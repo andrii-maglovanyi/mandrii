@@ -31,7 +31,7 @@ jobs:
         run: yarn start &
 
       - name: Wait for server to be ready
-        run: yarn dlx wait-on http://localhost:3000
+        run: yarn dlx wait-on http://localhost:3000/en
 
       - name: Audit URLs using Lighthouse
         uses: treosh/lighthouse-ci-action@v12
