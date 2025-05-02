@@ -1,0 +1,47 @@
+name: Analyze Bundle Size
+
+# Run this workflow on every Pull Request action as well as all pushes to main
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "analyze"
+  analyze:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Analyze bundle
+        uses: andrii-maglovanyi/nextjs-bundle-analyzer@dc9a820
+        with:
+          workflow-id: bundle_analysis.yml
+          default-branch: main
+          prefix: .next
+          github-token: ${{ secrets.CREATE_OR_UPDATE_COMMENT }}
