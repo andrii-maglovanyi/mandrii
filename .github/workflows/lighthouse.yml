@@ -1,0 +1,43 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack for Yarn Berry
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build Next.js app
+        run: yarn build
+
+      - name: Start Next.js server in background
+        run: yarn start &
+
+      - name: Wait for server to be ready
+        run: yarn dlx wait-on http://localhost:3000
+
+      - name: Audit URLs using Lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:3000/en
+          budgetPath: ./ci/lighthouse/budget.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
