@@ -41,3 +41,6 @@ jobs:
           budgetPath: ./ci/lighthouse/budget.json
           uploadArtifacts: true
           temporaryPublicStorage: true
+        env:
+           LHCI_GITHUB_TOKEN: ${{ secrets.LHCI_GITHUB_TOKEN }}
+
