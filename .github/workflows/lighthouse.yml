@@ -66,7 +66,13 @@ jobs:
             }
 
             const manifest = JSON.parse(fs.readFileSync(manifestPath));
-            const links = manifest.map(report => report.url).join('\n- ');
+            const links = manifest.map(report => {
+                const path = report.jsonPath;
+
+                const manifestJSON = JSON.parse(fs.readFileSync(manifestPath));
+                return JSON.stringify(manifestJSON, null, 2)
+            }).join('\n- ');
+            const manifest2 = JSON.parse(fs.readFileSync(manifestPath));
 
             const commentBody = `
             ## 📝 Lighthouse CI Results
