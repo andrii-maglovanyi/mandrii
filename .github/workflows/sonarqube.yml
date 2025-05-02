@@ -12,22 +12,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          fetch-depth: 0  # Required for SonarQube to compare branches
+          version: 10
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Enable pnpm via Corepack
-        run: corepack prepare pnpm@latest --activate
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      # Optional: build or lint (if required for analysis)
-      # - run: pnpm build
+        run: pnpm install
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5.1.0
