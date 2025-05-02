@@ -55,30 +55,30 @@ jobs:
       - name: Comment Lighthouse Results on PR
         uses: actions/github-script@v7
         with:
-            script: |
-                const fs = require('fs');
-                const manifestPath = '.lighthouseci/manifest.json';
+          script: |
+            const fs = require('fs');
+            const reportDir = '.lighthouseci';
+            const manifestPath = `${reportDir}/manifest.json`;
+            
+            if (!fs.existsSync(manifestPath)) {
+              core.setFailed('Lighthouse manifest.json not found!');
+              return;
+            }
 
-                if (!fs.existsSync(manifestPath)) {
-                    core.setFailed('Lighthouse manifest.json not found!');
-                    return;
-                }
+            const manifest = JSON.parse(fs.readFileSync(manifestPath));
+            const links = manifest.map(report => report.url).join('\n- ');
 
-                const manifest = JSON.parse(fs.readFileSync(manifestPath));
-                
-                # const links = manifest
-                #     .map(report => report.links.html)
-                #     .filter(Boolean)
-                #     .join('\n- ');
+            const commentBody = `
+            ## 📝 Lighthouse CI Results
+            Lighthouse audit reports for this PR:
+            - ${links}
 
-                const commentBody = `
-                ## 💡 Lighthouse CI Results
+            > **Please review the results above before merging!**
+            `;
 
-                - ${JSON.stringify(manifest, null, 2)}`;
-
-                await github.rest.issues.createComment({
-                    issue_number: context.issue.number,
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    body: commentBody
-                });
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
