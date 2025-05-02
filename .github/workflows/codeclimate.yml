@@ -1,5 +1,3 @@
-
-
 name: CodeClimate
 
 on:
@@ -13,13 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Enable Corepack for Yarn Berry
-        run: corepack enable
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable pnpm via Corepack
+        run: corepack prepare pnpm@latest --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Code coverage
         uses: paambaati/codeclimate-action@v9.0.0
         env:
-            CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
         with:
-            coverageCommand: yarn run coverage
-            debug: true
+          coverageCommand: pnpm coverage
+          debug: true
