@@ -39,6 +39,7 @@ jobs:
           urls: |
             http://localhost:3000/en
           budgetPath: ./ci/lighthouse/budget.json
+          configPath: ./ci/lighthouse/lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
         env:
