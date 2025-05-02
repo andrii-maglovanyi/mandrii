@@ -31,6 +31,8 @@ jobs:
 
       - name: Build Next.js app
         run: yarn build
+        env:
+            NEXT_TELEMETRY_DISABLED: 1
 
       - name: Start Next.js server in background
         run: yarn start &
@@ -72,7 +74,7 @@ jobs:
                 const commentBody = `
                 ## 💡 Lighthouse CI Results
 
-                - ${manifest}`;
+                - ${JSON.stringify(manifest, null, 2)}`;
 
                 await github.rest.issues.createComment({
                     issue_number: context.issue.number,
