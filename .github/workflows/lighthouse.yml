@@ -68,10 +68,13 @@ jobs:
             const manifest = JSON.parse(fs.readFileSync(manifestPath));
             const links = manifest.map(report => {
                 const path = report.jsonPath;
+                const htmlPath = report.htmlPath;
 
                 const manifestJSON = JSON.parse(fs.readFileSync(path));
-                return JSON.stringify(manifestJSON, null, 2)
+                # return JSON.stringify(manifestJSON, null, 2)
+                return fs.readFileSync(htmlPath)
             }).join('\n- ');
+            const manifest2 = JSON.parse(fs.readFileSync(manifestPath));
             const manifest2 = JSON.parse(fs.readFileSync(manifestPath));
 
             const commentBody = `
