@@ -64,15 +64,15 @@ jobs:
 
                 const manifest = JSON.parse(fs.readFileSync(manifestPath));
                 
-                const links = manifest
-                    .map(report => report.links.html)
-                    .filter(Boolean)
-                    .join('\n- ');
+                # const links = manifest
+                #     .map(report => report.links.html)
+                #     .filter(Boolean)
+                #     .join('\n- ');
 
                 const commentBody = `
                 ## 💡 Lighthouse CI Results
 
-                - ${links}`;
+                - ${manifest}`;
 
                 await github.rest.issues.createComment({
                     issue_number: context.issue.number,
