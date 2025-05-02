@@ -39,9 +39,10 @@ jobs:
         run: pnpm build
 
       - name: Analyze bundle
-        uses: andrii-maglovanyi/nextjs-bundle-analyzer@dc9a820
+        uses: grokku/nextjs-bundle-analyzer@v1
         with:
           workflow-id: bundle_analysis.yml
           default-branch: main
-          prefix: .next
+          dist-folder: .next
+          budget: 200
           github-token: ${{ secrets.CREATE_OR_UPDATE_COMMENT }}

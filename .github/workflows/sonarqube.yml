@@ -33,11 +33,3 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        args: >
-          -Dsonar.organization=andrii-maglovanyi
-          -Dsonar.projectKey=andrii-maglovanyi
-          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-          -Dsonar.sources=src
-          -Dsonar.tests=tests/
-          -Dsonar.test.exclusions=**/*.test.{ts,tsx}
-          -Dsonar.verbose=true
