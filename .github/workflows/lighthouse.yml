@@ -1,4 +1,4 @@
-name: Lighthouse CI
+name: Lighthouse
 
 on:
   push:
@@ -72,6 +72,8 @@ jobs:
             ## 📝 Lighthouse CI Results
             Lighthouse audit reports for this PR:
             - ${links}
+
+            ${JSON.stringify(manifest, null, 2)}
 
             > **Please review the results above before merging!**
             `;
