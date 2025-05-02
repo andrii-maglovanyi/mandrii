@@ -5,15 +5,7 @@
       "startServerCommand": "yarn start",
       "numberOfRuns": 3,
       "settings": {
-        "preset": "mobile",
-        "formFactor": "mobile",
-        "screenEmulation": {
-          "mobile": true,
-          "width": 390,
-          "height": 844,
-          "deviceScaleFactor": 2.5,
-          "disabled": false
-        }
+        "preset": "desktop"
       }
     },
     "assert": {
