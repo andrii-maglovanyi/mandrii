@@ -1,0 +1,14 @@
+{
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#f8d848",
+    "titleBar.activeForeground": "#336fb0",
+    "titleBar.inactiveBackground": "#336fb0",
+    "titleBar.inactiveForeground": "#f8d848"
+  }
+}
