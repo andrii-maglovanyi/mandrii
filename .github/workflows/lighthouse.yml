@@ -74,7 +74,7 @@ jobs:
                     bestPractices: Math.round(summary['best-practices'] * 100),
                     seo: Math.round(summary.seo * 100)
                     };
-                    return `| [${report.url}](${report.links.html || '#'}) | ${scores.performance} | ${scores.accessibility} | ${scores.bestPractices} | ${scores.seo} |`;
+                    return `| [${report.url}] | ${scores.performance} | ${scores.accessibility} | ${scores.bestPractices} | ${scores.seo} |`;
                 }).join('\n');
 
                 const commentBody = `
