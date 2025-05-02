@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse, NextFetchEvent } from "next/server";
+import { NextRequest, NextFetchEvent } from "next/server";
 import { MiddlewareFactory } from "./stackHandler";
 
 export const withContentSecurityPolicy: MiddlewareFactory = (next) => {
