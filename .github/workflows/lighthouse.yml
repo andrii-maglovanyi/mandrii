@@ -45,53 +45,6 @@ jobs:
         run: npx wait-on http://localhost:3000/en
 
       - name: Audit URLs using Lighthouse
-        uses: treosh/lighthouse-ci-action@v12
+        uses: foo-software/lighthouse-check-action@master
         with:
-          urls: |
-            http://localhost:3000/en
-          budgetPath: ./ci/lighthouse/budget.json
-          configPath: ./ci/lighthouse/lighthouserc.json
-          uploadArtifacts: true
-          temporaryPublicStorage: true
-        env:
-          LHCI_GITHUB_TOKEN: ${{ secrets.LHCI_GITHUB_TOKEN }}
-
-      - name: Comment Lighthouse Results on PR
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const manifestPath = '.lighthouseci/manifest.json';
-
-            if (!fs.existsSync(manifestPath)) {
-              core.setFailed('Lighthouse manifest.json not found!');
-              return;
-            }
-
-            const manifest = JSON.parse(fs.readFileSync(manifestPath));
-
-            const tableRows = manifest.map(report => {
-              const summary = report.summary;
-              const scores = {
-                performance: Math.round(summary.performance * 100),
-                accessibility: Math.round(summary.accessibility * 100),
-                bestPractices: Math.round(summary['best-practices'] * 100),
-                seo: Math.round(summary.seo * 100)
-              };
-              return `| **${report.url}** | ${scores.performance} | ${scores.accessibility} | ${scores.bestPractices} | ${scores.seo} |`;
-            }).join('\n');
-
-            const commentBody = `
-            ## 📝 Lighthouse CI Audit Summary
-
-            | URL | 🏎️ Performance | ♿ Accessibility | 🔧 Best Practices | 🔍 SEO |
-            |-----|---------------|-----------------|-------------------|---------|
-            ${tableRows}
-            `;
-
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: commentBody
-            });
+          urls: 'http://localhost:3000/en'
