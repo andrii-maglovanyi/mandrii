@@ -31,18 +31,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+        
       - name: Build Next.js app
         run: pnpm build
         env:
           NEXT_TELEMETRY_DISABLED: 1
-
-      - name: Start Next.js server in background
-        run: pnpm start &
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
-
-      - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3000/en
 
       - name: Audit URLs using Lighthouse
         run: |
