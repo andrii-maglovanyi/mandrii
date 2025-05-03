@@ -29,7 +29,7 @@ jobs:
           node-version: 22
           cache: 'pnpm'
 
-      - name: Audit URLs
+      - name: Audit deployment
         run: |
           pnpm install -g @lhci/cli@0.14.x
           lhci autorun
