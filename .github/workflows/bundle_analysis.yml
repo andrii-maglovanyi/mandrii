@@ -1,4 +1,4 @@
-name: Analyze Bundle Size
+name: Bundle Size
 
 # Run this workflow on every Pull Request action as well as all pushes to main
 on:
