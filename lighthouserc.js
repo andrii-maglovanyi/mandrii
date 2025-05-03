@@ -5,7 +5,7 @@ module.exports = {
       preset: "lighthouse:recommended",
     },
     collect: {
-      url: [`${process.env.VERCEL_URL}/en`],
+      url: [`${process.env.BASE_URL}/en`],
       startServerReadyPattern: "ready on",
     },
     upload: {
