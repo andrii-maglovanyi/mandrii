@@ -37,7 +37,7 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
-      - name: Audit URLs using Lighthouse
+      - name: Audit URLs
         run: |
           pnpm install -g @lhci/cli@0.14.x
           lhci autorun
