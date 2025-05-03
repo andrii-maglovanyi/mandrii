@@ -1,19 +1,20 @@
 name: Lighthouse
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
+  repository_dispatch:
+    types:
+      - 'vercel.deployment.success'
+      - 'vercel.deployment.error'
+      - 'vercel.deployment.canceled'
+      - 'vercel.deployment.ignored'
+      - 'vercel.deployment.skipped'
+      - 'vercel.deployment.pending'
+      - 'vercel.deployment.failed'
+      - 'vercel.deployment.promoted'
 
 jobs:
   analyze:
-    if: github.event_name == 'repository_dispatch'
+    # if: github.event_name == 'repository_dispatch'
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +31,7 @@ jobs:
           node-version: 22
           cache: 'pnpm'
 
-      - name: Audit URLs
+      - name: Audit deployment
         run: |
           pnpm install -g @lhci/cli@0.14.x
           lhci autorun
@@ -38,3 +39,5 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_URL: ${{ github.event.client_payload.url }}
+
+          
