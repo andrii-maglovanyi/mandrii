@@ -4,7 +4,7 @@ module.exports = {
       preset: "lighthouse:recommended",
     },
     collect: {
-      url: ["http://localhost:3000/"],
+      url: ["http://localhost:3000/en"],
       startServerCommand: "pnpm build & pnpm start",
     },
     upload: {
