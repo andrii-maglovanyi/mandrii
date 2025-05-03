@@ -4,7 +4,7 @@ module.exports = {
       preset: "lighthouse:recommended",
     },
     collect: {
-      url: ["http://localhost:3000/en"],
+      url: [`${process.env.VERCEL_URL}/en`],
       startServerReadyPattern: "ready on",
       startServerCommand: "pnpm start",
     },
