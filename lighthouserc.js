@@ -5,7 +5,7 @@ module.exports = {
     },
     collect: {
       url: ["http://localhost:3000/en"],
-      startServerCommand: "pnpm build & pnpm start",
+      startServerCommand: "pnpm start",
     },
     upload: {
       target: "temporary-public-storage",
