@@ -1,3 +1,4 @@
+console.log(":::::::::::", JSON.stringify(process.env, null, 2));
 module.exports = {
   ci: {
     assert: {
@@ -6,7 +7,6 @@ module.exports = {
     collect: {
       url: [`${process.env.VERCEL_URL}/en`],
       startServerReadyPattern: "ready on",
-      startServerCommand: "pnpm start",
     },
     upload: {
       target: "temporary-public-storage",
