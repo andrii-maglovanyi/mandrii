@@ -3,12 +3,14 @@ name: Lighthouse
 on:
   repository_dispatch:
     types:
-    - 'vercel.deployment.success'
-
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
+      - 'vercel.deployment.success'
+      - 'vercel.deployment.error'
+      - 'vercel.deployment.canceled'
+      - 'vercel.deployment.ignored'
+      - 'vercel.deployment.skipped'
+      - 'vercel.deployment.pending'
+      - 'vercel.deployment.failed'
+      - 'vercel.deployment.promoted'
 
 jobs:
   analyze:
@@ -37,3 +39,5 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_URL: ${{ github.event.client_payload.url }}
+
+          
