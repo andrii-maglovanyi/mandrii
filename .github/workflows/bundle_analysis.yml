@@ -39,7 +39,7 @@ jobs:
         run: pnpm build
 
       - name: Analyze bundle
-        uses: grokku/nextjs-bundle-analyzer@v1
+        uses: andrii-maglovanyi/nextjs-bundle-analyzer@v1
         with:
           workflow-id: bundle_analysis.yml
           default-branch: main
