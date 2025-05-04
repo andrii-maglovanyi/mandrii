@@ -12,7 +12,7 @@ module.exports = {
       },
     },
     collect: {
-      url: [`${process.env.BASE_URL}/en`],
+      url: [`${process.env.VERCEL_PREVIEW_URL}/en`],
       startServerReadyPattern: "ready on",
       settings: {
         extraHeaders: {
