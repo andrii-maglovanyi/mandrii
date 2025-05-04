@@ -13,14 +13,16 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.git.sha }}
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
 
       - name: Install dependencies
         run: pnpm install && pnpx playwright install --with-deps
