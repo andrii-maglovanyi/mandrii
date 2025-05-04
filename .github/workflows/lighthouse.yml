@@ -31,7 +31,7 @@ jobs:
           pnpm install -g @lhci/cli@0.14.x
           lhci autorun
         env:
-          BASE_URL: ${{ github.event.client_payload.url }}
+          VERCEL_PREVIEW_URL: ${{ github.event.client_payload.url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           VERCEL_PROTECTION_BYPASS: ${{ secrets.LHCI_VERCEL_PROTECTION_BYPASS }}
