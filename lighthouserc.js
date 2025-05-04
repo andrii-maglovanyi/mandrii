@@ -1,3 +1,5 @@
+console.log("VERCEL_PREVIEW_URL", process.env.VERCEL_PREVIEW_URL);
+
 module.exports = {
   ci: {
     assert: {
