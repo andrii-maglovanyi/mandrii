@@ -34,5 +34,6 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_URL: ${{ github.event.client_payload.url }}
+          VERCEL_PROTECTION_BYPASS: ${{ secrets.LHCI_VERCEL_PROTECTION_BYPASS }}
 
           
