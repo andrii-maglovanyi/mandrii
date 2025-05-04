@@ -12,6 +12,7 @@ module.exports = {
         // or temporary content. However, this impacts the Lighthouse SEO audit.
         // Ignore the noindex SEO audit in CI
         "is-crawlable": "off",
+        "robots-txt": "off",
       },
     },
     collect: {
