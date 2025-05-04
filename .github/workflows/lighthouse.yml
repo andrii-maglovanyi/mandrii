@@ -4,17 +4,10 @@ on:
   repository_dispatch:
     types:
       - 'vercel.deployment.success'
-      - 'vercel.deployment.error'
-      - 'vercel.deployment.canceled'
-      - 'vercel.deployment.ignored'
-      - 'vercel.deployment.skipped'
-      - 'vercel.deployment.pending'
-      - 'vercel.deployment.failed'
-      - 'vercel.deployment.promoted'
 
 jobs:
   analyze:
-    # if: github.event_name == 'repository_dispatch'
+    if: github.event_name == 'repository_dispatch'
     runs-on: ubuntu-latest
 
     steps:
