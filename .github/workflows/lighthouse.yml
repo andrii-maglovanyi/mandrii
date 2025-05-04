@@ -12,6 +12,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.git.sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
       
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -26,5 +34,6 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_URL: ${{ github.event.client_payload.url }}
+          VERCEL_PROTECTION_BYPASS: ${{ secrets.LHCI_VERCEL_PROTECTION_BYPASS }}
 
           

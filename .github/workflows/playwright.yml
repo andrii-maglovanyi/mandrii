@@ -1,0 +1,31 @@
+name: Playwright
+
+on:
+  repository_dispatch:
+    types:
+      - 'vercel.deployment.success'
+jobs:
+  run-e2es:
+    if: github.event_name == 'repository_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.git.sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install && pnpx playwright install --with-deps
+
+      - name: Run tests
+        run: pnpx playwright test
+        env:
+          BASE_URL: ${{ github.event.client_payload.url }}
