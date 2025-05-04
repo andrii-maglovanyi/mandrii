@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install && pnpx playwright install --with-deps
 
-      - name: Run tests
+      - name: Run tests!
         run: pnpx playwright test
         env:
           BASE_URL: ${{ github.event.client_payload.url }}
