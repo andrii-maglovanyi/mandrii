@@ -17,6 +17,9 @@ module.exports = {
         // previews and does not indicate a problem with production performance.
         // Ignore the bfcache audit in CI
         "bf-cache": "off",
+
+        // Allow a small amount of unused JavaScript (Next.js hydration/runtime)
+        "unused-javascript": ["error", { maxLength: 4 }],
       },
     },
     collect: {
@@ -26,6 +29,7 @@ module.exports = {
         extraHeaders: {
           "x-vercel-protection-bypass": process.env.VERCEL_PROTECTION_BYPASS,
         },
+        emulatedFormFactor: "mobile",
       },
     },
     upload: {
