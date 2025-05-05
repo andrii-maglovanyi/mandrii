@@ -19,14 +19,14 @@ jobs:
         id: nvmrc
         run: echo "##[set-output name=NODE_VERSION;]$(cat .nvmrc)"
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "${{ steps.nvmrc.outputs.NODE_VERSION }}"
           cache: 'pnpm'
-
-      - name: Enable Corepack (uses packageManager field)
-        run: corepack enable
 
       - name: Install dependencies
         run: pnpm install
