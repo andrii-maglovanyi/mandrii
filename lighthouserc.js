@@ -1,5 +1,3 @@
-console.log("VERCEL_PREVIEW_URL", process.env.VERCEL_PREVIEW_URL);
-
 module.exports = {
   ci: {
     assert: {
@@ -11,6 +9,14 @@ module.exports = {
         // or temporary content. However, this impacts the Lighthouse SEO audit.
         // Ignore the noindex SEO audit in CI
         "is-crawlable": "off",
+
+        // Vercel Preview Deployments often serve pages with the HTTP header
+        // Cache-Control: no-store to avoid caching temporary content.
+        // This prevents pages from being stored in the back/forward cache (bfcache),
+        // triggering a warning in Lighthouse. This is expected behavior for
+        // previews and does not indicate a problem with production performance.
+        // Ignore the bfcache audit in CI
+        bfcache: "off",
       },
     },
     collect: {
