@@ -15,7 +15,7 @@ module.exports = {
         // This prevents pages from being stored in the back/forward cache (bfcache),
         // triggering a warning in Lighthouse. This is expected behavior for
         // previews and does not indicate a problem with production performance.
-        // Ignore the bfcache audit in CI
+        // Ignore the bfcache audit in CI.
         bfcache: "off",
       },
     },
