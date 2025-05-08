@@ -9,18 +9,18 @@ yarn-error.log*
 # misc
 .DS_Store
 *.pem
-/.history
+.history/
 
 # next.js
-/.next
-/out
+.next/
+out/
 
 # pnpm
 node_modules
 .pnpm-debug.log*
 
 # production
-/build
+build/
 
 # storybook
 *storybook.log
