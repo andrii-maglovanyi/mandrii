@@ -1,7 +1,7 @@
 import path from "path";
 
 const buildEslintCommand = (filenames) =>
-  `pnpm lint --fix --file ${filenames
+  `next lint --fix --file ${filenames
     .map((f) => path.relative(process.cwd(), f))
     .join(" --file ")}`;
 
