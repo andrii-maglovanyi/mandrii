@@ -1,4 +1,4 @@
 export default {
-  "*.{ts,tsx,js,jsx}": ["pnpm lint --fix"],
-  "*.{ts,tsx,css,md,json}": ["prettier --write --ignore-unknown"],
+  "src/**/*.{ts,tsx}": ["pnpm lint --fix"],
+  "src/**/*.{ts,tsx,css,md,json}": ["prettier --write --ignore-unknown"],
 };

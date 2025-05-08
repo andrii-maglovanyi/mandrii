@@ -1,7 +1,6 @@
 {
   "name": "@mandrii/eslint-config-custom",
   "version": "0.0.0",
-  "main": "base.mjs",
   "type": "module",
   "license": "UNLICENSED",
   "publishConfig": {
