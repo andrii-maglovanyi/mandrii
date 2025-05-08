@@ -10,7 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <img sr />
+      <img src="" />
       <body>{children}</body>
     </html>
   );
