@@ -1,4 +1,15 @@
+// export default {
+//   "*.{ts,tsx}": ["pnpm lint --fix"],
+//   "*.{ts,tsx,css,md,json}": ["prettier --write --ignore-unknown"],
+// };
+
+import path from "path";
+
+const buildEslintCommand = (filenames) =>
+  `pnpm lint --fix --file ${filenames
+    .map((f) => path.relative(process.cwd(), f))
+    .join(" --file ")}`;
+
 export default {
-  "src/**/*.{ts,tsx}": ["pnpm lint --fix"],
-  "src/**/*.{ts,tsx,css,md,json}": ["prettier --write --ignore-unknown"],
+  "*.{js,jsx,ts,tsx}": [buildEslintCommand],
 };

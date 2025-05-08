@@ -1,5 +1,5 @@
-import { withContentSecurityPolicy } from "~/middlewares/withContentSecurityPolicy";
 import { stackMiddlewares } from "~/middlewares/stackHandler";
+import { withContentSecurityPolicy } from "~/middlewares/withContentSecurityPolicy";
 
 const middlewares = [withContentSecurityPolicy];
 
