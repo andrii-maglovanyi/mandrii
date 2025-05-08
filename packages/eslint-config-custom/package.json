@@ -1,7 +1,7 @@
 {
   "name": "@mandrii/eslint-config-custom",
   "version": "0.0.0",
-  "main": "eslint.config.mjs",
+  "main": "base.mjs",
   "type": "module",
   "license": "UNLICENSED",
   "publishConfig": {
@@ -11,7 +11,6 @@
     "@eslint/eslintrc": "^3.3.1",
     "eslint": "^9.26.0",
     "eslint-config-next": "^15.3.1",
-    "globals": "^16.0.0",
-    "typescript-eslint": "^8.32.0"
+    "eslint-plugin-perfectionist": "^4.12.3"
   }
 }

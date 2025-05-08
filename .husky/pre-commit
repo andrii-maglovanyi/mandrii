@@ -15,4 +15,4 @@ if [ -z "$TICKET_CODE_IN_BRANCH_NAME" ]; then
   exit 1
 fi
 
-npx lint-staged
+pnpm exec lint-staged

@@ -7,12 +7,15 @@
     "url": "https://github.com/andrii-maglovanyi/mandrii.git"
   },
   "scripts": {
-    "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
-    "start": "pnpm --filter web start",
+    "dev": "pnpm --filter web dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "pnpm -r lint",
+    "prepare": "husky && husky install",
+    "start": "pnpm --filter web start",
     "test": "pnpm -r test",
-    "prepare": "husky"
+    "typecheck": "pnpm -r exec tsc --noEmit"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -23,6 +26,8 @@
     "@types/react": "19.1.2",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
+    "prettier": "3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "typescript": "^5.8.3"
   },
   "browserslist": [

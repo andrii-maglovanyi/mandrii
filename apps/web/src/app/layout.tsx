@@ -3,8 +3,8 @@ type RootLayoutProps = Readonly<{
 }>;
 
 export const metadata = {
+  description: "Мандруй / Мрій / Дій",
   title: "Мандрій",
-  description: 'Мандруй / Мрій / Дій"',
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {

@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "composite": true,
     "jsx": "preserve",
     "plugins": [
       {
@@ -11,11 +12,11 @@
       "~/*": [
         "./src/*"
       ]
-    }
+    },
+    "strictNullChecks": true
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "src",
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
