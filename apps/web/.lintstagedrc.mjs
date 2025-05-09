@@ -1,16 +1,11 @@
 import baseConfig from "../../.lintstagedrc.base.mjs";
-import path from "path";
 
-export const getFiles = (filenames) =>
-  filenames
-    .map((f) => path.relative(`${process.cwd()}/apps/web`, f))
-    .join(" --file ");
-
-const eslintWithFix = (filenames) =>
-  `pnpm lint --file ${getFiles(filenames)} --fix`;
+const buildEslintCommand = (filenames) =>
+  `pnpm run lint --fix --file ${filenames
+    .map((f) => `"${f}"`)
+    .join(" --file ")}`;
 
 export default {
   ...baseConfig,
-  "**/*.{ts,tsx}": [eslintWithFix],
-  // "**/*.{ts,tsx}": ["pnpm lint --fix"],
+  "**/*.{ts,tsx}": [buildEslintCommand],
 };
