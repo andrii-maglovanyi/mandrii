@@ -10,12 +10,9 @@
     "build": "next build",
     "dev": "next dev",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "lint": "next lint",
     "prepare": "husky",
-    "start": "next start",
-    "test": "pnpm -r test",
-    "typecheck": "pnpm -r exec tsc --noEmit"
+    "start": "next start"
   },
   "dependencies": {
     "next": "^15.3.2",
