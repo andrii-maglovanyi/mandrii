@@ -7,7 +7,7 @@ export const metadata = {
   title: "Мандрій",
 };
 
-console.log("t s e s t");
+console.log("t s es t");
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
