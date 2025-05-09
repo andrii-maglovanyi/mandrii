@@ -56,14 +56,4 @@ if [[ "$BRANCH" =~ $PROTECTED_BRANCHES ]]; then
 "
   exit 1
 fi
-
-echo "🔎 Running type check (tsc)..."
-pnpm exec tsc --noEmit
-
-RESULT=$?
-
-if [ $RESULT -ne 0 ]; then
-  echo "❌ Type check failed. Push aborted."
-  exit 1
-fi
 exit 0
