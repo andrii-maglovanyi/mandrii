@@ -58,7 +58,7 @@ if [[ "$BRANCH" =~ $PROTECTED_BRANCHES ]]; then
 fi
 
 echo "🔎 Running type check (tsc)..."
-pnpm -r exec tsc --noEmit
+pnpm exec tsc --noEmit
 
 RESULT=$?
 
