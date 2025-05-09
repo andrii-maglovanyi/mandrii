@@ -4,7 +4,6 @@ type RootLayoutProps = Readonly<{
 
 export const metadata = {
   description: "Мандруй / Мрій / Дій",
-
   title: "Мандрій",
 };
 
