@@ -3,7 +3,6 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
         headers: [
           {
             key: "Strict-Transport-Security",
@@ -18,6 +17,7 @@ const nextConfig = {
             value: "DENY",
           },
         ],
+        source: "/(.*)",
       },
     ];
   },

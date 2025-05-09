@@ -3,7 +3,7 @@ name: Playwright
 on:
   repository_dispatch:
     types:
-      - 'vercel.deployment.success'
+      - "vercel.deployment.success"
 jobs:
   run-e2es:
     if: github.event_name == 'repository_dispatch'
@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install && pnpx playwright install --with-deps
