@@ -4,13 +4,17 @@ type RootLayoutProps = Readonly<{
 
 export const metadata = {
   description: "Мандруй / Мрій / Дій",
+
   title: "Мандрій",
 };
+
+console.log("test");
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <img src="s" />
+      <img hidden="true" />
+
       <a>Momo</a>
       <body>{children}</body>
     </html>

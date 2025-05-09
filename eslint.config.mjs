@@ -1,14 +1,15 @@
-import perfectionist from "eslint-plugin-perfectionist";
 import { FlatCompat } from "@eslint/eslintrc";
+import perfectionist from 'eslint-plugin-perfectionist'
+
+
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
 });
 
-export default [
+const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-  {
-    ignores: [".next/**", "public/**", "**/graphql.generated.ts"],
-  },
-  perfectionist.configs["recommended-alphabetical"],
+  perfectionist.configs['recommended-alphabetical'],
 ];
+
+export default eslintConfig;
