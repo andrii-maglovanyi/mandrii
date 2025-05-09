@@ -8,8 +8,25 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next", "next/core-web-vitals", "next/typescript"),
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
   perfectionist.configs['recommended-alphabetical'],
 ];
 
-export default eslintConfig;
+function forceAllWarningsToErrors(configs) {
+  for (const config of configs) {
+    if (config.rules) {
+      for (const ruleName in config.rules) {
+        const rule = config.rules[ruleName];
+        if (Array.isArray(rule)) {
+          if (rule[0] === "warn") rule[0] = "error";
+        } else if (rule === "warn") {
+          config.rules[ruleName] = "error";
+        }
+      }
+    }
+  }
+}
+
+export default forceAllWarningsToErrors(eslintConfig);
+
+// export default eslintConfig;
