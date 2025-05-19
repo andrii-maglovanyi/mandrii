@@ -1,7 +1,9 @@
 import { stackMiddlewares } from "~/middlewares/stackHandler";
 import { withContentSecurityPolicy } from "~/middlewares/withContentSecurityPolicy";
 
-const middlewares = [withContentSecurityPolicy];
+import { withLanguage } from "./middlewares/withLanguage";
+
+const middlewares = [withLanguage, withContentSecurityPolicy];
 
 export default stackMiddlewares(middlewares);
 
