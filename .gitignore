@@ -9,18 +9,18 @@ yarn-error.log*
 # misc
 .DS_Store
 *.pem
-/.history
+.history/
 
 # next.js
-/.next
-/out
+.next/
+out/
 
 # pnpm
 node_modules
 .pnpm-debug.log*
 
 # production
-/build
+build/
 
 # storybook
 *storybook.log
@@ -29,3 +29,9 @@ storybook-static
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

@@ -1,4 +1,5 @@
-import { NextRequest, NextFetchEvent } from "next/server";
+import { NextFetchEvent, NextRequest } from "next/server";
+
 import { MiddlewareFactory } from "./stackHandler";
 
 export const withContentSecurityPolicy: MiddlewareFactory = (next) => {
@@ -27,7 +28,7 @@ export const withContentSecurityPolicy: MiddlewareFactory = (next) => {
       new NextRequest(request.url, {
         headers: requestHeaders,
       }),
-      event
+      event,
     );
 
     response.headers.set("Content-Security-Policy", cspHeader);

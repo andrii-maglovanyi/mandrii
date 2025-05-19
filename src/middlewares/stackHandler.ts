@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse, NextFetchEvent } from "next/server";
-
-export type MiddlewareHandler = (
-  request: NextRequest,
-  event: NextFetchEvent
-) => NextResponse | Promise<NextResponse>;
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 export type MiddlewareFactory = (next: MiddlewareHandler) => MiddlewareHandler;
 
+export type MiddlewareHandler = (
+  request: NextRequest,
+  event: NextFetchEvent,
+) => NextResponse | Promise<NextResponse>;
+
 export function stackMiddlewares(
-  middlewareFactories: MiddlewareFactory[]
+  middlewareFactories: MiddlewareFactory[],
 ): MiddlewareHandler {
   const initialHandler: MiddlewareHandler = () => {
     return NextResponse.next();
@@ -16,6 +16,6 @@ export function stackMiddlewares(
 
   return middlewareFactories.reduceRight<MiddlewareHandler>(
     (next, middleware) => middleware(next),
-    initialHandler
+    initialHandler,
   );
 }

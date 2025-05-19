@@ -3,7 +3,7 @@ name: Lighthouse
 on:
   repository_dispatch:
     types:
-      - 'vercel.deployment.success'
+      - "vercel.deployment.success"
 
 jobs:
   analyze:
@@ -24,8 +24,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
-          
+          cache: "pnpm"
+
       - name: Audit deployment
         run: |
           pnpm install -g @lhci/cli@0.14.x
@@ -35,5 +35,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           VERCEL_PROTECTION_BYPASS: ${{ secrets.LHCI_VERCEL_PROTECTION_BYPASS }}
-
-          

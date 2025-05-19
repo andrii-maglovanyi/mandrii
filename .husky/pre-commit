@@ -1,0 +1,18 @@
+#!/bin/sh
+
+BRANCH=$(git symbolic-ref --short HEAD)
+
+if [ "$OSTYPE" = "linux-gnu" ]; then
+  GREP="grep -P"
+else
+  GREP="grep -Ei"
+fi
+
+TICKET_CODE_IN_BRANCH_NAME=$(echo "$BRANCH" | $GREP '^MNDR-[0-9]{3,}_') || true
+
+if [ -z "$TICKET_CODE_IN_BRANCH_NAME" ]; then
+  printf "ERROR - Ticket code is mandatory in the branch name (for example: MNDR-123_branch_name)\n"
+  exit 1
+fi
+
+pnpm lint-staged

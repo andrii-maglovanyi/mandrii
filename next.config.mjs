@@ -1,9 +1,12 @@
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
         headers: [
           {
             key: "Strict-Transport-Security",
@@ -18,9 +21,10 @@ const nextConfig = {
             value: "DENY",
           },
         ],
+        source: "/(.*)",
       },
     ];
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

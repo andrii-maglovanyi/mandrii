@@ -1,7 +1,9 @@
-import { withContentSecurityPolicy } from "~/middlewares/withContentSecurityPolicy";
 import { stackMiddlewares } from "~/middlewares/stackHandler";
+import { withContentSecurityPolicy } from "~/middlewares/withContentSecurityPolicy";
 
-const middlewares = [withContentSecurityPolicy];
+import { withLanguage } from "./middlewares/withLanguage";
+
+const middlewares = [withLanguage, withContentSecurityPolicy];
 
 export default stackMiddlewares(middlewares);
 
@@ -15,11 +17,11 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
       missing: [
-        { type: "header", key: "next-router-prefetch" },
-        { type: "header", key: "purpose", value: "prefetch" },
+        { key: "next-router-prefetch", type: "header" },
+        { key: "purpose", type: "header", value: "prefetch" },
       ],
+      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
     },
   ],
 };
