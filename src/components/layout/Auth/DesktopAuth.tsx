@@ -79,7 +79,6 @@ export function DesktopAuth() {
   const { openCustomDialog } = useDialog();
 
   const isAuthenticated = !!profileData;
-  console.log("Profile Data:", profileData);
   const isLoading = status === "loading";
 
   const handleSignIn = async () => {
