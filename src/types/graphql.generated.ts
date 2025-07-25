@@ -4037,13 +4037,13 @@ export function useGetPublicLocationsLazyQuery(
  */
 export function useGetPublicLocationsQuery(
   baseOptions: (
-      | { skip: boolean }
-      | { skip?: boolean; variables: GetPublicLocationsQueryVariables; }
-    ) &
+    | { skip: boolean }
+    | { skip?: boolean; variables: GetPublicLocationsQueryVariables }
+  ) &
     Apollo.QueryHookOptions<
-    GetPublicLocationsQuery,
-    GetPublicLocationsQueryVariables
-  >,
+      GetPublicLocationsQuery,
+      GetPublicLocationsQueryVariables
+    >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
@@ -4137,13 +4137,13 @@ export function useGetUserLocationsLazyQuery(
  */
 export function useGetUserLocationsQuery(
   baseOptions: (
-      | { skip: boolean }
-      | { skip?: boolean; variables: GetUserLocationsQueryVariables; }
-    ) &
+    | { skip: boolean }
+    | { skip?: boolean; variables: GetUserLocationsQueryVariables }
+  ) &
     Apollo.QueryHookOptions<
-    GetUserLocationsQuery,
-    GetUserLocationsQueryVariables
-  >,
+      GetUserLocationsQuery,
+      GetUserLocationsQueryVariables
+    >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetUserLocationsQuery, GetUserLocationsQueryVariables>(
@@ -4238,13 +4238,13 @@ export function useGetAdminLocationsLazyQuery(
  */
 export function useGetAdminLocationsQuery(
   baseOptions: (
-      | { skip: boolean }
-      | { skip?: boolean; variables: GetAdminLocationsQueryVariables; }
-    ) &
+    | { skip: boolean }
+    | { skip?: boolean; variables: GetAdminLocationsQueryVariables }
+  ) &
     Apollo.QueryHookOptions<
-    GetAdminLocationsQuery,
-    GetAdminLocationsQueryVariables
-  >,
+      GetAdminLocationsQuery,
+      GetAdminLocationsQueryVariables
+    >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
