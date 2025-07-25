@@ -8,7 +8,7 @@ import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { constants } from "~/lib/constants";
 import { getEmailSchema } from "~/lib/validation/email";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY ?? "");
 const { audienceId, baseUrl, fromEmail } = constants;
 
 const sendVerificationEmail = async (

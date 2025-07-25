@@ -4,7 +4,7 @@ import { getLocaleContext } from "~/lib/api/helpers";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { constants } from "~/lib/constants";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY ?? "");
 const { audienceId, baseUrl } = constants;
 
 export const GET = (req: Request) =>

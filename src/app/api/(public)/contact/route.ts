@@ -7,7 +7,7 @@ import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { constants } from "~/lib/constants";
 import { getContactSchema } from "~/lib/validation/contact";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY ?? "");
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
