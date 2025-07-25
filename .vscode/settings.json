@@ -1,0 +1,13 @@
+{
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#f8d848",
+    "titleBar.activeForeground": "#336fb0",
+    "titleBar.inactiveBackground": "#336fb0",
+    "titleBar.inactiveForeground": "#f8d848"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "cSpell.words": ["mndr"]
+}

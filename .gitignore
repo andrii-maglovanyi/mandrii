@@ -1,0 +1,43 @@
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# misc
+.DS_Store
+*.pem
+.history/
+
+# next.js
+.next/
+out/
+
+# pnpm
+node_modules
+.pnpm-debug.log*
+
+# production
+build/
+
+# storybook
+*storybook.log
+storybook-static
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# test
+coverage/
+
+# Sentry Config File
+.env.sentry-build-plugin

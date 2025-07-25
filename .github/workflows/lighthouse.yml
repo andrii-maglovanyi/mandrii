@@ -1,0 +1,37 @@
+name: Lighthouse
+
+on:
+  repository_dispatch:
+    types:
+      - "vercel.deployment.success"
+
+jobs:
+  analyze:
+    if: github.event_name == 'repository_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.git.sha }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Audit deployment
+        run: |
+          pnpm install -g @lhci/cli@0.14.x
+          lhci autorun
+        env:
+          VERCEL_PREVIEW_URL: ${{ github.event.client_payload.url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          VERCEL_PROTECTION_BYPASS: ${{ secrets.LHCI_VERCEL_PROTECTION_BYPASS }}
