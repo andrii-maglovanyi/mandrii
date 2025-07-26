@@ -1,8 +1,9 @@
-import { validateCaptcha } from "~/lib/recaptcha";
+import { validateCaptcha } from "../recaptcha";
 
 export async function verifyCaptcha(token: string, action: string) {
-  const valid = await validateCaptcha(token, action);
-  if (!valid) {
+  const isHuman = await validateCaptcha(token, action);
+
+  if (!isHuman) {
     return Response.json(
       { error: "reCAPTCHA verification failed" },
       { status: 403 },

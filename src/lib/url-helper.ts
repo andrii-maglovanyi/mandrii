@@ -1,7 +1,7 @@
 export class UrlHelper {
   static config = {
     development: { hostname: "localhost:3000", scheme: "http" },
-    preview: { hostname: "preview.mandrii.com", scheme: "https" },
+    preview: { hostname: "mandrii.vercel.app", scheme: "https" },
     production: { hostname: "mandrii.com", scheme: "https" },
     test: { hostname: "localhost:3000", scheme: "http" },
   };

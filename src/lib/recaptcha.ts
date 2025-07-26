@@ -1,15 +1,21 @@
 import { privateConfig } from "./config/private";
+import { UrlHelper } from "./url-helper";
 
 export async function validateCaptcha(
   token: string,
-  expectedAction: string,
+  action: string,
 ): Promise<boolean> {
-  const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
-    body: `secret=${privateConfig.recaptcha.secretKey}&response=${token}`,
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  const res = await fetch(`${UrlHelper.buildApiUrl("captcha")}`, {
+    body: JSON.stringify({ action, token }),
+    headers: { "Content-Type": "application/json" },
     method: "POST",
   });
 
+  if (!res.ok) {
+    return false;
+  }
+
   const data = await res.json();
-  return data.success && data.score > 0.5 && data.action === expectedAction;
+
+  return data.success === true;
 }
