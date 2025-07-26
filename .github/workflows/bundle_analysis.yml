@@ -39,7 +39,7 @@ jobs:
       - name: Build
         env:
           UNSET_CONFIG: true
-        run: pnpm build --turbo
+        run: pnpm build
 
       - name: Analyze bundle
         uses: andrii-maglovanyi/nextjs-bundle-analyzer@v1

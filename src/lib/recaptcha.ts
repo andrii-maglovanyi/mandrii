@@ -1,4 +1,3 @@
-import { privateConfig } from "./config/private";
 import { UrlHelper } from "./url-helper";
 
 export async function validateCaptcha(
