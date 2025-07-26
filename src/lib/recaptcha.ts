@@ -1,10 +1,11 @@
+import { privateConfig } from "./config/private";
+
 export async function validateCaptcha(
   token: string,
   expectedAction: string,
 ): Promise<boolean> {
-  const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET_KEY!;
   const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
-    body: `secret=${secret}&response=${token}`,
+    body: `secret=${privateConfig.recaptcha.secretKey}&response=${token}`,
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     method: "POST",
   });

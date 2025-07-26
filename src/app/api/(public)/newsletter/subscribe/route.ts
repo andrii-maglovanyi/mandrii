@@ -5,10 +5,11 @@ import { getLocaleContext } from "~/lib/api/helpers";
 import { verifyCaptcha } from "~/lib/api/recaptcha";
 import { validateRequest } from "~/lib/api/validate";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
+import { privateConfig } from "~/lib/config/private";
 import { constants } from "~/lib/constants";
 import { getEmailSchema } from "~/lib/validation/email";
 
-const resend = new Resend(process.env.RESEND_API_KEY ?? "");
+const resend = new Resend(privateConfig.email.resendApiKey);
 const { audienceId, baseUrl, fromEmail } = constants;
 
 const sendVerificationEmail = async (

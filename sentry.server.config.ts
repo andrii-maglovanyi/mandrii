@@ -1,8 +1,11 @@
 import * as Sentry from "@sentry/nextjs";
 
+import { isProduction } from "~/lib/config/env";
+import { publicConfig } from "~/lib/config/public";
+
 Sentry.init({
   debug: false,
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  dsn: publicConfig.analytics.sentryDsn,
+  enabled: isProduction,
   tracesSampleRate: 1,
-  enabled: process.env.NODE_ENV === "production",
 });

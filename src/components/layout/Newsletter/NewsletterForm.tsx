@@ -12,14 +12,13 @@ import {
 import { ActionButton, Alert, Button, Input, RichText } from "~/components/ui";
 import { useForm } from "~/hooks/useForm";
 import { useI18n } from "~/i18n/useI18n";
+import { publicConfig } from "~/lib/config/public";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { getEmailFormSchema } from "~/lib/validation/email";
 
 export function NewsletterForm() {
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-    >
+    <GoogleReCaptchaProvider reCaptchaKey={publicConfig.recaptcha.siteKey}>
       <Newsletter />
     </GoogleReCaptchaProvider>
   );

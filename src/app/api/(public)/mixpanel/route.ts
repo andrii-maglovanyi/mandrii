@@ -2,22 +2,17 @@ import { captureException } from "@sentry/nextjs";
 import { NextResponse } from "next/server";
 
 import { auth } from "~/lib/auth";
+import { isDevelopment } from "~/lib/config/env";
+import { privateConfig } from "~/lib/config/private";
 
 export async function POST(request: Request) {
   try {
-    if (process.env.NODE_ENV !== "production") {
+    if (isDevelopment) {
       return NextResponse.json({ status: "Event is ignored" });
     }
 
-    if (!process.env.MIXPANEL_TOKEN) {
-      return NextResponse.json(
-        { error: "Missing Mixpanel token" },
-        { status: 500 },
-      );
-    }
-
     const Mixpanel = (await import("mixpanel")).default;
-    const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
+    const mixpanel = Mixpanel.init(privateConfig.analytics.mixpanelToken);
 
     const data = await request.json();
     const { event, properties } = data;
