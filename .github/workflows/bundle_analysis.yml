@@ -48,4 +48,4 @@ jobs:
           default-branch: main
           dist-folder: .next
           budget: 200
-          github-token: ${{ secrets.CREATE_OR_UPDATE_COMMENT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
