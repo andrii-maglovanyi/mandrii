@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 
+import { UrlHelper } from "./url-helper";
 import { getPlatform } from "./utils/platform";
 import { storage } from "./utils/storage";
 
@@ -31,7 +32,7 @@ export const sendToMixpanel = (
   eventName: string,
   eventProperties?: EventProperties,
 ): void => {
-  if (window.location.hostname === "localhost") {
+  if (window.location.hostname !== UrlHelper.getProductionHostname()) {
     return;
   }
 
