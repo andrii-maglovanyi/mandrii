@@ -2,12 +2,12 @@ import { captureException } from "@sentry/nextjs";
 import { NextResponse } from "next/server";
 
 import { auth } from "~/lib/auth";
-import { isDevelopment } from "~/lib/config/env";
+import { isProduction } from "~/lib/config/env";
 import { privateConfig } from "~/lib/config/private";
 
 export async function POST(request: Request) {
   try {
-    if (isDevelopment) {
+    if (!isProduction) {
       return NextResponse.json({ status: "Event is ignored" });
     }
 
