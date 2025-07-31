@@ -33,7 +33,7 @@ export function getEnvVar(
 
 export const privateConfig: PrivateConfig = {
   analytics: {
-    mixpanelToken: getEnvVar("MIXPANEL_TOKEN"),
+    mixpanelToken: getEnvVar("MIXPANEL_TOKEN", false),
     sentryAuthToken: getEnvVar("SENTRY_AUTH_TOKEN"),
   },
   auth: {
