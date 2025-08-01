@@ -1,5 +1,6 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from "next-intl/plugin";
+import { execSync } from 'child_process';
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -35,6 +36,11 @@ const nextConfig = {
       },
     ];
   },
+  env: {
+    VERCEL_ENV: process.env.VERCEL_ENV || process.env.NODE_ENV,
+    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA || execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim(),
+    BUILD_TIME: new Date().toISOString(),
+  }
 };
 
 export default withSentryConfig(withNextIntl(nextConfig), {
