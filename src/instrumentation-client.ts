@@ -1,8 +1,10 @@
 import * as Sentry from "@sentry/nextjs";
 
+import { publicConfig } from "./lib/config/public";
+
 Sentry.init({
   debug: false,
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  dsn: publicConfig.analytics.sentryDsn,
   tracesSampleRate: 1,
 });
 

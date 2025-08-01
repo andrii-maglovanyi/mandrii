@@ -11,6 +11,7 @@ import {
 import { Button, Input, Separator, SvgIcon } from "~/components/ui";
 import { useForm } from "~/hooks/useForm";
 import { useI18n } from "~/i18n/useI18n";
+import { publicConfig } from "~/lib/config/public";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { getEmailFormSchema } from "~/lib/validation/email";
 
@@ -108,9 +109,7 @@ const SignIn = () => {
 
 export function SignInForm() {
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-    >
+    <GoogleReCaptchaProvider reCaptchaKey={publicConfig.recaptcha.siteKey}>
       <SignIn />
     </GoogleReCaptchaProvider>
   );

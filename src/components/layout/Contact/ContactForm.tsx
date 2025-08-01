@@ -13,6 +13,7 @@ import { MixpanelTracker } from "~/components/layout";
 import { Alert, Button, Input, Textarea } from "~/components/ui";
 import { useForm } from "~/hooks/useForm";
 import { useI18n } from "~/i18n/useI18n";
+import { publicConfig } from "~/lib/config/public";
 import { getContactFormSchema } from "~/lib/validation/contact";
 
 const Contact = () => {
@@ -157,9 +158,7 @@ const Contact = () => {
 
 export function ContactForm() {
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-    >
+    <GoogleReCaptchaProvider reCaptchaKey={publicConfig.recaptcha.siteKey}>
       <Contact />
     </GoogleReCaptchaProvider>
   );
