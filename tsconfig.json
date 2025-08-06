@@ -11,6 +11,8 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "incremental": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
     "module": "esnext",
     "esModuleInterop": true,
     "moduleResolution": "bundler",

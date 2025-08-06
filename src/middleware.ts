@@ -28,7 +28,8 @@ export const config = {
         { key: "next-router-prefetch", type: "header" },
         { key: "purpose", type: "header", value: "prefetch" },
       ],
-      source: "/((?!admin|api|_next/static|_next/image|static|favicon.ico).*)",
+      source:
+        "/((?!admin|api|cv|_next/static|_next/image|static|favicon.ico).*)",
     },
   ],
 };
