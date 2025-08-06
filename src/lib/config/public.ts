@@ -2,6 +2,11 @@ interface PublicConfig {
   analytics: {
     sentryDsn: string;
   };
+  deploymentInfo: {
+    buildTime: string;
+    commitSha?: string;
+    environment: string;
+  };
   hasura: {
     endpoint: string;
   };
@@ -17,6 +22,11 @@ interface PublicConfig {
 export const publicConfig: PublicConfig = {
   analytics: {
     sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN || "__UNSET__",
+  },
+  deploymentInfo: {
+    buildTime: process.env.BUILD_TIME || "~",
+    commitSha: process.env.VERCEL_GIT_COMMIT_SHA || "~",
+    environment: process.env.VERCEL_ENV || "~",
   },
   hasura: {
     endpoint: process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT || "__UNSET__",
