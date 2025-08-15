@@ -21,9 +21,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   if (!session?.user) {
     return redirect(
-      `https://mandrii.com/api/auth/signin?callbackUrl=${encodeURIComponent(
-        "https://admin.mandrii.com",
-      )}`,
+      `https://mandrii.com/api/auth/signin?callbackUrl=${encodeURIComponent("https://admin.mandrii.com")}`,
     );
   }
 

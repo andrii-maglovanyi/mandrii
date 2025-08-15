@@ -1,5 +1,8 @@
+import { NotificationsTicker } from "~/components/layout";
+
 import "../globals.css";
 
+import { NotificationsProvider } from "~/contexts/NotificationsContext";
 import { ThemeProvider } from "~/contexts/ThemeContext";
 
 type RootLayoutProps = Readonly<{
@@ -11,7 +14,12 @@ export default async function CVLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <NotificationsProvider>
+            {children}
+            <NotificationsTicker />
+          </NotificationsProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

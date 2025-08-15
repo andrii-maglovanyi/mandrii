@@ -1,11 +1,7 @@
 import { useEffect } from "react";
 
 import { sendToMixpanel } from "~/lib/mixpanel";
-import {
-  GetPublicLocationsQuery,
-  Location_Status_Enum,
-  Locations,
-} from "~/types";
+import { GetPublicLocationsQuery, Location_Status_Enum, Locations } from "~/types";
 import { UUID } from "~/types/uuid";
 
 import { COLOR_STYLES } from "./constants";
@@ -93,13 +89,7 @@ function createAndAddMarker(
   props: Props,
   STYLES: typeof COLOR_STYLES.LIGHT,
 ) {
-  const {
-    labelSpansRef,
-    mapRef,
-    markersRef,
-    onLocationSelected,
-    selectedLocationId,
-  } = props;
+  const { labelSpansRef, mapRef, markersRef, onLocationSelected, selectedLocationId } = props;
   if (!geo || !mapRef.current) return;
   const isSelected = id === selectedLocationId;
   const contentDiv = document.createElement("div");
@@ -151,11 +141,7 @@ function createArrowDiv(
   arrowDiv.style.transform = "translateX(-50%)";
   arrowDiv.style.width = "0";
   arrowDiv.style.borderTop = `4px solid ${
-    status === Location_Status_Enum.Pending
-      ? STYLES.bgPending
-      : isSelected
-        ? STYLES.bgActive
-        : STYLES.bg
+    status === Location_Status_Enum.Pending ? STYLES.bgPending : isSelected ? STYLES.bgActive : STYLES.bg
   }`;
   return arrowDiv;
 }
@@ -187,15 +173,11 @@ function drawMarkers(props: Props, STYLES: typeof COLOR_STYLES.LIGHT) {
   const { labelSpansRef, locations, mapRef, markersRef } = props;
   if (mapRef.current && locations) {
     clearMarkers(markersRef, labelSpansRef);
-    locations.forEach((location) =>
-      createAndAddMarker(location, props, STYLES),
-    );
+    locations.forEach((location) => createAndAddMarker(location, props, STYLES));
   }
 }
 
 function getTextContent(name: string, maxNumWords = 3): string {
   const words = name.split(" ");
-  return words.length > maxNumWords
-    ? `${words.slice(0, maxNumWords).join(" ")}...`
-    : name;
+  return words.length > maxNumWords ? `${words.slice(0, maxNumWords).join(" ")}...` : name;
 }

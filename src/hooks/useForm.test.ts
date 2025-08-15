@@ -11,9 +11,7 @@ const schema = z.object({
 
 describe("useForm", () => {
   it("initializes with empty or provided values", () => {
-    const { result } = renderHook(() =>
-      useForm({ initialValues: { name: "John" }, schema }),
-    );
+    const { result } = renderHook(() => useForm({ initialValues: { name: "John" }, schema }));
     expect(result.current.values.name).toBe("John");
     expect(result.current.values.email).toBe("");
   });
@@ -75,9 +73,7 @@ describe("useForm", () => {
     const { result } = renderHook(() => useForm({ schema }));
 
     act(() => {
-      result.current.setFieldErrorsFromServer([
-        { code: "custom", message: "Email already taken", path: ["email"] },
-      ]);
+      result.current.setFieldErrorsFromServer([{ code: "custom", message: "Email already taken", path: ["email"] }]);
     });
 
     expect(result.current.errors.email).toBe("Email already taken");

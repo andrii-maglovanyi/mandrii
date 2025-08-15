@@ -21,9 +21,7 @@ type RootLayoutProps = Readonly<{
   params: Promise<{ locale: string }>;
 }>;
 
-export async function generateMetadata({
-  params,
-}: RootLayoutProps): Promise<Metadata> {
+export async function generateMetadata({ params }: RootLayoutProps): Promise<Metadata> {
   const { locale } = await params;
   const isUkrainian = locale === "uk";
 
@@ -40,9 +38,7 @@ export async function generateMetadata({
       : "travel / dream / act - a space for travelers and dreamers",
     metadataBase: new URL(UrlHelper.getBaseUrl()),
     openGraph: {
-      description: isUkrainian
-        ? "мандруй / мрій / дій"
-        : "travel / dream / act",
+      description: isUkrainian ? "мандруй / мрій / дій" : "travel / dream / act",
       images: ["/assets/logo/mandrii.png"],
       locale: isUkrainian ? "uk_UA" : "en_US",
       siteName: isUkrainian ? "Мандрій" : "Mandrii",
@@ -67,10 +63,7 @@ const setInitialTheme = `
   })();
 `;
 
-export default async function RootLayout({
-  children,
-  params,
-}: RootLayoutProps) {
+export default async function RootLayout({ children, params }: RootLayoutProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();

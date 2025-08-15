@@ -18,17 +18,7 @@ interface ListCardProps {
 
 export const ListCard = ({ location, onClick, selectedId }: ListCardProps) => {
   const i18n = useI18n();
-  const {
-    address,
-    description_en,
-    description_uk,
-    emails,
-    id,
-    name,
-    phone_numbers,
-    slug,
-    website,
-  } = location;
+  const { address, description_en, description_uk, emails, id, name, phone_numbers, slug, website } = location;
 
   const locale = useLocale();
 
@@ -41,11 +31,7 @@ export const ListCard = ({ location, onClick, selectedId }: ListCardProps) => {
   };
 
   return (
-    <div
-      className="flex flex-col pt-[2px] pb-2"
-      id={String(id)}
-      key={id.toString()}
-    >
+    <div className="flex flex-col pt-[2px] pb-2" id={String(id)} key={id.toString()}>
       <section
         aria-label={`Location: ${name}`}
         className={clsx(
@@ -80,34 +66,15 @@ export const ListCard = ({ location, onClick, selectedId }: ListCardProps) => {
             <h3 className="text-lg font-semibold">{name}</h3>
 
             <RichText as="p">
-              {(
-                (locale === "en" ? description_en : description_uk) ?? ""
-              ).replaceAll("\n", "<br />")}
+              {((locale === "en" ? description_en : description_uk) ?? "").replaceAll("\n", "<br />")}
             </RichText>
           </div>
 
           <div className="mt-4 flex flex-col text-sm">
-            <InfoLine
-              icon={<Globe size={16} />}
-              info={website}
-              isLink
-              tooltipText="Copy website"
-            />
-            <InfoLine
-              icon={<AtSign size={16} />}
-              info={emails?.join(", ")}
-              tooltipText="Copy email"
-            />
-            <InfoLine
-              icon={<Phone size={16} />}
-              info={phone_numbers?.join(", ")}
-              tooltipText="Copy phone number"
-            />
-            <InfoLine
-              icon={<MapPin size={16} />}
-              info={address}
-              tooltipText="Copy address"
-            />
+            <InfoLine icon={<Globe size={16} />} info={website} isLink tooltipText="Copy website" />
+            <InfoLine icon={<AtSign size={16} />} info={emails?.join(", ")} tooltipText="Copy email" />
+            <InfoLine icon={<Phone size={16} />} info={phone_numbers?.join(", ")} tooltipText="Copy phone number" />
+            <InfoLine icon={<MapPin size={16} />} info={address} tooltipText="Copy address" />
           </div>
         </div>
       </section>

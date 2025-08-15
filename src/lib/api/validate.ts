@@ -9,10 +9,7 @@ export async function validateRequest<T>(
 
   if (!result.success) {
     return {
-      error: Response.json(
-        { details: result.error.issues, error: "Invalid input" },
-        { status: 400 },
-      ),
+      error: Response.json({ details: result.error.issues, error: "Invalid input" }, { status: 400 }),
     };
   }
 

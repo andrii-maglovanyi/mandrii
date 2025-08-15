@@ -15,10 +15,7 @@ export type Incremental<T> =
     }
   | T;
 export type InputMaybe<T> = Maybe<T>;
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T,
-> = { [_ in K]?: never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type MakeMaybe<T, K extends keyof T> = {
   [SubKey in K]: Maybe<T[SubKey]>;
 } & Omit<T, K>;
@@ -1791,17 +1788,13 @@ export type Mutation_Root = {
   /** update single row of the table: "location_category" */
   update_location_category_by_pk?: Maybe<Location_Category>;
   /** update multiples rows of table: "location_category" */
-  update_location_category_many?: Maybe<
-    Array<Maybe<Location_Category_Mutation_Response>>
-  >;
+  update_location_category_many?: Maybe<Array<Maybe<Location_Category_Mutation_Response>>>;
   /** update data of the table: "location_status" */
   update_location_status?: Maybe<Location_Status_Mutation_Response>;
   /** update single row of the table: "location_status" */
   update_location_status_by_pk?: Maybe<Location_Status>;
   /** update multiples rows of table: "location_status" */
-  update_location_status_many?: Maybe<
-    Array<Maybe<Location_Status_Mutation_Response>>
-  >;
+  update_location_status_many?: Maybe<Array<Maybe<Location_Status_Mutation_Response>>>;
   /** update data of the table: "locations" */
   update_locations?: Maybe<Locations_Mutation_Response>;
   /** update single row of the table: "locations" */
@@ -1813,9 +1806,7 @@ export type Mutation_Root = {
   /** update single row of the table: "provider_type" */
   update_provider_type_by_pk?: Maybe<Provider_Type>;
   /** update multiples rows of table: "provider_type" */
-  update_provider_type_many?: Maybe<
-    Array<Maybe<Provider_Type_Mutation_Response>>
-  >;
+  update_provider_type_many?: Maybe<Array<Maybe<Provider_Type_Mutation_Response>>>;
   /** update data of the table: "sessions" */
   update_sessions?: Maybe<Sessions_Mutation_Response>;
   /** update single row of the table: "sessions" */
@@ -1845,9 +1836,7 @@ export type Mutation_Root = {
   /** update single row of the table: "verification_tokens" */
   update_verification_tokens_by_pk?: Maybe<Verification_Tokens>;
   /** update multiples rows of table: "verification_tokens" */
-  update_verification_tokens_many?: Maybe<
-    Array<Maybe<Verification_Tokens_Mutation_Response>>
-  >;
+  update_verification_tokens_many?: Maybe<Array<Maybe<Verification_Tokens_Mutation_Response>>>;
 };
 
 /** mutation root */
@@ -3994,30 +3983,21 @@ export const GetPublicLocationsDocument = gql`
   }
 `;
 
-export type GetPublicLocationsLazyQueryHookResult = ReturnType<
-  typeof useGetPublicLocationsLazyQuery
->;
-export type GetPublicLocationsQueryHookResult = ReturnType<
-  typeof useGetPublicLocationsQuery
->;
+export type GetPublicLocationsLazyQueryHookResult = ReturnType<typeof useGetPublicLocationsLazyQuery>;
+export type GetPublicLocationsQueryHookResult = ReturnType<typeof useGetPublicLocationsQuery>;
 export type GetPublicLocationsQueryResult = Apollo.QueryResult<
   GetPublicLocationsQuery,
   GetPublicLocationsQueryVariables
 >;
-export type GetPublicLocationsSuspenseQueryHookResult = ReturnType<
-  typeof useGetPublicLocationsSuspenseQuery
->;
+export type GetPublicLocationsSuspenseQueryHookResult = ReturnType<typeof useGetPublicLocationsSuspenseQuery>;
 export function useGetPublicLocationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetPublicLocationsQuery,
-    GetPublicLocationsQueryVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPublicLocationsQuery, GetPublicLocationsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetPublicLocationsQuery,
-    GetPublicLocationsQueryVariables
-  >(GetPublicLocationsDocument, options);
+  return Apollo.useLazyQuery<GetPublicLocationsQuery, GetPublicLocationsQueryVariables>(
+    GetPublicLocationsDocument,
+    options,
+  );
 }
 /**
  * __useGetPublicLocationsQuery__
@@ -4036,37 +4016,25 @@ export function useGetPublicLocationsLazyQuery(
  * });
  */
 export function useGetPublicLocationsQuery(
-  baseOptions: (
-    | { skip: boolean }
-    | { skip?: boolean; variables: GetPublicLocationsQueryVariables }
-  ) &
-    Apollo.QueryHookOptions<
-      GetPublicLocationsQuery,
-      GetPublicLocationsQueryVariables
-    >,
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicLocationsQueryVariables }) &
+    Apollo.QueryHookOptions<GetPublicLocationsQuery, GetPublicLocationsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetPublicLocationsQuery,
-    GetPublicLocationsQueryVariables
-  >(GetPublicLocationsDocument, options);
+  return Apollo.useQuery<GetPublicLocationsQuery, GetPublicLocationsQueryVariables>(
+    GetPublicLocationsDocument,
+    options,
+  );
 }
 export function useGetPublicLocationsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetPublicLocationsQuery,
-        GetPublicLocationsQueryVariables
-      >,
+    | Apollo.SuspenseQueryHookOptions<GetPublicLocationsQuery, GetPublicLocationsQueryVariables>,
 ) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetPublicLocationsQuery,
-    GetPublicLocationsQueryVariables
-  >(GetPublicLocationsDocument, options);
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetPublicLocationsQuery, GetPublicLocationsQueryVariables>(
+    GetPublicLocationsDocument,
+    options,
+  );
 }
 export const GetUserLocationsDocument = gql`
   query GetUserLocations($where: locations_bool_exp!) {
@@ -4094,30 +4062,15 @@ export const GetUserLocationsDocument = gql`
   }
 `;
 
-export type GetUserLocationsLazyQueryHookResult = ReturnType<
-  typeof useGetUserLocationsLazyQuery
->;
-export type GetUserLocationsQueryHookResult = ReturnType<
-  typeof useGetUserLocationsQuery
->;
-export type GetUserLocationsQueryResult = Apollo.QueryResult<
-  GetUserLocationsQuery,
-  GetUserLocationsQueryVariables
->;
-export type GetUserLocationsSuspenseQueryHookResult = ReturnType<
-  typeof useGetUserLocationsSuspenseQuery
->;
+export type GetUserLocationsLazyQueryHookResult = ReturnType<typeof useGetUserLocationsLazyQuery>;
+export type GetUserLocationsQueryHookResult = ReturnType<typeof useGetUserLocationsQuery>;
+export type GetUserLocationsQueryResult = Apollo.QueryResult<GetUserLocationsQuery, GetUserLocationsQueryVariables>;
+export type GetUserLocationsSuspenseQueryHookResult = ReturnType<typeof useGetUserLocationsSuspenseQuery>;
 export function useGetUserLocationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUserLocationsQuery,
-    GetUserLocationsQueryVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<GetUserLocationsQuery, GetUserLocationsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetUserLocationsQuery,
-    GetUserLocationsQueryVariables
-  >(GetUserLocationsDocument, options);
+  return Apollo.useLazyQuery<GetUserLocationsQuery, GetUserLocationsQueryVariables>(GetUserLocationsDocument, options);
 }
 /**
  * __useGetUserLocationsQuery__
@@ -4136,37 +4089,22 @@ export function useGetUserLocationsLazyQuery(
  * });
  */
 export function useGetUserLocationsQuery(
-  baseOptions: (
-    | { skip: boolean }
-    | { skip?: boolean; variables: GetUserLocationsQueryVariables }
-  ) &
-    Apollo.QueryHookOptions<
-      GetUserLocationsQuery,
-      GetUserLocationsQueryVariables
-    >,
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserLocationsQueryVariables }) &
+    Apollo.QueryHookOptions<GetUserLocationsQuery, GetUserLocationsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetUserLocationsQuery, GetUserLocationsQueryVariables>(
-    GetUserLocationsDocument,
-    options,
-  );
+  return Apollo.useQuery<GetUserLocationsQuery, GetUserLocationsQueryVariables>(GetUserLocationsDocument, options);
 }
 export function useGetUserLocationsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetUserLocationsQuery,
-        GetUserLocationsQueryVariables
-      >,
+    | Apollo.SuspenseQueryHookOptions<GetUserLocationsQuery, GetUserLocationsQueryVariables>,
 ) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetUserLocationsQuery,
-    GetUserLocationsQueryVariables
-  >(GetUserLocationsDocument, options);
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetUserLocationsQuery, GetUserLocationsQueryVariables>(
+    GetUserLocationsDocument,
+    options,
+  );
 }
 export const GetAdminLocationsDocument = gql`
   query GetAdminLocations($where: locations_bool_exp!) {
@@ -4195,30 +4133,18 @@ export const GetAdminLocationsDocument = gql`
   }
 `;
 
-export type GetAdminLocationsLazyQueryHookResult = ReturnType<
-  typeof useGetAdminLocationsLazyQuery
->;
-export type GetAdminLocationsQueryHookResult = ReturnType<
-  typeof useGetAdminLocationsQuery
->;
-export type GetAdminLocationsQueryResult = Apollo.QueryResult<
-  GetAdminLocationsQuery,
-  GetAdminLocationsQueryVariables
->;
-export type GetAdminLocationsSuspenseQueryHookResult = ReturnType<
-  typeof useGetAdminLocationsSuspenseQuery
->;
+export type GetAdminLocationsLazyQueryHookResult = ReturnType<typeof useGetAdminLocationsLazyQuery>;
+export type GetAdminLocationsQueryHookResult = ReturnType<typeof useGetAdminLocationsQuery>;
+export type GetAdminLocationsQueryResult = Apollo.QueryResult<GetAdminLocationsQuery, GetAdminLocationsQueryVariables>;
+export type GetAdminLocationsSuspenseQueryHookResult = ReturnType<typeof useGetAdminLocationsSuspenseQuery>;
 export function useGetAdminLocationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAdminLocationsQuery,
-    GetAdminLocationsQueryVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAdminLocationsQuery, GetAdminLocationsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetAdminLocationsQuery,
-    GetAdminLocationsQueryVariables
-  >(GetAdminLocationsDocument, options);
+  return Apollo.useLazyQuery<GetAdminLocationsQuery, GetAdminLocationsQueryVariables>(
+    GetAdminLocationsDocument,
+    options,
+  );
 }
 /**
  * __useGetAdminLocationsQuery__
@@ -4237,37 +4163,22 @@ export function useGetAdminLocationsLazyQuery(
  * });
  */
 export function useGetAdminLocationsQuery(
-  baseOptions: (
-    | { skip: boolean }
-    | { skip?: boolean; variables: GetAdminLocationsQueryVariables }
-  ) &
-    Apollo.QueryHookOptions<
-      GetAdminLocationsQuery,
-      GetAdminLocationsQueryVariables
-    >,
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminLocationsQueryVariables }) &
+    Apollo.QueryHookOptions<GetAdminLocationsQuery, GetAdminLocationsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetAdminLocationsQuery,
-    GetAdminLocationsQueryVariables
-  >(GetAdminLocationsDocument, options);
+  return Apollo.useQuery<GetAdminLocationsQuery, GetAdminLocationsQueryVariables>(GetAdminLocationsDocument, options);
 }
 export function useGetAdminLocationsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetAdminLocationsQuery,
-        GetAdminLocationsQueryVariables
-      >,
+    | Apollo.SuspenseQueryHookOptions<GetAdminLocationsQuery, GetAdminLocationsQueryVariables>,
 ) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetAdminLocationsQuery,
-    GetAdminLocationsQueryVariables
-  >(GetAdminLocationsDocument, options);
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetAdminLocationsQuery, GetAdminLocationsQueryVariables>(
+    GetAdminLocationsDocument,
+    options,
+  );
 }
 export const UpdateLocationStatusDocument = gql`
   mutation UpdateLocationStatus($id: uuid!, $status: location_status_enum!) {
@@ -4283,15 +4194,12 @@ export type UpdateLocationStatusMutationFn = Apollo.MutationFunction<
   UpdateLocationStatusMutationVariables
 >;
 
-export type UpdateLocationStatusMutationHookResult = ReturnType<
-  typeof useUpdateLocationStatusMutation
->;
+export type UpdateLocationStatusMutationHookResult = ReturnType<typeof useUpdateLocationStatusMutation>;
 export type UpdateLocationStatusMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationStatusMutation,
   UpdateLocationStatusMutationVariables
 >;
-export type UpdateLocationStatusMutationResult =
-  Apollo.MutationResult<UpdateLocationStatusMutation>;
+export type UpdateLocationStatusMutationResult = Apollo.MutationResult<UpdateLocationStatusMutation>;
 /**
  * __useUpdateLocationStatusMutation__
  *
@@ -4311,14 +4219,11 @@ export type UpdateLocationStatusMutationResult =
  * });
  */
 export function useUpdateLocationStatusMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateLocationStatusMutation,
-    UpdateLocationStatusMutationVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<UpdateLocationStatusMutation, UpdateLocationStatusMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateLocationStatusMutation,
-    UpdateLocationStatusMutationVariables
-  >(UpdateLocationStatusDocument, options);
+  return Apollo.useMutation<UpdateLocationStatusMutation, UpdateLocationStatusMutationVariables>(
+    UpdateLocationStatusDocument,
+    options,
+  );
 }

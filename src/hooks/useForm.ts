@@ -13,10 +13,7 @@ export function useForm<T extends z.ZodRawShape>(config: {
   type Touched = Partial<Record<FieldKey, boolean>>;
 
   const [values, setValues] = useState<FormData>(() => {
-    const entries = Object.keys(schema.shape).map((key) => [
-      key,
-      (initialValues as Record<string, string>)[key] ?? "",
-    ]);
+    const entries = Object.keys(schema.shape).map((key) => [key, (initialValues as Record<string, string>)[key] ?? ""]);
     return Object.fromEntries(entries) as FormData;
   });
 
@@ -28,9 +25,7 @@ export function useForm<T extends z.ZodRawShape>(config: {
     const result = schemaField.safeParse(value);
     setErrors((prev) => ({
       ...prev,
-      [field]: result.success
-        ? undefined
-        : (result.error.issues[0]?.message ?? "Invalid input"),
+      [field]: result.success ? undefined : (result.error.issues[0]?.message ?? "Invalid input"),
     }));
   };
 
@@ -47,8 +42,7 @@ export function useForm<T extends z.ZodRawShape>(config: {
   const getFieldProps = (field: FieldKey) => ({
     error: errors[field],
     onBlur: handleBlur(field),
-    onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-      handleChange(field)(e.target.value),
+    onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(field)(e.target.value),
     showErrorMessage: true,
     value: values[field],
   });
@@ -87,9 +81,7 @@ export function useForm<T extends z.ZodRawShape>(config: {
     setErrors(newErrors);
   };
 
-  const isFormValid =
-    schema.safeParse(values).success &&
-    Object.keys(errors).every((key) => !errors[key as FieldKey]);
+  const isFormValid = schema.safeParse(values).success && Object.keys(errors).every((key) => !errors[key as FieldKey]);
 
   return {
     errors,

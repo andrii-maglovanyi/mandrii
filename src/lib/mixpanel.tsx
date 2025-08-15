@@ -28,10 +28,7 @@ function getUserID(): string {
   return userID;
 }
 
-export const sendToMixpanel = (
-  eventName: string,
-  eventProperties?: EventProperties,
-): void => {
+export const sendToMixpanel = (eventName: string, eventProperties?: EventProperties): void => {
   if (window.location.hostname !== UrlHelper.getProductionHostname()) {
     return;
   }
@@ -56,14 +53,10 @@ export const sendToMixpanel = (
 
     const urlParams = new URLSearchParams(window.location.search);
     const utmParams: Record<string, string | undefined> = Object.fromEntries(
-      [
-        "utm_source",
-        "utm_medium",
-        "utm_campaign",
-        "utm_term",
-        "utm_content",
-        "id",
-      ].map((key) => [key, urlParams.get(key) ?? undefined]),
+      ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "id"].map((key) => [
+        key,
+        urlParams.get(key) ?? undefined,
+      ]),
     );
 
     const userID = getUserID();
@@ -72,17 +65,14 @@ export const sendToMixpanel = (
 
     const additionalProperties: Record<string, unknown> = {
       $browser: userAgent,
-      $browser_version:
-        typeof navigator !== "undefined" ? navigator.userAgent : "Unknown",
+      $browser_version: typeof navigator !== "undefined" ? navigator.userAgent : "Unknown",
       $city: locationData?.city ?? "Unknown",
       $continent: locationData?.continent ?? "Unknown",
       $current_url: window.location.href,
       $device: platform,
       $device_id: userAgent,
       $initial_referrer: document.referrer || undefined,
-      $initial_referring_domain: document.referrer
-        ? new URL(document.referrer).hostname
-        : undefined,
+      $initial_referring_domain: document.referrer ? new URL(document.referrer).hostname : undefined,
       $os: platform,
       $region: locationData?.regionName ?? "Unknown",
       $screen_height: window.screen?.height ?? 0,

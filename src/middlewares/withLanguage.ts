@@ -8,10 +8,7 @@ import { MiddlewareFactory } from "./stackHandler";
 const intlMiddleware = createMiddleware(routing);
 
 export const withLanguage: MiddlewareFactory = (next) => {
-  return async function middleware(
-    request: NextRequest,
-    event: NextFetchEvent,
-  ) {
+  return async function middleware(request: NextRequest, event: NextFetchEvent) {
     const intlResponse = await intlMiddleware(request);
 
     // If intl handled the response, return it (i.e. redirect or locale injection)

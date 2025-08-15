@@ -9,11 +9,7 @@ const compat = new FlatCompat({
 });
 
 export default [
-  ...compat.extends(
-    "next/core-web-vitals",
-    "next/typescript",
-    "plugin:storybook/recommended",
-  ),
+  ...compat.extends("next/core-web-vitals", "next/typescript", "plugin:storybook/recommended"),
   {
     files: ["src/**/*.test.{ts,tsx}"],
     plugins: {

@@ -27,9 +27,7 @@ test.describe("Authentication Providers", () => {
     await page.getByLabel(/email address/i).fill("tester@mandrii.com");
 
     await Promise.all([
-      page.waitForResponse((res) =>
-        res.url().includes("/api/auth/signin/resend"),
-      ),
+      page.waitForResponse((res) => res.url().includes("/api/auth/signin/resend")),
       page.getByRole("button", { name: /sign in with email/i }).click(),
     ]);
 
@@ -54,9 +52,7 @@ test.describe("Authentication Providers", () => {
     await expect(page.getByText(signInModalTitle)).toBeVisible();
 
     await Promise.all([
-      page.waitForResponse((res) =>
-        res.url().includes("/api/auth/signin/google"),
-      ),
+      page.waitForResponse((res) => res.url().includes("/api/auth/signin/google")),
       page.getByRole("button", { name: /sign in with google/i }).click(),
     ]);
   });
@@ -83,9 +79,7 @@ test.describe("Authenticated user profile menu", () => {
 
     await page.goto("/", { waitUntil: "networkidle" });
 
-    await expect(
-      page.getByRole("button", { name: /sign in/i }),
-    ).not.toBeVisible();
+    await expect(page.getByRole("button", { name: /sign in/i })).not.toBeVisible();
 
     const profileButton = page.getByRole("button", { name: /profile/i });
     await expect(profileButton).toBeVisible();

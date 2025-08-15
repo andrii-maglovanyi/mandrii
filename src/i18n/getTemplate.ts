@@ -1,7 +1,4 @@
-export const getTemplate = (
-  template: string,
-  options?: Record<string, Date | number | string>,
-) => {
+export const getTemplate = (template: string, options?: Record<string, Date | number | string>) => {
   if (!options) return template;
 
   return template.replace(/\{([^{}]+)\}/g, (_, key) => {

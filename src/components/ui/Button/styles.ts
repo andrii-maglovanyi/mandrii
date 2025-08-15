@@ -4,10 +4,8 @@ export const baseClass = `inline-flex cursor-pointer items-center justify-center
 
 export const variantClasses = {
   filled: {
-    neutral:
-      "bg-neutral text-surface hover:bg-neutral-hover disabled:bg-neutral-disabled disabled:text-surface/80",
-    primary:
-      "bg-primary text-surface hover:bg-primary-hover disabled:bg-primary-disabled disabled:text-surface/80",
+    neutral: "bg-neutral text-surface hover:bg-neutral-hover disabled:bg-neutral-disabled disabled:text-surface/80",
+    primary: "bg-primary text-surface hover:bg-primary-hover disabled:bg-primary-disabled disabled:text-surface/80",
   },
   ghost: {
     neutral:

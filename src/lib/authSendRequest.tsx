@@ -21,9 +21,7 @@ type SendVerificationRequestParams = {
   url: string;
 };
 
-export async function sendVerificationRequest(
-  params: SendVerificationRequestParams,
-) {
+export async function sendVerificationRequest(params: SendVerificationRequestParams) {
   const { identifier: to, provider, url } = params;
 
   const { searchParams } = new URL(params.request.url);
@@ -52,8 +50,7 @@ export async function sendVerificationRequest(
     method: "POST",
   });
 
-  if (!res.ok)
-    throw new Error("Resend error: " + JSON.stringify(await res.json()));
+  if (!res.ok) throw new Error("Resend error: " + JSON.stringify(await res.json()));
 }
 
 async function html({ i18n, url }: EmailPrams) {

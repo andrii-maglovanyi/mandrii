@@ -10,12 +10,7 @@ export interface FormDialogProps extends ModalProps {
 
 export type FormProps = Pick<ModalProps, "children" | "title">;
 
-export const FormDialog = ({
-  children,
-  onClose,
-  onSubmit,
-  ...props
-}: FormDialogProps) => {
+export const FormDialog = ({ children, onClose, onSubmit, ...props }: FormDialogProps) => {
   const i18n = useI18n();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

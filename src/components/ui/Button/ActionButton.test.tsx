@@ -19,35 +19,20 @@ describe("ActionButton", () => {
   });
 
   it("applies correct size class", () => {
-    render(
-      <ActionButton aria-label="small button" icon={<MockIcon />} size="sm" />,
-    );
+    render(<ActionButton aria-label="small button" icon={<MockIcon />} size="sm" />);
     const button = screen.getByRole("button", { name: "small button" });
     expect(button).toHaveClass("w-8", "h-8");
   });
 
   it("applies correct variant and type classes", () => {
-    render(
-      <ActionButton
-        aria-label="ghost primary"
-        color="primary"
-        icon={<MockIcon />}
-        variant="ghost"
-      />,
-    );
+    render(<ActionButton aria-label="ghost primary" color="primary" icon={<MockIcon />} variant="ghost" />);
     const button = screen.getByRole("button", { name: "ghost primary" });
     expect(button).toHaveClass("bg-transparent", "text-primary");
   });
 
   it("triggers onClick handler", async () => {
     const onClick = vi.fn();
-    render(
-      <ActionButton
-        aria-label="click me"
-        icon={<MockIcon />}
-        onClick={onClick}
-      />,
-    );
+    render(<ActionButton aria-label="click me" icon={<MockIcon />} onClick={onClick} />);
     const button = screen.getByRole("button", { name: "click me" });
 
     await userEvent.click(button);
@@ -56,14 +41,7 @@ describe("ActionButton", () => {
 
   it("does not trigger onClick if disabled", async () => {
     const onClick = vi.fn();
-    render(
-      <ActionButton
-        aria-label="disabled"
-        disabled
-        icon={<MockIcon />}
-        onClick={onClick}
-      />,
-    );
+    render(<ActionButton aria-label="disabled" disabled icon={<MockIcon />} onClick={onClick} />);
     const button = screen.getByRole("button", { name: "disabled" });
 
     await userEvent.click(button);
@@ -72,13 +50,7 @@ describe("ActionButton", () => {
   });
 
   it("supports custom className", () => {
-    render(
-      <ActionButton
-        aria-label="with extra class"
-        className="md:hidden"
-        icon={<MockIcon />}
-      />,
-    );
+    render(<ActionButton aria-label="with extra class" className="md:hidden" icon={<MockIcon />} />);
     const button = screen.getByRole("button", { name: "with extra class" });
     expect(button).toHaveClass("md:hidden");
   });

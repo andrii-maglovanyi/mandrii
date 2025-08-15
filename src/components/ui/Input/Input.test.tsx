@@ -7,10 +7,7 @@ import { Input } from "./Input";
 describe("Input", () => {
   it("renders with label and placeholder", () => {
     render(<Input label="Email" placeholder="your@email.com" />);
-    expect(screen.getByLabelText("Email")).toHaveAttribute(
-      "placeholder",
-      "your@email.com",
-    );
+    expect(screen.getByLabelText("Email")).toHaveAttribute("placeholder", "your@email.com");
   });
 
   it("calls onChange when user types", async () => {

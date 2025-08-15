@@ -11,12 +11,7 @@ export type ConfirmProps = {
   message: string;
 } & Pick<ModalProps, "title">;
 
-export const ConfirmDialog = ({
-  message,
-  onClose,
-  onConfirm,
-  ...props
-}: ConfirmDialogProps) => {
+export const ConfirmDialog = ({ message, onClose, onConfirm, ...props }: ConfirmDialogProps) => {
   const i18n = useI18n();
 
   return (

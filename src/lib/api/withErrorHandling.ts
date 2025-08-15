@@ -1,13 +1,9 @@
 import { captureException } from "@sentry/nextjs";
 
-export async function withErrorHandling(
-  handler: () => Promise<Response | undefined>,
-): Promise<Response> {
+export async function withErrorHandling(handler: () => Promise<Response | undefined>): Promise<Response> {
   try {
     const result = await handler();
-    return (
-      result ?? Response.json({ error: "Empty response" }, { status: 500 })
-    );
+    return result ?? Response.json({ error: "Empty response" }, { status: 500 });
   } catch (error) {
     captureException(error);
     console.error("API Error:", error);

@@ -41,12 +41,7 @@ const Template: StoryFn<typeof Input> = (args) => {
 
   return (
     <div className="w-full min-w-md">
-      <Input
-        {...args}
-        onChange={(e) => setValue(e.target.value)}
-        onSelectSuggestion={setValue}
-        value={value}
-      />
+      <Input {...args} onChange={(e) => setValue(e.target.value)} onSelectSuggestion={setValue} value={value} />
       <div className="mt-2">
         The value is... <strong>{value}</strong>
       </div>

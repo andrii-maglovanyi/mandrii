@@ -58,12 +58,7 @@ export const Alert = ({
     isVisible && (
       <div
         aria-live="polite"
-        className={clsx(
-          "flex h-12 items-center rounded-md pr-1 pl-4",
-          bgColor,
-          textColor,
-          className,
-        )}
+        className={clsx("flex h-12 items-center rounded-md pr-1 pl-4", bgColor, textColor, className)}
         role="alert"
       >
         <div className="mr-3 flex-shrink-0">
@@ -74,12 +69,7 @@ export const Alert = ({
           <div className="text-sm leading-relaxed">{children}</div>
         </div>
 
-        <ActionButton
-          aria-label={dismissLabel}
-          icon={<X />}
-          onClick={handleDismiss}
-          variant="ghost"
-        />
+        <ActionButton aria-label={dismissLabel} icon={<X />} onClick={handleDismiss} variant="ghost" />
       </div>
     )
   );

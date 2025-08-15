@@ -72,30 +72,17 @@ export const Modal = ({ children, isOpen, onClose, title }: ModalProps) => {
 
   const animationClass = `transition-all duration-300 ${isVisibleClass}`;
 
-  const backdropClass =
-    "backdrop:backdrop-blur-xs backdrop:bg-neutral-800/20 dark:backdrop:bg-neutral-200/20";
-  const positionClass =
-    "md:top-1/2 md:left-1/2 md:right-1/2 md:bottom-auto md:-translate-x-1/2 md:max-w-lg";
-  const layoutClass =
-    "bg-surface text-on-surface w-full z-50 rounded-xl p-6 shadow-x overflow-visible";
+  const backdropClass = "backdrop:backdrop-blur-xs backdrop:bg-neutral-800/20 dark:backdrop:bg-neutral-200/20";
+  const positionClass = "md:top-1/2 md:left-1/2 md:right-1/2 md:bottom-auto md:-translate-x-1/2 md:max-w-lg";
+  const layoutClass = "bg-surface text-on-surface w-full z-50 rounded-xl p-6 shadow-x overflow-visible";
   const mobileClass = "bottom-0 mt-auto mx-auto mb-4";
 
-  const modalClass = clsx(
-    layoutClass,
-    positionClass,
-    animationClass,
-    backdropClass,
-    mobileClass,
-    "fixed",
-  );
+  const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `
+    fixed
+  `);
 
   return ReactDOM.createPortal(
-    <dialog
-      aria-labelledby="modal-title"
-      aria-modal="true"
-      className={modalClass}
-      ref={dialogRef}
-    >
+    <dialog aria-labelledby="modal-title" aria-modal="true" className={modalClass} ref={dialogRef}>
       <div className="fixed -top-12 right-0">
         <ActionButton
           aria-label="Close modal"
@@ -106,9 +93,9 @@ export const Modal = ({ children, isOpen, onClose, title }: ModalProps) => {
           variant="ghost"
         />
       </div>
-      <div className="mb-4 flex items-center">
-        {title && <h2 className="text-xl font-normal">{title}</h2>}
-      </div>
+      <div className="mb-4 flex items-center">{title && <h2 className={`
+        text-xl font-normal
+      `}>{title}</h2>}</div>
       <div className="mb-6">{children}</div>
     </dialog>,
     document.body,

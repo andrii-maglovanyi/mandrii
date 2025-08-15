@@ -1,5 +1,6 @@
 export { AdminLayout } from "./AdminLayout/AdminLayout";
 export { ContactForm } from "./Contact/ContactForm";
+export { ContentViewer } from "./ContentViewer/ContentViewer";
 export { Locations } from "./Locations/Locations";
 export { MainLayout } from "./MainLayout/MainLayout";
 export { MixpanelTracker } from "./MixpanelTracker/MixpanelTracker";

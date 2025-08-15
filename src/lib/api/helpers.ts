@@ -1,10 +1,11 @@
 import { getI18n } from "~/i18n/getI18n";
+import { Locale } from "~/types";
 
 export async function getLocaleContext(req: Request) {
   const { searchParams } = new URL(req.url);
-  const locale = searchParams.get("locale") ?? "en";
+  const locale: Locale = (searchParams.get("locale") as Locale) ?? Locale.EN;
 
-  if (!["en", "uk"].includes(locale)) {
+  if (!Object.values(Locale).includes(locale)) {
     return {
       error: Response.json({ error: "Invalid locale" }, { status: 400 }),
     };

@@ -17,13 +17,8 @@ interface MenuProps<K, T> {
   ref: React.Ref<MenuHandle>;
 }
 
-export function Menu<K extends React.ReactNode, T>({
-  onSelect,
-  options,
-  ref,
-}: Readonly<MenuProps<K, T>>) {
-  const { focusedIndex, focusItemAtIndex, handleKeyDown, menuRef } =
-    useKeyboardNavigation();
+export function Menu<K extends React.ReactNode, T>({ onSelect, options, ref }: Readonly<MenuProps<K, T>>) {
+  const { focusedIndex, focusItemAtIndex, handleKeyDown, menuRef } = useKeyboardNavigation();
 
   useImperativeHandle(ref, () => ({
     focusIndex: focusItemAtIndex,
@@ -31,9 +26,7 @@ export function Menu<K extends React.ReactNode, T>({
 
   return (
     <div
-      aria-activedescendant={
-        focusedIndex !== null ? `option-${focusedIndex}` : undefined
-      }
+      aria-activedescendant={focusedIndex !== null ? `option-${focusedIndex}` : undefined}
       className={`
         absolute top-[100%] z-50 mt-1.5 h-max max-h-80 w-fit min-w-full
         overflow-y-scroll rounded-lg bg-surface p-1 text-on-surface shadow-xl

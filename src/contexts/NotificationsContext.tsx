@@ -1,13 +1,7 @@
 "use client";
 
 import { nanoid } from "nanoid";
-import React, {
-  createContext,
-  ReactNode,
-  useCallback,
-  useMemo,
-  useReducer,
-} from "react";
+import React, { createContext, ReactNode, useCallback, useMemo, useReducer } from "react";
 
 import { ColorVariant } from "~/types";
 
@@ -40,10 +34,7 @@ type Actions =
   | { payload: string; type: "REMOVE_NOTIFICATION" }
   | { type: "RESET" };
 
-const notificationsReducer = (
-  state: NotificationsState,
-  action: Actions,
-): NotificationsState => {
+const notificationsReducer = (state: NotificationsState, action: Actions): NotificationsState => {
   switch (action.type) {
     case "NEW_NOTIFICATION": {
       const newNotification: Notification = {
@@ -60,16 +51,12 @@ const notificationsReducer = (
           notification.header === newNotification.header,
       );
 
-      return exists
-        ? state
-        : { notifications: [...state.notifications, newNotification] };
+      return exists ? state : { notifications: [...state.notifications, newNotification] };
     }
 
     case "REMOVE_NOTIFICATION":
       return {
-        notifications: state.notifications.filter(
-          ({ id }) => id !== action.payload,
-        ),
+        notifications: state.notifications.filter(({ id }) => id !== action.payload),
       };
 
     case "RESET":
@@ -80,27 +67,17 @@ const notificationsReducer = (
   }
 };
 
-export const NotificationsContext = createContext<
-  NotificationsContextType | undefined
->(undefined);
+export const NotificationsContext = createContext<NotificationsContextType | undefined>(undefined);
 
-export const NotificationsProvider = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+export const NotificationsProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(notificationsReducer, initialState);
 
   const newNotification = useCallback(
-    (payload: NotificationPayload) =>
-      dispatch({ payload, type: "NEW_NOTIFICATION" }),
+    (payload: NotificationPayload) => dispatch({ payload, type: "NEW_NOTIFICATION" }),
     [],
   );
 
-  const removeNotification = useCallback(
-    (id: string) => dispatch({ payload: id, type: "REMOVE_NOTIFICATION" }),
-    [],
-  );
+  const removeNotification = useCallback((id: string) => dispatch({ payload: id, type: "REMOVE_NOTIFICATION" }), []);
 
   const reset = useCallback(() => dispatch({ type: "RESET" }), []);
 
@@ -114,9 +91,5 @@ export const NotificationsProvider = ({
     [state, newNotification, removeNotification, reset],
   );
 
-  return (
-    <NotificationsContext.Provider value={value}>
-      {children}
-    </NotificationsContext.Provider>
-  );
+  return <NotificationsContext.Provider value={value}>{children}</NotificationsContext.Provider>;
 };

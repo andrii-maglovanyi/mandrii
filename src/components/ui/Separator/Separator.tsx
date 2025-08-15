@@ -10,11 +10,7 @@ const variantClasses = {
   tight: "w-fit mx-auto px-4",
 };
 
-export const Separator = ({
-  className = "",
-  text,
-  variant = "full",
-}: SeparatorProps) => {
+export const Separator = ({ className = "", text, variant = "full" }: SeparatorProps) => {
   return (
     <div
       className={`
