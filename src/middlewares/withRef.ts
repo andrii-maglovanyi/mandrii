@@ -34,10 +34,7 @@ export const withRef: MiddlewareFactory = (next) => {
         return NextResponse.redirect(redirect.url);
       } catch (error) {
         console.error("Redirect middleware error:", error);
-        return NextResponse.json(
-          { error: "Internal Server Error" },
-          { status: 500 },
-        );
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
       }
     }
 

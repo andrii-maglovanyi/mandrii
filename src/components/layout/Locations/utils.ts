@@ -17,8 +17,7 @@ function createDashedCirclePath(
 
     // Adjust for longitude, which shrinks with cos(latitude)
     const lngOffset =
-      (radiusInMeters * Math.sin(angle)) /
-      (metersPerDegreeLat * Math.cos((center.lat * Math.PI) / 180));
+      (radiusInMeters * Math.sin(angle)) / (metersPerDegreeLat * Math.cos((center.lat * Math.PI) / 180));
 
     result.push({
       lat: center.lat + latOffset,

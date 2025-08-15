@@ -4,10 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { useLocale } from "next-intl";
 import { usePathname } from "next/navigation";
 import { FormEvent, useState } from "react";
-import {
-  GoogleReCaptchaProvider,
-  useGoogleReCaptcha,
-} from "react-google-recaptcha-v3";
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 import { ActionButton, Alert, Button, Input, RichText } from "~/components/ui";
 import { useForm } from "~/hooks/useForm";
@@ -25,26 +22,16 @@ export function NewsletterForm() {
 }
 
 function Newsletter() {
-  const [status, setStatus] = useState<
-    | "already_subscribed"
-    | "error"
-    | "idle"
-    | "sending"
-    | "verification_email_sent"
-  >("idle");
+  const [status, setStatus] = useState<"already_subscribed" | "error" | "idle" | "sending" | "verification_email_sent">(
+    "idle",
+  );
 
   const { executeRecaptcha } = useGoogleReCaptcha();
   const i18n = useI18n();
   const pathname = usePathname();
   const locale = useLocale();
 
-  const {
-    getFieldProps,
-    isFormValid,
-    setFieldErrorsFromServer,
-    validateForm,
-    values,
-  } = useForm({
+  const { getFieldProps, isFormValid, setFieldErrorsFromServer, validateForm, values } = useForm({
     schema: getEmailFormSchema(i18n),
   });
 
@@ -128,11 +115,7 @@ function Newsletter() {
                 email: values.email,
               })}
             </RichText>
-            <p>
-              {i18n(
-                "And verify that you indeed own your email by clicking that button.",
-              )}
-            </p>
+            <p>{i18n("And verify that you indeed own your email by clicking that button.")}</p>
           </>
         );
       default:
@@ -170,12 +153,7 @@ function Newsletter() {
               md:hidden
               lg:block
             `}>
-              <Button
-                busy={status === "sending"}
-                className="ml-3"
-                disabled={!isFormValid}
-                type="submit"
-              >
+              <Button busy={status === "sending"} className="ml-3" disabled={!isFormValid} type="submit">
                 {status === "sending" ? i18n("Sending") : i18n("Subscribe")}
               </Button>
             </span>
@@ -185,9 +163,7 @@ function Newsletter() {
               lg:hidden
             `}>
               <ActionButton
-                aria-label={
-                  status === "sending" ? i18n("Sending") : i18n("Subscribe")
-                }
+                aria-label={status === "sending" ? i18n("Sending") : i18n("Subscribe")}
                 busy={status === "sending"}
                 className="ml-3"
                 disabled={!isFormValid}

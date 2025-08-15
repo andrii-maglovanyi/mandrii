@@ -30,11 +30,7 @@ const Template: StoryFn<typeof Textarea> = (args) => {
 
   return (
     <div className="w-md">
-      <Textarea
-        {...args}
-        onChange={(e) => setValue(e.target.value)}
-        value={value}
-      />
+      <Textarea {...args} onChange={(e) => setValue(e.target.value)} value={value} />
     </div>
   );
 };

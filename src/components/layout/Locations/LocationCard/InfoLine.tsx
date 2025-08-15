@@ -12,12 +12,7 @@ interface InfoLineProps {
   tooltipText: string;
 }
 
-export const InfoLine = ({
-  icon,
-  info,
-  isLink = false,
-  tooltipText,
-}: InfoLineProps) => {
+export const InfoLine = ({ icon, info, isLink = false, tooltipText }: InfoLineProps) => {
   const { showSuccess } = useNotifications();
   const i18n = useI18n();
 
@@ -32,12 +27,10 @@ export const InfoLine = ({
 
   if (info) {
     return (
-      <div
-        className={`
-          flex w-full cursor-pointer items-center gap-2 px-8 py-1.5
-          hover:bg-on-surface/5
-        `}
-      >
+      <div className={`
+        flex w-full cursor-pointer items-center gap-2 px-8 py-1.5
+        hover:bg-on-surface/5
+      `}>
         {icon}
         {isLink ? (
           <a

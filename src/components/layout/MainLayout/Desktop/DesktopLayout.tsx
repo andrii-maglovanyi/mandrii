@@ -10,10 +10,7 @@ type DesktopLayoutProps = {
   navLinks: React.ReactNode;
 };
 
-export function DesktopLayout({
-  children,
-  navLinks,
-}: Readonly<DesktopLayoutProps>) {
+export function DesktopLayout({ children, navLinks }: Readonly<DesktopLayoutProps>) {
   return (
     <>
       <header

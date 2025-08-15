@@ -1,9 +1,6 @@
 import { UrlHelper } from "./url-helper";
 
-export async function validateCaptcha(
-  token: string,
-  action: string,
-): Promise<boolean> {
+export async function validateCaptcha(token: string, action: string): Promise<boolean> {
   const res = await fetch(`${UrlHelper.buildApiUrl("captcha")}`, {
     body: JSON.stringify({ action, token }),
     headers: { "Content-Type": "application/json" },

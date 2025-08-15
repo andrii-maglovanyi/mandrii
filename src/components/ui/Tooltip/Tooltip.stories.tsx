@@ -2,16 +2,7 @@ import type { Meta, StoryFn, StoryObj } from "@storybook/nextjs";
 
 import { Tooltip } from "./Tooltip";
 
-const positions = [
-  "top",
-  "top-start",
-  "top-end",
-  "right",
-  "bottom",
-  "bottom-start",
-  "bottom-end",
-  "left",
-] as const;
+const positions = ["top", "top-start", "top-end", "right", "bottom", "bottom-start", "bottom-end", "left"] as const;
 
 const meta: Meta<typeof Tooltip> = {
   argTypes: {
@@ -38,12 +29,10 @@ type Story = StoryObj<typeof Tooltip>;
 
 const Template: StoryFn<typeof Tooltip> = (args) => (
   <Tooltip {...args}>
-    <span
-      className={`
-        inline-block cursor-default rounded bg-surface px-3 py-2 transition
-        hover:bg-surface-tint
-      `}
-    >
+    <span className={`
+      inline-block cursor-default rounded bg-surface px-3 py-2 transition
+      hover:bg-surface-tint
+    `}>
       Hover me
     </span>
   </Tooltip>

@@ -8,11 +8,7 @@ interface RichTextProps {
   className?: string;
 }
 
-export const RichText = ({
-  as: Tag = "span",
-  children,
-  className,
-}: RichTextProps) => {
+export const RichText = ({ as: Tag = "span", children, className }: RichTextProps) => {
   return (
     <Tag
       className={className}

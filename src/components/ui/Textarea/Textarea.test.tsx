@@ -7,10 +7,7 @@ import { Textarea } from "./Textarea";
 describe("Textarea", () => {
   it("renders with label and placeholder", () => {
     render(<Textarea label="Message" placeholder="Type your message..." />);
-    expect(screen.getByLabelText("Message")).toHaveAttribute(
-      "placeholder",
-      "Type your message...",
-    );
+    expect(screen.getByLabelText("Message")).toHaveAttribute("placeholder", "Type your message...");
   });
 
   it("calls onChange when user types", async () => {

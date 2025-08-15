@@ -6,5 +6,4 @@ export const getEmailSchema = (i18n: (key: string) => string) =>
     email: z.string().email(i18n("Please enter a valid email address")),
   });
 
-export const getEmailFormSchema = (i18n: (key: string) => string) =>
-  getEmailSchema(i18n).omit({ captchaToken: true });
+export const getEmailFormSchema = (i18n: (key: string) => string) => getEmailSchema(i18n).omit({ captchaToken: true });

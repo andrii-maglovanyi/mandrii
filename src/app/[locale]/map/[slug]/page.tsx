@@ -6,9 +6,7 @@ interface MapLocationPage {
   }>;
 }
 
-export default async function MapLocationPage({
-  params,
-}: Readonly<MapLocationPage>) {
+export default async function MapLocationPage({ params }: Readonly<MapLocationPage>) {
   const slug = (await params).slug;
 
   return (

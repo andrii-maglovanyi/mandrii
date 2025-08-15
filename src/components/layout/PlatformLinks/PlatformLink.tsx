@@ -8,12 +8,7 @@ import { sendToMixpanel } from "~/lib/mixpanel";
 
 import { PlatformLinkProps, SOCIAL_LINKS } from "./link-configs";
 
-export const PlatformLink = ({
-  href,
-  label,
-  size = "medium",
-  type,
-}: Readonly<PlatformLinkProps>) => {
+export const PlatformLink = ({ href, label, size = "medium", type }: Readonly<PlatformLinkProps>) => {
   const handleClick = () => {
     if (SOCIAL_LINKS.map(({ type }) => type).includes(type)) {
       sendToMixpanel("Clicked Support Link", { platform: label });

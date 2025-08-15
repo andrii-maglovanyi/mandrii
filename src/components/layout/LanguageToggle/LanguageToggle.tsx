@@ -12,8 +12,7 @@ export function LanguageToggle({ "data-testid": testId = "language-toggle" }) {
   const pathname = usePathname();
 
   const nextLocale = locale === "en" ? "uk" : "en";
-  const label =
-    locale === "en" ? "Переключити на українську" : "Switch to English";
+  const label = locale === "en" ? "Переключити на українську" : "Switch to English";
 
   const handleClick = () => {
     sendToMixpanel("Toggled Language", { language: nextLocale });
@@ -24,9 +23,7 @@ export function LanguageToggle({ "data-testid": testId = "language-toggle" }) {
     <ActionButton
       aria-label={label}
       data-testid={testId}
-      icon={
-        <span className="text-base font-semibold uppercase">{nextLocale}</span>
-      }
+      icon={<span className="text-base font-semibold uppercase">{nextLocale}</span>}
       onClick={handleClick}
       variant="ghost"
     />

@@ -1,11 +1,4 @@
-export const svgImportKeys = [
-  "google",
-  "buymeacoffee",
-  "instagram",
-  "patreon",
-  "telegram",
-  "youtube",
-] as const;
+export const svgImportKeys = ["google", "buymeacoffee", "instagram", "patreon", "telegram", "youtube"] as const;
 
 export type IconType = (typeof svgImportKeys)[number];
 
@@ -21,21 +14,10 @@ interface SvgIconProps {
   size?: keyof typeof IconSize;
 }
 
-export function SvgIcon({
-  "data-testid": testId = "svg-icon",
-  id,
-  size = "medium",
-}: Readonly<SvgIconProps>) {
+export function SvgIcon({ "data-testid": testId = "svg-icon", id, size = "medium" }: Readonly<SvgIconProps>) {
   return (
-    <svg
-      aria-hidden="true"
-      data-testid={testId}
-      style={{ height: IconSize[size], width: IconSize[size] }}
-    >
-      <use
-        data-testid={`${testId}-presentation`}
-        href={`/static/sprite.svg#${id}`}
-      />
+    <svg aria-hidden="true" data-testid={testId} style={{ height: IconSize[size], width: IconSize[size] }}>
+      <use data-testid={`${testId}-presentation`} href={`/static/sprite.svg#${id}`} />
     </svg>
   );
 }

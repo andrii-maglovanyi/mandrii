@@ -5,10 +5,7 @@ interface EmailActionButtonProps {
   url: string;
 }
 
-export const EmailActionButton = ({
-  children,
-  url,
-}: EmailActionButtonProps) => (
+export const EmailActionButton = ({ children, url }: EmailActionButtonProps) => (
   <Button
     className={`
       inline-block rounded-md bg-primary px-6 py-3 text-lg font-semibold

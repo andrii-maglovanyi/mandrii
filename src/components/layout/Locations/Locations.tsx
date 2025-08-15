@@ -121,17 +121,10 @@ export const Locations = ({ slug }: LocationsProps) => {
   const [showMap, setShowMap] = useState(false);
   const { showError } = useNotifications();
   const [suggestions, setSuggestions] = useState<Array<Suggestion>>([]);
-  const [userLocation, setUserLocation] =
-    useState<Location>(LONDON_COORDINATES);
-  const [selectedLocationId, setSelectedLocationId] = useState<null | UUID>(
-    null,
-  );
-  const [distance, setDistance] = useState(
-    DISTANCES[DISTANCES.length - 1].value,
-  );
-  const [category, setCategory] = useState<Location_Category_Enum>(
-    categoryOptions[0].value,
-  );
+  const [userLocation, setUserLocation] = useState<Location>(LONDON_COORDINATES);
+  const [selectedLocationId, setSelectedLocationId] = useState<null | UUID>(null);
+  const [distance, setDistance] = useState(DISTANCES[DISTANCES.length - 1].value);
+  const [category, setCategory] = useState<Location_Category_Enum>(categoryOptions[0].value);
 
   const { isDark } = useTheme();
   const { usePublicLocations } = useLocations();
@@ -155,8 +148,7 @@ export const Locations = ({ slug }: LocationsProps) => {
 
   const handleFocus = useCallback(() => {
     if (!sessionTokenRef.current) {
-      sessionTokenRef.current =
-        new google.maps.places.AutocompleteSessionToken();
+      sessionTokenRef.current = new google.maps.places.AutocompleteSessionToken();
     }
   }, []);
 
@@ -177,9 +169,7 @@ export const Locations = ({ slug }: LocationsProps) => {
         },
         (error) => {
           console.error(error);
-          showError(
-            i18n("Unable to find your location. Please try searching!"),
-          );
+          showError(i18n("Unable to find your location. Please try searching!"));
         },
       );
     } else {
@@ -191,9 +181,7 @@ export const Locations = ({ slug }: LocationsProps) => {
     const mapInstance = mapRef.current?.getMap();
     if (!mapInstance) {
       setSuggestions([]);
-      throw new Error(
-        i18n("Map is not available yet. Please wait until it loads"),
-      );
+      throw new Error(i18n("Map is not available yet. Please wait until it loads"));
     }
 
     const service = new google.maps.places.PlacesService(mapInstance);
@@ -229,8 +217,7 @@ export const Locations = ({ slug }: LocationsProps) => {
 
         sendToMixpanel("Selected Suggested Location", {
           ...coords,
-          name: suggestions.find(({ place_id }) => place_id === id)
-            ?.description,
+          name: suggestions.find(({ place_id }) => place_id === id)?.description,
         });
 
         setUserLocation(coords);
@@ -241,12 +228,9 @@ export const Locations = ({ slug }: LocationsProps) => {
       if (error instanceof Error) {
         showError(error.message);
       } else if (error === "OVER_QUERY_LIMIT") {
-        showError(
-          i18n(
-            "You've made too many searches in a short time. Please wait a minute and try again.",
-          ),
-          { header: i18n("Whoa, slow down!") },
-        );
+        showError(i18n("You've made too many searches in a short time. Please wait a minute and try again."), {
+          header: i18n("Whoa, slow down!"),
+        });
       } else {
         showError(i18n("Oops, try again"));
       }
@@ -289,10 +273,7 @@ export const Locations = ({ slug }: LocationsProps) => {
         };
 
         mapServiceRef.current.getPlacePredictions(request, (result, status) => {
-          if (
-            status === google.maps.places.PlacesServiceStatus.OK &&
-            result?.length
-          ) {
+          if (status === google.maps.places.PlacesServiceStatus.OK && result?.length) {
             setSuggestions(result);
           } else {
             setSuggestions([]);
@@ -354,12 +335,10 @@ export const Locations = ({ slug }: LocationsProps) => {
                     onFocus={handleFocus}
                     onSelectSuggestion={handleSelectSuggestion}
                     placeholder={i18n("Location")}
-                    suggestions={suggestions.map(
-                      ({ description, place_id }) => ({
-                        label: description,
-                        value: place_id,
-                      }),
-                    )}
+                    suggestions={suggestions.map(({ description, place_id }) => ({
+                      label: description,
+                      value: place_id,
+                    }))}
                   />
                 </div>
 
@@ -374,12 +353,7 @@ export const Locations = ({ slug }: LocationsProps) => {
                     />
                   </div>
                   <div className="flex-2/5">
-                    <Select
-                      disabled={!isReady}
-                      onChange={setDistance}
-                      options={DISTANCES}
-                      value={distance}
-                    />
+                    <Select disabled={!isReady} onChange={setDistance} options={DISTANCES} value={distance} />
                   </div>
                 </div>
               </div>
@@ -397,55 +371,33 @@ export const Locations = ({ slug }: LocationsProps) => {
                     <LocateFixed className="mr-2" size={18} /> {i18n("Find me")}
                   </Button>
                 </div>
-                <RichText
-                  as="div"
-                  className={clsx(
-                    `
-                      text-sm
-                      sm:text-base
-                    `,
-                    isReady ? "visible" : "hidden",
-                  )}
-                >
+                <RichText as="div" className={clsx(`
+                  text-sm
+                  sm:text-base
+                `, isReady ? `visible` : `hidden`)}>
                   {i18n("Added **{total}** places", { total })}
                 </RichText>
               </div>
             </div>
           </div>
 
-          <div
-            className={clsx(
-              "mx-auto h-full w-1/2 flex-col justify-center",
-              showMap ? "hidden" : "flex",
-            )}
-          >
-            <ProgressBar
-              isLoading={!isReady}
-              onLoaded={() => setShowMap(true)}
-            />
+          <div className={clsx("mx-auto h-full w-1/2 flex-col justify-center", showMap ? `
+            hidden
+          ` : `flex`)}>
+            <ProgressBar isLoading={!isReady} onLoaded={() => setShowMap(true)} />
           </div>
 
-          <div
-            className={clsx(
-              `
-                h-full grid-cols-1 gap-2
-                md:grid-cols-2
-              `,
-              showMap ? "grid" : "hidden",
-            )}
-          >
+          <div className={clsx(`
+            h-full grid-cols-1 gap-2
+            md:grid-cols-2
+          `, showMap ? `grid` : `hidden`)}>
             <div className={`
               hidden
               md:block
             `}>
-              <div
-                className={`
-                  -mt-[2px] h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll
-                  px-3
-                `}
-              >
-                {locationCards}
-              </div>
+              <div className={`
+                -mt-[2px] h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
+              `}>{locationCards}</div>
             </div>
 
             <div className="relative col-span-1 h-full">
@@ -475,11 +427,9 @@ export const Locations = ({ slug }: LocationsProps) => {
               />
 
               <div className="absolute top-0 mt-3 ml-3">
-                <p
-                  className={`
-                    rounded-md bg-on-surface/70 px-3 py-1 text-sm text-surface
-                  `}
-                >
+                <p className={`
+                  rounded-md bg-on-surface/70 px-3 py-1 text-sm text-surface
+                `}>
                   {locationCards.length
                     ? `${i18n("Showing {number} results", { number: locationCards.length })}`
                     : i18n("Nothing found")}

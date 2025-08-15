@@ -3,8 +3,8 @@ import Image from "next/image";
 
 interface UserProfileProps {
   email: string;
-  imageUrl?: null | string;
-  name?: string;
+  imageUrl?: null | string | undefined;
+  name?: null | string | undefined;
 }
 
 export const UserProfile = ({ email, imageUrl, name }: UserProfileProps) => {

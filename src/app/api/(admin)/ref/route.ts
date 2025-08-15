@@ -39,10 +39,7 @@ export async function DELETE(request: Request) {
 
     return Response.json({ message: "URL removed successfully" });
   } catch (error) {
-    return Response.json(
-      { error: `Internal Server Error: ${error}` },
-      { status: 500 },
-    );
+    return Response.json({ error: `Internal Server Error: ${error}` }, { status: 500 });
   }
 }
 
@@ -64,10 +61,7 @@ export async function GET() {
 
     return Response.json(allRedirects);
   } catch (error) {
-    return Response.json(
-      { error: `Internal Server Error: ${error}` },
-      { status: 500 },
-    );
+    return Response.json({ error: `Internal Server Error: ${error}` }, { status: 500 });
   }
 }
 
@@ -75,10 +69,7 @@ export async function POST(request: Request) {
   const { topic, url } = await request.json();
 
   if (!topic || !url) {
-    return Response.json(
-      { error: "Topic and URL are required" },
-      { status: 400 },
-    );
+    return Response.json({ error: "Topic and URL are required" }, { status: 400 });
   }
 
   try {
@@ -92,15 +83,9 @@ export async function POST(request: Request) {
     const redirect: Redirect = { hits: 0, url };
     await kv.set(key, redirect);
 
-    return Response.json(
-      { message: "URL added successfully" },
-      { status: 201 },
-    );
+    return Response.json({ message: "URL added successfully" }, { status: 201 });
   } catch (error) {
-    return Response.json(
-      { error: `Internal Server Error: ${error}` },
-      { status: 500 },
-    );
+    return Response.json({ error: `Internal Server Error: ${error}` }, { status: 500 });
   }
 }
 
@@ -108,10 +93,7 @@ export async function PUT(request: Request) {
   const { topic, url } = await request.json();
 
   if (!topic || !url) {
-    return Response.json(
-      { error: "Topic and new URL are required" },
-      { status: 400 },
-    );
+    return Response.json({ error: "Topic and new URL are required" }, { status: 400 });
   }
 
   try {
@@ -127,9 +109,6 @@ export async function PUT(request: Request) {
 
     return Response.json({ message: "URL updated successfully" });
   } catch (error) {
-    return Response.json(
-      { error: `Internal Server Error: ${error}` },
-      { status: 500 },
-    );
+    return Response.json({ error: `Internal Server Error: ${error}` }, { status: 500 });
   }
 }

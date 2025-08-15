@@ -1,10 +1,7 @@
 import Image from "next/image";
 
 import { MixpanelTracker } from "~/components/layout";
-import {
-  SOCIAL_LINKS,
-  SUPPORT_LINKS,
-} from "~/components/layout/PlatformLinks/link-configs";
+import { SOCIAL_LINKS, SUPPORT_LINKS } from "~/components/layout/PlatformLinks/link-configs";
 import { PlatformLink } from "~/components/layout/PlatformLinks/PlatformLink";
 import { useI18n } from "~/i18n/useI18n";
 
@@ -12,22 +9,15 @@ export default function LovePage() {
   const i18n = useI18n();
 
   return (
-    <div
-      className={`
-        mx-auto flex flex-grow flex-col items-center justify-center space-y-6
-        text-center
-      `}
-    >
+    <div className={`
+      mx-auto flex flex-grow flex-col items-center justify-center space-y-6
+      text-center
+    `}>
       <div className={`
         border-b border-b-black
         dark:border-b-neutral-700
       `}>
-        <Image
-          alt="Mandrii"
-          height={100}
-          src="/static/mandrii.png"
-          width={100}
-        />
+        <Image alt="Mandrii" height={100} src="/static/mandrii.png" width={100} />
       </div>
       <h1
         className={`
@@ -37,16 +27,12 @@ export default function LovePage() {
       >
         {i18n("Thanks for your support")}
       </h1>
-      <p className="text-xl">
-        {i18n("No matter how hard things get, we're still together")}
-      </p>
+      <p className="text-xl">{i18n("No matter how hard things get, we're still together")}</p>
       <section className="mt-4 mb-6">
-        <div
-          className={`
-            flex cursor-default flex-col items-center justify-center gap-4
-            md:flex-row md:gap-6
-          `}
-        >
+        <div className={`
+          flex cursor-default flex-col items-center justify-center gap-4
+          md:flex-row md:gap-6
+        `}>
           <div className="space-x-2">
             {SOCIAL_LINKS.map((props) => (
               <PlatformLink key={props.type} size="large" {...props} />
@@ -70,19 +56,11 @@ export default function LovePage() {
       </p>
 
       <div>
-        <Image
-          alt="Mandrii"
-          className={`
-            mt-2 h-auto
-            dark:invert
-          `}
-          height={44}
-          src="/static/logo.svg"
-          width={120}
-        />
-        <div className="mt-1 text-center text-xs">
-          мандруй &bull; мрій &bull; дій
-        </div>
+        <Image alt="Mandrii" className={`
+          mt-2 h-auto
+          dark:invert
+        `} height={44} src="/static/logo.svg" width={120} />
+        <div className="mt-1 text-center text-xs">мандруй &bull; мрій &bull; дій</div>
       </div>
       <MixpanelTracker event="Viewed Love Page" />
     </div>
