@@ -1,3 +1,5 @@
+import { envName } from "./config/env";
+
 export class UrlHelper {
   static config = {
     development: { hostname: "localhost:3000", scheme: "http" },
@@ -28,12 +30,12 @@ export class UrlHelper {
   }
 
   static getBaseUrl() {
-    return `${this.getScheme()}://${this.getHostname()}`;
+    const { scheme, hostname } = this.getConfig();
+    return `${scheme}://${hostname}`;
   }
 
   static getConfig() {
-    const env = process.env.NODE_ENV || "development";
-    return this.config[env] || this.config.development;
+    return this.config[envName];
   }
 
   static getHostname() {
@@ -42,10 +44,6 @@ export class UrlHelper {
 
   static getProductionHostname() {
     return this.config.production.hostname;
-  }
-
-  static getScheme() {
-    return process.env.SCHEME || this.getConfig().scheme;
   }
 
   static isValidUrl(urlString: string) {
