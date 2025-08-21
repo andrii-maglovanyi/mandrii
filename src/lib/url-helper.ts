@@ -30,7 +30,7 @@ export class UrlHelper {
   }
 
   static getBaseUrl() {
-    const { scheme, hostname } = this.getConfig();
+    const { hostname, scheme } = this.getConfig();
     return `${scheme}://${hostname}`;
   }
 
