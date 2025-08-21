@@ -1,31 +1,35 @@
 "use client";
 
-import { ContentData } from "~/lib/mdx/reader";
-import { DownloadContentButton } from "./DownloadContentButton";
 import { format, Locale } from "date-fns";
+import { enGB, uk } from "date-fns/locale";
 import { useLocale } from "next-intl";
-import { uk, enGB } from "date-fns/locale";
+
+import { ContentData } from "~/lib/mdx/reader";
+
+import { DownloadContentButton } from "./DownloadContentButton";
 
 interface ContentMetaProps {
-  meta: ContentData["meta"];
   id: string;
+  meta: ContentData["meta"];
   type: string;
 }
 
 const localeMap: Record<string, Locale> = {
-  uk: uk,
   en: enGB,
+  uk: uk,
 };
 
-export const ContentMeta = ({ meta, id, type }: ContentMetaProps) => {
+export const ContentMeta = ({ id, meta, type }: ContentMetaProps) => {
   const localeKey = useLocale();
 
   const locale = localeMap[localeKey] ?? enGB;
 
   return (
-    <div className="text-neutral-disabled flex items-center justify-end space-x-1 text-sm">
+    <div className={`
+      flex items-center justify-end space-x-1 text-sm text-neutral-disabled
+    `}>
       <span>{format(new Date(meta.date), "dd MMMM yyyy", { locale })}</span> <span>&bull;</span>
-      <DownloadContentButton meta={meta} id={id} type={type} />
+      <DownloadContentButton id={id} meta={meta} type={type} />
     </div>
   );
 };

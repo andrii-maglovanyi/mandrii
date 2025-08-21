@@ -3,7 +3,6 @@
 import { format } from "date-fns";
 import { Download } from "lucide-react";
 import { useSession } from "next-auth/react";
-
 import { useState } from "react";
 
 import { ActionButton } from "~/components/ui";
@@ -12,12 +11,12 @@ import { useI18n } from "~/i18n/useI18n";
 import { ContentData } from "~/lib/mdx/reader";
 
 interface DownloadContentButtonProps {
-  meta: ContentData["meta"];
   id: string;
+  meta: ContentData["meta"];
   type: string;
 }
 
-export const DownloadContentButton = ({ meta, id, type }: DownloadContentButtonProps) => {
+export const DownloadContentButton = ({ id, meta, type }: DownloadContentButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const { showError, showSuccess } = useNotifications();
   const { status } = useSession();
@@ -75,10 +74,10 @@ export const DownloadContentButton = ({ meta, id, type }: DownloadContentButtonP
       busy={isGenerating}
       color="primary"
       disabled={isGenerating}
+      icon={<Download />}
       onClick={handleGeneratePDF}
       size="sm"
       variant="ghost"
-      icon={<Download />}
     />
   );
 };

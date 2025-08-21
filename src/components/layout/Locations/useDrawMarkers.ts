@@ -5,7 +5,6 @@ import { GetPublicLocationsQuery, Location_Status_Enum, Locations } from "~/type
 import { UUID } from "~/types/uuid";
 
 import { COLOR_STYLES } from "./constants";
-import { ST } from "next/dist/shared/lib/utils";
 
 type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;
 
