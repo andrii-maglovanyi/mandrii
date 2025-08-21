@@ -193,6 +193,7 @@ class MarkdownContentManager {
 
       for (const filename of possibleFiles) {
         const testPath = path.join(contentDirectory, filename);
+        console.log(`Checking for content file: ${testPath}`);
         if (fs.existsSync(testPath)) {
           fullPath = testPath;
           break;

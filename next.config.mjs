@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingIncludes: {
+    "/api/**/*": ["./content/**/*", "./.next/static/css/**/*"],
+  },
   images: {
     remotePatterns: [
       {
