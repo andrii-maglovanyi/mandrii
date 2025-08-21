@@ -7,7 +7,7 @@ const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   outputFileTracingIncludes: {
-    "/api/pdf/*": ["./content/**/*", "./.next/static/css/**/*"],
+    "/api/pdf/**/*": ["./content/**/*", "./.next/static/css/**/*"],
     "/app/\[locale\]/**/*": ["./content/**/*"],
   },
   images: {
