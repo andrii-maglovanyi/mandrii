@@ -287,8 +287,60 @@ class MarkdownContentManager {
   }
 
   private getContentDirectory(contentType: ContentType, lang: Locale) {
+    console.log(`Base directory: ${this.baseDirectory}`);
+
+    // List base directory contents
+    try {
+      if (fs.existsSync(this.baseDirectory)) {
+        const baseContents = fs.readdirSync(this.baseDirectory);
+        console.log(`Base directory contents: ${baseContents.join(", ")}`);
+      } else {
+        console.log(`Base directory does not exist: ${this.baseDirectory}`);
+
+        // Check if parent directory exists and what's in it
+        const parentDir = path.dirname(this.baseDirectory);
+        if (fs.existsSync(parentDir)) {
+          const parentContents = fs.readdirSync(parentDir);
+          console.log(`Parent directory (${parentDir}) contents: ${parentContents.join(", ")}`);
+        }
+      }
+    } catch (error) {
+      console.error(`Error listing base directory contents: ${error}`);
+    }
+
     const validLang = this.validateLocale(lang);
-    return path.join(this.baseDirectory, contentType, validLang);
+
+    console.log(`Using content directory for type "${contentType}" and locale "${validLang}"`);
+
+    // List contentType directory contents
+    const contentTypeDir = path.join(this.baseDirectory, contentType);
+    try {
+      if (fs.existsSync(contentTypeDir)) {
+        const contentTypeContents = fs.readdirSync(contentTypeDir);
+        console.log(`Content type directory (${contentTypeDir}) contents: ${contentTypeContents.join(", ")}`);
+      } else {
+        console.log(`Content type directory does not exist: ${contentTypeDir}`);
+      }
+    } catch (error) {
+      console.error(`Error listing content type directory: ${error}`);
+    }
+
+    const finalContentDir = path.join(this.baseDirectory, contentType, validLang);
+    console.log(`Final content directory: ${finalContentDir}`);
+
+    // List final directory contents
+    try {
+      if (fs.existsSync(finalContentDir)) {
+        const finalContents = fs.readdirSync(finalContentDir);
+        console.log(`Final content directory contents: ${finalContents.join(", ")}`);
+      } else {
+        console.log(`Final content directory does not exist: ${finalContentDir}`);
+      }
+    } catch (error) {
+      console.error(`Error listing final content directory: ${error}`);
+    }
+
+    return finalContentDir;
   }
 
   private isMarkdownFile(filename: string) {
