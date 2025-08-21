@@ -193,6 +193,7 @@ class MarkdownContentManager {
 
       for (const filename of possibleFiles) {
         const testPath = path.join(contentDirectory, filename);
+        console.log(`Checking for content file: ${testPath}`);
         if (fs.existsSync(testPath)) {
           fullPath = testPath;
           break;
@@ -286,7 +287,9 @@ class MarkdownContentManager {
   }
 
   private getContentDirectory(contentType: ContentType, lang: Locale) {
+    console.log(`Base directory: ${this.baseDirectory}`);
     const validLang = this.validateLocale(lang);
+    console.log(`Using content directory for type "${contentType}" and locale "${validLang}"`);
     return path.join(this.baseDirectory, contentType, validLang);
   }
 
