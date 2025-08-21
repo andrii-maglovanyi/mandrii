@@ -21,7 +21,7 @@ export interface ContentManagerConfig {
 export type ContentType = string; // 'posts', 'cv', etc
 
 const DEFAULT_CONFIG: Required<ContentManagerConfig> = {
-  baseDirectory: "public/content",
+  baseDirectory: "content",
   defaultLocale: Locale.EN,
   sortBy: "date",
   sortOrder: "desc",
