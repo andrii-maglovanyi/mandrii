@@ -18,17 +18,11 @@ export async function POST(request: Request) {
     const { event, properties } = data;
 
     if (!event || typeof event !== "string") {
-      return NextResponse.json(
-        { error: "Invalid event name" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid event name" }, { status: 400 });
     }
 
     if (!properties || typeof properties !== "object") {
-      return NextResponse.json(
-        { error: "Invalid properties object" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid properties object" }, { status: 400 });
     }
 
     const session = await auth();

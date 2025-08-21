@@ -5,12 +5,7 @@ import { withAdmin } from "./middlewares/withAdmin";
 import { withLanguage } from "./middlewares/withLanguage";
 import { withRef } from "./middlewares/withRef";
 
-const middlewares = [
-  withAdmin,
-  withRef,
-  withLanguage,
-  withContentSecurityPolicy,
-];
+const middlewares = [withAdmin, withRef, withLanguage, withContentSecurityPolicy];
 
 export default stackMiddlewares(middlewares);
 
@@ -28,7 +23,7 @@ export const config = {
         { key: "next-router-prefetch", type: "header" },
         { key: "purpose", type: "header", value: "prefetch" },
       ],
-      source: "/((?!admin|api|_next/static|_next/image|static|favicon.ico).*)",
+      source: "/((?!admin|api|cv|_next/static|_next/image|static|favicon.ico).*)",
     },
   ],
 };

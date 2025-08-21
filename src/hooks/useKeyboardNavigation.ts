@@ -21,24 +21,17 @@ export const useKeyboardNavigation = () => {
     setFocusedIndex(index);
   };
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLElement>,
-    handler: () => void,
-  ) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>, handler: () => void) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       setFocusedIndex(null);
       handler();
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
-      setFocusedIndex((prevIndex) =>
-        prevIndex === null || prevIndex === itemsLength - 1 ? 0 : prevIndex + 1,
-      );
+      setFocusedIndex((prevIndex) => (prevIndex === null || prevIndex === itemsLength - 1 ? 0 : prevIndex + 1));
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
-      setFocusedIndex((prevIndex) =>
-        prevIndex === null || prevIndex === 0 ? itemsLength - 1 : prevIndex - 1,
-      );
+      setFocusedIndex((prevIndex) => (prevIndex === null || prevIndex === 0 ? itemsLength - 1 : prevIndex - 1));
     }
   };
 

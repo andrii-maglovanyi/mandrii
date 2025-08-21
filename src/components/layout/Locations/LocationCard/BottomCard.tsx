@@ -1,12 +1,4 @@
-import {
-  AtSign,
-  ChevronDown,
-  ChevronUp,
-  Globe,
-  MapPin,
-  Phone,
-  Share2,
-} from "lucide-react";
+import { AtSign, ChevronDown, ChevronUp, Globe, MapPin, Phone, Share2 } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
@@ -54,16 +46,7 @@ export function BottomCard({ location }: Readonly<BottomCardInterface>) {
 
   const toggle = () => setIsExpanded((prev) => !prev);
 
-  const {
-    address,
-    description_en,
-    description_uk,
-    emails,
-    name,
-    phone_numbers,
-    slug,
-    website,
-  } = location;
+  const { address, description_en, description_uk, emails, name, phone_numbers, slug, website } = location;
 
   return (
     <div
@@ -78,12 +61,9 @@ export function BottomCard({ location }: Readonly<BottomCardInterface>) {
         height: isExpanded && innerHeight ? `${innerHeight}px` : "33vh",
       }}
     >
-      <button
-        className={`
-          flex h-[40px] w-full cursor-pointer items-center justify-center
-        `}
-        onClick={toggle}
-      >
+      <button className={`
+        flex h-[40px] w-full cursor-pointer items-center justify-center
+      `} onClick={toggle}>
         {isExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
       </button>
 
@@ -106,34 +86,15 @@ export function BottomCard({ location }: Readonly<BottomCardInterface>) {
           </div>
 
           <RichText as="p">
-            {(
-              (locale === "en" ? description_en : description_uk) ?? ""
-            ).replaceAll("\n", "<br />")}
+            {((locale === "en" ? description_en : description_uk) ?? "").replaceAll("\n", "<br />")}
           </RichText>
         </div>
 
         <div className="mt-4 flex flex-col text-sm">
-          <InfoLine
-            icon={<Globe size={16} />}
-            info={website}
-            isLink
-            tooltipText="Copy website"
-          />
-          <InfoLine
-            icon={<AtSign size={16} />}
-            info={emails?.join(", ")}
-            tooltipText="Copy email"
-          />
-          <InfoLine
-            icon={<Phone size={16} />}
-            info={phone_numbers?.join(", ")}
-            tooltipText="Copy phone number"
-          />
-          <InfoLine
-            icon={<MapPin size={16} />}
-            info={address}
-            tooltipText="Copy address"
-          />
+          <InfoLine icon={<Globe size={16} />} info={website} isLink tooltipText="Copy website" />
+          <InfoLine icon={<AtSign size={16} />} info={emails?.join(", ")} tooltipText="Copy email" />
+          <InfoLine icon={<Phone size={16} />} info={phone_numbers?.join(", ")} tooltipText="Copy phone number" />
+          <InfoLine icon={<MapPin size={16} />} info={address} tooltipText="Copy address" />
         </div>
       </div>
     </div>

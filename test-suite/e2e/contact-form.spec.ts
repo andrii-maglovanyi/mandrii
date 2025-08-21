@@ -10,9 +10,7 @@ test("can submit contact form successfully", async ({ page }) => {
   const submitButton = page.getByRole("button", { name: /send message/i });
 
   await Promise.all([
-    page.waitForResponse(
-      (res) => res.url().includes("/api/contact") && res.status() === 200,
-    ),
+    page.waitForResponse((res) => res.url().includes("/api/contact") && res.status() === 200),
     submitButton.click(),
   ]);
 

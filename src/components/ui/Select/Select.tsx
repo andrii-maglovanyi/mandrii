@@ -47,8 +47,7 @@ export function Select<K extends React.ReactNode, T>({
   const selectId = id ?? generatedId;
   const [focused, setFocused] = useState(false);
 
-  const selectedLabel =
-    options.find((opt) => opt.value === value)?.label ?? placeholder;
+  const selectedLabel = options.find((opt) => opt.value === value)?.label ?? placeholder;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<MenuHandle>(null);
@@ -60,9 +59,7 @@ export function Select<K extends React.ReactNode, T>({
       }
     };
 
-    const handleKeyDown = (
-      event: KeyboardEvent | React.KeyboardEvent<HTMLElement>,
-    ) => {
+    const handleKeyDown = (event: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
       if (event.key === "Escape") {
         setFocused(false);
       }
@@ -99,10 +96,7 @@ export function Select<K extends React.ReactNode, T>({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label
-          className="text-sm font-medium text-on-surface"
-          htmlFor={selectId}
-        >
+        <label className="text-sm font-medium text-on-surface" htmlFor={selectId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>

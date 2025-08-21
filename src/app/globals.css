@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:where(.dark, .dark *));
+
+.prose {
+  --tw-prose-links: var(--color-primary);
+}
 
 @layer base {
   @theme {
@@ -116,11 +122,7 @@
 
   /* Layout Glow */
   .mndr-layout-glow::before {
-    background: linear-gradient(
-      90deg,
-      var(--color-primary) 10%,
-      var(--color-secondary) 90%
-    );
+    background: linear-gradient(90deg, var(--color-primary) 10%, var(--color-secondary) 90%);
     bottom: -12.5%;
     content: "";
     filter: blur(80px);

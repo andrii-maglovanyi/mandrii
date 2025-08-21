@@ -58,15 +58,7 @@ const authOptions = {
     async redirect({ baseUrl, url }: { baseUrl: string; url: string }) {
       return url.startsWith(baseUrl) ? url : "/account";
     },
-    async session({
-      session,
-      token,
-      user,
-    }: {
-      session: Session;
-      token: JWT;
-      user: User;
-    }) {
+    async session({ session, token, user }: { session: Session; token: JWT; user: User }) {
       if (!token?.sub) {
         return session;
       }

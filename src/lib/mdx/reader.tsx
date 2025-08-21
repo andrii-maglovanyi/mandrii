@@ -40,11 +40,7 @@ class MarkdownContentManager {
   /**
    * Check if content exists
    */
-  public contentExists(
-    contentType: ContentType,
-    id: string,
-    lang: Locale = this.config.defaultLocale,
-  ): boolean {
+  public contentExists(contentType: ContentType, id: string, lang: Locale = this.config.defaultLocale): boolean {
     try {
       const validLang = this.validateLocale(lang);
       const contentDirectory = this.getContentDirectory(contentType, validLang);
@@ -145,9 +141,7 @@ class MarkdownContentManager {
         return [];
       }
 
-      const fileNames = fs
-        .readdirSync(contentDirectory)
-        .filter((filename) => this.isMarkdownFile(filename));
+      const fileNames = fs.readdirSync(contentDirectory).filter((filename) => this.isMarkdownFile(filename));
 
       if (fileNames.length === 0) {
         console.warn(`No markdown files found in: ${contentDirectory}`);
@@ -176,10 +170,7 @@ class MarkdownContentManager {
 
       return this.sortContent(allContent);
     } catch (error) {
-      console.error(
-        `Error getting content for type "${contentType}" (${lang}):`,
-        error,
-      );
+      console.error(`Error getting content for type "${contentType}" (${lang}):`, error);
       return [];
     }
   }
@@ -196,12 +187,12 @@ class MarkdownContentManager {
       const validLang = this.validateLocale(lang);
       const contentDirectory = this.getContentDirectory(contentType, validLang);
 
+      // Try both .md and .mdx extensions
       const possibleFiles = [`${id}.md`, `${id}.mdx`];
       let fullPath: null | string = null;
 
       for (const filename of possibleFiles) {
         const testPath = path.join(contentDirectory, filename);
-        console.log(`Checking for content file: ${testPath}`);
         if (fs.existsSync(testPath)) {
           fullPath = testPath;
           break;
@@ -222,10 +213,7 @@ class MarkdownContentManager {
         meta: matterResult.data,
       };
     } catch (error) {
-      console.error(
-        `Error getting content "${contentType}/${id}" (${lang}):`,
-        error,
-      );
+      console.error(`Error getting content "${contentType}/${id}" (${lang}):`, error);
       return null;
     }
   }
@@ -233,9 +221,7 @@ class MarkdownContentManager {
   /**
    * Get all content IDs for a specific type across all Locales
    */
-  public getContentIds(
-    contentType: ContentType,
-  ): Array<{ params: { id: string; lang?: string } }> {
+  public getContentIds(contentType: ContentType): Array<{ params: { id: string; lang?: string } }> {
     try {
       const allIds: Array<{ params: { id: string; lang?: string } }> = [];
 
@@ -246,9 +232,7 @@ class MarkdownContentManager {
           continue;
         }
 
-        const fileNames = fs
-          .readdirSync(contentDirectory)
-          .filter((filename) => this.isMarkdownFile(filename));
+        const fileNames = fs.readdirSync(contentDirectory).filter((filename) => this.isMarkdownFile(filename));
 
         for (const fileName of fileNames) {
           const id = fileName.replace(/\.(md|mdx)$/i, "");
@@ -263,10 +247,7 @@ class MarkdownContentManager {
 
       return allIds;
     } catch (error) {
-      console.error(
-        `Error getting content IDs for type "${contentType}":`,
-        error,
-      );
+      console.error(`Error getting content IDs for type "${contentType}":`, error);
       return [];
     }
   }
@@ -283,10 +264,7 @@ class MarkdownContentManager {
       }
     >
   > {
-    const stats: Record<
-      ContentType,
-      { byLocale: Record<Locale, number>; total: number }
-    > = {};
+    const stats: Record<ContentType, { byLocale: Record<Locale, number>; total: number }> = {};
     const contentTypes = this.getAvailableContentTypes();
 
     for (const contentType of contentTypes) {
@@ -321,10 +299,7 @@ class MarkdownContentManager {
       const aValue = a.meta[this.config.sortBy];
       const bValue = b.meta[this.config.sortBy];
 
-      if (
-        this.config.sortBy === "date" ||
-        this.config.sortBy.toLowerCase().includes("date")
-      ) {
+      if (this.config.sortBy === "date" || this.config.sortBy.toLowerCase().includes("date")) {
         const dateA = new Date(aValue);
         const dateB = new Date(bValue);
 
@@ -344,9 +319,7 @@ class MarkdownContentManager {
   }
 
   private validateLocale(lang: Locale) {
-    return this.config.supportedLocales.includes(lang)
-      ? lang
-      : this.config.defaultLocale;
+    return this.config.supportedLocales.includes(lang) ? lang : this.config.defaultLocale;
   }
 }
 

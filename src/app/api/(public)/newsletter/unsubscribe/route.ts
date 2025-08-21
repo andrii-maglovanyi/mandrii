@@ -39,8 +39,5 @@ export const GET = (req: Request) =>
       unsubscribed: true,
     });
 
-    return Response.redirect(
-      `${baseUrl}/${locale}/newsletter/unsubscribed`,
-      302,
-    );
+    return Response.redirect(`${baseUrl}/${locale}/newsletter/unsubscribed`, 302);
   });

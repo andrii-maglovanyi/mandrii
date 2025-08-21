@@ -1,7 +1,5 @@
 "use client";
 
-export function AdminLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <div className="flex min-h-screen flex-col">{children}</div>;
 }

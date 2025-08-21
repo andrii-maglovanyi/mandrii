@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { storage } from "~/lib/utils/storage";
@@ -24,9 +17,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const saved = storage.get<string>("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const resolved = saved ? saved === "dark" : prefersDark;
     setIsDark(resolved);
   }, []);
@@ -50,11 +41,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   if (!contextValue) return null;
 
-  return (
-    <ThemeContext.Provider value={contextValue}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = (): ThemeContextType => {

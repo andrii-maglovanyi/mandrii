@@ -11,9 +11,7 @@ import { Footer } from "../Footer/Footer";
 import { DesktopLayout } from "./Desktop/DesktopLayout";
 import { MobileLayout } from "./Mobile/MobileLayout";
 
-export function MainLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const i18n = useI18n();
   const pathname = usePathname();
 

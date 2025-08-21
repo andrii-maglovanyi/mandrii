@@ -5,7 +5,7 @@ export default {
     "at-rule-no-unknown": [
       true,
       {
-        ignoreAtRules: ["apply", "custom-variant", "layer", "theme"],
+        ignoreAtRules: ["apply", "custom-variant", "layer", "plugin", "theme"],
       },
     ],
     "at-rule-no-deprecated": [

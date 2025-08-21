@@ -8,9 +8,7 @@ if (!fs.existsSync(translationsDir)) {
   process.exit(1);
 }
 
-const files = fs
-  .readdirSync(translationsDir)
-  .filter((file) => file.endsWith(".json"));
+const files = fs.readdirSync(translationsDir).filter((file) => file.endsWith(".json"));
 
 if (files.length === 0) {
   console.warn("⚠️ No .json translation files found in:", translationsDir);

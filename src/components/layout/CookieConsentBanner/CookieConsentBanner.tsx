@@ -40,9 +40,7 @@ export default function CookieConsentBanner() {
         lg:mr-8 lg:mb-0
       `}>
         <Cookie className="mr-2" />
-        <span className="flex-1 break-words">
-          {i18n("I use cookies to make your visit smoother")}
-        </span>
+        <span className="flex-1 break-words">{i18n("I use cookies to make your visit smoother")}</span>
       </div>
       <div className="flex w-fit items-center text-right">
         <Link className="mr-4 text-nowrap" href="/about-cookies">

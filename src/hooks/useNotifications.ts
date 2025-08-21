@@ -34,20 +34,15 @@ export const useNotifications = () => {
     [newNotification],
   );
 
-  const dismissNotification = useCallback(
-    (id: string) => removeNotification(id),
-    [removeNotification],
-  );
+  const dismissNotification = useCallback((id: string) => removeNotification(id), [removeNotification]);
 
   const showSuccess = useCallback(
-    (message: string, options?: Options) =>
-      showNotification(ColorVariant.Success, message, options?.header),
+    (message: string, options?: Options) => showNotification(ColorVariant.Success, message, options?.header),
     [showNotification],
   );
 
   const showError = useCallback(
-    (message: string, options?: Options) =>
-      showNotification(ColorVariant.Error, message, options?.header),
+    (message: string, options?: Options) => showNotification(ColorVariant.Error, message, options?.header),
     [showNotification],
   );
 

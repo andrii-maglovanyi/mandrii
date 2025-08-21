@@ -136,12 +136,7 @@ export const UPDATE_LOCATION_STATUS = gql`
   }
 `;
 
-const useLocationsQuery = <
-  T extends
-    | GetAdminLocationsQuery
-    | GetPublicLocationsQuery
-    | GetUserLocationsQuery,
->(
+const useLocationsQuery = <T extends GetAdminLocationsQuery | GetPublicLocationsQuery | GetUserLocationsQuery>(
   query: DocumentNode,
   params: LocationsParams,
 ) => {
@@ -157,9 +152,7 @@ const useLocationsQuery = <
 };
 
 export const useLocations = () => {
-  const [updateStatus, { error, loading }] = useMutation(
-    UPDATE_LOCATION_STATUS,
-  );
+  const [updateStatus, { error, loading }] = useMutation(UPDATE_LOCATION_STATUS);
 
   const updateLocationStatus = useCallback(
     async (id: number, status: Location_Category_Enum) => {

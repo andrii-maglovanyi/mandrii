@@ -44,9 +44,7 @@ export const Notification = memo(function Snackbar({
         }}
       >
         <div>
-          {header ? (
-            <div className="mb-1 text-lg font-semibold">{header}</div>
-          ) : null}
+          {header ? <div className="mb-1 text-lg font-semibold">{header}</div> : null}
           <div className="truncate">{message}</div>
         </div>
       </div>

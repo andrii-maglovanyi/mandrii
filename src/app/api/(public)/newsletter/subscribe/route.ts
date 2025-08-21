@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import { CreateContactResponse, GetContactResponse, Resend } from "resend";
 
 import VerifyEmail from "~/components/email/VerifyEmail";
@@ -28,7 +29,7 @@ const sendVerificationEmail = async (
   });
 };
 
-export const POST = (req: Request) =>
+export const POST = (req: NextRequest) =>
   withErrorHandling(async () => {
     const { error, i18n, locale } = await getLocaleContext(req);
     if (error) return error;

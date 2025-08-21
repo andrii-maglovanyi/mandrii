@@ -1,14 +1,6 @@
 import { ReactNode, useId } from "react";
 
-export type Position =
-  | "bottom-end"
-  | "bottom-start"
-  | "bottom"
-  | "left"
-  | "right"
-  | "top-end"
-  | "top-start"
-  | "top";
+export type Position = "bottom-end" | "bottom-start" | "bottom" | "left" | "right" | "top-end" | "top-start" | "top";
 
 type TooltipProps = {
   children: ReactNode;
@@ -52,12 +44,7 @@ const POSITION_CLASSES: Record<Position, { arrow: string; tooltip: string }> = {
   },
 };
 
-export const Tooltip = ({
-  children,
-  className = "",
-  label,
-  position = "top",
-}: TooltipProps) => {
+export const Tooltip = ({ children, className = "", label, position = "top" }: TooltipProps) => {
   const id = useId();
   const classes = POSITION_CLASSES[position];
 
@@ -83,12 +70,10 @@ export const Tooltip = ({
         role="tooltip"
       >
         {label}
-        <div
-          className={`
-            absolute h-2 w-2 rotate-45 bg-surface-tint
-            ${classes.arrow}
-          `}
-        />
+        <div className={`
+          absolute h-2 w-2 rotate-45 bg-surface-tint
+          ${classes.arrow}
+        `} />
       </div>
     </div>
   );

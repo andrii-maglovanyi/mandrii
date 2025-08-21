@@ -40,13 +40,11 @@ export const Footer = () => {
         </div>
       </div>
 
-      <div
-        className={`
-          mt-8 flex flex-col items-center justify-between border-t pt-6
-          text-on-surface
-          md:flex-row
-        `}
-      >
+      <div className={`
+        mt-8 flex flex-col items-center justify-between border-t pt-6
+        text-on-surface
+        md:flex-row
+      `}>
         <div>
           2025 <strong className="mr-4">Мандрій</strong>{" "}
           <span className="opacity-60">мандруй &bull; мрій &bull; дій</span>

@@ -44,12 +44,7 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
 
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
-      <ActionButton
-        aria-label="Profile"
-        icon={<User />}
-        onClick={() => setOpen(!open)}
-        variant="ghost"
-      />
+      <ActionButton aria-label="Profile" icon={<User />} onClick={() => setOpen(!open)} variant="ghost" />
       {render && (
         <menu
           className={`

@@ -1,5 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const isCI = !!process.env.CI;
+
 export default defineConfig({
   forbidOnly: !!process.env.CI,
   fullyParallel: true,
@@ -40,13 +42,13 @@ export default defineConfig({
     video: process.env.CI ? "retain-on-failure" : "off",
   },
 
-  webServer: process.env.CI
-    ? undefined
+  ...(isCI
+    ? { workers: 1 }
     : {
-        command: "pnpm dev",
-        reuseExistingServer: true,
-        url: "http://localhost:3000",
-      },
-
-  workers: process.env.CI ? 1 : undefined,
+        webServer: {
+          command: "pnpm dev",
+          reuseExistingServer: true,
+          url: "http://localhost:3000",
+        },
+      }),
 });

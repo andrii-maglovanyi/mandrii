@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, type ReactNode, useContext, useMemo, useState } from "react";
 
 import { ConfirmProps } from "~/components/layout/DialogHost/ConfirmDialog";
 import { CustomProps } from "~/components/layout/DialogHost/CustomDialog";
@@ -31,9 +25,7 @@ interface DialogContextType {
   dialog: DialogEntry | null;
   openConfirmDialog: (props: ConfirmProps) => Promise<boolean>;
   openCustomDialog: (props: CustomProps) => Promise<void>;
-  openFormDialog: (
-    props: FormProps,
-  ) => Promise<Record<string, FormDataEntryValue>>;
+  openFormDialog: (props: FormProps) => Promise<Record<string, FormDataEntryValue>>;
 }
 
 const DialogContext = createContext<DialogContextType | null>(null);
@@ -55,9 +47,7 @@ export const DialogProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const openFormDialog = (
-    props: FormProps,
-  ): Promise<Record<string, FormDataEntryValue>> => {
+  const openFormDialog = (props: FormProps): Promise<Record<string, FormDataEntryValue>> => {
     return new Promise((resolve) => {
       setDialog({ props, resolve, type: "form" });
     });

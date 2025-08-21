@@ -11,9 +11,7 @@ export default function AboutCookiesPage() {
   return (
     <>
       <header className="space-y-2">
-        <h1 className="text-2xl font-bold">
-          {isEnglish ? "What is a cookie?" : "Що таке cookies?"}
-        </h1>
+        <h1 className="text-2xl font-bold">{isEnglish ? "What is a cookie?" : "Що таке cookies?"}</h1>
         <p>
           🍪 <strong>{isEnglish ? "A cookie" : "Cookie"}</strong>{" "}
           {isEnglish
@@ -26,9 +24,7 @@ export default function AboutCookiesPage() {
         <h2 className="text-xl font-semibold">
           {isEnglish ? "Why do I use cookies?" : "Чому я використовую cookies?"}
         </h2>
-        <p>
-          {isEnglish ? "For a few different purposes:" : "З кількох причин:"}
-        </p>
+        <p>{isEnglish ? "For a few different purposes:" : "З кількох причин:"}</p>
         <ul className="list-inside list-disc space-y-1">
           <li>
             {isEnglish

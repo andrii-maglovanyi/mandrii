@@ -16,9 +16,9 @@ import { Container } from "../Container";
 import { Logo } from "../Logo";
 
 const AnimatedIconSwap = ({ isOpen }: { isOpen: boolean }) => (
-  <span
-    className={`relative inline-block h-6 w-6 transition-transform duration-300`}
-  >
+  <span className={`
+    relative inline-block h-6 w-6 transition-transform duration-300
+  `}>
     <Menu
       className={clsx(
         "absolute inset-0 transition-transform duration-300",
@@ -39,10 +39,7 @@ type MobileLayoutProps = {
   navLinks: React.ReactNode;
 };
 
-export function MobileLayout({
-  children,
-  navLinks,
-}: Readonly<MobileLayoutProps>) {
+export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const i18n = useI18n();
   const pathname = usePathname();
@@ -53,11 +50,9 @@ export function MobileLayout({
 
   return (
     <>
-      <header
-        className={`
-          relative z-50 flex h-16 items-center justify-end px-4 shadow-md
-        `}
-      >
+      <header className={`
+        relative z-50 flex h-16 items-center justify-end px-4 shadow-md
+      `}>
         <span className="absolute left-1/2 -translate-x-1/2 transform">
           <Logo />
         </span>

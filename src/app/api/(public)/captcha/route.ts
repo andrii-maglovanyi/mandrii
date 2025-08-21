@@ -20,26 +20,17 @@ export async function POST(request: Request) {
     const { action, token } = await request.json();
 
     if (!token || typeof token !== "string") {
-      return Response.json(
-        { error: "Invalid or missing reCAPTCHA token" },
-        { status: 400 },
-      );
+      return Response.json({ error: "Invalid or missing reCAPTCHA token" }, { status: 400 });
     }
 
     if (!action || typeof action !== "string") {
-      return Response.json(
-        { error: "Invalid or missing action" },
-        { status: 400 },
-      );
+      return Response.json({ error: "Invalid or missing action" }, { status: 400 });
     }
 
     const success = await verifyCaptcha(token, action);
 
     if (!success) {
-      return Response.json(
-        { error: "reCAPTCHA verification failed" },
-        { status: 403 },
-      );
+      return Response.json({ error: "reCAPTCHA verification failed" }, { status: 403 });
     }
 
     return Response.json({ success }, { status: 200 });

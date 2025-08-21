@@ -111,12 +111,7 @@ export const LocationsMap = ({
         dashedCircleRef.current.setMap(null);
       }
 
-      dashedCircleRef.current = createDashedCirclePolyline(
-        map,
-        userLocation,
-        distance,
-        COLOR_STYLES[colorScheme].bg,
-      );
+      dashedCircleRef.current = createDashedCirclePolyline(map, userLocation, distance, COLOR_STYLES[colorScheme].bg);
       if (dashedCircleRef.current) {
         const path = dashedCircleRef.current.getPath();
         const bounds = new google.maps.LatLngBounds();
@@ -142,11 +137,7 @@ export const LocationsMap = ({
   });
 
   if (!isLoaded) {
-    return (
-      <div className="h-full w-full items-center justify-center">
-        {i18n("Loading map...")}
-      </div>
-    );
+    return <div className="h-full w-full items-center justify-center">{i18n("Loading map...")}</div>;
   }
 
   return (

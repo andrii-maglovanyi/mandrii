@@ -10,9 +10,7 @@ import { SignInForm } from "./SignInForm";
 import { UserMenu } from "./UserMenu";
 import { UserProfile } from "./UserProfile";
 
-export function MobileAuth({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>) {
   const i18n = useI18n();
 
   const { data: profileData, status } = useSession();

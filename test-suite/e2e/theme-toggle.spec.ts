@@ -3,9 +3,7 @@ import { expect, test } from "@playwright/test";
 test.describe("Theme toggle (desktop)", () => {
   test.use({ viewport: { height: 800, width: 1280 } });
 
-  test("should switch between light and dark mode and persist", async ({
-    page,
-  }) => {
+  test("should switch between light and dark mode and persist", async ({ page }) => {
     await page.goto("/");
 
     const toggle = page.getByTestId("theme-toggle-desktop");
@@ -26,9 +24,7 @@ test.describe("Theme toggle (desktop)", () => {
 test.describe("Theme toggle (mobile)", () => {
   test.use({ viewport: { height: 812, width: 375 } }); // iPhone X
 
-  test("should switch between light and dark mode and persist", async ({
-    page,
-  }) => {
+  test("should switch between light and dark mode and persist", async ({ page }) => {
     await page.goto("/");
 
     const html = page.locator("html");

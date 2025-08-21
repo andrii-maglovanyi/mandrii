@@ -11,16 +11,11 @@ export async function GET(request: NextRequest) {
   try {
     // Extract client IP address from headers
     const forwardedFor = request.headers.get("x-forwarded-for");
-    const ip = forwardedFor
-      ? forwardedFor.split(",")[0].trim()
-      : request.headers.get("x-real-ip");
+    const ip = forwardedFor ? forwardedFor.split(",")[0]?.trim() : request.headers.get("x-real-ip");
 
     // Validate the extracted IP
     if (!ip || ipaddr.parse(ip).range() === "private") {
-      return NextResponse.json(
-        { error: "Invalid or private IP address" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid or private IP address" }, { status: 400 });
     }
 
     const cached = ipCache.get(ip);
@@ -42,20 +37,14 @@ export async function GET(request: NextRequest) {
 
     // Handle API response failure
     if (!locationResponse.ok) {
-      return NextResponse.json(
-        { error: "Failed to fetch location data" },
-        { status: locationResponse.status },
-      );
+      return NextResponse.json({ error: "Failed to fetch location data" }, { status: locationResponse.status });
     }
 
     const locationData = await locationResponse.json();
 
     // Check if IP-API returned an error
     if (locationData.status === "fail") {
-      return NextResponse.json(
-        { error: locationData.message ?? "Failed to retrieve location data" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: locationData.message ?? "Failed to retrieve location data" }, { status: 400 });
     }
 
     ipCache.set(ip, {

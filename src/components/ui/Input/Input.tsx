@@ -86,9 +86,7 @@ export function Input<K extends string, T extends string>({
       }
     };
 
-    const handleKeyDown = (
-      event: KeyboardEvent | React.KeyboardEvent<HTMLElement>,
-    ) => {
+    const handleKeyDown = (event: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
       if (event.key === "Escape") {
         setShowSuggestions(false);
       }
@@ -114,18 +112,13 @@ export function Input<K extends string, T extends string>({
   };
 
   const formedSuggestions = filteredSuggestions.map((suggestion) =>
-    typeof suggestion === "string"
-      ? { label: suggestion, value: suggestion }
-      : suggestion,
+    typeof suggestion === "string" ? { label: suggestion, value: suggestion } : suggestion,
   );
 
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label
-          className="text-sm font-medium text-on-surface"
-          htmlFor={inputId}
-        >
+        <label className="text-sm font-medium text-on-surface" htmlFor={inputId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>
@@ -161,10 +154,7 @@ export function Input<K extends string, T extends string>({
         {formedSuggestions.length > 0 && showSuggestions && (
           <Menu
             onSelect={(option) => {
-              setQuery(
-                formedSuggestions.find(({ value }) => value === option)
-                  ?.label ?? option,
-              );
+              setQuery(formedSuggestions.find(({ value }) => value === option)?.label ?? option);
               onSelectSuggestion?.(option);
               setShowSuggestions(false);
             }}

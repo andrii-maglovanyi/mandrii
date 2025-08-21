@@ -47,9 +47,7 @@ const QRCodeGenerator = () => {
   }, []);
 
   useEffect(() => {
-    const data = text?.includes(`ref.${UrlHelper.getProductionHostname()}`)
-      ? encodeURI(text)
-      : "";
+    const data = text?.includes(`ref.${UrlHelper.getProductionHostname()}`) ? encodeURI(text) : "";
 
     if (!data) {
       setIsDisabled(true);
@@ -79,11 +77,7 @@ const QRCodeGenerator = () => {
 
           ctx.fillStyle = "#273D6C";
           ctx.font = `${fontSize}px ${font}`;
-          ctx.fillText(
-            `ref.${UrlHelper.getProductionHostname()}`,
-            textX,
-            margin * 2,
-          );
+          ctx.fillText(`ref.${UrlHelper.getProductionHostname()}`, textX, margin * 2);
 
           const barWidth = canvas.width;
           const barHeight = margin * 3;

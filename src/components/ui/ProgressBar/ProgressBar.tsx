@@ -7,10 +7,7 @@ export interface ProgressBarProps {
   onLoaded?: () => void;
 }
 
-export function ProgressBar({
-  isLoading,
-  onLoaded,
-}: Readonly<ProgressBarProps>) {
+export function ProgressBar({ isLoading, onLoaded }: Readonly<ProgressBarProps>) {
   const [progress, setProgress] = useState(0);
   const animationFrame = useRef<null | number>(null);
   const finishTimeout = useRef<NodeJS.Timeout | null>(null);

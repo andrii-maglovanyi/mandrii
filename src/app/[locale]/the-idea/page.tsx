@@ -24,9 +24,7 @@ you're welcome here.`
       </header>
 
       <section className="space-y-2">
-        <h2 className="text-xl font-semibold">
-          {isEnglish ? "What's the idea?" : "У чому ідея?"}
-        </h2>
+        <h2 className="text-xl font-semibold">{isEnglish ? "What's the idea?" : "У чому ідея?"}</h2>
         <p>
           {isEnglish
             ? `I write about travel and discovery, history, culture, social 
@@ -41,9 +39,7 @@ where we are.`
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-xl font-semibold">
-          {isEnglish ? "Why does it matter?" : "Навіщо це потрібно?"}
-        </h2>
+        <h2 className="text-xl font-semibold">{isEnglish ? "Why does it matter?" : "Навіщо це потрібно?"}</h2>
         <p>
           {isEnglish
             ? `Ukrainian culture, language, and identity - all of it is under 
@@ -67,9 +63,7 @@ belong.`
 
       <section className="space-y-2">
         <h2 className="text-xl font-semibold">
-          {isEnglish
-            ? "Discover Ukrainian places"
-            : "Відкривай українське поруч"}
+          {isEnglish ? "Discover Ukrainian places" : "Відкривай українське поруч"}
         </h2>
         <p>
           {isEnglish
