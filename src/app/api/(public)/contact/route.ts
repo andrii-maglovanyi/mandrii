@@ -4,10 +4,11 @@ import { getLocaleContext } from "~/lib/api/helpers";
 import { verifyCaptcha } from "~/lib/api/recaptcha";
 import { validateRequest } from "~/lib/api/validate";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
+import { privateConfig } from "~/lib/config/private";
 import { constants } from "~/lib/constants";
 import { getContactSchema } from "~/lib/validation/contact";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(privateConfig.email.resendApiKey);
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
@@ -28,7 +29,7 @@ export const POST = (req: Request) =>
       from: constants.fromEmail(locale),
       subject: i18n("A message from {name}<{email}>", { email, name }),
       text: message,
-      to: process.env.AUTHOR_EMAIL!,
+      to: privateConfig.email.authorEmail,
     });
 
     return Response.json({ status: "sent" });

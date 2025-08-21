@@ -2,6 +2,7 @@ import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { Ref, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 
 import { useI18n } from "~/i18n/useI18n";
+import { publicConfig } from "~/lib/config/public";
 import { GetPublicLocationsQuery } from "~/types";
 import { UUID } from "~/types/uuid";
 
@@ -56,7 +57,7 @@ export const LocationsMap = ({
     () => ({
       colorScheme,
       fullscreenControl: false,
-      mapId: process.env.NEXT_PUBLIC_GOOGLE_MAP_ID,
+      mapId: publicConfig.maps.mapId,
       mapTypeControl: false,
       streetViewControl: false,
     }),
@@ -64,7 +65,7 @@ export const LocationsMap = ({
   );
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+    googleMapsApiKey: publicConfig.maps.apiKey,
     libraries,
   });
 

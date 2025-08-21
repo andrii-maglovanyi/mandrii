@@ -8,12 +8,10 @@ import Resend from "next-auth/providers/resend";
 import { UserRole } from "~/types/next-auth";
 
 import { sendVerificationRequest } from "./authSendRequest";
+import { isProduction } from "./config/env";
+import { privateConfig } from "./config/private";
+import { publicConfig } from "./config/public";
 import { UrlHelper } from "./url-helper";
-
-const JWT_SECRET = process.env.NEXTAUTH_SECRET;
-if (!JWT_SECRET) {
-  throw new Error("Missing NEXTAUTH_SECRET in environment variables.");
-}
 
 const getHasuraClaims = ({ id, role }: { id: string; role: UserRole }) => ({
   "x-hasura-allowed-roles": role === "admin" ? ["admin", "user"] : ["user"],
@@ -22,7 +20,7 @@ const getHasuraClaims = ({ id, role }: { id: string; role: UserRole }) => ({
 });
 
 const getUserById = async (id: string) => {
-  const res = await fetch(process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT!, {
+  const res = await fetch(publicConfig.hasura.endpoint, {
     body: JSON.stringify({
       query: `
         query GetUserById($id: uuid!) {
@@ -36,7 +34,7 @@ const getUserById = async (id: string) => {
     }),
     headers: {
       "Content-Type": "application/json",
-      "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET!,
+      "x-hasura-admin-secret": privateConfig.hasura.adminSecret,
     },
     method: "POST",
   });
@@ -87,7 +85,7 @@ const authOptions = {
           "https://hasura.io/jwt/claims": dbUser.hasuraClaims,
           sub: user?.id || token.sub,
         },
-        JWT_SECRET,
+        privateConfig.auth.nextAuthSecret,
         {
           algorithm: "HS256",
           expiresIn: "1h",
@@ -98,21 +96,20 @@ const authOptions = {
       return session;
     },
   },
-  cookies:
-    process.env.NODE_ENV === "production"
-      ? {
-          sessionToken: {
-            name: `__Secure-next-auth.session-token`,
-            options: {
-              domain: `.${UrlHelper.getHostname()}`,
-              httpOnly: true,
-              path: "/",
-              sameSite: "lax" as const,
-              secure: true,
-            },
+  cookies: isProduction
+    ? {
+        sessionToken: {
+          name: `__Secure-next-auth.session-token`,
+          options: {
+            domain: `.${UrlHelper.getHostname()}`,
+            httpOnly: true,
+            path: "/",
+            sameSite: "lax" as const,
+            secure: true,
           },
-        }
-      : undefined,
+        },
+      }
+    : undefined,
   pages: {
     verifyRequest: "/auth/verify-request",
   },
@@ -122,6 +119,7 @@ const authOptions = {
       sendVerificationRequest,
     }),
   ],
+  secret: privateConfig.auth.nextAuthSecret,
   session: {
     strategy: "jwt" as const,
   },
@@ -130,7 +128,7 @@ const authOptions = {
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authOptions,
   adapter: HasuraAdapter({
-    adminSecret: process.env.HASURA_ADMIN_SECRET!,
-    endpoint: process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT!,
+    adminSecret: privateConfig.hasura.adminSecret,
+    endpoint: publicConfig.hasura.endpoint,
   }),
 });

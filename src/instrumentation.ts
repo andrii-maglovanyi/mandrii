@@ -1,7 +1,9 @@
 import * as Sentry from "@sentry/nextjs";
 
+import { isDevelopment } from "./lib/config/env";
+
 export async function register() {
-  if (process.env.NODE_ENV !== "production") {
+  if (isDevelopment) {
     return;
   }
 
