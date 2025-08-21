@@ -5,6 +5,7 @@ import { GetPublicLocationsQuery, Location_Status_Enum, Locations } from "~/type
 import { UUID } from "~/types/uuid";
 
 import { COLOR_STYLES } from "./constants";
+import { ST } from "next/dist/shared/lib/utils";
 
 type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;
 
@@ -30,6 +31,8 @@ type Props = {
   onLocationSelected: (id: UUID) => void;
   selectedLocationId: null | UUID;
 };
+
+const pendingIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hourglass-icon lucide-hourglass inline mb-0.5"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>`;
 
 export function useDrawMarkers(props: Props) {
   useEffect(() => {
@@ -140,9 +143,7 @@ function createArrowDiv(
   arrowDiv.style.position = "absolute";
   arrowDiv.style.transform = "translateX(-50%)";
   arrowDiv.style.width = "0";
-  arrowDiv.style.borderTop = `4px solid ${
-    status === Location_Status_Enum.Pending ? STYLES.bgPending : isSelected ? STYLES.bgActive : STYLES.bg
-  }`;
+  arrowDiv.style.borderTop = `4px solid ${isSelected ? STYLES.bgActive : STYLES.bg}`;
   return arrowDiv;
 }
 
@@ -160,12 +161,9 @@ function createLabelSpan(
   labelSpan.style.position = "relative";
   labelSpan.style.whiteSpace = "nowrap";
   labelSpan.style.padding = "4px 8px";
-  labelSpan.innerHTML = getTextContent(name);
-  labelSpan.style.backgroundColor = isSelected
-    ? STYLES.bgActive
-    : status === Location_Status_Enum.Pending
-      ? STYLES.bgPending
-      : STYLES.bg;
+  labelSpan.innerHTML = `${status === Location_Status_Enum.Pending ? pendingIcon : ""} ${getTextContent(name)}`;
+  labelSpan.style.backgroundColor = isSelected ? STYLES.bgActive : STYLES.bg;
+
   return labelSpan;
 }
 

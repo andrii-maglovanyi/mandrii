@@ -23,8 +23,6 @@ async function generatePdfFromHtml(htmlContent: string) {
     launchOptions.args = chromium.args;
   }
 
-  console.log("Launching Puppeteer with options:", launchOptions);
-
   const browser = await puppeteer.launch(launchOptions);
   const page = await browser.newPage();
 
@@ -73,9 +71,6 @@ export const POST = (req: NextRequest) =>
       files.filter((f) => f.endsWith(".css")).map((f) => fs.readFile(path.join(cssDir, f), "utf8")),
     );
     const tailwindCss = cssChunks.join("\n");
-
-    console.log("Available CSS classes:", tailwindCss.includes("prose-sm") ? "prose-sm found" : "prose-sm NOT found");
-    console.log("CSS length:", tailwindCss.length);
 
     const fullHtml = `
 <!DOCTYPE html>

@@ -8,7 +8,7 @@ import Resend from "next-auth/providers/resend";
 import { UserRole } from "~/types/next-auth";
 
 import { sendVerificationRequest } from "./authSendRequest";
-import { isProduction } from "./config/env";
+import { isDevelopment, isProduction } from "./config/env";
 import { privateConfig } from "./config/private";
 import { publicConfig } from "./config/public";
 import { UrlHelper } from "./url-helper";
@@ -81,7 +81,7 @@ const authOptions = {
         {
           algorithm: "HS256",
           expiresIn: "1h",
-          issuer: UrlHelper.getBaseUrl(),
+          issuer: UrlHelper.getBaseUrl(isDevelopment ? "preview" : undefined), // Use Preview as issuer in development for Hasura JWT
         },
       );
 

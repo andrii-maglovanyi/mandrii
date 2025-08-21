@@ -30,8 +30,6 @@ export async function sendVerificationRequest(params: SendVerificationRequestPar
   const i18n = await getI18n({ locale });
   const emailParams = { i18n, url };
 
-  console.log("DEBUG Token:", token); // Debugging line to check the token value
-
   const isHuman = token && (await validateCaptcha(token, "signin_form"));
   if (!isHuman) {
     throw new Error("reCAPTCHA verification failed");

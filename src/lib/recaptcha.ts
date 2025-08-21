@@ -13,11 +13,6 @@ export async function validateCaptcha(token: string, action: string): Promise<bo
     method: "POST",
   });
 
-  console.log("DEBUG data:", JSON.stringify({ action, token }));
-  console.log("DEBUG request URL:", `${UrlHelper.buildApiUrl("captcha")}`);
-  console.log("DEBUG response status:", res.status);
-  console.log("DEBUG response headers:", JSON.stringify(res.headers));
-
   if (!res.ok) {
     return false;
   }

@@ -29,13 +29,13 @@ export class UrlHelper {
     }
   }
 
-  static getBaseUrl() {
-    const { hostname, scheme } = this.getConfig();
+  static getBaseUrl(envNameOverride?: keyof typeof this.config) {
+    const { hostname, scheme } = this.getConfig(envNameOverride);
     return `${scheme}://${hostname}`;
   }
 
-  static getConfig() {
-    return this.config[envName];
+  static getConfig(envNameOverride?: keyof typeof this.config) {
+    return this.config[envNameOverride ?? envName];
   }
 
   static getHostname() {
