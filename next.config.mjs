@@ -8,7 +8,7 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
   experimental: {
     outputFileTracingIncludes: {
-      "/api/**/*": ["./content/**/*"],
+      "/api/**/*": ["./content/**/*", ".next/**/*"],
     },
   },
   images: {
