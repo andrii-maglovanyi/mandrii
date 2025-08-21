@@ -108,6 +108,7 @@ const authOptions = {
   providers: [
     Google,
     Resend({
+      apiKey: privateConfig.email.resendApiKey,
       sendVerificationRequest,
     }),
   ],
