@@ -224,7 +224,7 @@ class MarkdownContentManager {
         meta: matterResult.data,
       };
     } catch (error) {
-      console.error(`Error getting content "${contentType}/${id}" (${lang}):`, error);
+      console.error(`Error getting content "${contentType}/${id}" (${locale}):`, error);
       return null;
     }
   }
