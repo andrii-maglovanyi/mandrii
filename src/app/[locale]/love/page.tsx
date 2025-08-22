@@ -5,6 +5,8 @@ import { SOCIAL_LINKS, SUPPORT_LINKS } from "~/components/layout/PlatformLinks/l
 import { PlatformLink } from "~/components/layout/PlatformLinks/PlatformLink";
 import { useI18n } from "~/i18n/useI18n";
 
+import { Avatar } from "./avatar";
+
 export default function LovePage() {
   const i18n = useI18n();
 
@@ -17,7 +19,7 @@ export default function LovePage() {
         border-b border-b-black
         dark:border-b-neutral-700
       `}>
-        <Image alt="Mandrii" height={100} src="/static/mandrii.png" width={100} />
+        <Avatar />
       </div>
       <h1
         className={`

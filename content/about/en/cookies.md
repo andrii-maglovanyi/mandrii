@@ -3,8 +3,6 @@ title: "What is a cookie?"
 date: "2025-08-21T16:14:00Z"
 ---
 
-# What is a cookie?
-
 🍪 **A cookie** is a tiny file stored on your computer or phone. It contains the website address and some data that your browser sends back to that website every time you visit it. Cookies are usually harmless and helpful and do not contain personal information or anything dangerous.
 
 ## Why do I use cookies?

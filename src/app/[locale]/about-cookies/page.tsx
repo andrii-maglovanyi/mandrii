@@ -5,8 +5,9 @@ import { Locale } from "~/types";
 const type = "about";
 const id = "cookies";
 
-export default async function AboutCookiesPage() {
-  const data = await contentManager.getContentById(type, id, Locale.EN);
+export default async function AboutCookiesPage({ params }: { params: { locale: Locale } }) {
+  const locale = params.locale;
+  const data = await contentManager.getContentById(type, id, locale);
 
   return (
     <>

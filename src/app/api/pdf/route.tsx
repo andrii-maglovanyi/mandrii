@@ -1,3 +1,5 @@
+import { format, Locale } from "date-fns";
+import { enGB, uk } from "date-fns/locale";
 import fs from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
@@ -9,6 +11,20 @@ import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { isDevelopment } from "~/lib/config/env";
 import { compileMDX } from "~/lib/mdx/compiler";
 import { contentManager } from "~/lib/mdx/reader";
+import { UrlHelper } from "~/lib/url-helper";
+import { toSnakeCase } from "~/lib/utils/string";
+
+const localeMap: Record<string, Locale> = {
+  en: enGB,
+  uk: uk,
+};
+
+const createFilename = (title: string) => {
+  const date = format(new Date(), "yyyy-MM-dd");
+  const filename = `${toSnakeCase(title)}_${date}.pdf`;
+
+  return `filename*=UTF-8''${encodeURIComponent(filename)}`;
+};
 
 async function generatePdfFromHtml(htmlContent: string) {
   const launchOptions: LaunchOptions = {
@@ -54,8 +70,7 @@ async function renderToString(Component: React.ComponentType) {
 export const POST = (req: NextRequest) =>
   withErrorHandling(async () => {
     const { locale } = await getLocaleContext(req);
-
-    const { filename, id, type } = await req.json();
+    const { id, type } = await req.json();
 
     const data = await contentManager.getContentById(type, id, locale);
 
@@ -105,8 +120,13 @@ export const POST = (req: NextRequest) =>
   </head>
   <body>
     <div class="prose prose-sm max-w-none">
+      <h1>${data.meta.title}</h1>
       ${await renderToString(MDXContent.default)}
     </div>
+    <div class="fixed bottom-0 right-0 flex items-center justify-end space-x-1 text-sm text-neutral-disabled">
+    <span>${format(new Date(data.meta.date), "dd MMMM yyyy", { locale: (locale && localeMap[locale]) ?? enGB })}</span>
+    <span>&bull;</span>
+    <a href="${UrlHelper.getBaseUrl()}">mandrii.com</></div>
   </body>
 </html>
 `;
@@ -116,7 +136,7 @@ export const POST = (req: NextRequest) =>
     return new NextResponse(buffer, {
       headers: {
         "Cache-Control": "no-cache",
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Disposition": `attachment; filename="${createFilename(data.meta.title)}.pdf"`,
         "Content-Type": "application/pdf",
       },
       status: 200,

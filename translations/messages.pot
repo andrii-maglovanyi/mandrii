@@ -123,6 +123,12 @@ msgstr ""
 msgid "Unable to find your location. Please try searching!"
 msgstr ""
 
+msgid "Map is not available yet. Please wait until it loads"
+msgstr ""
+
+msgid "Could not get place details."
+msgstr ""
+
 msgid "You've made too many searches in a short time. Please wait a minute and try again."
 msgstr ""
 
@@ -187,6 +193,18 @@ msgid "What does it mean?"
 msgstr ""
 
 msgid "Accept"
+msgstr ""
+
+msgid "PDF generated successfully"
+msgstr ""
+
+msgid "An error occurred while generating PDF"
+msgstr ""
+
+msgid "Generating PDF..."
+msgstr ""
+
+msgid "Download as PDF"
 msgstr ""
 
 msgid "Thanks for your message!"
@@ -265,9 +283,6 @@ msgid "Confirm your subscription"
 msgstr ""
 
 msgid "A message from {name}<{email}>"
-msgstr ""
-
-msgid "Hello, world!"
 msgstr ""
 
 msgid "Unsubscribed"

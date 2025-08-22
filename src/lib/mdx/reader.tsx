@@ -7,7 +7,7 @@ import { Locale } from "~/types";
 export interface ContentData {
   content: string;
   id: string;
-  meta: Record<string, number | string>;
+  meta: Record<string, string>;
 }
 
 export interface ContentManagerConfig {
@@ -181,28 +181,38 @@ class MarkdownContentManager {
   public async getContentById(
     contentType: ContentType,
     id: string,
-    lang: Locale = this.config.defaultLocale,
+    locale: Locale = this.config.defaultLocale,
   ): Promise<ContentData | null> {
     try {
-      const validLang = this.validateLocale(lang);
-      const contentDirectory = this.getContentDirectory(contentType, validLang);
+      const scanDirectory = (locale: Locale) => {
+        let fullPath: null | string = null;
 
-      // Try both .md and .mdx extensions
-      const possibleFiles = [`${id}.md`, `${id}.mdx`];
-      let fullPath: null | string = null;
+        const contentDirectory = this.getContentDirectory(contentType, locale);
+        const possibleFiles = [`${id}.md`, `${id}.mdx`];
 
-      for (const filename of possibleFiles) {
-        const testPath = path.join(contentDirectory, filename);
-        console.log(`Checking for content file: ${testPath}`);
-        if (fs.existsSync(testPath)) {
-          fullPath = testPath;
-          break;
+        for (const filename of possibleFiles) {
+          const testPath = path.join(contentDirectory, filename);
+          console.log(`Checking for content file: ${testPath}`);
+          if (fs.existsSync(testPath)) {
+            fullPath = testPath;
+            break;
+          }
         }
-      }
+
+        return fullPath;
+      };
+
+      const validLocale = this.validateLocale(locale);
+      let fullPath = scanDirectory(validLocale);
 
       if (!fullPath) {
-        console.warn(`Content not found: ${contentType}/${id} (${lang})`);
-        return null;
+        console.warn(`Content ${contentType}/${id} not found for ${locale} locale. Falling back to default locale.`);
+        fullPath = scanDirectory(Locale.EN);
+
+        if (!fullPath) {
+          console.warn(`Content ${contentType}/${id} not found in default locale either.`);
+          return null;
+        }
       }
 
       const fileContents = fs.readFileSync(fullPath, "utf8");
@@ -286,61 +296,10 @@ class MarkdownContentManager {
     return stats;
   }
 
-  private getContentDirectory(contentType: ContentType, lang: Locale) {
-    console.log(`Base directory: ${this.baseDirectory}`);
+  private getContentDirectory(contentType: ContentType, locale: Locale) {
+    const validLocale = this.validateLocale(locale);
 
-    // List base directory contents
-    try {
-      if (fs.existsSync(this.baseDirectory)) {
-        const baseContents = fs.readdirSync(this.baseDirectory);
-        console.log(`Base directory contents: ${baseContents.join(", ")}`);
-      } else {
-        console.log(`Base directory does not exist: ${this.baseDirectory}`);
-
-        // Check if parent directory exists and what's in it
-        const parentDir = path.dirname(this.baseDirectory);
-        if (fs.existsSync(parentDir)) {
-          const parentContents = fs.readdirSync(parentDir);
-          console.log(`Parent directory (${parentDir}) contents: ${parentContents.join(", ")}`);
-        }
-      }
-    } catch (error) {
-      console.error(`Error listing base directory contents: ${error}`);
-    }
-
-    const validLang = this.validateLocale(lang);
-
-    console.log(`Using content directory for type "${contentType}" and locale "${validLang}"`);
-
-    // List contentType directory contents
-    const contentTypeDir = path.join(this.baseDirectory, contentType);
-    try {
-      if (fs.existsSync(contentTypeDir)) {
-        const contentTypeContents = fs.readdirSync(contentTypeDir);
-        console.log(`Content type directory (${contentTypeDir}) contents: ${contentTypeContents.join(", ")}`);
-      } else {
-        console.log(`Content type directory does not exist: ${contentTypeDir}`);
-      }
-    } catch (error) {
-      console.error(`Error listing content type directory: ${error}`);
-    }
-
-    const finalContentDir = path.join(this.baseDirectory, contentType, validLang);
-    console.log(`Final content directory: ${finalContentDir}`);
-
-    // List final directory contents
-    try {
-      if (fs.existsSync(finalContentDir)) {
-        const finalContents = fs.readdirSync(finalContentDir);
-        console.log(`Final content directory contents: ${finalContents.join(", ")}`);
-      } else {
-        console.log(`Final content directory does not exist: ${finalContentDir}`);
-      }
-    } catch (error) {
-      console.error(`Error listing final content directory: ${error}`);
-    }
-
-    return finalContentDir;
+    return path.join(this.baseDirectory, contentType, validLocale);
   }
 
   private isMarkdownFile(filename: string) {

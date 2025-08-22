@@ -1,5 +1,4 @@
 {
-  "Hello, world!": "Привіт, світ!",
   "Light mode": "Світла тема",
   "Dark mode": "Темна тема",
   "Close menu": "Закрити меню",
@@ -99,5 +98,11 @@
   "Whoa, slow down!": "Гей, не так швидко!",
   "Oops, try again": "Ой, спробуй ще раз",
   "Copied": "Скопійовано",
-  "Unable to find your location_ Please try searching!": "Не вдалося знайти твою локацію. Спробуй пошук!"
+  "Unable to find your location_ Please try searching!": "Не вдалося знайти твою локацію. Спробуй пошук!",
+  "Map is not available yet_ Please wait until it loads": "Карта ще недоступна. Будь ласка, зачекай, поки вона завантажиться",
+  "Could not get place details_": "Не вдалося отримати інформацію про локацію.",
+  "PDF generated successfully": "PDF успішно згенеровано",
+  "An error occurred while generating PDF": "Під час створення PDF сталася помилка",
+  "Generating PDF___": "Створення PDF...",
+  "Download as PDF": "Завантажити як PDF"
 }

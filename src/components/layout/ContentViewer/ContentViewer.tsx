@@ -29,6 +29,7 @@ export const ContentViewer = async ({ data, id, type }: ContentViewerProps) => {
           prose max-w-none
           dark:prose-invert
         `}>
+          <h1>{meta.title}</h1>
           <Content />
         </article>
       </div>
