@@ -10,6 +10,7 @@ import { ActionButton } from "~/components/ui";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useI18n } from "~/i18n/useI18n";
 import { ContentData } from "~/lib/mdx/reader";
+import { sendToMixpanel } from "~/lib/mixpanel";
 import { toSnakeCase } from "~/lib/utils/string";
 
 interface DownloadContentButtonProps {
@@ -26,6 +27,7 @@ export const DownloadContentButton = ({ id, meta, type }: DownloadContentButtonP
   const i18n = useI18n();
 
   const handleGeneratePDF = async () => {
+    sendToMixpanel("Clicked Generate PDF", { id, type });
     setIsGenerating(true);
 
     try {
