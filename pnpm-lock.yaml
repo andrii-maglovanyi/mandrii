@@ -216,15 +216,9 @@ importers:
       eslint-plugin-testing-library:
         specifier: ^7.6.1
         version: 7.6.8(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
-      husky:
-        specifier: ^9.1.7
-        version: 9.1.7
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
-      lint-staged:
-        specifier: ^16.1.2
-        version: 16.1.6
       poeditor-sync-tool:
         specifier: ^1.0.0
         version: 1.0.0
