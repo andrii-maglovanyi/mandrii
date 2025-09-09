@@ -1,0 +1,23 @@
+[project]
+name = "services"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [
+    {name = "Andrii Maglovanyi", email = "andrii.maglovanyi@gmail.com"},
+]
+dependencies = [
+    "fastapi>=0.116.1",
+    "requests>=2.32.5",
+    "uvicorn[standard]>=0.35.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.12.11",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
