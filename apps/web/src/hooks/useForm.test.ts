@@ -1,0 +1,98 @@
+import { act, renderHook } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { z } from "zod";
+
+import { useForm } from "./useForm"; // adjust path to your hook file
+
+const schema = z.object({
+  email: z.string().email("Invalid email"),
+  name: z.string().min(1, "Name required"),
+});
+
+describe("useForm", () => {
+  it("initializes with empty or provided values", () => {
+    const { result } = renderHook(() => useForm({ initialValues: { name: "John" }, schema }));
+    expect(result.current.values.name).toBe("John");
+    expect(result.current.values.email).toBe("");
+  });
+
+  it("updates values via onChange", () => {
+    const { result } = renderHook(() => useForm({ schema }));
+
+    act(() => {
+      result.current.handleChange("name")("Jane");
+    });
+
+    expect(result.current.values.name).toBe("Jane");
+  });
+
+  it("validates field on blur and sets error", () => {
+    const { result } = renderHook(() => useForm({ schema }));
+
+    act(() => {
+      result.current.handleBlur("name")();
+    });
+
+    expect(result.current.errors.name).toBe("Name required");
+    expect(result.current.touched.name).toBe(true);
+  });
+
+  it("validates entire form and returns false if invalid", () => {
+    const { result } = renderHook(() => useForm({ schema }));
+
+    let valid = true;
+
+    act(() => {
+      valid = result.current.validateForm();
+    });
+
+    expect(valid).toBe(false);
+    expect(result.current.errors.name).toBe("Name required");
+    expect(result.current.errors.email).toBe("Invalid email");
+  });
+
+  it("returns true if form is valid", () => {
+    const { result } = renderHook(() =>
+      useForm({
+        initialValues: { email: "alice@example.com", name: "Alice" },
+        schema,
+      }),
+    );
+
+    let valid = false;
+    act(() => {
+      valid = result.current.validateForm();
+    });
+
+    expect(valid).toBe(true);
+    expect(result.current.errors.name).toBeUndefined();
+    expect(result.current.errors.email).toBeUndefined();
+  });
+
+  it("allows manually setting server-side errors", () => {
+    const { result } = renderHook(() => useForm({ schema }));
+
+    act(() => {
+      result.current.setFieldErrorsFromServer([{ code: "custom", message: "Email already taken", path: ["email"] }]);
+    });
+
+    expect(result.current.errors.email).toBe("Email already taken");
+  });
+
+  it("computes isFormValid correctly", () => {
+    const { result } = renderHook(() =>
+      useForm({
+        initialValues: { email: "alice@example.com", name: "Alice" },
+        schema,
+      }),
+    );
+
+    expect(result.current.isFormValid).toBe(true);
+
+    act(() => {
+      result.current.handleChange("email")("invalid");
+    });
+
+    expect(result.current.isFormValid).toBe(false);
+  });
+});
