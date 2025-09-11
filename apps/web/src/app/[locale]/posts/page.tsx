@@ -1,10 +1,9 @@
 import { MixpanelTracker, PostCard } from "~/components/layout";
-import { Breadcrumbs } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { ContentData, contentManager } from "~/lib/mdx/reader";
 import { Locale } from "~/types";
 
-interface PostPageLayoutProps {
+interface PostsLayoutProps {
   locale: Locale;
   posts: Array<ContentData>;
 }
@@ -15,12 +14,11 @@ interface PostsPageProps {
 
 const type = "posts";
 
-const PostPageLayout = ({ locale, posts }: PostPageLayoutProps) => {
+const PostsPageLayout = ({ locale, posts }: PostsLayoutProps) => {
   const i18n = useI18n();
 
   return (
     <>
-      <Breadcrumbs items={[{ title: i18n("Posts"), url: `/${locale}/posts` }]} />
       <h1 className="mb-12 text-5xl font-extrabold text-on-surface">{i18n("Posts")}</h1>
 
       <div
@@ -30,7 +28,7 @@ const PostPageLayout = ({ locale, posts }: PostPageLayoutProps) => {
         `}
       >
         {posts.map(({ content, id, meta }) => (
-          <PostCard content={content} id={id} key={id} locale={locale} meta={meta} type={type} />
+          <PostCard content={content} id={id} key={id} locale={locale} meta={meta} type={type} withCategory />
         ))}
       </div>
     </>
@@ -43,7 +41,7 @@ export default async function PostsPage({ params }: PostsPageProps) {
 
   return (
     <>
-      <PostPageLayout locale={locale} posts={posts} />
+      <PostsPageLayout locale={locale} posts={posts} />
       <MixpanelTracker event="Viewed Posts Page" />
     </>
   );

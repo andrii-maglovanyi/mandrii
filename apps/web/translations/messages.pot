@@ -21,6 +21,9 @@ msgstr ""
 msgid "Dark mode"
 msgstr ""
 
+msgid "Profile"
+msgstr ""
+
 msgid "Hold up - **{email}**, you're already subscribed!"
 msgstr ""
 

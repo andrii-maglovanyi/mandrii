@@ -4,13 +4,13 @@ import path from "path";
 
 import { Locale } from "~/types";
 
-import { constants } from "../constants";
+import { CategorySlug } from "../posts/categories";
 
 export interface ContentData {
   content: string;
   id: string;
   meta: {
-    category?: (typeof constants.posts.enabledCategories)[number]["name"];
+    categorySlug?: CategorySlug;
     date: string;
     description?: string;
     images?: string[];
@@ -29,7 +29,7 @@ export interface ContentManagerConfig {
 export type ContentType = string; // 'posts', 'cv', etc
 
 interface ContentFilters {
-  category?: string;
+  categorySlug?: string;
   limit?: number;
   page?: number;
   pageSize?: number;
@@ -358,9 +358,9 @@ class MarkdownContentManager {
   }
 
   private passesFilters(contentData: ContentData, filters: ContentFilters): boolean {
-    if (filters.category) {
-      const contentCategory = contentData.meta.category;
-      if (!contentCategory || contentCategory !== filters.category) {
+    if (filters.categorySlug) {
+      const contentCategory = contentData.meta.categorySlug;
+      if (!contentCategory || contentCategory !== filters.categorySlug) {
         return false;
       }
     }

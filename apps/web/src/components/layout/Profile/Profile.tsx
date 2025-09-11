@@ -12,7 +12,7 @@ export const Profile = () => {
     <div className="flex flex-grow flex-col space-y-6">
       <h1 className="text-4xl font-bold">{i18n("Profile")}</h1>
 
-      {profileData?.user.name}
+      <h2>{profileData?.user.name}</h2>
     </div>
   );
 };
