@@ -32,9 +32,9 @@ export const withRef: MiddlewareFactory = (next) => {
         kv.incr(`ref:${topic}:hits`);
 
         fetch(`${request.nextUrl.origin}/api/slack-notify`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ topic, url: redirect.url }),
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
         });
 
         return NextResponse.redirect(redirect.url);

@@ -1,14 +1,15 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest } from "next/server";
+
 import { sendSlackNotification } from "~/lib/slack/ref";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { topic, url } = req.body;
+export async function POST(request: NextRequest) {
+  const { topic, url } = await request.json();
 
   try {
     await sendSlackNotification(topic, url);
-    res.status(200).json({ ok: true });
+    return Response.json({ ok: true }, { status: 200 });
   } catch (error) {
     console.error("Slack error:", error);
-    res.status(500).json({ ok: false });
+    return Response.json({ error: "Failed to send Slack notification" }, { status: 500 });
   }
 }

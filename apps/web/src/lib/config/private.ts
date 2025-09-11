@@ -16,6 +16,10 @@ interface PrivateConfig {
   recaptcha: {
     secretKey: string;
   };
+  slack: {
+    botToken: string;
+    signingSecret: string;
+  };
 }
 
 export function getEnvVar(name: string, required: boolean = process.env.UNSET_CONFIG !== "true"): string {
@@ -45,5 +49,9 @@ export const privateConfig: PrivateConfig = {
   },
   recaptcha: {
     secretKey: getEnvVar("RECAPTCHA_SECRET_KEY"),
+  },
+  slack: {
+    botToken: getEnvVar("NEXT_PRIVATE_SLACK_BOT_TOKEN"),
+    signingSecret: getEnvVar("NEXT_PRIVATE_SLACK_SIGNING_SECRET"),
   },
 };

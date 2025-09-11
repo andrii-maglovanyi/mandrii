@@ -1,8 +1,10 @@
 import { App } from "@slack/bolt";
 
+import { privateConfig } from "../config/private";
+
 const app = new App({
-  signingSecret: process.env.NEXT_PRIVATE_SLACK_SIGNING_SECRET,
-  token: process.env.NEXT_PRIVATE_SLACK_BOT_TOKEN,
+  signingSecret: privateConfig.slack.signingSecret,
+  token: privateConfig.slack.botToken,
 });
 
 export const sendSlackNotification = async (topic: string, url: string) => {
@@ -28,7 +30,7 @@ export const sendSlackNotification = async (topic: string, url: string) => {
 
   await app.client.chat.postMessage({
     blocks,
-    channel: process.env.NEXT_PUBLIC_SLACK_CHANNEL!,
-    token: process.env.NEXT_PRIVATE_SLACK_BOT_TOKEN,
+    channel: "ref",
+    token: privateConfig.slack.botToken,
   });
 };
