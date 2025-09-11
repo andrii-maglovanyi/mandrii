@@ -52,7 +52,16 @@ const HomePageLayout = ({ locale, posts }: HomePageLayoutProps) => {
             md:w-1/2
           `}>
             {allPosts.map(({ content, id, meta }) => (
-              <PostCard content={content} id={id} isRecent key={id} locale={locale} meta={meta} type={type} />
+              <PostCard
+                content={content}
+                id={id}
+                isRecent
+                key={id}
+                locale={locale}
+                meta={meta}
+                type={type}
+                withCategory
+              />
             ))}
           </div>
         </div>
@@ -61,11 +70,14 @@ const HomePageLayout = ({ locale, posts }: HomePageLayoutProps) => {
       <div className={`
         mt-8 rounded-lg bg-gradient-to-r from-primary to-secondary p-[1px]
       `}>
-        <div className={`
-          flex space-x-4 rounded-lg bg-white p-6
-          dark:bg-black
-        `}>
-          <div>
+        <div
+          className={`
+            flex flex-col space-y-6 rounded-lg bg-white p-6
+            md:flex-row md:space-y-0 md:space-x-4
+            dark:bg-black
+          `}
+        >
+          <div className="flex-1">
             <h3 className="text-2xl font-bold">{i18n("Let's unite, Ukrainians!")}</h3>
             <p className="mt-4">
               {i18n("Discover Ukrainian businesses, restaurants, cultural center and community hubs across Europe.")}
@@ -76,8 +88,14 @@ const HomePageLayout = ({ locale, posts }: HomePageLayoutProps) => {
               )}
             </p>
           </div>
-          <div className="ml-auto flex min-w-max items-center justify-center">
-            <Button color="primary" isFeatured size="lg">
+          <div className={`
+            flex shrink-0 items-center justify-center
+            md:ml-auto md:min-w-max
+          `}>
+            <Button className={`
+              w-full
+              md:w-auto
+            `} color="primary" isFeatured size="lg">
               <Map className="mr-2" />
               {i18n("Explore the Map")}
             </Button>
