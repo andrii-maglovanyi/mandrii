@@ -1,5 +1,8 @@
+import { captureException } from "@sentry/nextjs";
 import { kv } from "@vercel/kv";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+
+import { sendSlackNotification } from "~/lib/slack/ref";
 
 import { MiddlewareFactory } from "./stackHandler";
 
@@ -29,7 +32,12 @@ export const withRef: MiddlewareFactory = (next) => {
         }
 
         // Increment hits atomically to avoid race conditions
-        await kv.incr(`ref:${topic}:hits`);
+        kv.incr(`ref:${topic}:hits`);
+
+        sendSlackNotification(topic, redirect.url).catch((error) => {
+          captureException(error);
+          console.error("Failed to send Slack notification:", error);
+        });
 
         return NextResponse.redirect(redirect.url);
       } catch (error) {
