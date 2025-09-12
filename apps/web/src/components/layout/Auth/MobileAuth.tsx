@@ -19,7 +19,9 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
   const isAuthenticated = !!profileData;
   const isLoading = status === "loading";
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
     openCustomDialog({
       children: <SignInForm />,
     });
