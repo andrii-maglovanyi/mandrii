@@ -29,7 +29,13 @@ export const withRef: MiddlewareFactory = (next) => {
         }
 
         // Increment hits atomically to avoid race conditions
-        await kv.incr(`ref:${topic}:hits`);
+        kv.incr(`ref:${topic}:hits`);
+
+        fetch(`${request.nextUrl.origin}/api/slack-notify`, {
+          body: JSON.stringify({ topic, url: redirect.url }),
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+        });
 
         return NextResponse.redirect(redirect.url);
       } catch (error) {
