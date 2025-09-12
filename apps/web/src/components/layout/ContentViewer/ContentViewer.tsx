@@ -38,6 +38,8 @@ export const ContentViewer = async ({ data, id, type }: ContentViewerProps) => {
           `}>
             <ImageCarousel
               images={meta.images?.map((image) => [constants.vercelBlobStorageUrl, type, id, image].join("/"))}
+              preloadNext
+              showDots
             />
           </div>
         ) : null}

@@ -28,8 +28,6 @@ export const PostCard = ({ id, isFeatured, isRecent, locale, meta, type, withCat
 
   const categoryName = getCategoryName(meta.categorySlug, locale);
 
-  console.log("CAT", categoryName, meta.categorySlug, locale);
-
   return (
     <div className={clsx("flex", isRecent ? "gap-4" : "flex-col text-left")} key={id}>
       <div
