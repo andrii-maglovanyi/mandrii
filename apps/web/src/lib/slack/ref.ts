@@ -10,27 +10,30 @@ const app = new App({
 export const sendSlackNotification = async (topic: string, url: string) => {
   const blocks = [
     {
-      text: {
-        text: `:pushpin: Someone followed *${topic}* ref`,
-        type: "mrkdwn",
-      },
       type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `:eyes: Someone followed *${topic}* ref`,
+      },
     },
     {
       type: "divider",
     },
     {
-      text: {
-        text: `URL: ${url}`,
-        type: "mrkdwn",
-      },
       type: "context",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: `URL: ${url}`,
+        },
+      ],
     },
   ];
 
   await app.client.chat.postMessage({
     blocks,
-    channel: "ref",
+    channel: "events",
+    text: `Someone followed ${topic} ref - ${url}`,
     token: privateConfig.slack.botToken,
   });
 };
