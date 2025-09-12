@@ -10,23 +10,23 @@ const app = new App({
 export const sendSlackNotification = async (topic: string, url: string) => {
   const blocks = [
     {
-      type: "section",
       text: {
-        type: "mrkdwn",
         text: `:eyes: Someone followed *${topic}* ref`,
+        type: "mrkdwn",
       },
+      type: "section",
     },
     {
       type: "divider",
     },
     {
-      type: "context",
       elements: [
         {
-          type: "mrkdwn",
           text: `URL: ${url}`,
+          type: "mrkdwn",
         },
       ],
+      type: "context",
     },
   ];
 
