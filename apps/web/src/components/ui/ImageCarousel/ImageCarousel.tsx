@@ -93,11 +93,13 @@ export const ImageCarousel = ({
 
   if (images.length === 0) {
     return (
-      <div className={`
-        relative flex h-full w-full min-w-20 items-center justify-center
-        overflow-hidden bg-surface-tint
-        md:min-w-40
-      `}>
+      <div
+        className={`
+          relative flex h-full w-full min-w-20 items-center justify-center
+          overflow-hidden bg-surface-tint
+          md:min-w-40
+        `}
+      >
         <svg aria-hidden="true" className="h-full w-full" role="img">
           <use href="/assets/sprite.svg#no-image" />
         </svg>

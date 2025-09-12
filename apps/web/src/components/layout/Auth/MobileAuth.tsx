@@ -42,7 +42,7 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
   if (isAuthenticated) {
     return (
       <>
-        <div className="bg-surface-tint rounded-xl p-4">
+        <div className="rounded-xl bg-surface-tint p-4">
           <UserProfile
             email={profileData.user?.email ?? ""}
             imageUrl={profileData.user?.image}
