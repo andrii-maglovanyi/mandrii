@@ -29,7 +29,7 @@ function getUserID(): string {
 }
 
 export const sendToMixpanel = (eventName: string, eventProperties?: EventProperties): void => {
-  if (window.location.hostname !== UrlHelper.getProductionHostname()) {
+  if (!window.location.hostname.endsWith(UrlHelper.getProductionHostname())) {
     return;
   }
 

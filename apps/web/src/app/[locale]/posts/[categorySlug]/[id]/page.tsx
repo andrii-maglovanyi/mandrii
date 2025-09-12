@@ -14,7 +14,7 @@ interface PostPageLayoutProps {
 }
 
 interface PostPageProps {
-  params: Promise<{ categorySlug: CategorySlug; id: string; locale: Locale; }>;
+  params: Promise<{ categorySlug: CategorySlug; id: string; locale: Locale }>;
 }
 
 const type = "posts";
