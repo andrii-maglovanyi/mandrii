@@ -5,30 +5,19 @@ import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface ImageCarouselProps {
-  autoPlay?: boolean;
-  autoPlayInterval?: number;
   images?: Array<string>;
   preloadNext?: boolean;
   showDots?: boolean;
 }
 
-export const ImageCarousel = ({
-  autoPlay = false,
-  autoPlayInterval = 5000,
-  images = [],
-  preloadNext = true,
-  showDots = false,
-}: ImageCarouselProps) => {
+export const ImageCarousel = ({ images = [], preloadNext = true, showDots = false }: ImageCarouselProps) => {
   const [index, setIndex] = useState(0);
   const [errorIndices, setErrorIndices] = useState<Set<number>>(new Set());
-  const [isUserInteracting, setIsUserInteracting] = useState(false);
 
-  // Memoize valid images (filter out errored ones)
   const validImages = useMemo(() => images.filter((_, idx) => !errorIndices.has(idx)), [images, errorIndices]);
 
   const hasMultipleImages = validImages.length > 1;
 
-  // Optimized navigation functions with useCallback
   const nextImage = useCallback(() => {
     if (!hasMultipleImages) return;
     setIndex((prevIndex) => (prevIndex + 1) % validImages.length);
@@ -43,20 +32,10 @@ export const ImageCarousel = ({
     setIndex(targetIndex);
   }, []);
 
-  // Handle image errors more efficiently
   const handleImageError = useCallback(() => {
     setErrorIndices((prev) => new Set(prev).add(index));
   }, [index]);
 
-  // Auto-play functionality
-  useEffect(() => {
-    if (!autoPlay || !hasMultipleImages || isUserInteracting) return;
-
-    const interval = setInterval(nextImage, autoPlayInterval);
-    return () => clearInterval(interval);
-  }, [autoPlay, hasMultipleImages, isUserInteracting, nextImage, autoPlayInterval]);
-
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!hasMultipleImages) return;
@@ -77,19 +56,10 @@ export const ImageCarousel = ({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [hasMultipleImages, nextImage, prevImage]);
 
-  // Reset error state when images change
   useEffect(() => {
     setErrorIndices(new Set());
     setIndex(0);
   }, [images]);
-
-  // User interaction handlers
-  const handleUserInteraction = useCallback(() => {
-    setIsUserInteracting(true);
-    // Reset auto-play after a delay
-    const timer = setTimeout(() => setIsUserInteracting(false), 10000);
-    return () => clearTimeout(timer);
-  }, []);
 
   if (images.length === 0) {
     return (
@@ -126,7 +96,6 @@ export const ImageCarousel = ({
         fill
         onError={handleImageError}
         priority={index === 0}
-        sizes="(min-width: 1024px) 1024px, (min-width: 768px) 100vw, 250px"
         src={currentImageSrc}
       />
 
@@ -154,7 +123,6 @@ export const ImageCarousel = ({
               focus:outline-none
             `}
             onClick={() => {
-              handleUserInteraction();
               prevImage();
             }}
             type="button"
@@ -173,7 +141,6 @@ export const ImageCarousel = ({
               focus:outline-none
             `}
             onClick={() => {
-              handleUserInteraction();
               nextImage();
             }}
             type="button"
@@ -199,7 +166,6 @@ export const ImageCarousel = ({
                   `}
                   key={dotIndex}
                   onClick={() => {
-                    handleUserInteraction();
                     goToImage(dotIndex);
                   }}
                 />
