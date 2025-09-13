@@ -32,9 +32,10 @@ export const ContentViewer = async ({ data, id, type }: ContentViewerProps) => {
         {meta.description ? <p className="text-neutral">{meta.description}</p> : null}
         {meta.images?.length ? (
           <div className={`
-            relative h-64 w-full overflow-hidden rounded-lg
-            sm:h-96
-            md:h-[480px]
+            relative h-96 w-full overflow-hidden rounded-lg
+            sm:h-[480px]
+            md:h-[640px]
+            lg:h-[720px]
           `}>
             <ImageCarousel
               images={meta.images?.map((image) => [constants.vercelBlobStorageUrl, type, id, image].join("/"))}

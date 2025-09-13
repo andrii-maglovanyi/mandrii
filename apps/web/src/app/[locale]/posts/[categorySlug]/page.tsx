@@ -33,12 +33,11 @@ const PostsCategoryPageLayout = ({ categoryName, locale, posts }: PostsCategoryL
         </h1>
       )}
 
-      <div
-        className={`
-          mb-32 grid gap-8 text-center
-          lg:mt-2 lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left
-        `}
-      >
+      <div className={`
+        mb-32 grid gap-8 text-left
+        md:grid-cols-3
+        lg:mt-2 lg:mb-0 lg:w-full lg:max-w-5xl
+      `}>
         {posts.map(({ content, id, meta }) => (
           <PostCard content={content} id={id} key={id} locale={locale} meta={meta} type={type} />
         ))}

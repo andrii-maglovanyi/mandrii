@@ -43,6 +43,7 @@ const HomePageLayout = ({ locale, posts }: HomePageLayoutProps) => {
               locale={locale}
               meta={fistPost.meta}
               type={type}
+              withCategory
             />
           </div>
           <div className={`
