@@ -72,10 +72,7 @@ export const Alert = ({
       <div
         aria-live="polite"
         className={clsx(
-          `
-            flex w-full items-center gap-2 rounded-lg px-4 py-2.5
-            transition-opacity duration-300
-          `,
+          `flex w-full items-center gap-2 rounded-lg px-4 py-2.5 transition-opacity duration-300`,
           bgColor,
           textColor,
           isFading && "opacity-0",

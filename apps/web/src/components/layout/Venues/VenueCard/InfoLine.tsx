@@ -27,10 +27,7 @@ export const InfoLine = ({ icon, info, isLink = false, tooltipText }: InfoLinePr
 
   if (info) {
     return (
-      <div className={`
-        flex w-full cursor-pointer items-center gap-2 px-8 py-1.5 text-left
-        hover:bg-on-surface/5
-      `}>
+      <div className={`hover:bg-on-surface/5 flex w-full cursor-pointer items-center gap-2 px-8 py-1.5 text-left`}>
         {icon}
         {isLink ? (
           <a

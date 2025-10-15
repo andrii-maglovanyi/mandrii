@@ -80,10 +80,7 @@ export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
 
         <div className="my-6 flex flex-col items-center space-y-1">
           <p
-            className={`
-              w-fit bg-gradient-to-r from-primary to-secondary bg-clip-text
-              text-3xl font-bold text-transparent
-            `}
+            className={`from-primary to-secondary w-fit bg-gradient-to-r bg-clip-text text-3xl font-bold text-transparent`}
           >
             {venue.name}
           </p>
@@ -123,7 +120,7 @@ export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
       </div>
 
       {/* Footer Note */}
-      <p className="text-center text-sm leading-relaxed text-neutral">
+      <p className="text-neutral text-center text-sm leading-relaxed">
         {i18n("I will verify your ownership before granting access to enhanced features")}
       </p>
     </div>

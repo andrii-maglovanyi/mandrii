@@ -9,7 +9,7 @@ interface TheIdeaPageProps {
 const type = "about";
 const id = "the-idea";
 
-export default async function TheIdeaPage({ params }: TheIdeaPageProps) {
+export default async function TheIdeaPage({ params }: Readonly<TheIdeaPageProps>) {
   const { locale } = await params;
   const data = await contentManager.getContentById(type, id, locale);
 

@@ -41,10 +41,7 @@ export const VenueStatus = ({ expanded, status }: VenueStatusProps) => {
 
   return (
     <>
-      <div className={`
-        hidden grow justify-center align-middle
-        md:flex
-      `}>
+      <div className={`hidden grow justify-center align-middle md:flex`}>
         <Tooltip label={label}>{icon}</Tooltip>
       </div>
       <div className="md:hidden">{expandedStatusView}</div>

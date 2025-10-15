@@ -1,6 +1,6 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from "next-intl/plugin";
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 
 const withNextIntl = createNextIntlPlugin();
 

@@ -15,6 +15,7 @@ import { ThemeProvider } from "~/contexts/ThemeContext";
 import { routing } from "~/i18n/routing";
 import ApolloWrapper from "~/lib/apollo/provider";
 import { UrlHelper } from "~/lib/url-helper";
+import * as Sentry from "@sentry/nextjs";
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -24,6 +25,8 @@ type RootLayoutProps = Readonly<{
 export async function generateMetadata({ params }: RootLayoutProps): Promise<Metadata> {
   const { locale } = await params;
   const isUkrainian = locale === "uk";
+
+  Sentry.logger.info("User triggered test log", { log_source: "sentry_test" });
 
   return {
     alternates: {

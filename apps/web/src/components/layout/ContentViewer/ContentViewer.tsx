@@ -24,19 +24,11 @@ export const ContentViewer = async ({ data, id, type }: ContentViewerProps) => {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <article className={`
-        prose max-w-none space-y-6
-        dark:prose-invert
-      `}>
+      <article className={`prose dark:prose-invert max-w-none space-y-6`}>
         <h1>{meta.title}</h1>
         {meta.description ? <p className="text-neutral">{meta.description}</p> : null}
         {meta.images?.length ? (
-          <div className={`
-            relative h-96 w-full overflow-hidden rounded-lg
-            sm:h-[480px]
-            md:h-[640px]
-            lg:h-[720px]
-          `}>
+          <div className={`relative h-96 w-full overflow-hidden rounded-lg sm:h-[480px] md:h-[640px] lg:h-[720px]`}>
             <ImageCarousel
               images={meta.images?.map((image) => [constants.vercelBlobStorageUrl, type, id, image].join("/"))}
               preloadNext
