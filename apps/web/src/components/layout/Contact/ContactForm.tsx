@@ -3,7 +3,7 @@
 import { MailCheck } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 import { MixpanelTracker } from "~/components/layout";
@@ -12,22 +12,35 @@ import { useForm } from "~/hooks/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
 import { getContactFormSchema } from "~/lib/validation/contact";
+import { Status } from "~/types";
 
 const Contact = () => {
   const i18n = useI18n();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { data: profileData } = useSession();
 
-  const { getFieldProps, isFormValid, setFieldErrorsFromServer, validateForm, values } = useForm({
+  const { getFieldProps, isFormValid, setFieldErrorsFromServer, setValues, validateForm, values } = useForm({
     initialValues: {
       email: profileData?.user?.email ?? "",
+      message: "",
       name: profileData?.user?.name ?? "",
     },
     schema: getContactFormSchema(i18n),
   });
 
+  useEffect(() => {
+    const { email, name } = profileData?.user ?? {};
+    if (name && email) {
+      setValues((prev) => ({
+        ...prev,
+        email,
+        name,
+      }));
+    }
+  }, [profileData, setValues]);
+
   const locale = useLocale();
-  const [status, setStatus] = useState<"error" | "idle" | "sending" | "sent">("idle");
+  const [status, setStatus] = useState<Status>("idle");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,7 +49,7 @@ const Contact = () => {
       return;
     }
 
-    setStatus("sending");
+    setStatus("processing");
     if (!executeRecaptcha) {
       setStatus("error");
       return;
@@ -54,11 +67,11 @@ const Contact = () => {
       const result = await res.json();
 
       if (res.ok) {
-        setStatus("sent");
+        setStatus("success");
       } else {
         setStatus("error");
-        if (result.details) {
-          setFieldErrorsFromServer(result.details);
+        if (result.errors) {
+          setFieldErrorsFromServer(result.errors);
         }
       }
     } catch (error) {
@@ -67,9 +80,9 @@ const Contact = () => {
     }
   };
 
-  const isSending = status === "sending";
+  const isSending = status === "processing";
 
-  if (status === "sent") {
+  if (status === "success") {
     return (
       <div className={`
         mx-auto flex flex-grow flex-col items-center justify-center space-y-6

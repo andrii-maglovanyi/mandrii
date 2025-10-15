@@ -1,4 +1,4 @@
-import { LogOut, User } from "lucide-react";
+import { LogOut, StretchHorizontal, User } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -21,8 +21,11 @@ export const UserMenu = () => {
 
   return (
     <>
-      <Link href="/profile">
+      <Link href="/user-profile">
         <User className="mr-2" /> {i18n("My profile")}
+      </Link>
+      <Link href="/user-directory">
+        <StretchHorizontal className="mr-2" /> {i18n("My directory")}
       </Link>
       <Link href="/#" onClick={handleSignOut}>
         <LogOut className="mr-2" /> {i18n("Sign out")}

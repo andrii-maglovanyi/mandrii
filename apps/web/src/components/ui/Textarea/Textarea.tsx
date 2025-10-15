@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Ref, useId } from "react";
+import React, { Ref, useId } from "react";
 
 import { FieldErrorMessage } from "../FieldErrorMessage/FieldErrorMessage";
 import { commonClass, commonInputClass } from "../styles";
@@ -13,14 +13,14 @@ export type TextareaProps = {
   label?: string;
   maxChars?: number;
   name?: string;
-  onBlur?: () => void;
+  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
   ref?: Ref<HTMLTextAreaElement>;
   required?: boolean;
   rows?: number;
   showErrorMessage?: boolean;
-  value?: string;
+  value?: null | string;
 };
 
 export function Textarea({
@@ -44,7 +44,7 @@ export function Textarea({
   const generatedId = useId();
   const textareaId = id ?? generatedId;
 
-  const charCount = value.length;
+  const charCount = value?.length ?? 0;
   const showCharCount = typeof maxChars === "number";
   const isOverLimit = showCharCount && charCount > maxChars;
 
@@ -77,7 +77,7 @@ export function Textarea({
         ref={ref}
         required={required}
         rows={rows}
-        value={value}
+        value={value ?? ""}
       />
       <div className="flex h-4 justify-between text-sm">
         {showErrorMessage && <FieldErrorMessage error={error} />}

@@ -27,10 +27,10 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        locations: {
-          keyArgs: ["where"],
+        venues: {
+          keyArgs: ["where", "limit", "offset", "order_by"],
         },
-        locations_aggregate: {
+        venues_aggregate: {
           keyArgs: ["where"],
         },
       },

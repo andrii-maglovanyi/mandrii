@@ -1,7 +1,10 @@
 "use client";
 
 import clsx from "clsx";
+import { Phone } from "lucide-react";
 import { Ref, useEffect, useId, useMemo, useRef, useState } from "react";
+
+import { CountryPhoneConfig, processPhoneNumber } from "~/lib/utils/phone-number";
 
 import { FieldErrorMessage } from "../FieldErrorMessage/FieldErrorMessage";
 import { Menu, MenuHandle, MenuOption } from "../Menu/Menu";
@@ -14,8 +17,10 @@ export type InputProps<K, T> = {
   error?: string;
   id?: string;
   label?: string;
+  max?: number;
+  min?: number;
   name?: string;
-  onBlur?: () => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: () => void;
   onSelectSuggestion?: (value: string) => void;
@@ -23,9 +28,10 @@ export type InputProps<K, T> = {
   ref?: Ref<HTMLInputElement>;
   required?: boolean;
   showErrorMessage?: boolean;
+  step?: number | string;
   suggestions?: Array<SuggestOption<K, T>>;
   type?: string;
-  value?: string;
+  value?: null | number | string;
 };
 
 export type SuggestOption<K, T> = MenuOption<K, T> | string;
@@ -37,6 +43,8 @@ export function Input<K extends string, T extends string>({
   error,
   id,
   label,
+  max,
+  min,
   name,
   onBlur,
   onChange,
@@ -46,22 +54,40 @@ export function Input<K extends string, T extends string>({
   ref,
   required = false,
   showErrorMessage = false,
+  step,
   suggestions = [],
   type = "text",
   value,
 }: Readonly<InputProps<K, T>>) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
-  const [query, setQuery] = useState<string>(String(value ?? ""));
+  const [query, setQuery] = useState<string>(() => {
+    if (value === null || value === undefined) return "";
+    return String(value);
+  });
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [detectedCountry, setDetectedCountry] = useState<CountryPhoneConfig | null>(null);
+
+  const isPhoneInput = type === "tel";
+
+  useEffect(() => {
+    const newValue = value === null || value === undefined ? "" : String(value);
+    setQuery(newValue);
+
+    if (isPhoneInput && newValue) {
+      const result = processPhoneNumber(newValue);
+      setDetectedCountry(result.detectedCountry);
+      setQuery(result.formatted);
+    }
+  }, [value, isPhoneInput]);
 
   const filteredSuggestions = useMemo(
     () =>
       query && showSuggestions
         ? suggestions.filter((suggestion) =>
             (typeof suggestion === "string" ? suggestion : suggestion.label)
-              .toLocaleLowerCase()
-              .includes(String(query).toLowerCase()),
+              .toLowerCase()
+              .includes(query.toLowerCase()),
           )
         : [],
     [suggestions, query, showSuggestions],
@@ -73,6 +99,7 @@ export function Input<K extends string, T extends string>({
     error ? "border-red-500" : "border-neutral",
     commonClass,
     commonInputClass,
+    isPhoneInput ? "pl-12" : "",
     className,
   );
 
@@ -86,7 +113,7 @@ export function Input<K extends string, T extends string>({
       }
     };
 
-    const handleKeyDown = (event: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setShowSuggestions(false);
       }
@@ -96,12 +123,12 @@ export function Input<K extends string, T extends string>({
     if (node) {
       node.addEventListener("focusout", handleFocusOut);
       node.addEventListener("keydown", handleKeyDown);
-    }
 
-    return () => {
-      node?.removeEventListener("keydown", handleKeyDown);
-      node?.removeEventListener("focusout", handleFocusOut);
-    };
+      return () => {
+        node.removeEventListener("keydown", handleKeyDown);
+        node.removeEventListener("focusout", handleFocusOut);
+      };
+    }
   }, []);
 
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -109,6 +136,25 @@ export function Input<K extends string, T extends string>({
       e.preventDefault();
       menuRef.current?.focusIndex(0);
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    menuRef.current?.focusIndex(null);
+
+    let newValue = e.target.value;
+
+    if (isPhoneInput) {
+      const result = processPhoneNumber(newValue);
+      newValue = result.formatted;
+
+      setDetectedCountry(result.detectedCountry);
+
+      e.target.value = newValue;
+    }
+
+    setQuery(newValue);
+    setShowSuggestions(true);
+    onChange?.(e);
   };
 
   const formedSuggestions = filteredSuggestions.map((suggestion) =>
@@ -124,6 +170,16 @@ export function Input<K extends string, T extends string>({
         </label>
       )}
       <span className="relative" ref={wrapperRef}>
+        {isPhoneInput && (
+          <span className={`
+            pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3
+            text-2xl
+          `}>
+            {detectedCountry ? detectedCountry.flag : <Phone className={`
+              mx-1 text-neutral-disabled
+            `} size={20} />}
+          </span>
+        )}
         <input
           aria-required={required}
           autoComplete={onSelectSuggestion ? "off" : undefined}
@@ -131,24 +187,21 @@ export function Input<K extends string, T extends string>({
           data-testid={testId}
           disabled={disabled}
           id={inputId}
+          max={max}
+          min={min}
           name={name}
           onBlur={onBlur}
-          onChange={(e) => {
-            menuRef.current?.focusIndex(null);
-
-            setQuery(e.target.value);
-            setShowSuggestions(true);
-            onChange?.(e);
-          }}
+          onChange={handleInputChange}
           onFocus={() => {
             setShowSuggestions(true);
             onFocus?.();
           }}
           onKeyDown={onInputKeyDown}
-          placeholder={placeholder}
+          placeholder={placeholder || (isPhoneInput ? "+44 0123 456 789" : undefined)}
           ref={ref}
           required={required}
-          type={type}
+          step={step}
+          type={isPhoneInput ? "tel" : type}
           value={query}
         />
         {formedSuggestions.length > 0 && showSuggestions && (
@@ -163,6 +216,7 @@ export function Input<K extends string, T extends string>({
           />
         )}
       </span>
+
       {showErrorMessage && <FieldErrorMessage error={error} />}
     </div>
   );

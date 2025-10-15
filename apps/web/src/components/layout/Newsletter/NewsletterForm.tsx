@@ -12,6 +12,7 @@ import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { getEmailFormSchema } from "~/lib/validation/email";
+import { Status } from "~/types";
 
 export function NewsletterForm() {
   return (
@@ -22,9 +23,7 @@ export function NewsletterForm() {
 }
 
 function Newsletter() {
-  const [status, setStatus] = useState<"already_subscribed" | "error" | "idle" | "sending" | "verification_email_sent">(
-    "idle",
-  );
+  const [status, setStatus] = useState<"already_subscribed" | "verification_email_sent" | Status>("idle");
 
   const { executeRecaptcha } = useGoogleReCaptcha();
   const i18n = useI18n();
@@ -49,7 +48,7 @@ function Newsletter() {
       return;
     }
 
-    setStatus("sending");
+    setStatus("processing");
 
     try {
       const captchaToken = await executeRecaptcha("newsletter_form");
@@ -69,8 +68,8 @@ function Newsletter() {
         setStatus(result.status);
       } else {
         setStatus("error");
-        if (result.details) {
-          setFieldErrorsFromServer(result.details);
+        if (result.errors) {
+          setFieldErrorsFromServer(result.errors);
         }
       }
     } catch (err) {
@@ -79,10 +78,12 @@ function Newsletter() {
     }
   };
 
+  const isBusy = status === "processing";
+
   const renderMessage = () => {
     switch (status) {
       case "already_subscribed":
-        return (
+        return values.email ? (
           <>
             <RichText as="p">
               {i18n("Hold up - **{email}**, you're already subscribed!", {
@@ -91,7 +92,7 @@ function Newsletter() {
             </RichText>
             <p>{i18n("And hey, I really appreciate that")}</p>
           </>
-        );
+        ) : null;
       case "error":
         return (
           <>
@@ -108,7 +109,7 @@ function Newsletter() {
           </>
         );
       case "verification_email_sent":
-        return (
+        return values.email ? (
           <>
             <RichText as="p">
               {i18n("Almost there! Now venture to **{email}** inbox.", {
@@ -117,7 +118,7 @@ function Newsletter() {
             </RichText>
             <p>{i18n("And verify that you indeed own your email by clicking that button.")}</p>
           </>
-        );
+        ) : null;
       default:
         return null;
     }
@@ -131,7 +132,7 @@ function Newsletter() {
       md:max-w-lg
     `}>
       <h3 className="font-semibold">{i18n("Newsletter")}</h3>
-      {!["idle", "sending"].includes(status) ? (
+      {!["idle", "processing"].includes(status) ? (
         renderMessage()
       ) : (
         <>
@@ -140,7 +141,7 @@ function Newsletter() {
           <form className="flex" onSubmit={handleSubscribe}>
             <div className="flex w-full flex-col">
               <Input
-                disabled={status === "sending"}
+                disabled={isBusy}
                 placeholder={i18n("Your email")}
                 required
                 type="email"
@@ -153,8 +154,8 @@ function Newsletter() {
               md:hidden
               lg:block
             `}>
-              <Button busy={status === "sending"} className="ml-3" disabled={!isFormValid} type="submit">
-                {status === "sending" ? i18n("Sending") : i18n("Subscribe")}
+              <Button busy={isBusy} className="ml-3" disabled={!isFormValid} type="submit">
+                {isBusy ? i18n("Sending") : i18n("Subscribe")}
               </Button>
             </span>
             <span className={`
@@ -163,8 +164,8 @@ function Newsletter() {
               lg:hidden
             `}>
               <ActionButton
-                aria-label={status === "sending" ? i18n("Sending") : i18n("Subscribe")}
-                busy={status === "sending"}
+                aria-label={isBusy ? i18n("Sending") : i18n("Subscribe")}
+                busy={isBusy}
                 className="ml-3"
                 disabled={!isFormValid}
                 icon={<ArrowRight />}

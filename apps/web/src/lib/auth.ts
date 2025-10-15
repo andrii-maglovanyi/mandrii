@@ -56,7 +56,7 @@ const getUserById = async (id: string) => {
 const authOptions = {
   callbacks: {
     async redirect({ baseUrl, url }: { baseUrl: string; url: string }) {
-      return url.startsWith(baseUrl) ? url : "/account";
+      return url.startsWith(baseUrl) ? url : "/user-profile";
     },
     async session({ session, token, user }: { session: Session; token: JWT; user: User }) {
       if (!token?.sub) {

@@ -1,0 +1,108 @@
+import { NextResponse } from "next/server";
+
+import { getApiContext } from "~/lib/api/context";
+import { BadRequestError, InternalServerError, ValidationError } from "~/lib/api/errors";
+import { validateRequest } from "~/lib/api/validate";
+import { withErrorHandling } from "~/lib/api/withErrorHandling";
+import { envName } from "~/lib/config/env";
+import { privateConfig } from "~/lib/config/private";
+import { sendSlackNotification } from "~/lib/slack/venue";
+import { getVenueSchema } from "~/lib/validation/venue";
+import { Venues } from "~/types";
+import { UUID } from "~/types/uuid";
+
+import { geocodeAddress } from "../../geocode/geo";
+import { processImages } from "./images";
+import { checkCoordinatesWithinRange, checkIsSlugUnique } from "./validation";
+import { saveVenue } from "./venue";
+
+export const POST = (req: Request) =>
+  withErrorHandling(async () => {
+    const { i18n, session } = await getApiContext(req, { withAuth: true, withI18n: true });
+
+    const schema = getVenueSchema(i18n);
+
+    const data = await validateRequest(req, schema);
+
+    const {
+      address,
+      category,
+      description_en,
+      description_uk,
+      emails,
+      images,
+      latitude,
+      logo,
+      longitude,
+      name,
+      phone_numbers,
+      slug,
+    } = data;
+
+    const venueData: Partial<Venues> = {
+      category,
+      description_en,
+      description_uk,
+      emails: emails?.map((email) => email.trim()) || [],
+      image_urls: [],
+      name: name.trim(),
+      phone_numbers: phone_numbers?.map((phone) => phone.trim()) || [],
+      social_links: { facebook: data.facebook?.trim() || null, instagram: data.instagram?.trim() || null },
+      website: data.website?.trim() || null,
+    };
+
+    if (data.id) {
+      venueData.id = data.id as UUID;
+    } else {
+      const isSlugUnique = await checkIsSlugUnique(slug);
+
+      if (!isSlugUnique) {
+        throw new ValidationError("Invalid input", [
+          { code: "custom", message: i18n("Slug is already taken"), path: ["slug"] },
+        ]);
+      }
+
+      venueData.slug = slug.trim();
+    }
+
+    if (address) {
+      const geo = await geocodeAddress(address.trim(), privateConfig.maps.apiKey);
+
+      if (!geo) {
+        throw new BadRequestError("Invalid address");
+      }
+
+      const { city, coordinates, country, postcode } = geo;
+      venueData.address = geo.address;
+      venueData.country = country;
+      venueData.city = city;
+      venueData.postcode = postcode;
+
+      if (longitude && latitude && checkCoordinatesWithinRange(coordinates, [longitude, latitude])) {
+        venueData.geo = {
+          coordinates: [longitude, latitude],
+          type: "Point",
+        };
+      } else {
+        venueData.geo = {
+          coordinates,
+          type: "Point",
+        };
+      }
+    }
+
+    const prefix = [envName, "venues", slug].join("/");
+
+    venueData.logo_url = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? "";
+    venueData.image_urls = await processImages(images ?? [], [prefix, "images"].join("/"));
+
+    const id = await saveVenue(venueData, session);
+
+    if (!id) {
+      throw new InternalServerError("Failed to save venue");
+    }
+
+    sendSlackNotification(session.user, venueData);
+
+    return NextResponse.json({ id, success: true }, { status: 200 });
+  });

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
-import { storage } from "~/lib/utils/storage";
+import { storage } from "~/lib/utils";
 
 export default function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);

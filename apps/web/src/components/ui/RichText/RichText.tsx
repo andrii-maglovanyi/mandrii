@@ -1,4 +1,3 @@
-import DOMPurify from "dompurify";
 import { JSX } from "react";
 import snarkdown from "snarkdown";
 
@@ -13,7 +12,7 @@ export const RichText = ({ as: Tag = "span", children, className }: RichTextProp
     <Tag
       className={className}
       dangerouslySetInnerHTML={{
-        __html: DOMPurify.sanitize(snarkdown(children)),
+        __html: snarkdown(children),
       }}
     />
   );

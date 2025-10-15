@@ -33,7 +33,7 @@ const Template: StoryFn<SelectProps<string, string>> = (args) => {
 
   return (
     <div className="w-full min-w-md">
-      <Select {...args} onChange={setValue} value={value} />
+      <Select {...args} onChange={(e) => setValue(e.target.value)} value={value} />
       <div className="mt-2">
         Selected value is... <strong>{value}</strong>
       </div>
@@ -87,7 +87,7 @@ const PreFilledTemplate: StoryFn<SelectProps<string, string>> = (args) => {
   const [value, setValue] = useState("banana");
   return (
     <div className="w-full min-w-md">
-      <Select {...args} onChange={setValue} value={value} />
+      <Select {...args} onChange={(e) => setValue(e.target.value)} value={value} />
       <div className="mt-2">
         Selected value is... <strong>{value}</strong>
       </div>

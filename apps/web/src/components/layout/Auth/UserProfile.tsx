@@ -1,23 +1,28 @@
 import { User } from "lucide-react";
+import { Session } from "next-auth";
 import Image from "next/image";
 
-interface UserProfileProps {
-  email: string;
-  imageUrl?: null | string | undefined;
-  name?: null | string | undefined;
+import { useI18n } from "~/i18n/useI18n";
+
+interface UserProfileCardProps {
+  profile: Session;
 }
 
-export const UserProfile = ({ email, imageUrl, name }: UserProfileProps) => {
+export const UserProfileCard = ({ profile }: UserProfileCardProps) => {
   const avatarSize = 48;
+  const i18n = useI18n();
+
+  const { user } = profile;
+  const { email = "", image, name, role } = user;
 
   return (
     <div className="flex cursor-default items-center space-x-3">
-      {imageUrl ? (
+      {image ? (
         <Image
-          alt={name ?? email}
+          alt={name ?? i18n("Someone")}
           className="rounded-full object-cover"
           height={avatarSize}
-          src={imageUrl}
+          src={image}
           width={avatarSize}
         />
       ) : (
@@ -32,8 +37,15 @@ export const UserProfile = ({ email, imageUrl, name }: UserProfileProps) => {
         </div>
       )}
       <div className="flex flex-col text-on-surface">
-        {name && <span className="font-semibold">{name}</span>}
-        <span className="text-neutral-500">{email}</span>
+        <div className="space-x-2">
+          {name && <span className="font-semibold">{name}</span>}
+          {role === "admin" ? (
+            <div className={`
+              inline-flex rounded bg-primary px-1 text-sm text-surface
+            `}>admin</div>
+          ) : null}
+        </div>
+        <span className="text-base text-neutral-500">{email}</span>
       </div>
     </div>
   );

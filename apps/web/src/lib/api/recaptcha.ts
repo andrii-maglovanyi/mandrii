@@ -1,9 +1,16 @@
 import { validateCaptcha } from "../recaptcha";
+import { BadRequestError } from "./errors";
 
 export async function verifyCaptcha(token: string, action: string) {
+  if (!token) {
+    throw new BadRequestError("Captcha token required");
+  }
+
   const isHuman = await validateCaptcha(token, action);
 
   if (!isHuman) {
-    return Response.json({ error: "reCAPTCHA verification failed" }, { status: 403 });
+    throw new BadRequestError("Invalid captcha");
   }
+
+  return true;
 }

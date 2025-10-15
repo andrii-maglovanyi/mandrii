@@ -8,6 +8,10 @@
   --tw-prose-links: var(--color-primary);
 }
 
+.w-md-editor-preview {
+  @apply prose dark:prose-invert max-w-none;
+}
+
 @layer base {
   @theme {
     --color-neutral-0: #fff;
@@ -44,6 +48,9 @@
     --color-ukraine-yellow-800: #605316;
     --color-ukraine-yellow-900: #342c08;
     --color-ukraine-yellow-950: #0e0a01;
+    --color-danger: #dc2626;
+    --color-danger-hover: #b91c1c;
+    --color-danger-disabled: #fca5a5;
     --color-neutral: var(--color-neutral-600);
     --color-neutral-hover: var(--color-neutral-700);
     --color-neutral-disabled: var(--color-neutral-300);
@@ -138,6 +145,22 @@
 
   .mndr-layout-glow:hover::before {
     opacity: 1;
+  }
+
+  /* gradient-shadow */
+  .mndr-with-gradient-shadow {
+    position: relative;
+  }
+
+  .mndr-with-gradient-shadow::before {
+    content: "";
+    position: absolute;
+    inset: 0.5rem 0.125rem -0.25rem;
+    background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+    border-radius: 0.75rem;
+    opacity: 0.8;
+    filter: blur(5px);
+    z-index: -1;
   }
 
   .grecaptcha-badge {

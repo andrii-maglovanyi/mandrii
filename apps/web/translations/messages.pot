@@ -3,7 +3,49 @@
 msgid "Sign in to Mandrii"
 msgstr ""
 
-msgid "Please enter a valid email address"
+msgid "The address appears to be incomplete"
+msgstr ""
+
+msgid "Please choose a category"
+msgstr ""
+
+msgid "Description is too long"
+msgstr ""
+
+msgid "Invalid email address"
+msgstr ""
+
+msgid "Please enter a valid {name} URL (e.g., {example})"
+msgstr ""
+
+msgid "Maximum is {MAX_IMAGES} images."
+msgstr ""
+
+msgid "Latitude must be between -90 and 90"
+msgstr ""
+
+msgid "Longitude must be between -180 and 180"
+msgstr ""
+
+msgid "Name is required"
+msgstr ""
+
+msgid "Name must be less than 100 characters"
+msgstr ""
+
+msgid "Invalid phone number"
+msgstr ""
+
+msgid "Slug must be at least 10 characters"
+msgstr ""
+
+msgid "Slug must be less than 150 characters"
+msgstr ""
+
+msgid "Slug must contain only lowercase letters, numbers, and hyphens"
+msgstr ""
+
+msgid "Website is invalid"
 msgstr ""
 
 msgid "Message is required"
@@ -12,109 +54,22 @@ msgstr ""
 msgid "Message is too long"
 msgstr ""
 
-msgid "Name is required"
-msgstr ""
-
-msgid "Light mode"
-msgstr ""
-
-msgid "Dark mode"
-msgstr ""
-
-msgid "Profile"
-msgstr ""
-
-msgid "Hold up - **{email}**, you're already subscribed!"
-msgstr ""
-
-msgid "And hey, I really appreciate that"
-msgstr ""
-
-msgid "Holy cow!"
-msgstr ""
-
-msgid "Dismiss alert"
-msgstr ""
-
-msgid "Failed to subscribe. Please try again."
-msgstr ""
-
-msgid "Almost there! Now venture to **{email}** inbox."
-msgstr ""
-
-msgid "And verify that you indeed own your email by clicking that button."
-msgstr ""
-
-msgid "Newsletter"
-msgstr ""
-
-msgid "Subscribe, and I'll send you real letters"
-msgstr ""
-
-msgid "Your email"
-msgstr ""
-
-msgid "Sending"
-msgstr ""
-
-msgid "Subscribe"
-msgstr ""
-
-msgid "Map"
-msgstr ""
-
-msgid "Events"
-msgstr ""
-
-msgid "Posts"
-msgstr ""
-
-msgid "Close menu"
-msgstr ""
-
-msgid "Open menu"
-msgstr ""
-
-msgid "Join & Support"
+msgid "Address is required"
 msgstr ""
 
 msgid "Loading map..."
 msgstr ""
 
-msgid "Beauty salon"
+msgid "Let's unite, Ukrainians!"
 msgstr ""
 
-msgid "Cafe"
+msgid "Discover Ukrainian businesses, restaurants, cultural center and community hubs across Europe."
 msgstr ""
 
-msgid "Catering"
+msgid "Whether you're looking for a familiar place, a taste of home, feeling of unity or ways to support own people abroad - this map helps you to find and contribute to the community."
 msgstr ""
 
-msgid "Church"
-msgstr ""
-
-msgid "Club"
-msgstr ""
-
-msgid "Cultural centre"
-msgstr ""
-
-msgid "Dental clinic"
-msgstr ""
-
-msgid "Grocery store"
-msgstr ""
-
-msgid "Library"
-msgstr ""
-
-msgid "Organization"
-msgstr ""
-
-msgid "Restaurant"
-msgstr ""
-
-msgid "School"
+msgid "Explore the Map"
 msgstr ""
 
 msgid "All categories"
@@ -159,10 +114,295 @@ msgstr ""
 msgid "Nothing found"
 msgstr ""
 
-msgid "Share this location"
+msgid "Copied venue URL"
+msgstr ""
+
+msgid "Manage your venue"
+msgstr ""
+
+msgid "Are you an owner?"
+msgstr ""
+
+msgid "Share this venue"
 msgstr ""
 
 msgid "Copied"
+msgstr ""
+
+msgid "Update and manage venue information"
+msgstr ""
+
+msgid "Host and promote events"
+msgstr ""
+
+msgid "Connect with local community"
+msgstr ""
+
+msgid "View analytics and more"
+msgstr ""
+
+msgid "Claim your ownership"
+msgstr ""
+
+msgid "What you'll get:"
+msgstr ""
+
+msgid "Sign in to claim ownership of this venue"
+msgstr ""
+
+msgid "Sign in"
+msgstr ""
+
+msgid "I will verify your ownership before granting access to enhanced features"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "Venues"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Virtual venue"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Add new venue"
+msgstr ""
+
+msgid "No venues added yet"
+msgstr ""
+
+msgid "Pending"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Rejected"
+msgstr ""
+
+msgid "Archived"
+msgstr ""
+
+msgid "Hidden"
+msgstr ""
+
+msgid "Logo"
+msgstr ""
+
+msgid "Preview logo"
+msgstr ""
+
+msgid "Remove logo"
+msgstr ""
+
+msgid "Venue logo"
+msgstr ""
+
+msgid "Click to upload"
+msgstr ""
+
+msgid "Images"
+msgstr ""
+
+msgid "Upload images"
+msgstr ""
+
+msgid "{addedImages}/{maxImages} images"
+msgstr ""
+
+msgid "Click to upload images"
+msgstr ""
+
+msgid "{number} images remaining"
+msgstr ""
+
+msgid "Preview {number}"
+msgstr ""
+
+msgid "Remove image {number}"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Slug"
+msgstr ""
+
+msgid "Optionally, update contacts, a description, photos, a logo, and an address for more details."
+msgstr ""
+
+msgid "Contacts"
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "The request may a little time to process..."
+msgstr ""
+
+msgid "Thanks for submitting! Your venue has been submitted for review."
+msgstr ""
+
+msgid "Failed to submit venue. Please try again."
+msgstr ""
+
+msgid "Saving changes"
+msgstr ""
+
+msgid "Save changes"
+msgstr ""
+
+msgid "Remove email"
+msgstr ""
+
+msgid "Remove phone number"
+msgstr ""
+
+msgid "Add email"
+msgstr ""
+
+msgid "Add phone number"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "You can add up to three emails."
+msgstr ""
+
+msgid "Phone number"
+msgstr ""
+
+msgid "**🌍 Auto-detection enabled**.<br />Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.<br /><br />  You can add up to three phone numbers."
+msgstr ""
+
+msgid "Social media"
+msgstr ""
+
+msgid "If you provide an address, it will appear on the [interactive map]({map_link}), where users can find it nearby or search within a specified area.<br/>The address and location won't be saved unless you verify the address."
+msgstr ""
+
+msgid "Verify address"
+msgstr ""
+
+msgid "Dismiss alert"
+msgstr ""
+
+msgid "Can not find the address, please correct it and try again"
+msgstr ""
+
+msgid "Please make sure the pin location on the map points to the right place.<br />You can adjust coordinates within 100m radius from the original point if it's not quite right"
+msgstr ""
+
+msgid "Latitude"
+msgstr ""
+
+msgid "orig."
+msgstr ""
+
+msgid "Longitude"
+msgstr ""
+
+msgid "Reset coordinates to original"
+msgstr ""
+
+msgid "Some images could not be loaded"
+msgstr ""
+
+msgid "Venue updated successfully"
+msgstr ""
+
+msgid "Failed to load venue data"
+msgstr ""
+
+msgid "Created on"
+msgstr ""
+
+msgid "Edit your venue details below.<br/>You can update all fields except the slug, which is locked after the first creation."
+msgstr ""
+
+msgid "Start adding your venue by selecting its category and name.<br/>The slug is auto-generated the URL and can only be edited during the first creation."
+msgstr ""
+
+msgid "Please check the venue URL and try again, or return to your [venues list]({venues_list_url})"
+msgstr ""
+
+msgid "Could not find that venue"
+msgstr ""
+
+msgid "Light mode"
+msgstr ""
+
+msgid "Dark mode"
+msgstr ""
+
+msgid "Hold up - **{email}**, you're already subscribed!"
+msgstr ""
+
+msgid "And hey, I really appreciate that"
+msgstr ""
+
+msgid "Holy cow!"
+msgstr ""
+
+msgid "Failed to subscribe. Please try again."
+msgstr ""
+
+msgid "Almost there! Now venture to **{email}** inbox."
+msgstr ""
+
+msgid "And verify that you indeed own your email by clicking that button."
+msgstr ""
+
+msgid "Newsletter"
+msgstr ""
+
+msgid "Subscribe, and I'll send you real letters"
+msgstr ""
+
+msgid "Your email"
+msgstr ""
+
+msgid "Sending"
+msgstr ""
+
+msgid "Subscribe"
+msgstr ""
+
+msgid "Map"
+msgstr ""
+
+msgid "Posts"
+msgstr ""
+
+msgid "Close menu"
+msgstr ""
+
+msgid "Open menu"
+msgstr ""
+
+msgid "Join & Support"
 msgstr ""
 
 msgid "More"
@@ -219,9 +459,6 @@ msgstr ""
 msgid "Failed to send message. Please try again."
 msgstr ""
 
-msgid "Name"
-msgstr ""
-
 msgid "Your name"
 msgstr ""
 
@@ -234,7 +471,13 @@ msgstr ""
 msgid "Send message"
 msgstr ""
 
+msgid "Someone"
+msgstr ""
+
 msgid "My profile"
+msgstr ""
+
+msgid "My directory"
 msgstr ""
 
 msgid "Sign out"
@@ -243,7 +486,7 @@ msgstr ""
 msgid "You can do so much more if you have a profile"
 msgstr ""
 
-msgid "You can add new locations and so much more to come"
+msgid "You can add new venues and so much more to come"
 msgstr ""
 
 msgid "Email address"
@@ -259,12 +502,6 @@ msgid "Sign in with Google"
 msgstr ""
 
 msgid "Loading your session..."
-msgstr ""
-
-msgid "Someone"
-msgstr ""
-
-msgid "Sign in"
 msgstr ""
 
 msgid "Confirm newsletter subscription"
@@ -288,19 +525,13 @@ msgstr ""
 msgid "A message from {name}<{email}>"
 msgstr ""
 
+msgid "Slug is already taken"
+msgstr ""
+
 msgid "Hi, friends!"
 msgstr ""
 
-msgid "Let's unite, Ukrainians!"
-msgstr ""
-
-msgid "Discover Ukrainian businesses, restaurants, cultural center and community hubs across Europe."
-msgstr ""
-
-msgid "Whether you're looking for a familiar place, a taste of home, feeling of unity or ways to support own people abroad - this map helps you to find and contribute to the community."
-msgstr ""
-
-msgid "Explore the Map"
+msgid "No posts available"
 msgstr ""
 
 msgid "Unsubscribed"
@@ -334,4 +565,10 @@ msgid "A sign-in link has been sent to your email address."
 msgstr ""
 
 msgid "Didn't get the email? Check your spam folder or try again."
+msgstr ""
+
+msgid "Add venue"
+msgstr ""
+
+msgid "Edit venue"
 msgstr ""

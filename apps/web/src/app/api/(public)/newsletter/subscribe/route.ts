@@ -1,8 +1,8 @@
-import { NextRequest } from "next/server";
 import { CreateContactResponse, GetContactResponse, Resend } from "resend";
 
 import VerifyEmail from "~/components/email/VerifyEmail";
-import { getLocaleContext } from "~/lib/api/helpers";
+import { getApiContext } from "~/lib/api/context";
+import { BadGateway } from "~/lib/api/errors";
 import { verifyCaptcha } from "~/lib/api/recaptcha";
 import { validateRequest } from "~/lib/api/validate";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
@@ -13,44 +13,63 @@ import { getEmailSchema } from "~/lib/validation/email";
 const resend = new Resend(privateConfig.email.resendApiKey);
 const { audienceId, baseUrl, fromEmail } = constants;
 
-const sendVerificationEmail = async (
-  contact: CreateContactResponse | GetContactResponse,
-  locale: string,
-  email: string,
-  i18n: (value: string) => string,
-) => {
-  const verifyUrl = `${baseUrl}/api/newsletter/verify?key=${contact.data?.id}&locale=${locale}`;
+type Contact = CreateContactResponse | GetContactResponse;
 
-  await resend.emails.send({
+interface VerificationEmailParams {
+  contact: Contact;
+  email: string;
+  i18n: (value: string) => string;
+  locale: string;
+}
+
+const sendVerificationEmail = async ({ contact, email, i18n, locale }: VerificationEmailParams): Promise<void> => {
+  const contactId = contact.data?.id;
+
+  if (!contactId) {
+    throw new BadGateway("Failed to create contact");
+  }
+
+  const verifyUrl = `${baseUrl}/api/newsletter/verify?key=${contactId}&locale=${locale}`;
+
+  const result = await resend.emails.send({
     from: fromEmail(locale),
     react: VerifyEmail({ i18n, url: verifyUrl }),
     subject: i18n("Confirm your subscription"),
     to: email,
   });
+
+  if (result.error) {
+    throw new BadGateway(`Failed to send verification email: ${result.error.message}`);
+  }
 };
 
-export const POST = (req: NextRequest) =>
+export const POST = (req: Request): Promise<Response> =>
   withErrorHandling(async () => {
-    const { error, i18n, locale } = await getLocaleContext(req);
-    if (error) return error;
-
+    const { i18n, locale } = await getApiContext(req, { withI18n: true });
     const schema = getEmailSchema(i18n);
+    const { captchaToken, email } = await validateRequest(req, schema);
 
-    const validation = await validateRequest(req, schema);
-    if ("error" in validation) return validation.error;
+    await verifyCaptcha(captchaToken, "newsletter_form");
 
-    const { captchaToken, email } = validation.data;
+    const existingContact = await resend.contacts.get({ audienceId, email });
 
-    const captchaError = await verifyCaptcha(captchaToken, "newsletter_form");
-    if (captchaError) return captchaError;
+    if (existingContact.error) {
+      if (!existingContact.error.message.includes("not found")) {
+        throw new BadGateway(`Failed to check contact: ${existingContact.error.message}`);
+      }
+    }
 
-    const contact = await resend.contacts.get({ audienceId, email });
-
-    if (contact?.data) {
-      if (contact.data.unsubscribed) {
-        await sendVerificationEmail(contact, locale, email, i18n);
+    if (existingContact.data) {
+      if (existingContact.data.unsubscribed) {
+        await sendVerificationEmail({
+          contact: existingContact,
+          email,
+          i18n,
+          locale,
+        });
         return Response.json({ status: "verification_email_sent" });
       }
+
       return Response.json({ status: "already_subscribed" });
     }
 
@@ -60,6 +79,16 @@ export const POST = (req: NextRequest) =>
       unsubscribed: true,
     });
 
-    await sendVerificationEmail(newContact, locale, email, i18n);
+    if (newContact.error) {
+      throw new BadGateway(`Failed to create contact: ${newContact.error.message}`);
+    }
+
+    await sendVerificationEmail({
+      contact: newContact,
+      email,
+      i18n,
+      locale,
+    });
+
     return Response.json({ status: "verification_email_sent" });
   });

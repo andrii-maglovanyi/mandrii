@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { CheckCircle, Info, TriangleAlert, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { ColorVariant } from "~/types";
 
@@ -12,6 +12,7 @@ interface AlertProps {
   children: React.ReactNode;
   className?: string;
   dismissLabel?: string;
+  fadeAfter?: number;
   onDismiss?: () => void;
   variant?: ColorVariant;
 }
@@ -42,34 +43,57 @@ const alertConfig = {
 export const Alert = ({
   children,
   className,
-  dismissLabel = "Dismiss",
+  dismissLabel,
+  fadeAfter,
   onDismiss,
   variant = ColorVariant.Error,
 }: AlertProps) => {
   const [isVisible, setIsVisible] = useState(true);
+  const [isFading, setIsFading] = useState(false);
+
   const { bgColor, icon: Icon, textColor } = alertConfig[variant];
 
-  const handleDismiss = () => {
-    setIsVisible(false);
-    onDismiss?.();
-  };
+  const handleDismiss = useCallback(() => {
+    setIsFading(true);
+    setTimeout(() => {
+      setIsVisible(false);
+      onDismiss?.();
+    }, 300);
+  }, [onDismiss]);
+
+  useEffect(() => {
+    if (!fadeAfter) return;
+    const timer = setTimeout(handleDismiss, fadeAfter);
+    return () => clearTimeout(timer);
+  }, [fadeAfter, handleDismiss]);
 
   return (
     isVisible && (
       <div
         aria-live="polite"
-        className={clsx("flex h-12 items-center rounded-md pr-1 pl-4", bgColor, textColor, className)}
+        className={clsx(
+          `
+            flex w-full items-center gap-2 rounded-lg px-4 py-2.5
+            transition-opacity duration-300
+          `,
+          bgColor,
+          textColor,
+          isFading && "opacity-0",
+          className,
+        )}
         role="alert"
       >
         <div className="mr-3 flex-shrink-0">
-          <Icon aria-hidden="true" />
+          <Icon aria-hidden="true" size={18} />
         </div>
 
         <div className="flex-1">
           <div className="text-sm leading-relaxed">{children}</div>
         </div>
 
-        <ActionButton aria-label={dismissLabel} icon={<X />} onClick={handleDismiss} variant="ghost" />
+        {dismissLabel ? (
+          <ActionButton aria-label={dismissLabel} icon={<X />} onClick={handleDismiss} variant="ghost" />
+        ) : null}
       </div>
     )
   );

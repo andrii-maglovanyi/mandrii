@@ -1,8 +1,8 @@
 import React from "react";
 
+import { AnimatedEllipsis } from "../AnimatedEllipsis/AnimatedEllipsis";
 import { sizeClasses } from "../styles";
 import { Tooltip } from "../Tooltip/Tooltip";
-import { AnimatedEllipsis } from "./AnimateEllipsis";
 import { baseClass, variantClasses } from "./styles";
 import { ActionButtonProps } from "./types";
 
