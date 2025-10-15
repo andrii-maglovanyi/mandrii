@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 
-import { publicConfig } from "./lib/config/public";
 import { isProduction } from "./lib/config/env";
+import { publicConfig } from "./lib/config/public";
 
 Sentry.init({
   debug: !isProduction,

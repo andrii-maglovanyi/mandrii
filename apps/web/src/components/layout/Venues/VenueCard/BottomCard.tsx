@@ -50,12 +50,20 @@ export function BottomCard({ venue }: Readonly<BottomCardInterface>) {
 
   return (
     <div
-      className={`border-neutral-hover bg-surface fixed right-0 bottom-0 left-0 z-30 overflow-hidden rounded-t-2xl shadow-lg transition-all duration-500 ease-in-out md:hidden ${!isExpanded ? `border-t` : ""} `}
+      className={`
+        fixed right-0 bottom-0 left-0 z-30 overflow-hidden rounded-t-2xl
+        border-neutral-hover bg-surface shadow-lg transition-all duration-500
+        ease-in-out
+        md:hidden
+        ${!isExpanded ? `border-t` : ""}
+      `}
       style={{
         height: isExpanded && innerHeight ? `${innerHeight}px` : "33vh",
       }}
     >
-      <button className={`flex h-[40px] w-full cursor-pointer items-center justify-center`} onClick={toggle}>
+      <button className={`
+        flex h-[40px] w-full cursor-pointer items-center justify-center
+      `} onClick={toggle}>
         {isExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
       </button>
 

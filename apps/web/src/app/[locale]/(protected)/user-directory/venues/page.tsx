@@ -17,7 +17,10 @@ const VenuePageLayout = ({ locale }: AddVenuePageLayoutProps) => {
   return (
     <>
       <Breadcrumbs items={[{ title: i18n("Venues"), url: `/${locale}/user-directory#Venues` }]} />
-      <h1 className={`text-on-surface mb-12 text-3xl font-extrabold md:text-5xl`}>{i18n("Add venue")}</h1>
+      <h1 className={`
+        mb-12 text-3xl font-extrabold text-on-surface
+        md:text-5xl
+      `}>{i18n("Add venue")}</h1>
 
       <EditVenue />
     </>

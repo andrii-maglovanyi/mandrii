@@ -26,12 +26,18 @@ const PostsCategoryPageLayout = ({ categoryName, locale, posts }: PostsCategoryL
     <>
       <Breadcrumbs items={[{ title: i18n("Posts"), url: `/${locale}/posts` }]} />
       {categoryName && (
-        <h1 className={`text-on-surface mb-12 flex items-center text-3xl font-extrabold`}>
+        <h1 className={`
+          mb-12 flex items-center text-3xl font-extrabold text-on-surface
+        `}>
           <Library className="mr-1" size={32} strokeWidth={3} /> {categoryName}
         </h1>
       )}
 
-      <div className={`mb-32 grid gap-8 text-left md:grid-cols-3 lg:mt-2 lg:mb-0 lg:w-full lg:max-w-5xl`}>
+      <div className={`
+        mb-32 grid gap-8 text-left
+        md:grid-cols-3
+        lg:mt-2 lg:mb-0 lg:w-full lg:max-w-5xl
+      `}>
         {posts.map(({ content, id, meta }) => (
           <PostCard content={content} id={id} key={id} locale={locale} meta={meta} type={type} />
         ))}

@@ -164,15 +164,20 @@ export function Input<K extends string, T extends string>({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-on-surface text-sm font-medium" htmlFor={inputId}>
+        <label className="text-sm font-medium text-on-surface" htmlFor={inputId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>
       )}
       <span className="relative" ref={wrapperRef}>
         {isPhoneInput && (
-          <span className={`pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-2xl`}>
-            {detectedCountry ? detectedCountry.flag : <Phone className={`text-neutral-disabled mx-1`} size={20} />}
+          <span className={`
+            pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3
+            text-2xl
+          `}>
+            {detectedCountry ? detectedCountry.flag : <Phone className={`
+              mx-1 text-neutral-disabled
+            `} size={20} />}
           </span>
         )}
         <input

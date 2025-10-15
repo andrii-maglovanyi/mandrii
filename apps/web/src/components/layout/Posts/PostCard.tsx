@@ -33,14 +33,20 @@ export const PostCard = ({ id, isFeatured, isRecent, locale, meta, type, withCat
       {meta.images?.length && !isRecent ? (
         <div
           className={clsx(
-            `bg-neutral/10 relative h-82 w-full min-w-2/5 overflow-hidden rounded-lg`,
+            `
+              relative h-82 w-full min-w-2/5 overflow-hidden rounded-lg
+              bg-neutral/10
+            `,
             isFeatured ? `md:h-96` : "md:h-48",
             isRecent ? "" : "mb-4",
           )}
         >
           <Image
             alt={title}
-            className={`object-cover transition-transform duration-300 ease-in-out hover:scale-105`}
+            className={`
+              object-cover transition-transform duration-300 ease-in-out
+              hover:scale-105
+            `}
             fill
             sizes="(min-width: 1024px) 350px, 250px"
             src={`${constants.vercelBlobStorageUrl}/${type}/${id}/cover.webp`}
@@ -49,16 +55,19 @@ export const PostCard = ({ id, isFeatured, isRecent, locale, meta, type, withCat
       ) : null}
       <div>
         {withCategory && categoryName ? (
-          <div className="text-neutral mb-1 flex items-center space-x-2">
+          <div className="mb-1 flex items-center space-x-2 text-neutral">
             <Library className="mr-1" size={18} />{" "}
             <Link href={`/${locale}/posts/${meta.categorySlug}`}>{categoryName}</Link>
           </div>
         ) : null}
         <Link href={`/${locale}/posts/${meta.categorySlug}/${id}`}>
-          <h1 className={clsx(`text-3xl font-extrabold md:text-2xl`, isFeatured ? `md:text-5xl` : "")}>{title}</h1>
+          <h1 className={clsx(`
+            text-3xl font-extrabold
+            md:text-2xl
+          `, isFeatured ? `md:text-5xl` : "")}>{title}</h1>
         </Link>
-        <p className="text-on-surface mt-3">{description}</p>
-        <div className={`border-surface-tint mt-4 border-t pt-2`}>
+        <p className="mt-3 text-on-surface">{description}</p>
+        <div className={`mt-4 border-t border-surface-tint pt-2`}>
           <ContentMeta meta={meta} type={type} />
         </div>
       </div>

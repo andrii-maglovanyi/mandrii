@@ -16,15 +16,23 @@ export const AnimatedEllipsis = ({ centered = false, el = "\u2022", size = "sm",
 
   const content = (
     <>
-      <span className={`animate-bounce [animation-delay:-0.3s]`}>{el}</span>
-      <span className={`animate-bounce [animation-delay:-0.15s]`}>{el}</span>
+      <span className={`
+        animate-bounce
+        [animation-delay:-0.3s]
+      `}>{el}</span>
+      <span className={`
+        animate-bounce
+        [animation-delay:-0.15s]
+      `}>{el}</span>
       <span className="animate-bounce">{el}</span>
     </>
   );
 
   if (centered) {
     return (
-      <div className={clsx(`inline-flex h-full min-h-6 w-full items-center justify-center`, textSize)} {...props}>
+      <div className={clsx(`
+        inline-flex h-full min-h-6 w-full items-center justify-center
+      `, textSize)} {...props}>
         {content}
       </div>
     );

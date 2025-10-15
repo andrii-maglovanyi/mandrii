@@ -14,8 +14,14 @@ export const Footer = () => {
   const { buildTime, commitSha, environment } = publicConfig.deploymentInfo;
 
   return (
-    <footer className={`mndr-layout-glow px-6 py-10 text-sm md:px-16`}>
-      <div className={`grid grid-cols-1 justify-start gap-8 md:grid-cols-2`}>
+    <footer className={`
+      mndr-layout-glow px-6 py-10 text-sm
+      md:px-16
+    `}>
+      <div className={`
+        grid grid-cols-1 justify-start gap-8
+        md:grid-cols-2
+      `}>
         <div className="space-y-3">
           <h3 className="font-semibold">{i18n("More")}</h3>
           <div>
@@ -34,13 +40,20 @@ export const Footer = () => {
         </div>
       </div>
 
-      <div className={`text-on-surface mt-8 flex flex-col items-center justify-between border-t pt-6 md:flex-row`}>
+      <div className={`
+        mt-8 flex flex-col items-center justify-between border-t pt-6
+        text-on-surface
+        md:flex-row
+      `}>
         <div>
           2025 <strong className="mr-4">Мандрій</strong>{" "}
           <span className="opacity-60">мандруй &bull; мрій &bull; дій</span>
         </div>
         <div>
-          <div className={`mt-3 space-x-2 md:mt-0`}>
+          <div className={`
+            mt-3 space-x-2
+            md:mt-0
+          `}>
             {SOCIAL_LINKS.map((props) => (
               <PlatformLink key={props.type} {...props} />
             ))}

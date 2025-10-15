@@ -22,7 +22,7 @@ export const NumberedPagination = ({ index, onChange, size = "md", total }: Numb
 
   if (showStartEllipsis) {
     pages.push(
-      <span className="text-neutral mx-2 px-1.5" key="ellipsis-start">
+      <span className="mx-2 px-1.5 text-neutral" key="ellipsis-start">
         ...
       </span>,
     );
@@ -41,7 +41,7 @@ export const NumberedPagination = ({ index, onChange, size = "md", total }: Numb
 
   if (showEndEllipsis) {
     pages.push(
-      <span className="text-neutral mx-2 px-1.5" key="ellipsis-end">
+      <span className="mx-2 px-1.5 text-neutral" key="ellipsis-end">
         ...
       </span>,
     );

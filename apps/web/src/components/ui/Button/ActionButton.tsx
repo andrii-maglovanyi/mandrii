@@ -35,7 +35,13 @@ export const ActionButton = ({
     <Tooltip label={ariaLabel} position={tooltipPosition}>
       <button
         aria-label={ariaLabel}
-        className={` ${baseClass} ${sizeClass} ${widthClass} ${variantClass} ${className} `}
+        className={`
+          ${baseClass}
+          ${sizeClass}
+          ${widthClass}
+          ${variantClass}
+          ${className}
+        `}
         data-testid={testId}
         disabled={disabled || busy}
         onClick={onClick}

@@ -1,7 +1,8 @@
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import * as Sentry from "@sentry/nextjs";
 
 import "../globals.css";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
@@ -15,7 +16,6 @@ import { ThemeProvider } from "~/contexts/ThemeContext";
 import { routing } from "~/i18n/routing";
 import ApolloWrapper from "~/lib/apollo/provider";
 import { UrlHelper } from "~/lib/url-helper";
-import * as Sentry from "@sentry/nextjs";
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;

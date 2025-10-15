@@ -64,7 +64,7 @@ export const Tabs = ({ children, defaultActiveKey = "", defer = false }: TabsPro
           : React.Children.map(tabsOnly, (child, index) =>
               React.isValidElement<TabPaneProps>(child) ? (
                 <div
-                  className="text-on-surface my-4"
+                  className="my-4 text-on-surface"
                   style={{
                     display: `${index === activeTab ? "block" : "none"}`,
                   }}
