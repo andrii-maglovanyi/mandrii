@@ -5,9 +5,9 @@ import { publicConfig } from "./lib/config/public";
 Sentry.init({
   debug: false,
   dsn: publicConfig.analytics.sentryDsn,
-  tracesSampleRate: 1,
-  integrations: [Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] })],
   enableLogs: true,
+  integrations: [Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] })],
+  tracesSampleRate: 1,
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
