@@ -116,7 +116,7 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       .nullable(),
 
     latitude: z
-      .union([z.string().transform((val) => parseFloat(val)), z.number()])
+      .union([z.string().transform((val) => Number.parseFloat(val)), z.number()])
       .pipe(
         z
           .number()
@@ -129,7 +129,7 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
     logo: z.instanceof(File).optional().nullable(),
 
     longitude: z
-      .union([z.string().transform((val) => parseFloat(val)), z.number()])
+      .union([z.string().transform((val) => Number.parseFloat(val)), z.number()])
       .pipe(
         z
           .number()

@@ -115,10 +115,29 @@ export const Venues = ({ slug }: VenuesProps) => {
     }
   }, []);
 
-  // Justification for linter/sonarqube:
-  // Geolocation is only requested in response to explicit user action ("Find me" button).
-  // This is necessary for providing location-based search results.
-  const getLocation = () => {
+  // SECURITY: Using geolocation is justified and necessary.
+  // - Triggered only by explicit user action (clicking the "Find me" button).
+  // - Used exclusively to center map/search results near the user's position.
+  // - Location data is not stored, transmitted, or shared with third parties.
+  // - Complies with browser permission prompts for user consent.
+  const getLocation = async () => {
+    if ("permissions" in navigator) {
+      try {
+        const permissionStatus = await navigator.permissions.query({ name: "geolocation" });
+
+        if (permissionStatus.state === "denied") {
+          showError(i18n("Location access denied. Please enable it in your browser settings."));
+          return;
+        }
+
+        permissionStatus.addEventListener("change", () => {
+          console.log("Geolocation permission changed to:", permissionStatus.state);
+        });
+      } catch (error) {
+        console.warn("Permissions API not available:", error);
+      }
+    }
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -291,14 +310,8 @@ export const Venues = ({ slug }: VenuesProps) => {
         <div className="flex grow flex-col">
           <div className="mx-auto mt-4 w-full max-w-(--breakpoint-xl) p-4">
             <div className="shrink-0 space-y-4">
-              <div className={`
-                flex flex-col gap-x-2
-                md:flex-row
-              `}>
-                <div className={`
-                  mb-4 flex-2
-                  md:mb-0
-                `}>
+              <div className={`flex flex-col gap-x-2 md:flex-row`}>
+                <div className={`mb-4 flex-2 md:mb-0`}>
                   <Input
                     disabled={!isReady}
                     onChange={(e) => {
@@ -350,33 +363,20 @@ export const Venues = ({ slug }: VenuesProps) => {
                     <LocateFixed className="mr-2" size={18} /> {i18n("Find me")}
                   </Button>
                 </div>
-                <RichText as="div" className={clsx(`
-                  text-sm
-                  sm:text-base
-                `, isReady ? `visible` : `hidden`)}>
+                <RichText as="div" className={clsx(`text-sm sm:text-base`, isReady ? `visible` : `hidden`)}>
                   {i18n("Added **{total}** places", { total })}
                 </RichText>
               </div>
             </div>
           </div>
 
-          <div className={clsx("mx-auto h-full w-1/2 flex-col justify-center", showMap ? `
-            hidden
-          ` : `flex`)}>
+          <div className={clsx("mx-auto h-full w-1/2 flex-col justify-center", showMap ? `hidden` : `flex`)}>
             <ProgressBar isLoading={!isReady} onLoaded={() => setShowMap(true)} />
           </div>
 
-          <div className={clsx(`
-            h-full grid-cols-1 gap-2
-            md:grid-cols-2
-          `, showMap ? `grid` : `hidden`)}>
-            <div className={`
-              hidden
-              md:block
-            `}>
-              <div className={`
-                -mt-[2px] h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
-              `}>{venueCards}</div>
+          <div className={clsx(`h-full grid-cols-1 gap-2 md:grid-cols-2`, showMap ? `grid` : `hidden`)}>
+            <div className={`hidden md:block`}>
+              <div className={`-mt-[2px] h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3`}>{venueCards}</div>
             </div>
 
             <div className="relative col-span-1 h-full">
@@ -407,9 +407,7 @@ export const Venues = ({ slug }: VenuesProps) => {
               />
 
               <div className="absolute top-0 mt-3 ml-3">
-                <p className={`
-                  rounded-md bg-on-surface/70 px-3 py-1 text-sm text-surface
-                `}>
+                <p className={`bg-on-surface/70 text-surface rounded-md px-3 py-1 text-sm`}>
                   {venueCards.length
                     ? `${i18n("Showing {number} results", { number: venueCards.length })}`
                     : i18n("Nothing found")}
