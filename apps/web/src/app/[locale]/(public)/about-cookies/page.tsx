@@ -9,7 +9,7 @@ interface AboutCookiesPageProps {
 const type = "about";
 const id = "cookies";
 
-export default async function AboutCookiesPage({ params }: AboutCookiesPageProps) {
+export default async function AboutCookiesPage({ params }: Readonly<AboutCookiesPageProps>) {
   const { locale } = await params;
   const data = await contentManager.getContentById(type, id, locale);
 

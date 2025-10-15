@@ -27,7 +27,7 @@ const VenuePageLayout = ({ locale }: AddVenuePageLayoutProps) => {
   );
 };
 
-export default async function VenuePage({ params }: AddVenuePageProps) {
+export default async function VenuePage({ params }: Readonly<AddVenuePageProps>) {
   const { locale } = await params;
 
   return (

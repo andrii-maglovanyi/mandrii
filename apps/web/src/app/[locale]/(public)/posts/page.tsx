@@ -38,7 +38,7 @@ const PostsPageLayout = ({ locale, posts }: PostsLayoutProps) => {
   );
 };
 
-export default async function PostsPage({ params }: PostsPageProps) {
+export default async function PostsPage({ params }: Readonly<PostsPageProps>) {
   const { locale } = await params;
   const posts = await contentManager.getContent(type, locale);
 

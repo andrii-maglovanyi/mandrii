@@ -35,7 +35,7 @@ const PostPageLayout = ({ categoryName, categorySlug, data, id, locale }: PostPa
   );
 };
 
-export default async function PostPage({ params }: PostPageProps) {
+export default async function PostPage({ params }: Readonly<PostPageProps>) {
   const { categorySlug, id, locale } = await params;
   const data = await contentManager.getContentById(type, id, locale);
   const categoryName = getCategoryName(categorySlug, locale);

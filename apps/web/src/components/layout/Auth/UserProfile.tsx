@@ -14,12 +14,13 @@ export const UserProfileCard = ({ profile }: UserProfileCardProps) => {
 
   const { user } = profile;
   const { email = "", image, name, role } = user;
+  const userName = name ?? i18n("Someone");
 
   return (
     <div className="flex cursor-default items-center space-x-3">
       {image ? (
         <Image
-          alt={name ?? i18n("Someone")}
+          alt={userName ?? i18n("Someone")}
           className="rounded-full object-cover"
           height={avatarSize}
           src={image}
@@ -38,7 +39,7 @@ export const UserProfileCard = ({ profile }: UserProfileCardProps) => {
       )}
       <div className="flex flex-col text-on-surface">
         <div className="space-x-2">
-          {name && <span className="font-semibold">{name}</span>}
+          <span className="font-semibold">{userName}</span>
           {role === "admin" ? (
             <div className={`
               inline-flex rounded bg-primary px-1 text-sm text-surface

@@ -58,7 +58,7 @@ const PostColumn = ({
 }) => (
   <div className={`
     flex flex-col gap-4
-    ${isLeftColumn ? "md:w-1/2" : "md:w-1/2"}
+    md:w-1/2
   `}>
     {posts.map(({ content, id, meta }, index) => (
       <PostCard
@@ -116,7 +116,7 @@ const HomePageLayout = ({ locale, posts }: HomePageLayoutProps) => {
   );
 };
 
-export default async function HomePage({ params }: HomePageProps) {
+export default async function HomePage({ params }: Readonly<HomePageProps>) {
   const { locale } = await params;
 
   const posts = await contentManager.getContent(CONTENT_TYPE, locale, {

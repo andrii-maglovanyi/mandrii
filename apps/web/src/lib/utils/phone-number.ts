@@ -8,13 +8,7 @@ export interface CountryPhoneConfig {
   pattern: RegExp;
 }
 
-export interface PhoneFormatResult {
-  detectedCountry: CountryPhoneConfig | null;
-  formatted: string;
-  isValid: boolean | null;
-}
-
-const COUNTRY_PATTERNS: CountryPhoneConfig[] = [
+const COUNTRY_PATTERNS = [
   {
     code: "+1",
     country: "US/CA",
@@ -67,24 +61,9 @@ const COUNTRY_PATTERNS: CountryPhoneConfig[] = [
   { code: "+84", country: "VN", flag: "🇻🇳", format: "XX XXXX XXXX", maxDigits: 9, minDigits: 9, pattern: /^\+?84/ },
 ];
 
-export function detectCountry(value: string): CountryPhoneConfig | null {
-  const normalized = normalizeNumber(value);
-  const digits = normalized.replace(/\D/g, "");
-
-  const sorted = [...COUNTRY_PATTERNS].sort((a, b) => b.code.length - a.code.length);
-
-  for (const country of sorted) {
-    const codeDigits = country.code.replace(/\D/g, "");
-    if (digits.startsWith(codeDigits)) {
-      return country;
-    }
-  }
-  return null;
-}
-
 export function formatPhoneNumber(value: string): string {
   const normalized = normalizeNumber(value);
-  let cleaned = normalized.replace(/[^\d+]/g, "");
+  let cleaned = normalized.replaceAll(/[^\d+]/g, "");
 
   if (cleaned && !cleaned.startsWith("+")) {
     cleaned = "+" + cleaned;
@@ -96,7 +75,8 @@ export function formatPhoneNumber(value: string): string {
 
   if (!country) {
     const digits = cleaned.slice(1);
-    const match = digits.match(/(\d{1,4})(\d{0,3})(\d{0,3})(\d{0,4})/);
+    const match = /(\d{1,4})(\d{0,3})(\d{0,3})(\d{0,4})/.exec(digits);
+
     if (match) {
       let formatted = "+";
       if (match[1]) formatted += match[1];
@@ -108,8 +88,8 @@ export function formatPhoneNumber(value: string): string {
     return cleaned;
   }
 
-  const codeLength = country.code.replace(/\D/g, "").length;
-  const allDigits = cleaned.replace(/\D/g, "");
+  const codeLength = country.code.replaceAll(/\D/g, "").length;
+  const allDigits = cleaned.replaceAll(/\D/g, "");
   const phoneDigits = allDigits.slice(codeLength);
 
   let formatted = country.code + " ";
@@ -132,11 +112,7 @@ export function formatPhoneNumber(value: string): string {
   return formatted;
 }
 
-export function getSupportedCountries(): CountryPhoneConfig[] {
-  return COUNTRY_PATTERNS;
-}
-
-export function processPhoneNumber(value: string): PhoneFormatResult {
+export function processPhoneNumber(value: string) {
   const formatted = formatPhoneNumber(value);
   const isValid = validatePhoneNumber(formatted);
   const detectedCountry = detectCountry(formatted);
@@ -148,26 +124,50 @@ export function processPhoneNumber(value: string): PhoneFormatResult {
   };
 }
 
-export function validatePhoneNumber(value: string): boolean | null {
+export function validatePhoneNumber(value: string) {
   const normalized = normalizeNumber(value);
-  if (!normalized || normalized === "+") return null;
+  if (!normalized || normalized === "+") {
+    return null;
+  }
 
-  const cleaned = value.replace(/\D/g, "");
+  const cleaned = value.replaceAll(/\D/g, "");
   const country = detectCountry(value);
 
   if (!country) {
     return cleaned.length >= 8;
   }
 
-  const codeLength = country.code.replace(/\D/g, "").length;
+  const codeLength = country.code.replaceAll(/\D/g, "").length;
   const phoneDigits = cleaned.slice(codeLength);
 
   return phoneDigits.length >= country.minDigits && phoneDigits.length <= country.maxDigits;
 }
 
-function normalizeNumber(value: string): string {
-  if (!value) return "";
-  let cleaned = value.replace(/[^\d+]/g, "");
-  if (!cleaned.startsWith("+")) cleaned = "+" + cleaned.replace(/^0+/, "");
+function detectCountry(value: string) {
+  const normalized = normalizeNumber(value);
+  const digits = normalized.replaceAll(/\D/g, "");
+
+  const sorted = [...COUNTRY_PATTERNS].sort((a, b) => b.code.length - a.code.length);
+
+  for (const country of sorted) {
+    const codeDigits = country.code.replaceAll(/\D/g, "");
+    if (digits.startsWith(codeDigits)) {
+      return country;
+    }
+  }
+  return null;
+}
+
+function normalizeNumber(value: string) {
+  if (!value) {
+    return "";
+  }
+
+  let cleaned = value.replaceAll(/[^\d+]/g, "");
+
+  if (!cleaned.startsWith("+")) {
+    cleaned = "+" + cleaned.replace(/^0+/, "");
+  }
+
   return cleaned;
 }

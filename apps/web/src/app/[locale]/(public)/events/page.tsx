@@ -36,7 +36,7 @@ const EventPageLayout = ({ events, locale }: EventPageLayoutProps) => {
   );
 };
 
-export default async function EventsPage({ params }: EventsPageProps) {
+export default async function EventsPage({ params }: Readonly<EventsPageProps>) {
   const { locale } = await params;
   const events = await contentManager.getContent(type, locale);
 

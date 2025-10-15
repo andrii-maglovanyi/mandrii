@@ -46,7 +46,7 @@ const PostsCategoryPageLayout = ({ categoryName, locale, posts }: PostsCategoryL
   );
 };
 
-export default async function PostsCategoryPage({ params }: PostsCategoryPageProps) {
+export default async function PostsCategoryPage({ params }: Readonly<PostsCategoryPageProps>) {
   const { categorySlug, locale } = await params;
   const posts = await contentManager.getContent(type, locale, { categorySlug });
   const categoryName = getCategoryName(categorySlug, locale);

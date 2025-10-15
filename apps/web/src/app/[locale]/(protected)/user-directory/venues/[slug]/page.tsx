@@ -9,7 +9,7 @@ interface EditVenuePageLayoutProps {
 }
 
 interface EditVenuePageProps {
-  params: Promise<{ locale: Locale; slug: string }>;
+  params: Readonly<Promise<{ locale: Locale; slug: string }>>;
 }
 
 const VenuePageLayout = ({ locale, slug }: EditVenuePageLayoutProps) => {
@@ -28,7 +28,7 @@ const VenuePageLayout = ({ locale, slug }: EditVenuePageLayoutProps) => {
   );
 };
 
-export default async function EditVenuePage({ params }: EditVenuePageProps) {
+export default async function EditVenuePage({ params }: Readonly<EditVenuePageProps>) {
   const { locale, slug } = await params;
 
   return (

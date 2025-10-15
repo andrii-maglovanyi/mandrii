@@ -132,9 +132,7 @@ function Newsletter() {
       md:max-w-lg
     `}>
       <h3 className="font-semibold">{i18n("Newsletter")}</h3>
-      {!["idle", "processing"].includes(status) ? (
-        renderMessage()
-      ) : (
+      {["idle", "processing"].includes(status) ? (
         <>
           <p>{i18n("Subscribe, and I'll send you real letters")}</p>
 
@@ -174,6 +172,8 @@ function Newsletter() {
             </span>
           </form>
         </>
+      ) : (
+        renderMessage()
       )}
     </div>
   );

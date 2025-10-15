@@ -39,6 +39,10 @@ export const sendSlackNotification = async (
 ) => {
   const media = getMedia({ image_urls, logo_url, name });
 
+  const categoryText = category ? constants.categories[category].label.uk : "[no category]";
+
+  const locationText = city && country ? ` - ${city}, ${country}` : "";
+
   const descriptionBlock = media
     ? {
         ...media,
@@ -97,7 +101,7 @@ export const sendSlackNotification = async (
         url: "https://admin.mandrii.com",
       },
       text: {
-        text: `*${category ? constants.categories[category].label.uk : "[no category]"}*${city && country ? ` - ${city}, ${country}` : ""}`,
+        text: `*${categoryText}*${locationText}`,
         type: "mrkdwn" as const,
       },
       type: "section" as const,

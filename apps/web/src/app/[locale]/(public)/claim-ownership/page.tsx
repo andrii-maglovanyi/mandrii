@@ -9,7 +9,7 @@ interface ClaimOwnershipPageProps {
 const type = "about";
 const id = "claim-ownership";
 
-export default async function ClaimOwnershipPage({ params }: ClaimOwnershipPageProps) {
+export default async function ClaimOwnershipPage({ params }: Readonly<ClaimOwnershipPageProps>) {
   const { locale } = await params;
   const data = await contentManager.getContentById(type, id, locale);
 
