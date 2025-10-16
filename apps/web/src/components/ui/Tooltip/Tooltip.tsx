@@ -50,7 +50,7 @@ export const Tooltip = ({ children, className = "", label, position = "top" }: T
 
   return (
     <div className={`
-      group relative inline-block w-fit
+      group/tooltip relative inline-block w-fit
       ${className}
     `}>
       <span aria-describedby={id} data-testid={`target-${id}`}>
@@ -62,8 +62,8 @@ export const Tooltip = ({ children, className = "", label, position = "top" }: T
           pointer-events-none absolute z-50 rounded-md bg-surface-tint px-2 py-1
           text-xs whitespace-nowrap text-on-surface opacity-0 shadow
           transition-opacity duration-200
-          group-hover:opacity-100
-          group-focus:opacity-100
+          group-hover/tooltip:opacity-100
+          group-focus/tooltip:opacity-100
           ${classes.tooltip}
         `}
         id={id}

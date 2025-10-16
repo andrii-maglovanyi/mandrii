@@ -1,17 +1,40 @@
-import { ZodSchema } from "zod";
+import { z, ZodObject, ZodRawShape, ZodType } from "zod";
 
-export async function validateRequest<T>(
+import { isZodArray } from "../utils";
+import { ValidationError } from "./errors";
+
+export async function validateRequest<T extends ZodRawShape>(
   req: Request,
-  schema: ZodSchema<T>,
-): Promise<{ data: T } | { error: Response }> {
-  const body = await req.json();
+  schema: ZodObject<T>,
+): Promise<z.infer<typeof schema>> {
+  const contentType = req.headers.get("content-type");
+  let body: unknown;
+
+  if (contentType?.includes("multipart/form-data")) {
+    const formData = await req.formData();
+    body = Object.fromEntries(
+      Array.from(formData.entries()).map(([field, value]) => {
+        const schemaField = schema.shape[field as keyof T] as unknown as ZodType;
+        const allValues = formData.getAll(field);
+
+        if (isZodArray(schemaField)) {
+          return [field, allValues];
+        }
+        return [field, allValues.length > 1 ? allValues[0] : value];
+      }),
+    );
+  } else if (contentType?.includes("application/x-www-form-urlencoded")) {
+    const formData = await req.formData();
+    body = Object.fromEntries(formData);
+  } else {
+    body = await req.json();
+  }
+
   const result = schema.safeParse(body);
 
   if (!result.success) {
-    return {
-      error: Response.json({ details: result.error.issues, error: "Invalid input" }, { status: 400 }),
-    };
+    throw new ValidationError("Invalid input", result.error.issues);
   }
 
-  return { data: result.data };
+  return result.data;
 }

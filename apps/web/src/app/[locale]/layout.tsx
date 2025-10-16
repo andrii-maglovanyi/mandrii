@@ -1,7 +1,6 @@
-import { SpeedInsights } from "@vercel/speed-insights/next";
-
 import "../globals.css";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";

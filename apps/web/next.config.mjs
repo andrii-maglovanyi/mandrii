@@ -1,6 +1,6 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from "next-intl/plugin";
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -19,7 +19,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "z9bwg0saanmopyjs.public.blob.vercel-storage.com",
+        hostname: "yiiprxif648vopwe.public.blob.vercel-storage.com",
         port: "",
       },
     ],

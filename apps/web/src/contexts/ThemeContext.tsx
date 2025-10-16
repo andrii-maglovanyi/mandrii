@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { sendToMixpanel } from "~/lib/mixpanel";
-import { storage } from "~/lib/utils/storage";
+import { storage } from "~/lib/utils";
 
 type ThemeContextType = {
   isDark: boolean;

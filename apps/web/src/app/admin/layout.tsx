@@ -9,20 +9,14 @@ import { DialogProvider } from "~/contexts/DialogContext";
 import { NotificationsProvider } from "~/contexts/NotificationsContext";
 import { ThemeProvider } from "~/contexts/ThemeContext";
 import ApolloWrapper from "~/lib/apollo/provider";
-import { auth } from "~/lib/auth";
+import { requireAuth } from "~/lib/auth/requireAuth";
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
 }>;
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const session = await auth();
-
-  if (!session?.user) {
-    return redirect(
-      `https://mandrii.com/api/auth/signin?callbackUrl=${encodeURIComponent("https://admin.mandrii.com")}`,
-    );
-  }
+  const session = await requireAuth();
 
   if (session.user.role !== "admin") {
     return redirect("/");

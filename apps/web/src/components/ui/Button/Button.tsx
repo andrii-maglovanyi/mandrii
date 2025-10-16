@@ -1,7 +1,8 @@
+import clsx from "clsx";
 import React from "react";
 
+import { AnimatedEllipsis } from "../AnimatedEllipsis/AnimatedEllipsis";
 import { sizeClasses } from "../styles";
-import { AnimatedEllipsis } from "./AnimateEllipsis";
 import { baseClass, variantClasses } from "./styles";
 import { ButtonProps } from "./types";
 
@@ -20,6 +21,7 @@ export const Button = ({
   disabled = false,
   isFeatured = false,
   onClick,
+  ref,
   size = "md",
   type = "button",
   variant = "filled",
@@ -31,16 +33,11 @@ export const Button = ({
 
   return (
     <button
-      className={`
-        ${baseClass}
-        ${sizeClass}
-        ${paddingClass}
-        ${variantClass}
-        ${className}
-      `}
+      className={clsx(baseClass, sizeClass, paddingClass, variantClass, className)}
       data-testid={testId}
       disabled={disabled || busy}
       onClick={onClick}
+      ref={ref}
       type={type}
       {...rest}
     >

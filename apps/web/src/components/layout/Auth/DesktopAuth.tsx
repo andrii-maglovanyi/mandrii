@@ -9,19 +9,17 @@ import { useI18n } from "~/i18n/useI18n";
 
 import { SignInForm } from "./SignInForm";
 import { UserMenu } from "./UserMenu";
-import { UserProfile } from "./UserProfile";
+import { UserProfileCard } from "./UserProfile";
 
 interface ProfileMenuProps {
   profileData: Session;
 }
 
 const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
-  const i18n = useI18n();
   const [open, setOpen] = useState(false);
   const [render, setRender] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Handle outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -32,12 +30,11 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Mount/unmount with delay
   useEffect(() => {
     if (open) {
       setRender(true);
     } else {
-      const timeout = setTimeout(() => setRender(false), 200); // match transition duration
+      const timeout = setTimeout(() => setRender(false), 200);
       return () => clearTimeout(timeout);
     }
   }, [open]);
@@ -55,11 +52,7 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
             ${open ? `scale-100 opacity-100` : `scale-95 opacity-0`}
           `}
         >
-          <UserProfile
-            email={profileData.user?.email ?? ""}
-            imageUrl={profileData.user?.image}
-            name={profileData.user?.name ?? i18n("Someone")}
-          />
+          <UserProfileCard profile={profileData} />
           <Separator className="mb-6" />
           <UserMenu />
         </menu>

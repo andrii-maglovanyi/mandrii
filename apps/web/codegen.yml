@@ -14,6 +14,7 @@ generates:
       scalars:
         geography: "./geography#Geography"
         geometry: "./geometry#Geometry"
+        json: "./json#Json"
         jsonb: "./json#Json"
         timestamptz: "./timestamp#Timestamp"
         uuid: "./uuid#UUID"

@@ -1,1 +1,1 @@
-export type Json = { [key: string]: Json } | boolean | Json[] | null | number | string;
+export type Json = { [key: string]: boolean | Json | Json[] | null | number | string };

@@ -6,17 +6,15 @@ import { useEffect, useState } from "react";
 
 import { Button } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
-import { storage } from "~/lib/utils/storage";
+import { storage } from "~/lib/utils";
 
 export default function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);
   const i18n = useI18n();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const accepted = storage.get("cookie_consent");
-      setVisible(!accepted);
-    }
+    const accepted = storage.get("cookie_consent");
+    setVisible(!accepted);
   }, []);
 
   const handleAccept = () => {

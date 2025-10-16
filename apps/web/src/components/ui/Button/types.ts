@@ -1,3 +1,5 @@
+import { Ref } from "react";
+
 import { Position } from "../Tooltip/Tooltip";
 
 export interface ActionButtonProps extends BaseButton {
@@ -5,7 +7,7 @@ export interface ActionButtonProps extends BaseButton {
   icon: React.ReactNode;
   tooltipPosition?: Position;
 }
-export type ButtonColor = "neutral" | "primary";
+export type ButtonColor = "danger" | "neutral" | "primary";
 export interface ButtonProps extends BaseButton {
   children: React.ReactNode;
   isFeatured?: boolean;
@@ -22,6 +24,7 @@ interface BaseButton {
   "data-testid"?: string;
   disabled?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  ref?: Ref<HTMLButtonElement>;
   size?: "lg" | "md" | "sm";
   type?: ButtonType;
   variant?: ButtonVariant;

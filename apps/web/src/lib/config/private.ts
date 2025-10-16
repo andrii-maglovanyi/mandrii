@@ -13,6 +13,9 @@ interface PrivateConfig {
   hasura: {
     adminSecret: string;
   };
+  maps: {
+    apiKey: string;
+  };
   recaptcha: {
     secretKey: string;
   };
@@ -46,6 +49,9 @@ export const privateConfig: PrivateConfig = {
   },
   hasura: {
     adminSecret: getEnvVar("HASURA_ADMIN_SECRET"),
+  },
+  maps: {
+    apiKey: getEnvVar("NEXT_PRIVATE_GOOGLE_MAPS_API_KEY"),
   },
   recaptcha: {
     secretKey: getEnvVar("RECAPTCHA_SECRET_KEY"),

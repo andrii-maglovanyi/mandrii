@@ -1,8 +1,7 @@
 import { nanoid } from "nanoid";
 
 import { UrlHelper } from "./url-helper";
-import { getPlatform } from "./utils/platform";
-import { storage } from "./utils/storage";
+import { getPlatform, storage } from "./utils";
 
 interface EventProperties {
   [key: string]: unknown;

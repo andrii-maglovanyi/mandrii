@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
-import { Ref, useEffect, useId, useRef, useState } from "react";
+import { ChangeEvent, Ref, useEffect, useId, useRef, useState } from "react";
 
 import { FieldErrorMessage } from "../FieldErrorMessage/FieldErrorMessage";
 import { Menu, MenuHandle, MenuOption } from "../Menu/Menu";
@@ -16,8 +16,8 @@ export type SelectProps<K, T> = {
   id?: string;
   label?: string;
   name?: string;
-  onBlur?: () => void;
-  onChange?: (value: T) => void;
+  onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onChange?: (e: { target: { value: T } } & ChangeEvent<HTMLSelectElement>) => void;
   options: Array<MenuOption<K, T>>;
   placeholder?: string;
   ref?: Ref<HTMLButtonElement>;
@@ -132,7 +132,14 @@ export function Select<K extends React.ReactNode, T>({
         {focused && options.length > 0 && (
           <Menu
             onSelect={(value) => {
-              onChange?.(value);
+              const event = {
+                target: {
+                  name,
+                  value,
+                },
+              } as { target: { value: T } } & ChangeEvent<HTMLSelectElement>;
+              onChange?.(event);
+
               setFocused(false);
             }}
             options={options}
