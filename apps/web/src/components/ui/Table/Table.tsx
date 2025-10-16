@@ -63,7 +63,7 @@ function getKey<T>(record: T, rowKey: keyof T) {
   const key = record[rowKey];
 
   if (typeof key !== "string" && typeof key !== "number") {
-    throw new Error("Row key is invalid");
+    throw new TypeError("Row key must be a string or number");
   }
 
   return key;
@@ -105,7 +105,7 @@ export function Table<T>({
   pagination,
   rowKey,
   size,
-}: TableProps<T>) {
+}: Readonly<TableProps<T>>) {
   const [data, setData] = useState(dataSource);
   const [paginator, setPaginator] = useState(pagination);
   const [expandedRows, setExpandedRows] = useState<Set<Key>>(new Set());
@@ -131,11 +131,11 @@ export function Table<T>({
 
   useEffect(() => {
     const defaultSortOrders = new Map<string, SortDirections>();
-    columns.forEach((column) => {
+    for (const column of columns) {
       if (!isExpandColumn(column) && column.defaultSortOrder) {
         defaultSortOrders.set(getDataPath(column), column.defaultSortOrder);
       }
-    });
+    }
 
     setSorterColumns(defaultSortOrders);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -271,9 +271,11 @@ export function Table<T>({
       );
     }
 
+    const displayValue = data != null ? (typeof data === "object" ? JSON.stringify(data) : String(data)) : null;
+
     return (
       <td className={clsx(tdStyles, className)} key={key} style={style}>
-        {data != null && String(data)}
+        {displayValue}
       </td>
     );
   };
@@ -335,10 +337,18 @@ export function Table<T>({
             const data = getNestedValue<T>(record, dataKey);
             const title = typeof column.title === "string" ? column.title : "";
 
+            const displayValue = column.render
+              ? column.render(data, record)
+              : data != null
+                ? typeof data === "object"
+                  ? JSON.stringify(data)
+                  : String(data)
+                : "";
+
             return (
               <React.Fragment key={dataKey}>
                 <span className="text-right text-neutral">{title}</span>
-                <span>{column.render ? column.render(data, record) : String(data || "")}</span>
+                <span>{displayValue}</span>
               </React.Fragment>
             );
           })}
