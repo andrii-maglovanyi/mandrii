@@ -23,22 +23,37 @@ The web app proxies requests to `/services/*` to the Python backend in developme
 
 ## Task Management
 
+### ⚠️ CRITICAL: Always Follow Ticket Workflow - No Exceptions!
+
+**BEFORE starting ANY Linear ticket work, you MUST:**
+1. Create ticket folder: `mkdir tickets/[TICKET-ID] && mkdir tickets/[TICKET-ID]/files`
+2. Copy templates: `cp tickets/templates/* tickets/[TICKET-ID]/`
+3. Fill out `tickets/[TICKET-ID]/task.md` with ticket details BEFORE coding
+4. Use ticket files throughout development to document work
+
+**Failure to create ticket folder = Incomplete work. No exceptions.**
+
 ### Task Organization
 
 - **Always check task management files** for the current task list before starting work
 - **For Linear tickets**: Check if a ticket folder exists in `/tickets/[TICKET-ID]/` and use the ticket-specific task file
-- **When starting work on a new Linear ticket**:
+- **When starting work on a new Linear ticket - MANDATORY STEPS IN ORDER**:
   1. **Fetch latest changes**: `git fetch origin`
   2. **Switch to main branch**: `git checkout main`
   3. **Pull latest**: `git pull origin main`
-  4. **Create ticket branch**: `git checkout -b [TICKET-ID]` (e.g., `MNDR-123`)
-  5. **Create ticket folder**: `/tickets/[TICKET-ID]/`
-  6. **Copy templates**: `cp tickets/templates/* tickets/[TICKET-ID]/` (if templates exist)
-  7. **Update ticket task file** with Linear details
-  8. **Reference ticket folder** in main task file
+  4. **Create ticket branch**: `git checkout -b [TICKET-ID]_description` (e.g., `MNDR-005_replace-foreach`)
+     - ⚠️ **Branch naming**: Must be `MNDR-XXX_description` with at least 3 digits (enforced by Husky)
+  5. **🚨 CREATE TICKET FOLDER IMMEDIATELY - DO NOT SKIP**: 
+     ```bash
+     mkdir -p tickets/[TICKET-ID]/files
+     cp tickets/templates/* tickets/[TICKET-ID]/
+     ```
+  6. **Fill out ticket task file**: Edit `tickets/[TICKET-ID]/task.md` with Linear ticket details
+  7. **Update main TASK.md**: Add reference to ticket folder in "In Progress" section
+  8. **NOW you can start coding** - document as you go in ticket files
 - **If a task is not listed**, add it to the appropriate task file with a brief description and date
-- **If you discover new tasks while working**, add them to the task file under a "Discovered During Work" section
-- **Mark completed tasks** immediately after finishing them
+- **If you discover new tasks while working**, add them to `tickets/[TICKET-ID]/notes.md` under "Discovered During Work"
+- **Mark completed tasks** immediately after finishing them in the ticket task.md file
 
 ### Task Completion Process
 
@@ -47,22 +62,78 @@ The web app proxies requests to `/services/*` to the Python backend in developme
   - Remove completed implementation plans and detailed steps
   - Keep active task files focused only on incomplete work
   - Add completion dates when archiving tasks
-- **When completing a Linear ticket - ALL finalization work MUST be done BEFORE creating the PR**:
-  1. **Complete all implementation and testing work**
-  2. **Archive ticket context and preserve knowledge**:
-     - Move important discoveries from `tickets/[TICKET-ID]/notes.md` to `docs/ticket-learnings.md`
-     - Copy architectural decisions from `tickets/[TICKET-ID]/decisions.md` to main decision records
-     - Add comprehensive ticket summary to completed tasks with reference to Linear ticket
-     - Preserve any reusable scripts/configs by moving to appropriate `docs/` or project folders
-  3. **Clean up project documentation**:
-     - Update main task file by removing completed work and marking ticket as done
-     - Archive ticket folder to `tickets/archived/[TICKET-ID]/`
-     - Update any relevant project documentation with new patterns or processes discovered
-  4. **Commit ALL finalization changes as part of the same PR**
-  5. **Create single pull request** that includes both implementation and finalization
-  6. **Use GitHub's "Squash and merge"** for clean history (if main branch is protected)
+
+### 🚨 MANDATORY Ticket Completion Checklist - MUST Complete ALL Steps BEFORE PR
+
+**When completing a Linear ticket - ALL finalization work MUST be done BEFORE creating the PR**:
+
+#### Step 1: Complete Implementation
+- [ ] All implementation tasks complete
+- [ ] All tests passing (or pre-existing failures documented)
+- [ ] TypeScript compilation passing
+- [ ] Code formatted with Prettier
+- [ ] Code linted (ESLint, Stylelint)
+
+#### Step 2: Document Work in Ticket Folder
+- [ ] `tickets/[TICKET-ID]/task.md` - Mark all tasks complete, add completion summary
+- [ ] `tickets/[TICKET-ID]/notes.md` - Document all key learnings and discoveries
+- [ ] `tickets/[TICKET-ID]/decisions.md` - Document all technical decisions made
+
+#### Step 3: Preserve Knowledge (Extract from Ticket Folder)
+- [ ] Extract key learnings from `tickets/[TICKET-ID]/notes.md` → `docs/ticket-learnings.md` (create if missing)
+- [ ] Copy significant architectural decisions from `tickets/[TICKET-ID]/decisions.md` → main `DECISIONS.md`
+- [ ] Move any reusable scripts/configs from `tickets/[TICKET-ID]/files/` → appropriate project folders
+- [ ] Update any relevant project documentation with new patterns or processes
+
+#### Step 4: Update Project Documentation
+- [ ] Add comprehensive entry to `COMPLETED.md` with:
+  - Completion date
+  - Ticket summary
+  - Key deliverables
+  - Files modified
+  - Technical impact
+  - Challenges overcome
+  - Key learnings
+  - Reference to ticket folder
+- [ ] Update main `TASK.md`:
+  - Remove from "In Progress" section
+  - Mark as complete with checkmark
+  - Remove detailed implementation plans
+
+#### Step 5: Archive Ticket Folder
+- [ ] Archive ticket folder: `mv tickets/[TICKET-ID] tickets/archived/[TICKET-ID]`
+- [ ] Verify ticket folder is in archived directory
+
+#### Step 6: Commit Finalization Changes
+- [ ] Stage all documentation changes: `git add COMPLETED.md TASK.md docs/ tickets/`
+- [ ] Commit finalization: `git commit -m "[TICKET-ID] [Docs]: Finalize ticket documentation"`
+- [ ] Ensure commit includes:
+  - Updated `COMPLETED.md`
+  - Updated `TASK.md`
+  - Updated `docs/ticket-learnings.md` (if applicable)
+  - Updated main `DECISIONS.md` (if applicable)
+  - Archived ticket folder moved
+
+#### Step 7: Create Pull Request
+- [ ] Push branch: `git push origin [TICKET-ID]_description`
+- [ ] Create pull request with:
+  - Clear title: `[TICKET-ID]: [Brief description]`
+  - Link to Linear ticket
+  - Summary of changes
+  - Reference to archived ticket folder for details
+- [ ] Use GitHub's "Squash and merge" for clean history (if main branch is protected)
+
+### 📋 Post-Merge Cleanup
+- [ ] Switch to main: `git checkout main`
+- [ ] Pull latest: `git pull origin main`
+- [ ] Delete local branch: `git branch -d [TICKET-ID]_description`
+- [ ] Verify archived ticket folder exists: `ls tickets/archived/[TICKET-ID]`
+
+---
+
 - **Always pause before starting a new task** to ensure you have the latest context and requirements
 - **If you need to ask questions about a task**, do so before starting work to clarify requirements
+- **NEVER skip ticket folder creation** - it's mandatory for all Linear tickets, no matter how small
 
 ## Best Practices
 
@@ -260,12 +331,3 @@ When using these instructions, adapt the following to your specific project:
 7. **Directory Structure**: Modify paths and folder organization to match your project layout
 8. **Dependencies**: Update package managers and dependency management practices
 9. **Documentation Files**: Create `PLANNING.md` and `DECISIONS.md` using the provided prompts if they don't exist
-
-### 🔧 Usage Instructions
-
-1. Copy this file to your project's `.github/` or `docs/` directory
-2. Rename to match your project's naming convention
-3. Customize the project-specific sections above
-4. Remove this usage section
-5. Add any project-specific patterns, conventions, or requirements
-6. Reference this file in your project's main documentation

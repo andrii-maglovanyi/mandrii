@@ -13,7 +13,12 @@ describe("Alert", () => {
   });
 
   it("renders with each variant", () => {
-    const variants: ColorVariant[] = [ColorVariant.Error, ColorVariant.Warning, ColorVariant.Info, ColorVariant.Success];
+    const variants: ColorVariant[] = [
+      ColorVariant.Error,
+      ColorVariant.Warning,
+      ColorVariant.Info,
+      ColorVariant.Success,
+    ];
 
     for (const variant of variants) {
       render(<Alert variant={variant}>This is a {variant}</Alert>);
