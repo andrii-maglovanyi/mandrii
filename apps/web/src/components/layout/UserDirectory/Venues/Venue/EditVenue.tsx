@@ -49,6 +49,15 @@ async function createFilesFromUrls(urls: string[]): Promise<File[]> {
   return files;
 }
 
+async function submitVenue(body: FormData, locale: string) {
+  const res = await fetch(`/api/venue/save?locale=${locale}`, {
+    body,
+    method: "POST",
+  });
+  const result = await res.json();
+  return { errors: result.errors, ok: res.ok };
+}
+
 export const EditVenue = ({ slug }: VenueProps) => {
   const client = useApolloClient();
   const { showError, showSuccess } = useNotifications();
@@ -169,15 +178,6 @@ export const EditVenue = ({ slug }: VenueProps) => {
     return body;
   }
 
-  async function submitVenue(body: FormData, locale: string) {
-    const res = await fetch(`/api/venue/save?locale=${locale}`, {
-      body,
-      method: "POST",
-    });
-    const result = await res.json();
-    return { errors: result.errors, ok: res.ok };
-  }
-
   async function handleSuccess() {
     showSuccess(i18n("Venue updated successfully"));
     router.push(`/user-directory#${i18n("Venues")}`);
@@ -214,10 +214,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
       return (
         <>
           {meta ? (
-            <div className={`
-              flex cursor-default items-center justify-end space-x-3 text-sm
-              text-neutral-disabled
-            `}>
+            <div className={`text-neutral-disabled flex cursor-default items-center justify-end space-x-3 text-sm`}>
               <Tooltip label={i18n("Created on")}>
                 {format(new Date(meta.createdAt), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
               </Tooltip>
@@ -225,7 +222,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
               <VenueStatus expanded status={meta.status} />
             </div>
           ) : null}
-          <RichText as="p" className="mb-6 text-sm text-neutral">
+          <RichText as="p" className="text-neutral mb-6 text-sm">
             {slug
               ? i18n(
                   "Edit your venue details below.<br/>You can update all fields except the slug, which is locked after the first creation.",

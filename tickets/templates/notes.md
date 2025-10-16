@@ -18,6 +18,7 @@
 **Problem**: [Describe the problem you encountered]
 
 **Approaches Tried**:
+
 1. [Approach 1] - [Result]
 2. [Approach 2] - [Result]
 
@@ -31,7 +32,6 @@
 
 - **File**: `path/to/file.ts`
   - [Interesting finding or pattern]
-  
 - **Pattern**: [Pattern name]
   - [How it's used in the codebase]
 
