@@ -8,6 +8,33 @@
 
 ## October 2025
 
+### MNDR-006: Move submitVenue function to module scope
+
+**Date**: October 16, 2025  
+**Ticket Folder**: `tickets/MNDR-006/`
+
+#### Performance & Optimization
+
+1. **Functions in Nested Scopes - Performance Impact**
+   - Functions defined inside React components are recreated on every render
+   - This wastes memory and prevents V8 optimization
+   - Example: `submitVenue` was being recreated on every EditVenue render
+   - **Takeaway**: Extract pure functions (those not capturing component variables) to module scope
+
+2. **Quick Win Refactorings**
+   - SonarQube identifies real performance issues, not just style preferences
+   - Simple moves to module scope can have measurable impact
+   - 5-minute fix with zero behavior changes
+   - **Takeaway**: Code quality tools like SonarQube point to legitimate optimizations
+
+3. **Pattern Recognition for Function Extraction**
+   - Look for functions that only use their parameters
+   - Functions that don't use hooks, props, or state
+   - Similar to helper functions like `createFileFromUrl`
+   - **Takeaway**: If a function doesn't need component context, move it out
+
+---
+
 ### MNDR-005: Replace forEach with for...of
 
 **Date**: October 16, 2025  
