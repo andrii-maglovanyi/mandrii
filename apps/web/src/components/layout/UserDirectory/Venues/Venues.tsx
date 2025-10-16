@@ -137,16 +137,18 @@ const Venues = () => {
         <Table
           columns={COLUMNS}
           dataSource={data}
-          emptyStateBodyMessage={
-            "You haven't added any venues yet. Click the button above to add your first venue and start managing your places!"
-          }
+          emptyStateBodyMessage={i18n(
+            "You haven't added any venues yet. Click the button above to add your first venue and start managing your places!",
+          )}
           emptyStateHeading={i18n("No venues added yet")}
           loading={loading}
           onSort={handleSort}
           pagination={{
             currentOffset: listState.offset,
+            nextText: i18n("Next"),
             onPaginate: handlePaginate,
             pageSize: listState.limit,
+            prevText: i18n("Previous"),
             total,
           }}
           rowKey="id"

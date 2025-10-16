@@ -34,8 +34,10 @@ type ExpandIconProps<T> = {
 interface PaginatorProps {
   currentOffset?: number;
   loading?: boolean;
+  nextText?: string;
   onPaginate: ({ offset }: { offset: number }) => void;
   pageSize?: number;
+  prevText?: string;
   total?: number;
 }
 
@@ -73,7 +75,15 @@ function isExpandColumn<T>(column: Column<T> | ExpandColumn): column is ExpandCo
   return column.key === "table-expand-column";
 }
 
-const Paginator = ({ currentOffset = 0, loading, onPaginate, pageSize = 1, total = 1 }: PaginatorProps) => {
+const Paginator = ({
+  currentOffset = 0,
+  loading,
+  nextText,
+  onPaginate,
+  pageSize = 1,
+  prevText,
+  total = 1,
+}: PaginatorProps) => {
   if (total <= pageSize) return null;
 
   const currentPage = Math.floor(currentOffset / pageSize) + 1;
@@ -84,10 +94,12 @@ const Paginator = ({ currentOffset = 0, loading, onPaginate, pageSize = 1, total
         data-testid="table-pagination"
         index={currentPage}
         loading={loading}
+        nextText={nextText}
         onPaginate={(pageIndex: number) => {
           const actualOffset = (pageIndex - 1) * pageSize;
           onPaginate({ offset: actualOffset });
         }}
+        prevText={prevText}
         total={Math.ceil(total / pageSize)}
       />
     </div>

@@ -8,12 +8,14 @@ import { NumberedPagination } from "./NumberedPagination";
 export interface PaginationProps {
   index: number;
   loading?: boolean;
+  nextText?: string;
   onPaginate: (page: number) => void;
+  prevText?: string;
   size?: "lg" | "md" | "sm";
   total: number;
 }
 
-export const Pagination = ({ index, loading, onPaginate, size = "md", total }: PaginationProps) => {
+export const Pagination = ({ index, loading, nextText, onPaginate, prevText, size = "md", total }: PaginationProps) => {
   const isMobile = useMediaQuery({
     query: "(max-width: 768px)",
   });
@@ -31,7 +33,14 @@ export const Pagination = ({ index, loading, onPaginate, size = "md", total }: P
           hidden
           md:flex
         `}>
-          <NumberedPagination index={index} onChange={onPaginate} size={size} total={total} />
+          <NumberedPagination
+            index={index}
+            nextText={nextText}
+            onChange={onPaginate}
+            prevText={prevText}
+            size={size}
+            total={total}
+          />
         </div>
       )}
     </nav>

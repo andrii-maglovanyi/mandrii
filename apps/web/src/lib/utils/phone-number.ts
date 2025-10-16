@@ -63,53 +63,11 @@ const COUNTRY_PATTERNS = [
 
 export function formatPhoneNumber(value: string): string {
   const normalized = normalizeNumber(value);
-  let cleaned = normalized.replaceAll(/[^\d+]/g, "");
-
-  if (cleaned && !cleaned.startsWith("+")) {
-    cleaned = "+" + cleaned;
-  }
-
+  const cleaned = ensureLeadingPlus(normalized.replaceAll(/[^\d+]/g, ""));
   if (!cleaned || cleaned === "+") return cleaned;
 
   const country = detectCountry(cleaned);
-
-  if (!country) {
-    const digits = cleaned.slice(1);
-    const match = /(\d{1,4})(\d{0,3})(\d{0,3})(\d{0,4})/.exec(digits);
-
-    if (match) {
-      let formatted = "+";
-      if (match[1]) formatted += match[1];
-      if (match[2]) formatted += " " + match[2];
-      if (match[3]) formatted += " " + match[3];
-      if (match[4]) formatted += " " + match[4];
-      return formatted.trim();
-    }
-    return cleaned;
-  }
-
-  const codeLength = country.code.replaceAll(/\D/g, "").length;
-  const allDigits = cleaned.replaceAll(/\D/g, "");
-  const phoneDigits = allDigits.slice(codeLength);
-
-  let formatted = country.code + " ";
-  let digitIndex = 0;
-
-  for (let i = 0; i < country.format.length && digitIndex < phoneDigits.length; i++) {
-    const char = country.format[i];
-    if (char === "X") {
-      formatted += phoneDigits[digitIndex];
-      digitIndex++;
-    } else {
-      formatted += char;
-    }
-  }
-
-  if (digitIndex < phoneDigits.length) {
-    formatted += " " + phoneDigits.slice(digitIndex);
-  }
-
-  return formatted;
+  return country ? formatWithCountry(cleaned, country) : formatWithoutCountry(cleaned);
 }
 
 export function processPhoneNumber(value: string) {
@@ -156,6 +114,39 @@ function detectCountry(value: string) {
     }
   }
   return null;
+}
+
+function ensureLeadingPlus(value: string): string {
+  return value && !value.startsWith("+") ? "+" + value : value;
+}
+
+function formatWithCountry(cleaned: string, country: { code: string; format: string }): string {
+  const codeLength = country.code.replaceAll(/\D/g, "").length;
+  const allDigits = cleaned.replaceAll(/\D/g, "");
+  const phoneDigits = allDigits.slice(codeLength);
+
+  let formatted = country.code + " ";
+  let digitIndex = 0;
+
+  for (const char of country.format) {
+    if (digitIndex >= phoneDigits.length) break;
+    formatted += char === "X" ? phoneDigits[digitIndex++] : char;
+  }
+
+  if (digitIndex < phoneDigits.length) {
+    formatted += " " + phoneDigits.slice(digitIndex);
+  }
+
+  return formatted;
+}
+
+function formatWithoutCountry(cleaned: string): string {
+  const digits = cleaned.slice(1);
+  const match = /(\d{1,4})(\d{0,3})(\d{0,3})(\d{0,4})/.exec(digits);
+  if (!match) return cleaned;
+
+  const [, p1, p2, p3, p4] = match;
+  return ["+", p1, p2, p3, p4].filter(Boolean).join(" ").trim();
 }
 
 function normalizeNumber(value: string) {

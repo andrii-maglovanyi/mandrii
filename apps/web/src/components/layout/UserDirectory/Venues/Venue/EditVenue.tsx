@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ZodError } from "zod";
 
 import { Alert, RichText, Tooltip } from "~/components/ui";
 import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
@@ -78,108 +79,125 @@ export const EditVenue = ({ slug }: VenueProps) => {
   }, [loading, error]);
 
   useEffect(() => {
-    let isMounted = true;
+    if (!data?.[0]) return;
 
-    async function loadVenueData() {
-      if (data?.[0] && isMounted) {
-        setLoadStatus("processing");
-        try {
-          const { created_at, geo, image_urls, logo_url, social_links, status, ...rest } = data[0];
+    const abortController = new AbortController();
+    const signal = abortController.signal;
 
-          const logo = logo_url ? (await createFilesFromUrls([logo_url]))[0] : null;
+    (async () => {
+      setLoadStatus("processing");
 
-          let images: File[] = [];
-          if (image_urls && image_urls.length > 0) {
-            try {
-              images = await createFilesFromUrls(image_urls);
-            } catch {
-              showError(i18n("Some images could not be loaded"));
-            }
-          }
+      try {
+        const { created_at, geo, image_urls, logo_url, social_links, status, ...rest } = data[0];
 
-          if (isMounted) {
-            setVenueFormData({
-              ...rest,
-              ...social_links,
-              images,
-              latitude: geo?.coordinates[1],
-              logo,
-              longitude: geo?.coordinates[0],
-            });
+        const logo = logo_url ? (await createFilesFromUrls([logo_url]))[0] : null;
 
-            if (status && created_at) {
-              setMeta({ createdAt: created_at, status });
-            }
-
-            setLoadStatus("idle");
-          }
-        } catch {
-          if (isMounted) {
-            setLoadStatus("error");
+        let images: File[] = [];
+        if (image_urls?.length) {
+          try {
+            images = await createFilesFromUrls(image_urls);
+          } catch {
+            showError(i18n("Some images could not be loaded"));
           }
         }
+
+        if (signal.aborted) return;
+
+        setVenueFormData({
+          ...rest,
+          ...social_links,
+          images,
+          latitude: geo?.coordinates[1],
+          logo,
+          longitude: geo?.coordinates[0],
+        });
+
+        if (status && created_at) {
+          setMeta({ createdAt: created_at, status });
+        }
+
+        setLoadStatus("idle");
+      } catch {
+        if (!signal.aborted) {
+          setLoadStatus("error");
+        }
       }
-    }
+    })();
 
-    loadVenueData();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => abortController.abort();
   }, [data, showError, i18n]);
 
   const handleSubmit = async (data: VenueFormData) => {
     setFormStatus("processing");
 
-    const body = new FormData();
-    for (const [key, value] of Object.entries(data)) {
-      if (Array.isArray(value)) {
-        for (const val of value) {
-          if (val) {
-            body.append(key, val);
-          }
-        }
-      } else if (value) {
-        if (value instanceof File) {
-          body.append(key, value);
-        } else if (typeof value === "object") {
-          body.append(key, JSON.stringify(value));
-        } else {
-          body.append(key, String(value));
-        }
-      }
-    }
-
     try {
-      const res = await fetch(`/api/venue/save?locale=${locale}`, {
-        body,
-        method: "POST",
-      });
+      const body = buildFormData(data);
+      const result = await submitVenue(body, locale);
 
-      const result = await res.json();
-
-      if (res.ok) {
-        showSuccess(i18n("Venue updated successfully"));
-        router.push(`/user-directory#${i18n("Venues")}`);
-
-        await client.refetchQueries({
-          include: ["GetUserVenues"],
-          updateCache(cache) {
-            cache.evict({ fieldName: "venues" });
-            cache.evict({ fieldName: "venues_aggregate" });
-            cache.gc();
-          },
-        });
+      if (result.ok) {
+        await handleSuccess();
       } else {
-        setFormStatus("error");
-        if (result.details) {
-          return result.details;
-        }
+        await handleError(result);
       }
     } catch {
       setFormStatus("error");
     }
   };
+
+  function buildFormData(data: VenueFormData): FormData {
+    const body = new FormData();
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.filter(Boolean).forEach((val) => body.append(key, val));
+        return;
+      }
+
+      if (!value) return;
+
+      if (value instanceof File) {
+        body.append(key, value);
+      } else if (typeof value === "object") {
+        body.append(key, JSON.stringify(value));
+      } else {
+        body.append(key, String(value));
+      }
+    });
+
+    return body;
+  }
+
+  async function submitVenue(body: FormData, locale: string) {
+    const res = await fetch(`/api/venue/save?locale=${locale}`, {
+      body,
+      method: "POST",
+    });
+    const result = await res.json();
+    return { errors: result.errors, ok: res.ok };
+  }
+
+  async function handleSuccess() {
+    showSuccess(i18n("Venue updated successfully"));
+    router.push(`/user-directory#${i18n("Venues")}`);
+
+    await client.refetchQueries({
+      include: ["GetUserVenues"],
+      updateCache(cache) {
+        cache.evict({ fieldName: "venues" });
+        cache.evict({ fieldName: "venues_aggregate" });
+        cache.gc();
+      },
+    });
+
+    setFormStatus("idle");
+  }
+
+  async function handleError(result: { errors?: ZodError["issues"] }) {
+    setFormStatus("error");
+    if (result.errors) {
+      return result.errors;
+    }
+  }
 
   const renderLayout = () => {
     if (loadStatus === "processing") {

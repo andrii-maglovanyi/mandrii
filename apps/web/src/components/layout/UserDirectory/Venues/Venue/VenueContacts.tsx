@@ -26,10 +26,10 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
 
   const createRemoveHandler = useCallback(
     (field: "emails" | "phone_numbers") => (index: number) => {
-      setValues((prev) => ({
-        ...prev,
-        [field]: (prev[field] || []).filter((_, i) => i !== index),
-      }));
+      setValues((prev) => {
+        const updatedField = (prev[field] || []).filter((_, i) => i !== index);
+        return { ...prev, [field]: updatedField };
+      });
     },
     [setValues],
   );

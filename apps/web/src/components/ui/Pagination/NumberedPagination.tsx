@@ -2,58 +2,60 @@ import { Button } from "../Button/Button";
 
 export interface NumberedPaginationProps {
   index: number;
+  nextText?: string;
   onChange: (page: number) => void;
+  prevText?: string;
   size?: "lg" | "md" | "sm";
   total: number;
 }
 
 const RANGE = 7;
 
-export const NumberedPagination = ({ index, onChange, size = "md", total }: NumberedPaginationProps) => {
-  const pages = [];
-  const showStartEllipsis = total > RANGE && (index > 4 || index > RANGE - 1);
-  const showEndEllipsis = total > RANGE && (index < 5 || index <= total - 4);
+function getVisiblePages(index: number, total: number): (number | string)[] {
+  if (total <= RANGE) return Array.from({ length: total }, (_, i) => i + 1);
 
-  pages.push(
-    <Button key={1} onClick={() => onChange(1)} size={size} variant={index === 1 ? "filled" : "ghost"}>
-      1
-    </Button>,
-  );
+  const pages: (number | string)[] = [1];
+  const showStartEllipsis = index > 4;
+  const showEndEllipsis = index < total - 3;
 
-  if (showStartEllipsis) {
-    pages.push(
-      <span className="mx-2 px-1.5 text-neutral" key="ellipsis-start">
-        ...
-      </span>,
+  const start = Math.max(2, Math.min(index - 1, total - 4));
+  const end = Math.min(total - 1, start + 3);
+
+  if (showStartEllipsis) pages.push("start-ellipsis");
+
+  for (let i = start; i <= end; i++) pages.push(i);
+
+  if (showEndEllipsis) pages.push("end-ellipsis");
+
+  pages.push(total);
+  return pages;
+}
+
+export const NumberedPagination = ({
+  index,
+  nextText = "Next",
+  onChange,
+  prevText = "Previous",
+  size = "md",
+  total,
+}: NumberedPaginationProps) => {
+  const pages = getVisiblePages(index, total);
+
+  const renderPage = (page: number | string) => {
+    if (typeof page === "string") {
+      return (
+        <span className="mx-2 px-1.5 text-neutral" key={page}>
+          ...
+        </span>
+      );
+    }
+
+    return (
+      <Button key={page} onClick={() => onChange(page)} size={size} variant={index === page ? "filled" : "ghost"}>
+        {page}
+      </Button>
     );
-  }
-
-  const start = total > RANGE ? (index > total - 4 ? total - 4 : Math.max(2, index > 4 ? index - 1 : 1)) : 2;
-  const end = total > RANGE ? (index > total - 4 ? total - 1 : Math.min(total - 1, Math.max(5, index + 1))) : total - 1;
-
-  for (let i = start; i <= end; i++) {
-    pages.push(
-      <Button key={i} onClick={() => onChange(i)} size={size} variant={index === i ? "filled" : "ghost"}>
-        {i}
-      </Button>,
-    );
-  }
-
-  if (showEndEllipsis) {
-    pages.push(
-      <span className="mx-2 px-1.5 text-neutral" key="ellipsis-end">
-        ...
-      </span>,
-    );
-  }
-
-  if (total > 1) {
-    pages.push(
-      <Button key={total} onClick={() => onChange(total)} size={size} variant={index === total ? "filled" : "ghost"}>
-        {total}
-      </Button>,
-    );
-  }
+  };
 
   return (
     <div className="flex items-center space-x-1">
@@ -64,9 +66,11 @@ export const NumberedPagination = ({ index, onChange, size = "md", total }: Numb
         size={size}
         variant="ghost"
       >
-        ← Previous
+        ← {prevText}
       </Button>
-      {pages}
+
+      {pages.map(renderPage)}
+
       <Button
         data-testid="next-page"
         disabled={index === total}
@@ -74,7 +78,7 @@ export const NumberedPagination = ({ index, onChange, size = "md", total }: Numb
         size={size}
         variant="ghost"
       >
-        Next →
+        {nextText} →
       </Button>
     </div>
   );
