@@ -296,15 +296,17 @@
 
 ### Linear Tickets
 
-- [x] **MNDR-5: Replace forEach with for...of**
+- [x] **MNDR-6: Move submitVenue function to module scope**
   - **Status**: ✅ Completed
-  - **Branch**: `MNDR-005_replace-foreach-with-for-of`
-  - **Commit**: `f5518f1`
-  - **Files Modified**: 6 files, 9 forEach instances replaced
+  - **Branch**: `MNDR-006_move-submitvenue-to-outer-scope`
+  - **Commit**: `b58ff5b`
+  - **Ticket Folder**: `tickets/MNDR-006/`
+  - **Files Modified**: 1 file (EditVenue.tsx)
   - **Next Steps**:
+    - Finalize documentation
+    - Archive ticket folder
     - Push branch to remote
     - Create pull request
-    - Merge to preview branch
 
 ---
 

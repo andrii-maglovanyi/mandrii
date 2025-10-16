@@ -26,6 +26,7 @@ The web app proxies requests to `/services/*` to the Python backend in developme
 ### ⚠️ CRITICAL: Always Follow Ticket Workflow - No Exceptions!
 
 **BEFORE starting ANY Linear ticket work, you MUST:**
+
 1. Create ticket folder: `mkdir tickets/[TICKET-ID] && mkdir tickets/[TICKET-ID]/files`
 2. Copy templates: `cp tickets/templates/* tickets/[TICKET-ID]/`
 3. Fill out `tickets/[TICKET-ID]/task.md` with ticket details BEFORE coding
@@ -43,7 +44,7 @@ The web app proxies requests to `/services/*` to the Python backend in developme
   3. **Pull latest**: `git pull origin main`
   4. **Create ticket branch**: `git checkout -b [TICKET-ID]_description` (e.g., `MNDR-005_replace-foreach`)
      - ⚠️ **Branch naming**: Must be `MNDR-XXX_description` with at least 3 digits (enforced by Husky)
-  5. **🚨 CREATE TICKET FOLDER IMMEDIATELY - DO NOT SKIP**: 
+  5. **🚨 CREATE TICKET FOLDER IMMEDIATELY - DO NOT SKIP**:
      ```bash
      mkdir -p tickets/[TICKET-ID]/files
      cp tickets/templates/* tickets/[TICKET-ID]/
@@ -68,6 +69,7 @@ The web app proxies requests to `/services/*` to the Python backend in developme
 **When completing a Linear ticket - ALL finalization work MUST be done BEFORE creating the PR**:
 
 #### Step 1: Complete Implementation
+
 - [ ] All implementation tasks complete
 - [ ] All tests passing (or pre-existing failures documented)
 - [ ] TypeScript compilation passing
@@ -75,17 +77,20 @@ The web app proxies requests to `/services/*` to the Python backend in developme
 - [ ] Code linted (ESLint, Stylelint)
 
 #### Step 2: Document Work in Ticket Folder
+
 - [ ] `tickets/[TICKET-ID]/task.md` - Mark all tasks complete, add completion summary
 - [ ] `tickets/[TICKET-ID]/notes.md` - Document all key learnings and discoveries
 - [ ] `tickets/[TICKET-ID]/decisions.md` - Document all technical decisions made
 
 #### Step 3: Preserve Knowledge (Extract from Ticket Folder)
+
 - [ ] Extract key learnings from `tickets/[TICKET-ID]/notes.md` → `docs/ticket-learnings.md` (create if missing)
 - [ ] Copy significant architectural decisions from `tickets/[TICKET-ID]/decisions.md` → main `DECISIONS.md`
 - [ ] Move any reusable scripts/configs from `tickets/[TICKET-ID]/files/` → appropriate project folders
 - [ ] Update any relevant project documentation with new patterns or processes
 
 #### Step 4: Update Project Documentation
+
 - [ ] Add comprehensive entry to `COMPLETED.md` with:
   - Completion date
   - Ticket summary
@@ -101,10 +106,12 @@ The web app proxies requests to `/services/*` to the Python backend in developme
   - Remove detailed implementation plans
 
 #### Step 5: Archive Ticket Folder
+
 - [ ] Archive ticket folder: `mv tickets/[TICKET-ID] tickets/archived/[TICKET-ID]`
 - [ ] Verify ticket folder is in archived directory
 
 #### Step 6: Commit Finalization Changes
+
 - [ ] Stage all documentation changes: `git add COMPLETED.md TASK.md docs/ tickets/`
 - [ ] Commit finalization: `git commit -m "[TICKET-ID] [Docs]: Finalize ticket documentation"`
 - [ ] Ensure commit includes:
@@ -115,6 +122,7 @@ The web app proxies requests to `/services/*` to the Python backend in developme
   - Archived ticket folder moved
 
 #### Step 7: Create Pull Request
+
 - [ ] Push branch: `git push origin [TICKET-ID]_description`
 - [ ] Create pull request with:
   - Clear title: `[TICKET-ID]: [Brief description]`
@@ -124,6 +132,7 @@ The web app proxies requests to `/services/*` to the Python backend in developme
 - [ ] Use GitHub's "Squash and merge" for clean history (if main branch is protected)
 
 ### 📋 Post-Merge Cleanup
+
 - [ ] Switch to main: `git checkout main`
 - [ ] Pull latest: `git pull origin main`
 - [ ] Delete local branch: `git branch -d [TICKET-ID]_description`

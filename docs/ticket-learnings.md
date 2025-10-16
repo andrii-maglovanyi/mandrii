@@ -8,6 +8,35 @@
 
 ## October 2025
 
+### MNDR-006: Move submitVenue function to module scope
+
+**Date**: October 16, 2025  
+**Ticket Folder**: `tickets/MNDR-006/`
+
+#### Performance & Optimization
+
+1. **Functions in Nested Scopes - Performance Impact**
+
+   - Functions defined inside React components are recreated on every render
+   - This wastes memory and prevents V8 optimization
+   - Example: `submitVenue` was being recreated on every EditVenue render
+   - **Takeaway**: Extract pure functions (those not capturing component variables) to module scope
+
+2. **Quick Win Refactorings**
+
+   - SonarQube identifies real performance issues, not just style preferences
+   - Simple moves to module scope can have measurable impact
+   - 5-minute fix with zero behavior changes
+   - **Takeaway**: Code quality tools like SonarQube point to legitimate optimizations
+
+3. **Pattern Recognition for Function Extraction**
+   - Look for functions that only use their parameters
+   - Functions that don't use hooks, props, or state
+   - Similar to helper functions like `createFileFromUrl`
+   - **Takeaway**: If a function doesn't need component context, move it out
+
+---
+
 ### MNDR-005: Replace forEach with for...of
 
 **Date**: October 16, 2025  
@@ -16,12 +45,14 @@
 #### Technical Learnings
 
 1. **for...of vs forEach Type Safety**
+
    - `for...of` provides stricter TypeScript type inference than `forEach`
    - This stricter checking can expose hidden type safety issues
    - Example: Revealed that `Alert.test.tsx` was using string literals instead of `ColorVariant` enum
    - **Takeaway**: Stricter type checking is an opportunity to improve code quality, not a problem to work around
 
 2. **Control Flow Differences**
+
    - `forEach` only supports `return` (which exits the callback, not the parent function)
    - `for...of` supports `break` (exit loop) and `continue` (skip iteration)
    - Example: In `EditVenue.tsx`, had to change `return` to `continue` for proper loop control
@@ -36,12 +67,14 @@
 #### Git & Tooling Learnings
 
 4. **Pre-commit Hook Maintenance**
+
    - Pre-commit hooks need updates when core tooling changes
    - ESLint 9 migration deprecated `next lint` command, breaking our lint-staged setup
    - Hooks can silently fail, causing confusion during commits
    - **Takeaway**: After major dependency updates, test git hooks thoroughly
 
 5. **lint-staged Auto-stash Behavior**
+
    - lint-staged automatically stashes changes before running linters
    - If linters fail, changes remain in stash (not automatically restored)
    - Must manually check `git stash list` and `git stash pop` to recover
@@ -56,6 +89,7 @@
 #### Testing & Code Quality
 
 7. **Enum vs String Literals in Tests**
+
    - Tests should use the same type safety as production code
    - Using string literals in tests can hide type mismatches
    - Example: `["error", "warning"]` vs `[ColorVariant.Error, ColorVariant.Warning]`
@@ -106,6 +140,7 @@
 ---
 
 **Related Documentation**:
+
 - `COMPLETED.md` - Historical record of completed tasks
 - `DECISIONS.md` - Architectural decision records
 - `tickets/archived/` - Detailed ticket documentation
