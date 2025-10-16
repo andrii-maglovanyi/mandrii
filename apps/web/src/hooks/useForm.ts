@@ -194,9 +194,9 @@ export function useForm<T extends ZodRawShape>(config: {
     setErrors(newErrors);
 
     const allTouched: Touched = {};
-    Object.keys(schema.shape).forEach((key) => {
+    for (const key of Object.keys(schema.shape)) {
       allTouched[key as FieldKey<T>] = true;
-    });
+    }
     setTouched(allTouched);
 
     return false;
@@ -204,12 +204,12 @@ export function useForm<T extends ZodRawShape>(config: {
 
   const setFieldErrorsFromServer = (issues: ZodError["issues"]) => {
     const newErrors: Errors = {};
-    issues.forEach((issue) => {
+    for (const issue of issues) {
       const field = issue.path[0] as FieldKey<T>;
       if (field) {
         newErrors[field] = issue.message;
       }
-    });
+    }
     setErrors(newErrors);
   };
 
