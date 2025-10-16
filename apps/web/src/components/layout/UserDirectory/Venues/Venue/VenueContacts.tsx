@@ -15,7 +15,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
   const i18n = useI18n();
 
   const createAddHandler = useCallback(
-    (field: "emails" | "phone_numbers") => () => {
+    (field: "emails" | "phone_numbers") => {
       setValues((prev) => ({
         ...prev,
         [field]: [...(prev[field] || []), ""],
@@ -25,7 +25,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
   );
 
   const createRemoveHandler = useCallback(
-    (field: "emails" | "phone_numbers") => (index: number) => {
+    (field: "emails" | "phone_numbers", index: number) => {
       setValues((prev) => {
         const updatedField = (prev[field] || []).filter((_, i) => i !== index);
         return { ...prev, [field]: updatedField };
@@ -34,10 +34,10 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
     [setValues],
   );
 
-  const addEmail = createAddHandler("emails");
-  const removeEmail = createRemoveHandler("emails");
-  const addPhoneNumber = createAddHandler("phone_numbers");
-  const removePhoneNumber = createRemoveHandler("phone_numbers");
+  const addEmail = () => createAddHandler("emails");
+  const removeEmail = (index: number) => createRemoveHandler("emails", index);
+  const addPhoneNumber = () => createAddHandler("phone_numbers");
+  const removePhoneNumber = (index: number) => createRemoveHandler("phone_numbers", index);
 
   const renderDynamicFields = (
     fieldName: "emails" | "phone_numbers",
@@ -131,7 +131,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
       </AccordionItem>
 
       <AccordionItem icon={<AtSign size={20} />} title={i18n("Email")}>
-        <p className="pt-2 pb-4 text-sm text-neutral">{i18n("You can add up to three emails.")}</p>
+        <p className="text-neutral pt-2 pb-4 text-sm">{i18n("You can add up to three emails.")}</p>
         <div className="flex grow flex-col">
           {renderDynamicFields("emails", i18n("Email"), "varenyk@puzatahata.co.uk", addEmail, removeEmail)}
         </div>
@@ -139,7 +139,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
 
       <AccordionItem icon={<Phone size={20} />} title={i18n("Phone number")}>
         <div className="flex grow flex-col">
-          <RichText as="p" className="py-2 text-sm text-neutral">
+          <RichText as="p" className="text-neutral py-2 text-sm">
             {i18n(
               "**🌍 Auto-detection enabled**.<br />Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.<br /><br />  You can add up to three phone numbers.",
             )}
