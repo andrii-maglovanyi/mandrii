@@ -42,7 +42,7 @@ const reducer = (state: APIParams, action: Action): APIParams => {
       }, {});
 
       const whereClauses: { [key: string]: object } = { where: {} };
-      Object.keys(action.payload).forEach((key) => {
+      for (const key of Object.keys(action.payload)) {
         if (key.startsWith("$")) {
           whereClauses[key.substring(1)] = action.payload[key];
         } else {
@@ -51,7 +51,7 @@ const reducer = (state: APIParams, action: Action): APIParams => {
             [key]: action.payload[key],
           };
         }
-      });
+      }
 
       return {
         ...stateWithoutWhere,

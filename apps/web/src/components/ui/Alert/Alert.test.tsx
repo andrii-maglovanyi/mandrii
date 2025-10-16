@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
+import { ColorVariant } from "~/types";
+
 import { Alert } from "./Alert";
 
 describe("Alert", () => {
@@ -11,12 +13,12 @@ describe("Alert", () => {
   });
 
   it("renders with each variant", () => {
-    const variants = ["error", "warning", "info", "success"] as const;
+    const variants: ColorVariant[] = [ColorVariant.Error, ColorVariant.Warning, ColorVariant.Info, ColorVariant.Success];
 
-    variants.forEach((variant) => {
+    for (const variant of variants) {
       render(<Alert variant={variant}>This is a {variant}</Alert>);
       expect(screen.getByText(`This is a ${variant}`)).toBeInTheDocument();
-    });
+    }
   });
 
   it("dismisses the alert when dismiss button is clicked", async () => {

@@ -18,9 +18,9 @@ describe("AnimatedEllipsis", () => {
     const stars = screen.getAllByText("★");
 
     expect(stars).toHaveLength(3);
-    stars.forEach((star) => {
+    for (const star of stars) {
       expect(star).toBeInTheDocument();
-    });
+    }
   });
 
   it("applies correct size classes", () => {
@@ -101,9 +101,9 @@ describe("AnimatedEllipsis", () => {
 
     expect(wrapper).toBeInTheDocument();
     expect(ellipsisElements).toHaveLength(3);
-    ellipsisElements.forEach((el) => {
+    for (const el of ellipsisElements) {
       expect(wrapper).toContainElement(el);
-    });
+    }
   });
 
   it("supports custom data-testid", () => {

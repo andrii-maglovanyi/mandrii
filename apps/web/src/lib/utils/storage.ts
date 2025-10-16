@@ -2,11 +2,11 @@ const PREFIX = "mndr.";
 
 export const storage = {
   clearAllWithPrefix() {
-    Object.keys(localStorage).forEach((key) => {
+    for (const key of Object.keys(localStorage)) {
       if (key.startsWith(PREFIX)) {
         localStorage.removeItem(key);
       }
-    });
+    }
   },
 
   get<T = string>(key: string): null | T {
