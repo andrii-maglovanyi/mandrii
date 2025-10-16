@@ -16,12 +16,14 @@
 #### Performance & Optimization
 
 1. **Functions in Nested Scopes - Performance Impact**
+
    - Functions defined inside React components are recreated on every render
    - This wastes memory and prevents V8 optimization
    - Example: `submitVenue` was being recreated on every EditVenue render
    - **Takeaway**: Extract pure functions (those not capturing component variables) to module scope
 
 2. **Quick Win Refactorings**
+
    - SonarQube identifies real performance issues, not just style preferences
    - Simple moves to module scope can have measurable impact
    - 5-minute fix with zero behavior changes
