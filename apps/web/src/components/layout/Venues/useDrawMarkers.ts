@@ -79,9 +79,10 @@ function clearMarkers(
   markersRef: React.RefObject<Map<UUID, AdvancedMarkerElement>>,
   labelSpansRef: React.RefObject<Map<number | string, HTMLSpanElement>>,
 ) {
-  markersRef.current.forEach((marker) => {
+  for (const marker of markersRef.current.values()) {
     marker.map = null;
-  });
+  }
+
   markersRef.current.clear();
   labelSpansRef.current.clear();
 }
@@ -170,7 +171,9 @@ function drawMarkers(props: Props, STYLES: typeof COLOR_STYLES.LIGHT) {
   const { labelSpansRef, mapRef, markersRef, venues } = props;
   if (mapRef.current && venues) {
     clearMarkers(markersRef, labelSpansRef);
-    venues.forEach((venue) => createAndAddMarker(venue, props, STYLES));
+    for (const venue of venues) {
+      createAndAddMarker(venue, props, STYLES);
+    }
   }
 }
 

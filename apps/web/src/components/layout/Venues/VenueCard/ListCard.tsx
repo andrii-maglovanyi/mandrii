@@ -32,7 +32,7 @@ export const ListCard = ({ onClick, selectedId, venue }: ListCardProps) => {
   const handleShareClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    const url = `${window.location.origin}/map/${slug}`;
+    const url = `${globalThis.location.origin}/map/${slug}`;
     sendToMixpanel("Clicked Share Venue", { slug });
     navigator.clipboard.writeText(url);
 

@@ -24,7 +24,7 @@ export const processAndUploadImage = async (file: Buffer, fileName: string) => {
 export const processImages = async (images: File[], prefix: string) => {
   try {
     const imageUrls: string[] = [];
-    const fileNames = images.map((image) => image.name);
+    const fileNames = new Set(images.map((image) => image.name));
 
     const blobNames: string[] = [];
     const blobsToDelete: string[] = [];
@@ -36,7 +36,7 @@ export const processImages = async (images: File[], prefix: string) => {
       if (blobName) {
         blobNames.push(blobName);
 
-        if (blobName && !fileNames.includes(blobName)) {
+        if (!fileNames.has(blobName)) {
           blobsToDelete.push([prefix, blobName].join("/"));
         }
       }

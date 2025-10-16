@@ -1,4 +1,4 @@
-export { Accordion } from "./Accordion/Accordion";
+export { AccordionItem, MultipleAccordion, SingleAccordion } from "./Accordion";
 export { Alert } from "./Alert/Alert";
 export { Breadcrumbs } from "./Breadcrumbs/Breadcrumbs";
 export { ActionButton } from "./Button/ActionButton";

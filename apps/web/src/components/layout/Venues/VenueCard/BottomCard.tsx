@@ -55,7 +55,7 @@ export function BottomCard({ venue }: Readonly<BottomCardInterface>) {
         border-neutral-hover bg-surface shadow-lg transition-all duration-500
         ease-in-out
         md:hidden
-        ${!isExpanded ? `border-t` : ""}
+        ${isExpanded ? "" : `border-t`}
       `}
       style={{
         height: isExpanded && innerHeight ? `${innerHeight}px` : "33vh",
@@ -75,7 +75,7 @@ export function BottomCard({ venue }: Readonly<BottomCardInterface>) {
               aria-label={i18n("Share this venue")}
               icon={<Share2 size={18} />}
               onClick={() => {
-                const url = `${window.location.origin}/map/${slug}`;
+                const url = `${globalThis.location.origin}/map/${slug}`;
                 sendToMixpanel("Clicked Share Venue (Mobile)", { slug });
 
                 navigator.clipboard.writeText(url);

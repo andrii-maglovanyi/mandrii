@@ -31,12 +31,10 @@ export const AccordionItem = ({ children, icon, isOpen = false, onToggle, title 
           ${isOpen ? `rotate-180 transform` : ""}
         `} />
       </button>
-      <div
-        className={`
-          overflow-hidden transition-all duration-150 ease-in-out
-          ${isOpen ? `max-h-[9999px]` : `max-h-0`}
-        `}
-      >
+      <div className={`
+        overflow-hidden transition-all duration-200 ease-out
+        ${isOpen ? `max-h-[9999px]` : `max-h-0`}
+      `}>
         <div className="border-t border-neutral-disabled px-6 py-4">{children}</div>
       </div>
     </div>

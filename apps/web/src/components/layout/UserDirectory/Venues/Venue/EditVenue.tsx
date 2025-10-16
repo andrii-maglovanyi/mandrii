@@ -58,8 +58,14 @@ export const EditVenue = ({ slug }: VenueProps) => {
 
   const { data, error, loading } = useGetVenue(slug);
 
+  const getInitialStatus = (): Status => {
+    if (loading) return "processing";
+    if (error) return "error";
+    return "idle";
+  };
+
   const [formStatus, setFormStatus] = useState<Status>("idle");
-  const [loadStatus, setLoadStatus] = useState<Status>(loading ? "processing" : error ? "error" : "idle");
+  const [loadStatus, setLoadStatus] = useState<Status>(getInitialStatus());
   const [venueFormData, setVenueFormData] = useState<null | Partial<VenueFormData>>(slug ? null : {});
   const [meta, setMeta] = useState<{ createdAt: string; status: string } | null>(null);
 
@@ -126,17 +132,23 @@ export const EditVenue = ({ slug }: VenueProps) => {
     setFormStatus("processing");
 
     const body = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
+    for (const [key, value] of Object.entries(data)) {
       if (Array.isArray(value)) {
-        value.forEach((val) => {
+        for (const val of value) {
           if (val) {
             body.append(key, val);
           }
-        });
+        }
       } else if (value) {
-        body.append(key, value instanceof File ? value : String(value));
+        if (value instanceof File) {
+          body.append(key, value);
+        } else if (typeof value === "object") {
+          body.append(key, JSON.stringify(value));
+        } else {
+          body.append(key, String(value));
+        }
       }
-    });
+    }
 
     try {
       const res = await fetch(`/api/venue/save?locale=${locale}`, {

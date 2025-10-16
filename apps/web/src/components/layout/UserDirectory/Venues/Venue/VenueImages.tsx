@@ -2,8 +2,8 @@ import { Frame, Image as ImageIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-import { Accordion, ActionButton, FilePicker } from "~/components/ui";
-import { AccordionItem } from "~/components/ui/Accordion/AccordionItem";
+import { ActionButton, FilePicker } from "~/components/ui";
+import { AccordionItem, MultipleAccordion } from "~/components/ui";
 import { FormProps } from "~/hooks/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { VenueSchema } from "~/lib/validation/venue";
@@ -85,7 +85,9 @@ export const VenueImages = ({ getFieldProps, isBusy, setValues, values }: VenueI
     setImagePreviews(previews);
 
     return () => {
-      imagePreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+      for (const preview of imagePreviews) {
+        URL.revokeObjectURL(preview.url);
+      }
     };
   }, [values.images]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -109,7 +111,7 @@ export const VenueImages = ({ getFieldProps, isBusy, setValues, values }: VenueI
   };
 
   return (
-    <Accordion allowMultiple>
+    <MultipleAccordion>
       <AccordionItem icon={<Frame size={20} />} isOpen title={i18n("Logo")}>
         <div className="m-auto max-h-56 max-w-56 overflow-hidden">
           {logoPreview ? (
@@ -121,15 +123,13 @@ export const VenueImages = ({ getFieldProps, isBusy, setValues, values }: VenueI
               removeLabel={i18n("Remove logo")}
             />
           ) : (
-            <>
-              <FilePicker
-                disabled={isBusy}
-                name="logo"
-                {...getFieldProps("logo")}
-                label={i18n("Venue logo")}
-                placeholder={i18n("Click to upload")}
-              />
-            </>
+            <FilePicker
+              disabled={isBusy}
+              name="logo"
+              {...getFieldProps("logo")}
+              label={i18n("Venue logo")}
+              placeholder={i18n("Click to upload")}
+            />
           )}
         </div>
       </AccordionItem>
@@ -173,6 +173,6 @@ export const VenueImages = ({ getFieldProps, isBusy, setValues, values }: VenueI
           </div>
         )}
       </AccordionItem>
-    </Accordion>
+    </MultipleAccordion>
   );
 };

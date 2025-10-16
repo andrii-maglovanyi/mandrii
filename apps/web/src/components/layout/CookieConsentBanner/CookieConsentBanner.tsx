@@ -13,10 +13,8 @@ export default function CookieConsentBanner() {
   const i18n = useI18n();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const accepted = storage.get("cookie_consent");
-      setVisible(!accepted);
-    }
+    const accepted = storage.get("cookie_consent");
+    setVisible(!accepted);
   }, []);
 
   const handleAccept = () => {

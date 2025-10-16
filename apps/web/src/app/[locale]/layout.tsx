@@ -1,5 +1,3 @@
-import * as Sentry from "@sentry/nextjs";
-
 import "../globals.css";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -25,8 +23,6 @@ type RootLayoutProps = Readonly<{
 export async function generateMetadata({ params }: RootLayoutProps): Promise<Metadata> {
   const { locale } = await params;
   const isUkrainian = locale === "uk";
-
-  Sentry.logger.info("User triggered test log", { log_source: "sentry_test" });
 
   return {
     alternates: {

@@ -31,6 +31,8 @@ interface VenuesProps {
   slug?: string;
 }
 
+const MAX_DISTANCE = 100000;
+
 export const Venues = ({ slug }: VenuesProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
@@ -65,7 +67,7 @@ export const Venues = ({ slug }: VenuesProps) => {
 
   const DISTANCES = useMemo(
     () =>
-      [1000, 2000, 5000, 10000, 25000, 100000].map((value) => ({
+      [1000, 2000, 5000, 10000, 25000, MAX_DISTANCE].map((value) => ({
         label: `${value / 1000}${i18n("km")}`,
         value: String(value),
       })),
@@ -81,7 +83,7 @@ export const Venues = ({ slug }: VenuesProps) => {
   const [suggestions, setSuggestions] = useState<Array<Suggestion>>([]);
   const [userLocation, setUserLocation] = useState<Location>(constants.london_coordinates);
   const [selectedVenueId, setSelectedVenueId] = useState<null | UUID>(null);
-  const [distance, setDistance] = useState(DISTANCES[DISTANCES.length - 1].value);
+  const [distance, setDistance] = useState(String(MAX_DISTANCE));
   const [category, setCategory] = useState<Venue_Category_Enum>(categoryOptions[0].value);
 
   const { isDark } = useTheme();
@@ -281,7 +283,7 @@ export const Venues = ({ slug }: VenuesProps) => {
   const venueCards: Array<React.ReactNode> = [];
   let selectedCard: React.ReactNode = <></>;
 
-  data.forEach((venue) => {
+  for (const venue of data) {
     const card = (
       <ListCard
         key={venue.id.toString()}
@@ -302,7 +304,7 @@ export const Venues = ({ slug }: VenuesProps) => {
     }
 
     venueCards.push(card);
-  });
+  }
 
   return (
     <div className="flex h-full grow flex-col">

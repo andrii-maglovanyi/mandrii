@@ -1,8 +1,7 @@
 import { AtSign, Facebook, Globe, Instagram, Minus, Phone, Plus, Users } from "lucide-react";
 import { useCallback } from "react";
 
-import { Accordion, ActionButton, Input, RichText } from "~/components/ui";
-import { AccordionItem } from "~/components/ui/Accordion/AccordionItem";
+import { AccordionItem, ActionButton, Input, MultipleAccordion, RichText } from "~/components/ui";
 import { FormProps } from "~/hooks/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { VenueSchema } from "~/lib/validation/venue";
@@ -117,7 +116,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
   );
 
   return (
-    <Accordion allowMultiple>
+    <MultipleAccordion>
       <AccordionItem icon={<Globe size={20} />} isOpen title={i18n("Website")}>
         <div className="flex grow flex-col">
           <Input
@@ -164,6 +163,6 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
         {renderSocialMediaInput(<Facebook />, "facebook", "Facebook", "https://facebook.com/puzatahata")}
         {renderSocialMediaInput(<Instagram />, "instagram", "Instagram", "https://instagram.com/puzatahata")}
       </AccordionItem>
-    </Accordion>
+    </MultipleAccordion>
   );
 };
