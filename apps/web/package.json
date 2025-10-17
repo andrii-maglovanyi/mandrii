@@ -11,7 +11,7 @@
     "generate": "./scripts/graphql-codegen.sh",
     "import-translations": "import-translations --dir=translations && node ./scripts/normalize-translation-keys.mjs",
     "format": "prettier --write .",
-    "lint:js": "next lint",
+    "lint:js": "eslint .",
     "lint:css": "stylelint '**/*.css'",
     "start": "next start",
     "test:unit": "vitest --project=unit",
@@ -64,7 +64,6 @@
     "zod": "^4.0.10"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
     "@graphql-codegen/cli": "^5.0.7",
     "@graphql-codegen/typescript": "^4.1.6",
     "@graphql-codegen/typescript-operations": "^4.6.1",

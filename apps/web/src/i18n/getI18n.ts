@@ -16,7 +16,7 @@ export const getI18n = async ({ locale }: GetI18nParams) => {
 
   return (key: string, options?: Record<string, Date | number | string>) => {
     // Normalize dotted keys to work around `next-intl` nesting limitations
-    const normalizedKey = key.replace(/\./g, "_");
+    const normalizedKey = key.replaceAll(".", "_");
 
     try {
       return t(normalizedKey, options);

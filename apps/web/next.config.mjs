@@ -6,23 +6,11 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  outputFileTracingIncludes: {
-    "/api/**/*": ["./content/**/*", "./.next/static/css/**/*"],
-    "/app/\[locale\]/**/*": ["./content/**/*"],
-  },
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-        port: "",
-      },
-      {
-        protocol: "https",
-        hostname: "yiiprxif648vopwe.public.blob.vercel-storage.com",
-        port: "",
-      },
-    ],
+  env: {
+    BUILD_TIME: new Date().toISOString(),
+    VERCEL_ENV: process.env.VERCEL_ENV || process.env.NODE_ENV,
+    VERCEL_GIT_COMMIT_SHA:
+      process.env.VERCEL_GIT_COMMIT_SHA || execSync("git rev-parse HEAD", { encoding: "utf8" }).trim(),
   },
   async headers() {
     return [
@@ -45,20 +33,32 @@ const nextConfig = {
       },
     ];
   },
-  env: {
-    VERCEL_ENV: process.env.VERCEL_ENV || process.env.NODE_ENV,
-    VERCEL_GIT_COMMIT_SHA:
-      process.env.VERCEL_GIT_COMMIT_SHA || execSync("git rev-parse HEAD", { encoding: "utf8" }).trim(),
-    BUILD_TIME: new Date().toISOString(),
+  images: {
+    remotePatterns: [
+      {
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        protocol: "https",
+      },
+      {
+        hostname: "yiiprxif648vopwe.public.blob.vercel-storage.com",
+        port: "",
+        protocol: "https",
+      },
+    ],
+  },
+  outputFileTracingIncludes: {
+    "/api/**/*": ["./content/**/*", "./.next/static/css/**/*"],
+    "/app/\[locale\]/**/*": ["./content/**/*"],
   },
   async rewrites() {
     return [
       {
-        source: "/services/:path*",
         destination:
           process.env.NODE_ENV === "development"
             ? "http://127.0.0.1:8000/:path*"
             : (process.env.SERVICES_URL ?? "https://services.mandrii.com") + "/:path*",
+        source: "/services/:path*",
       },
     ];
   },

@@ -1,14 +1,14 @@
 import { FlatCompat } from "@eslint/eslintrc";
-import perfectionist from "eslint-plugin-perfectionist";
 import vitest from "@vitest/eslint-plugin";
 import betterTailwindcss from "eslint-plugin-better-tailwindcss";
+import perfectionist from "eslint-plugin-perfectionist";
 import testingLibrary from "eslint-plugin-testing-library";
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
 });
 
-export default [
+const config = [
   ...compat.extends("next/core-web-vitals", "next/typescript", "plugin:storybook/recommended"),
   {
     files: ["src/**/*.test.{ts,tsx}"],
@@ -22,8 +22,8 @@ export default [
   perfectionist.configs["recommended-alphabetical"],
   {
     plugins: {
-      vitest,
       "better-tailwindcss": betterTailwindcss,
+      vitest,
     },
     rules: {
       ...betterTailwindcss.configs["recommended-warn"].rules,
@@ -39,4 +39,9 @@ export default [
       },
     },
   },
+  {
+    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts"],
+  },
 ];
+
+export default config;

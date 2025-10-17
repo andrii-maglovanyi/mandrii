@@ -23,13 +23,13 @@ const calculateDisplayTime = (message: string) => {
 
 const getIcon = (variant: ColorVariant) => {
   switch (variant) {
-    case ColorVariant.Error:
+    case "error":
       return <Frown size={32} />;
-    case ColorVariant.Info:
+    case "info":
       return <Info size={32} />;
-    case ColorVariant.Success:
+    case "success":
       return <Smile size={32} />;
-    case ColorVariant.Warning:
+    case "warning":
       return <Meh size={32} />;
   }
 };

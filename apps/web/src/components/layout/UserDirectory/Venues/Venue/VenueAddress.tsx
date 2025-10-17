@@ -8,7 +8,6 @@ import { FormProps } from "~/hooks/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { getLatitudeBounds, getLongitudeBounds } from "~/lib/utils";
 import { VenueSchema } from "~/lib/validation/venue";
-import { ColorVariant } from "~/types";
 
 import { VenuesMap } from "../../../Venues/VenuesMap";
 import { useGeocode } from "./hooks";
@@ -144,7 +143,7 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
           <Alert className={`
             mt-8
             md:mt-2
-          `} variant={ColorVariant.Success}>
+          `} variant="success">
             {fullAddress.address}
           </Alert>
 

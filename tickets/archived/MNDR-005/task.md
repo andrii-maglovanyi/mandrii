@@ -26,25 +26,30 @@ Replace all instances of `forEach` loops with `for...of` loops throughout the co
 ### Files Modified (6 files, 9 forEach instances)
 
 1. **`apps/web/src/lib/utils/storage.ts`**
+
    - Replaced `forEach` in `clearAllWithPrefix()` function
    - Iterating over localStorage keys to clear items with matching prefix
 
 2. **`apps/web/src/hooks/useListControls.ts`**
+
    - Replaced `forEach` in filter action reducer (line 59)
    - Iterating over filter selections to build filter object
 
 3. **`apps/web/src/hooks/useForm.ts`**
+
    - Replaced 2 `forEach` instances:
      - In `validateForm()` - iterating over form errors
      - In `setFieldErrorsFromServer()` - iterating over server error fields
 
 4. **`apps/web/src/components/layout/UserDirectory/Venues/Venue/EditVenue.tsx`**
+
    - Replaced 2 `forEach` instances in `buildFormData()`:
      - Outer loop: iterating over formData entries
      - Inner loop: iterating over array values for multi-value fields
    - Changed `return` → `continue` (for...of allows continue, forEach used return)
 
 5. **`apps/web/src/components/ui/AnimatedEllipsis/AnimatedEllipsis.test.tsx`**
+
    - Replaced 2 `forEach` instances in test assertions
    - Iterating over test cases and DOM elements
 
@@ -80,7 +85,8 @@ Replace all instances of `forEach` loops with `for...of` loops throughout the co
 
 **Problem**: lint-staged auto-stashed uncommitted changes, initial commit only included 1 file
 
-**Solution**: 
+**Solution**:
+
 1. Retrieved stashed changes: `git stash list`, `git stash pop`
 2. Amended commit to include all files: `git commit --amend --no-verify`
 

@@ -40,14 +40,7 @@ const alertConfig = {
   },
 };
 
-export const Alert = ({
-  children,
-  className,
-  dismissLabel,
-  fadeAfter,
-  onDismiss,
-  variant = ColorVariant.Error,
-}: AlertProps) => {
+export const Alert = ({ children, className, dismissLabel, fadeAfter, onDismiss, variant = "error" }: AlertProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isFading, setIsFading] = useState(false);
 

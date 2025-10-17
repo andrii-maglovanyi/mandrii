@@ -1,7 +1,5 @@
 import { Meta, StoryObj } from "@storybook/nextjs";
 
-import { ColorVariant } from "~/types";
-
 import { Alert } from "./Alert";
 
 const meta: Meta<typeof Alert> = {
@@ -26,27 +24,27 @@ type Story = StoryObj<typeof Alert>;
 export const Default: Story = {
   args: {
     children: "This is an alert",
-    variant: ColorVariant.Error,
+    variant: "error",
   },
 };
 
 export const Success: Story = {
   args: {
     children: "Operation completed successfully!",
-    variant: ColorVariant.Success,
+    variant: "success",
   },
 };
 
 export const Warning: Story = {
   args: {
     children: "Be careful, this might break things.",
-    variant: ColorVariant.Warning,
+    variant: "warning",
   },
 };
 
 export const Info: Story = {
   args: {
     children: "Here is some useful information.",
-    variant: ColorVariant.Info,
+    variant: "info",
   },
 };

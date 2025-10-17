@@ -7,7 +7,7 @@ import { Alert, Button } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
-import { ColorVariant, GetPublicVenuesQuery } from "~/types";
+import { GetPublicVenuesQuery } from "~/types";
 
 import { SignInForm } from "../../Auth/SignInForm";
 
@@ -112,7 +112,7 @@ export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
           </Button>
         ) : (
           <div className="flex flex-col space-y-4">
-            <Alert variant={ColorVariant.Warning}>{i18n("Sign in to claim ownership of this venue")}</Alert>
+            <Alert variant="warning">{i18n("Sign in to claim ownership of this venue")}</Alert>
 
             <Button className="gap-2 py-3" color="primary" onClick={handleSignIn} variant="outlined">
               <LogIn size={20} />

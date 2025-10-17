@@ -3,6 +3,8 @@ import { z, ZodError, ZodObject, ZodRawShape, ZodType } from "zod";
 
 import { isZodArray } from "~/lib/utils";
 
+type FieldChangeEvent = ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+
 export type FormProps<T extends ZodRawShape> = {
   errors: Partial<Record<FieldKey<T>, string>>;
   getFieldProps: <K extends keyof z.infer<ZodObject<T>>>(field: K) => FieldProps<T, K>;
@@ -21,7 +23,7 @@ type FieldKey<T extends ZodRawShape> = keyof FormData<T>;
 interface FieldProps<T extends ZodRawShape, K extends keyof z.infer<ZodObject<T>>> {
   error?: string;
   onBlur: (value?: unknown) => void;
-  onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+  onChange: (e: FieldChangeEvent) => void;
   showErrorMessage: boolean;
   value: z.infer<ZodObject<T>>[K];
 }
@@ -100,7 +102,7 @@ export function useForm<T extends ZodRawShape>(config: {
     return {
       error: errors[field],
       onBlur: handleBlur(field),
-      onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      onChange: (e: FieldChangeEvent) => {
         const inputElement = e.target as HTMLInputElement;
         const files = inputElement.files;
 
@@ -145,7 +147,7 @@ export function useForm<T extends ZodRawShape>(config: {
           {
             error: errors[field],
             onBlur: handleBlur(field),
-            onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+            onChange: (e: FieldChangeEvent) => {
               handleChange(field)([e.target.value]);
             },
             showErrorMessage: true,
@@ -157,7 +159,7 @@ export function useForm<T extends ZodRawShape>(config: {
       return arrayValue.map((item, index) => ({
         error: typeof errors[field] === "object" && errors[field] !== null ? errors[field][index] : errors[field],
         onBlur: handleBlur(field),
-        onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        onChange: (e: FieldChangeEvent) => {
           const newArray = [...arrayValue];
           newArray[index] = e.target.value;
           handleChange(field)(newArray);
@@ -171,8 +173,7 @@ export function useForm<T extends ZodRawShape>(config: {
       {
         error: errors[field],
         onBlur: handleBlur(field),
-        onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-          handleChange(field)(e.target.value),
+        onChange: (e: FieldChangeEvent) => handleChange(field)(e.target.value),
         showErrorMessage: true,
         value: fieldValue,
       },
