@@ -23,13 +23,13 @@ const calculateDisplayTime = (message: string) => {
 
 const getIcon = (variant: ColorVariant) => {
   switch (variant) {
-    case ColorVariant.Error:
+    case "error":
       return <Frown size={32} />;
-    case ColorVariant.Info:
+    case "info":
       return <Info size={32} />;
-    case ColorVariant.Success:
+    case "success":
       return <Smile size={32} />;
-    case ColorVariant.Warning:
+    case "warning":
       return <Meh size={32} />;
   }
 };
@@ -51,11 +51,7 @@ export const Notification = memo(function Snackbar({
   return (
     open && (
       <div
-        className={`
-          fixed right-0 bottom-4 left-0 z-50 mx-auto flex w-min max-w-[90%]
-          min-w-96 transform items-center justify-between rounded-lg
-          bg-on-surface p-4 text-surface transition-transform
-        `}
+        className={`bg-on-surface text-surface fixed right-0 bottom-4 left-0 z-50 mx-auto flex w-min max-w-[90%] min-w-96 transform items-center justify-between rounded-lg p-4 transition-transform`}
         style={{
           height: `${SNACKBAR_HEIGHT}px`,
           transform: `translateY(${-index / 2 - index * SNACKBAR_HEIGHT}px)`,

@@ -40,14 +40,7 @@ const alertConfig = {
   },
 };
 
-export const Alert = ({
-  children,
-  className,
-  dismissLabel,
-  fadeAfter,
-  onDismiss,
-  variant = ColorVariant.Error,
-}: AlertProps) => {
+export const Alert = ({ children, className, dismissLabel, fadeAfter, onDismiss, variant = "error" }: AlertProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isFading, setIsFading] = useState(false);
 
@@ -72,10 +65,7 @@ export const Alert = ({
       <div
         aria-live="polite"
         className={clsx(
-          `
-            flex w-full items-center gap-2 rounded-lg px-4 py-2.5
-            transition-opacity duration-300
-          `,
+          `flex w-full items-center gap-2 rounded-lg px-4 py-2.5 transition-opacity duration-300`,
           bgColor,
           textColor,
           isFading && "opacity-0",

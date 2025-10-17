@@ -8,10 +8,10 @@ interface Options {
 }
 
 const defaultHeaders = {
-  [ColorVariant.Error]: "Error!",
-  [ColorVariant.Info]: "Info!",
-  [ColorVariant.Success]: "Success!",
-  [ColorVariant.Warning]: "Warning!",
+  error: "Error!",
+  info: "Info!",
+  success: "Success!",
+  warning: "Warning!",
 };
 
 export const useNotifications = () => {
@@ -37,12 +37,12 @@ export const useNotifications = () => {
   const dismissNotification = useCallback((id: string) => removeNotification(id), [removeNotification]);
 
   const showSuccess = useCallback(
-    (message: string, options?: Options) => showNotification(ColorVariant.Success, message, options?.header),
+    (message: string, options?: Options) => showNotification("success", message, options?.header),
     [showNotification],
   );
 
   const showError = useCallback(
-    (message: string, options?: Options) => showNotification(ColorVariant.Error, message, options?.header),
+    (message: string, options?: Options) => showNotification("error", message, options?.header),
     [showNotification],
   );
 
