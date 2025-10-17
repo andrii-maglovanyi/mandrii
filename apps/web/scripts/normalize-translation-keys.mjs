@@ -22,7 +22,7 @@ files.forEach((file) => {
 
     const modified = {};
     for (const [key, value] of Object.entries(original)) {
-      const newKey = key.replace(/\./g, "_");
+      const newKey = key.replaceAll(".", "_");
       modified[newKey] = value;
     }
 

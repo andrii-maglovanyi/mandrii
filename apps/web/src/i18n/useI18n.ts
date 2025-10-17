@@ -20,7 +20,7 @@ export const useI18n = () => {
 
       // If translation returns key itself, try normalized version (replace dots)
       if (translated === key && key.includes(".")) {
-        const normalizedKey = key.replace(/\./g, "_");
+        const normalizedKey = key.replaceAll(".", "_");
         const normalized = t(normalizedKey, { ...options, fallback: key });
 
         return normalized === normalizedKey ? getTemplate(key, options) : normalized;

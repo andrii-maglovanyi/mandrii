@@ -74,9 +74,11 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
 
   useEffect(() => {
     if (values.name && !initialValues.id) {
+      const nameWithArea = values.area ? `${values.name} ${values.area}` : values.name;
+
       setValues((prev) => ({
         ...prev,
-        slug: slugify(`${values.name}${values.area ? ` ${values.area}` : ""}`, {
+        slug: slugify(nameWithArea, {
           lower: true,
           strict: true,
         }),
@@ -99,14 +101,8 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className={`
-        flex grow flex-col justify-evenly
-        lg:flex-row lg:space-x-4
-      `}>
-        <div className={`
-          flex flex-3 flex-col justify-evenly
-          md:flex-row md:space-x-4
-        `}>
+      <div className={`flex grow flex-col justify-evenly lg:flex-row lg:space-x-4`}>
+        <div className={`flex flex-3 flex-col justify-evenly md:flex-row md:space-x-4`}>
           <div className="flex flex-3 flex-col">
             <Select
               disabled={isBusy}
@@ -142,7 +138,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
         </div>
       </div>
 
-      <p className="text-sm text-neutral">
+      <p className="text-neutral text-sm">
         {i18n("Optionally, update contacts, a description, photos, a logo, and an address for more details.")}
       </p>
 
@@ -172,10 +168,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
         </TabPane>
       </Tabs>
 
-      <div className={`
-        flex flex-col justify-end space-y-4 space-x-4 py-2
-        md:flex-row md:items-center md:space-y-0
-      `}>
+      <div className={`flex flex-col justify-end space-y-4 space-x-4 py-2 md:flex-row md:items-center md:space-y-0`}>
         {status === "processing" && <Alert variant="info">{i18n("The request may a little time to process...")}</Alert>}
         {status === "success" && (
           <Alert fadeAfter={5000} variant="success">
