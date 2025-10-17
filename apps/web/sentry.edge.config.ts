@@ -7,7 +7,7 @@ Sentry.init({
   debug: !isProduction,
   dsn: publicConfig.analytics.sentryDsn,
   enabled: isProduction,
-  tracesSampleRate: 1,
-  integrations: [Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] })],
   enableLogs: true,
+  integrations: [Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] })],
+  tracesSampleRate: 1,
 });
