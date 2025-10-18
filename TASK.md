@@ -296,6 +296,14 @@
 
 ### Linear Tickets
 
+- [x] **MNDR-7: Add generic README description based on website functionality**
+  - **Status**: ✅ Completed - January 18, 2025
+  - **Branch**: `MNDR-007_add-readme-description`
+  - **Commit**: `5574566`
+  - **Ticket Folder**: `tickets/archived/MNDR-007/`
+  - **PR**: Ready to create
+  - **Summary**: Added comprehensive README with project overview, 10 key features, and complete tech stack documentation
+
 - [x] **MNDR-6: Move submitVenue function to module scope**
   - **Status**: ✅ Completed
   - **Branch**: `MNDR-006_move-submitvenue-to-outer-scope`
