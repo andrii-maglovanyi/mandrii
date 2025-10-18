@@ -17,13 +17,15 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - manifest.json (PWA manifest)
+     * - static (static assets)
      */
     {
       missing: [
         { key: "next-router-prefetch", type: "header" },
         { key: "purpose", type: "header", value: "prefetch" },
       ],
-      source: "/((?!admin|api|cv|_next/static|_next/image|services|static|favicon.ico).*)",
+      source: "/((?!admin|api|cv|_next/static|_next/image|services|static|favicon\\.ico|manifest\\.json).*)",
     },
   ],
 };
