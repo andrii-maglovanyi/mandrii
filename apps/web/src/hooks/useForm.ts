@@ -3,8 +3,6 @@ import { z, ZodError, ZodObject, ZodRawShape, ZodType } from "zod";
 
 import { isZodArray } from "~/lib/utils";
 
-type FieldChangeEvent = ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
-
 export type FormProps<T extends ZodRawShape> = {
   errors: Partial<Record<FieldKey<T>, string>>;
   getFieldProps: <K extends keyof z.infer<ZodObject<T>>>(field: K) => FieldProps<T, K>;
@@ -19,6 +17,8 @@ export type FormProps<T extends ZodRawShape> = {
   validateForm: () => boolean;
   values: Partial<z.infer<ZodObject<T>>>;
 };
+
+type FieldChangeEvent = ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
 type FieldKey<T extends ZodRawShape> = keyof FormData<T>;
 interface FieldProps<T extends ZodRawShape, K extends keyof z.infer<ZodObject<T>>> {
   error?: string;
