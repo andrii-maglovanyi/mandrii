@@ -41,10 +41,10 @@ export async function generateMetadata({ params }: RootLayoutProps): Promise<Met
       ? "мандруй / мрій / дій - простір для мандрівників та мрійників"
       : "travel / dream / act - a space for travelers and dreamers",
     icons: {
-      apple: [{ sizes: "180x180", url: "/apple-touch-icon.png" }],
+      apple: [{ sizes: "180x180", url: "/static/apple-touch-icon.png" }],
       icon: [
-        { sizes: "192x192", url: "/icon-192.png" },
-        { sizes: "512x512", url: "/icon-512.png" },
+        { sizes: "192x192", url: "/static/icon-192.png" },
+        { sizes: "512x512", url: "/static/icon-512.png" },
       ],
     },
     manifest: "/manifest.json",
