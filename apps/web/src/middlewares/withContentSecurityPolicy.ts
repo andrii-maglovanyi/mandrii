@@ -18,7 +18,7 @@ export const withContentSecurityPolicy: MiddlewareFactory = (next) => {
       frame-ancestors 'none';
       upgrade-insecure-requests;
     `
-      .replace(/\s{2,}/g, " ")
+      .replaceAll(/\s{2,}/, " ")
       .trim();
 
     const requestHeaders = new Headers(request.headers);
