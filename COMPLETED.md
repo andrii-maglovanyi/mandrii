@@ -1,8 +1,73 @@
 # Mandrii - Completed Tasks
 
-**Last Updated**: October 16, 2025
+**Last Updated**: January 18, 2025
 
 > This file tracks historical record of completed tasks, improvements, and fixes for the Mandrii project. For active tasks, see `TASK.md`. For architectural decisions, see `DECISIONS.md`.
+
+---
+
+## January 2025
+
+### MNDR-007: Add generic README description based on website functionality
+
+**Completed**: January 18, 2025  
+**Linear Ticket**: MNDR-7  
+**Branch**: `MNDR-007_add-readme-description`  
+**Commit**: `5574566`  
+**Ticket Folder**: `tickets/MNDR-007/`
+
+**Summary**:
+Added comprehensive README.md documentation describing the Mandrii website's dual purpose (Ukrainian venues directory + personal blog), key features, and complete technology stack.
+
+**Key Deliverables**:
+
+- ✅ Project overview explaining venue directory and blog
+- ✅ Documented 10 key user-facing features with icons
+- ✅ Complete technology stack organized by category
+- ✅ Monorepo project structure visualization
+- ✅ Maintained existing author information
+
+**Files Modified**:
+
+- `README.md` - Added comprehensive project description
+- `TASK.md` - Added MNDR-007 reference to In Progress section
+- `tickets/MNDR-007/` - Complete ticket documentation
+
+**Content Documented**:
+
+**User-Facing Features**:
+- Interactive map with Google Maps integration
+- Venue search and filtering capabilities
+- Community reviews and ratings system
+- Event listings at Ukrainian venues
+- Bilingual support (English/Ukrainian)
+- Authentication (Google OAuth + magic links)
+- PWA support with home screen icons
+- Personal blog with MDX content
+- CV/resume professional profile
+- Contact form
+
+**Technology Stack**:
+- Frontend: Next.js 15, React 19, Tailwind CSS v4, Apollo Client
+- Backend: Hasura GraphQL, PostgreSQL (Neon), FastAPI
+- Development: TypeScript, Vitest, Playwright, ESLint, Sentry
+
+**Technical Impact**:
+
+- Documentation: Professional README for project visitors
+- Clarity: Clear explanation of dual-purpose platform
+- Discoverability: Easier for users to understand project scope
+- Marketing: Balance between technical and general audience
+
+**Learnings**:
+
+- README best practices: Lead with functionality, not implementation
+- Visual scanning: Emoji icons improve content scannability
+- Organization: Group tech stack by logical categories
+- Balance: Write for both technical and non-technical audiences
+- Context: Keep Ukrainian title "Мандрій" for authenticity
+
+**Time Investment**: ~15 minutes total
 
 ---
 
