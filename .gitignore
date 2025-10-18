@@ -30,6 +30,12 @@ storybook-static
 *.tsbuildinfo
 next-env.d.ts
 
+# hasura
+*.bak
+hasura/preview/.env
+hasura/production/.env
+hasura/production/seeds/
+
 # Playwright
 /test-results/
 /playwright-report/

@@ -32,9 +32,22 @@ export async function generateMetadata({ params }: RootLayoutProps): Promise<Met
         uk: UrlHelper.buildUrl("/uk"),
       },
     },
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: isUkrainian ? "Мандрій" : "Mandrii",
+    },
     description: isUkrainian
       ? "мандруй / мрій / дій - простір для мандрівників та мрійників"
       : "travel / dream / act - a space for travelers and dreamers",
+    icons: {
+      apple: [{ sizes: "180x180", url: "/apple-touch-icon.png" }],
+      icon: [
+        { sizes: "192x192", url: "/icon-192.png" },
+        { sizes: "512x512", url: "/icon-512.png" },
+      ],
+    },
+    manifest: "/manifest.json",
     metadataBase: new URL(UrlHelper.getBaseUrl()),
     openGraph: {
       description: isUkrainian ? "мандруй / мрій / дій" : "travel / dream / act",
