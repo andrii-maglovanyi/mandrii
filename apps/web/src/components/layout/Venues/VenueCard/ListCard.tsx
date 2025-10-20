@@ -52,7 +52,12 @@ export const ListCard = ({ onClick, selectedId, venue }: ListCardProps) => {
       <section
         aria-label={`Venue: ${name}`}
         className={clsx(
-          `bg-on-surface/5 hover:bg-on-surface/10 flex w-full overflow-x-hidden rounded-md border-2 transition-colors duration-200 lg:text-base`,
+          `
+            flex w-full overflow-x-hidden rounded-md border-2 bg-on-surface/5
+            transition-colors duration-200
+            hover:bg-on-surface/10
+            lg:text-base
+          `,
           selectedId === id ? "border-on-surface" : "border-transparent",
         )}
         onClick={onClick}
@@ -78,7 +83,10 @@ export const ListCard = ({ onClick, selectedId, venue }: ListCardProps) => {
               <ActionButton
                 aria-label={i18n("Are you an owner?")}
                 className="group"
-                icon={<Crown className={`stroke-amber-500 group-hover:fill-amber-500`} size={18} />}
+                icon={<Crown className={`
+                  stroke-amber-500
+                  group-hover:fill-amber-500
+                `} size={18} />}
                 onClick={handleOwnerClick}
                 size="sm"
               />

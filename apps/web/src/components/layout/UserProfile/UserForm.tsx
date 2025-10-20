@@ -1,19 +1,20 @@
 "use client";
 
+import { Session } from "next-auth";
 import { useLocale } from "next-intl";
 import { FormEvent, useState } from "react";
 import { ZodError } from "zod";
+
 import { Button, Input } from "~/components/ui";
 import { useForm } from "~/hooks/useForm";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
-
 import { useI18n } from "~/i18n/useI18n";
 import { getUserSchema } from "~/lib/validation/user";
 import { Locale, Status, Users } from "~/types";
-import { Avatar } from "../Avatar/Avatar";
 import { UUID } from "~/types/uuid";
-import { Session } from "next-auth";
+
+import { Avatar } from "../Avatar/Avatar";
 
 interface UserFormProps {
   profile: Session;
@@ -21,9 +22,9 @@ interface UserFormProps {
 
 async function submitProfile(body: Partial<Users>, locale: string) {
   const res = await fetch(`/api/user/save?locale=${locale}`, {
+    body: JSON.stringify(body),
     headers: { "Content-Type": "application/json" },
     method: "POST",
-    body: JSON.stringify(body),
   });
 
   const result = await res.json();
@@ -37,7 +38,7 @@ export const UserForm = ({ profile: sessionProfile }: UserFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const locale = useLocale() as Locale;
   const { showSuccess } = useNotifications();
-  const { data, update: updateSession, refetchProfile, isLoading } = useUser();
+  const { data, isLoading, refetchProfile, update: updateSession } = useUser();
 
   const currentUser = data?.user;
 
@@ -106,7 +107,9 @@ export const UserForm = ({ profile: sessionProfile }: UserFormProps) => {
     <div className="mt-4 flex flex-grow flex-col space-y-6">
       <form onSubmit={handleSubmit}>
         <div className="flex items-center space-x-4">
-          <Avatar profile={sessionProfile} avatarSize={120} className="bg-neutral-disabled rounded-full p-1" />
+          <Avatar avatarSize={120} className={`
+            rounded-full bg-neutral-disabled p-1
+          `} profile={sessionProfile} />
           <div className="flex max-w-sm grow flex-col">
             {isEditing ? (
               <Input
@@ -126,15 +129,15 @@ export const UserForm = ({ profile: sessionProfile }: UserFormProps) => {
         <div className="flex justify-end">
           {isEditing ? (
             <div className="flex space-x-3">
-              <Button variant="ghost" onClick={handleCancel} disabled={isBusy}>
+              <Button disabled={isBusy} onClick={handleCancel} variant="ghost">
                 {i18n("Cancel")}
               </Button>
-              <Button variant="filled" type="submit" disabled={!isFormValid || isBusy}>
+              <Button disabled={!isFormValid || isBusy} type="submit" variant="filled">
                 {i18n("Save")}
               </Button>
             </div>
           ) : (
-            <Button variant="outlined" onClick={() => setIsEditing(true)}>
+            <Button onClick={() => setIsEditing(true)} variant="outlined">
               {i18n("Edit")}
             </Button>
           )}

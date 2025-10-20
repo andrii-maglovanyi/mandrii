@@ -1,9 +1,9 @@
 "use client";
 
+import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
 import { useUser } from "~/hooks/useUser";
 
 import { UserForm } from "./UserForm";
-import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
 
 export const UserProfile = () => {
   const { data, isLoading } = useUser();

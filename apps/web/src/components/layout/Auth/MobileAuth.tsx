@@ -3,8 +3,8 @@ import Link from "next/link";
 
 import { Separator } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
-import { useI18n } from "~/i18n/useI18n";
 import { useUser } from "~/hooks/useUser";
+import { useI18n } from "~/i18n/useI18n";
 
 import { SignInForm } from "./SignInForm";
 import { UserMenu } from "./UserMenu";
@@ -13,7 +13,7 @@ import { UserProfileCard } from "./UserProfile";
 export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>) {
   const i18n = useI18n();
 
-  const { data: profileData, isLoading, isAuthenticated } = useUser();
+  const { data: profileData, isAuthenticated, isLoading } = useUser();
   const { openCustomDialog } = useDialog();
 
   const handleSignIn = async (e: React.MouseEvent) => {
@@ -39,7 +39,7 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
   if (isAuthenticated) {
     return (
       <>
-        <div className="bg-surface-tint rounded-xl p-4">
+        <div className="rounded-xl bg-surface-tint p-4">
           <UserProfileCard profile={profileData!} />
         </div>
 

@@ -2,7 +2,7 @@
 
 import { gql, useQuery } from "@apollo/client";
 import { SessionProvider, useSession } from "next-auth/react";
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, ReactNode, useContext } from "react";
 
 const GET_USER_PROFILE = gql`
   query GetUserProfile($id: uuid!) {
@@ -17,22 +17,42 @@ const GET_USER_PROFILE = gql`
   }
 `;
 
-type UserProfile = {
-  id: string;
-  name: string | null;
-  email: string | null;
-  role: string;
-  status: string;
-  image: string | null;
-} | null;
-
 type AuthContextType = {
-  profile: UserProfile;
   isLoading: boolean;
+  profile: UserProfile;
   refetchProfile: () => Promise<void>;
 };
 
+type UserProfile = {
+  email: null | string;
+  id: string;
+  image: null | string;
+  name: null | string;
+  role: string;
+  status: string;
+} | null;
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+type AuthProviderProps = Readonly<{
+  children: React.ReactNode;
+}>;
+
+export default function AuthProvider({ children }: AuthProviderProps) {
+  return (
+    <SessionProvider>
+      <AuthContextProvider>{children}</AuthContextProvider>
+    </SessionProvider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+  return context;
+}
 
 function AuthContextProvider({ children }: { children: ReactNode }) {
   const { data: session, status } = useSession();
@@ -54,24 +74,4 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-  return context;
-}
-
-type AuthProviderProps = Readonly<{
-  children: React.ReactNode;
-}>;
-
-export default function AuthProvider({ children }: AuthProviderProps) {
-  return (
-    <SessionProvider>
-      <AuthContextProvider>{children}</AuthContextProvider>
-    </SessionProvider>
-  );
 }

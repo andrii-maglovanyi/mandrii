@@ -4,11 +4,10 @@ import { getApiContext } from "~/lib/api/context";
 import { InternalServerError } from "~/lib/api/errors";
 import { validateRequest } from "~/lib/api/validate";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
-
+import { getUserSchema } from "~/lib/validation/user";
 import { Users } from "~/types";
 
 import { saveUser } from "./user";
-import { getUserSchema } from "~/lib/validation/user";
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {

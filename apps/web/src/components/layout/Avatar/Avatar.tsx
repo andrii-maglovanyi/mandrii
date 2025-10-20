@@ -1,16 +1,17 @@
-import { Session } from "next-auth";
-import { useI18n } from "~/i18n/useI18n";
-import Image from "next/image";
-import { User } from "lucide-react";
 import clsx from "clsx";
+import { User } from "lucide-react";
+import { Session } from "next-auth";
+import Image from "next/image";
+
+import { useI18n } from "~/i18n/useI18n";
 
 interface AvatarProps {
-  profile?: Session;
-  className?: string;
   avatarSize?: number;
+  className?: string;
+  profile?: Session;
 }
 
-export const Avatar = ({ profile, className, avatarSize = 48 }: AvatarProps) => {
+export const Avatar = ({ avatarSize = 48, className, profile }: AvatarProps) => {
   const i18n = useI18n();
   const { image, name } = profile?.user ?? {};
 
@@ -26,7 +27,10 @@ export const Avatar = ({ profile, className, avatarSize = 48 }: AvatarProps) => 
         />
       ) : (
         <div
-          className={clsx(`bg-surface flex items-center justify-center rounded-full text-neutral-500`)}
+          className={clsx(`
+            flex items-center justify-center rounded-full bg-surface
+            text-neutral-500
+          `)}
           style={{ height: avatarSize, width: avatarSize }}
         >
           <User size={avatarSize / 2} />

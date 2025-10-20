@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { Scalars } from "~/types";
 
 export const getUserSchema = (i18n: (key: string) => string) =>
@@ -7,5 +8,5 @@ export const getUserSchema = (i18n: (key: string) => string) =>
     name: z.string().min(1, { message: i18n("Name is required") }),
   });
 
-export type UserSchema = ReturnType<typeof getUserSchema>;
 export type UserFormData = z.infer<UserSchema>;
+export type UserSchema = ReturnType<typeof getUserSchema>;
