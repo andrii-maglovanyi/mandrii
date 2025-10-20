@@ -174,5 +174,5 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
   });
 };
 
-export type VenueFormData = z.infer<VenueSchema>;
 export type VenueSchema = ReturnType<typeof getVenueSchema>;
+export type VenueFormData = z.infer<VenueSchema>;

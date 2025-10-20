@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import { AtSign, Crown, Globe, MapPin, PenTool, Phone, Share2 } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
 
 import { ActionButton, RichText } from "~/components/ui"; // ensure Button component exists
 import { useDialog } from "~/contexts/DialogContext";
 import { useNotifications } from "~/hooks/useNotifications";
+import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { GetPublicVenuesQuery } from "~/types";
@@ -24,7 +24,7 @@ export const ListCard = ({ onClick, selectedId, venue }: ListCardProps) => {
   const i18n = useI18n();
   const { address, description_en, description_uk, emails, id, name, phone_numbers, slug, website } = venue;
   const { openCustomDialog } = useDialog();
-  const { data: profileData } = useSession();
+  const { data: profileData } = useUser();
   const { showSuccess } = useNotifications();
 
   const locale = useLocale();

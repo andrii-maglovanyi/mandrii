@@ -87,8 +87,8 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
         <script dangerouslySetInnerHTML={{ __html: setInitialTheme }} />
       </head>
       <body>
-        <AuthProvider>
-          <ApolloWrapper>
+        <ApolloWrapper>
+          <AuthProvider>
             <ThemeProvider>
               <NextIntlClientProvider>
                 <DialogProvider>
@@ -99,8 +99,8 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
                 </DialogProvider>
               </NextIntlClientProvider>
             </ThemeProvider>
-          </ApolloWrapper>
-        </AuthProvider>
+          </AuthProvider>
+        </ApolloWrapper>
         <SpeedInsights />
       </body>
     </html>

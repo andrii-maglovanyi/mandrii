@@ -2,12 +2,12 @@
 
 import { format } from "date-fns";
 import { Download } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
 import { useState } from "react";
 
 import { ActionButton } from "~/components/ui";
 import { useNotifications } from "~/hooks/useNotifications";
+import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { ContentData } from "~/lib/mdx/reader";
 import { sendToMixpanel } from "~/lib/mixpanel";
@@ -22,7 +22,7 @@ interface DownloadContentButtonProps {
 export const DownloadContentButton = ({ id, meta, type }: DownloadContentButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const { showError, showSuccess } = useNotifications();
-  const { status } = useSession();
+  const { status } = useUser();
   const locale = useLocale();
   const i18n = useI18n();
 

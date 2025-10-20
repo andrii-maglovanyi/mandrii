@@ -1,10 +1,10 @@
 import { Loader2, LogIn } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 import { Separator } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useI18n } from "~/i18n/useI18n";
+import { useUser } from "~/hooks/useUser";
 
 import { SignInForm } from "./SignInForm";
 import { UserMenu } from "./UserMenu";
@@ -13,11 +13,8 @@ import { UserProfileCard } from "./UserProfile";
 export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>) {
   const i18n = useI18n();
 
-  const { data: profileData, status } = useSession();
+  const { data: profileData, isLoading, isAuthenticated } = useUser();
   const { openCustomDialog } = useDialog();
-
-  const isAuthenticated = !!profileData;
-  const isLoading = status === "loading";
 
   const handleSignIn = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -42,8 +39,8 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
   if (isAuthenticated) {
     return (
       <>
-        <div className="rounded-xl bg-surface-tint p-4">
-          <UserProfileCard profile={profileData} />
+        <div className="bg-surface-tint rounded-xl p-4">
+          <UserProfileCard profile={profileData!} />
         </div>
 
         {children}

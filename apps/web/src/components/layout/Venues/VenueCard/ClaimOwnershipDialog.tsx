@@ -1,10 +1,10 @@
 import { Calendar, ChartColumnIncreasing, LogIn, MapPin, PenTool, Users } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
 import { Alert, Button } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
+import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { GetPublicVenuesQuery } from "~/types";
@@ -16,7 +16,7 @@ interface ClaimOwnershipDialogProps {
 }
 
 export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
-  const { data: session } = useSession();
+  const { data: session } = useUser();
   const router = useRouter();
   const i18n = useI18n();
   const { openCustomDialog } = useDialog();
@@ -80,10 +80,7 @@ export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
 
         <div className="my-6 flex flex-col items-center space-y-1">
           <p
-            className={`
-              w-fit bg-gradient-to-r from-primary to-secondary bg-clip-text
-              text-3xl font-bold text-transparent
-            `}
+            className={`from-primary to-secondary w-fit bg-gradient-to-r bg-clip-text text-3xl font-bold text-transparent`}
           >
             {venue.name}
           </p>
@@ -123,7 +120,7 @@ export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
       </div>
 
       {/* Footer Note */}
-      <p className="text-center text-sm leading-relaxed text-neutral">
+      <p className="text-neutral text-center text-sm leading-relaxed">
         {i18n("I will verify your ownership before granting access to enhanced features")}
       </p>
     </div>

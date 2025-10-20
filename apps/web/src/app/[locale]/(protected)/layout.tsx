@@ -6,5 +6,6 @@ type AuthLayoutProps = Readonly<{
 
 export default async function AuthLayout({ children }: AuthLayoutProps) {
   await requireAuth();
+
   return <>{children}</>;
 }

@@ -1,18 +1,20 @@
 "use client";
-import { useSession } from "next-auth/react";
 
-import { useI18n } from "~/i18n/useI18n";
+import { useUser } from "~/hooks/useUser";
+
+import { UserForm } from "./UserForm";
+import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
 
 export const UserProfile = () => {
-  const i18n = useI18n();
+  const { data, isLoading } = useUser();
 
-  const { data: profileData } = useSession();
+  if (isLoading || !data?.user) {
+    return <AnimatedEllipsis centered size="md" />;
+  }
 
   return (
-    <div className="flex flex-grow flex-col space-y-6">
-      <h1 className="text-4xl font-bold">{i18n("Profile")}</h1>
-
-      <h2>{profileData?.user.name}</h2>
+    <div className="mt-4 flex flex-grow flex-col space-y-6">
+      <UserForm profile={data} />
     </div>
   );
 };
