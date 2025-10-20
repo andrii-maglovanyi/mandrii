@@ -189,5 +189,13 @@
   "Add email": "Додати електронну пошту",
   "Add phone number": "Додати номер телефону",
   "Created on": "Дата створення",
-  "Slug is already taken": "Такий ідентифікатор уже зайнятий"
+  "Slug is already taken": "Такий ідентифікатор уже зайнятий",
+  "Invalid user ID": "Недійсний ідентифікатор користувача",
+  "Location access denied_ Please enable it in your browser settings_": "Доступ до місцезнаходження заборонено. Будь ласка, увімкни його в налаштуваннях браузера.",
+  "Profile updated successfully": "Профіль успішно оновлено",
+  "Save": "Зберегти",
+  "Next": "Вперед",
+  "Home": "Додому",
+  "No venues added yet_ Click the button above to add the first one and start managing your venues!": "Ще немає доданих закладів. Натисни кнопку вище, щоб додати перший заклад і почати ними керувати!",
+  "Back": "Назад"
 }

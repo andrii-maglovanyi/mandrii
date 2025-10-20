@@ -17,3 +17,4 @@ export { Table } from "./Table/Table";
 export { TabPane, Tabs } from "./Tabs";
 export { Textarea } from "./Textarea/Textarea";
 export { Tooltip } from "./Tooltip/Tooltip";
+export { ImagePreview } from "./ImagePreview/ImagePreview";

@@ -24,7 +24,6 @@ const executeGraphQLQuery = async <T>(
   variables: Record<string, unknown>,
   accessToken: string,
 ): Promise<T> => {
-  console.log("HERE");
   const response = await fetch(publicConfig.hasura.endpoint, {
     body: JSON.stringify({ query, variables }),
     headers: {
@@ -40,8 +39,6 @@ const executeGraphQLQuery = async <T>(
 
   const result = await response.json();
 
-  console.log("THERE", result);
-
   if (result.errors) {
     throw new Error(result.errors[0].message);
   }
@@ -50,8 +47,6 @@ const executeGraphQLQuery = async <T>(
 };
 
 export const saveUser = async (variables: Partial<Users>, session: AuthenticatedSession) => {
-  console.log("IIIIII", variables);
-
   const { id, ...updateFields } = variables;
 
   if (!id) {

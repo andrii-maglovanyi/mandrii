@@ -40,18 +40,18 @@ describe("useForm", () => {
   it("validates entire form and returns false if invalid", () => {
     const { result } = renderHook(() => useForm({ schema }));
 
-    let valid = true;
+    let validationResult: false | { email: string; name: string } = false;
 
     act(() => {
-      valid = result.current.validateForm();
+      validationResult = result.current.validateForm();
     });
 
-    expect(valid).toBe(false);
+    expect(validationResult).toBe(false);
     expect(result.current.errors.name).toBe("Name required");
     expect(result.current.errors.email).toBe("Invalid email");
   });
 
-  it("returns true if form is valid", () => {
+  it("returns validated values if form is valid", () => {
     const { result } = renderHook(() =>
       useForm({
         initialValues: { email: "alice@example.com", name: "Alice" },
@@ -59,12 +59,13 @@ describe("useForm", () => {
       }),
     );
 
-    let valid = false;
+    let validationResult;
     act(() => {
-      valid = result.current.validateForm();
+      validationResult = result.current.validateForm();
     });
 
-    expect(valid).toBe(true);
+    expect(validationResult).not.toBe(false);
+    expect(validationResult).toEqual({ email: "alice@example.com", name: "Alice" });
     expect(result.current.errors.name).toBeUndefined();
     expect(result.current.errors.email).toBeUndefined();
   });

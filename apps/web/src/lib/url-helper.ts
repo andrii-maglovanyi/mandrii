@@ -54,4 +54,13 @@ export class UrlHelper {
       return false;
     }
   }
+
+  static isAbsoluteUrl(urlString: string) {
+    try {
+      const url = new URL(urlString);
+      return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }
 }

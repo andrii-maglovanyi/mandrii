@@ -18,19 +18,15 @@ export const Avatar = ({ avatarSize = 48, className, profile }: AvatarProps) => 
   return (
     <div className={className}>
       {image ? (
-        <Image
-          alt={name ?? i18n("Someone")}
-          className="rounded-full object-cover"
-          height={avatarSize}
-          src={image}
-          width={avatarSize}
-        />
+        <div
+          className="border-primary relative overflow-hidden rounded-full border"
+          style={{ height: avatarSize, width: avatarSize }}
+        >
+          <Image alt={name ?? i18n("Someone")} className="object-cover" fill src={image} />
+        </div>
       ) : (
         <div
-          className={clsx(`
-            flex items-center justify-center rounded-full bg-surface
-            text-neutral-500
-          `)}
+          className={clsx(`bg-surface flex items-center justify-center rounded-full text-neutral-500`)}
           style={{ height: avatarSize, width: avatarSize }}
         >
           <User size={avatarSize / 2} />

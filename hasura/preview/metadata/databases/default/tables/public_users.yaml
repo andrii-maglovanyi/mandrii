@@ -31,7 +31,17 @@ select_permissions:
         - id
         - image
         - name
+        - role
+        - status
       filter:
         id:
           _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - name
+      filter: {}
+      check: null
     comment: ""

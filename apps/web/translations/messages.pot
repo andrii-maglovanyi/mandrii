@@ -48,6 +48,9 @@ msgstr ""
 msgid "Website is invalid"
 msgstr ""
 
+msgid "Invalid user ID"
+msgstr ""
+
 msgid "Message is required"
 msgstr ""
 
@@ -76,6 +79,9 @@ msgid "All categories"
 msgstr ""
 
 msgid "km"
+msgstr ""
+
+msgid "Location access denied. Please enable it in your browser settings."
 msgstr ""
 
 msgid "Unable to find your location. Please try searching!"
@@ -156,7 +162,22 @@ msgstr ""
 msgid "I will verify your ownership before granting access to enhanced features"
 msgstr ""
 
-msgid "Profile"
+msgid "Someone"
+msgstr ""
+
+msgid "Profile updated successfully"
+msgstr ""
+
+msgid "Your name"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Edit"
 msgstr ""
 
 msgid "Venues"
@@ -177,13 +198,19 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-msgid "Edit"
-msgstr ""
-
 msgid "Add new venue"
 msgstr ""
 
+msgid "No venues added yet. Click the button above to add the first one and start managing your venues!"
+msgstr ""
+
 msgid "No venues added yet"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Back"
 msgstr ""
 
 msgid "Pending"
@@ -420,9 +447,6 @@ msgstr ""
 msgid "This site is protected by reCAPTCHA and the Google [Privacy Policy]({policy_link}) and [Terms of Service]({terms_link}) apply."
 msgstr ""
 
-msgid "Cancel"
-msgstr ""
-
 msgid "Submit"
 msgstr ""
 
@@ -459,9 +483,6 @@ msgstr ""
 msgid "Failed to send message. Please try again."
 msgstr ""
 
-msgid "Your name"
-msgstr ""
-
 msgid "Message"
 msgstr ""
 
@@ -469,9 +490,6 @@ msgid "Just wanted to drop you a quick note about..."
 msgstr ""
 
 msgid "Send message"
-msgstr ""
-
-msgid "Someone"
 msgstr ""
 
 msgid "My profile"
@@ -558,6 +576,9 @@ msgstr ""
 msgid "Thank you for being part of this adventure."
 msgstr ""
 
+msgid "Home"
+msgstr ""
+
 msgid "Check your email"
 msgstr ""
 
@@ -565,6 +586,9 @@ msgid "A sign-in link has been sent to your email address."
 msgstr ""
 
 msgid "Didn't get the email? Check your spam folder or try again."
+msgstr ""
+
+msgid "Profile"
 msgstr ""
 
 msgid "Add venue"

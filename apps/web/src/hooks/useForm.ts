@@ -14,7 +14,8 @@ export type FormProps<T extends ZodRawShape> = {
   setFieldErrorsFromServer: (issues: ZodError["issues"]) => void;
   setValues: Dispatch<SetStateAction<Partial<z.infer<ZodObject<T>>>>>;
   touched: Partial<Record<FieldKey<T>, boolean>>;
-  validateForm: () => boolean;
+  resetForm: () => void;
+  validateForm: () => z.infer<ZodObject<T>> | false;
   values: Partial<z.infer<ZodObject<T>>>;
 };
 
@@ -180,11 +181,13 @@ export function useForm<T extends ZodRawShape>(config: {
     ];
   }
 
-  const validateForm = (): boolean => {
+  const validateForm = (): FormData<T> | false => {
     const result = schema.safeParse(values);
     if (result.success) {
       setErrors({});
-      return true;
+      // Update values to be the fully validated data
+      setValues(result.data);
+      return result.data;
     }
 
     const newErrors: Errors = {};
@@ -217,6 +220,12 @@ export function useForm<T extends ZodRawShape>(config: {
   const isFormValid =
     schema.safeParse(values).success && Object.keys(errors).every((key) => !errors[key as FieldKey<T>]);
 
+  const resetForm = () => {
+    setValues(initialValues);
+    setErrors({});
+    setTouched({});
+  };
+
   return {
     errors,
     getFieldProps,
@@ -227,6 +236,7 @@ export function useForm<T extends ZodRawShape>(config: {
     setErrors,
     setFieldErrorsFromServer,
     setValues,
+    resetForm,
     touched,
     validateForm,
     values,

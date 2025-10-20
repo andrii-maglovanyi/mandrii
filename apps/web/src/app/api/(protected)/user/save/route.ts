@@ -8,6 +8,8 @@ import { getUserSchema } from "~/lib/validation/user";
 import { Users } from "~/types";
 
 import { saveUser } from "./user";
+import { processImages } from "../../venue/save/images";
+import { envName } from "~/lib/config/env";
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
@@ -15,12 +17,15 @@ export const POST = (req: Request) =>
 
     const schema = getUserSchema(i18n);
 
-    const data = await validateRequest(req, schema);
+    const { name, avatar, ...data } = await validateRequest(req, schema);
 
     const profileData: Partial<Users> = {
-      id: data.id,
-      name: data.name.trim(),
+      ...data,
+      name: name.trim(),
     };
+
+    const prefix = [envName, "users", profileData.id].join("/");
+    profileData.image = (await processImages(avatar ? [avatar] : [], [prefix, "image"].join("/")))[0] ?? "";
 
     const id = await saveUser(profileData, session);
 
