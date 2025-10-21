@@ -1,5 +1,6 @@
-import { EditVenue, MixpanelTracker } from "~/components/layout";
+import { MixpanelTracker } from "~/components/layout";
 import { Breadcrumbs } from "~/components/ui";
+import { EditVenue } from "~/features";
 import { useI18n } from "~/i18n/useI18n";
 import { Locale } from "~/types";
 

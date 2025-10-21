@@ -1,5 +1,5 @@
 import { act, renderHook } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
 import { useForm } from "./useForm"; // adjust path to your hook file
@@ -40,7 +40,7 @@ describe("useForm", () => {
   it("validates entire form and returns false if invalid", () => {
     const { result } = renderHook(() => useForm({ schema }));
 
-    let validationResult: false | { email: string; name: string } = false;
+    let validationResult: { email: string; name: string } | false = false;
 
     act(() => {
       validationResult = result.current.validateForm();
@@ -111,6 +111,3 @@ describe("useForm", () => {
     });
   });
 });
-
-// NOTE: Tests for useFormSubmit should be created in a separate test file:
-// src/hooks/form/useFormSubmit.test.ts

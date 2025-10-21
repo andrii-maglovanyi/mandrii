@@ -1,4 +1,5 @@
 export * from "./address";
+export * from "./compare";
 export * from "./email";
 export * from "./geo";
 export * from "./locale";

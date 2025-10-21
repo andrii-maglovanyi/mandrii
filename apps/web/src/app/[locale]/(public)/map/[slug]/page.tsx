@@ -1,4 +1,5 @@
-import { MixpanelTracker, Venues } from "~/components/layout";
+import { MixpanelTracker } from "~/components/layout";
+import { Venues } from "~/features";
 
 interface MapVenuePage {
   params: Promise<{

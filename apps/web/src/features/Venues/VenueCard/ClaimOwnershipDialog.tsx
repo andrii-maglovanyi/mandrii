@@ -2,14 +2,13 @@ import { Calendar, ChartColumnIncreasing, LogIn, MapPin, PenTool, Users } from "
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
+import { SignInForm } from "~/components/layout";
 import { Alert, Button } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { GetPublicVenuesQuery } from "~/types";
-
-import { SignInForm } from "../../Auth/SignInForm";
 
 interface ClaimOwnershipDialogProps {
   venue: GetPublicVenuesQuery["venues"][number];

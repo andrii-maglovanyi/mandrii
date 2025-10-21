@@ -8,23 +8,23 @@ import { UrlHelper } from "~/lib/url-helper";
 import { UserRole } from "~/types/next-auth";
 import { UUID } from "~/types/uuid";
 
-export interface UserSession extends Session {
-  user: User & {
-    id: UUID;
-    name: string;
-  };
-}
-
 export interface UserContext {
   data: null | UserSession;
   isAuthenticated: boolean;
   isLoading: boolean;
   refetchProfile: () => Promise<void>;
-  status: "loading" | "authenticated" | "unauthenticated";
-  update: (data?: Partial<Session> | undefined) => Promise<Session | null>;
+  status: "authenticated" | "loading" | "unauthenticated";
+  update: (data?: Partial<Session> | undefined) => Promise<null | Session>;
 }
 
-export function getFullImageUrl(image: string | null | undefined): string | null {
+export interface UserSession extends Session {
+  user: {
+    id: UUID;
+    name: string;
+  } & User;
+}
+
+export function getFullImageUrl(image: null | string | undefined): null | string {
   if (!image) return null;
 
   if (UrlHelper.isAbsoluteUrl(image)) {

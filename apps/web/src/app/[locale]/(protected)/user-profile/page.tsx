@@ -1,7 +1,8 @@
 import { useLocale } from "next-intl";
 
-import { MixpanelTracker, UserProfile } from "~/components/layout";
-import { Breadcrumbs } from "~/components/ui/Breadcrumbs/Breadcrumbs";
+import { MixpanelTracker } from "~/components/layout";
+import { Breadcrumbs } from "~/components/ui";
+import { UserProfile } from "~/features";
 import { useI18n } from "~/i18n/useI18n";
 
 export default function UserProfilePage() {

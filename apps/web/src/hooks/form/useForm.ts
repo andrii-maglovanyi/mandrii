@@ -1,9 +1,9 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { z, ZodError, ZodObject, ZodRawShape, ZodType } from "zod";
 
-import { isZodArray } from "~/lib/utils";
-
-export type OnFormSubmitHandler = (data: FormData) => Promise<{ ok: boolean; errors?: ZodError["issues"] }>;
+import { createFileFromUrl } from "~/lib/forms";
+import { areValuesEqual, isZodArray } from "~/lib/utils";
+import { Status } from "~/types";
 
 export type FormProps<T extends ZodRawShape> = {
   errors: Partial<Record<FieldKey<T>, string>>;
@@ -11,29 +11,38 @@ export type FormProps<T extends ZodRawShape> = {
   getFieldsProps: <K extends keyof z.infer<ZodObject<T>>>(field: K) => FieldsProps<T, K>[];
   handleBlur: (field: FieldKey<T>) => (value?: unknown) => void;
   handleChange: (field: FieldKey<T>) => (value: unknown) => void;
+  hasChanges: boolean;
   isFormValid: boolean;
+  resetForm: () => void;
   setErrors: Dispatch<SetStateAction<Partial<Record<FieldKey<T>, string>>>>;
   setFieldErrorsFromServer: (issues: ZodError["issues"]) => void;
   setValues: Dispatch<SetStateAction<Partial<z.infer<ZodObject<T>>>>>;
   touched: Partial<Record<FieldKey<T>, boolean>>;
-  resetForm: () => void;
-  validateForm: () => z.infer<ZodObject<T>> | false;
-  values: Partial<z.infer<ZodObject<T>>>;
   useFormSubmit: (options: {
+    onError?: (errors?: ZodError["issues"]) => Promise<void> | void;
     onSubmit: OnFormSubmitHandler;
-    onSuccess?: () => void | Promise<void>;
-    onError?: (errors?: ZodError["issues"]) => void | Promise<void>;
+    onSuccess?: () => Promise<void> | void;
   }) => {
-    status: import("~/types").Status;
-    setStatus: (status: import("~/types").Status) => void;
     handleSubmit: (e: import("react").FormEvent<HTMLFormElement>) => Promise<void>;
+    setStatus: (status: import("~/types").Status) => void;
+    status: import("~/types").Status;
   };
+  useImagePreviews: <K extends FieldKey<T>>(
+    field: K,
+  ) => {
+    previews: ImageFile[];
+    removePreview: () => void;
+  };
+  validateForm: () => false | z.infer<ZodObject<T>>;
+  values: Partial<z.infer<ZodObject<T>>>;
 };
 
-type FormDataType<T extends ZodRawShape> = z.infer<z.ZodObject<T>>;
+export type OnFormSubmitHandler = (data: FormData) => Promise<{ errors?: ZodError["issues"]; ok: boolean }>;
 
 type FieldChangeEvent = ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+
 type FieldKey<T extends ZodRawShape> = keyof FormDataType<T>;
+
 interface FieldProps<T extends ZodRawShape, K extends keyof z.infer<ZodObject<T>>> {
   error?: string;
   onBlur: (value?: unknown) => void;
@@ -45,13 +54,49 @@ interface FieldProps<T extends ZodRawShape, K extends keyof z.infer<ZodObject<T>
 type FieldsProps<T extends ZodRawShape, K extends keyof z.infer<ZodObject<T>>> = {
   value: UnwrapArray<z.infer<ZodObject<T>>[K]>;
 } & Omit<FieldProps<T, K>, "value">;
+type FormDataType<T extends ZodRawShape> = z.infer<z.ZodObject<T>>;
+interface ImageFile {
+  file: File;
+  url: string;
+}
+
+/**
+ * Helper type that allows string URLs for File fields during initialization.
+ * This enables passing database URLs directly as initialValues, which will be
+ * automatically converted to Files by useImagePreviews.
+ */
+type InitialValuesType<T extends ZodRawShape> = {
+  [K in keyof FormDataType<T>]?: FormDataType<T>[K] extends File | null | undefined
+    ? File | null | string | undefined
+    : FormDataType<T>[K] extends File[] | null | undefined
+      ? (File | string)[] | null | undefined
+      : FormDataType<T>[K];
+};
 
 type UnwrapArray<T> = T extends (infer U)[] ? U : T;
 
+/**
+ * Deep equality check for entire form state objects.
+ */
+const areFormValuesEqual = (
+  left: Partial<Record<string, unknown>>,
+  right: Partial<Record<string, unknown>>,
+): boolean => {
+  const allKeys = new Set([...Object.keys(left), ...Object.keys(right)]);
+
+  for (const key of allKeys) {
+    if (!areValuesEqual(left[key], right[key])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export interface UseFormSubmitOptions<T extends ZodRawShape> {
-  onSubmit: (data: z.infer<ZodObject<T>>) => Promise<{ ok: boolean; errors?: ZodError["issues"] }>;
-  onSuccess?: () => void | Promise<void>;
-  onError?: (errors?: ZodError["issues"]) => void | Promise<void>;
+  onError?: (errors?: ZodError["issues"]) => Promise<void> | void;
+  onSubmit: (data: z.infer<ZodObject<T>>) => Promise<{ errors?: ZodError["issues"]; ok: boolean }>;
+  onSuccess?: () => Promise<void> | void;
 }
 
 export function buildFormData<T extends Record<string, unknown>>(data: T) {
@@ -80,7 +125,7 @@ export function buildFormData<T extends Record<string, unknown>>(data: T) {
 }
 
 export function useForm<T extends ZodRawShape>(config: {
-  initialValues?: Partial<z.infer<ZodObject<T>>>;
+  initialValues?: Partial<InitialValuesType<T>>;
   schema: ZodObject<T>;
 }): FormProps<T> {
   const { initialValues = {}, schema } = config;
@@ -88,9 +133,13 @@ export function useForm<T extends ZodRawShape>(config: {
   type Errors = Partial<Record<FieldKey<T>, string>>;
   type Touched = Partial<Record<FieldKey<T>, boolean>>;
 
+  // Store the initial values in a ref to track what the "saved" state is
+  const initialValuesRef = useRef<Partial<FormDataType<T>>>(initialValues as Partial<FormDataType<T>>);
+
   const [values, setValues] = useState<Partial<FormDataType<T>>>(initialValues);
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState<Touched>({});
+  const [status, setStatus] = useState<Status>("idle");
 
   const validateField = (field: FieldKey<T>, value: unknown) => {
     const schemaField = schema.shape[field as keyof T] as unknown as ZodType;
@@ -143,7 +192,9 @@ export function useForm<T extends ZodRawShape>(config: {
     const fieldValue = values[field];
 
     return {
+      disabled: status === "processing",
       error: errors[field],
+      name: String(field),
       onBlur: handleBlur(field),
       onChange: (e: FieldChangeEvent) => {
         const inputElement = e.target as HTMLInputElement;
@@ -223,7 +274,7 @@ export function useForm<T extends ZodRawShape>(config: {
     ];
   }
 
-  const validateForm = (): FormDataType<T> | false => {
+  const validateForm = (): false | FormDataType<T> => {
     const result = schema.safeParse(values);
     if (result.success) {
       setErrors({});
@@ -261,10 +312,107 @@ export function useForm<T extends ZodRawShape>(config: {
   const isFormValid =
     schema.safeParse(values).success && Object.keys(errors).every((key) => !errors[key as FieldKey<T>]);
 
+  const hasChanges = useMemo(() => !areFormValuesEqual(values, initialValuesRef.current), [values]);
+
   const resetForm = () => {
-    setValues(initialValues);
+    setStatus("idle");
+    setValues(initialValuesRef.current);
     setErrors({});
     setTouched({});
+  };
+
+  /**
+   * Hook to manage multiple image previews.
+   * Automatically creates and revokes object URLs.
+   *
+   * @param files - Array of files to preview
+   * @returns Array of ImageFile with blob URLs
+   */
+  const useImagePreviews = <K extends FieldKey<T>>(field: K) => {
+    const [previews, setPreviews] = useState<ImageFile[]>([]);
+    const fieldValue = values[field];
+
+    useEffect(() => {
+      const valueArray = Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : [];
+      const containsString = valueArray.some((value) => typeof value === "string" && value);
+
+      if (!containsString) return;
+
+      let isCancelled = false;
+
+      (async () => {
+        const convertedFiles = await Promise.all(
+          valueArray.map(async (value) => {
+            if (!value) return null;
+            if (value instanceof File) return value;
+            try {
+              return await createFileFromUrl(String(value));
+            } catch (error) {
+              console.error("Failed to convert image URL to File", error);
+              return null;
+            }
+          }),
+        );
+
+        if (isCancelled) return;
+
+        const sanitizedFiles = convertedFiles.filter((file): file is File => file instanceof File);
+        const nextValue = Array.isArray(fieldValue) ? sanitizedFiles : (sanitizedFiles[0] ?? undefined);
+
+        setValues((prev) => ({
+          ...prev,
+          [field]: nextValue,
+        }));
+
+        // Update the baseline so URL→File conversion doesn't count as a change
+        initialValuesRef.current = {
+          ...initialValuesRef.current,
+          [field]: nextValue,
+        };
+
+        validateField(field, nextValue);
+      })();
+
+      return () => {
+        isCancelled = true;
+      };
+    }, [fieldValue, field]);
+
+    useEffect(() => {
+      const files: File[] = Array.isArray(fieldValue)
+        ? (fieldValue as Array<unknown>).filter((value): value is File => value instanceof File)
+        : fieldValue instanceof File
+          ? [fieldValue]
+          : [];
+
+      if (!files.length) {
+        setPreviews((prev) => {
+          prev.forEach((preview) => URL.revokeObjectURL(preview.url));
+          return [];
+        });
+        return;
+      }
+
+      const nextPreviews = files.map((file) => ({ file, url: URL.createObjectURL(file) }));
+
+      setPreviews((prev) => {
+        prev.forEach((preview) => URL.revokeObjectURL(preview.url));
+        return nextPreviews;
+      });
+
+      return () => {
+        nextPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+      };
+    }, [fieldValue]);
+
+    const removePreview = () => {
+      setValues((prev) => ({
+        ...prev,
+        [field]: Array.isArray(prev[field]) ? [] : undefined,
+      }));
+    };
+
+    return { previews, removePreview };
   };
 
   /**
@@ -272,12 +420,11 @@ export function useForm<T extends ZodRawShape>(config: {
    * This allows optional submission handling while maintaining access to form context.
    */
   const useFormSubmit = (options: {
-    onSubmit: (data: FormData) => Promise<{ ok: boolean; errors?: ZodError["issues"] }>;
-    onSuccess?: () => void | Promise<void>;
-    onError?: (errors?: ZodError["issues"]) => void | Promise<void>;
+    onError?: (errors?: ZodError["issues"]) => Promise<void> | void;
+    onSubmit: (data: FormData) => Promise<{ errors?: ZodError["issues"]; ok: boolean }>;
+    onSuccess?: () => Promise<void> | void;
   }) => {
-    const { onSubmit, onSuccess, onError } = options;
-    const [status, setStatus] = useState<import("~/types").Status>("idle");
+    const { onError, onSubmit, onSuccess } = options;
 
     const handleSubmit = async (e: import("react").FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -296,6 +443,8 @@ export function useForm<T extends ZodRawShape>(config: {
 
         if (result.ok) {
           setStatus("success");
+          // Update baseline to current values so hasChanges becomes false
+          initialValuesRef.current = validatedData;
           await onSuccess?.();
         } else {
           setStatus("error");
@@ -304,16 +453,16 @@ export function useForm<T extends ZodRawShape>(config: {
           }
           await onError?.(result.errors);
         }
-      } catch (error) {
+      } catch {
         setStatus("error");
         await onError?.();
       }
     };
 
     return {
-      status,
-      setStatus,
       handleSubmit,
+      setStatus,
+      status,
     };
   };
 
@@ -323,14 +472,16 @@ export function useForm<T extends ZodRawShape>(config: {
     getFieldsProps,
     handleBlur,
     handleChange,
+    hasChanges,
     isFormValid,
+    resetForm,
     setErrors,
     setFieldErrorsFromServer,
     setValues,
-    resetForm,
     touched,
+    useFormSubmit,
+    useImagePreviews,
     validateForm,
     values,
-    useFormSubmit,
   };
 }

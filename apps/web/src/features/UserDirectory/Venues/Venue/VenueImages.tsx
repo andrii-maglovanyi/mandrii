@@ -1,6 +1,8 @@
 import { Frame, Image as ImageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AccordionItem, FilePicker, ImagePreview, MultipleAccordion } from "~/components/ui";
+
+import { ImagePreview } from "~/components/layout";
+import { AccordionItem, FilePicker, MultipleAccordion } from "~/components/ui";
 import { FormProps } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { VenueSchema } from "~/lib/validation/venue";
@@ -89,7 +91,7 @@ export const VenueImages = ({ getFieldProps, isBusy, setValues, values }: VenueI
         <div>
           <label className="mb-2 block font-semibold">
             {i18n("Upload images")}
-            <span className="text-neutral ml-2 text-sm font-normal">
+            <span className="ml-2 text-sm font-normal text-neutral">
               ({i18n("{addedImages}/{maxImages} images", { addedImages: imagePreviews.length, maxImages: MAX_IMAGES })})
             </span>
           </label>
@@ -105,7 +107,11 @@ export const VenueImages = ({ getFieldProps, isBusy, setValues, values }: VenueI
         </div>
 
         {imagePreviews.length > 0 && (
-          <div className={`mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3`}>
+          <div className={`
+            mt-8 grid grid-cols-1 gap-4
+            sm:grid-cols-2
+            md:grid-cols-3
+          `}>
             {imagePreviews.map((preview, index) => (
               <ImagePreview
                 isBusy={isBusy}

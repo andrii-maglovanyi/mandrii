@@ -101,8 +101,14 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className={`flex grow flex-col justify-evenly lg:flex-row lg:space-x-4`}>
-        <div className={`flex flex-3 flex-col justify-evenly md:flex-row md:space-x-4`}>
+      <div className={`
+        flex grow flex-col justify-evenly
+        lg:flex-row lg:space-x-4
+      `}>
+        <div className={`
+          flex flex-3 flex-col justify-evenly
+          md:flex-row md:space-x-4
+        `}>
           <div className="flex flex-3 flex-col">
             <Select
               disabled={isBusy}
@@ -138,7 +144,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
         </div>
       </div>
 
-      <p className="text-neutral text-sm">
+      <p className="text-sm text-neutral">
         {i18n("Optionally, update contacts, a description, photos, a logo, and an address for more details.")}
       </p>
 
@@ -169,7 +175,10 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
       </Tabs>
 
       <div
-        className={`flex flex-col justify-center space-y-4 md:flex-row md:items-center md:justify-end md:space-y-0 md:space-x-4`}
+        className={`
+          flex flex-col justify-center space-y-4
+          md:flex-row md:items-center md:justify-end md:space-y-0 md:space-x-4
+        `}
       >
         <div className="my-2 h-11">
           {status === "processing" && (

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { MixpanelTracker, PostCard } from "~/components/layout";
-import { VenuesBanner } from "~/components/layout/Venues/VenuesBanner";
+import { VenuesBanner } from "~/features/Venues/VenuesBanner";
 import { useI18n } from "~/i18n/useI18n";
 import { ContentData, contentManager } from "~/lib/mdx/reader";
 import { Locale } from "~/types";

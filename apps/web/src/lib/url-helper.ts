@@ -46,19 +46,19 @@ export class UrlHelper {
     return this.config.production.hostname;
   }
 
-  static isValidUrl(urlString: string) {
+  static isAbsoluteUrl(urlString: string) {
     try {
-      new URL(urlString);
-      return true;
+      const url = new URL(urlString);
+      return url.protocol === "http:" || url.protocol === "https:";
     } catch {
       return false;
     }
   }
 
-  static isAbsoluteUrl(urlString: string) {
+  static isValidUrl(urlString: string) {
     try {
-      const url = new URL(urlString);
-      return url.protocol === "http:" || url.protocol === "https:";
+      new URL(urlString);
+      return true;
     } catch {
       return false;
     }

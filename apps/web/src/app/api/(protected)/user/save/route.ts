@@ -4,12 +4,12 @@ import { getApiContext } from "~/lib/api/context";
 import { InternalServerError } from "~/lib/api/errors";
 import { validateRequest } from "~/lib/api/validate";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
+import { envName } from "~/lib/config/env";
 import { getUserSchema } from "~/lib/validation/user";
 import { Users } from "~/types";
 
-import { saveUser } from "./user";
 import { processImages } from "../../venue/save/images";
-import { envName } from "~/lib/config/env";
+import { saveUser } from "./user";
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
@@ -17,7 +17,7 @@ export const POST = (req: Request) =>
 
     const schema = getUserSchema(i18n);
 
-    const { name, avatar, ...data } = await validateRequest(req, schema);
+    const { image, name, ...data } = await validateRequest(req, schema);
 
     const profileData: Partial<Users> = {
       ...data,
@@ -25,7 +25,7 @@ export const POST = (req: Request) =>
     };
 
     const prefix = [envName, "users", profileData.id].join("/");
-    profileData.image = (await processImages(avatar ? [avatar] : [], [prefix, "image"].join("/")))[0] ?? "";
+    profileData.image = (await processImages(image ? [image] : [], [prefix, "image"].join("/")))[0] ?? "";
 
     const id = await saveUser(profileData, session);
 

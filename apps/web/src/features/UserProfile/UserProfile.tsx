@@ -1,14 +1,16 @@
 "use client";
 
-import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
-import { useUser } from "~/hooks/useUser";
-import { UserForm } from "./UserForm";
-import { EmptyState } from "~/components/ui";
 import { UserSearch } from "lucide-react";
+import { useLocale } from "next-intl";
+
+import { EmptyState } from "~/components/ui";
+import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
+import { useNotifications } from "~/hooks/useNotifications";
+import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { Locale } from "~/types";
-import { useLocale } from "next-intl";
-import { useNotifications } from "~/hooks/useNotifications";
+
+import { UserForm } from "./UserForm";
 
 export const UserProfile = () => {
   const { data, isLoading, refetchProfile, update } = useUser();
@@ -50,7 +52,7 @@ export const UserProfile = () => {
 
   return (
     <div className="mt-4 flex flex-grow flex-col space-y-6">
-      <UserForm profile={data} onSubmit={submitProfile} onSuccess={onProfileSaved} />
+      <UserForm onSubmit={submitProfile} onSuccess={onProfileSaved} profile={data} />
     </div>
   );
 };

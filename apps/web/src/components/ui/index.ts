@@ -1,8 +1,10 @@
 export { AccordionItem, MultipleAccordion, SingleAccordion } from "./Accordion";
 export { Alert } from "./Alert/Alert";
+export { AnimatedEllipsis } from "./AnimatedEllipsis/AnimatedEllipsis";
 export { Breadcrumbs } from "./Breadcrumbs/Breadcrumbs";
 export { ActionButton } from "./Button/ActionButton";
 export { Button } from "./Button/Button";
+export { EmptyState } from "./EmptyState/EmptyState";
 export { FilePicker } from "./FilePicker/FilePicker";
 export { ImageCarousel } from "./ImageCarousel/ImageCarousel";
 export { Input } from "./Input/Input";
@@ -17,6 +19,3 @@ export { Table } from "./Table/Table";
 export { TabPane, Tabs } from "./Tabs";
 export { Textarea } from "./Textarea/Textarea";
 export { Tooltip } from "./Tooltip/Tooltip";
-export { ImagePreview } from "./ImagePreview/ImagePreview";
-export { EmptyState } from "./EmptyState/EmptyState";
-export { AnimatedEllipsis } from "./AnimatedEllipsis/AnimatedEllipsis";
