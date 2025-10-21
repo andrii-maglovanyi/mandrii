@@ -7,6 +7,7 @@ const USER_FIELDS = `
   id
   name
   email
+  image
   role
   status
 `;

@@ -1,12 +1,30 @@
-import { Session } from "next-auth";
+import { Session, User } from "next-auth";
 import { useSession } from "next-auth/react";
 
 import { useAuth } from "~/contexts/AuthContext";
+import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { UrlHelper } from "~/lib/url-helper";
 import { UserRole } from "~/types/next-auth";
+import { UUID } from "~/types/uuid";
 
-function getFullImageUrl(image: string | null | undefined): string | null {
+export interface UserSession extends Session {
+  user: User & {
+    id: UUID;
+    name: string;
+  };
+}
+
+export interface UserContext {
+  data: null | UserSession;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  refetchProfile: () => Promise<void>;
+  status: "loading" | "authenticated" | "unauthenticated";
+  update: (data?: Partial<Session> | undefined) => Promise<Session | null>;
+}
+
+export function getFullImageUrl(image: string | null | undefined): string | null {
   if (!image) return null;
 
   if (UrlHelper.isAbsoluteUrl(image)) {
@@ -16,22 +34,25 @@ function getFullImageUrl(image: string | null | undefined): string | null {
   return `${constants.vercelBlobStorageUrl}/${image}`;
 }
 
-export function useUser() {
+export const useUser = (): UserContext => {
   const { data: session, status, update } = useSession();
   const { isLoading: profileLoading, profile, refetchProfile } = useAuth();
+  const i18n = useI18n();
 
   const isLoading = status === "loading" || profileLoading;
   const isAuthenticated = !!session?.user;
 
-  const data: null | Session = session
+  const data: null | UserSession = session
     ? {
         ...session,
         user: {
           ...session.user,
+          ...profile,
+          id: (profile?.id ?? session.user?.id) as UUID,
+          name: profile?.name ?? session.user?.name ?? i18n("Someone"),
           ...(profile && {
             email: profile.email,
             image: getFullImageUrl(profile.image),
-            name: profile.name,
             role: profile.role as UserRole,
           }),
         },
@@ -46,4 +67,4 @@ export function useUser() {
     status,
     update,
   };
-}
+};

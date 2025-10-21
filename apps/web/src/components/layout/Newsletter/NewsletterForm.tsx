@@ -7,7 +7,7 @@ import { FormEvent, useState } from "react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 import { ActionButton, Alert, Button, Input, RichText } from "~/components/ui";
-import { useForm } from "~/hooks/useForm";
+import { useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
 import { sendToMixpanel } from "~/lib/mixpanel";
@@ -127,10 +127,7 @@ function Newsletter() {
   if (isSubscribedPage) return null;
 
   return (
-    <div className={`
-      w-full max-w-full space-y-3
-      md:max-w-lg
-    `}>
+    <div className={`w-full max-w-full space-y-3 md:max-w-lg`}>
       <h3 className="font-semibold">{i18n("Newsletter")}</h3>
       {["idle", "processing"].includes(status) ? (
         <>
@@ -146,21 +143,12 @@ function Newsletter() {
                 {...getFieldProps("email")}
               />
             </div>
-            <span className={`
-              hidden
-              sm:block
-              md:hidden
-              lg:block
-            `}>
+            <span className={`hidden sm:block md:hidden lg:block`}>
               <Button busy={isBusy} className="ml-3" disabled={!isFormValid} type="submit">
                 {isBusy ? i18n("Sending") : i18n("Subscribe")}
               </Button>
             </span>
-            <span className={`
-              sm:hidden
-              md:block
-              lg:hidden
-            `}>
+            <span className={`sm:hidden md:block lg:hidden`}>
               <ActionButton
                 aria-label={isBusy ? i18n("Sending") : i18n("Subscribe")}
                 busy={isBusy}

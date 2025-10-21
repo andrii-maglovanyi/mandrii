@@ -1,5 +1,5 @@
 import { act, renderHook } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import { useForm } from "./useForm"; // adjust path to your hook file
@@ -96,4 +96,21 @@ describe("useForm", () => {
 
     expect(result.current.isFormValid).toBe(false);
   });
+
+  describe("integration with useFormSubmit", () => {
+    it("useForm does not include submission methods", () => {
+      const { result } = renderHook(() => useForm({ schema }));
+      expect(result.current).not.toHaveProperty("status");
+      expect(result.current).not.toHaveProperty("handleSubmit");
+    });
+
+    it("provides validateForm and setFieldErrorsFromServer for useFormSubmit", () => {
+      const { result } = renderHook(() => useForm({ schema }));
+      expect(typeof result.current.validateForm).toBe("function");
+      expect(typeof result.current.setFieldErrorsFromServer).toBe("function");
+    });
+  });
 });
+
+// NOTE: Tests for useFormSubmit should be created in a separate test file:
+// src/hooks/form/useFormSubmit.test.ts

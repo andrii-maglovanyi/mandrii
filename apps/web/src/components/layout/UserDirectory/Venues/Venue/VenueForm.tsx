@@ -6,7 +6,7 @@ import slugify from "slugify";
 import z from "zod";
 
 import { Alert, Button, Input, Select, TabPane, Tabs } from "~/components/ui";
-import { useForm } from "~/hooks/useForm";
+import { useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
@@ -101,14 +101,8 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className={`
-        flex grow flex-col justify-evenly
-        lg:flex-row lg:space-x-4
-      `}>
-        <div className={`
-          flex flex-3 flex-col justify-evenly
-          md:flex-row md:space-x-4
-        `}>
+      <div className={`flex grow flex-col justify-evenly lg:flex-row lg:space-x-4`}>
+        <div className={`flex flex-3 flex-col justify-evenly md:flex-row md:space-x-4`}>
           <div className="flex flex-3 flex-col">
             <Select
               disabled={isBusy}
@@ -144,7 +138,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
         </div>
       </div>
 
-      <p className="text-sm text-neutral">
+      <p className="text-neutral text-sm">
         {i18n("Optionally, update contacts, a description, photos, a logo, and an address for more details.")}
       </p>
 
@@ -174,18 +168,20 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
         </TabPane>
       </Tabs>
 
-      <div className={`
-        flex flex-col justify-end space-y-4 space-x-4 py-2
-        md:flex-row md:items-center md:space-y-0
-      `}>
-        {status === "processing" && <Alert variant="info">{i18n("The request may a little time to process...")}</Alert>}
-        {status === "success" && (
-          <Alert fadeAfter={5000} variant="success">
-            {i18n("Thanks for submitting! Your venue has been submitted for review.")}
-          </Alert>
-        )}
-        {status === "error" && <Alert variant="error">{i18n("Failed to submit venue. Please try again.")}</Alert>}
-
+      <div
+        className={`flex flex-col justify-center space-y-4 md:flex-row md:items-center md:justify-end md:space-y-0 md:space-x-4`}
+      >
+        <div className="my-2 h-11">
+          {status === "processing" && (
+            <Alert variant="info">{i18n("The request may a little time to process...")}</Alert>
+          )}
+          {status === "success" && (
+            <Alert fadeAfter={5000} variant="success">
+              {i18n("Thanks for submitting! Your venue has been submitted for review.")}
+            </Alert>
+          )}
+          {status === "error" && <Alert variant="error">{i18n("Failed to submit venue. Please try again.")}</Alert>}
+        </div>
         <Button busy={isBusy} color="primary" disabled={!isFormValid} type="submit">
           {isBusy ? i18n("Saving changes") : i18n("Save changes")}
         </Button>

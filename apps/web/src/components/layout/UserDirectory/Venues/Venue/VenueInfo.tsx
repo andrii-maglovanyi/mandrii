@@ -1,6 +1,6 @@
 import { MDEditor } from "~/components/ui";
 import { useTheme } from "~/contexts/ThemeContext";
-import { FormProps } from "~/hooks/useForm";
+import { FormProps } from "~/hooks/form/useForm";
 import { venueDescriptionMaxCharsCount, VenueSchema } from "~/lib/validation/venue";
 
 interface VenueInfoProps extends Pick<FormProps<VenueSchema["shape"]>, "getFieldProps"> {

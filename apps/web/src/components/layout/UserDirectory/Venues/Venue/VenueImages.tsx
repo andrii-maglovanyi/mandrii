@@ -1,7 +1,7 @@
 import { Frame, Image as ImageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AccordionItem, FilePicker, ImagePreview, MultipleAccordion } from "~/components/ui";
-import { FormProps } from "~/hooks/useForm";
+import { FormProps } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { VenueSchema } from "~/lib/validation/venue";
 

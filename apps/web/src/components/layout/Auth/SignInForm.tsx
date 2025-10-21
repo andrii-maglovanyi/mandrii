@@ -6,7 +6,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 import { Button, Input, Separator, SvgIcon } from "~/components/ui";
-import { useForm } from "~/hooks/useForm";
+import { useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
 import { sendToMixpanel } from "~/lib/mixpanel";
@@ -51,7 +51,7 @@ const SignIn = () => {
 
   return (
     <>
-      <h2 className="mb-4 text-center text-xl font-semibold text-on-surface">
+      <h2 className="text-on-surface mb-4 text-center text-xl font-semibold">
         {i18n("You can do so much more if you have a profile")}
       </h2>
       <p className="mb-6 text-center">{i18n("You can add new venues and so much more to come")}</p>

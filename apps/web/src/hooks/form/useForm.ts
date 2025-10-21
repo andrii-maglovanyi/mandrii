@@ -3,6 +3,8 @@ import { z, ZodError, ZodObject, ZodRawShape, ZodType } from "zod";
 
 import { isZodArray } from "~/lib/utils";
 
+export type OnFormSubmitHandler = (data: FormData) => Promise<{ ok: boolean; errors?: ZodError["issues"] }>;
+
 export type FormProps<T extends ZodRawShape> = {
   errors: Partial<Record<FieldKey<T>, string>>;
   getFieldProps: <K extends keyof z.infer<ZodObject<T>>>(field: K) => FieldProps<T, K>;
@@ -17,10 +19,21 @@ export type FormProps<T extends ZodRawShape> = {
   resetForm: () => void;
   validateForm: () => z.infer<ZodObject<T>> | false;
   values: Partial<z.infer<ZodObject<T>>>;
+  useFormSubmit: (options: {
+    onSubmit: OnFormSubmitHandler;
+    onSuccess?: () => void | Promise<void>;
+    onError?: (errors?: ZodError["issues"]) => void | Promise<void>;
+  }) => {
+    status: import("~/types").Status;
+    setStatus: (status: import("~/types").Status) => void;
+    handleSubmit: (e: import("react").FormEvent<HTMLFormElement>) => Promise<void>;
+  };
 };
 
+type FormDataType<T extends ZodRawShape> = z.infer<z.ZodObject<T>>;
+
 type FieldChangeEvent = ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
-type FieldKey<T extends ZodRawShape> = keyof FormData<T>;
+type FieldKey<T extends ZodRawShape> = keyof FormDataType<T>;
 interface FieldProps<T extends ZodRawShape, K extends keyof z.infer<ZodObject<T>>> {
   error?: string;
   onBlur: (value?: unknown) => void;
@@ -33,9 +46,38 @@ type FieldsProps<T extends ZodRawShape, K extends keyof z.infer<ZodObject<T>>> =
   value: UnwrapArray<z.infer<ZodObject<T>>[K]>;
 } & Omit<FieldProps<T, K>, "value">;
 
-type FormData<T extends ZodRawShape> = z.infer<z.ZodObject<T>>;
-
 type UnwrapArray<T> = T extends (infer U)[] ? U : T;
+
+export interface UseFormSubmitOptions<T extends ZodRawShape> {
+  onSubmit: (data: z.infer<ZodObject<T>>) => Promise<{ ok: boolean; errors?: ZodError["issues"] }>;
+  onSuccess?: () => void | Promise<void>;
+  onError?: (errors?: ZodError["issues"]) => void | Promise<void>;
+}
+
+export function buildFormData<T extends Record<string, unknown>>(data: T) {
+  const body = new FormData();
+
+  for (const [key, value] of Object.entries(data)) {
+    if (Array.isArray(value)) {
+      for (const val of value.filter(Boolean)) {
+        body.append(key, val);
+      }
+      continue;
+    }
+
+    if (!value) continue;
+
+    if (value instanceof File) {
+      body.append(key, value);
+    } else if (typeof value === "object") {
+      body.append(key, JSON.stringify(value));
+    } else {
+      body.append(key, String(value));
+    }
+  }
+
+  return body;
+}
 
 export function useForm<T extends ZodRawShape>(config: {
   initialValues?: Partial<z.infer<ZodObject<T>>>;
@@ -46,7 +88,7 @@ export function useForm<T extends ZodRawShape>(config: {
   type Errors = Partial<Record<FieldKey<T>, string>>;
   type Touched = Partial<Record<FieldKey<T>, boolean>>;
 
-  const [values, setValues] = useState<Partial<FormData<T>>>(initialValues);
+  const [values, setValues] = useState<Partial<FormDataType<T>>>(initialValues);
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState<Touched>({});
 
@@ -131,7 +173,7 @@ export function useForm<T extends ZodRawShape>(config: {
         }
       },
       showErrorMessage: true,
-      value: fieldValue as FormData<T>[K],
+      value: fieldValue as FormDataType<T>[K],
     };
   }
 
@@ -181,11 +223,10 @@ export function useForm<T extends ZodRawShape>(config: {
     ];
   }
 
-  const validateForm = (): FormData<T> | false => {
+  const validateForm = (): FormDataType<T> | false => {
     const result = schema.safeParse(values);
     if (result.success) {
       setErrors({});
-      // Update values to be the fully validated data
       setValues(result.data);
       return result.data;
     }
@@ -226,6 +267,56 @@ export function useForm<T extends ZodRawShape>(config: {
     setTouched({});
   };
 
+  /**
+   * Factory function that returns a custom hook for form submission.
+   * This allows optional submission handling while maintaining access to form context.
+   */
+  const useFormSubmit = (options: {
+    onSubmit: (data: FormData) => Promise<{ ok: boolean; errors?: ZodError["issues"] }>;
+    onSuccess?: () => void | Promise<void>;
+    onError?: (errors?: ZodError["issues"]) => void | Promise<void>;
+  }) => {
+    const { onSubmit, onSuccess, onError } = options;
+    const [status, setStatus] = useState<import("~/types").Status>("idle");
+
+    const handleSubmit = async (e: import("react").FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      const validatedData = validateForm();
+      if (!validatedData) {
+        setStatus("idle");
+        return;
+      }
+
+      setStatus("processing");
+
+      try {
+        const formData = buildFormData(validatedData);
+        const result = await onSubmit(formData);
+
+        if (result.ok) {
+          setStatus("success");
+          await onSuccess?.();
+        } else {
+          setStatus("error");
+          if (result.errors) {
+            setFieldErrorsFromServer(result.errors);
+          }
+          await onError?.(result.errors);
+        }
+      } catch (error) {
+        setStatus("error");
+        await onError?.();
+      }
+    };
+
+    return {
+      status,
+      setStatus,
+      handleSubmit,
+    };
+  };
+
   return {
     errors,
     getFieldProps,
@@ -240,5 +331,6 @@ export function useForm<T extends ZodRawShape>(config: {
     touched,
     validateForm,
     values,
+    useFormSubmit,
   };
 }
