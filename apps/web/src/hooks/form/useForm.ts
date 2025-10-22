@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { z, ZodError, ZodObject, ZodRawShape, ZodType } from "zod";
 
 import { createFileFromUrl } from "~/lib/forms";
@@ -23,18 +23,31 @@ export type FormProps<T extends ZodRawShape> = {
     onSubmit: OnFormSubmitHandler;
     onSuccess?: () => Promise<void> | void;
   }) => {
-    handleSubmit: (e: import("react").FormEvent<HTMLFormElement>) => Promise<void>;
-    setStatus: (status: import("~/types").Status) => void;
-    status: import("~/types").Status;
+    handleSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+    setStatus: (status: Status) => void;
+    status: Status;
   };
   useImagePreviews: <K extends FieldKey<T>>(
     field: K,
   ) => {
     previews: ImageFile[];
-    removePreview: () => void;
+    removePreview: (index?: number) => void;
   };
   validateForm: () => false | z.infer<ZodObject<T>>;
   values: Partial<z.infer<ZodObject<T>>>;
+};
+
+/**
+ * Helper type that allows string URLs for File fields during initialization.
+ * This enables passing database URLs directly as initialValues, which will be
+ * automatically converted to Files by useImagePreviews.
+ */
+export type InitialValuesType<T extends ZodRawShape> = {
+  [K in keyof FormDataType<T>]?: FormDataType<T>[K] extends File | null | undefined
+    ? File | null | string | undefined
+    : FormDataType<T>[K] extends File[] | null | undefined
+      ? (File | string)[] | null | undefined
+      : FormDataType<T>[K];
 };
 
 export type OnFormSubmitHandler = (data: FormData) => Promise<{ errors?: ZodError["issues"]; ok: boolean }>;
@@ -45,33 +58,21 @@ type FieldKey<T extends ZodRawShape> = keyof FormDataType<T>;
 
 interface FieldProps<T extends ZodRawShape, K extends keyof z.infer<ZodObject<T>>> {
   error?: string;
+  name: string;
   onBlur: (value?: unknown) => void;
   onChange: (e: FieldChangeEvent) => void;
   showErrorMessage: boolean;
   value: z.infer<ZodObject<T>>[K];
 }
-
 type FieldsProps<T extends ZodRawShape, K extends keyof z.infer<ZodObject<T>>> = {
   value: UnwrapArray<z.infer<ZodObject<T>>[K]>;
 } & Omit<FieldProps<T, K>, "value">;
 type FormDataType<T extends ZodRawShape> = z.infer<z.ZodObject<T>>;
+
 interface ImageFile {
   file: File;
   url: string;
 }
-
-/**
- * Helper type that allows string URLs for File fields during initialization.
- * This enables passing database URLs directly as initialValues, which will be
- * automatically converted to Files by useImagePreviews.
- */
-type InitialValuesType<T extends ZodRawShape> = {
-  [K in keyof FormDataType<T>]?: FormDataType<T>[K] extends File | null | undefined
-    ? File | null | string | undefined
-    : FormDataType<T>[K] extends File[] | null | undefined
-      ? (File | string)[] | null | undefined
-      : FormDataType<T>[K];
-};
 
 type UnwrapArray<T> = T extends (infer U)[] ? U : T;
 
@@ -239,7 +240,9 @@ export function useForm<T extends ZodRawShape>(config: {
         handleChange(field)([""]);
         return [
           {
+            disabled: status === "processing",
             error: errors[field],
+            name: String(field),
             onBlur: handleBlur(field),
             onChange: (e: FieldChangeEvent) => {
               handleChange(field)([e.target.value]);
@@ -251,7 +254,9 @@ export function useForm<T extends ZodRawShape>(config: {
       }
 
       return arrayValue.map((item, index) => ({
+        disabled: status === "processing",
         error: typeof errors[field] === "object" && errors[field] !== null ? errors[field][index] : errors[field],
+        name: String(field),
         onBlur: handleBlur(field),
         onChange: (e: FieldChangeEvent) => {
           const newArray = [...arrayValue];
@@ -265,7 +270,9 @@ export function useForm<T extends ZodRawShape>(config: {
 
     return [
       {
+        disabled: status === "processing",
         error: errors[field],
+        name: String(field),
         onBlur: handleBlur(field),
         onChange: (e: FieldChangeEvent) => handleChange(field)(e.target.value),
         showErrorMessage: true,
@@ -338,43 +345,50 @@ export function useForm<T extends ZodRawShape>(config: {
 
       if (!containsString) return;
 
-      let isCancelled = false;
+      const abortController = new AbortController();
+      const signal = abortController.signal;
 
       (async () => {
-        const convertedFiles = await Promise.all(
-          valueArray.map(async (value) => {
-            if (!value) return null;
-            if (value instanceof File) return value;
-            try {
-              return await createFileFromUrl(String(value));
-            } catch (error) {
-              console.error("Failed to convert image URL to File", error);
-              return null;
-            }
-          }),
-        );
+        try {
+          const convertedFiles = await Promise.all(
+            // Todo: Promise.all ?
+            valueArray.map(async (value) => {
+              if (!value) return null;
+              if (value instanceof File) return value;
+              try {
+                return await createFileFromUrl(String(value), { name: value.split("/").pop() });
+              } catch (error) {
+                console.error("Failed to convert image URL to File", error);
+                return null;
+              }
+            }),
+          );
 
-        if (isCancelled) return;
+          if (signal.aborted) return;
 
-        const sanitizedFiles = convertedFiles.filter((file): file is File => file instanceof File);
-        const nextValue = Array.isArray(fieldValue) ? sanitizedFiles : (sanitizedFiles[0] ?? undefined);
+          const sanitizedFiles = convertedFiles.filter((file): file is File => file instanceof File);
+          const nextValue = Array.isArray(fieldValue) ? sanitizedFiles : (sanitizedFiles[0] ?? undefined);
 
-        setValues((prev) => ({
-          ...prev,
-          [field]: nextValue,
-        }));
+          setValues((prev) => ({
+            ...prev,
+            [field]: nextValue,
+          }));
 
-        // Update the baseline so URL→File conversion doesn't count as a change
-        initialValuesRef.current = {
-          ...initialValuesRef.current,
-          [field]: nextValue,
-        };
+          initialValuesRef.current = {
+            ...initialValuesRef.current,
+            [field]: nextValue,
+          };
 
-        validateField(field, nextValue);
+          validateField(field, nextValue);
+        } catch {
+          if (!signal.aborted) {
+            setStatus("error");
+          }
+        }
       })();
 
       return () => {
-        isCancelled = true;
+        abortController.abort();
       };
     }, [fieldValue, field]);
 
@@ -393,7 +407,14 @@ export function useForm<T extends ZodRawShape>(config: {
         return;
       }
 
-      const nextPreviews = files.map((file) => ({ file, url: URL.createObjectURL(file) }));
+      const nextPreviews = files.map((file) => {
+        const alreadyExistingPreview = previews.find((preview) => preview.file.name === file.name);
+        if (alreadyExistingPreview) {
+          return alreadyExistingPreview;
+        }
+
+        return { file, url: URL.createObjectURL(file) };
+      });
 
       setPreviews((prev) => {
         prev.forEach((preview) => URL.revokeObjectURL(preview.url));
@@ -403,12 +424,12 @@ export function useForm<T extends ZodRawShape>(config: {
       return () => {
         nextPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
       };
-    }, [fieldValue]);
+    }, [fieldValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const removePreview = () => {
+    const removePreview = (index = 0) => {
       setValues((prev) => ({
         ...prev,
-        [field]: Array.isArray(prev[field]) ? [] : undefined,
+        [field]: Array.isArray(prev[field]) ? prev[field].filter((_, i) => i !== index) : undefined,
       }));
     };
 
@@ -426,7 +447,7 @@ export function useForm<T extends ZodRawShape>(config: {
   }) => {
     const { onError, onSubmit, onSuccess } = options;
 
-    const handleSubmit = async (e: import("react").FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const validatedData = validateForm();

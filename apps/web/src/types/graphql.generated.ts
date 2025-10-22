@@ -221,15 +221,43 @@ export enum Users_Select_Column {
   /** column name */
   EmailVerified = "emailVerified",
   /** column name */
+  EventsCreated = "events_created",
+  /** column name */
   Id = "id",
   /** column name */
   Image = "image",
   /** column name */
+  IsVerifiedContributor = "is_verified_contributor",
+  /** column name */
+  LastActivityAt = "last_activity_at",
+  /** column name */
+  Level = "level",
+  /** column name */
   Name = "name",
+  /** column name */
+  Points = "points",
+  /** column name */
+  ReviewsCreated = "reviews_created",
   /** column name */
   Role = "role",
   /** column name */
   Status = "status",
+  /** column name */
+  ThankYouCount = "thank_you_count",
+  /** column name */
+  VenuesCreated = "venues_created",
+}
+
+/** select "users_aggregate_bool_exp_bool_and_arguments_columns" columns of table "users" */
+export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsVerifiedContributor = "is_verified_contributor",
+}
+
+/** select "users_aggregate_bool_exp_bool_or_arguments_columns" columns of table "users" */
+export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsVerifiedContributor = "is_verified_contributor",
 }
 
 /** update columns of table "users" */
@@ -239,15 +267,31 @@ export enum Users_Update_Column {
   /** column name */
   EmailVerified = "emailVerified",
   /** column name */
+  EventsCreated = "events_created",
+  /** column name */
   Id = "id",
   /** column name */
   Image = "image",
   /** column name */
+  IsVerifiedContributor = "is_verified_contributor",
+  /** column name */
+  LastActivityAt = "last_activity_at",
+  /** column name */
+  Level = "level",
+  /** column name */
   Name = "name",
+  /** column name */
+  Points = "points",
+  /** column name */
+  ReviewsCreated = "reviews_created",
   /** column name */
   Role = "role",
   /** column name */
   Status = "status",
+  /** column name */
+  ThankYouCount = "thank_you_count",
+  /** column name */
+  VenuesCreated = "venues_created",
 }
 
 /** unique or primary key constraints on table "venue_category" */
@@ -349,9 +393,9 @@ export enum Venues_Select_Column {
   /** column name */
   Id = "id",
   /** column name */
-  ImageUrls = "image_urls",
+  Images = "images",
   /** column name */
-  LogoUrl = "logo_url",
+  Logo = "logo",
   /** column name */
   Name = "name",
   /** column name */
@@ -397,9 +441,9 @@ export enum Venues_Update_Column {
   /** column name */
   Id = "id",
   /** column name */
-  ImageUrls = "image_urls",
+  Images = "images",
   /** column name */
-  LogoUrl = "logo_url",
+  Logo = "logo",
   /** column name */
   Name = "name",
   /** column name */
@@ -817,6 +861,19 @@ export type Accounts_Variance_Order_By = {
   expires_at?: InputMaybe<Order_By>;
 };
 
+/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
+export type Boolean_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _gt?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _gte?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["Boolean"]["input"]>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lte?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _neq?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["Boolean"]["input"]>>;
+};
+
 export type Geography_Cast_Exp = {
   geometry?: InputMaybe<Geometry_Comparison_Exp>;
 };
@@ -883,13 +940,13 @@ export type GetAdminVenuesQuery = {
     __typename?: "venues";
     address?: null | string;
     category: Venue_Category_Enum;
-    created_at?: null | Timestamp;
+    created_at: Timestamp;
     description_en?: null | string;
     description_uk?: null | string;
     emails?: Array<string> | null;
     geo?: Geography | null;
     id: UUID;
-    image_urls?: Array<string> | null;
+    images?: Array<string> | null;
     name: string;
     phone_numbers?: Array<string> | null;
     slug: string;
@@ -917,7 +974,7 @@ export type GetPublicVenuesQuery = {
     emails?: Array<string> | null;
     geo?: Geography | null;
     id: UUID;
-    image_urls?: Array<string> | null;
+    images?: Array<string> | null;
     name: string;
     owner_id?: null | UUID;
     phone_numbers?: Array<string> | null;
@@ -943,14 +1000,14 @@ export type GetUserVenuesQuery = {
     category: Venue_Category_Enum;
     city?: null | string;
     country?: null | string;
-    created_at?: null | Timestamp;
+    created_at: Timestamp;
     description_en?: null | string;
     description_uk?: null | string;
     emails?: Array<string> | null;
     geo?: Geography | null;
     id: UUID;
-    image_urls?: Array<string> | null;
-    logo_url?: null | string;
+    images?: Array<string> | null;
+    logo?: null | string;
     name: string;
     phone_numbers?: Array<string> | null;
     postcode?: null | string;
@@ -1452,6 +1509,7 @@ export type Mutation_RootUpdate_User_StatusArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Users_By_PkArgs = {
+  _inc?: InputMaybe<Users_Inc_Input>;
   _set?: InputMaybe<Users_Set_Input>;
   pk_columns: Users_Pk_Columns_Input;
 };
@@ -1463,6 +1521,7 @@ export type Mutation_RootUpdate_Users_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_UsersArgs = {
+  _inc?: InputMaybe<Users_Inc_Input>;
   _set?: InputMaybe<Users_Set_Input>;
   where: Users_Bool_Exp;
 };
@@ -1945,6 +2004,7 @@ export type Scalars = {
   Int: { input: number; output: number };
   json: { input: Json; output: Json };
   String: { input: string; output: string };
+  timestamp: { input: Timestamp; output: Timestamp };
   timestamptz: { input: Timestamp; output: Timestamp };
   uuid: { input: UUID; output: UUID };
 };
@@ -2527,6 +2587,19 @@ export type Subscription_RootVerification_TokensArgs = {
   where?: InputMaybe<Verification_Tokens_Bool_Exp>;
 };
 
+/** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
+export type Timestamp_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _gt?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _gte?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["timestamp"]["input"]>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _lte?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _neq?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["timestamp"]["input"]>>;
+};
+
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type Timestamptz_Comparison_Exp = {
   _eq?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -2542,12 +2615,7 @@ export type Timestamptz_Comparison_Exp = {
 
 export type UpdateVenueStatusMutation = {
   __typename?: "mutation_root";
-  update_venues_by_pk?: {
-    __typename?: "venues";
-    id: UUID;
-    status: Venue_Status_Enum;
-    updated_at?: null | Timestamp;
-  } | null;
+  update_venues_by_pk?: { __typename?: "venues"; id: UUID; status: Venue_Status_Enum; updated_at: Timestamp } | null;
 };
 
 export type UpdateVenueStatusMutationVariables = Exact<{
@@ -2870,19 +2938,27 @@ export type Users = {
   accounts_aggregate: Accounts_Aggregate;
   email: Scalars["String"]["output"];
   emailVerified?: Maybe<Scalars["timestamptz"]["output"]>;
+  events_created: Scalars["Int"]["output"];
   id: Scalars["uuid"]["output"];
   image?: Maybe<Scalars["String"]["output"]>;
+  is_verified_contributor: Scalars["Boolean"]["output"];
+  last_activity_at?: Maybe<Scalars["timestamp"]["output"]>;
+  level: Scalars["Int"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
+  points: Scalars["Int"]["output"];
+  reviews_created: Scalars["Int"]["output"];
   role: User_Role_Enum;
   /** An array relationship */
   sessions: Array<Sessions>;
   /** An aggregate relationship */
   sessions_aggregate: Sessions_Aggregate;
   status: User_Status_Enum;
+  thank_you_count: Scalars["Int"]["output"];
   /** An object relationship */
   user_role: User_Role;
   /** An object relationship */
   user_status: User_Status;
+  venues_created: Scalars["Int"]["output"];
 };
 
 /** aggregated selection of "users" */
@@ -2893,7 +2969,23 @@ export type Users_Aggregate = {
 };
 
 export type Users_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Users_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Users_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Users_Aggregate_Bool_Exp_Count>;
+};
+
+export type Users_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Users_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Users_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Users_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
 };
 
 export type Users_Aggregate_Bool_Exp_Count = {
@@ -2906,9 +2998,17 @@ export type Users_Aggregate_Bool_Exp_Count = {
 /** aggregate fields of "users" */
 export type Users_Aggregate_Fields = {
   __typename?: "users_aggregate_fields";
+  avg?: Maybe<Users_Avg_Fields>;
   count: Scalars["Int"]["output"];
   max?: Maybe<Users_Max_Fields>;
   min?: Maybe<Users_Min_Fields>;
+  stddev?: Maybe<Users_Stddev_Fields>;
+  stddev_pop?: Maybe<Users_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Users_Stddev_Samp_Fields>;
+  sum?: Maybe<Users_Sum_Fields>;
+  var_pop?: Maybe<Users_Var_Pop_Fields>;
+  var_samp?: Maybe<Users_Var_Samp_Fields>;
+  variance?: Maybe<Users_Variance_Fields>;
 };
 
 /** aggregate fields of "users" */
@@ -2919,9 +3019,17 @@ export type Users_Aggregate_FieldsCountArgs = {
 
 /** order by aggregate values of table "users" */
 export type Users_Aggregate_Order_By = {
+  avg?: InputMaybe<Users_Avg_Order_By>;
   count?: InputMaybe<Order_By>;
   max?: InputMaybe<Users_Max_Order_By>;
   min?: InputMaybe<Users_Min_Order_By>;
+  stddev?: InputMaybe<Users_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Users_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Users_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Users_Sum_Order_By>;
+  var_pop?: InputMaybe<Users_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Users_Var_Samp_Order_By>;
+  variance?: InputMaybe<Users_Variance_Order_By>;
 };
 
 /** input type for inserting array relation for remote table "users" */
@@ -2929,6 +3037,27 @@ export type Users_Arr_Rel_Insert_Input = {
   data: Array<Users_Insert_Input>;
   /** upsert condition */
   on_conflict?: InputMaybe<Users_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Users_Avg_Fields = {
+  __typename?: "users_avg_fields";
+  events_created?: Maybe<Scalars["Float"]["output"]>;
+  level?: Maybe<Scalars["Float"]["output"]>;
+  points?: Maybe<Scalars["Float"]["output"]>;
+  reviews_created?: Maybe<Scalars["Float"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Float"]["output"]>;
+  venues_created?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "users" */
+export type Users_Avg_Order_By = {
+  events_created?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'. */
@@ -2940,15 +3069,33 @@ export type Users_Bool_Exp = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Bool_Exp>;
   email?: InputMaybe<String_Comparison_Exp>;
   emailVerified?: InputMaybe<Timestamptz_Comparison_Exp>;
+  events_created?: InputMaybe<Int_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   image?: InputMaybe<String_Comparison_Exp>;
+  is_verified_contributor?: InputMaybe<Boolean_Comparison_Exp>;
+  last_activity_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  level?: InputMaybe<Int_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
+  points?: InputMaybe<Int_Comparison_Exp>;
+  reviews_created?: InputMaybe<Int_Comparison_Exp>;
   role?: InputMaybe<User_Role_Enum_Comparison_Exp>;
   sessions?: InputMaybe<Sessions_Bool_Exp>;
   sessions_aggregate?: InputMaybe<Sessions_Aggregate_Bool_Exp>;
   status?: InputMaybe<User_Status_Enum_Comparison_Exp>;
+  thank_you_count?: InputMaybe<Int_Comparison_Exp>;
   user_role?: InputMaybe<User_Role_Bool_Exp>;
   user_status?: InputMaybe<User_Status_Bool_Exp>;
+  venues_created?: InputMaybe<Int_Comparison_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "users" */
+export type Users_Inc_Input = {
+  events_created?: InputMaybe<Scalars["Int"]["input"]>;
+  level?: InputMaybe<Scalars["Int"]["input"]>;
+  points?: InputMaybe<Scalars["Int"]["input"]>;
+  reviews_created?: InputMaybe<Scalars["Int"]["input"]>;
+  thank_you_count?: InputMaybe<Scalars["Int"]["input"]>;
+  venues_created?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /** input type for inserting data into table "users" */
@@ -2956,14 +3103,22 @@ export type Users_Insert_Input = {
   accounts?: InputMaybe<Accounts_Arr_Rel_Insert_Input>;
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  events_created?: InputMaybe<Scalars["Int"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   image?: InputMaybe<Scalars["String"]["input"]>;
+  is_verified_contributor?: InputMaybe<Scalars["Boolean"]["input"]>;
+  last_activity_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  level?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  points?: InputMaybe<Scalars["Int"]["input"]>;
+  reviews_created?: InputMaybe<Scalars["Int"]["input"]>;
   role?: InputMaybe<User_Role_Enum>;
   sessions?: InputMaybe<Sessions_Arr_Rel_Insert_Input>;
   status?: InputMaybe<User_Status_Enum>;
+  thank_you_count?: InputMaybe<Scalars["Int"]["input"]>;
   user_role?: InputMaybe<User_Role_Obj_Rel_Insert_Input>;
   user_status?: InputMaybe<User_Status_Obj_Rel_Insert_Input>;
+  venues_created?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /** aggregate max on columns */
@@ -2971,18 +3126,32 @@ export type Users_Max_Fields = {
   __typename?: "users_max_fields";
   email?: Maybe<Scalars["String"]["output"]>;
   emailVerified?: Maybe<Scalars["timestamptz"]["output"]>;
+  events_created?: Maybe<Scalars["Int"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   image?: Maybe<Scalars["String"]["output"]>;
+  last_activity_at?: Maybe<Scalars["timestamp"]["output"]>;
+  level?: Maybe<Scalars["Int"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
+  points?: Maybe<Scalars["Int"]["output"]>;
+  reviews_created?: Maybe<Scalars["Int"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Int"]["output"]>;
+  venues_created?: Maybe<Scalars["Int"]["output"]>;
 };
 
 /** order by max() on columns of table "users" */
 export type Users_Max_Order_By = {
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
+  events_created?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
+  last_activity_at?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -2990,18 +3159,32 @@ export type Users_Min_Fields = {
   __typename?: "users_min_fields";
   email?: Maybe<Scalars["String"]["output"]>;
   emailVerified?: Maybe<Scalars["timestamptz"]["output"]>;
+  events_created?: Maybe<Scalars["Int"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   image?: Maybe<Scalars["String"]["output"]>;
+  last_activity_at?: Maybe<Scalars["timestamp"]["output"]>;
+  level?: Maybe<Scalars["Int"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
+  points?: Maybe<Scalars["Int"]["output"]>;
+  reviews_created?: Maybe<Scalars["Int"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Int"]["output"]>;
+  venues_created?: Maybe<Scalars["Int"]["output"]>;
 };
 
 /** order by min() on columns of table "users" */
 export type Users_Min_Order_By = {
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
+  events_created?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
+  last_activity_at?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "users" */
@@ -3032,14 +3215,22 @@ export type Users_Order_By = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Order_By>;
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
+  events_created?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
+  is_verified_contributor?: InputMaybe<Order_By>;
+  last_activity_at?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
   role?: InputMaybe<Order_By>;
   sessions_aggregate?: InputMaybe<Sessions_Aggregate_Order_By>;
   status?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
   user_role?: InputMaybe<User_Role_Order_By>;
   user_status?: InputMaybe<User_Status_Order_By>;
+  venues_created?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: users */
@@ -3051,11 +3242,82 @@ export type Users_Pk_Columns_Input = {
 export type Users_Set_Input = {
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  events_created?: InputMaybe<Scalars["Int"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   image?: InputMaybe<Scalars["String"]["input"]>;
+  is_verified_contributor?: InputMaybe<Scalars["Boolean"]["input"]>;
+  last_activity_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  level?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  points?: InputMaybe<Scalars["Int"]["input"]>;
+  reviews_created?: InputMaybe<Scalars["Int"]["input"]>;
   role?: InputMaybe<User_Role_Enum>;
   status?: InputMaybe<User_Status_Enum>;
+  thank_you_count?: InputMaybe<Scalars["Int"]["input"]>;
+  venues_created?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Users_Stddev_Fields = {
+  __typename?: "users_stddev_fields";
+  events_created?: Maybe<Scalars["Float"]["output"]>;
+  level?: Maybe<Scalars["Float"]["output"]>;
+  points?: Maybe<Scalars["Float"]["output"]>;
+  reviews_created?: Maybe<Scalars["Float"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Float"]["output"]>;
+  venues_created?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "users" */
+export type Users_Stddev_Order_By = {
+  events_created?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Users_Stddev_Pop_Fields = {
+  __typename?: "users_stddev_pop_fields";
+  events_created?: Maybe<Scalars["Float"]["output"]>;
+  level?: Maybe<Scalars["Float"]["output"]>;
+  points?: Maybe<Scalars["Float"]["output"]>;
+  reviews_created?: Maybe<Scalars["Float"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Float"]["output"]>;
+  venues_created?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "users" */
+export type Users_Stddev_Pop_Order_By = {
+  events_created?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Users_Stddev_Samp_Fields = {
+  __typename?: "users_stddev_samp_fields";
+  events_created?: Maybe<Scalars["Float"]["output"]>;
+  level?: Maybe<Scalars["Float"]["output"]>;
+  points?: Maybe<Scalars["Float"]["output"]>;
+  reviews_created?: Maybe<Scalars["Float"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Float"]["output"]>;
+  venues_created?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "users" */
+export type Users_Stddev_Samp_Order_By = {
+  events_created?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "users" */
@@ -3070,18 +3332,112 @@ export type Users_Stream_Cursor_Input = {
 export type Users_Stream_Cursor_Value_Input = {
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  events_created?: InputMaybe<Scalars["Int"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   image?: InputMaybe<Scalars["String"]["input"]>;
+  is_verified_contributor?: InputMaybe<Scalars["Boolean"]["input"]>;
+  last_activity_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  level?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  points?: InputMaybe<Scalars["Int"]["input"]>;
+  reviews_created?: InputMaybe<Scalars["Int"]["input"]>;
   role?: InputMaybe<User_Role_Enum>;
   status?: InputMaybe<User_Status_Enum>;
+  thank_you_count?: InputMaybe<Scalars["Int"]["input"]>;
+  venues_created?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Users_Sum_Fields = {
+  __typename?: "users_sum_fields";
+  events_created?: Maybe<Scalars["Int"]["output"]>;
+  level?: Maybe<Scalars["Int"]["output"]>;
+  points?: Maybe<Scalars["Int"]["output"]>;
+  reviews_created?: Maybe<Scalars["Int"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Int"]["output"]>;
+  venues_created?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "users" */
+export type Users_Sum_Order_By = {
+  events_created?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
 };
 
 export type Users_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Users_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Users_Set_Input>;
   /** filter the rows which have to be updated */
   where: Users_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Users_Var_Pop_Fields = {
+  __typename?: "users_var_pop_fields";
+  events_created?: Maybe<Scalars["Float"]["output"]>;
+  level?: Maybe<Scalars["Float"]["output"]>;
+  points?: Maybe<Scalars["Float"]["output"]>;
+  reviews_created?: Maybe<Scalars["Float"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Float"]["output"]>;
+  venues_created?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "users" */
+export type Users_Var_Pop_Order_By = {
+  events_created?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Users_Var_Samp_Fields = {
+  __typename?: "users_var_samp_fields";
+  events_created?: Maybe<Scalars["Float"]["output"]>;
+  level?: Maybe<Scalars["Float"]["output"]>;
+  points?: Maybe<Scalars["Float"]["output"]>;
+  reviews_created?: Maybe<Scalars["Float"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Float"]["output"]>;
+  venues_created?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "users" */
+export type Users_Var_Samp_Order_By = {
+  events_created?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Users_Variance_Fields = {
+  __typename?: "users_variance_fields";
+  events_created?: Maybe<Scalars["Float"]["output"]>;
+  level?: Maybe<Scalars["Float"]["output"]>;
+  points?: Maybe<Scalars["Float"]["output"]>;
+  reviews_created?: Maybe<Scalars["Float"]["output"]>;
+  thank_you_count?: Maybe<Scalars["Float"]["output"]>;
+  venues_created?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "users" */
+export type Users_Variance_Order_By = {
+  events_created?: InputMaybe<Order_By>;
+  level?: InputMaybe<Order_By>;
+  points?: InputMaybe<Order_By>;
+  reviews_created?: InputMaybe<Order_By>;
+  thank_you_count?: InputMaybe<Order_By>;
+  venues_created?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "users" */
@@ -3438,14 +3794,14 @@ export type Venues = {
   category: Venue_Category_Enum;
   city?: Maybe<Scalars["String"]["output"]>;
   country?: Maybe<Scalars["String"]["output"]>;
-  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  created_at: Scalars["timestamptz"]["output"];
   description_en?: Maybe<Scalars["String"]["output"]>;
   description_uk?: Maybe<Scalars["String"]["output"]>;
   emails?: Maybe<Array<Scalars["String"]["output"]>>;
   geo?: Maybe<Scalars["geography"]["output"]>;
   id: Scalars["uuid"]["output"];
-  image_urls?: Maybe<Array<Scalars["String"]["output"]>>;
-  logo_url?: Maybe<Scalars["String"]["output"]>;
+  images?: Maybe<Array<Scalars["String"]["output"]>>;
+  logo?: Maybe<Scalars["String"]["output"]>;
   name: Scalars["String"]["output"];
   /** An object relationship */
   owner?: Maybe<Users>;
@@ -3455,7 +3811,7 @@ export type Venues = {
   slug: Scalars["String"]["output"];
   social_links: Scalars["json"]["output"];
   status: Venue_Status_Enum;
-  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  updated_at: Scalars["timestamptz"]["output"];
   /** An object relationship */
   user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
@@ -3527,8 +3883,8 @@ export type Venues_Bool_Exp = {
   emails?: InputMaybe<String_Array_Comparison_Exp>;
   geo?: InputMaybe<Geography_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  image_urls?: InputMaybe<String_Array_Comparison_Exp>;
-  logo_url?: InputMaybe<String_Comparison_Exp>;
+  images?: InputMaybe<String_Array_Comparison_Exp>;
+  logo?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   owner?: InputMaybe<Users_Bool_Exp>;
   owner_id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -3557,8 +3913,8 @@ export type Venues_Insert_Input = {
   emails?: InputMaybe<Array<Scalars["String"]["input"]>>;
   geo?: InputMaybe<Scalars["geography"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
-  image_urls?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  logo_url?: InputMaybe<Scalars["String"]["input"]>;
+  images?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  logo?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   owner?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   owner_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -3586,8 +3942,8 @@ export type Venues_Max_Fields = {
   description_uk?: Maybe<Scalars["String"]["output"]>;
   emails?: Maybe<Array<Scalars["String"]["output"]>>;
   id?: Maybe<Scalars["uuid"]["output"]>;
-  image_urls?: Maybe<Array<Scalars["String"]["output"]>>;
-  logo_url?: Maybe<Scalars["String"]["output"]>;
+  images?: Maybe<Array<Scalars["String"]["output"]>>;
+  logo?: Maybe<Scalars["String"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   owner_id?: Maybe<Scalars["uuid"]["output"]>;
   phone_numbers?: Maybe<Array<Scalars["String"]["output"]>>;
@@ -3608,8 +3964,8 @@ export type Venues_Max_Order_By = {
   description_uk?: InputMaybe<Order_By>;
   emails?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  image_urls?: InputMaybe<Order_By>;
-  logo_url?: InputMaybe<Order_By>;
+  images?: InputMaybe<Order_By>;
+  logo?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   owner_id?: InputMaybe<Order_By>;
   phone_numbers?: InputMaybe<Order_By>;
@@ -3631,8 +3987,8 @@ export type Venues_Min_Fields = {
   description_uk?: Maybe<Scalars["String"]["output"]>;
   emails?: Maybe<Array<Scalars["String"]["output"]>>;
   id?: Maybe<Scalars["uuid"]["output"]>;
-  image_urls?: Maybe<Array<Scalars["String"]["output"]>>;
-  logo_url?: Maybe<Scalars["String"]["output"]>;
+  images?: Maybe<Array<Scalars["String"]["output"]>>;
+  logo?: Maybe<Scalars["String"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   owner_id?: Maybe<Scalars["uuid"]["output"]>;
   phone_numbers?: Maybe<Array<Scalars["String"]["output"]>>;
@@ -3653,8 +4009,8 @@ export type Venues_Min_Order_By = {
   description_uk?: InputMaybe<Order_By>;
   emails?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  image_urls?: InputMaybe<Order_By>;
-  logo_url?: InputMaybe<Order_By>;
+  images?: InputMaybe<Order_By>;
+  logo?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   owner_id?: InputMaybe<Order_By>;
   phone_numbers?: InputMaybe<Order_By>;
@@ -3693,8 +4049,8 @@ export type Venues_Order_By = {
   emails?: InputMaybe<Order_By>;
   geo?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  image_urls?: InputMaybe<Order_By>;
-  logo_url?: InputMaybe<Order_By>;
+  images?: InputMaybe<Order_By>;
+  logo?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   owner?: InputMaybe<Users_Order_By>;
   owner_id?: InputMaybe<Order_By>;
@@ -3728,8 +4084,8 @@ export type Venues_Set_Input = {
   emails?: InputMaybe<Array<Scalars["String"]["input"]>>;
   geo?: InputMaybe<Scalars["geography"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
-  image_urls?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  logo_url?: InputMaybe<Scalars["String"]["input"]>;
+  images?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  logo?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   owner_id?: InputMaybe<Scalars["uuid"]["input"]>;
   phone_numbers?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -3762,8 +4118,8 @@ export type Venues_Stream_Cursor_Value_Input = {
   emails?: InputMaybe<Array<Scalars["String"]["input"]>>;
   geo?: InputMaybe<Scalars["geography"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
-  image_urls?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  logo_url?: InputMaybe<Scalars["String"]["input"]>;
+  images?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  logo?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   owner_id?: InputMaybe<Scalars["uuid"]["input"]>;
   phone_numbers?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -3913,7 +4269,7 @@ export const GetPublicVenuesDocument = gql`
       id
       name
       address
-      image_urls
+      images
       description_uk
       description_en
       geo
@@ -3980,8 +4336,8 @@ export const GetUserVenuesDocument = gql`
       city
       country
       postcode
-      logo_url
-      image_urls
+      logo
+      images
       category
       created_at
       description_uk
@@ -4050,7 +4406,7 @@ export const GetAdminVenuesDocument = gql`
       id
       name
       address
-      image_urls
+      images
       category
       created_at
       description_uk

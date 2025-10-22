@@ -1,16 +1,16 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { FormEvent, useEffect } from "react";
+import { useEffect } from "react";
 import slugify from "slugify";
-import z from "zod";
 
-import { Alert, Button, Input, Select, TabPane, Tabs } from "~/components/ui";
-import { useForm } from "~/hooks/form/useForm";
+import { FormFooter } from "~/components/layout";
+import { Input, Select, TabPane, Tabs } from "~/components/ui";
+import { InitialValuesType, OnFormSubmitHandler, useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
-import { getVenueSchema, VenueFormData } from "~/lib/validation/venue";
+import { getVenueSchema, VenueSchema } from "~/lib/validation/venue";
 import { Locale, Status, Venue_Category_Enum } from "~/types";
 
 import { VenueAddress } from "./VenueAddress";
@@ -19,61 +19,43 @@ import { VenueImages } from "./VenueImages";
 import { VenueInfo } from "./VenueInfo";
 
 interface VenueFormProps {
-  initialValues?: Partial<VenueFormData>;
-  onSubmit(data: Partial<VenueFormData>): Promise<void | z.ZodError["issues"]>;
+  initialValues?: Partial<InitialValuesType<VenueSchema["shape"]>>;
+  onSubmit: OnFormSubmitHandler;
+  onSuccess(): void;
   status?: Status;
 }
 
-const INITIAL_FORM_VALUES = {
-  address: null,
-  area: null,
-  category: Venue_Category_Enum.BeautySalon,
-  city: null,
-  country: null,
-  description_en: "",
-  description_uk: "",
-  emails: [""],
-  images: [],
-  name: "",
-  phone_numbers: [""],
-  slug: "",
-  website: "",
-};
-
-export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: VenueFormProps) => {
+export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueFormProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
-  const isBusy = status === "processing";
+
+  console.log("initialValues", initialValues);
 
   const {
     errors,
     getFieldProps,
     getFieldsProps,
+    hasChanges,
     isFormValid,
-    setFieldErrorsFromServer,
+    resetForm,
     setValues,
-    validateForm,
+    useFormSubmit,
+    useImagePreviews,
     values,
   } = useForm({
-    initialValues: { ...INITIAL_FORM_VALUES, ...initialValues },
+    initialValues,
     schema: getVenueSchema(i18n),
   });
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
-    const errors = await onSubmit(values);
-    if (errors) {
-      setFieldErrorsFromServer(errors);
-    }
-  };
+  const { handleSubmit, status } = useFormSubmit({
+    onSubmit,
+    onSuccess,
+  });
 
   useEffect(() => {
-    if (values.name && !initialValues.id) {
+    if (initialValues.id) return;
+
+    if (values.name) {
       const nameWithArea = values.area ? `${values.name} ${values.area}` : values.name;
 
       setValues((prev) => ({
@@ -99,6 +81,8 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
     };
   });
 
+  const isBusy = status === "processing";
+
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className={`
@@ -110,36 +94,20 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
           md:flex-row md:space-x-4
         `}>
           <div className="flex flex-3 flex-col">
-            <Select
-              disabled={isBusy}
-              label={i18n("Category")}
-              name="category"
-              options={categoryOptions}
-              required
-              {...getFieldProps("category")}
-            />
+            <Select label={i18n("Category")} options={categoryOptions} required {...getFieldProps("category")} />
           </div>
           <div className="flex flex-4 flex-col">
-            <Input
-              disabled={isBusy}
-              label={i18n("Name")}
-              name="name"
-              placeholder="Пузата хата"
-              required
-              type="text"
-              {...getFieldProps("name")}
-            />
+            <Input label={i18n("Name")} placeholder="Пузата хата" required type="text" {...getFieldProps("name")} />
           </div>
         </div>
         <div className="flex flex-2 flex-col">
           <Input
-            disabled={isBusy || Boolean(initialValues.id)}
             label={i18n("Slug")}
-            name="slug"
             placeholder="puzata-hata-london"
             required
             type="text"
             {...getFieldProps("slug")}
+            disabled={isBusy || Boolean(initialValues.id)}
           />
         </div>
       </div>
@@ -150,18 +118,13 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
 
       <Tabs>
         <TabPane tab={i18n("Contacts")}>
-          <VenueContacts
-            getFieldProps={getFieldProps}
-            getFieldsProps={getFieldsProps}
-            isBusy={isBusy}
-            setValues={setValues}
-          />
+          <VenueContacts getFieldProps={getFieldProps} getFieldsProps={getFieldsProps} setValues={setValues} />
         </TabPane>
         <TabPane tab={i18n("Info")}>
-          <VenueInfo getFieldProps={getFieldProps} isBusy={isBusy} />
+          <VenueInfo getFieldProps={getFieldProps} />
         </TabPane>
         <TabPane tab={i18n("Images")}>
-          <VenueImages getFieldProps={getFieldProps} isBusy={isBusy} setValues={setValues} values={values} />
+          <VenueImages getFieldProps={getFieldProps} setValues={setValues} useImagePreviews={useImagePreviews} />
         </TabPane>
         <TabPane tab={i18n("Address")}>
           <VenueAddress
@@ -174,27 +137,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, status = "idle" }: Ven
         </TabPane>
       </Tabs>
 
-      <div
-        className={`
-          flex flex-col justify-center space-y-4
-          md:flex-row md:items-center md:justify-end md:space-y-0 md:space-x-4
-        `}
-      >
-        <div className="my-2 h-11">
-          {status === "processing" && (
-            <Alert variant="info">{i18n("The request may a little time to process...")}</Alert>
-          )}
-          {status === "success" && (
-            <Alert fadeAfter={5000} variant="success">
-              {i18n("Thanks for submitting! Your venue has been submitted for review.")}
-            </Alert>
-          )}
-          {status === "error" && <Alert variant="error">{i18n("Failed to submit venue. Please try again.")}</Alert>}
-        </div>
-        <Button busy={isBusy} color="primary" disabled={!isFormValid} type="submit">
-          {isBusy ? i18n("Saving changes") : i18n("Save changes")}
-        </Button>
-      </div>
+      <FormFooter handleCancel={resetForm} hasChanges={hasChanges} isFormValid={isFormValid} status={status} />
     </form>
   );
 };

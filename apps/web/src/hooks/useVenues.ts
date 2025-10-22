@@ -59,7 +59,7 @@ const GET_PUBLIC_VENUES = gql`
       id
       name
       address
-      image_urls
+      images
       description_uk
       description_en
       geo
@@ -87,8 +87,8 @@ const GET_USER_VENUES = gql`
       city
       country
       postcode
-      logo_url
-      image_urls
+      logo
+      images
       category
       created_at
       description_uk
@@ -115,7 +115,7 @@ const GET_ADMIN_VENUES = gql`
       id
       name
       address
-      image_urls
+      images
       category
       created_at
       description_uk

@@ -1,5 +1,4 @@
 import { Frame, Image as ImageIcon } from "lucide-react";
-import { useEffect, useState } from "react";
 
 import { ImagePreview } from "~/components/layout";
 import { AccordionItem, FilePicker, MultipleAccordion } from "~/components/ui";
@@ -7,82 +6,29 @@ import { FormProps } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { VenueSchema } from "~/lib/validation/venue";
 
-interface ImageFile {
-  file: File;
-  url: string;
-}
-
-interface VenueImagesProps extends Pick<FormProps<VenueSchema["shape"]>, "getFieldProps" | "setValues" | "values"> {
-  isBusy: boolean;
-}
+type VenueImagesProps = Pick<FormProps<VenueSchema["shape"]>, "getFieldProps" | "setValues" | "useImagePreviews">;
 
 const MAX_IMAGES = 6;
 
-export const VenueImages = ({ getFieldProps, isBusy, setValues, values }: VenueImagesProps) => {
+export const VenueImages = ({ getFieldProps, useImagePreviews }: VenueImagesProps) => {
   const i18n = useI18n();
-  const [logoPreview, setLogoPreview] = useState<ImageFile | null>();
-  const [imagePreviews, setImagePreviews] = useState<ImageFile[]>([]);
 
-  useEffect(() => {
-    const images = values.images ?? [];
-
-    const previews = images.map((file) => {
-      const alreadyExistingImage = imagePreviews.find((image) => image.file.name === file.name);
-      if (alreadyExistingImage) {
-        return alreadyExistingImage;
-      }
-
-      return { file, url: URL.createObjectURL(file) };
-    });
-
-    setImagePreviews(previews);
-
-    return () => {
-      for (const preview of imagePreviews) {
-        URL.revokeObjectURL(preview.url);
-      }
-    };
-  }, [values.images]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    const logo = values.logo;
-    setLogoPreview(logo ? { file: logo, url: URL.createObjectURL(logo) } : null);
-  }, [values.logo]);
-
-  const removeLogo = () => {
-    setValues((prev) => ({
-      ...prev,
-      logo: undefined,
-    }));
-  };
-
-  const removeImage = (index: number) => {
-    setValues((prev) => ({
-      ...prev,
-      images: values.images?.filter((_, i) => i !== index),
-    }));
-  };
+  const { previews: imagePreviews, removePreview: removeImagePreview } = useImagePreviews("images");
+  const { previews: logoPreviews, removePreview: removeLogoPreview } = useImagePreviews("logo");
 
   return (
     <MultipleAccordion>
       <AccordionItem icon={<Frame size={20} />} isOpen title={i18n("Logo")}>
         <div className="m-auto max-h-56 max-w-56 overflow-hidden">
-          {logoPreview ? (
+          {logoPreviews.length ? (
             <ImagePreview
-              isBusy={isBusy}
-              onRemove={removeLogo}
+              onRemove={removeLogoPreview}
               previewAlt={i18n("Preview logo")}
-              previewUrl={logoPreview.url}
+              previewUrl={logoPreviews[0].url}
               removeLabel={i18n("Remove logo")}
             />
           ) : (
-            <FilePicker
-              disabled={isBusy}
-              name="logo"
-              {...getFieldProps("logo")}
-              label={i18n("Venue logo")}
-              placeholder={i18n("Click to upload")}
-            />
+            <FilePicker {...getFieldProps("logo")} label={i18n("Venue logo")} placeholder={i18n("Click to upload")} />
           )}
         </div>
       </AccordionItem>
@@ -97,9 +43,7 @@ export const VenueImages = ({ getFieldProps, isBusy, setValues, values }: VenueI
           </label>
 
           <FilePicker
-            disabled={isBusy}
             isMultiple
-            name="images"
             {...getFieldProps("images")}
             label={i18n("Click to upload images")}
             placeholder={i18n("{number} images remaining", { number: Math.max(0, MAX_IMAGES - imagePreviews.length) })}
@@ -114,10 +58,9 @@ export const VenueImages = ({ getFieldProps, isBusy, setValues, values }: VenueI
           `}>
             {imagePreviews.map((preview, index) => (
               <ImagePreview
-                isBusy={isBusy}
                 key={preview.url}
                 number={index + 1}
-                onRemove={() => removeImage(index)}
+                onRemove={() => removeImagePreview(index)}
                 previewAlt={i18n("Preview {number}", { number: index + 1 })}
                 previewUrl={preview.url}
                 removeLabel={i18n("Remove image {number}", { number: index + 1 })}

@@ -14,8 +14,8 @@ const VENUE_FIELDS = `
   country
   postcode
   geo
-  image_urls
-  logo_url
+  images
+  logo
   description_en
   description_uk
   website

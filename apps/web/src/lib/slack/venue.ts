@@ -13,13 +13,13 @@ const app = new App({
   token: process.env.NEXT_PRIVATE_SLACK_BOT_TOKEN,
 });
 
-const getMedia = ({ image_urls, logo_url, name }: Partial<Venues>) => {
+const getMedia = ({ images, logo, name }: Partial<Venues>) => {
   let imageUrl = "";
 
-  if (logo_url) {
-    imageUrl = `${constants.vercelBlobStorageUrl}/${logo_url}`;
-  } else if (image_urls?.length) {
-    imageUrl = `${constants.vercelBlobStorageUrl}/${image_urls[0]}`;
+  if (logo) {
+    imageUrl = `${constants.vercelBlobStorageUrl}/${logo}`;
+  } else if (images?.length) {
+    imageUrl = `${constants.vercelBlobStorageUrl}/${images[0]}`;
   }
 
   if (!imageUrl) return null;
@@ -35,9 +35,9 @@ const getMedia = ({ image_urls, logo_url, name }: Partial<Venues>) => {
 
 export const sendSlackNotification = async (
   user: User,
-  { category, city, country, description_en, description_uk, id, image_urls, logo_url, name }: Partial<Venues>,
+  { category, city, country, description_en, description_uk, id, images, logo, name }: Partial<Venues>,
 ) => {
-  const media = getMedia({ image_urls, logo_url, name });
+  const media = getMedia({ images, logo, name });
 
   const categoryText = category ? constants.categories[category].label.uk : "[no category]";
 

@@ -6,12 +6,9 @@ import { FormProps } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { VenueSchema } from "~/lib/validation/venue";
 
-interface VenueContactsProps
-  extends Pick<FormProps<VenueSchema["shape"]>, "getFieldProps" | "getFieldsProps" | "setValues"> {
-  isBusy: boolean;
-}
+type VenueContactsProps = Pick<FormProps<VenueSchema["shape"]>, "getFieldProps" | "getFieldsProps" | "setValues">;
 
-export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues }: VenueContactsProps) => {
+export const VenueContacts = ({ getFieldProps, getFieldsProps, setValues }: VenueContactsProps) => {
   const i18n = useI18n();
 
   const createAddHandler = useCallback(
@@ -56,19 +53,17 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
           <div className="mt-2 flex gap-2" key={index}>
             <div className="flex grow flex-col">
               <Input
-                disabled={isBusy}
                 label={`${label} ${index + 1}`}
-                name={fieldName}
                 placeholder={placeholder}
                 {...extraProps}
                 {...fieldProps}
+                name={fieldName}
               />
             </div>
             {index > 0 && (
               <ActionButton
                 aria-label={fieldName === "emails" ? i18n("Remove email") : i18n("Remove phone number")}
                 className="mt-6"
-                disabled={isBusy}
                 icon={<Minus />}
                 onClick={() => removeHandler(index)}
                 tooltipPosition="left"
@@ -81,7 +76,6 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
           <div className="flex justify-end">
             <ActionButton
               aria-label={fieldName === "emails" ? i18n("Add email") : i18n("Add phone number")}
-              disabled={isBusy}
               icon={<Plus />}
               onClick={addHandler}
               tooltipPosition="left"
@@ -103,14 +97,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
     <div className="flex items-center gap-2">
       <div className="mr-2">{icon}</div>
       <div className="flex grow flex-col">
-        <Input
-          disabled={isBusy}
-          label={label}
-          name={name}
-          placeholder={placeholder}
-          type="url"
-          {...getFieldProps(name)}
-        />
+        <Input label={label} placeholder={placeholder} type="url" {...getFieldProps(name)} name={name} />
       </div>
     </div>
   );
@@ -120,9 +107,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, isBusy, setValues
       <AccordionItem icon={<Globe size={20} />} isOpen title={i18n("Website")}>
         <div className="flex grow flex-col">
           <Input
-            disabled={isBusy}
             label={i18n("Website")}
-            name="website"
             placeholder="https://puzatahata.co.uk"
             type="url"
             {...getFieldProps("website")}

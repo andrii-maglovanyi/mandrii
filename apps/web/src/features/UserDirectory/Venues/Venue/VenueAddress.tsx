@@ -114,7 +114,6 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
             className="w-96"
             disabled={isBusy || isAddressLoading}
             label={i18n("Address")}
-            name="address"
             placeholder="10 Oxford St, London W1D 1AW"
             type="text"
             {...getFieldProps("address")}
@@ -166,11 +165,9 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
             md:flex-row md:space-x-4
           `}>
             <Input
-              disabled={isBusy}
               label={`${i18n("Latitude")} (${i18n("orig.")} ${fullAddress.coordinates[1]})`}
               max={bounds?.latitude.maxLat}
               min={bounds?.latitude.minLat}
-              name="latitude"
               placeholder="51.51653"
               step="0.00001"
               type="number"
@@ -178,11 +175,9 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
             />
 
             <Input
-              disabled={isBusy}
               label={`${i18n("Longitude")} (${i18n("orig.")} ${fullAddress.coordinates[0]})`}
               max={bounds?.longitude.maxLng}
               min={bounds?.longitude.minLng}
-              name="longitude"
               placeholder="-0.13090"
               step="0.00001"
               type="number"

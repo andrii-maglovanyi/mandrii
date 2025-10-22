@@ -108,7 +108,6 @@ const Contact = () => {
         <Input
           disabled={isSending}
           label={i18n("Name")}
-          name="name"
           placeholder={`${i18n("Your name")}`}
           required
           {...getFieldProps("name")}
@@ -117,7 +116,6 @@ const Contact = () => {
         <Input
           disabled={isSending}
           label={i18n("Your email")}
-          name="email"
           placeholder="example@email.com"
           required
           type="email"
@@ -128,7 +126,6 @@ const Contact = () => {
           disabled={isSending}
           label={i18n("Message")}
           maxChars={1000}
-          name="message"
           placeholder={i18n("Just wanted to drop you a quick note about...")}
           required
           rows={7}

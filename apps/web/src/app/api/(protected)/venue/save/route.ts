@@ -44,7 +44,7 @@ export const POST = (req: Request) =>
       description_en,
       description_uk,
       emails: emails?.map((email) => email.trim()) || [],
-      image_urls: [],
+      images: [],
       name: name.trim(),
       phone_numbers: phone_numbers?.map((phone) => phone.trim()) || [],
       social_links: { facebook: data.facebook?.trim() || null, instagram: data.instagram?.trim() || null },
@@ -93,8 +93,8 @@ export const POST = (req: Request) =>
 
     const prefix = [envName, "venues", slug].join("/");
 
-    venueData.logo_url = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? "";
-    venueData.image_urls = await processImages(images ?? [], [prefix, "images"].join("/"));
+    venueData.logo = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? "";
+    venueData.images = await processImages(images ?? [], [prefix, "images"].join("/"));
 
     const id = await saveVenue(venueData, session);
 
