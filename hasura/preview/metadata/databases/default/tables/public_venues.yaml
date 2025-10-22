@@ -39,8 +39,8 @@ insert_permissions:
         - description_uk
         - emails
         - geo
-        - image_urls
-        - logo_url
+        - images
+        - logo
         - name
         - phone_numbers
         - postcode
@@ -62,8 +62,8 @@ select_permissions:
         - emails
         - geo
         - id
-        - image_urls
-        - logo_url
+        - images
+        - logo
         - name
         - owner_id
         - phone_numbers
@@ -90,8 +90,8 @@ select_permissions:
         - emails
         - geo
         - id
-        - image_urls
-        - logo_url
+        - images
+        - logo
         - name
         - owner_id
         - phone_numbers
@@ -122,8 +122,8 @@ update_permissions:
         - description_uk
         - emails
         - geo
-        - image_urls
-        - logo_url
+        - images
+        - logo
         - name
         - phone_numbers
         - postcode

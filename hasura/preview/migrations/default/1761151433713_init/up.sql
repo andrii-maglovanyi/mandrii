@@ -62,7 +62,15 @@ CREATE TABLE public.users (
     "emailVerified" timestamp with time zone,
     image text,
     role text DEFAULT 'user'::text NOT NULL,
-    status text DEFAULT 'inactive'::text NOT NULL
+    status text DEFAULT 'active'::text NOT NULL,
+    points integer DEFAULT 0 NOT NULL,
+    level integer DEFAULT 1 NOT NULL,
+    thank_you_count integer DEFAULT 0 NOT NULL,
+    venues_created integer DEFAULT 0 NOT NULL,
+    events_created integer DEFAULT 0 NOT NULL,
+    reviews_created integer DEFAULT 0 NOT NULL,
+    last_activity_at timestamp without time zone,
+    is_verified_contributor boolean DEFAULT false NOT NULL
 );
 CREATE TABLE public.venue_category (
     value text NOT NULL
@@ -87,12 +95,12 @@ CREATE TABLE public.venues (
     emails text[],
     website text,
     social_links json DEFAULT json_build_object() NOT NULL,
-    logo_url text,
-    image_urls text[],
+    logo text,
+    images text[],
     slug text NOT NULL,
     user_id uuid,
-    created_at timestamp with time zone DEFAULT now(),
-    updated_at timestamp with time zone DEFAULT now(),
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     owner_id uuid
 );
 CREATE TABLE public.verification_tokens (
