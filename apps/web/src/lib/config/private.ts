@@ -23,6 +23,9 @@ interface PrivateConfig {
     botToken: string;
     signingSecret: string;
   };
+  rewards: {
+    pointsPerVenueCreation: number;
+  };
 }
 
 export function getEnvVar(name: string, required: boolean = process.env.UNSET_CONFIG !== "true"): string {
@@ -59,5 +62,8 @@ export const privateConfig: PrivateConfig = {
   slack: {
     botToken: getEnvVar("NEXT_PRIVATE_SLACK_BOT_TOKEN"),
     signingSecret: getEnvVar("NEXT_PRIVATE_SLACK_SIGNING_SECRET"),
+  },
+  rewards: {
+    pointsPerVenueCreation: 20,
   },
 };

@@ -8,8 +8,8 @@ import { envName } from "~/lib/config/env";
 import { getUserSchema } from "~/lib/validation/user";
 import { Users } from "~/types";
 
-import { processImages } from "../../venue/save/images";
-import { saveUser } from "./user";
+import { processImages } from "~/lib/utils/images";
+import { saveUser } from "~/lib/models/user";
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {

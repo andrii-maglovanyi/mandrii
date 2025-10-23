@@ -52,12 +52,7 @@ export const ListCard = ({ onClick, selectedId, venue }: ListCardProps) => {
       <section
         aria-label={`Venue: ${name}`}
         className={clsx(
-          `
-            flex w-full overflow-x-hidden rounded-md border-2 bg-on-surface/5
-            transition-colors duration-200
-            hover:bg-on-surface/10
-            lg:text-base
-          `,
+          `bg-on-surface/5 hover:bg-on-surface/10 flex w-full overflow-x-hidden rounded-md border-2 transition-colors duration-200 lg:text-base`,
           selectedId === id ? "border-on-surface" : "border-transparent",
         )}
         onClick={onClick}
@@ -72,7 +67,7 @@ export const ListCard = ({ onClick, selectedId, venue }: ListCardProps) => {
       >
         <div className="flex w-full flex-col">
           <div className="mt-1.5 mr-1.5 flex justify-end space-x-2">
-            {profileData && profileData.user.id === venue.owner_id ? (
+            {profileData && profileData.id === venue.owner_id ? (
               <ActionButton
                 aria-label={i18n("Manage your venue")}
                 icon={<PenTool size={18} />}
@@ -83,10 +78,7 @@ export const ListCard = ({ onClick, selectedId, venue }: ListCardProps) => {
               <ActionButton
                 aria-label={i18n("Are you an owner?")}
                 className="group"
-                icon={<Crown className={`
-                  stroke-amber-500
-                  group-hover:fill-amber-500
-                `} size={18} />}
+                icon={<Crown className={`stroke-amber-500 group-hover:fill-amber-500`} size={18} />}
                 onClick={handleOwnerClick}
                 size="sm"
               />

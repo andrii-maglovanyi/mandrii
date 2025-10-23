@@ -1,18 +1,18 @@
 import { LogIn, User } from "lucide-react";
-import { Session } from "next-auth";
 import { useEffect, useRef, useState } from "react";
 
 import { ActionButton, Separator } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
+import { UserSession } from "~/types/user";
 
 import { SignInForm } from "./SignInForm";
 import { UserMenu } from "./UserMenu";
 import { UserProfileCard } from "./UserProfile";
 
 interface ProfileMenuProps {
-  profileData: Session;
+  profileData: UserSession;
 }
 
 const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
@@ -44,13 +44,7 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
       <ActionButton aria-label="Profile" icon={<User />} onClick={() => setOpen(!open)} variant="ghost" />
       {render && (
         <menu
-          className={`
-            absolute right-0 z-40 mt-2 w-max origin-top-right transform
-            space-y-2 rounded-md bg-surface-tint p-4 text-on-surface shadow-lg
-            transition duration-200 ease-out
-            dark:shadow-neutral-500/10
-            ${open ? `scale-100 opacity-100` : `scale-95 opacity-0`}
-          `}
+          className={`bg-surface-tint text-on-surface absolute right-0 z-40 mt-2 w-max origin-top-right transform space-y-2 rounded-md p-4 shadow-lg transition duration-200 ease-out dark:shadow-neutral-500/10 ${open ? `scale-100 opacity-100` : `scale-95 opacity-0`} `}
         >
           <UserProfileCard profile={profileData} />
           <Separator className="mb-6" />

@@ -1,14 +1,14 @@
-import { Session } from "next-auth";
-
 import { getI18n } from "~/i18n/getI18n";
-import { Locale } from "~/types";
+import { Locale, Users } from "~/types";
 
 import { auth } from "../auth";
 import { UnauthorizedError } from "./errors";
+import { getUserById } from "../models/user";
 
 export type AuthenticatedSession = {
   accessToken: string;
-} & Session;
+  user: Partial<Users>;
+};
 
 interface ApiContextBase {
   locale: Locale;
@@ -29,6 +29,23 @@ interface ApiContextWithUser extends ApiContextBase {
   session: AuthenticatedSession;
 }
 
+const getUserContext = async () => {
+  const session = await auth();
+  const accessToken = session?.accessToken;
+
+  if (!accessToken || !session?.user?.id) {
+    return null;
+  }
+
+  const user = await getUserById(session.user.id, { accessToken });
+
+  if (!user) {
+    throw new UnauthorizedError("User not found");
+  }
+
+  return { accessToken, user } as AuthenticatedSession;
+};
+
 export async function getApiContext(req: Request, options: { withAuth: true; withI18n: true }): Promise<ApiContextFull>;
 export async function getApiContext(
   req: Request,
@@ -42,24 +59,23 @@ export async function getApiContext(
   req: Request,
   options?: { withAuth?: false; withI18n?: false },
 ): Promise<ApiContextBase>;
-
 export async function getApiContext(req: Request, { withAuth = false, withI18n = false }: ApiContextParams = {}) {
   const { searchParams } = new URL(req.url);
   const localeParam = searchParams.get("locale") as Locale | null;
   const locale = Object.values(Locale).includes(localeParam ?? Locale.EN) ? (localeParam as Locale) : Locale.EN;
 
   if (withAuth && withI18n) {
-    const session = await auth();
+    const session = await getUserContext();
     if (!session?.accessToken) throw new UnauthorizedError();
 
     const i18n = await getI18n({ locale });
-    return { i18n, locale, session: session as AuthenticatedSession } satisfies ApiContextFull;
+    return { i18n, locale, session } satisfies ApiContextFull;
   }
 
   if (withAuth) {
-    const session = await auth();
+    const session = await getUserContext();
     if (!session?.accessToken) throw new UnauthorizedError();
-    return { locale, session: session as AuthenticatedSession } satisfies ApiContextWithUser;
+    return { locale, session } satisfies ApiContextWithUser;
   }
 
   if (withI18n) {

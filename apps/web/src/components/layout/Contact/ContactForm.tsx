@@ -21,15 +21,15 @@ const Contact = () => {
 
   const { getFieldProps, isFormValid, setFieldErrorsFromServer, setValues, validateForm, values } = useForm({
     initialValues: {
-      email: profileData?.user?.email ?? "",
+      email: profileData?.email ?? "",
       message: "",
-      name: profileData?.user?.name ?? "",
+      name: profileData?.name ?? "",
     },
     schema: getContactFormSchema(i18n),
   });
 
   useEffect(() => {
-    const { email, name } = profileData?.user ?? {};
+    const { email, name } = profileData ?? {};
     if (name && email) {
       setValues((prev) => ({
         ...prev,
@@ -84,10 +84,7 @@ const Contact = () => {
 
   if (status === "success") {
     return (
-      <div className={`
-        mx-auto flex flex-grow flex-col items-center justify-center space-y-6
-        text-center
-      `}>
+      <div className={`mx-auto flex flex-grow flex-col items-center justify-center space-y-6 text-center`}>
         <MailCheck size={50} />
         <h1 className="text-4xl font-bold">{i18n("Thanks for your message!")}</h1>
         <p className="text-lg">{i18n("I'll get back to you soon.")}</p>
@@ -98,7 +95,7 @@ const Contact = () => {
 
   return (
     <>
-      <h1 className="mb-6 text-3xl font-semibold text-on-surface">{i18n("Contact me")}</h1>
+      <h1 className="text-on-surface mb-6 text-3xl font-semibold">{i18n("Contact me")}</h1>
 
       {status === "error" && (
         <Alert dismissLabel={i18n("Dismiss alert")}>{i18n("Failed to send message. Please try again.")}</Alert>

@@ -357,6 +357,9 @@ hasura migrate apply --down 1 --envfile .env
 
 # Mark migration as applied without running (use with caution!)
 hasura migrate apply --version <version> --skip-execution --envfile .env
+
+# Delete migration by id
+hasura migrate delete --version <migration_id> --envfile .env
 ```
 
 ### Metadata Inconsistencies

@@ -4,6 +4,8 @@ import { gql, useQuery } from "@apollo/client";
 import { SessionProvider, useSession } from "next-auth/react";
 import { createContext, ReactNode, useContext } from "react";
 
+import { Users } from "~/types";
+
 const GET_USER_PROFILE = gql`
   query GetUserProfile($id: uuid!) {
     users_by_pk(id: $id) {
@@ -13,24 +15,19 @@ const GET_USER_PROFILE = gql`
       role
       status
       image
+      points
+      venues_created
+      events_created
+      level
     }
   }
 `;
 
 type AuthContextType = {
   isLoading: boolean;
-  profile: UserProfile;
+  profile: null | Users;
   refetchProfile: () => Promise<void>;
 };
-
-type UserProfile = {
-  email: null | string;
-  id: string;
-  image: null | string;
-  name: null | string;
-  role: string;
-  status: string;
-} | null;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

@@ -1,4 +1,4 @@
-import { Session, User } from "next-auth";
+import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 
 import { useAuth } from "~/contexts/AuthContext";
@@ -6,6 +6,7 @@ import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { UrlHelper } from "~/lib/url-helper";
 import { UserRole } from "~/types/next-auth";
+import { UserSession } from "~/types/user";
 import { UUID } from "~/types/uuid";
 
 export interface UserContext {
@@ -15,13 +16,6 @@ export interface UserContext {
   refetchProfile: () => Promise<void>;
   status: "authenticated" | "loading" | "unauthenticated";
   update: (data?: Partial<Session> | undefined) => Promise<null | Session>;
-}
-
-export interface UserSession extends Session {
-  user: {
-    id: UUID;
-    name: string;
-  } & User;
 }
 
 export function getFullImageUrl(image: null | string | undefined): null | string {
@@ -44,18 +38,12 @@ export const useUser = (): UserContext => {
 
   const data: null | UserSession = session
     ? {
-        ...session,
-        user: {
-          ...session.user,
-          ...profile,
-          id: (profile?.id ?? session.user?.id) as UUID,
-          name: profile?.name ?? session.user?.name ?? i18n("Someone"),
-          ...(profile && {
-            email: profile.email,
-            image: getFullImageUrl(profile.image),
-            role: profile.role as UserRole,
-          }),
-        },
+        ...profile,
+        email: profile?.email ?? session.user?.email ?? "",
+        id: (profile?.id ?? session.user?.id) as UUID,
+        image: getFullImageUrl(profile?.image ?? session.user?.image),
+        name: profile?.name ?? session.user?.name ?? i18n("Someone"),
+        role: (profile?.role ?? session.user?.role ?? "user") as UserRole,
       }
     : null;
 
