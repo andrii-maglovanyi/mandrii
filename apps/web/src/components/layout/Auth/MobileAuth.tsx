@@ -8,7 +8,7 @@ import { useI18n } from "~/i18n/useI18n";
 
 import { SignInForm } from "./SignInForm";
 import { UserMenu } from "./UserMenu";
-import { UserProfileCard } from "./UserProfile";
+import { UserProfileCard } from "./UserProfileCard";
 
 export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>) {
   const i18n = useI18n();
@@ -39,9 +39,7 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
   if (isAuthenticated) {
     return (
       <>
-        <div className="rounded-xl bg-surface-tint p-4">
-          <UserProfileCard profile={profileData!} />
-        </div>
+        <UserProfileCard profile={profileData!} />
 
         {children}
         <Separator className="mb-6" variant="margin" />

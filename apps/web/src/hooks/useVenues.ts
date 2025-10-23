@@ -59,6 +59,8 @@ const GET_PUBLIC_VENUES = gql`
       id
       name
       address
+      city
+      country
       images
       description_uk
       description_en

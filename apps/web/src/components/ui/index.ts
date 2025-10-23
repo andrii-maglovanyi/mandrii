@@ -10,6 +10,7 @@ export { ImageCarousel } from "./ImageCarousel/ImageCarousel";
 export { Input } from "./Input/Input";
 export { MDEditor } from "./MDEditor/MDEditor";
 export { Notification } from "./Notification/Notification";
+export { Pagination } from "./Pagination/Pagination";
 export { ProgressBar } from "./ProgressBar/ProgressBar";
 export { RichText } from "./RichText/RichText";
 export { Select } from "./Select/Select";

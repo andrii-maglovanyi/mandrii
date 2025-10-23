@@ -71,7 +71,7 @@ export const UserProfile = () => {
 
   return (
     <div className="flex flex-grow flex-col gap-8 py-4 md:py-8">
-      <div className={`border-primary/10 bg-surface-tint rounded-2xl border p-6 shadow-lg md:p-8`}>
+      <div className={`bg-surface-tint/50 rounded-2xl p-6 md:p-8`}>
         <div className="mb-8">
           <h2
             className={`from-primary to-secondary mb-2 bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent md:text-3xl`}

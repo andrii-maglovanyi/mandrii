@@ -18,6 +18,7 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
   const navLinks = (
     <>
       <Link href="/map">{i18n("Map")}</Link>
+      <Link href="/venues">{i18n("Venues")}</Link>
       <Link href="/events">{i18n("Events")}</Link>
       <Link href="/posts">{i18n("Posts")}</Link>
     </>
