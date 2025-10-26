@@ -1,23 +1,19 @@
 "use client";
 
 import clsx from "clsx";
-import { BadgeCheck, Clock, Crown, MapPin, PenTool, Share2 } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-import { ActionButton, Tooltip } from "~/components/ui";
-import { useDialog } from "~/contexts/DialogContext";
-import { useNotifications } from "~/hooks/useNotifications";
-import { useUser } from "~/hooks/useUser";
-import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
-import { getIcon } from "~/lib/icons/icons";
-import { sendToMixpanel } from "~/lib/mixpanel";
-import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
 
-import { ClaimOwnershipDialog } from "../VenueCard/ClaimOwnershipDialog";
+import { GetPublicVenuesQuery, Locale } from "~/types";
+
+import { CardHeader } from "./Components/CardHeader";
+import { useMediaQuery } from "react-responsive";
+import { CardFooter } from "./Components/CardFooter";
+import { CardMetadata } from "./Components/CardMetadata";
 
 interface LayoutConfig {
   containerClasses: string;
@@ -30,9 +26,9 @@ interface LayoutConfig {
   titleClasses: string;
 }
 
-type LayoutVariant = "masonry-full" | "masonry-half" | "masonry-small" | "masonry-third" | "tile";
+type LayoutVariant = "masonry-full" | "masonry-half" | "masonry-small" | "masonry-third" | "list";
 
-interface VenueCardBaseProps {
+interface CardBaseProps {
   hasImage?: boolean;
   variant: LayoutVariant;
   venue: GetPublicVenuesQuery["venues"][number];
@@ -121,9 +117,9 @@ const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): LayoutConfi
 
     return {
       containerClasses: config.containerClasses,
-      contentClasses: clsx("flex flex-1 flex-col p-4", {
+      contentClasses: clsx("flex flex-1 flex-col p-4 ", {
         "gap-2": isMasonryVertical,
-        "justify-between p-5": !isMasonryVertical,
+        "justify-between p-4": !isMasonryVertical,
       }),
       descriptionClasses: config.descriptionClasses,
       imageContainerClasses: clsx("relative flex-shrink-0 overflow-hidden", {
@@ -162,56 +158,20 @@ const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): LayoutConfi
 /**
  * Base venue card component with configurable layouts.
  *
- * @param {VenueCardBaseProps} props - Component props.
+ * @param {CardBaseProps} props - Component props.
  * @returns {JSX.Element} The venue card.
  */
-export const VenueCardBase = ({ hasImage = false, variant, venue }: VenueCardBaseProps) => {
-  const i18n = useI18n();
+export const CardBase = ({ hasImage = false, variant, venue }: CardBaseProps) => {
   const locale = useLocale() as Locale;
-  const { data: profileData } = useUser();
-  const { showSuccess } = useNotifications();
-  const { openCustomDialog } = useDialog();
-  const router = useRouter();
 
   const description = (locale === "uk" ? venue.description_uk : venue.description_en) || "";
   const truncatedDescription = description.length > 120 ? `${description.substring(0, 120)}...` : description;
   const mainImage = venue.logo ?? venue.images?.[0];
-  const { iconName, label } = constants.categories[venue.category as keyof typeof constants.categories];
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const config = getLayoutConfig(variant, hasImage);
 
-  const handleOwnerClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    sendToMixpanel("Clicked Claim Ownership", { slug: venue.slug });
-
-    openCustomDialog({
-      children: <ClaimOwnershipDialog venue={venue} />,
-    });
-  };
-
-  const handleShareClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const url = `${globalThis.location.origin}/venues/${venue.slug}`;
-    sendToMixpanel("Clicked Share Venue", { slug: venue.slug });
-    navigator.clipboard.writeText(url);
-
-    showSuccess(i18n("Copied venue URL"));
-  };
-
-  const handleManageClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    sendToMixpanel("Clicked Manage Venue", { slug: venue.slug });
-
-    router.push(`/user-directory/venues/${venue.slug}`);
-  };
-
-  const CardWrapper = variant.startsWith("tile") ? "article" : "div";
+  const CardWrapper = variant.startsWith("list") ? "article" : "div";
 
   return (
     <Link className={config.containerClasses} href={`/venues/${venue.slug}`}>
@@ -246,88 +206,28 @@ export const VenueCardBase = ({ hasImage = false, variant, venue }: VenueCardBas
 
         <div className={config.contentClasses}>
           <div className="flex-1">
-            <div className="mb-2 flex h-8 justify-between">
-              <div className={`text-on-surface flex h-full items-center gap-1 text-sm`}>
-                {getIcon(iconName, { className: "flex-shrink-0", size: 16 })}
-                {label[locale]}
-              </div>
-
-              <div className="flex items-center gap-1">
-                {profileData && (profileData.id === venue.owner_id || profileData.id === venue.user_id) ? (
-                  <ActionButton
-                    aria-label={i18n("Edit venue")}
-                    className="group"
-                    icon={<PenTool className={`hidden group-hover/card:flex`} size={18} />}
-                    onClick={handleManageClick}
-                    size="sm"
-                    variant="ghost"
-                  />
-                ) : (
-                  <div className={`hidden group-hover/card:flex`}>
-                    <ActionButton
-                      aria-label={i18n("I own this venue")}
-                      className="group"
-                      icon={
-                        <Crown
-                          className={`stroke-amber-600 group-hover:fill-amber-600 dark:stroke-amber-400 dark:group-hover:fill-amber-400`}
-                          size={18}
-                        />
-                      }
-                      onClick={handleOwnerClick}
-                      size="sm"
-                      variant="ghost"
-                    />
-                  </div>
-                )}
-                <ActionButton
-                  aria-label={i18n("Share this venue")}
-                  className="group"
-                  icon={<Share2 className={`hidden group-hover/card:flex`} size={18} />}
-                  onClick={handleShareClick}
-                  size="sm"
-                  variant="ghost"
-                />
-                {venue.owner_id ? (
-                  <Tooltip label={i18n("Verified venue with owner")} position="left">
-                    <BadgeCheck className={`stroke-surface-tint fill-green-600 dark:fill-green-400`} />
-                  </Tooltip>
-                ) : null}
-              </div>
-            </div>
+            <CardHeader venue={venue} hideUntilHover={!isMobile} />
 
             <h3 className={config.titleClasses}>{venue.name}</h3>
 
             {venue.address && (
               <div className="text-neutral mb-2 flex items-start gap-1 text-sm">
                 <MapPin className="mt-0.5 shrink-0" size={16} />
-                <span className={variant.startsWith("tile") ? "line-clamp-1" : `line-clamp-2`}>{venue.address}</span>
+                <span className={variant.startsWith("list") ? "line-clamp-1" : `line-clamp-2`}>{venue.address}</span>
               </div>
             )}
 
             {config.showDescription && description && (
               <p className={config.descriptionClasses}>
-                {variant.startsWith("tile") ? truncatedDescription : description}
+                {variant.startsWith("list") ? truncatedDescription : description}
               </p>
             )}
           </div>
 
-          <div className={`border-primary/5 flex items-center justify-between border-t pt-3`}>
-            <div className="text-neutral flex items-center gap-2 text-xs">
-              {venue.status === Venue_Status_Enum.Pending && (
-                <>
-                  <Clock size={14} />
-                  <span className="capitalize">{venue.status?.toLowerCase()}</span>
-                </>
-              )}
-            </div>
-
-            <div
-              className={`text-primary flex items-center gap-1 text-xs font-medium opacity-0 transition-opacity group-hover/card:opacity-100`}
-            >
-              {i18n("Discover")}
-              <span className={`transition-transform group-hover/card:translate-x-1`}>→</span>
-            </div>
-          </div>
+          {variant === "masonry-full" && (
+            <CardMetadata variant={variant.startsWith("list") ? "list" : "grid"} venue={venue} hideUntilHover />
+          )}
+          <CardFooter venue={venue} hideUntilHover={!isMobile} />
         </div>
       </CardWrapper>
     </Link>

@@ -10,9 +10,9 @@ import { getVenuesFilter, useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { GetPublicVenuesQuery, Venue_Category_Enum } from "~/types";
 
-import { VenueMasonryCard } from "./VenueMasonryCard";
+import { VenuesMasonryCard } from "../VenueCard/VenuesMasonryCard";
 import { VenuesListFilter } from "./VenuesListFilter";
-import { VenuesTileCard } from "./VenuesTileCard";
+import { VenuesListCard } from "../VenueCard/VenuesListCard";
 
 type LayoutSize = "full" | "half" | "small" | "third";
 interface VenueWithLayout {
@@ -190,10 +190,7 @@ export const VenuesList = () => {
       />
 
       <div className="flex flex-wrap items-center justify-between">
-        <RichText as="div" className={`
-          text-sm
-          sm:text-base
-        `}>
+        <RichText as="div" className={`text-sm sm:text-base`}>
           {(() => {
             const currentOffset = listState.offset ?? 0;
             const start = currentOffset + 1;
@@ -207,7 +204,7 @@ export const VenuesList = () => {
           })()}
         </RichText>
 
-        <div className="flex gap-1 rounded-lg bg-surface-tint p-1">
+        <div className="bg-surface-tint flex gap-1 rounded-lg p-1">
           <ActionButton
             aria-label={i18n("Grid view")}
             color="primary"
@@ -228,10 +225,7 @@ export const VenuesList = () => {
 
       {loading && (
         <div
-          className={`
-            absolute inset-0 hidden items-center justify-center
-            md:flex
-          `}
+          className={`absolute inset-0 hidden items-center justify-center md:flex`}
           data-testid="spinner"
           style={{ marginTop: venues.length ? "0" : "5rem" }}
         >
@@ -246,13 +240,9 @@ export const VenuesList = () => {
           icon={<MapPinOff size={50} />}
         />
       ) : viewMode === "grid" ? (
-        <div className={`
-          grid auto-rows-auto grid-cols-1 gap-4
-          sm:grid-cols-2
-          lg:grid-cols-4
-        `}>
+        <div className={`grid auto-rows-auto grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4`}>
           {venueLayouts.map((item) => (
-            <VenueMasonryCard
+            <VenuesMasonryCard
               hasImage={item.hasImage}
               key={item.venue.id}
               layoutSize={item.layoutSize}
@@ -263,7 +253,7 @@ export const VenuesList = () => {
       ) : (
         <div className="flex flex-col gap-4">
           {venues.map((venue) => (
-            <VenuesTileCard key={venue.id} venue={venue} />
+            <VenuesListCard key={venue.id} venue={venue} />
           ))}
         </div>
       )}
