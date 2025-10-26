@@ -44,7 +44,13 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
       <ActionButton aria-label="Profile" icon={<User />} onClick={() => setOpen(!open)} variant="ghost" />
       {render && (
         <menu
-          className={`bg-surface-tint text-on-surface absolute right-0 z-40 mt-2 w-max origin-top-right transform space-y-2 space-y-4 rounded-md p-4 shadow-lg transition duration-200 ease-out dark:shadow-neutral-500/10 ${open ? `scale-100 opacity-100` : `scale-95 opacity-0`} `}
+          className={`
+            absolute right-0 z-40 mt-2 w-max origin-top-right transform
+            space-y-2 space-y-4 rounded-md bg-surface-tint p-4 text-on-surface
+            shadow-lg transition duration-200 ease-out
+            dark:shadow-neutral-500/10
+            ${open ? `scale-100 opacity-100` : `scale-95 opacity-0`}
+          `}
         >
           <UserProfileCard profile={profileData} />
 

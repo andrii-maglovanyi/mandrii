@@ -1,5 +1,6 @@
 "use client";
 
+import { te } from "date-fns/locale/te";
 import { MailCheck } from "lucide-react";
 import { useLocale } from "next-intl";
 import { FormEvent, useEffect, useState } from "react";
@@ -14,7 +15,7 @@ import { publicConfig } from "~/lib/config/public";
 import { getContactFormSchema } from "~/lib/validation/contact";
 import { Status } from "~/types";
 
-const Contact = () => {
+const Contact = ({ message = "" }: { message?: string }) => {
   const i18n = useI18n();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { data: profileData } = useUser();
@@ -22,7 +23,7 @@ const Contact = () => {
   const { getFieldProps, isFormValid, setFieldErrorsFromServer, setValues, validateForm, values } = useForm({
     initialValues: {
       email: profileData?.email ?? "",
-      message: "",
+      message,
       name: profileData?.name ?? "",
     },
     schema: getContactFormSchema(i18n),
@@ -37,7 +38,7 @@ const Contact = () => {
         name,
       }));
     }
-  }, [profileData, setValues]);
+  }, [profileData?.name, profileData?.email, setValues]);
 
   const locale = useLocale();
   const [status, setStatus] = useState<Status>("idle");
@@ -84,7 +85,10 @@ const Contact = () => {
 
   if (status === "success") {
     return (
-      <div className={`mx-auto flex flex-grow flex-col items-center justify-center space-y-6 text-center`}>
+      <div className={`
+        mx-auto flex flex-grow flex-col items-center justify-center space-y-6
+        text-center
+      `}>
         <MailCheck size={50} />
         <h1 className="text-4xl font-bold">{i18n("Thanks for your message!")}</h1>
         <p className="text-lg">{i18n("I'll get back to you soon.")}</p>
@@ -95,7 +99,7 @@ const Contact = () => {
 
   return (
     <>
-      <h1 className="text-on-surface mb-6 text-3xl font-semibold">{i18n("Contact me")}</h1>
+      <h1 className="mb-6 text-3xl font-semibold text-on-surface">{i18n("Contact me")}</h1>
 
       {status === "error" && (
         <Alert dismissLabel={i18n("Dismiss alert")}>{i18n("Failed to send message. Please try again.")}</Alert>
@@ -139,10 +143,10 @@ const Contact = () => {
   );
 };
 
-export function ContactForm() {
+export function ContactForm({ template }: { template?: string }) {
   return (
     <GoogleReCaptchaProvider reCaptchaKey={publicConfig.recaptcha.siteKey}>
-      <Contact />
+      <Contact message={template} />
     </GoogleReCaptchaProvider>
   );
 }

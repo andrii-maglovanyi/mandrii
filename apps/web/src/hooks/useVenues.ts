@@ -1,4 +1,4 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
 
@@ -15,15 +15,17 @@ import { useGraphApi } from "./useGraphApi";
 
 interface VenuesParams {
   category?: Venue_Category_Enum;
+  country?: string;
   distance?: string;
   geo?: {
     lat: number;
     lng: number;
   };
+  name?: string;
   slug?: string;
 }
 
-export const getVenuesMapFilter = ({ category, distance, geo, slug }: VenuesParams) => {
+export const getVenuesFilter = ({ category, country, distance, geo, name, slug }: VenuesParams) => {
   const variables: { where: FilterParams } = {
     where: {},
   };
@@ -48,29 +50,52 @@ export const getVenuesMapFilter = ({ category, distance, geo, slug }: VenuesPara
     if (category) {
       variables.where.category = { _eq: category.toUpperCase() };
     }
+
+    if (country) {
+      variables.where.country = { _eq: country };
+    }
+
+    if (name) {
+      variables.where._or = [
+        { name: { _ilike: `%${name}%` } },
+        { city: { _ilike: `%${name}%` } },
+        { address: { _ilike: `%${name}%` } },
+      ];
+    }
   }
 
   return { variables };
 };
 
+const GET_AVAILABLE_COUNTRIES = gql`
+  query GetAvailableCountries($where: venues_bool_exp!) {
+    venues(where: $where, distinct_on: country, order_by: { country: asc }) {
+      country
+    }
+  }
+`;
+
 const GET_PUBLIC_VENUES = gql`
-  query GetPublicVenues($where: venues_bool_exp!) {
-    venues(where: $where) {
+  query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       id
       name
       address
       city
       country
+      logo
       images
       description_uk
       description_en
       geo
+      category
       emails
       website
       phone_numbers
       slug
       status
       owner_id
+      user_id
     }
     venues_aggregate(where: $where) {
       aggregate {
@@ -101,6 +126,7 @@ const GET_USER_VENUES = gql`
       phone_numbers
       social_links
       status
+      owner_id
       slug
     }
     venues_aggregate(where: $where) {
@@ -165,6 +191,32 @@ export const useVenues = () => {
     [updateStatus, loading, error],
   );
 
+  /**
+   * Get list of distinct countries where active venues exist.
+   * Useful for populating country filter dropdowns.
+   */
+  const useAvailableCountries = () => {
+    const { data, error, loading } = useQuery(GET_AVAILABLE_COUNTRIES, {
+      variables: {
+        where: {
+          _and: [
+            { status: { _eq: "ACTIVE" } },
+            { country: { _is_null: false } },
+            { country: { _neq: "" } }, // Exclude empty strings
+          ],
+        },
+      },
+    });
+
+    const countries = data?.venues?.map((venue: { country: string }) => venue.country).filter(Boolean) ?? [];
+
+    return {
+      countries,
+      error,
+      loading,
+    };
+  };
+
   const useAdminVenues = (params: APIParams) => useGraphApi<GetAdminVenuesQuery["venues"]>(GET_ADMIN_VENUES, params);
 
   const useUserVenues = (params?: APIParams) => {
@@ -203,6 +255,7 @@ export const useVenues = () => {
   return {
     updateVenueStatus,
     useAdminVenues,
+    useAvailableCountries,
     useGetVenue,
     usePublicVenues,
     useUserVenues,

@@ -3,9 +3,28 @@ import * as runtime from "react/jsx-runtime";
 
 import { useMDXComponents } from "./mdx-components";
 
-export async function compileMDX(mdxContent: string) {
+interface MDXVariables {
+  [key: string]: string;
+}
+
+/**
+ * Compiles MDX content with optional variable replacement
+ * @param mdxContent - The MDX content string
+ * @param variables - Optional object with key-value pairs to replace in the MDX (e.g., { VENUE_NAME: "My Venue" })
+ * @returns Compiled MDX component
+ */
+export async function compileMDX(mdxContent: string, variables?: MDXVariables) {
   try {
-    const file = await compile(mdxContent, {
+    // Replace variables in the format {{ VARIABLE_NAME }}
+    let processedContent = mdxContent;
+    if (variables) {
+      Object.entries(variables).forEach(([key, value]) => {
+        const regex = new RegExp(`{{\\s*${key}\\s*}}`, "g");
+        processedContent = processedContent.replace(regex, value);
+      });
+    }
+
+    const file = await compile(processedContent, {
       outputFormat: "function-body",
       providerImportSource: "./mxd-components",
     });

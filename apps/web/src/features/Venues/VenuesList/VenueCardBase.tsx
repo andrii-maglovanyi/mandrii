@@ -1,0 +1,335 @@
+"use client";
+
+import clsx from "clsx";
+import { BadgeCheck, Clock, Crown, MapPin, PenTool, Share2 } from "lucide-react";
+import { useLocale } from "next-intl";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { ActionButton, Tooltip } from "~/components/ui";
+import { useDialog } from "~/contexts/DialogContext";
+import { useNotifications } from "~/hooks/useNotifications";
+import { useUser } from "~/hooks/useUser";
+import { useI18n } from "~/i18n/useI18n";
+import { constants } from "~/lib/constants";
+import { getIcon } from "~/lib/icons/icons";
+import { sendToMixpanel } from "~/lib/mixpanel";
+import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
+
+import { ClaimOwnershipDialog } from "../VenueCard/ClaimOwnershipDialog";
+
+interface LayoutConfig {
+  containerClasses: string;
+  contentClasses: string;
+  descriptionClasses: string;
+  imageContainerClasses: string;
+  imageSizes: string;
+  innerContainerClasses: string;
+  showDescription: boolean;
+  titleClasses: string;
+}
+
+type LayoutVariant = "masonry-full" | "masonry-half" | "masonry-small" | "masonry-third" | "tile";
+
+interface VenueCardBaseProps {
+  hasImage?: boolean;
+  variant: LayoutVariant;
+  venue: GetPublicVenuesQuery["venues"][number];
+}
+
+/**
+ * Base card styles shared across all variants.
+ */
+const baseCardClasses = clsx(
+  "relative flex overflow-hidden rounded-xl border border-primary/0",
+  "group/card bg-surface-tint/50 transition-all duration-300",
+  `
+    no-underline
+    hover:border-primary/20 hover:shadow-lg
+  `,
+);
+
+/**
+ * Masonry variant configurations.
+ */
+const masonryVariants = {
+  "masonry-full": {
+    containerClasses: clsx(
+      baseCardClasses,
+      `
+      col-span-1 min-h-[300px]
+      sm:col-span-2
+      lg:col-span-4
+    `,
+    ),
+    descriptionClasses: "text-neutral text-sm line-clamp-3",
+    imageClasses: { horizontal: "h-full min-h-[300px] w-full sm:w-2/5", vertical: "h-48 w-full sm:h-56" },
+    imageSizes: "(max-width: 768px) 100vw, 40vw",
+    minHeight: "min-h-[300px]",
+    showDescription: true,
+    titleClasses: "text-xl sm:text-2xl",
+  },
+  "masonry-half": {
+    containerClasses: clsx(
+      baseCardClasses,
+      `
+      col-span-1 min-h-[300px]
+      sm:col-span-2
+      lg:col-span-2
+    `,
+    ),
+    descriptionClasses: "text-neutral text-sm line-clamp-2",
+    imageClasses: { horizontal: "h-full min-h-[300px] w-full sm:w-1/2", vertical: "h-44 w-full sm:h-52" },
+    imageSizes: "(max-width: 768px) 100vw, 50vw",
+    minHeight: "min-h-[300px]",
+    showDescription: true,
+    titleClasses: "text-lg sm:text-xl",
+  },
+  "masonry-small": {
+    containerClasses: clsx(baseCardClasses, "col-span-1 min-h-[220px]"),
+    descriptionClasses: "text-neutral text-sm line-clamp-2",
+    imageClasses: { horizontal: "", vertical: "h-40 w-full sm:h-48" },
+    imageSizes: "(max-width: 768px) 100vw, 33vw",
+    minHeight: "min-h-[220px]",
+    showDescription: false,
+    titleClasses: "text-base sm:text-lg",
+  },
+  "masonry-third": {
+    containerClasses: clsx(baseCardClasses, "col-span-1 min-h-[260px]"),
+    descriptionClasses: "text-neutral text-sm line-clamp-2",
+    imageClasses: { horizontal: "", vertical: "h-44 w-full sm:h-52" },
+    imageSizes: "(max-width: 768px) 100vw, 33vw",
+    minHeight: "min-h-[260px]",
+    showDescription: false,
+    titleClasses: "text-base sm:text-lg",
+  },
+} as const;
+
+/**
+ * Get layout configuration based on variant.
+ *
+ * @param {LayoutVariant} variant - The layout variant to use.
+ * @param {boolean} hasImage - Whether the card has an image.
+ * @returns {LayoutConfig} The layout configuration.
+ */
+const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): LayoutConfig => {
+  if (variant.startsWith("masonry")) {
+    const config = masonryVariants[variant as keyof typeof masonryVariants];
+    const isMasonryVertical =
+      variant === "masonry-small" || variant === "masonry-third" || (variant.startsWith("masonry") && !hasImage);
+
+    return {
+      containerClasses: config.containerClasses,
+      contentClasses: clsx("flex flex-1 flex-col p-4", {
+        "gap-2": isMasonryVertical,
+        "justify-between p-5": !isMasonryVertical,
+      }),
+      descriptionClasses: config.descriptionClasses,
+      imageContainerClasses: clsx("relative flex-shrink-0 overflow-hidden", {
+        [config.imageClasses.horizontal]: !isMasonryVertical,
+        [config.imageClasses.vertical]: isMasonryVertical,
+      }),
+      imageSizes: config.imageSizes,
+      innerContainerClasses: clsx("flex h-full w-full", config.minHeight, {
+        "flex-col": isMasonryVertical,
+        "flex-row": !isMasonryVertical && hasImage,
+      }),
+      showDescription: config.showDescription,
+      titleClasses: clsx(
+        `
+          mb-2 line-clamp-2 font-bold text-primary transition-colors
+          group-hover/card:underline
+        `,
+        config.titleClasses,
+      ),
+    };
+  }
+
+  return {
+    containerClasses: clsx(baseCardClasses, "flex flex-row"),
+    contentClasses: "flex flex-1 flex-col gap-2 p-4",
+    descriptionClasses: "text-neutral text-sm line-clamp-3",
+    imageContainerClasses: "bg-neutral/5 relative overflow-hidden max-h-64 min-h-48 max-w-64 min-w-48 flex-shrink-0",
+    imageSizes: "256px",
+    innerContainerClasses: "w-full flex",
+    showDescription: true,
+    titleClasses:
+      "text-lg sm:text-xl group-hover/card:text-primary mb-2 line-clamp-1 font-bold transition-colors group-hover/card:underline",
+  };
+};
+
+/**
+ * Base venue card component with configurable layouts.
+ *
+ * @param {VenueCardBaseProps} props - Component props.
+ * @returns {JSX.Element} The venue card.
+ */
+export const VenueCardBase = ({ hasImage = false, variant, venue }: VenueCardBaseProps) => {
+  const i18n = useI18n();
+  const locale = useLocale() as Locale;
+  const { data: profileData } = useUser();
+  const { showSuccess } = useNotifications();
+  const { openCustomDialog } = useDialog();
+  const router = useRouter();
+
+  const description = (locale === "uk" ? venue.description_uk : venue.description_en) || "";
+  const truncatedDescription = description.length > 120 ? `${description.substring(0, 120)}...` : description;
+  const mainImage = venue.logo ?? venue.images?.[0];
+  const { iconName, label } = constants.categories[venue.category as keyof typeof constants.categories];
+
+  const config = getLayoutConfig(variant, hasImage);
+
+  const handleOwnerClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    sendToMixpanel("Clicked Claim Ownership", { slug: venue.slug });
+
+    openCustomDialog({
+      children: <ClaimOwnershipDialog venue={venue} />,
+    });
+  };
+
+  const handleShareClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const url = `${globalThis.location.origin}/venues/${venue.slug}`;
+    sendToMixpanel("Clicked Share Venue", { slug: venue.slug });
+    navigator.clipboard.writeText(url);
+
+    showSuccess(i18n("Copied venue URL"));
+  };
+
+  const handleManageClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    sendToMixpanel("Clicked Manage Venue", { slug: venue.slug });
+
+    router.push(`/user-directory/venues/${venue.slug}`);
+  };
+
+  const CardWrapper = variant.startsWith("tile") ? "article" : "div";
+
+  return (
+    <Link className={config.containerClasses} href={`/venues/${venue.slug}`}>
+      <CardWrapper className={config.innerContainerClasses}>
+        {hasImage && mainImage && (
+          <div className={config.imageContainerClasses}>
+            <Image
+              alt={venue.name}
+              className={`object-cover transition-transform duration-300 group-hover/card:scale-110`}
+              fill
+              sizes={config.imageSizes}
+              src={`${constants.vercelBlobStorageUrl}/${mainImage}`}
+            />
+            <div
+              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
+            />
+          </div>
+        )}
+
+        {hasImage && !mainImage && variant.startsWith("masonry") && (
+          <div className={config.imageContainerClasses}>
+            <div
+              className={`from-primary/10 to-secondary/10 flex h-full items-center justify-center bg-gradient-to-br`}
+            >
+              <MapPin className="text-neutral opacity-30" size={48} />
+            </div>
+            <div
+              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
+            />
+          </div>
+        )}
+
+        <div className={config.contentClasses}>
+          <div className="flex-1">
+            <div className="mb-2 flex h-8 justify-between">
+              <div className={`text-on-surface flex h-full items-center gap-1 text-sm`}>
+                {getIcon(iconName, { className: "flex-shrink-0", size: 16 })}
+                {label[locale]}
+              </div>
+
+              <div className="flex items-center gap-1">
+                {profileData && (profileData.id === venue.owner_id || profileData.id === venue.user_id) ? (
+                  <ActionButton
+                    aria-label={i18n("Edit venue")}
+                    className="group"
+                    icon={<PenTool className={`hidden group-hover/card:flex`} size={18} />}
+                    onClick={handleManageClick}
+                    size="sm"
+                    variant="ghost"
+                  />
+                ) : (
+                  <div className={`hidden group-hover/card:flex`}>
+                    <ActionButton
+                      aria-label={i18n("I own this venue")}
+                      className="group"
+                      icon={
+                        <Crown
+                          className={`stroke-amber-600 group-hover:fill-amber-600 dark:stroke-amber-400 dark:group-hover:fill-amber-400`}
+                          size={18}
+                        />
+                      }
+                      onClick={handleOwnerClick}
+                      size="sm"
+                      variant="ghost"
+                    />
+                  </div>
+                )}
+                <ActionButton
+                  aria-label={i18n("Share this venue")}
+                  className="group"
+                  icon={<Share2 className={`hidden group-hover/card:flex`} size={18} />}
+                  onClick={handleShareClick}
+                  size="sm"
+                  variant="ghost"
+                />
+                {venue.owner_id ? (
+                  <Tooltip label={i18n("Verified venue with owner")} position="left">
+                    <BadgeCheck className={`stroke-surface-tint fill-green-600 dark:fill-green-400`} />
+                  </Tooltip>
+                ) : null}
+              </div>
+            </div>
+
+            <h3 className={config.titleClasses}>{venue.name}</h3>
+
+            {venue.address && (
+              <div className="text-neutral mb-2 flex items-start gap-1 text-sm">
+                <MapPin className="mt-0.5 shrink-0" size={16} />
+                <span className={variant.startsWith("tile") ? "line-clamp-1" : `line-clamp-2`}>{venue.address}</span>
+              </div>
+            )}
+
+            {config.showDescription && description && (
+              <p className={config.descriptionClasses}>
+                {variant.startsWith("tile") ? truncatedDescription : description}
+              </p>
+            )}
+          </div>
+
+          <div className={`border-primary/5 flex items-center justify-between border-t pt-3`}>
+            <div className="text-neutral flex items-center gap-2 text-xs">
+              {venue.status === Venue_Status_Enum.Pending && (
+                <>
+                  <Clock size={14} />
+                  <span className="capitalize">{venue.status?.toLowerCase()}</span>
+                </>
+              )}
+            </div>
+
+            <div
+              className={`text-primary flex items-center gap-1 text-xs font-medium opacity-0 transition-opacity group-hover/card:opacity-100`}
+            >
+              {i18n("Discover")}
+              <span className={`transition-transform group-hover/card:translate-x-1`}>→</span>
+            </div>
+          </div>
+        </div>
+      </CardWrapper>
+    </Link>
+  );
+};

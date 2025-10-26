@@ -81,7 +81,7 @@ export const ListCard = ({ onClick, selectedId, venue }: ListCardProps) => {
               />
             ) : (
               <ActionButton
-                aria-label={i18n("Are you an owner?")}
+                aria-label={i18n("I own this venue")}
                 className="group"
                 icon={<Crown className={`
                   stroke-amber-500

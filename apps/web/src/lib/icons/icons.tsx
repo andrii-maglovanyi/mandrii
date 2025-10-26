@@ -30,7 +30,7 @@ const ICONS = {
 
 export type IconName = keyof typeof ICONS;
 
-export function getIcon(iconName: IconName, props?: React.SVGProps<SVGSVGElement>) {
+export function getIcon(iconName: IconName, props?: { size?: number } & React.SVGProps<SVGSVGElement>) {
   const IconComponent = ICONS[iconName];
   return IconComponent ? <IconComponent {...props} /> : null;
 }

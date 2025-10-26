@@ -5,11 +5,10 @@ import { InternalServerError } from "~/lib/api/errors";
 import { validateRequest } from "~/lib/api/validate";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { envName } from "~/lib/config/env";
+import { saveUser } from "~/lib/models/user";
+import { processImages } from "~/lib/utils/images";
 import { getUserSchema } from "~/lib/validation/user";
 import { Users } from "~/types";
-
-import { processImages } from "~/lib/utils/images";
-import { saveUser } from "~/lib/models/user";
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {

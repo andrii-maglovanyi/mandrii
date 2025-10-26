@@ -18,7 +18,7 @@ export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
   const { data: session } = useUser();
   const router = useRouter();
   const i18n = useI18n();
-  const { openCustomDialog } = useDialog();
+  const { closeDialog, openCustomDialog } = useDialog();
 
   const OWNERSHIP_BENEFITS = [
     {
@@ -47,10 +47,12 @@ export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
       venue_id: venue.id,
     });
 
+    const callbackUrl = `/claim-ownership?venue=${venue.slug}`;
+
     openCustomDialog({
-      children: <SignInForm />,
+      children: <SignInForm callbackUrl={callbackUrl} />,
     });
-  }, [openCustomDialog, venue.id]);
+  }, [openCustomDialog, venue.id, venue.slug]);
 
   const handleClaimOwnership = useCallback(() => {
     sendToMixpanel("Clicked Claim Ownership", {
@@ -58,8 +60,9 @@ export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
       venue_name: venue.name,
     });
 
-    router.push(`/claim-ownership?venue=${venue.id}`);
-  }, [router, venue.id, venue.name]);
+    router.push(`/claim-ownership?venue=${venue.slug}`);
+    closeDialog();
+  }, [router, venue.slug, venue.name]);
 
   useEffect(() => {
     sendToMixpanel("Viewed Claim Ownership Dialog", {

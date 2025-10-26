@@ -1,11 +1,12 @@
 "use client";
 
+import { CalendarHeart, ChartColumn, MapPin, Pencil } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect } from "react";
 import slugify from "slugify";
 
 import { FormFooter } from "~/components/layout";
-import { Input, Select, TabPane, Tabs } from "~/components/ui";
+import { Checkbox, Input, RichText, Select, TabPane, Tabs } from "~/components/ui";
 import { InitialValuesType, OnFormSubmitHandler, useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -28,9 +29,7 @@ interface VenueFormProps {
 export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueFormProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
-
-  console.log("initialValues", initialValues);
-
+  console.log("INIT", initialValues);
   const {
     errors,
     getFieldProps,
@@ -109,10 +108,26 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
             {...getFieldProps("slug")}
             disabled={isBusy || Boolean(initialValues.id)}
           />
+          <p className="mt-1.5 text-sm text-neutral">
+            {i18n(
+              "↑ The slug serves as a unique identifier for your venue and must be URL-friendly. Once created, it cannot be changed.",
+            )}
+          </p>
         </div>
       </div>
 
-      <p className="text-sm text-neutral">
+      <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-5">
+        <Checkbox
+          label={i18n("I own this venue")}
+          {...getFieldProps("is_owner")}
+          disabled={isBusy || Boolean(initialValues.id)}
+        />
+        <p className="text-sm text-neutral">
+          ↑ {i18n("Legal owners have additional management privileges. This setting cannot be changed.")}
+        </p>
+      </div>
+
+      <p className="mt-8 text-sm">
         {i18n("Optionally, update contacts, a description, photos, a logo, and an address for more details.")}
       </p>
 
@@ -136,6 +151,8 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
           />
         </TabPane>
       </Tabs>
+
+      {isFormValid && "isFormValid"}
 
       <FormFooter handleCancel={resetForm} hasChanges={hasChanges} isFormValid={isFormValid} status={status} />
     </form>

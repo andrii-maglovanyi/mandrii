@@ -2,8 +2,8 @@ import { VenueDetail } from "~/features/Venues/VenueDetail";
 
 interface VenuePageProps {
   params: Promise<{
-    slug: string;
     locale: string;
+    slug: string;
   }>;
 }
 

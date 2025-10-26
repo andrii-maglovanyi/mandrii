@@ -4,6 +4,7 @@ export { AnimatedEllipsis } from "./AnimatedEllipsis/AnimatedEllipsis";
 export { Breadcrumbs } from "./Breadcrumbs/Breadcrumbs";
 export { ActionButton } from "./Button/ActionButton";
 export { Button } from "./Button/Button";
+export { Checkbox } from "./Checkbox/Checkbox";
 export { EmptyState } from "./EmptyState/EmptyState";
 export { FilePicker } from "./FilePicker/FilePicker";
 export { ImageCarousel } from "./ImageCarousel/ImageCarousel";

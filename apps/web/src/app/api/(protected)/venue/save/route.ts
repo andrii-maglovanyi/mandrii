@@ -6,16 +6,16 @@ import { validateRequest } from "~/lib/api/validate";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { envName } from "~/lib/config/env";
 import { privateConfig } from "~/lib/config/private";
+import { saveUser } from "~/lib/models/user";
+import { saveVenue } from "~/lib/models/venue";
 import { sendSlackNotification } from "~/lib/slack/venue";
+import { processImages } from "~/lib/utils/images";
 import { getVenueSchema } from "~/lib/validation/venue";
 import { Venues } from "~/types";
 import { UUID } from "~/types/uuid";
 
 import { geocodeAddress } from "../../geocode/geo";
-import { processImages } from "~/lib/utils/images";
 import { checkCoordinatesWithinRange, checkIsSlugUnique } from "./validation";
-import { saveVenue } from "~/lib/models/venue";
-import { saveUser } from "~/lib/models/user";
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
@@ -34,6 +34,7 @@ export const POST = (req: Request) =>
       description_uk,
       emails,
       images,
+      is_owner,
       latitude,
       logo,
       longitude,
@@ -68,9 +69,11 @@ export const POST = (req: Request) =>
 
       venueData.slug = slug.trim();
     }
-
+    console.log("HERE3");
     if (address) {
       const geo = await geocodeAddress(address.trim(), privateConfig.maps.apiKey);
+
+      console.log("HERE3.1", geo);
 
       if (!geo) {
         throw new BadRequestError("Invalid address");
@@ -81,7 +84,7 @@ export const POST = (req: Request) =>
       venueData.country = country;
       venueData.city = city;
       venueData.postcode = postcode;
-
+      console.log("HERE3.2");
       if (longitude && latitude && checkCoordinatesWithinRange(coordinates, [longitude, latitude])) {
         venueData.geo = {
           coordinates: [longitude, latitude],
@@ -94,13 +97,14 @@ export const POST = (req: Request) =>
         };
       }
     }
-
+    console.log("HERE4");
     const prefix = [envName, "venues", slug].join("/");
 
     venueData.logo = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? "";
     venueData.images = await processImages(images ?? [], [prefix, "images"].join("/"));
 
-    const venueId = await saveVenue(venueData, session);
+    console.log("TO SAVE VENUE");
+    const venueId = await saveVenue(venueData, session, Boolean(is_owner));
 
     if (!venueId) {
       throw new InternalServerError("Failed to save venue");

@@ -10,16 +10,18 @@ import { ContentMeta } from "./ContentMeta";
 interface ContentViewerProps {
   data: ContentData | null;
   id: string;
+  showMeta?: boolean;
   type: string;
+  variables?: Record<string, string>;
 }
 
-export const ContentViewer = async ({ data, id, type }: ContentViewerProps) => {
+export const ContentViewer = async ({ data, id, showMeta, type, variables }: ContentViewerProps) => {
   const { content, meta } = data || {
     content: "",
     meta: { date: "", description: "", images: [], title: "" },
   };
 
-  const MDXContent = await compileMDX(content);
+  const MDXContent = await compileMDX(content, variables);
   const Content = MDXContent.default;
 
   return (
@@ -28,8 +30,16 @@ export const ContentViewer = async ({ data, id, type }: ContentViewerProps) => {
         prose max-w-none space-y-6
         dark:prose-invert
       `}>
-        <h1>{meta.title}</h1>
-        {meta.description ? <p className="text-neutral">{meta.description}</p> : null}
+        <h1 className={`
+          mb-8
+          bg-[linear-gradient(to_right,var(--color-neutral)_0%,var(--color-on-surface)_30%,var(--color-on-surface)_70%,var(--color-neutral)_100%)]
+          bg-clip-text text-center text-7xl text-transparent
+        `}>
+          {meta.title}
+        </h1>
+        {meta.description ? <p className={`
+          mb-8 text-center text-2xl text-neutral
+        `}>{meta.description}</p> : null}
         {meta.images?.length ? (
           <div className={`
             relative h-96 w-full overflow-hidden rounded-lg
@@ -44,7 +54,7 @@ export const ContentViewer = async ({ data, id, type }: ContentViewerProps) => {
             />
           </div>
         ) : null}
-        <ContentMeta id={id} meta={meta} type={type} />
+        {showMeta && <ContentMeta id={id} meta={meta} type={type} />}
         <Content />
       </article>
     </div>

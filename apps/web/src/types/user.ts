@@ -10,12 +10,12 @@ import { GetUserProfileQuery } from "./graphql.generated";
  * - Required fields (id, name, email, image, role) are explicitly defined
  * - 'role' uses NextAuth's UserRole type instead of GraphQL's User_Role_Enum
  */
-export type UserSession = Partial<
-  Omit<NonNullable<GetUserProfileQuery["users_by_pk"]>, "email" | "id" | "image" | "name" | "role">
-> & {
+export type UserSession = {
   email: string;
   id: UUID;
   image: null | string;
   name: string;
   role: UserRole;
-};
+} & Partial<
+  Omit<NonNullable<GetUserProfileQuery["users_by_pk"]>, "email" | "id" | "image" | "name" | "role">
+>;

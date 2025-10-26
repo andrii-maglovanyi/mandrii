@@ -1,4 +1,4 @@
 export { VenueMasonryCard } from "./VenueMasonryCard";
 export { VenuesList } from "./VenuesList";
-export { VenuesListFilters } from "./VenuesListFilters";
+export { VenuesListFilter } from "./VenuesListFilter";
 export { VenuesTileCard } from "./VenuesTileCard";

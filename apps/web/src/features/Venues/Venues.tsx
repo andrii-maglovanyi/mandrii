@@ -10,7 +10,7 @@ import { Button, Input, ProgressBar, RichText, Select } from "~/components/ui";
 import { useTheme } from "~/contexts/ThemeContext";
 import { useListControls } from "~/hooks/useListControls";
 import { useNotifications } from "~/hooks/useNotifications";
-import { getVenuesMapFilter, useVenues } from "~/hooks/useVenues";
+import { getVenuesFilter, useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
@@ -87,7 +87,7 @@ export const Venues = ({ slug }: VenuesProps) => {
   const [category, setCategory] = useState<Venue_Category_Enum>(categoryOptions[0].value);
 
   const { isDark } = useTheme();
-  const { variables } = getVenuesMapFilter({
+  const { variables } = getVenuesFilter({
     category,
     distance,
     geo: userLocation,
@@ -228,7 +228,7 @@ export const Venues = ({ slug }: VenuesProps) => {
   }, [isReady]);
 
   useEffect(() => {
-    const { variables } = getVenuesMapFilter({
+    const { variables } = getVenuesFilter({
       category,
       distance,
       geo: userLocation,

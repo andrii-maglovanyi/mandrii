@@ -1,32 +1,9 @@
 import { privateConfig } from "~/lib/config/private";
-import { publicConfig } from "~/lib/config/public";
+import { checkIsSlugUnique as checkSlugUnique } from "~/lib/graphql/queries";
 import { getLatitudeBounds, getLongitudeBounds } from "~/lib/utils";
 
-const GET_VENUE_BY_SLUG = `
-  query GetVenueBySlug($slug: String!) {
-    venues(where: { slug: { _eq: $slug } }, limit: 1) {
-      id
-    }
-  }
-`;
-
 export const checkIsSlugUnique = async (slug: string): Promise<boolean> => {
-  const response = await fetch(publicConfig.hasura.endpoint, {
-    body: JSON.stringify({ query: GET_VENUE_BY_SLUG, variables: { slug } }),
-    headers: {
-      "Content-Type": "application/json",
-      "x-hasura-admin-secret": privateConfig.hasura.adminSecret,
-    },
-    method: "POST",
-  });
-
-  const result = await response.json();
-
-  if (result.errors) {
-    throw new Error(result.errors[0].message);
-  }
-
-  return result.data.venues.length === 0;
+  return checkSlugUnique(slug, privateConfig.hasura.adminSecret);
 };
 
 export const checkCoordinatesWithinRange = (

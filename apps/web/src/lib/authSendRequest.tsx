@@ -7,6 +7,7 @@ import { constants } from "./constants";
 import { validateCaptcha } from "./recaptcha";
 
 type EmailPrams = {
+  callbackUrl?: string;
   i18n: (key: string, params?: Record<string, string>) => string;
   url: string;
 };
@@ -25,10 +26,21 @@ export async function sendVerificationRequest(params: SendVerificationRequestPar
   const { identifier: to, provider, url } = params;
 
   const { searchParams } = new URL(params.request.url);
-  const locale = searchParams.get("locale") ?? "en";
-  const token = searchParams.get("token");
+  const callbackUrl = searchParams.get("callbackUrl");
+
+  const body = await params.request.clone().json();
+  const token = body.token;
+  const locale = body.locale ?? "en";
+
+  let finalUrl = url;
+  if (callbackUrl) {
+    const verificationUrl = new URL(url);
+    verificationUrl.searchParams.set("callbackUrl", callbackUrl);
+    finalUrl = verificationUrl.toString();
+  }
+
   const i18n = await getI18n({ locale });
-  const emailParams = { i18n, url };
+  const emailParams = { i18n, url: finalUrl };
 
   const isHuman = token && (await validateCaptcha(token, "signin_form"));
   if (!isHuman) {

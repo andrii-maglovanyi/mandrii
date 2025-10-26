@@ -44,15 +44,11 @@ const executeGraphQLQuery = async <T>(
     method: "POST",
   });
 
-  console.log("RES", response);
-
   if (!response.ok) {
     throw new BadGateway("Failed to execute GraphQL query");
   }
 
   const result = await response.json();
-
-  console.log("RESULT", result);
 
   if (result.errors) {
     throw new Error(result.errors[0].message);
@@ -66,15 +62,11 @@ export const getUserById = async (id: string, session: { accessToken: string }) 
     throw new UnauthorizedError("Access token is required");
   }
 
-  console.log(">>>>>", GET_USER_BY_ID_QUERY);
-
-  const result = await executeGraphQLQuery<{ users_by_pk: Users | null }>(
+  const result = await executeGraphQLQuery<{ users_by_pk: null | Users }>(
     GET_USER_BY_ID_QUERY,
     { id },
     session.accessToken,
   );
-
-  console.log(">>>>>RES", result);
 
   return result.users_by_pk;
 };

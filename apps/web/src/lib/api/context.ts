@@ -2,8 +2,8 @@ import { getI18n } from "~/i18n/getI18n";
 import { Locale, Users } from "~/types";
 
 import { auth } from "../auth";
-import { UnauthorizedError } from "./errors";
 import { getUserById } from "../models/user";
+import { UnauthorizedError } from "./errors";
 
 export type AuthenticatedSession = {
   accessToken: string;
