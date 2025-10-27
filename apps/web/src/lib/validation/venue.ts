@@ -18,12 +18,12 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       .optional()
       .nullable(),
     area: z.string().optional().nullable(),
-
     category: z.enum(Object.values(Venue_Category_Enum), {
       message: i18n("Please choose a category"),
     }),
 
     city: z.string().optional().nullable(),
+
     country: z.string().optional().nullable(),
     description_en: z
       .string()
@@ -49,7 +49,6 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       )
       .optional()
       .nullable(),
-
     facebook: z
       .string()
       .refine(
@@ -114,6 +113,8 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       )
       .optional()
       .nullable(),
+
+    is_owner: z.coerce.boolean().optional(),
 
     latitude: z
       .union([z.string().transform((val) => Number.parseFloat(val)), z.number()])

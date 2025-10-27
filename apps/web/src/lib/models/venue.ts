@@ -67,7 +67,7 @@ const executeGraphQLQuery = async <T>(
   return result.data;
 };
 
-export const saveVenue = async (variables: Partial<Venues>, session: AuthenticatedSession) => {
+export const saveVenue = async (variables: Partial<Venues>, session: AuthenticatedSession, isOwner = false) => {
   const isUpdate = !!variables.id;
 
   if (isUpdate) {
@@ -101,7 +101,7 @@ export const saveVenue = async (variables: Partial<Venues>, session: Authenticat
     const result = await executeGraphQLQuery<{ insert_venues_one: { id: string } }>(
       INSERT_VENUE_MUTATION,
       {
-        object: { ...variables, user_id: session.user.id },
+        object: { ...variables, owner_id: isOwner ? session.user.id : null, user_id: session.user.id },
       },
       session.accessToken,
     );

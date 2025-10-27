@@ -1,5 +1,5 @@
 import { AuthenticatedSession } from "~/lib/api/context";
-import { BadGateway, BadRequestError, NotFoundError } from "~/lib/api/errors";
+import { BadGateway, BadRequestError, NotFoundError, UnauthorizedError } from "~/lib/api/errors";
 import { publicConfig } from "~/lib/config/public";
 import { Users } from "~/types";
 
@@ -10,6 +10,16 @@ const USER_FIELDS = `
   image
   role
   status
+  points
+  venues_created
+`;
+
+const GET_USER_BY_ID_QUERY = `
+  query GetUserById($id: uuid!) {
+    users_by_pk(id: $id) {
+      ${USER_FIELDS}
+    }
+  }
 `;
 
 const UPDATE_USER_MUTATION = `
@@ -35,7 +45,7 @@ const executeGraphQLQuery = async <T>(
   });
 
   if (!response.ok) {
-    throw new BadGateway("Failed to save user");
+    throw new BadGateway("Failed to execute GraphQL query");
   }
 
   const result = await response.json();
@@ -45,6 +55,20 @@ const executeGraphQLQuery = async <T>(
   }
 
   return result.data;
+};
+
+export const getUserById = async (id: string, session: { accessToken: string }) => {
+  if (!session.accessToken) {
+    throw new UnauthorizedError("Access token is required");
+  }
+
+  const result = await executeGraphQLQuery<{ users_by_pk: null | Users }>(
+    GET_USER_BY_ID_QUERY,
+    { id },
+    session.accessToken,
+  );
+
+  return result.users_by_pk;
 };
 
 export const saveUser = async (variables: Partial<Users>, session: AuthenticatedSession) => {

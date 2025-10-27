@@ -60,6 +60,9 @@ msgstr ""
 msgid "Address is required"
 msgstr ""
 
+msgid "Someone"
+msgstr ""
+
 msgid "Loading map..."
 msgstr ""
 
@@ -120,16 +123,88 @@ msgstr ""
 msgid "Nothing found"
 msgstr ""
 
+msgid "View Details"
+msgstr ""
+
+msgid "All countries"
+msgstr ""
+
+msgid "Search venues..."
+msgstr ""
+
+msgid "Showing **{count}** of **{total}** venues"
+msgstr ""
+
+msgid "Showing **{start}**-**{end}** of **{total}** venues"
+msgstr ""
+
+msgid "Grid view"
+msgstr ""
+
+msgid "List view"
+msgstr ""
+
+msgid "Try adjusting your filters or search terms"
+msgstr ""
+
+msgid "No venues found"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
 msgid "Copied venue URL"
+msgstr ""
+
+msgid "I own this venue"
 msgstr ""
 
 msgid "Manage your venue"
 msgstr ""
 
-msgid "Are you an owner?"
+msgid "Share this venue"
 msgstr ""
 
-msgid "Share this venue"
+msgid "Discover"
+msgstr ""
+
+msgid "Venue link copied to clipboard"
+msgstr ""
+
+msgid "The venue you're looking for doesn't exist or has been removed"
+msgstr ""
+
+msgid "Venue not found"
+msgstr ""
+
+msgid "Share"
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "Upcoming Events"
+msgstr ""
+
+msgid "No upcoming events at this time"
+msgstr ""
+
+msgid "Check back later for updates!"
+msgstr ""
+
+msgid "Contact Information"
+msgstr ""
+
+msgid "No contact information available"
+msgstr ""
+
+msgid "Quick Info"
+msgstr ""
+
+msgid "Address not provided"
 msgstr ""
 
 msgid "Copied"
@@ -162,19 +237,49 @@ msgstr ""
 msgid "I will verify your ownership before granting access to enhanced features"
 msgstr ""
 
-msgid "Someone"
+msgid "This is the glitch you get when there is no profile data available. Please contact me."
+msgstr ""
+
+msgid "Oops! Who are you?"
 msgstr ""
 
 msgid "Profile updated successfully"
 msgstr ""
 
+msgid "points"
+msgstr ""
+
+msgid "venues"
+msgstr ""
+
+msgid "events"
+msgstr ""
+
+msgid "Your Profile"
+msgstr ""
+
+msgid "Manage your account settings and view your community contributions"
+msgstr ""
+
+msgid "Community Impact"
+msgstr ""
+
+msgid "Preview image"
+msgstr ""
+
+msgid "Remove image"
+msgstr ""
+
+msgid "User image"
+msgstr ""
+
+msgid "Click to upload"
+msgstr ""
+
 msgid "Your name"
 msgstr ""
 
-msgid "Cancel"
-msgstr ""
-
-msgid "Save"
+msgid "Your email address cannot be changed."
 msgstr ""
 
 msgid "Edit"
@@ -207,12 +312,6 @@ msgstr ""
 msgid "No venues added yet"
 msgstr ""
 
-msgid "Next"
-msgstr ""
-
-msgid "Back"
-msgstr ""
-
 msgid "Pending"
 msgstr ""
 
@@ -238,9 +337,6 @@ msgid "Remove logo"
 msgstr ""
 
 msgid "Venue logo"
-msgstr ""
-
-msgid "Click to upload"
 msgstr ""
 
 msgid "Images"
@@ -280,21 +376,6 @@ msgid "Info"
 msgstr ""
 
 msgid "Address"
-msgstr ""
-
-msgid "The request may a little time to process..."
-msgstr ""
-
-msgid "Thanks for submitting! Your venue has been submitted for review."
-msgstr ""
-
-msgid "Failed to submit venue. Please try again."
-msgstr ""
-
-msgid "Saving changes"
-msgstr ""
-
-msgid "Save changes"
 msgstr ""
 
 msgid "Remove email"
@@ -354,13 +435,19 @@ msgstr ""
 msgid "Reset coordinates to original"
 msgstr ""
 
-msgid "Some images could not be loaded"
-msgstr ""
-
 msgid "Venue updated successfully"
 msgstr ""
 
-msgid "Failed to load venue data"
+msgid "An unexpected error occurred. Please try again later."
+msgstr ""
+
+msgid "Something went wrong"
+msgstr ""
+
+msgid "Please check the venue URL and try again, or return to your [venues list]({venues_list_url})"
+msgstr ""
+
+msgid "Could not find that venue"
 msgstr ""
 
 msgid "Created on"
@@ -372,10 +459,10 @@ msgstr ""
 msgid "Start adding your venue by selecting its category and name.<br/>The slug is auto-generated the URL and can only be edited during the first creation."
 msgstr ""
 
-msgid "Please check the venue URL and try again, or return to your [venues list]({venues_list_url})"
+msgid "I manage {name} ({slug}) and would like to claim ownership of its venue."
 msgstr ""
 
-msgid "Could not find that venue"
+msgid "Start verification"
 msgstr ""
 
 msgid "Light mode"
@@ -430,6 +517,18 @@ msgid "Open menu"
 msgstr ""
 
 msgid "Join & Support"
+msgstr ""
+
+msgid "Failed to save data. Please try again."
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Saving"
+msgstr ""
+
+msgid "Save"
 msgstr ""
 
 msgid "More"
@@ -552,6 +651,15 @@ msgstr ""
 msgid "No posts available"
 msgstr ""
 
+msgid "Home"
+msgstr ""
+
+msgid "Discover venues"
+msgstr ""
+
+msgid "Explore Ukrainian venues and community spaces around the world"
+msgstr ""
+
 msgid "Unsubscribed"
 msgstr ""
 
@@ -576,7 +684,52 @@ msgstr ""
 msgid "Thank you for being part of this adventure."
 msgstr ""
 
-msgid "Home"
+msgid "Claim your venue"
+msgstr ""
+
+msgid "Take control of your venue's profile. Update information, create events, and connect with your community."
+msgstr ""
+
+msgid "Submit verification request"
+msgstr ""
+
+msgid "Send me an email with:"
+msgstr ""
+
+msgid "Proof that you manage this venue (business email, social media account, etc.)"
+msgstr ""
+
+msgid "A few words about what makes your venue special for the community"
+msgstr ""
+
+msgid "That's it! Wait for approval"
+msgstr ""
+
+msgid "I'll review your request and grant access within **24-48 hours**."
+msgstr ""
+
+msgid "Find your venue"
+msgstr ""
+
+msgid "Search for your venue in the [catalog](/venues) and click **<Crown className='mb-1.5 inline' size={18} />I own this venue** to start the verification process."
+msgstr ""
+
+msgid "Sign in to your account"
+msgstr ""
+
+msgid "Create an account or sign in to get started. You'll need to be logged in to verify ownership."
+msgstr ""
+
+msgid "How it works"
+msgstr ""
+
+msgid "Three simple steps to verify and manage your venue"
+msgstr ""
+
+msgid "Ready to claim your venue?"
+msgstr ""
+
+msgid "Browse venues"
 msgstr ""
 
 msgid "Check your email"

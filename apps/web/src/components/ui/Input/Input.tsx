@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { Phone } from "lucide-react";
+import { Phone, Search } from "lucide-react";
 import { Ref, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { CountryPhoneConfig, processPhoneNumber } from "~/lib/utils/phone-number";
@@ -99,7 +99,7 @@ export function Input<K extends string, T extends string>({
     error ? "border-red-500" : "border-neutral",
     commonClass,
     commonInputClass,
-    isPhoneInput ? "pl-12" : "",
+    isPhoneInput || type === "search" ? "pl-12" : "",
     className,
   );
 
@@ -161,6 +161,30 @@ export function Input<K extends string, T extends string>({
     typeof suggestion === "string" ? { label: suggestion, value: suggestion } : suggestion,
   );
 
+  const iconWrapperClass = "pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-2xl";
+
+  const renderLeftIcon = () => {
+    if (isPhoneInput) {
+      return (
+        <span className={iconWrapperClass}>
+          {detectedCountry ? detectedCountry.flag : <Phone className={`
+            mx-1 text-neutral-disabled
+          `} size={20} />}
+        </span>
+      );
+    }
+
+    if (type === "search") {
+      return (
+        <span className={iconWrapperClass}>
+          <Search className="mx-1 text-neutral-disabled" size={20} />
+        </span>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -170,16 +194,7 @@ export function Input<K extends string, T extends string>({
         </label>
       )}
       <span className="relative" ref={wrapperRef}>
-        {isPhoneInput && (
-          <span className={`
-            pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3
-            text-2xl
-          `}>
-            {detectedCountry ? detectedCountry.flag : <Phone className={`
-              mx-1 text-neutral-disabled
-            `} size={20} />}
-          </span>
-        )}
+        {renderLeftIcon()}
         <input
           aria-required={required}
           autoComplete={onSelectSuggestion ? "off" : undefined}

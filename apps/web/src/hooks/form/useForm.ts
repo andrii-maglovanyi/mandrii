@@ -220,6 +220,8 @@ export function useForm<T extends ZodRawShape>(config: {
           } else {
             handleChange(field)(newFiles[0] || null);
           }
+        } else if (inputElement.type === "checkbox") {
+          handleChange(field)(inputElement.checked);
         } else {
           handleChange(field)(e.target.value);
         }

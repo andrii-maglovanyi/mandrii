@@ -19,6 +19,9 @@ interface PrivateConfig {
   recaptcha: {
     secretKey: string;
   };
+  rewards: {
+    pointsPerVenueCreation: number;
+  };
   slack: {
     botToken: string;
     signingSecret: string;
@@ -55,6 +58,9 @@ export const privateConfig: PrivateConfig = {
   },
   recaptcha: {
     secretKey: getEnvVar("RECAPTCHA_SECRET_KEY"),
+  },
+  rewards: {
+    pointsPerVenueCreation: 20,
   },
   slack: {
     botToken: getEnvVar("NEXT_PRIVATE_SLACK_BOT_TOKEN"),

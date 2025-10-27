@@ -30,7 +30,7 @@ const PostPageLayout = ({ categoryName, categorySlug, data, id, locale }: PostPa
           { title: categoryName ?? "...", url: `/${locale}/posts/${categorySlug}` },
         ]}
       />
-      <ContentViewer data={data} id={id} type={type} />
+      <ContentViewer data={data} id={id} showMeta type={type} />
     </>
   );
 };

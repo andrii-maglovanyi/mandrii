@@ -12,7 +12,11 @@ import { publicConfig } from "~/lib/config/public";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { getEmailFormSchema } from "~/lib/validation/email";
 
-const SignIn = () => {
+interface SignInProps {
+  callbackUrl?: string;
+}
+
+const SignIn = ({ callbackUrl }: SignInProps) => {
   const [isBusy, setIsBusy] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const locale = useLocale();
@@ -44,7 +48,17 @@ const SignIn = () => {
 
     sendToMixpanel("Signed In", { method: "email" });
 
-    await signIn("resend", values, { locale, token });
+    await signIn(
+      "resend",
+      {
+        ...values,
+        locale,
+        token,
+      },
+      {
+        callbackUrl,
+      },
+    );
   };
 
   const { error, onChange, value } = getFieldProps("email");
@@ -90,7 +104,7 @@ const SignIn = () => {
           disabled={isBusy}
           onClick={() => {
             sendToMixpanel("Signed In", { method: "google" });
-            signIn("google");
+            signIn("google", { callbackUrl });
           }}
           variant="outlined"
         >
@@ -102,10 +116,10 @@ const SignIn = () => {
   );
 };
 
-export function SignInForm() {
+export function SignInForm({ callbackUrl }: SignInProps = {}) {
   return (
     <GoogleReCaptchaProvider reCaptchaKey={publicConfig.recaptcha.siteKey}>
-      <SignIn />
+      <SignIn callbackUrl={callbackUrl} />
     </GoogleReCaptchaProvider>
   );
 }

@@ -11,7 +11,7 @@ export const VenuesBanner = () => {
   const i18n = useI18n();
   return (
     <div className={`
-      mt-8 rounded-lg bg-gradient-to-r from-primary to-secondary p-[1px]
+      mt-8 rounded-lg bg-linear-to-r from-primary to-secondary p-px
     `}>
       <div
         className={`

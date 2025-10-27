@@ -10,7 +10,7 @@ export default async function AboutCookiesPage() {
 
   return (
     <>
-      <ContentViewer data={data} id={id} type={type} />
+      <ContentViewer data={data} id={id} showMeta type={type} />
       <MixpanelTracker event="Viewed CV Page" />
     </>
   );

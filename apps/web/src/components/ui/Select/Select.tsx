@@ -85,7 +85,7 @@ export function Select<K extends React.ReactNode, T>({
   };
 
   const selectClass = clsx(
-    "px-3 pr-10 text-left",
+    "px-3 pr-10 text-left text-nowrap",
     sizeClasses.md,
     error ? "border-red-500" : "border-neutral",
     commonClass,

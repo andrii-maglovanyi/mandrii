@@ -10,7 +10,7 @@ import { Button, Input, ProgressBar, RichText, Select } from "~/components/ui";
 import { useTheme } from "~/contexts/ThemeContext";
 import { useListControls } from "~/hooks/useListControls";
 import { useNotifications } from "~/hooks/useNotifications";
-import { getVenuesMapFilter, useVenues } from "~/hooks/useVenues";
+import { getVenuesFilter, useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
@@ -18,8 +18,8 @@ import { sendToMixpanel } from "~/lib/mixpanel";
 import { Locale, Venue_Category_Enum } from "~/types";
 import { UUID } from "~/types/uuid";
 
-import { BottomCard } from "./VenueCard/BottomCard";
-import { ListCard } from "./VenueCard/ListCard";
+import { MapListCard } from "./VenueCard/MapListCard";
+import { MapMobileCard } from "./VenueCard/MapMobileCard";
 import { GoogleMapRef, VenuesMap } from "./VenuesMap";
 
 type AutocompleteService = google.maps.places.AutocompleteService | null;
@@ -87,7 +87,7 @@ export const Venues = ({ slug }: VenuesProps) => {
   const [category, setCategory] = useState<Venue_Category_Enum>(categoryOptions[0].value);
 
   const { isDark } = useTheme();
-  const { variables } = getVenuesMapFilter({
+  const { variables } = getVenuesFilter({
     category,
     distance,
     geo: userLocation,
@@ -228,7 +228,7 @@ export const Venues = ({ slug }: VenuesProps) => {
   }, [isReady]);
 
   useEffect(() => {
-    const { variables } = getVenuesMapFilter({
+    const { variables } = getVenuesFilter({
       category,
       distance,
       geo: userLocation,
@@ -285,7 +285,7 @@ export const Venues = ({ slug }: VenuesProps) => {
 
   for (const venue of data) {
     const card = (
-      <ListCard
+      <MapListCard
         key={venue.id.toString()}
         onClick={() => {
           sendToMixpanel("Selected Venue Card", {
@@ -300,7 +300,7 @@ export const Venues = ({ slug }: VenuesProps) => {
     );
 
     if (venue.id === selectedVenueId) {
-      selectedCard = <BottomCard venue={venue} />;
+      selectedCard = <MapMobileCard venue={venue} />;
     }
 
     venueCards.push(card);
@@ -396,7 +396,8 @@ export const Venues = ({ slug }: VenuesProps) => {
               md:block
             `}>
               <div className={`
-                -mt-[2px] h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
+                -mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
+                pt-0.5
               `}>{venueCards}</div>
             </div>
 

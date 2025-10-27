@@ -71,6 +71,7 @@ select_permissions:
         - slug
         - social_links
         - status
+        - user_id
         - website
       filter:
         status:

@@ -49,7 +49,7 @@ export function Menu<K extends React.ReactNode, T>({ onSelect, options, ref }: R
         <div
           aria-selected={focusedIndex === index}
           className={`
-            cursor-pointer rounded-lg px-4 py-3
+            cursor-pointer rounded-lg px-4 py-3 text-nowrap
             hover:bg-surface-tint
             focus:bg-surface-tint
           `}

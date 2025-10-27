@@ -3,7 +3,7 @@ schema:
   - "${NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT}":
       headers:
         x-hasura-admin-secret: "${HASURA_ADMIN_SECRET}"
-documents: "**/*.ts"
+documents: "**/*.{ts,tsx}"
 generates:
   src/types/graphql.generated.ts:
     plugins:

@@ -14,22 +14,22 @@ import { publicConfig } from "~/lib/config/public";
 import { getContactFormSchema } from "~/lib/validation/contact";
 import { Status } from "~/types";
 
-const Contact = () => {
+const Contact = ({ message = "" }: { message?: string }) => {
   const i18n = useI18n();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { data: profileData } = useUser();
 
   const { getFieldProps, isFormValid, setFieldErrorsFromServer, setValues, validateForm, values } = useForm({
     initialValues: {
-      email: profileData?.user?.email ?? "",
-      message: "",
-      name: profileData?.user?.name ?? "",
+      email: profileData?.email ?? "",
+      message,
+      name: profileData?.name ?? "",
     },
     schema: getContactFormSchema(i18n),
   });
 
   useEffect(() => {
-    const { email, name } = profileData?.user ?? {};
+    const { email, name } = profileData ?? {};
     if (name && email) {
       setValues((prev) => ({
         ...prev,
@@ -85,7 +85,7 @@ const Contact = () => {
   if (status === "success") {
     return (
       <div className={`
-        mx-auto flex flex-grow flex-col items-center justify-center space-y-6
+        mx-auto flex grow flex-col items-center justify-center space-y-6
         text-center
       `}>
         <MailCheck size={50} />
@@ -142,10 +142,10 @@ const Contact = () => {
   );
 };
 
-export function ContactForm() {
+export function ContactForm({ template }: { template?: string }) {
   return (
     <GoogleReCaptchaProvider reCaptchaKey={publicConfig.recaptcha.siteKey}>
-      <Contact />
+      <Contact message={template} />
     </GoogleReCaptchaProvider>
   );
 }

@@ -217,6 +217,8 @@ export enum Users_Constraint {
 /** select columns of table "users" */
 export enum Users_Select_Column {
   /** column name */
+  City = "city",
+  /** column name */
   Email = "email",
   /** column name */
   EmailVerified = "emailVerified",
@@ -228,8 +230,6 @@ export enum Users_Select_Column {
   Image = "image",
   /** column name */
   IsVerifiedContributor = "is_verified_contributor",
-  /** column name */
-  LastActivityAt = "last_activity_at",
   /** column name */
   Level = "level",
   /** column name */
@@ -263,6 +263,8 @@ export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Colum
 /** update columns of table "users" */
 export enum Users_Update_Column {
   /** column name */
+  City = "city",
+  /** column name */
   Email = "email",
   /** column name */
   EmailVerified = "emailVerified",
@@ -274,8 +276,6 @@ export enum Users_Update_Column {
   Image = "image",
   /** column name */
   IsVerifiedContributor = "is_verified_contributor",
-  /** column name */
-  LastActivityAt = "last_activity_at",
   /** column name */
   Level = "level",
   /** column name */
@@ -964,22 +964,36 @@ export type GetAdminVenuesQueryVariables = Exact<{
   where: Venues_Bool_Exp;
 }>;
 
+export type GetAvailableCountriesQuery = {
+  __typename?: "query_root";
+  venues: Array<{ __typename?: "venues"; country?: null | string }>;
+};
+
+export type GetAvailableCountriesQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+}>;
+
 export type GetPublicVenuesQuery = {
   __typename?: "query_root";
   venues: Array<{
     __typename?: "venues";
     address?: null | string;
+    category: Venue_Category_Enum;
+    city?: null | string;
+    country?: null | string;
     description_en?: null | string;
     description_uk?: null | string;
     emails?: Array<string> | null;
     geo?: Geography | null;
     id: UUID;
     images?: Array<string> | null;
+    logo?: null | string;
     name: string;
     owner_id?: null | UUID;
     phone_numbers?: Array<string> | null;
     slug: string;
     status: Venue_Status_Enum;
+    user_id?: null | UUID;
     website?: null | string;
   }>;
   venues_aggregate: {
@@ -989,7 +1003,31 @@ export type GetPublicVenuesQuery = {
 };
 
 export type GetPublicVenuesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
   where: Venues_Bool_Exp;
+}>;
+
+export type GetUserProfileQuery = {
+  __typename?: "query_root";
+  users_by_pk?: {
+    __typename?: "users";
+    email: string;
+    events_created: number;
+    id: UUID;
+    image?: null | string;
+    level: number;
+    name?: null | string;
+    points: number;
+    role: User_Role_Enum;
+    status: User_Status_Enum;
+    venues_created: number;
+  } | null;
+};
+
+export type GetUserProfileQueryVariables = Exact<{
+  id: Scalars["uuid"]["input"];
 }>;
 
 export type GetUserVenuesQuery = {
@@ -1009,6 +1047,7 @@ export type GetUserVenuesQuery = {
     images?: Array<string> | null;
     logo?: null | string;
     name: string;
+    owner_id?: null | UUID;
     phone_numbers?: Array<string> | null;
     postcode?: null | string;
     slug: string;
@@ -2004,7 +2043,6 @@ export type Scalars = {
   Int: { input: number; output: number };
   json: { input: Json; output: Json };
   String: { input: string; output: string };
-  timestamp: { input: Timestamp; output: Timestamp };
   timestamptz: { input: Timestamp; output: Timestamp };
   uuid: { input: UUID; output: UUID };
 };
@@ -2587,19 +2625,6 @@ export type Subscription_RootVerification_TokensArgs = {
   where?: InputMaybe<Verification_Tokens_Bool_Exp>;
 };
 
-/** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
-export type Timestamp_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _gt?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _gte?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _in?: InputMaybe<Array<Scalars["timestamp"]["input"]>>;
-  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _lt?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _lte?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _neq?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _nin?: InputMaybe<Array<Scalars["timestamp"]["input"]>>;
-};
-
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type Timestamptz_Comparison_Exp = {
   _eq?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -2936,13 +2961,13 @@ export type Users = {
   accounts: Array<Accounts>;
   /** An aggregate relationship */
   accounts_aggregate: Accounts_Aggregate;
+  city?: Maybe<Scalars["String"]["output"]>;
   email: Scalars["String"]["output"];
   emailVerified?: Maybe<Scalars["timestamptz"]["output"]>;
   events_created: Scalars["Int"]["output"];
   id: Scalars["uuid"]["output"];
   image?: Maybe<Scalars["String"]["output"]>;
   is_verified_contributor: Scalars["Boolean"]["output"];
-  last_activity_at?: Maybe<Scalars["timestamp"]["output"]>;
   level: Scalars["Int"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
   points: Scalars["Int"]["output"];
@@ -3067,13 +3092,13 @@ export type Users_Bool_Exp = {
   _or?: InputMaybe<Array<Users_Bool_Exp>>;
   accounts?: InputMaybe<Accounts_Bool_Exp>;
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Bool_Exp>;
+  city?: InputMaybe<String_Comparison_Exp>;
   email?: InputMaybe<String_Comparison_Exp>;
   emailVerified?: InputMaybe<Timestamptz_Comparison_Exp>;
   events_created?: InputMaybe<Int_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   image?: InputMaybe<String_Comparison_Exp>;
   is_verified_contributor?: InputMaybe<Boolean_Comparison_Exp>;
-  last_activity_at?: InputMaybe<Timestamp_Comparison_Exp>;
   level?: InputMaybe<Int_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   points?: InputMaybe<Int_Comparison_Exp>;
@@ -3101,13 +3126,13 @@ export type Users_Inc_Input = {
 /** input type for inserting data into table "users" */
 export type Users_Insert_Input = {
   accounts?: InputMaybe<Accounts_Arr_Rel_Insert_Input>;
+  city?: InputMaybe<Scalars["String"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["timestamptz"]["input"]>;
   events_created?: InputMaybe<Scalars["Int"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   image?: InputMaybe<Scalars["String"]["input"]>;
   is_verified_contributor?: InputMaybe<Scalars["Boolean"]["input"]>;
-  last_activity_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   level?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   points?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3124,12 +3149,12 @@ export type Users_Insert_Input = {
 /** aggregate max on columns */
 export type Users_Max_Fields = {
   __typename?: "users_max_fields";
+  city?: Maybe<Scalars["String"]["output"]>;
   email?: Maybe<Scalars["String"]["output"]>;
   emailVerified?: Maybe<Scalars["timestamptz"]["output"]>;
   events_created?: Maybe<Scalars["Int"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   image?: Maybe<Scalars["String"]["output"]>;
-  last_activity_at?: Maybe<Scalars["timestamp"]["output"]>;
   level?: Maybe<Scalars["Int"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   points?: Maybe<Scalars["Int"]["output"]>;
@@ -3140,12 +3165,12 @@ export type Users_Max_Fields = {
 
 /** order by max() on columns of table "users" */
 export type Users_Max_Order_By = {
+  city?: InputMaybe<Order_By>;
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
   events_created?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
-  last_activity_at?: InputMaybe<Order_By>;
   level?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
@@ -3157,12 +3182,12 @@ export type Users_Max_Order_By = {
 /** aggregate min on columns */
 export type Users_Min_Fields = {
   __typename?: "users_min_fields";
+  city?: Maybe<Scalars["String"]["output"]>;
   email?: Maybe<Scalars["String"]["output"]>;
   emailVerified?: Maybe<Scalars["timestamptz"]["output"]>;
   events_created?: Maybe<Scalars["Int"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   image?: Maybe<Scalars["String"]["output"]>;
-  last_activity_at?: Maybe<Scalars["timestamp"]["output"]>;
   level?: Maybe<Scalars["Int"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   points?: Maybe<Scalars["Int"]["output"]>;
@@ -3173,12 +3198,12 @@ export type Users_Min_Fields = {
 
 /** order by min() on columns of table "users" */
 export type Users_Min_Order_By = {
+  city?: InputMaybe<Order_By>;
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
   events_created?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
-  last_activity_at?: InputMaybe<Order_By>;
   level?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
@@ -3213,13 +3238,13 @@ export type Users_On_Conflict = {
 /** Ordering options when selecting data from "users". */
 export type Users_Order_By = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Order_By>;
+  city?: InputMaybe<Order_By>;
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
   events_created?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
   is_verified_contributor?: InputMaybe<Order_By>;
-  last_activity_at?: InputMaybe<Order_By>;
   level?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
@@ -3240,13 +3265,13 @@ export type Users_Pk_Columns_Input = {
 
 /** input type for updating data in table "users" */
 export type Users_Set_Input = {
+  city?: InputMaybe<Scalars["String"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["timestamptz"]["input"]>;
   events_created?: InputMaybe<Scalars["Int"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   image?: InputMaybe<Scalars["String"]["input"]>;
   is_verified_contributor?: InputMaybe<Scalars["Boolean"]["input"]>;
-  last_activity_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   level?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   points?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3330,13 +3355,13 @@ export type Users_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Users_Stream_Cursor_Value_Input = {
+  city?: InputMaybe<Scalars["String"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["timestamptz"]["input"]>;
   events_created?: InputMaybe<Scalars["Int"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   image?: InputMaybe<Scalars["String"]["input"]>;
   is_verified_contributor?: InputMaybe<Scalars["Boolean"]["input"]>;
-  last_activity_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   level?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   points?: InputMaybe<Scalars["Int"]["input"]>;
@@ -4263,22 +4288,144 @@ export type Verification_Tokens_Updates = {
   where: Verification_Tokens_Bool_Exp;
 };
 
+export const GetUserProfileDocument = gql`
+  query GetUserProfile($id: uuid!) {
+    users_by_pk(id: $id) {
+      id
+      name
+      email
+      role
+      status
+      image
+      points
+      venues_created
+      events_created
+      level
+    }
+  }
+`;
+
+export type GetUserProfileLazyQueryHookResult = ReturnType<typeof useGetUserProfileLazyQuery>;
+export type GetUserProfileQueryHookResult = ReturnType<typeof useGetUserProfileQuery>;
+export type GetUserProfileQueryResult = Apollo.QueryResult<GetUserProfileQuery, GetUserProfileQueryVariables>;
+export type GetUserProfileSuspenseQueryHookResult = ReturnType<typeof useGetUserProfileSuspenseQuery>;
+export function useGetUserProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
+}
+/**
+ * __useGetUserProfileQuery__
+ *
+ * To run a query within a React component, call `useGetUserProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserProfileQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserProfileQuery(
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables }) &
+    Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
+}
+export function useGetUserProfileSuspenseQuery(
+  baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
+}
+export const GetAvailableCountriesDocument = gql`
+  query GetAvailableCountries($where: venues_bool_exp!) {
+    venues(where: $where, distinct_on: country, order_by: { country: asc }) {
+      country
+    }
+  }
+`;
+
+export type GetAvailableCountriesLazyQueryHookResult = ReturnType<typeof useGetAvailableCountriesLazyQuery>;
+export type GetAvailableCountriesQueryHookResult = ReturnType<typeof useGetAvailableCountriesQuery>;
+export type GetAvailableCountriesQueryResult = Apollo.QueryResult<
+  GetAvailableCountriesQuery,
+  GetAvailableCountriesQueryVariables
+>;
+export type GetAvailableCountriesSuspenseQueryHookResult = ReturnType<typeof useGetAvailableCountriesSuspenseQuery>;
+export function useGetAvailableCountriesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>(
+    GetAvailableCountriesDocument,
+    options,
+  );
+}
+/**
+ * __useGetAvailableCountriesQuery__
+ *
+ * To run a query within a React component, call `useGetAvailableCountriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAvailableCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAvailableCountriesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAvailableCountriesQuery(
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAvailableCountriesQueryVariables }) &
+    Apollo.QueryHookOptions<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>(
+    GetAvailableCountriesDocument,
+    options,
+  );
+}
+export function useGetAvailableCountriesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>(
+    GetAvailableCountriesDocument,
+    options,
+  );
+}
 export const GetPublicVenuesDocument = gql`
-  query GetPublicVenues($where: venues_bool_exp!) {
-    venues(where: $where) {
+  query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       id
       name
       address
+      city
+      country
+      logo
       images
       description_uk
       description_en
       geo
+      category
       emails
       website
       phone_numbers
       slug
       status
       owner_id
+      user_id
     }
     venues_aggregate(where: $where) {
       aggregate {
@@ -4311,6 +4458,9 @@ export function useGetPublicVenuesLazyQuery(
  * const { data, loading, error } = useGetPublicVenuesQuery({
  *   variables: {
  *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      order_by: // value for 'order_by'
  *   },
  * });
  */
@@ -4348,6 +4498,7 @@ export const GetUserVenuesDocument = gql`
       phone_numbers
       social_links
       status
+      owner_id
       slug
     }
     venues_aggregate(where: $where) {

@@ -84,7 +84,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
       );
     }
 
-    if (!data.length) {
+    if (!data.length && slug) {
       return (
         <EmptyState
           body={i18n("Please check the venue URL and try again, or return to your [venues list]({venues_list_url})", {
@@ -119,7 +119,11 @@ export const EditVenue = ({ slug }: VenueProps) => {
                 "Start adding your venue by selecting its category and name.<br/>The slug is auto-generated the URL and can only be edited during the first creation.",
               )}
         </RichText>
-        <VenueForm initialValues={data[0]} onSubmit={submitVenue} onSuccess={handleSuccess} />
+        <VenueForm
+          initialValues={{ ...data[0], is_owner: Boolean(data[0].owner_id) }}
+          onSubmit={submitVenue}
+          onSuccess={handleSuccess}
+        />
       </>
     );
   };

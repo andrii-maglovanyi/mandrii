@@ -6,9 +6,9 @@ import { useState } from "react";
 import { Avatar, FormFooter, ImagePreview } from "~/components/layout";
 import { Button, FilePicker, Input, Tooltip } from "~/components/ui";
 import { OnFormSubmitHandler, useForm } from "~/hooks/form/useForm";
-import { UserSession } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { getUserSchema } from "~/lib/validation/user";
+import { UserSession } from "~/types/user";
 
 interface UserFormProps {
   onSubmit: OnFormSubmitHandler;
@@ -21,7 +21,7 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const { getFieldProps, hasChanges, isFormValid, resetForm, useFormSubmit, useImagePreviews, values } = useForm({
-    initialValues: profile.user,
+    initialValues: profile,
     schema: getUserSchema(i18n),
   });
 
@@ -89,7 +89,7 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
               <Tooltip label={i18n("Your email address cannot be changed.")} position="top">
                 <Lock className="stroke-neutral-disabled" size={16} />
               </Tooltip>
-              {profile.user.email}
+              {profile.email}
             </div>
           </div>
         </div>

@@ -6,22 +6,22 @@ import { validateRequest } from "~/lib/api/validate";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { envName } from "~/lib/config/env";
 import { privateConfig } from "~/lib/config/private";
+import { saveUser } from "~/lib/models/user";
+import { saveVenue } from "~/lib/models/venue";
 import { sendSlackNotification } from "~/lib/slack/venue";
+import { processImages } from "~/lib/utils/images";
 import { getVenueSchema } from "~/lib/validation/venue";
 import { Venues } from "~/types";
 import { UUID } from "~/types/uuid";
 
 import { geocodeAddress } from "../../geocode/geo";
-import { processImages } from "./images";
 import { checkCoordinatesWithinRange, checkIsSlugUnique } from "./validation";
-import { saveVenue } from "./venue";
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
     const { i18n, session } = await getApiContext(req, { withAuth: true, withI18n: true });
 
     const schema = getVenueSchema(i18n);
-
     const data = await validateRequest(req, schema);
 
     const {
@@ -31,6 +31,7 @@ export const POST = (req: Request) =>
       description_uk,
       emails,
       images,
+      is_owner,
       latitude,
       logo,
       longitude,
@@ -95,14 +96,29 @@ export const POST = (req: Request) =>
 
     venueData.logo = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? "";
     venueData.images = await processImages(images ?? [], [prefix, "images"].join("/"));
+    const venueId = await saveVenue(venueData, session, Boolean(is_owner));
 
-    const id = await saveVenue(venueData, session);
-
-    if (!id) {
+    if (!venueId) {
       throw new InternalServerError("Failed to save venue");
+    }
+
+    // Update user points and venues_created only for new venues
+    if (!venueData.id) {
+      const userId = await saveUser(
+        {
+          id: session.user.id,
+          points: (session.user.points ?? 0) + privateConfig.rewards.pointsPerVenueCreation,
+          venues_created: (session.user.venues_created ?? 0) + 1,
+        },
+        session,
+      );
+
+      if (!userId) {
+        throw new InternalServerError("Failed to save user");
+      }
     }
 
     sendSlackNotification(session.user, venueData);
 
-    return NextResponse.json({ id, success: true }, { status: 200 });
+    return NextResponse.json({ id: venueId, success: true }, { status: 200 });
   });
