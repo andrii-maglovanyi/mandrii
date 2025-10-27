@@ -60,23 +60,14 @@ export function MapMobileCard({ venue }: Readonly<MapMobileCardInterface>) {
 
   return (
     <div
-      className={`
-        fixed right-0 bottom-0 left-0 z-30 overflow-hidden rounded-t-2xl
-        border-neutral-hover bg-surface shadow-lg transition-all duration-500
-        ease-in-out
-        md:hidden
-        ${isExpanded ? "" : `border-t`}
-      `}
+      className={`border-neutral-hover bg-surface fixed right-0 bottom-0 left-0 z-30 overflow-hidden rounded-t-2xl shadow-lg transition-all duration-500 ease-in-out md:hidden ${isExpanded ? "" : `border-t`} `}
       style={{
         height: isExpanded && innerHeight ? `${innerHeight}px` : "33vh",
       }}
     >
       <button
         aria-label={isExpanded ? i18n("Collapse venue details") : i18n("Expand venue details")}
-        className={`
-          flex h-10 w-full cursor-pointer items-center justify-center
-          hover:bg-on-surface/5
-        `}
+        className={`hover:bg-on-surface/5 flex h-10 w-full cursor-pointer items-center justify-center`}
         onClick={toggle}
       >
         {isExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
@@ -87,17 +78,13 @@ export function MapMobileCard({ venue }: Readonly<MapMobileCardInterface>) {
           <CardHeader venue={venue} />
 
           <h3
-            className={`
-              mb-2 line-clamp-2 text-lg font-bold text-primary transition-colors
-              group-hover/card:underline
-              sm:text-xl
-            `}
+            className={`text-primary mb-2 line-clamp-2 text-lg font-bold transition-colors group-hover/card:underline sm:text-xl`}
           >
             <Link href={`/venues/${venue.slug}`}>{venue.name}</Link>
           </h3>
 
           {description && (
-            <RichText as="p" className="text-sm text-neutral">
+            <RichText as="p" className="text-neutral text-sm">
               {description.replaceAll("\n", "<br />")}
             </RichText>
           )}

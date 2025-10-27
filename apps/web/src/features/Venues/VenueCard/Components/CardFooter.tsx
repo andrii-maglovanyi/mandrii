@@ -13,10 +13,8 @@ export const CardFooter = ({ hideUntilHover, venue }: CardFooterProps) => {
   const i18n = useI18n();
 
   return (
-    <div className={`
-      flex items-center justify-between border-t border-primary/5 pt-3
-    `}>
-      <div className="flex items-center gap-2 text-xs text-neutral">
+    <div className={`border-primary/5 flex items-center justify-between border-t pt-3`}>
+      <div className="text-neutral flex items-center gap-2 text-xs">
         {venue.status === Venue_Status_Enum.Pending && (
           <>
             <Clock size={14} />
@@ -26,22 +24,13 @@ export const CardFooter = ({ hideUntilHover, venue }: CardFooterProps) => {
       </div>
 
       <Link
-        className={`
-          flex items-center gap-1 text-xs font-medium text-primary no-underline
-          ${
-          hideUntilHover ? `
-            opacity-0 transition-opacity
-            group-hover/card:opacity-100
-          ` : `opacity-100`
-        }
-        `}
+        className={`text-primary flex items-center gap-1 text-xs font-medium no-underline ${
+          hideUntilHover ? `opacity-0 transition-opacity group-hover/card:opacity-100` : `opacity-100`
+        } `}
         href={`/venues/${venue.slug}`}
       >
         {i18n("Discover")}
-        <span className={`
-          transition-transform
-          group-hover/card:translate-x-1
-        `}>→</span>
+        <span className={`transition-transform group-hover/card:translate-x-1`}>→</span>
       </Link>
     </div>
   );
