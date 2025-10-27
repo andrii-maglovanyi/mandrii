@@ -1,12 +1,11 @@
 "use client";
 
-import { CalendarHeart, ChartColumn, MapPin, Pencil } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect } from "react";
 import slugify from "slugify";
 
 import { FormFooter } from "~/components/layout";
-import { Checkbox, Input, RichText, Select, TabPane, Tabs } from "~/components/ui";
+import { Checkbox, Input, Select, TabPane, Tabs } from "~/components/ui";
 import { InitialValuesType, OnFormSubmitHandler, useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -151,8 +150,6 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
           />
         </TabPane>
       </Tabs>
-
-      {isFormValid && "isFormValid"}
 
       <FormFooter handleCancel={resetForm} hasChanges={hasChanges} isFormValid={isFormValid} status={status} />
     </form>

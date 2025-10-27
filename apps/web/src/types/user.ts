@@ -16,6 +16,4 @@ export type UserSession = {
   image: null | string;
   name: string;
   role: UserRole;
-} & Partial<
-  Omit<NonNullable<GetUserProfileQuery["users_by_pk"]>, "email" | "id" | "image" | "name" | "role">
->;
+} & Partial<Omit<NonNullable<GetUserProfileQuery["users_by_pk"]>, "email" | "id" | "image" | "name" | "role">>;

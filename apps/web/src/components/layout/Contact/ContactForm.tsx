@@ -1,6 +1,5 @@
 "use client";
 
-import { te } from "date-fns/locale/te";
 import { MailCheck } from "lucide-react";
 import { useLocale } from "next-intl";
 import { FormEvent, useEffect, useState } from "react";
@@ -38,7 +37,7 @@ const Contact = ({ message = "" }: { message?: string }) => {
         name,
       }));
     }
-  }, [profileData?.name, profileData?.email, setValues]);
+  }, [profileData, setValues]);
 
   const locale = useLocale();
   const [status, setStatus] = useState<Status>("idle");
@@ -86,7 +85,7 @@ const Contact = ({ message = "" }: { message?: string }) => {
   if (status === "success") {
     return (
       <div className={`
-        mx-auto flex flex-grow flex-col items-center justify-center space-y-6
+        mx-auto flex grow flex-col items-center justify-center space-y-6
         text-center
       `}>
         <MailCheck size={50} />

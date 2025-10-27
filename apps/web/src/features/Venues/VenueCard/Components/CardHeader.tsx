@@ -1,25 +1,25 @@
 import { BadgeCheck, Crown, PenTool, Share2 } from "lucide-react";
 import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
 import { ActionButton, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
+import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
-import { useRouter } from "next/navigation";
-
 import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { GetPublicVenuesQuery, Locale } from "~/types";
+
 import { ClaimOwnershipDialog } from "../../ClaimOwnershipDialog";
-import { useNotifications } from "~/hooks/useNotifications";
 
 interface CardHeaderProps {
   hideUntilHover?: boolean;
   venue: GetPublicVenuesQuery["venues"][number];
 }
 
-export const CardHeader = ({ venue, hideUntilHover = false }: CardHeaderProps) => {
+export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const { data: profileData } = useUser();
@@ -61,7 +61,7 @@ export const CardHeader = ({ venue, hideUntilHover = false }: CardHeaderProps) =
 
   return (
     <div className="mb-2 flex h-8 justify-between">
-      <div className={`text-on-surface flex h-full items-center gap-1 text-sm`}>
+      <div className={`flex h-full items-center gap-1 text-sm text-on-surface`}>
         {getIcon(iconName, { className: "flex-shrink-0", size: 16 })}
         {label[locale]}
       </div>
@@ -71,19 +71,29 @@ export const CardHeader = ({ venue, hideUntilHover = false }: CardHeaderProps) =
           <ActionButton
             aria-label={i18n("Edit venue")}
             className="group"
-            icon={<PenTool className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+            icon={<PenTool className={hideUntilHover ? `
+              hidden
+              group-hover/card:flex
+            ` : ""} size={18} />}
             onClick={handleManageClick}
             size="sm"
             variant="ghost"
           />
         ) : (
-          <div className={hideUntilHover ? `hidden group-hover/card:flex` : ""}>
+          <div className={hideUntilHover ? `
+            hidden
+            group-hover/card:flex
+          ` : ""}>
             <ActionButton
               aria-label={i18n("I own this venue")}
               className="group"
               icon={
                 <Crown
-                  className={`stroke-amber-600 group-hover:fill-amber-600 dark:stroke-amber-400 dark:group-hover:fill-amber-400`}
+                  className={`
+                    stroke-amber-600
+                    group-hover:fill-amber-600
+                    dark:stroke-amber-400 dark:group-hover:fill-amber-400
+                  `}
                   size={18}
                 />
               }
@@ -96,14 +106,20 @@ export const CardHeader = ({ venue, hideUntilHover = false }: CardHeaderProps) =
         <ActionButton
           aria-label={i18n("Share this venue")}
           className="group"
-          icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+          icon={<Share2 className={hideUntilHover ? `
+            hidden
+            group-hover/card:flex
+          ` : ""} size={18} />}
           onClick={handleShareClick}
           size="sm"
           variant="ghost"
         />
         {venue.owner_id ? (
           <Tooltip label={i18n("Verified venue with owner")} position="left">
-            <BadgeCheck className="stroke-green-600 dark:stroke-green-400" />
+            <BadgeCheck className={`
+              stroke-green-600
+              dark:stroke-green-400
+            `} />
           </Tooltip>
         ) : null}
       </div>

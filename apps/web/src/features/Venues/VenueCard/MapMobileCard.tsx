@@ -2,17 +2,16 @@
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale } from "next-intl";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { RichText } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
-
 import { GetPublicVenuesQuery, Locale } from "~/types";
 
-import { CardMetadata } from "./Components/CardMetadata";
-import { CardHeader } from "./Components/CardHeader";
 import { CardFooter } from "./Components/CardFooter";
-import Link from "next/link";
+import { CardHeader } from "./Components/CardHeader";
+import { CardMetadata } from "./Components/CardMetadata";
 
 interface MapMobileCardInterface {
   venue: GetPublicVenuesQuery["venues"][number];
@@ -61,14 +60,23 @@ export function MapMobileCard({ venue }: Readonly<MapMobileCardInterface>) {
 
   return (
     <div
-      className={`border-neutral-hover bg-surface fixed right-0 bottom-0 left-0 z-30 overflow-hidden rounded-t-2xl shadow-lg transition-all duration-500 ease-in-out md:hidden ${isExpanded ? "" : `border-t`} `}
+      className={`
+        fixed right-0 bottom-0 left-0 z-30 overflow-hidden rounded-t-2xl
+        border-neutral-hover bg-surface shadow-lg transition-all duration-500
+        ease-in-out
+        md:hidden
+        ${isExpanded ? "" : `border-t`}
+      `}
       style={{
         height: isExpanded && innerHeight ? `${innerHeight}px` : "33vh",
       }}
     >
       <button
         aria-label={isExpanded ? i18n("Collapse venue details") : i18n("Expand venue details")}
-        className={`hover:bg-on-surface/5 flex h-10 w-full cursor-pointer items-center justify-center`}
+        className={`
+          flex h-10 w-full cursor-pointer items-center justify-center
+          hover:bg-on-surface/5
+        `}
         onClick={toggle}
       >
         {isExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
@@ -79,13 +87,17 @@ export function MapMobileCard({ venue }: Readonly<MapMobileCardInterface>) {
           <CardHeader venue={venue} />
 
           <h3
-            className={`text-primary mb-2 line-clamp-2 text-lg font-bold transition-colors group-hover/card:underline sm:text-xl`}
+            className={`
+              mb-2 line-clamp-2 text-lg font-bold text-primary transition-colors
+              group-hover/card:underline
+              sm:text-xl
+            `}
           >
             <Link href={`/venues/${venue.slug}`}>{venue.name}</Link>
           </h3>
 
           {description && (
-            <RichText as="p" className="text-neutral text-sm">
+            <RichText as="p" className="text-sm text-neutral">
               {description.replaceAll("\n", "<br />")}
             </RichText>
           )}

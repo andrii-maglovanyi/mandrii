@@ -1,4 +1,3 @@
-import { Crown } from "lucide-react";
 import Link from "next/link";
 
 import { ContentViewer, MixpanelTracker } from "~/components/layout";
@@ -102,11 +101,13 @@ export default async function ClaimOwnershipPage({ params, searchParams }: Reado
             {steps.map((step, index) => (
               <li className="flex gap-4" key={index}>
                 <div className="flex flex-col items-center">
-                  <div className={`
-                    flex h-8 min-h-8 w-8 items-center justify-center
-                    rounded-full bg-primary text-xs font-semibold tracking-wide
-                    text-surface
-                  `}>
+                  <div
+                    className={`
+                      flex h-8 min-h-8 w-8 items-center justify-center
+                      rounded-full bg-primary text-xs font-semibold
+                      tracking-wide text-surface
+                    `}
+                  >
                     {index + 1}
                   </div>
                   {index < steps.length - 1 ? (
@@ -124,10 +125,12 @@ export default async function ClaimOwnershipPage({ params, searchParams }: Reado
           </ol>
         </section>
 
-        <section className={`
-          flex flex-col items-center gap-3 rounded-2xl bg-gradient-to-br
-          from-primary/10 to-transparent p-6 pb-12
-        `}>
+        <section
+          className={`
+            flex flex-col items-center gap-3 rounded-2xl bg-gradient-to-br
+            from-primary/10 to-transparent p-6 pb-12
+          `}
+        >
           <h3 className="mt-4 text-center text-3xl font-bold">{i18n("Ready to claim your venue?")}</h3>
           <div className={`
             mt-2 flex w-full flex-col items-center justify-center gap-4
@@ -135,7 +138,7 @@ export default async function ClaimOwnershipPage({ params, searchParams }: Reado
             {venueData ? (
               <ClaimOwnership name={venueData.name} slug={venueData.slug} />
             ) : (
-              <a
+              <Link
                 className={`
                   flex items-center justify-center rounded-xl border-2
                   border-primary/20 bg-surface px-12 py-2 font-medium
@@ -146,7 +149,7 @@ export default async function ClaimOwnershipPage({ params, searchParams }: Reado
                 href="/venues"
               >
                 {i18n("Browse venues")}
-              </a>
+              </Link>
             )}
           </div>
         </section>

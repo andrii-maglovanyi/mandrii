@@ -29,8 +29,11 @@ export async function validateRequest<T extends ZodRawShape>(
   } else {
     body = await req.json();
   }
+  console.log(">>BODY", body);
 
   const result = schema.safeParse(body);
+
+  console.log("RESULT", result);
 
   if (!result.success) {
     throw new ValidationError("Invalid input", result.error.issues);

@@ -5,15 +5,20 @@ import { MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
+import { useMediaQuery } from "react-responsive";
 
 import { constants } from "~/lib/constants";
-
 import { GetPublicVenuesQuery, Locale } from "~/types";
 
-import { CardHeader } from "./Components/CardHeader";
-import { useMediaQuery } from "react-responsive";
 import { CardFooter } from "./Components/CardFooter";
+import { CardHeader } from "./Components/CardHeader";
 import { CardMetadata } from "./Components/CardMetadata";
+
+interface CardBaseProps {
+  hasImage?: boolean;
+  variant: LayoutVariant;
+  venue: GetPublicVenuesQuery["venues"][number];
+}
 
 interface LayoutConfig {
   containerClasses: string;
@@ -26,13 +31,7 @@ interface LayoutConfig {
   titleClasses: string;
 }
 
-type LayoutVariant = "masonry-full" | "masonry-half" | "masonry-small" | "masonry-third" | "list";
-
-interface CardBaseProps {
-  hasImage?: boolean;
-  variant: LayoutVariant;
-  venue: GetPublicVenuesQuery["venues"][number];
-}
+type LayoutVariant = "list" | "masonry-full" | "masonry-half" | "masonry-small" | "masonry-third";
 
 /**
  * Base card styles shared across all variants.
@@ -54,10 +53,10 @@ const masonryVariants = {
     containerClasses: clsx(
       baseCardClasses,
       `
-      col-span-1 min-h-[300px]
-      sm:col-span-2
-      lg:col-span-4
-    `,
+        col-span-1 min-h-[300px]
+        sm:col-span-2
+        lg:col-span-4
+      `,
     ),
     descriptionClasses: "text-neutral text-sm line-clamp-3",
     imageClasses: { horizontal: "h-full min-h-[300px] w-full sm:w-2/5", vertical: "h-48 w-full sm:h-56" },
@@ -70,10 +69,10 @@ const masonryVariants = {
     containerClasses: clsx(
       baseCardClasses,
       `
-      col-span-1 min-h-[300px]
-      sm:col-span-2
-      lg:col-span-2
-    `,
+        col-span-1 min-h-[300px]
+        sm:col-span-2
+        lg:col-span-2
+      `,
     ),
     descriptionClasses: "text-neutral text-sm line-clamp-2",
     imageClasses: { horizontal: "h-full min-h-[300px] w-full sm:w-1/2", vertical: "h-44 w-full sm:h-52" },
@@ -117,7 +116,7 @@ const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): LayoutConfi
 
     return {
       containerClasses: config.containerClasses,
-      contentClasses: clsx("flex flex-1 flex-col p-4 ", {
+      contentClasses: clsx("flex flex-1 flex-col p-4", {
         "gap-2": isMasonryVertical,
         "justify-between p-4": !isMasonryVertical,
       }),
@@ -180,13 +179,20 @@ export const CardBase = ({ hasImage = false, variant, venue }: CardBaseProps) =>
           <div className={config.imageContainerClasses}>
             <Image
               alt={venue.name}
-              className={`object-cover transition-transform duration-300 group-hover/card:scale-110`}
+              className={`
+                object-cover transition-transform duration-300
+                group-hover/card:scale-110
+              `}
               fill
               sizes={config.imageSizes}
               src={`${constants.vercelBlobStorageUrl}/${mainImage}`}
             />
             <div
-              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
+              className={`
+                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
+                to-transparent opacity-0 transition-opacity
+                group-hover/card:opacity-100
+              `}
             />
           </div>
         )}
@@ -194,26 +200,35 @@ export const CardBase = ({ hasImage = false, variant, venue }: CardBaseProps) =>
         {hasImage && !mainImage && variant.startsWith("masonry") && (
           <div className={config.imageContainerClasses}>
             <div
-              className={`from-primary/10 to-secondary/10 flex h-full items-center justify-center bg-gradient-to-br`}
+              className={`
+                flex h-full items-center justify-center bg-gradient-to-br
+                from-primary/10 to-secondary/10
+              `}
             >
               <MapPin className="text-neutral opacity-30" size={48} />
             </div>
             <div
-              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
+              className={`
+                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
+                to-transparent opacity-0 transition-opacity
+                group-hover/card:opacity-100
+              `}
             />
           </div>
         )}
 
         <div className={config.contentClasses}>
           <div className="flex-1">
-            <CardHeader venue={venue} hideUntilHover={!isMobile} />
+            <CardHeader hideUntilHover={!isMobile} venue={venue} />
 
             <h3 className={config.titleClasses}>{venue.name}</h3>
 
             {venue.address && (
-              <div className="text-neutral mb-2 flex items-start gap-1 text-sm">
+              <div className="mb-2 flex items-start gap-1 text-sm text-neutral">
                 <MapPin className="mt-0.5 shrink-0" size={16} />
-                <span className={variant.startsWith("list") ? "line-clamp-1" : `line-clamp-2`}>{venue.address}</span>
+                <span className={variant.startsWith("list") ? "line-clamp-1" : `
+                  line-clamp-2
+                `}>{venue.address}</span>
               </div>
             )}
 
@@ -224,10 +239,11 @@ export const CardBase = ({ hasImage = false, variant, venue }: CardBaseProps) =>
             )}
           </div>
 
-          {variant === "masonry-full" && (
-            <CardMetadata variant={variant.startsWith("list") ? "list" : "grid"} venue={venue} hideUntilHover />
-          )}
-          <CardFooter venue={venue} hideUntilHover={!isMobile} />
+          {variant === "masonry-full" ||
+            (variant === "masonry-half" && !hasImage && (
+              <CardMetadata hideUntilHover variant={variant.startsWith("list") ? "list" : "grid"} venue={venue} />
+            ))}
+          <CardFooter hideUntilHover={!isMobile} venue={venue} />
         </div>
       </CardWrapper>
     </Link>

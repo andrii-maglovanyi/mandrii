@@ -2,13 +2,14 @@
 
 import { AtSign, Globe, MapPin, Phone } from "lucide-react";
 
-import { InfoLine } from "./InfoLine";
 import { GetPublicVenuesQuery } from "~/types";
 
+import { InfoLine } from "./InfoLine";
+
 interface CardMetadataProps {
-  venue: GetPublicVenuesQuery["venues"][number];
-  variant?: CardMetadataVariant;
   hideUntilHover?: boolean;
+  variant?: CardMetadataVariant;
+  venue: GetPublicVenuesQuery["venues"][number];
 }
 
 type CardMetadataVariant = "grid" | "list" | "map";
@@ -23,7 +24,7 @@ type CardMetadataVariant = "grid" | "list" | "map";
  * @param {CardMetadataProps} props - Component props.
  * @returns {JSX.Element | null} The venue quick info display.
  */
-export const CardMetadata = ({ variant = "list", venue, hideUntilHover }: CardMetadataProps) => {
+export const CardMetadata = ({ hideUntilHover, variant = "list", venue }: CardMetadataProps) => {
   // Determine which fields to show based on variant
   const showWebsite = variant === "list" || variant === "grid";
   const showEmail = variant === "list" || variant === "grid";
@@ -43,7 +44,7 @@ export const CardMetadata = ({ variant = "list", venue, hideUntilHover }: CardMe
   }
 
   return (
-    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col text-sm">
+    <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
       {showWebsite && (
         <InfoLine
           hideUntilHover={hideUntilHover}

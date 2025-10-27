@@ -30,11 +30,13 @@ export const ContentViewer = async ({ data, id, showMeta, type, variables }: Con
         prose max-w-none space-y-6
         dark:prose-invert
       `}>
-        <h1 className={`
-          mb-8
-          bg-[linear-gradient(to_right,var(--color-neutral)_0%,var(--color-on-surface)_30%,var(--color-on-surface)_70%,var(--color-neutral)_100%)]
-          bg-clip-text text-center text-7xl text-transparent
-        `}>
+        <h1
+          className={`
+            mb-8
+            bg-[linear-gradient(to_right,var(--color-neutral)_0%,var(--color-on-surface)_30%,var(--color-on-surface)_70%,var(--color-neutral)_100%)]
+            bg-clip-text text-center text-7xl text-transparent
+          `}
+        >
           {meta.title}
         </h1>
         {meta.description ? <p className={`

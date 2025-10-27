@@ -1,7 +1,7 @@
 import { LogIn, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { ActionButton, Separator } from "~/components/ui";
+import { ActionButton } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
@@ -46,8 +46,8 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
         <menu
           className={`
             absolute right-0 z-40 mt-2 w-max origin-top-right transform
-            space-y-2 space-y-4 rounded-md bg-surface-tint p-4 text-on-surface
-            shadow-lg transition duration-200 ease-out
+            space-y-4 rounded-md bg-surface-tint p-4 text-on-surface shadow-lg
+            transition duration-200 ease-out
             dark:shadow-neutral-500/10
             ${open ? `scale-100 opacity-100` : `scale-95 opacity-0`}
           `}

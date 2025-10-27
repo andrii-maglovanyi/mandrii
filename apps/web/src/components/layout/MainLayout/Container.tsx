@@ -12,5 +12,7 @@ const DEFAULT_CLASS = "z-0 m-auto max-w-5xl space-y-6 overflow-y-auto px-4 py-12
 export const Container = ({ children }: ContainerProps) => {
   const pathname = usePathname();
 
-  return <main className={clsx(COMMON_CLASS, !pathname.includes("/map") && DEFAULT_CLASS)}>{children}</main>;
+  const fullWidthPattern = /^\/(en|uk)\/(map(\/[^/]+)?|venues\/[^/]+)$/;
+
+  return <main className={clsx(COMMON_CLASS, !fullWidthPattern.test(pathname) && DEFAULT_CLASS)}>{children}</main>;
 };
