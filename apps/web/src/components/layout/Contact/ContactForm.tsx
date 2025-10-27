@@ -84,7 +84,10 @@ const Contact = ({ message = "" }: { message?: string }) => {
 
   if (status === "success") {
     return (
-      <div className={`mx-auto flex grow flex-col items-center justify-center space-y-6 text-center`}>
+      <div className={`
+        mx-auto flex grow flex-col items-center justify-center space-y-6
+        text-center
+      `}>
         <MailCheck size={50} />
         <h1 className="text-4xl font-bold">{i18n("Thanks for your message!")}</h1>
         <p className="text-lg">{i18n("I'll get back to you soon.")}</p>
@@ -95,7 +98,7 @@ const Contact = ({ message = "" }: { message?: string }) => {
 
   return (
     <>
-      <h1 className="text-on-surface mb-6 text-3xl font-semibold">{i18n("Contact me")}</h1>
+      <h1 className="mb-6 text-3xl font-semibold text-on-surface">{i18n("Contact me")}</h1>
 
       {status === "error" && (
         <Alert dismissLabel={i18n("Dismiss alert")}>{i18n("Failed to send message. Please try again.")}</Alert>

@@ -45,7 +45,10 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
   return (
     <div className="mt-4 flex flex-grow flex-col">
       <form onSubmit={handleSubmit}>
-        <div className={`flex flex-col items-center gap-6 text-center md:flex-row md:text-left`}>
+        <div className={`
+          flex flex-col items-center gap-6 text-center
+          md:flex-row md:text-left
+        `}>
           {isEditing ? (
             <div className="h-44 w-44 overflow-hidden">
               {previews.length > 0 ? (
@@ -66,15 +69,23 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
               )}
             </div>
           ) : (
-            <Avatar avatarSize={174} className={`border-primary m-0 rounded-full border`} profile={profile} />
+            <Avatar avatarSize={174} className={`
+              m-0 rounded-full border border-primary
+            `} profile={profile} />
           )}
           <div className="flex w-full max-w-sm grow flex-col">
             {isEditing ? (
               <Input placeholder={`${i18n("Your name")}`} required {...getFieldProps("name")} />
             ) : (
-              <h1 className={`mb-6 text-3xl font-bold text-nowrap md:mb-3 md:text-5xl`}>{values.name}</h1>
+              <h1 className={`
+                mb-6 text-3xl font-bold text-nowrap
+                md:mb-3 md:text-5xl
+              `}>{values.name}</h1>
             )}
-            <div className={`text-neutral flex items-center justify-center gap-2 md:justify-start`}>
+            <div className={`
+              flex items-center justify-center gap-2 text-neutral
+              md:justify-start
+            `}>
               <Tooltip label={i18n("Your email address cannot be changed.")} position="top">
                 <Lock className="stroke-neutral-disabled" size={16} />
               </Tooltip>
@@ -86,7 +97,10 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
         {isEditing ? (
           <FormFooter handleCancel={handleCancel} hasChanges={hasChanges} isFormValid={isFormValid} status={status} />
         ) : (
-          <div className={`mt-16 flex flex-col justify-center md:flex-row md:justify-end`}>
+          <div className={`
+            mt-16 flex flex-col justify-center
+            md:flex-row md:justify-end
+          `}>
             <Button onClick={() => setIsEditing(true)} variant="outlined">
               {i18n("Edit")}
             </Button>

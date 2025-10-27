@@ -96,7 +96,7 @@ export function Select<K extends React.ReactNode, T>({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-on-surface text-sm font-medium" htmlFor={selectId}>
+        <label className="text-sm font-medium text-on-surface" htmlFor={selectId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>
@@ -120,7 +120,10 @@ export function Select<K extends React.ReactNode, T>({
           <ChevronDown
             aria-hidden
             className={clsx(
-              `absolute top-1/2 right-3 -translate-y-1/2 text-neutral-500 transition-transform`,
+              `
+                absolute top-1/2 right-3 -translate-y-1/2 text-neutral-500
+                transition-transform
+              `,
               focused && "rotate-180",
             )}
             size={18}

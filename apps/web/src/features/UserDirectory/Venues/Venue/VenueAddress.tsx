@@ -96,7 +96,7 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
 
   return (
     <>
-      <RichText as="p" className="text-neutral py-6 text-sm">
+      <RichText as="p" className="py-6 text-sm text-neutral">
         {i18n(
           "If you provide an address, it will appear on the [interactive map]({map_link}), where users can find it nearby or search within a specified area.<br/>The address and location won't be saved unless you verify the address.",
           {
@@ -105,7 +105,10 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
         )}
       </RichText>
 
-      <div className={`flex flex-col md:flex-row md:space-x-4`}>
+      <div className={`
+        flex flex-col
+        md:flex-row md:space-x-4
+      `}>
         <div className="flex grow flex-col">
           <Input
             className="w-96"
@@ -116,7 +119,10 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
             {...getFieldProps("address")}
           />
         </div>
-        <div className={`flex flex-col md:pt-6`}>
+        <div className={`
+          flex flex-col
+          md:pt-6
+        `}>
           <Button disabled={isVerifyDisabled} onClick={handleVerifyAddress} variant="filled">
             {i18n("Verify address")}
           </Button>
@@ -133,7 +139,10 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
 
       {hasVerifiedAddress && (
         <>
-          <Alert className={`mt-8 md:mt-2`} variant="success">
+          <Alert className={`
+            mt-8
+            md:mt-2
+          `} variant="success">
             {fullAddress.address}
           </Alert>
 
@@ -146,12 +155,15 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
             />
           </div>
 
-          <RichText as="p" className="text-neutral py-6 text-sm">
+          <RichText as="p" className="py-6 text-sm text-neutral">
             {i18n(
               "Please make sure the pin location on the map points to the right place.<br />You can adjust coordinates within 100m radius from the original point if it's not quite right",
             )}
           </RichText>
-          <div className={`flex w-full flex-col md:flex-row md:space-x-4`}>
+          <div className={`
+            flex w-full flex-col
+            md:flex-row md:space-x-4
+          `}>
             <Input
               label={`${i18n("Latitude")} (${i18n("orig.")} ${fullAddress.coordinates[1]})`}
               max={bounds?.latitude.maxLat}

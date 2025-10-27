@@ -44,7 +44,7 @@ export const CardMetadata = ({ hideUntilHover, variant = "list", venue }: CardMe
   }
 
   return (
-    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col text-sm">
+    <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
       {showWebsite && (
         <InfoLine
           hideUntilHover={hideUntilHover}

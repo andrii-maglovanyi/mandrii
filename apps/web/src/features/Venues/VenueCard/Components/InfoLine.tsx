@@ -56,7 +56,10 @@ export const InfoLine = ({ hideUntilHover = false, icon, info, isLink = false, t
   );
 
   return (
-    <div className={`group/info hover:bg-on-surface/5 flex w-full items-center justify-between text-left`}>
+    <div className={`
+      group/info flex w-full items-center justify-between text-left
+      hover:bg-on-surface/5
+    `}>
       {isLink ? (
         <a
           className="flex min-w-0 flex-1 items-center gap-2 px-4 py-1.5"
@@ -72,7 +75,10 @@ export const InfoLine = ({ hideUntilHover = false, icon, info, isLink = false, t
       ) : (
         <Tooltip className="w-full! flex-1" label={tooltipText}>
           <button
-            className={`flex w-full min-w-0 cursor-pointer items-center gap-2 px-4 py-1.5 text-left`}
+            className={`
+              flex w-full min-w-0 cursor-pointer items-center gap-2 px-4 py-1.5
+              text-left
+            `}
             onClick={handleCopy}
           >
             {icon}

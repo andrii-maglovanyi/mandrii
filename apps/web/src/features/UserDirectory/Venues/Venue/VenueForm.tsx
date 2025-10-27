@@ -82,8 +82,14 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className={`flex grow flex-col justify-evenly lg:flex-row lg:space-x-4`}>
-        <div className={`flex flex-3 flex-col justify-evenly md:flex-row md:space-x-4`}>
+      <div className={`
+        flex grow flex-col justify-evenly
+        lg:flex-row lg:space-x-4
+      `}>
+        <div className={`
+          flex flex-3 flex-col justify-evenly
+          md:flex-row md:space-x-4
+        `}>
           <div className="flex flex-3 flex-col">
             <Select label={i18n("Category")} options={categoryOptions} required {...getFieldProps("category")} />
           </div>
@@ -100,7 +106,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
             {...getFieldProps("slug")}
             disabled={isBusy || Boolean(initialValues.id)}
           />
-          <p className="text-neutral mt-1.5 text-sm">
+          <p className="mt-1.5 text-sm text-neutral">
             {i18n(
               "↑ The slug serves as a unique identifier for your venue and must be URL-friendly. Once created, it cannot be changed.",
             )}
@@ -108,13 +114,13 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
         </div>
       </div>
 
-      <div className="border-primary/20 bg-primary/5 rounded-lg border-2 p-5">
+      <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-5">
         <Checkbox
           label={i18n("I own this venue")}
           {...getFieldProps("is_owner")}
           disabled={isBusy || Boolean(initialValues.id)}
         />
-        <p className="text-neutral text-sm">
+        <p className="text-sm text-neutral">
           ↑ {i18n("Legal owners have additional management privileges. This setting cannot be changed.")}
         </p>
       </div>
