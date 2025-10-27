@@ -19,12 +19,9 @@ import { checkCoordinatesWithinRange, checkIsSlugUnique } from "./validation";
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
-    console.log("HERE");
     const { i18n, session } = await getApiContext(req, { withAuth: true, withI18n: true });
 
-    console.log("HERE0.5");
     const schema = getVenueSchema(i18n);
-    console.log("HERE1");
     const data = await validateRequest(req, schema);
 
     const {
@@ -54,7 +51,6 @@ export const POST = (req: Request) =>
       social_links: { facebook: data.facebook?.trim() || null, instagram: data.instagram?.trim() || null },
       website: data.website?.trim() || null,
     };
-    console.log("HERE2");
 
     if (data.id) {
       venueData.id = data.id as UUID;
@@ -69,11 +65,9 @@ export const POST = (req: Request) =>
 
       venueData.slug = slug.trim();
     }
-    console.log("HERE3");
+
     if (address) {
       const geo = await geocodeAddress(address.trim(), privateConfig.maps.apiKey);
-
-      console.log("HERE3.1", geo);
 
       if (!geo) {
         throw new BadRequestError("Invalid address");
@@ -84,7 +78,7 @@ export const POST = (req: Request) =>
       venueData.country = country;
       venueData.city = city;
       venueData.postcode = postcode;
-      console.log("HERE3.2");
+
       if (longitude && latitude && checkCoordinatesWithinRange(coordinates, [longitude, latitude])) {
         venueData.geo = {
           coordinates: [longitude, latitude],
@@ -97,13 +91,11 @@ export const POST = (req: Request) =>
         };
       }
     }
-    console.log("HERE4");
+
     const prefix = [envName, "venues", slug].join("/");
 
     venueData.logo = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? "";
     venueData.images = await processImages(images ?? [], [prefix, "images"].join("/"));
-
-    console.log("TO SAVE VENUE");
     const venueId = await saveVenue(venueData, session, Boolean(is_owner));
 
     if (!venueId) {

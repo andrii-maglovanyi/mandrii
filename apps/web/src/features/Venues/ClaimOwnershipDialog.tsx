@@ -81,10 +81,12 @@ export const ClaimOwnershipDialog = ({ venue }: ClaimOwnershipDialogProps) => {
         <h1 className="text-xl font-semibold">{i18n("Claim your ownership")}</h1>
 
         <div className="my-6 flex flex-col items-center space-y-1">
-          <p className={`
-            w-fit bg-linear-to-r from-primary to-secondary bg-clip-text text-3xl
-            font-bold text-transparent
-          `}>
+          <p
+            className={`
+              w-fit bg-linear-to-r from-primary to-secondary bg-clip-text
+              text-3xl font-bold text-transparent
+            `}
+          >
             {venue.name}
           </p>
           <p className="text-neutral">{venue.address}</p>

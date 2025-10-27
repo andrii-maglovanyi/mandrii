@@ -28,7 +28,6 @@ interface VenueFormProps {
 export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueFormProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
-  console.log("INIT", initialValues);
   const {
     errors,
     getFieldProps,
