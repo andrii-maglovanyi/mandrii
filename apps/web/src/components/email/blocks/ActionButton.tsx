@@ -7,7 +7,10 @@ interface EmailActionButtonProps {
 
 export const EmailActionButton = ({ children, url }: EmailActionButtonProps) => (
   <Button
-    className={`bg-primary text-neutral-0 inline-block rounded-md px-6 py-3 text-lg font-semibold`}
+    className={`
+      inline-block rounded-md bg-primary px-6 py-3 text-lg font-semibold
+      text-neutral-0
+    `}
     href={url}
     style={{ color: "white" }}
   >

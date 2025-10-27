@@ -83,9 +83,7 @@ export const Modal = ({ children, isOpen, onClose, title }: ModalProps) => {
     animationClass,
     backdropClass,
     mobileClass,
-    `
-    fixed
-  `,
+    `fixed`,
   );
 
   return ReactDOM.createPortal(
@@ -100,7 +98,9 @@ export const Modal = ({ children, isOpen, onClose, title }: ModalProps) => {
           variant="ghost"
         />
       </div>
-      <div className="mb-4 flex items-center">{title && <h2 className={`text-xl font-normal`}>{title}</h2>}</div>
+      <div className="mb-4 flex items-center">{title && <h2 className={`
+        text-xl font-normal
+      `}>{title}</h2>}</div>
       <div className="mb-6">{children}</div>
     </dialog>,
     document.body,

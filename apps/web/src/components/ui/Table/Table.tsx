@@ -233,7 +233,10 @@ export function Table<T>({
 
     return sorter ? (
       <th
-        className={clsx(` ${thStyles} cursor-pointer whitespace-nowrap`, className)}
+        className={clsx(`
+          ${thStyles}
+          cursor-pointer whitespace-nowrap
+        `, className)}
         key={key}
         onClick={() => handleSort(key)}
         style={style}
@@ -245,7 +248,10 @@ export function Table<T>({
         </div>
       </th>
     ) : (
-      <th className={clsx(` ${thStyles} text-left whitespace-nowrap`, className)} key={key} style={style}>
+      <th className={clsx(`
+        ${thStyles}
+        text-left whitespace-nowrap
+      `, className)} key={key} style={style}>
         {headerTitle}
       </th>
     );
@@ -292,7 +298,12 @@ export function Table<T>({
 
     return (
       <React.Fragment key={key}>
-        <tr className={`group ${expanded ? "" : `border-surface-tint border-b`} hover:bg-on-surface/3 last:border-b-0`}>
+        <tr className={`
+          group
+          ${expanded ? "" : `border-b border-surface-tint`}
+          last:border-b-0
+          hover:bg-on-surface/3
+        `}>
           {columns.map((column) =>
             isExpandColumn(column) ? (
               <td className={tdStyles} key={column.key}>
@@ -308,7 +319,7 @@ export function Table<T>({
           )}
         </tr>
         {expanded && (
-          <tr className={`group border-neutral border-b`}>
+          <tr className={`group border-b border-neutral`}>
             <td className="p-0 pt-px align-middle" colSpan={columns.length}>
               {expandable?.expandedRowRender(record)}
             </td>
@@ -323,7 +334,10 @@ export function Table<T>({
 
     return (
       <div
-        className={`border-surface-tint bg-surface mb-4 inline-grid w-full grid-cols-[max-content_1fr] gap-4 rounded-lg border p-4 shadow-lg`}
+        className={`
+          mb-4 inline-grid w-full grid-cols-[max-content_1fr] gap-4 rounded-lg
+          border border-surface-tint bg-surface p-4 shadow-lg
+        `}
         key={key}
       >
         {columns
@@ -345,7 +359,7 @@ export function Table<T>({
 
             return (
               <React.Fragment key={dataKey}>
-                <span className="text-neutral text-right">{title}</span>
+                <span className="text-right text-neutral">{title}</span>
                 <span>{displayValue}</span>
               </React.Fragment>
             );
@@ -367,12 +381,15 @@ export function Table<T>({
 
   return (
     <div className="relative min-h-32">
-      <div className={`hidden md:block`}>
+      <div className={`
+        hidden
+        md:block
+      `}>
         <table className="w-full table-auto border-collapse">
           {loading && !dataSource?.length ? null : (
             <>
               <colgroup>{columns.map(renderColgroup)}</colgroup>
-              <thead className="border-surface border-b">
+              <thead className="border-b border-surface">
                 <tr>
                   {columns.map((column) =>
                     isExpandColumn(column) ? (
@@ -395,7 +412,10 @@ export function Table<T>({
 
       {loading && (
         <div
-          className={`absolute inset-0 hidden items-center justify-center md:flex`}
+          className={`
+            absolute inset-0 hidden items-center justify-center
+            md:flex
+          `}
           data-testid="spinner"
           style={{ marginTop: data.length ? "0" : "5rem" }}
         >

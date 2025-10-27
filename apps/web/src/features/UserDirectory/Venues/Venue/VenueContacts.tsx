@@ -116,7 +116,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, setValues }: Venu
       </AccordionItem>
 
       <AccordionItem icon={<AtSign size={20} />} title={i18n("Email")}>
-        <p className="text-neutral pt-2 pb-4 text-sm">{i18n("You can add up to three emails.")}</p>
+        <p className="pt-2 pb-4 text-sm text-neutral">{i18n("You can add up to three emails.")}</p>
         <div className="flex grow flex-col">
           {renderDynamicFields("emails", i18n("Email"), "varenyk@puzatahata.co.uk", addEmail, removeEmail)}
         </div>
@@ -124,7 +124,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, setValues }: Venu
 
       <AccordionItem icon={<Phone size={20} />} title={i18n("Phone number")}>
         <div className="flex grow flex-col">
-          <RichText as="p" className="text-neutral py-2 text-sm">
+          <RichText as="p" className="py-2 text-sm text-neutral">
             {i18n(
               "**🌍 Auto-detection enabled**.<br />Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.<br /><br />  You can add up to three phone numbers.",
             )}

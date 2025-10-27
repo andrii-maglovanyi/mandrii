@@ -190,7 +190,10 @@ export const VenuesList = () => {
       />
 
       <div className="flex flex-wrap items-center justify-between">
-        <RichText as="div" className={`text-sm sm:text-base`}>
+        <RichText as="div" className={`
+          text-sm
+          sm:text-base
+        `}>
           {(() => {
             const currentOffset = listState.offset ?? 0;
             const start = currentOffset + 1;
@@ -204,7 +207,7 @@ export const VenuesList = () => {
           })()}
         </RichText>
 
-        <div className="bg-surface-tint flex gap-1 rounded-lg p-1">
+        <div className="flex gap-1 rounded-lg bg-surface-tint p-1">
           <ActionButton
             aria-label={i18n("Grid view")}
             color="primary"
@@ -240,7 +243,11 @@ export const VenuesList = () => {
           icon={<MapPinOff size={50} />}
         />
       ) : viewMode === "grid" ? (
-        <div className={`grid auto-rows-auto grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4`}>
+        <div className={`
+          grid auto-rows-auto grid-cols-1 gap-4
+          sm:grid-cols-2
+          lg:grid-cols-4
+        `}>
           {venueLayouts.map((item) => (
             <VenuesMasonryCard
               hasImage={item.hasImage}

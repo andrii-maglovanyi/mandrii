@@ -167,7 +167,9 @@ export function Input<K extends string, T extends string>({
     if (isPhoneInput) {
       return (
         <span className={iconWrapperClass}>
-          {detectedCountry ? detectedCountry.flag : <Phone className={`text-neutral-disabled mx-1`} size={20} />}
+          {detectedCountry ? detectedCountry.flag : <Phone className={`
+            mx-1 text-neutral-disabled
+          `} size={20} />}
         </span>
       );
     }
@@ -175,7 +177,7 @@ export function Input<K extends string, T extends string>({
     if (type === "search") {
       return (
         <span className={iconWrapperClass}>
-          <Search className="text-neutral-disabled mx-1" size={20} />
+          <Search className="mx-1 text-neutral-disabled" size={20} />
         </span>
       );
     }
@@ -186,7 +188,7 @@ export function Input<K extends string, T extends string>({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-on-surface text-sm font-medium" htmlFor={inputId}>
+        <label className="text-sm font-medium text-on-surface" htmlFor={inputId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>
