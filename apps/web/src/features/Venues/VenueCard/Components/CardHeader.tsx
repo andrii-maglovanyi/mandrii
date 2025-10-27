@@ -61,7 +61,7 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
 
   return (
     <div className="mb-2 flex h-8 justify-between">
-      <div className={`flex h-full items-center gap-1 text-sm text-on-surface`}>
+      <div className={`text-on-surface flex h-full items-center gap-1 text-sm`}>
         {getIcon(iconName, { className: "flex-shrink-0", size: 16 })}
         {label[locale]}
       </div>
@@ -71,29 +71,19 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
           <ActionButton
             aria-label={i18n("Edit venue")}
             className="group"
-            icon={<PenTool className={hideUntilHover ? `
-              hidden
-              group-hover/card:flex
-            ` : ""} size={18} />}
+            icon={<PenTool className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
             onClick={handleManageClick}
             size="sm"
             variant="ghost"
           />
         ) : (
-          <div className={hideUntilHover ? `
-            hidden
-            group-hover/card:flex
-          ` : ""}>
+          <div className={hideUntilHover ? `hidden group-hover/card:flex` : ""}>
             <ActionButton
               aria-label={i18n("I own this venue")}
               className="group"
               icon={
                 <Crown
-                  className={`
-                    stroke-amber-600
-                    group-hover:fill-amber-600
-                    dark:stroke-amber-400 dark:group-hover:fill-amber-400
-                  `}
+                  className={`stroke-amber-600 group-hover:fill-amber-600 dark:stroke-amber-400 dark:group-hover:fill-amber-400`}
                   size={18}
                 />
               }
@@ -106,20 +96,14 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
         <ActionButton
           aria-label={i18n("Share this venue")}
           className="group"
-          icon={<Share2 className={hideUntilHover ? `
-            hidden
-            group-hover/card:flex
-          ` : ""} size={18} />}
+          icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
           onClick={handleShareClick}
           size="sm"
           variant="ghost"
         />
         {venue.owner_id ? (
           <Tooltip label={i18n("Verified venue with owner")} position="left">
-            <BadgeCheck className={`
-              stroke-green-600
-              dark:stroke-green-400
-            `} />
+            <BadgeCheck className={`stroke-green-600 dark:stroke-green-400`} />
           </Tooltip>
         ) : null}
       </div>

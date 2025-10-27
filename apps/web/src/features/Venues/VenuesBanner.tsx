@@ -10,15 +10,9 @@ export const VenuesBanner = () => {
   const router = useRouter();
   const i18n = useI18n();
   return (
-    <div className={`
-      mt-8 rounded-lg bg-linear-to-r from-primary to-secondary p-px
-    `}>
+    <div className={`from-primary to-secondary mt-8 rounded-lg bg-linear-to-r p-px`}>
       <div
-        className={`
-          flex flex-col space-y-6 rounded-lg bg-white p-6
-          md:flex-row md:space-y-0 md:space-x-4
-          dark:bg-black
-        `}
+        className={`flex flex-col space-y-6 rounded-lg bg-white p-6 md:flex-row md:space-y-0 md:space-x-4 dark:bg-black`}
       >
         <div className="flex-1">
           <h3 className="text-2xl font-bold">{i18n("Let's unite, Ukrainians!")}</h3>
@@ -31,15 +25,9 @@ export const VenuesBanner = () => {
             )}
           </p>
         </div>
-        <div className={`
-          flex shrink-0 items-center justify-center
-          md:ml-auto md:min-w-max
-        `}>
+        <div className={`flex shrink-0 items-center justify-center md:ml-auto md:min-w-max`}>
           <Button
-            className={`
-              mndr-with-gradient-shadow w-full
-              md:w-auto
-            `}
+            className={`mndr-with-gradient-shadow w-full md:w-auto`}
             color="primary"
             isFeatured
             onClick={() => {

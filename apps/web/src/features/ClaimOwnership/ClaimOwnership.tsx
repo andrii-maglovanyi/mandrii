@@ -25,10 +25,7 @@ export const ClaimOwnership = ({ name, slug }: ClaimOwnershipProps) => {
         </div>
       ) : (
         <Button
-          className={`
-            mndr-with-gradient-shadow mx-auto w-full max-w-3xs
-            md:w-auto
-          `}
+          className={`mndr-with-gradient-shadow mx-auto w-full max-w-3xs md:w-auto`}
           color="primary"
           isFeatured
           onClick={() => {

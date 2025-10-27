@@ -65,7 +65,7 @@ const SignIn = ({ callbackUrl }: SignInProps) => {
 
   return (
     <>
-      <h2 className="mb-4 text-center text-xl font-semibold text-on-surface">
+      <h2 className="text-on-surface mb-4 text-center text-xl font-semibold">
         {i18n("You can do so much more if you have a profile")}
       </h2>
       <p className="mb-6 text-center">{i18n("You can add new venues and so much more to come")}</p>

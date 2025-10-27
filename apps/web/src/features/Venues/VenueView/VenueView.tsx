@@ -55,60 +55,34 @@ export const VenueView = ({ slug }: VenueViewProps) => {
   return (
     <div className="flex flex-col">
       {/* Hero Section - Edge to Edge Image Carousel */}
-      <div className={`
-        relative w-full pb-2
-        md:pb-4
-      `}>
+      <div className={`relative w-full pb-2 md:pb-4`}>
         {images.length > 0 ? (
-          <div className={`
-            relative aspect-video w-full
-            md:aspect-21/9
-          `}>
+          <div className={`relative aspect-video w-full md:aspect-21/9`}>
             <ImageCarousel images={images} showDots />
             {/* Gradient Overlay */}
             <div
-              className={`
-                pointer-events-none absolute inset-0 bg-linear-to-t
-                from-black/80 via-black/40 to-transparent
-              `}
+              className={`pointer-events-none absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent`}
             />
           </div>
         ) : (
           <div
-            className={`
-              relative aspect-video w-full bg-linear-to-br from-primary/20
-              via-primary/10 to-secondary/20
-              md:aspect-21/9
-            `}
+            className={`from-primary/20 via-primary/10 to-secondary/20 relative aspect-video w-full bg-linear-to-br md:aspect-21/9`}
           />
         )}
 
         {/* Venue Name Overlay on Image */}
-        <div className={`
-          pointer-events-none absolute right-0 bottom-20 left-0 p-8
-          md:bottom-28
-        `}>
+        <div className={`pointer-events-none absolute right-0 bottom-20 left-0 p-8 md:bottom-28`}>
           <div className="mx-auto max-w-7xl">
             <div className="min-w-0">
               <h1
-                className={`
-                  mb-3 text-3xl leading-tight font-black tracking-tight
-                  text-white drop-shadow-2xl
-                  md:text-5xl
-                  lg:text-6xl
-                `}
+                className={`mb-3 text-3xl leading-tight font-black tracking-tight text-white drop-shadow-2xl md:text-5xl lg:text-6xl`}
               >
                 {venue.name}
               </h1>
               {venue.address && (
-                <div className={`
-                  flex items-start gap-2 text-white/95 drop-shadow-lg
-                `}>
+                <div className={`flex items-start gap-2 text-white/95 drop-shadow-lg`}>
                   <MapPin className="mt-1 shrink-0" size={20} />
-                  <span className={`
-                    text-base font-medium
-                    md:text-lg
-                  `}>{venue.address}</span>
+                  <span className={`text-base font-medium md:text-lg`}>{venue.address}</span>
                 </div>
               )}
             </div>
@@ -120,11 +94,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
           <div className="absolute right-0 bottom-0 left-0 px-8">
             <div className="mx-auto max-w-7xl">
               <div
-                className={`
-                  relative h-24 w-24 overflow-hidden rounded-3xl border-4
-                  border-white bg-white shadow-2xl
-                  md:h-32 md:w-32
-                `}
+                className={`relative h-24 w-24 overflow-hidden rounded-3xl border-4 border-white bg-white shadow-2xl md:h-32 md:w-32`}
               >
                 <Image alt={`${venue.name} logo`} className="object-cover" fill src={logoUrl} />
               </div>
@@ -139,33 +109,20 @@ export const VenueView = ({ slug }: VenueViewProps) => {
       </div>
 
       {/* Main Content */}
-      <div className={`
-        mx-auto w-full max-w-5xl px-4 py-2
-        lg:py-4
-      `}>
+      <div className={`mx-auto w-full max-w-5xl px-4 py-2 lg:py-4`}>
         {/* Tabs for About and Events */}
         <Tabs defaultActiveKey="about">
           <TabPane tab={i18n("About")}>
-            <div className={`
-              grid grid-cols-1 gap-4
-              lg:grid-cols-3
-            `}>
+            <div className={`grid grid-cols-1 gap-4 lg:grid-cols-3`}>
               {/* Description - Left side (2/3) */}
               <div className="lg:col-span-2">
                 {description ? (
-                  <div className={`
-                    prose max-w-none
-                    dark:prose-invert
-                  `}>
+                  <div className={`prose dark:prose-invert max-w-none`}>
                     <RichText>{description}</RichText>
                   </div>
                 ) : (
                   <div
-                    className={`
-                      flex items-center justify-center rounded-2xl border-2
-                      border-dashed border-gray-200 py-16
-                      dark:border-gray-700
-                    `}
+                    className={`flex items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 py-16 dark:border-gray-700`}
                   >
                     <p className="text-neutral/60">{i18n("No description available")}</p>
                   </div>
@@ -175,12 +132,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
               {/* Info Cards - Right side (1/3) */}
               <div className="flex flex-col">
                 <section
-                  className={`
-                    group/card rounded-xl border border-primary/0
-                    bg-surface-tint/50 p-4 transition-all duration-300
-                    hover:border-primary/20 hover:shadow-lg
-                    lg:text-base
-                  `}
+                  className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
                 >
                   <CardMetadata variant="list" venue={venue} />
                 </section>

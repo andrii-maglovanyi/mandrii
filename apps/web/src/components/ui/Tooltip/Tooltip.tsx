@@ -49,31 +49,18 @@ export const Tooltip = ({ children, className = "", label, position = "top" }: T
   const classes = POSITION_CLASSES[position];
 
   return (
-    <div className={`
-      group/tooltip relative inline-block w-fit
-      ${className}
-    `}>
+    <div className={`group/tooltip relative inline-block w-fit ${className} `}>
       <span aria-describedby={id} data-testid={`target-${id}`}>
         {children}
       </span>
 
       <div
-        className={`
-          pointer-events-none absolute z-50 rounded-md bg-surface-tint px-2 py-1
-          text-xs whitespace-nowrap text-on-surface opacity-0 shadow
-          transition-opacity duration-200
-          group-hover/tooltip:opacity-100
-          group-focus/tooltip:opacity-100
-          ${classes.tooltip}
-        `}
+        className={`bg-surface-tint text-on-surface pointer-events-none absolute z-50 rounded-md px-2 py-1 text-xs whitespace-nowrap opacity-0 shadow transition-opacity duration-200 group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 ${classes.tooltip} `}
         id={id}
         role="tooltip"
       >
         {label}
-        <div className={`
-          absolute h-2 w-2 rotate-45 bg-surface-tint
-          ${classes.arrow}
-        `} />
+        <div className={`bg-surface-tint absolute h-2 w-2 rotate-45 ${classes.arrow} `} />
       </div>
     </div>
   );

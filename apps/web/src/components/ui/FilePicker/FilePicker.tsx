@@ -50,9 +50,9 @@ export const FilePicker = ({
     <>
       <label className={inputClass}>
         <div className="text-center">
-          <Upload className="mx-auto mb-2 h-8 w-8 text-neutral-disabled" />
+          <Upload className="text-neutral-disabled mx-auto mb-2 h-8 w-8" />
           {label}
-          {placeholder && <span className="mt-1 block text-sm text-neutral">{placeholder}</span>}
+          {placeholder && <span className="text-neutral mt-1 block text-sm">{placeholder}</span>}
         </div>
         <input
           accept="image/*"
