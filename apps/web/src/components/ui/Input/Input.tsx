@@ -167,7 +167,9 @@ export function Input<K extends string, T extends string>({
     if (isPhoneInput) {
       return (
         <span className={iconWrapperClass}>
-          {detectedCountry ? detectedCountry.flag : <Phone className="mx-1 text-neutral-disabled" size={20} />}
+          {detectedCountry ? detectedCountry.flag : <Phone className={`
+            mx-1 text-neutral-disabled
+          `} size={20} />}
         </span>
       );
     }
