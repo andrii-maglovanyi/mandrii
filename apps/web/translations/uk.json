@@ -130,7 +130,7 @@
   "Slug": "Ідентифікатор",
   "Contacts": "Контакти",
   "Images": "Зображення",
-  "If you provide an address, it will appear on the [interactive map]({map_link}), where users can find it nearby or search within a specified area_<br/>The address and location won't be saved unless you verify the address_": "Якщо ти вкажеш адресу, вона з’явиться на [інтерактивній мапі]({map_link}), де користувачі зможуть знайти її поблизу або шукати в зазначеній області.<br/>Адресу та розташування не буде збережено, поки ти не підтвердиш адресу.",
+  "If you provide an address, it will appear on the [interactive map]({map_link}), where users can find it nearby or search within a specified area_<br/>The address and location won't be saved unless you verify the address_": "Якщо ти вкажеш адресу, вона з'явиться на [інтерактивній мапі]({map_link}), де користувачі зможуть знайти її поблизу або шукати в зазначеній області.<br/>Адресу та розташування не буде збережено, поки ти не підтвердиш адресу.",
   "Verify address": "Підтвердити адресу",
   "Can not find the address, please correct it and try again": "Не вдалося знайти адресу. Будь ласка, виправ її та спробуй ще раз.",
   "Please make sure the pin location on the map points to the right place_<br />You can adjust coordinates within 100m radius from the original point if it's not quite right": "Переконайся, що позначка на мапі вказує на правильне місце.<br/>Ти можеш скорегувати координати в радіусі 100 м від початкової точки, якщо вона не зовсім точна.",
