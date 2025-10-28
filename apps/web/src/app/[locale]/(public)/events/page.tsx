@@ -6,7 +6,6 @@ import { Locale } from "~/types";
 
 interface EventPageLayoutProps {
   events: Array<ContentData>;
-  locale: Locale;
 }
 
 interface EventsPageProps {
@@ -15,21 +14,15 @@ interface EventsPageProps {
 
 const type = "events";
 
-const EventPageLayout = ({ events, locale }: EventPageLayoutProps) => {
+const EventPageLayout = ({ events }: EventPageLayoutProps) => {
   const i18n = useI18n();
 
   return (
     <>
-      <Breadcrumbs items={[{ title: i18n("Home"), url: `/${locale}` }]} />
-      <h1 className={`
-        mb-12 text-3xl font-extrabold
-        md:text-5xl
-      `}>{i18n("Events")}</h1>
+      <Breadcrumbs items={[{ title: i18n("Home"), url: `/` }]} />
+      <h1 className={`mb-12 text-3xl font-extrabold md:text-5xl`}>{i18n("Events")}</h1>
 
-      <div className={`
-        mb-32
-        lg:mt-2 lg:mb-0 lg:w-full lg:max-w-5xl lg:text-left
-      `}>
+      <div className={`mb-32 lg:mt-2 lg:mb-0 lg:w-full lg:max-w-5xl lg:text-left`}>
         {events?.length ? events.map(({ meta }) => meta.title) : "No events found."}
       </div>
     </>
@@ -42,7 +35,7 @@ export default async function EventsPage({ params }: Readonly<EventsPageProps>) 
 
   return (
     <>
-      <EventPageLayout events={events} locale={locale} />
+      <EventPageLayout events={events} />
       <MixpanelTracker event="Viewed Events Page" />
     </>
   );
