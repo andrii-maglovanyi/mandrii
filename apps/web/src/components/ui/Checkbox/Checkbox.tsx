@@ -68,9 +68,9 @@ export function Checkbox({
 
   const labelClass = clsx(
     "text-base text-on-surface select-none",
-    disabled
-      ? "pointer-events-none cursor-not-allowed text-neutral-disabled"
-      : `cursor-pointer`,
+    disabled ? "pointer-events-none cursor-not-allowed text-neutral-disabled" : `
+      cursor-pointer
+    `,
   );
 
   return (

@@ -15,7 +15,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, setValues }: Venu
     (field: "emails" | "phone_numbers") => {
       setValues((prev) => ({
         ...prev,
-        [field]: [...(prev[field] || []), ""],
+        [field]: [...(prev[field]?.length ? prev[field] : [""]), ""],
       }));
     },
     [setValues],

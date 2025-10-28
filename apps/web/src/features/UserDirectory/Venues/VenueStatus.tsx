@@ -12,25 +12,25 @@ interface VenueStatusProps {
 export const VenueStatus = ({ expanded, status }: VenueStatusProps) => {
   const i18n = useI18n();
 
-  let icon = <Clock className="fill-blue-500/10 stroke-blue-500" />;
+  let icon = <Clock className="fill-blue-500/10 stroke-blue-500" size={18} />;
   let label = i18n("Pending");
 
   if (status === Venue_Status_Enum.Active) {
     label = i18n("Active");
-    icon = <CheckCircle2 className="fill-green-500/10 stroke-green-500" />;
+    icon = <CheckCircle2 className="fill-green-500/10 stroke-green-500" size={18} />;
   } else if (status === Venue_Status_Enum.Rejected) {
     label = i18n("Rejected");
-    icon = <XCircle className="fill-red-500/10 stroke-red-500" />;
+    icon = <XCircle className="fill-red-500/10 stroke-red-500" size={18} />;
   } else if (status === Venue_Status_Enum.Archived) {
     label = i18n("Archived");
-    icon = <Archive className="fill-gray-500/10 stroke-gray-500" />;
+    icon = <Archive className="fill-gray-500/10 stroke-gray-500" size={18} />;
   } else if (status === Venue_Status_Enum.Hidden) {
     label = i18n("Hidden");
-    icon = <EyeOff className="fill-slate-500/10 stroke-slate-500" />;
+    icon = <EyeOff className="fill-slate-500/10 stroke-slate-500" size={18} />;
   }
 
   const expandedStatusView = (
-    <div className="flex items-center">
+    <div className="flex items-center text-sm">
       {icon} <span className="ml-2">{label}</span>
     </div>
   );

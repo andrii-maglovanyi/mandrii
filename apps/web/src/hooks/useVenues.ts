@@ -9,7 +9,9 @@ import {
   GetPublicVenuesQuery,
   GetUserVenuesQuery,
   Venue_Category_Enum,
+  Venue_Status_Enum,
 } from "~/types";
+import { UUID } from "~/types/uuid";
 
 import { useGraphApi } from "./useGraphApi";
 
@@ -181,7 +183,7 @@ export const useVenues = () => {
   });
 
   const updateVenueStatus = useCallback(
-    async (id: number, status: Venue_Category_Enum) => {
+    async (id: UUID, status: Venue_Status_Enum) => {
       const { data } = await updateStatus({
         variables: { id, status },
       });
