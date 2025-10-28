@@ -10,7 +10,11 @@ export default function VenuesPage() {
     <>
       <Breadcrumbs items={[{ title: i18n("Home"), url: `/` }]} />
       <h1
-        className={`from-primary to-secondary mb-12 bg-gradient-to-r bg-clip-text text-3xl font-extrabold text-transparent md:text-5xl`}
+        className={`
+          mb-12 bg-gradient-to-r from-primary to-secondary bg-clip-text text-3xl
+          font-extrabold text-transparent
+          md:text-5xl
+        `}
       >
         {i18n("Discover venues")}
       </h1>
