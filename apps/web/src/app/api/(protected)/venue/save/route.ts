@@ -52,8 +52,6 @@ export const POST = (req: Request) =>
       website: data.website?.trim() || null,
     };
 
-    console.log("Venue data to be saved:", venueData);
-
     if (data.id) {
       venueData.id = data.id as UUID;
     } else {

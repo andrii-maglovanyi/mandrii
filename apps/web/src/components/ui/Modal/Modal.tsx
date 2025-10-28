@@ -77,14 +77,9 @@ export const Modal = ({ children, isOpen, onClose, title }: ModalProps) => {
   const layoutClass = "bg-surface text-on-surface w-full z-50 rounded-xl p-6 shadow-x overflow-visible";
   const mobileClass = "bottom-0 mt-auto mx-auto mb-4";
 
-  const modalClass = clsx(
-    layoutClass,
-    positionClass,
-    animationClass,
-    backdropClass,
-    mobileClass,
-    `fixed`,
-  );
+  const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `
+    fixed
+  `);
 
   return ReactDOM.createPortal(
     <dialog aria-labelledby="modal-title" aria-modal="true" className={modalClass} ref={dialogRef}>
