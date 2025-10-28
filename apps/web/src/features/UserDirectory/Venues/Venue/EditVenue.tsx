@@ -2,19 +2,21 @@
 
 import { useApolloClient } from "@apollo/client";
 import { format } from "date-fns";
-import { Bug, Search } from "lucide-react";
+import { Ban, Bug, Rocket, Search } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { RichText, Tooltip } from "~/components/ui";
+import { ActionButton } from "~/components/ui";
 import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
 import { EmptyState } from "~/components/ui/EmptyState/EmptyState";
 import { useNotifications } from "~/hooks/useNotifications";
+import { useUser } from "~/hooks/useUser";
 import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { toDateLocale } from "~/lib/utils";
-import { Locale } from "~/types";
+import { Locale, Venue_Status_Enum } from "~/types";
 
 import { VenueStatus } from "../VenueStatus";
 import { VenueForm } from "./VenueForm";
@@ -29,8 +31,9 @@ export const EditVenue = ({ slug }: VenueProps) => {
   const locale = useLocale() as Locale;
   const i18n = useI18n();
   const router = useRouter();
-  const { useGetVenue } = useVenues();
+  const { updateVenueStatus, useGetVenue } = useVenues();
 
+  const { data: profileData } = useUser();
   const { data, error, loading } = useGetVenue(slug);
 
   const [meta, setMeta] = useState<{ createdAt: string; status: string } | null>(null);
@@ -108,6 +111,32 @@ export const EditVenue = ({ slug }: VenueProps) => {
             </Tooltip>
             <span>&bull;</span>
             <VenueStatus expanded status={meta.status} />
+            {profileData?.role === "admin" && (
+              <div className="flex gap-2">
+                <ActionButton
+                  aria-label={i18n("Publish venue")}
+                  color="primary"
+                  icon={<Rocket />}
+                  onClick={() => {
+                    updateVenueStatus(data[0].id, Venue_Status_Enum.Active);
+                  }}
+                  tooltipPosition="left"
+                  type="button"
+                  variant="filled"
+                />
+                <ActionButton
+                  aria-label={i18n("Reject venue")}
+                  color="danger"
+                  icon={<Ban />}
+                  onClick={() => {
+                    updateVenueStatus(data[0].id, Venue_Status_Enum.Rejected);
+                  }}
+                  tooltipPosition="left"
+                  type="button"
+                  variant="filled"
+                />
+              </div>
+            )}
           </div>
         ) : null}
         <RichText as="p" className="mb-6 text-sm text-neutral">

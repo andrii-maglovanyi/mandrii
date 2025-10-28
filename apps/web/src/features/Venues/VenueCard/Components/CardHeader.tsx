@@ -124,8 +124,8 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
 
   return (
     <div className="mb-2 flex h-8 justify-between">
-      <div className={`flex h-full items-center gap-1 text-on-surface`}>
-        {getIcon(iconName, { size: 20 })}
+      <div className={`flex h-full items-center gap-1 text-sm text-on-surface`}>
+        {getIcon(iconName, { size: 18 })}
         {label[locale]}
       </div>
 

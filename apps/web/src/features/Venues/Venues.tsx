@@ -335,6 +335,7 @@ export const Venues = ({ slug }: VenuesProps) => {
                       label: description,
                       value: place_id,
                     }))}
+                    type="search"
                   />
                 </div>
 

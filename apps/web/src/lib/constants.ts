@@ -14,6 +14,12 @@ const countries = {
       uk: "Нідерланди",
     },
   },
+  pl: {
+    label: {
+      en: "Poland",
+      uk: "Польща",
+    },
+  },
   uk: {
     label: {
       en: "United Kingdom",
