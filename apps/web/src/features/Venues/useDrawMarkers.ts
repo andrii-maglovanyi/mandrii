@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 
+import { constants } from "~/lib/constants";
+import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
-import { GetPublicVenuesQuery, Venue_Status_Enum, Venues } from "~/types";
+import { GetPublicVenuesQuery, Venue_Category_Enum, Venue_Status_Enum, Venues } from "~/types";
 import { UUID } from "~/types/uuid";
 
 import { COLOR_STYLES } from "./constants";
@@ -11,6 +13,7 @@ type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;
 interface AttachMarkerHandlersParams {
   advancedMarker: AdvancedMarkerElement;
   arrowDiv: HTMLDivElement;
+  category: Venue_Category_Enum;
   id: UUID;
   isSelected: boolean;
   labelSpan: HTMLSpanElement;
@@ -31,8 +34,6 @@ type Props = {
   venues?: GetPublicVenuesQuery["venues"];
 };
 
-const pendingIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-icon lucide-clock inline mb-0.5 mr-0.5"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>`;
-
 export function useDrawMarkers(props: Props) {
   useEffect(() => {
     if (!props.isLoaded || !props.venues) return;
@@ -44,6 +45,7 @@ export function useDrawMarkers(props: Props) {
 function attachMarkerHandlers({
   advancedMarker,
   arrowDiv,
+  category,
   id,
   isSelected,
   labelSpan,
@@ -57,6 +59,7 @@ function attachMarkerHandlers({
       labelSpan.style.backgroundColor = STYLES.bgHover;
       arrowDiv.style.borderTop = `4px solid ${STYLES.bgHover}`;
       advancedMarker.style.zIndex = "3";
+      labelSpan.innerHTML = `${getTextContent(name)} `;
     }
   };
   labelSpan.onmouseout = () => {
@@ -64,6 +67,7 @@ function attachMarkerHandlers({
       labelSpan.style.backgroundColor = STYLES.bg;
       arrowDiv.style.borderTop = `4px solid ${STYLES.bg}`;
       advancedMarker.style.zIndex = "1";
+      labelSpan.innerHTML = `${getCategory(category)}`;
     }
   };
   advancedMarker.addListener("click", () => {
@@ -88,7 +92,7 @@ function clearMarkers(
 }
 
 function createAndAddMarker(
-  { geo, id, name, status }: GetPublicVenuesQuery["venues"][number],
+  { category, geo, id, name, status }: GetPublicVenuesQuery["venues"][number],
   props: Props,
   STYLES: typeof COLOR_STYLES.LIGHT,
 ) {
@@ -97,9 +101,11 @@ function createAndAddMarker(
   const isSelected = id === selectedVenueId;
   const contentDiv = document.createElement("div");
   contentDiv.style.cursor = "pointer";
-  const labelSpan = createLabelSpan(id, name, isSelected, status, STYLES);
+  const labelSpan = createLabelSpan(id, name, category, isSelected, status, STYLES);
   const arrowDiv = createArrowDiv(isSelected, status, STYLES);
+  // const notificationDiv = createNotificationDiv();
   labelSpan.appendChild(arrowDiv);
+  // contentDiv.appendChild(notificationDiv);
   contentDiv.appendChild(labelSpan);
 
   const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
@@ -116,6 +122,7 @@ function createAndAddMarker(
   attachMarkerHandlers({
     advancedMarker,
     arrowDiv,
+    category,
     id,
     isSelected,
     labelSpan,
@@ -150,22 +157,39 @@ function createArrowDiv(
 function createLabelSpan(
   id: number | string,
   name: string,
+  category: Venue_Category_Enum,
   isSelected: boolean,
   status: Venues["status"],
   STYLES: typeof COLOR_STYLES.LIGHT,
 ): HTMLSpanElement {
   const labelSpan = document.createElement("span");
   labelSpan.setAttribute("id", String(id));
-  labelSpan.style.borderRadius = "30px";
+  labelSpan.style.borderRadius = "8px";
   labelSpan.style.color = STYLES.onBg;
   labelSpan.style.position = "relative";
   labelSpan.style.whiteSpace = "nowrap";
   labelSpan.style.padding = "4px 8px";
-  labelSpan.innerHTML = `${status === Venue_Status_Enum.Pending ? pendingIcon : ""} ${getTextContent(name)}`;
+
+  labelSpan.innerHTML = isSelected ? getTextContent(name) : getCategory(category);
   labelSpan.style.backgroundColor = isSelected ? STYLES.bgActive : STYLES.bg;
 
   return labelSpan;
 }
+
+// function createNotificationDiv(): HTMLDivElement {
+//   const notificationDiv = document.createElement("div");
+//   notificationDiv.style.backgroundColor = "red";
+//   notificationDiv.style.borderRadius = "4px";
+//   notificationDiv.style.height = "8px";
+//   notificationDiv.style.width = "8px";
+//   notificationDiv.style.border = "1px solid #fff";
+//   notificationDiv.style.bottom = "16px";
+//   notificationDiv.style.position = "absolute";
+//   notificationDiv.style.right = "-2px";
+//   notificationDiv.style.top = "-6px";
+//   notificationDiv.style.zIndex = "100";
+//   return notificationDiv;
+// }
 
 function drawMarkers(props: Props, STYLES: typeof COLOR_STYLES.LIGHT) {
   const { labelSpansRef, mapRef, markersRef, venues } = props;
@@ -175,6 +199,17 @@ function drawMarkers(props: Props, STYLES: typeof COLOR_STYLES.LIGHT) {
       createAndAddMarker(venue, props, STYLES);
     }
   }
+}
+
+function getCategory(value: Venue_Category_Enum) {
+  const { iconName } = constants.categories[value as keyof typeof constants.categories];
+
+  return getIcon(iconName, {
+    asString: true,
+    className: "inline mb-0.5 ml-0.5",
+    height: 12,
+    width: 12,
+  });
 }
 
 function getTextContent(name: string, maxNumWords = 3): string {
