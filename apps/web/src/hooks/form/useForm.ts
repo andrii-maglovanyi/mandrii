@@ -275,7 +275,7 @@ export function useForm<T extends ZodRawShape>(config: {
         error: errors[field],
         name: String(field),
         onBlur: handleBlur(field),
-        onChange: (e: FieldChangeEvent) => handleChange(field)(e.target.value),
+        onChange: (e: FieldChangeEvent) => handleChange(field)([e.target.value]),
         showErrorMessage: true,
         value: fieldValue,
       },
