@@ -37,7 +37,7 @@ export const FormFooter = ({ handleCancel, hasChanges, isFormValid, status }: Fo
         <Button disabled={isBusy} onClick={handleCancel} variant="ghost">
           {i18n("Cancel")}
         </Button>
-        <Button busy={isBusy} disabled={!isFormValid || !hasChanges} type="submit" variant="filled">
+        <Button busy={isBusy} color="primary" disabled={!isFormValid || !hasChanges} type="submit" variant="filled">
           {isBusy ? i18n("Saving") : i18n("Save")}
         </Button>
       </div>

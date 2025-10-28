@@ -43,6 +43,7 @@
     "ipaddr.js": "^2.2.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.525.0",
+    "marked": "^16.4.1",
     "mixpanel": "^0.18.1",
     "nanoid": "^5.1.5",
     "next": "^15.4.4",

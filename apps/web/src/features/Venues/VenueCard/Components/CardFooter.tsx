@@ -1,6 +1,6 @@
 import { Clock } from "lucide-react";
-import Link from "next/link";
 
+import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 import { GetPublicVenuesQuery, Venue_Status_Enum } from "~/types";
 

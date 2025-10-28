@@ -239,7 +239,6 @@ export function useForm<T extends ZodRawShape>(config: {
       const arrayValue = fieldValue ?? [];
 
       if (arrayValue.length === 0) {
-        handleChange(field)([""]);
         return [
           {
             disabled: status === "processing",

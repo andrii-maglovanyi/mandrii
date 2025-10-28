@@ -123,93 +123,6 @@ msgstr ""
 msgid "Nothing found"
 msgstr ""
 
-msgid "View Details"
-msgstr ""
-
-msgid "All countries"
-msgstr ""
-
-msgid "Search venues..."
-msgstr ""
-
-msgid "Showing **{count}** of **{total}** venues"
-msgstr ""
-
-msgid "Showing **{start}**-**{end}** of **{total}** venues"
-msgstr ""
-
-msgid "Grid view"
-msgstr ""
-
-msgid "List view"
-msgstr ""
-
-msgid "Try adjusting your filters or search terms"
-msgstr ""
-
-msgid "No venues found"
-msgstr ""
-
-msgid "Next"
-msgstr ""
-
-msgid "Back"
-msgstr ""
-
-msgid "Copied venue URL"
-msgstr ""
-
-msgid "I own this venue"
-msgstr ""
-
-msgid "Manage your venue"
-msgstr ""
-
-msgid "Share this venue"
-msgstr ""
-
-msgid "Discover"
-msgstr ""
-
-msgid "Venue link copied to clipboard"
-msgstr ""
-
-msgid "The venue you're looking for doesn't exist or has been removed"
-msgstr ""
-
-msgid "Venue not found"
-msgstr ""
-
-msgid "Share"
-msgstr ""
-
-msgid "About"
-msgstr ""
-
-msgid "Upcoming Events"
-msgstr ""
-
-msgid "No upcoming events at this time"
-msgstr ""
-
-msgid "Check back later for updates!"
-msgstr ""
-
-msgid "Contact Information"
-msgstr ""
-
-msgid "No contact information available"
-msgstr ""
-
-msgid "Quick Info"
-msgstr ""
-
-msgid "Address not provided"
-msgstr ""
-
-msgid "Copied"
-msgstr ""
-
 msgid "Update and manage venue information"
 msgstr ""
 
@@ -235,6 +148,84 @@ msgid "Sign in"
 msgstr ""
 
 msgid "I will verify your ownership before granting access to enhanced features"
+msgstr ""
+
+msgid "All countries"
+msgstr ""
+
+msgid "Search venues..."
+msgstr ""
+
+msgid "Showing **{start}**-**{end}** of **{total}** venues"
+msgstr ""
+
+msgid "Grid view"
+msgstr ""
+
+msgid "List view"
+msgstr ""
+
+msgid "Try adjusting your filters or search terms"
+msgstr ""
+
+msgid "No venues found"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "The venue you're looking for doesn't exist or has been removed"
+msgstr ""
+
+msgid "Venue not found"
+msgstr ""
+
+msgid "View on map"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
+msgid "Check back later for updates!"
+msgstr ""
+
+msgid "No upcoming events at this time"
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "No description available"
+msgstr ""
+
+msgid "Collapse venue details"
+msgstr ""
+
+msgid "Expand venue details"
+msgstr ""
+
+msgid "Copied"
+msgstr ""
+
+msgid "Copied venue URL"
+msgstr ""
+
+msgid "Edit venue"
+msgstr ""
+
+msgid "I own this venue"
+msgstr ""
+
+msgid "Share this venue"
+msgstr ""
+
+msgid "Verified venue with owner"
+msgstr ""
+
+msgid "Discover"
 msgstr ""
 
 msgid "This is the glitch you get when there is no profile data available. Please contact me."
@@ -286,9 +277,6 @@ msgid "Edit"
 msgstr ""
 
 msgid "Venues"
-msgstr ""
-
-msgid "Events"
 msgstr ""
 
 msgid "Status"
@@ -364,6 +352,12 @@ msgid "Name"
 msgstr ""
 
 msgid "Slug"
+msgstr ""
+
+msgid "↑ The slug serves as a unique identifier for your venue and must be URL-friendly. Once created, it cannot be changed."
+msgstr ""
+
+msgid "Legal owners have additional management privileges. This setting cannot be changed."
 msgstr ""
 
 msgid "Optionally, update contacts, a description, photos, a logo, and an address for more details."
@@ -684,13 +678,10 @@ msgstr ""
 msgid "Thank you for being part of this adventure."
 msgstr ""
 
-msgid "Claim your venue"
-msgstr ""
-
 msgid "Take control of your venue's profile. Update information, create events, and connect with your community."
 msgstr ""
 
-msgid "Submit verification request"
+msgid "Claim your venue"
 msgstr ""
 
 msgid "Send me an email with:"
@@ -702,28 +693,31 @@ msgstr ""
 msgid "A few words about what makes your venue special for the community"
 msgstr ""
 
-msgid "That's it! Wait for approval"
+msgid "Submit verification request"
 msgstr ""
 
 msgid "I'll review your request and grant access within **24-48 hours**."
 msgstr ""
 
-msgid "Find your venue"
+msgid "That's it! Wait for approval"
 msgstr ""
 
 msgid "Search for your venue in the [catalog](/venues) and click **<Crown className='mb-1.5 inline' size={18} />I own this venue** to start the verification process."
 msgstr ""
 
-msgid "Sign in to your account"
+msgid "Find your venue"
 msgstr ""
 
 msgid "Create an account or sign in to get started. You'll need to be logged in to verify ownership."
 msgstr ""
 
+msgid "Sign in to your account"
+msgstr ""
+
 msgid "How it works"
 msgstr ""
 
-msgid "Three simple steps to verify and manage your venue"
+msgid "Simple steps to verify and manage your venue"
 msgstr ""
 
 msgid "Ready to claim your venue?"
@@ -745,7 +739,4 @@ msgid "Profile"
 msgstr ""
 
 msgid "Add venue"
-msgstr ""
-
-msgid "Edit venue"
 msgstr ""

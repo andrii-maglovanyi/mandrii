@@ -43,7 +43,7 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
   };
 
   return (
-    <div className="mt-4 flex flex-grow flex-col">
+    <div className="mt-4 flex grow flex-col">
       <form onSubmit={handleSubmit}>
         <div className={`
           flex flex-col items-center gap-6 text-center

@@ -1,6 +1,6 @@
-import fs from "fs";
 import matter from "gray-matter";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import { Locale } from "~/types";
 
@@ -176,7 +176,6 @@ class MarkdownContentManager {
 
         for (const filename of possibleFiles) {
           const testPath = path.join(contentDirectory, filename);
-          console.log(`Checking for content file: ${testPath}`);
           if (fs.existsSync(testPath)) {
             fullPath = testPath;
             break;

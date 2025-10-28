@@ -3,8 +3,9 @@
 import { Calendar, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-import { AnimatedEllipsis, EmptyState, ImageCarousel, RichText, TabPane, Tabs } from "~/components/ui";
+import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, TabPane, Tabs } from "~/components/ui";
 import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -21,13 +22,14 @@ export const VenueView = ({ slug }: VenueViewProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const { useGetVenue } = useVenues();
+  const router = useRouter();
 
   const { data: venues, loading } = useGetVenue(slug);
   const venue = venues?.[0];
 
   if (loading) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <AnimatedEllipsis size="lg" />
       </div>
     );
@@ -35,11 +37,13 @@ export const VenueView = ({ slug }: VenueViewProps) => {
 
   if (!venue) {
     return (
-      <EmptyState
-        body={i18n("The venue you're looking for doesn't exist or has been removed")}
-        heading={i18n("Venue not found")}
-        icon={<MapPin size={50} />}
-      />
+      <div className="flex flex-1 items-center justify-center">
+        <EmptyState
+          body={i18n("The venue you're looking for doesn't exist or has been removed")}
+          heading={i18n("Venue not found")}
+          icon={<MapPin size={50} />}
+        />
+      </div>
     );
   }
 
@@ -76,8 +80,8 @@ export const VenueView = ({ slug }: VenueViewProps) => {
         ) : (
           <div
             className={`
-              relative aspect-video w-full bg-linear-to-br from-primary/20
-              via-primary/10 to-secondary/20
+              relative aspect-video w-full bg-linear-to-br from-primary/30
+              via-primary/15 to-secondary/30
               md:aspect-21/9
             `}
           />
@@ -85,15 +89,15 @@ export const VenueView = ({ slug }: VenueViewProps) => {
 
         {/* Venue Name Overlay on Image */}
         <div className={`
-          pointer-events-none absolute right-0 bottom-20 left-0 p-8
-          md:bottom-28
+          absolute right-0 bottom-20 left-0 px-4 pb-8
+          md:bottom-28 md:px-8
         `}>
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-5xl">
             <div className="min-w-0">
               <h1
                 className={`
                   mb-3 text-3xl leading-tight font-black tracking-tight
-                  text-white drop-shadow-2xl
+                  text-on-surface drop-shadow-2xl
                   md:text-5xl
                   lg:text-6xl
                 `}
@@ -101,14 +105,15 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                 {venue.name}
               </h1>
               {venue.address && (
-                <div className={`
-                  flex items-start gap-2 text-white/95 drop-shadow-lg
-                `}>
-                  <MapPin className="mt-1 shrink-0" size={20} />
+                <div className={`flex items-center gap-4 text-on-surface/80`}>
+                  <MapPin />
                   <span className={`
                     text-base font-medium
                     md:text-lg
-                  `}>{venue.address}</span>
+                  `}>{venue.address}</span>{" "}
+                  <Button onClick={() => router.push(`/map/${venue.slug}`)} size="sm" variant="outlined">
+                    {i18n("View on map")}
+                  </Button>
                 </div>
               )}
             </div>
@@ -117,8 +122,11 @@ export const VenueView = ({ slug }: VenueViewProps) => {
 
         {/* Logo Overlapping Image and Content */}
         {logoUrl && (
-          <div className="absolute right-0 bottom-0 left-0 px-8">
-            <div className="mx-auto max-w-7xl">
+          <div className={`
+            absolute right-0 bottom-0 left-0 px-4
+            md:px-8
+          `}>
+            <div className="mx-auto max-w-5xl">
               <div
                 className={`
                   relative h-24 w-24 overflow-hidden rounded-3xl border-4
@@ -132,9 +140,15 @@ export const VenueView = ({ slug }: VenueViewProps) => {
           </div>
         )}
 
-        {/* Share Button - Below Carousel */}
-        <div className="mx-auto mt-2 w-full max-w-5xl pr-4 pl-24">
-          <CardHeader hideUntilHover={false} venue={venue} />
+        <div className={`mx-auto mt-2 w-full max-w-5xl px-4`}>
+          <div className={logoUrl ? `
+            pl-28
+            md:pl-40
+            lg:pl-36
+            xl:pl-32
+          ` : ""}>
+            <CardHeader hideUntilHover={false} venue={venue} />
+          </div>
         </div>
       </div>
 
@@ -145,6 +159,15 @@ export const VenueView = ({ slug }: VenueViewProps) => {
       `}>
         {/* Tabs for About and Events */}
         <Tabs defaultActiveKey="about">
+          <TabPane tab={i18n("Events")}>
+            <EmptyState
+              body={i18n("Check back later for updates!")}
+              className="mt-20"
+              heading={i18n("No upcoming events at this time")}
+              icon={<Calendar size={50} />}
+            />
+          </TabPane>
+
           <TabPane tab={i18n("About")}>
             <div className={`
               grid grid-cols-1 gap-4
@@ -186,23 +209,6 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                 </section>
               </div>
             </div>
-          </TabPane>
-
-          <TabPane tab={i18n("Events")}>
-            <EmptyState
-              body={i18n("Check back later for updates!")}
-              className="mt-20"
-              heading={i18n("No upcoming events at this time")}
-              icon={<Calendar size={50} />}
-            />
-            {/* TODO: Wire up real events when available */}
-            {/* <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 py-20 dark:border-gray-700">
-              <div className="from-primary/10 to-secondary/10 mb-6 rounded-full bg-linear-to-br p-8 shadow-inner">
-                <Calendar className="text-neutral/40" size={56} />
-              </div>
-              <p className="text-neutral mb-3 text-xl font-bold">{i18n("No upcoming events at this time")}</p>
-              <p className="text-neutral/60 text-sm">{i18n("Check back later for updates!")}</p>
-            </div> */}
           </TabPane>
         </Tabs>
       </div>

@@ -1,6 +1,7 @@
 import { ArrowRight, CornerRightDown } from "lucide-react";
-import Link from "next/link";
 import React from "react";
+
+import { Link } from "~/i18n/navigation";
 
 export const Breadcrumbs = ({ items }: { items: Array<{ title: string; url?: string }> }) => {
   const list = items

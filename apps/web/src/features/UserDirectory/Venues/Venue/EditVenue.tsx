@@ -120,7 +120,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
               )}
         </RichText>
         <VenueForm
-          initialValues={{ ...data[0], is_owner: Boolean(data[0]?.owner_id) }}
+          initialValues={{ ...data[0], is_owner: Boolean(data[0]?.owner_id), ...(data[0]?.social_links ?? {}) }}
           onSubmit={submitVenue}
           onSuccess={handleSuccess}
         />

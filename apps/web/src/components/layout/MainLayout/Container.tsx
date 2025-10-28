@@ -12,7 +12,8 @@ const DEFAULT_CLASS = "z-0 m-auto max-w-5xl space-y-6 overflow-y-auto px-4 py-12
 export const Container = ({ children }: ContainerProps) => {
   const pathname = usePathname();
 
-  const fullWidthPattern = /^\/(en|uk)\/(map(\/[^/]+)?|venues\/[^/]+)$/;
+  // Match full-width pages with optional locale prefix (as-needed for en, always for uk)
+  const fullWidthPattern = /^\/(uk\/)?(map(\/[^/]+)?|venues\/[^/]+)$/;
 
   return <main className={clsx(COMMON_CLASS, !fullWidthPattern.test(pathname) && DEFAULT_CLASS)}>{children}</main>;
 };

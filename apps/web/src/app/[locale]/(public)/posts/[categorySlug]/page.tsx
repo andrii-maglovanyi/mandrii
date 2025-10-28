@@ -24,7 +24,7 @@ const PostsCategoryPageLayout = ({ categoryName, locale, posts }: PostsCategoryL
 
   return (
     <>
-      <Breadcrumbs items={[{ title: i18n("Posts"), url: `/${locale}/posts` }]} />
+      <Breadcrumbs items={[{ title: i18n("Posts"), url: `/posts` }]} />
       {categoryName && (
         <h1 className={`
           mb-12 flex items-center text-3xl font-extrabold text-on-surface

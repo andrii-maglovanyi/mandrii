@@ -1,17 +1,14 @@
-import { useLocale } from "next-intl";
-
 import { MixpanelTracker } from "~/components/layout";
 import { Breadcrumbs } from "~/components/ui";
 import { VenuesList } from "~/features/Venues/VenuesList";
 import { useI18n } from "~/i18n/useI18n";
 
 export default function VenuesPage() {
-  const locale = useLocale();
   const i18n = useI18n();
 
   return (
     <>
-      <Breadcrumbs items={[{ title: i18n("Home"), url: `/${locale}` }]} />
+      <Breadcrumbs items={[{ title: i18n("Home"), url: `/` }]} />
       <h1
         className={`
           mb-12 bg-gradient-to-r from-primary to-secondary bg-clip-text text-3xl

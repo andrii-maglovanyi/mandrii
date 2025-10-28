@@ -48,7 +48,7 @@ const Venues = () => {
                 group text-2xl font-bold
                 md:text-base md:font-semibold
               `}
-              href={`/${hasAddress ? "map" : "venues"}/${slug}`}
+              href={`/venues/${slug}`}
               target="_blank"
             >
               {String(name)}

@@ -6,7 +6,6 @@ import { Locale } from "~/types";
 
 interface EventPageLayoutProps {
   events: Array<ContentData>;
-  locale: Locale;
 }
 
 interface EventsPageProps {
@@ -15,12 +14,12 @@ interface EventsPageProps {
 
 const type = "events";
 
-const EventPageLayout = ({ events, locale }: EventPageLayoutProps) => {
+const EventPageLayout = ({ events }: EventPageLayoutProps) => {
   const i18n = useI18n();
 
   return (
     <>
-      <Breadcrumbs items={[{ title: i18n("Home"), url: `/${locale}` }]} />
+      <Breadcrumbs items={[{ title: i18n("Home"), url: `/` }]} />
       <h1 className={`
         mb-12 text-3xl font-extrabold
         md:text-5xl
@@ -42,7 +41,7 @@ export default async function EventsPage({ params }: Readonly<EventsPageProps>) 
 
   return (
     <>
-      <EventPageLayout events={events} locale={locale} />
+      <EventPageLayout events={events} />
       <MixpanelTracker event="Viewed Events Page" />
     </>
   );

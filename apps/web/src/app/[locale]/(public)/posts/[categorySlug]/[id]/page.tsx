@@ -10,7 +10,6 @@ interface PostPageLayoutProps {
   categorySlug: CategorySlug;
   data: ContentData | null;
   id: string;
-  locale: Locale;
 }
 
 interface PostPageProps {
@@ -19,15 +18,15 @@ interface PostPageProps {
 
 const type = "posts";
 
-const PostPageLayout = ({ categoryName, categorySlug, data, id, locale }: PostPageLayoutProps) => {
+const PostPageLayout = ({ categoryName, categorySlug, data, id }: PostPageLayoutProps) => {
   const i18n = useI18n();
 
   return (
     <>
       <Breadcrumbs
         items={[
-          { title: i18n("Posts"), url: `/${locale}/posts` },
-          { title: categoryName ?? "...", url: `/${locale}/posts/${categorySlug}` },
+          { title: i18n("Posts"), url: `/posts` },
+          { title: categoryName ?? "...", url: `/posts/${categorySlug}` },
         ]}
       />
       <ContentViewer data={data} id={id} showMeta type={type} />
@@ -42,7 +41,7 @@ export default async function PostPage({ params }: Readonly<PostPageProps>) {
 
   return (
     <>
-      <PostPageLayout categoryName={categoryName} categorySlug={categorySlug} data={data} id={id} locale={locale} />
+      <PostPageLayout categoryName={categoryName} categorySlug={categorySlug} data={data} id={id} />
       <MixpanelTracker event="Viewed Post Page" props={{ id, locale }} />
     </>
   );

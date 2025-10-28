@@ -2,10 +2,10 @@
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale } from "next-intl";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { RichText } from "~/components/ui";
+import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 import { GetPublicVenuesQuery, Locale } from "~/types";
 

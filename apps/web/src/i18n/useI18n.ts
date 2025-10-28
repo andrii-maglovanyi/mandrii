@@ -15,18 +15,14 @@ export const useI18n = () => {
         return getTemplate(key, options);
       }
 
-      // Try normal key first
-      const translated = t(key, { ...options, fallback: key });
+      // Normalize dotted keys to work around `next-intl` nesting limitations
+      const normalizedKey = key.replaceAll(".", "_");
 
-      // If translation returns key itself, try normalized version (replace dots)
-      if (translated === key && key.includes(".")) {
-        const normalizedKey = key.replaceAll(".", "_");
-        const normalized = t(normalizedKey, { ...options, fallback: key });
-
-        return normalized === normalizedKey ? getTemplate(key, options) : normalized;
+      try {
+        return t(normalizedKey, options);
+      } catch {
+        return getTemplate(key, options);
       }
-
-      return translated;
     },
     [locale, t],
   );
