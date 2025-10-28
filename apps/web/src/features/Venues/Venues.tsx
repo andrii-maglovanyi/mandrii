@@ -95,6 +95,7 @@ export const Venues = ({ slug }: VenuesProps) => {
   });
 
   const { handleFilter, listState } = useListControls({
+    limit: 50,
     where: variables.where,
   });
   const { usePublicVenues } = useVenues();
@@ -375,7 +376,7 @@ export const Venues = ({ slug }: VenuesProps) => {
                   text-sm
                   sm:text-base
                 `, isReady ? `visible` : `hidden`)}>
-                  {i18n("Added **{total}** places", { total })}
+                  {i18n("Shown **{total}** venues", { total })}
                 </RichText>
               </div>
             </div>

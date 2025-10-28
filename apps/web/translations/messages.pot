@@ -114,7 +114,7 @@ msgstr ""
 msgid "Find me"
 msgstr ""
 
-msgid "Added **{total}** places"
+msgid "Shown **{total}** venue"
 msgstr ""
 
 msgid "Showing {number} results"

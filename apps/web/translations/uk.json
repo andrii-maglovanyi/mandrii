@@ -75,7 +75,6 @@
   "Location": "Локація",
   "All categories": "Усі категорії",
   "Find me": "Знайти мене",
-  "Added **{total}** places": "Додано **{total}** локацій",
   "Select category___": "Вибери категорію...",
   "Showing {number} results": "Показано {number, plural,\n  one {# результат}\n  few {# результати}\n  many {# результатів}\n  other {# результатів}\n}",
   "Nothing found": "Нічого не знайдено",
@@ -245,5 +244,6 @@
   "Expand venue details": "Розгорнути деталі закладу",
   "Verified venue with owner": "Підтверджений заклад із власником",
   "↑ The slug serves as a unique identifier for your venue and must be URL-friendly_ Once created, it cannot be changed_": "↑ Слугує унікальним ідентифікатором твого закладу і має підходити для URL-адреси. Після створення його не можна змінити.",
-  "Legal owners have additional management privileges_ This setting cannot be changed_": "Власники закладу отримують додаткові можливості керування. Це налаштування не можна змінити."
+  "Legal owners have additional management privileges_ This setting cannot be changed_": "Власники закладу отримують додаткові можливості керування. Це налаштування не можна змінити.",
+  "Shown **{total}** venues": "Показано {total, plural,\n  one {# заклад}\n  few {# заклади}\n  many {# закладів}\n  other {# закладів}\n}"
 }
