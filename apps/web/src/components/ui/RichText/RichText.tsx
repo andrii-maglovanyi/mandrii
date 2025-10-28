@@ -1,5 +1,5 @@
+import { marked } from "marked";
 import { JSX } from "react";
-import snarkdown from "snarkdown";
 
 interface RichTextProps {
   as?: keyof JSX.IntrinsicElements;
@@ -12,7 +12,7 @@ export const RichText = ({ as: Tag = "span", children, className }: RichTextProp
     <Tag
       className={className}
       dangerouslySetInnerHTML={{
-        __html: snarkdown(children),
+        __html: marked.parse(children, { breaks: true, gfm: true }),
       }}
     />
   );

@@ -49,7 +49,7 @@ const nextConfig = {
   },
   outputFileTracingIncludes: {
     "/api/**/*": ["./content/**/*", "./.next/static/css/**/*"],
-    "/app/\[locale\]/**/*": ["./content/**/*"],
+    "/app/[locale]/**/*": ["./content/**/*"],
   },
   async rewrites() {
     return [

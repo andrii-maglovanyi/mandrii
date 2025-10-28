@@ -2,9 +2,9 @@
 
 import clsx from "clsx";
 import { useLocale } from "next-intl";
-import Link from "next/link";
 
 import { RichText } from "~/components/ui";
+import { Link } from "~/i18n/navigation";
 import { GetPublicVenuesQuery, Locale } from "~/types";
 import { UUID } from "~/types/uuid";
 

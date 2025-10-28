@@ -22,7 +22,7 @@ export const variantClasses = {
     danger:
       "border border-danger text-danger hover:bg-danger/20 disabled:border-danger-disabled disabled:text-danger-disabled disabled:hover:bg-transparent",
     neutral:
-      "border border-neutral text-neutral hover:bg-surface-tint/20 disabled:border-neutral-disabled disabled:text-neutral-disabled disabled:hover:bg-transparent",
+      "border border-neutral text-neutral hover:bg-surface-tint/40 disabled:border-neutral-disabled disabled:text-neutral-disabled disabled:hover:bg-transparent",
     primary:
       "border border-primary text-primary hover:bg-primary/20 disabled:border-primary-disabled disabled:text-primary-disabled disabled:hover:bg-transparent",
   },

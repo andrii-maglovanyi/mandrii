@@ -57,6 +57,7 @@ select_permissions:
         - category
         - city
         - country
+        - created_at
         - description_en
         - description_uk
         - emails
