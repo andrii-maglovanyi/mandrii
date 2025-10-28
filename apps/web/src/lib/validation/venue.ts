@@ -127,7 +127,7 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       .optional()
       .nullable(),
 
-    logo: z.instanceof(File).optional().nullable(),
+    logo: z.preprocess((val) => (val === "" ? null : val), z.instanceof(File).optional().nullable()),
 
     longitude: z
       .union([z.string().transform((val) => Number.parseFloat(val)), z.number()])

@@ -4,13 +4,14 @@ import { useRouter } from "next/navigation";
 
 import { ActionButton, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
+import { VenueStatus } from "~/features/UserDirectory/Venues/VenueStatus";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
-import { GetPublicVenuesQuery, Locale } from "~/types";
+import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
 
 import { ClaimOwnershipDialog } from "../../ClaimOwnershipDialog";
 
@@ -59,13 +60,8 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
     router.push(`/user-directory/venues/${venue.slug}`);
   };
 
-  return (
-    <div className="mb-2 flex h-8 justify-between">
-      <div className={`flex h-full items-center gap-1 text-sm text-on-surface`}>
-        {getIcon(iconName, { className: "flex-shrink-0", size: 16 })}
-        {label[locale]}
-      </div>
-
+  const renderActiveVenueControls = () => {
+    return (
       <div className="flex items-center gap-1">
         {profileData && (profileData.id === venue.owner_id || profileData.id === venue.user_id) ? (
           <ActionButton
@@ -123,6 +119,21 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
           </Tooltip>
         ) : null}
       </div>
+    );
+  };
+
+  return (
+    <div className="mb-2 flex h-8 justify-between">
+      <div className={`flex h-full items-center gap-1 text-on-surface`}>
+        {getIcon(iconName, { size: 20 })}
+        {label[locale]}
+      </div>
+
+      {venue.status === Venue_Status_Enum.Active ? (
+        renderActiveVenueControls()
+      ) : (
+        <VenueStatus expanded status={venue.status} />
+      )}
     </div>
   );
 };

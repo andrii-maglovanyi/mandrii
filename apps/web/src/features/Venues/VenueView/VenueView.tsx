@@ -140,7 +140,6 @@ export const VenueView = ({ slug }: VenueViewProps) => {
           </div>
         )}
 
-        {/* Share Button - Below Carousel */}
         <div className={`mx-auto mt-2 w-full max-w-5xl px-4`}>
           <div className={logoUrl ? `
             pl-28

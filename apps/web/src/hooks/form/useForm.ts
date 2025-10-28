@@ -239,7 +239,6 @@ export function useForm<T extends ZodRawShape>(config: {
       const arrayValue = fieldValue ?? [];
 
       if (arrayValue.length === 0) {
-        handleChange(field)([""]);
         return [
           {
             disabled: status === "processing",
@@ -318,6 +317,8 @@ export function useForm<T extends ZodRawShape>(config: {
     setErrors(newErrors);
   };
 
+  console.log("useForm errors:", errors);
+  console.log("-->>", schema.safeParse(values));
   const isFormValid =
     schema.safeParse(values).success && Object.keys(errors).every((key) => !errors[key as FieldKey<T>]);
 
