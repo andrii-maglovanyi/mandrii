@@ -226,16 +226,6 @@ export const VenuesList = () => {
         </div>
       </div>
 
-      {loading && (
-        <div
-          className="absolute inset-0 items-center justify-center"
-          data-testid="spinner"
-          style={{ marginTop: venues.length ? "0" : "5rem" }}
-        >
-          <AnimatedEllipsis size="md" />
-        </div>
-      )}
-
       {!loading && venues?.length === 0 ? (
         <EmptyState
           body={i18n("Try adjusting your filters or search terms")}
@@ -262,6 +252,12 @@ export const VenuesList = () => {
           {venues.map((venue) => (
             <VenuesListCard key={venue.id} venue={venue} />
           ))}
+        </div>
+      )}
+
+      {loading && !venues.length && (
+        <div className="flex items-center justify-center" data-testid="spinner">
+          <AnimatedEllipsis size="md" />
         </div>
       )}
 
