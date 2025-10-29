@@ -245,5 +245,15 @@
   "Verified venue with owner": "Підтверджений заклад із власником",
   "↑ The slug serves as a unique identifier for your venue and must be URL-friendly_ Once created, it cannot be changed_": "↑ Слугує унікальним ідентифікатором твого закладу і має підходити для URL-адреси. Після створення його не можна змінити.",
   "Legal owners have additional management privileges_ This setting cannot be changed_": "Власники закладу отримують додаткові можливості керування. Це налаштування не можна змінити.",
-  "Shown **{total}** venues": "Показано {total, plural,\n  one {# заклад}\n  few {# заклади}\n  many {# закладів}\n  other {# закладів}\n}"
+  "Shown **{amount}** venues of **{total}**": "Показано **{amount, plural,\n  one {# заклад}\n  few {# заклади}\n  many {# закладів}\n  other {# закладів}\n}** з **{total}**",
+  "Copy phone number": "Копіювати номер телефону",
+  "Copy email address": "Копіювати адресу електронної пошти",
+  "Copy address": "Копіювати адресу",
+  "Manage venue": "Керувати закладом",
+  "Publish venue": "Опублікувати заклад",
+  "Are you sure you want to publish this venue?": "Точно хочеш опублікувати цей заклад?",
+  "Reject venue": "Відхилити заклад",
+  "Are you sure you want to reject this venue?": "Точно хочеш відхилити цей заклад?",
+  "Archive venue": "Архівувати заклад",
+  "Are you sure you want to archive this venue?": "Точно хочеш архівувати цей заклад?"
 }

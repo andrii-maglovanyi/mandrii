@@ -40,6 +40,7 @@ export const DialogHost = ({ dialog }: DialogHost) => {
           }}
           onConfirm={() => {
             dialog.resolve(true);
+            props.onConfirm?.();
             handleClose();
           }}
         >

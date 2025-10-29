@@ -114,7 +114,13 @@ msgstr ""
 msgid "Find me"
 msgstr ""
 
-msgid "Shown **{total}** venue"
+msgid "Shown **{amount}** venues of **{total}**"
+msgstr ""
+
+msgid "Try adjusting your filters or search terms"
+msgstr ""
+
+msgid "No venues found"
 msgstr ""
 
 msgid "Showing {number} results"
@@ -165,12 +171,6 @@ msgstr ""
 msgid "List view"
 msgstr ""
 
-msgid "Try adjusting your filters or search terms"
-msgstr ""
-
-msgid "No venues found"
-msgstr ""
-
 msgid "Next"
 msgstr ""
 
@@ -210,10 +210,34 @@ msgstr ""
 msgid "Copied"
 msgstr ""
 
+msgid "Copy phone number"
+msgstr ""
+
+msgid "Copy email address"
+msgstr ""
+
+msgid "Copy address"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Social media"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Phone number"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
 msgid "Copied venue URL"
 msgstr ""
 
-msgid "Edit venue"
+msgid "Manage venue"
 msgstr ""
 
 msgid "I own this venue"
@@ -369,9 +393,6 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
-msgid "Address"
-msgstr ""
-
 msgid "Remove email"
 msgstr ""
 
@@ -384,22 +405,10 @@ msgstr ""
 msgid "Add phone number"
 msgstr ""
 
-msgid "Website"
-msgstr ""
-
-msgid "Email"
-msgstr ""
-
 msgid "You can add up to three emails."
 msgstr ""
 
-msgid "Phone number"
-msgstr ""
-
 msgid "**🌍 Auto-detection enabled**.<br />Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.<br /><br />  You can add up to three phone numbers."
-msgstr ""
-
-msgid "Social media"
 msgstr ""
 
 msgid "If you provide an address, it will appear on the [interactive map]({map_link}), where users can find it nearby or search within a specified area.<br/>The address and location won't be saved unless you verify the address."
@@ -445,6 +454,24 @@ msgid "Could not find that venue"
 msgstr ""
 
 msgid "Created on"
+msgstr ""
+
+msgid "Publish venue"
+msgstr ""
+
+msgid "Are you sure you want to publish this venue?"
+msgstr ""
+
+msgid "Reject venue"
+msgstr ""
+
+msgid "Are you sure you want to reject this venue?"
+msgstr ""
+
+msgid "Archive venue"
+msgstr ""
+
+msgid "Are you sure you want to archive this venue?"
 msgstr ""
 
 msgid "Edit your venue details below.<br/>You can update all fields except the slug, which is locked after the first creation."
@@ -739,4 +766,7 @@ msgid "Profile"
 msgstr ""
 
 msgid "Add venue"
+msgstr ""
+
+msgid "Edit venue"
 msgstr ""
