@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { Calendar, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
@@ -63,7 +64,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
         relative w-full pb-2
         md:pb-4
       `}>
-        {images.length > 0 ? (
+        {images.length ? (
           <div className={`
             relative aspect-video w-full
             md:aspect-21/9
@@ -73,7 +74,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
             <div
               className={`
                 pointer-events-none absolute inset-0 bg-linear-to-t
-                from-black/80 via-black/40 to-transparent
+                from-neutral-900 via-neutral-900/30 to-transparent
               `}
             />
           </div>
@@ -95,24 +96,32 @@ export const VenueView = ({ slug }: VenueViewProps) => {
           <div className="mx-auto max-w-5xl">
             <div className="min-w-0">
               <h1
-                className={`
-                  mb-3 text-3xl leading-tight font-black tracking-tight
-                  text-on-surface drop-shadow-2xl
-                  md:text-5xl
-                  lg:text-6xl
-                `}
+                className={clsx(
+                  images.length ? "text-neutral-0" : "text-on-surface",
+                  `
+                    mb-3 text-3xl leading-tight font-black tracking-tight
+                    drop-shadow-2xl
+                    md:text-5xl
+                    lg:text-6xl
+                  `,
+                )}
               >
                 {venue.name}
               </h1>
               {venue.address && (
-                <div className={`flex items-center gap-4 text-on-surface/80`}>
+                <div
+                  className={clsx(
+                    images.length ? "text-neutral-0/80" : "text-on-surface/80",
+                    `flex items-center gap-4`,
+                  )}
+                >
                   <MapPin />
                   <span className={`
                     text-base font-medium
                     md:text-lg
                   `}>{venue.address}</span>{" "}
-                  <Button onClick={() => router.push(`/map/${venue.slug}`)} size="sm" variant="outlined">
-                    {i18n("View on map")}
+                  <Button color="primary" onClick={() => router.push(`/map/${venue.slug}`)} size="sm" variant="filled">
+                    {i18n("Map")}
                   </Button>
                 </div>
               )}
@@ -130,7 +139,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
               <div
                 className={`
                   relative h-24 w-24 overflow-hidden rounded-3xl border-4
-                  border-white bg-white shadow-2xl
+                  border-surface bg-surface shadow-2xl
                   md:h-32 md:w-32
                 `}
               >
@@ -176,12 +185,10 @@ export const VenueView = ({ slug }: VenueViewProps) => {
               {/* Description - Left side (2/3) */}
               <div className="lg:col-span-2">
                 {description ? (
-                  <div className={`
+                  <RichText className={`
                     prose max-w-none
                     dark:prose-invert
-                  `}>
-                    <RichText>{description}</RichText>
-                  </div>
+                  `}>{description}</RichText>
                 ) : (
                   <div
                     className={`

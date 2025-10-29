@@ -17,6 +17,7 @@ interface InfoLineProps {
   isEmail?: boolean;
   isLink?: boolean;
   isPhoneNumber?: boolean;
+  strikethrough?: boolean;
   tooltipText: string;
 }
 
@@ -32,6 +33,7 @@ export const InfoLine = ({
   isEmail,
   isLink,
   isPhoneNumber,
+  strikethrough,
   tooltipText,
 }: InfoLineProps) => {
   const { showSuccess } = useNotifications();
@@ -62,14 +64,27 @@ export const InfoLine = ({
     <div className="flex min-w-0 flex-1 justify-between py-0.5 pr-2 pl-4">
       <div className="flex min-w-0 items-center gap-2 text-neutral">
         {leadingIcon || icon}
-        <a className="min-w-0 truncate" href={href} onClick={handleLinkClick} rel="noopener noreferrer" target="_blank">
-          {info}
-        </a>
+        {strikethrough ? (
+          <Tooltip label={i18n("This venue is archived")}>
+            <span className="min-w-0 cursor-default truncate line-through">{info}</span>
+          </Tooltip>
+        ) : (
+          <a
+            className="min-w-0 truncate"
+            href={href}
+            onClick={handleLinkClick}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {info}
+          </a>
+        )}
       </div>
 
       <ActionButton
         aria-label={copyLabel}
         className={hideClasses}
+        disabled={strikethrough}
         icon={<Copy size={16} />}
         onClick={handleCopy}
         size="sm"

@@ -4,7 +4,7 @@ import { AtSign, Facebook, Globe, Instagram, MapPin } from "lucide-react";
 
 import { Separator } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
-import { GetPublicVenuesQuery } from "~/types";
+import { GetPublicVenuesQuery, Venue_Status_Enum } from "~/types";
 
 import { InfoLine } from "./InfoLine";
 
@@ -49,6 +49,8 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
   if (!hasAnyInfo) {
     return null;
   }
+
+  const isArchived = venue.status === Venue_Status_Enum.Archived;
 
   // Helper to render a section with optional separator
   const Section = ({ children, title }: { children: React.ReactNode; title?: string }) => (
@@ -107,6 +109,7 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
               info={email}
               isEmail
               key={email}
+              strikethrough={isArchived}
               tooltipText="Copy email"
             />
           ))}
@@ -122,6 +125,7 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
               info={number}
               isPhoneNumber
               key={number}
+              strikethrough={isArchived}
               tooltipText="Copy phone number"
             />
           ))}

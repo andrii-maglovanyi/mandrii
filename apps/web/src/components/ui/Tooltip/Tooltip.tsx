@@ -59,8 +59,8 @@ export const Tooltip = ({ children, className = "", label, position = "top" }: T
 
       <div
         className={`
-          pointer-events-none absolute z-50 rounded-md bg-surface-tint px-2 py-1
-          text-xs whitespace-nowrap text-on-surface opacity-0 shadow
+          pointer-events-none absolute z-50 rounded-md bg-neutral-hover px-2
+          py-1 text-xs whitespace-nowrap text-surface opacity-0 shadow
           transition-opacity duration-200
           group-hover/tooltip:opacity-100
           group-focus/tooltip:opacity-100
@@ -71,7 +71,7 @@ export const Tooltip = ({ children, className = "", label, position = "top" }: T
       >
         {label}
         <div className={`
-          absolute h-2 w-2 rotate-45 bg-surface-tint
+          absolute h-2 w-2 rotate-45 bg-neutral-hover
           ${classes.arrow}
         `} />
       </div>

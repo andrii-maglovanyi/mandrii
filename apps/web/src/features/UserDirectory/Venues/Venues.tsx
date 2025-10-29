@@ -19,7 +19,7 @@ const Venues = () => {
   const router = useRouter();
   const { useUserVenues } = useVenues();
   const { handlePaginate, handleSort, listState } = useListControls();
-  const { data, error, loading, total } = useUserVenues(listState);
+  const { count, data, error, loading } = useUserVenues(listState);
 
   const i18n = useI18n();
   const locale = useLocale() as Locale;
@@ -146,12 +146,12 @@ const Venues = () => {
           loading={loading}
           onSort={handleSort}
           pagination={{
+            count,
             currentOffset: listState.offset,
             nextText: i18n("Next"),
             onPaginate: handlePaginate,
             pageSize: listState.limit,
             prevText: i18n("Back"),
-            total,
           }}
           rowKey="id"
         />

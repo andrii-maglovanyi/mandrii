@@ -61,6 +61,7 @@ export const getVenuesFilter = ({ category, country, distance, geo, name, slug }
       variables.where._or = [
         { name: { _ilike: `%${name}%` } },
         { city: { _ilike: `%${name}%` } },
+        { area: { _ilike: `%${name}%` } },
         { address: { _ilike: `%${name}%` } },
       ];
     }
@@ -92,7 +93,12 @@ const GET_PUBLIC_VENUES = gql`
       owner_id
       user_id
     }
-    venues_aggregate {
+    venues_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    total: venues_aggregate {
       aggregate {
         count
       }

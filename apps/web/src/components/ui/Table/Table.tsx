@@ -32,13 +32,13 @@ type ExpandIconProps<T> = {
 };
 
 interface PaginatorProps {
+  count?: number;
   currentOffset?: number;
   loading?: boolean;
   nextText?: string;
   onPaginate: ({ offset }: { offset: number }) => void;
   pageSize?: number;
   prevText?: string;
-  total?: number;
 }
 
 interface TableProps<T> {
@@ -76,21 +76,22 @@ function isExpandColumn<T>(column: Column<T> | ExpandColumn): column is ExpandCo
 }
 
 const Paginator = ({
+  count = 1,
   currentOffset = 0,
   loading,
   nextText,
   onPaginate,
   pageSize = 1,
   prevText,
-  total = 1,
 }: PaginatorProps) => {
-  if (total <= pageSize) return null;
+  if (count <= pageSize) return null;
 
   const currentPage = Math.floor(currentOffset / pageSize) + 1;
 
   return (
     <div className="mt-4 flex justify-center">
       <Pagination
+        count={Math.ceil(count / pageSize)}
         data-testid="table-pagination"
         index={currentPage}
         loading={loading}
@@ -100,7 +101,6 @@ const Paginator = ({
           onPaginate({ offset: actualOffset });
         }}
         prevText={prevText}
-        total={Math.ceil(total / pageSize)}
       />
     </div>
   );

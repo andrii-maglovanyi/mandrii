@@ -82,7 +82,7 @@ export function MapMobileCard({ venue }: Readonly<MapMobileCardInterface>) {
         {isExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
       </button>
 
-      <div className="h-full overflow-y-auto pt-2 pb-6" ref={cardRef}>
+      <div className="h-full overflow-scroll overflow-y-auto pt-2 pb-20" ref={cardRef}>
         <div className="px-8">
           <CardHeader venue={venue} />
 
@@ -96,11 +96,10 @@ export function MapMobileCard({ venue }: Readonly<MapMobileCardInterface>) {
             <Link href={`/venues/${venue.slug}`}>{venue.name}</Link>
           </h3>
 
-          {description && (
-            <RichText as="p" className="text-sm text-neutral">
-              {description.replaceAll("\n", "<br />")}
-            </RichText>
-          )}
+          {description && <RichText className={`
+            prose max-w-none
+            dark:prose-invert
+          `}>{description}</RichText>}
 
           <CardMetadata variant="map" venue={venue} />
           <CardFooter venue={venue} />
