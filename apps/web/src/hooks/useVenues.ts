@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
 
@@ -69,14 +69,6 @@ export const getVenuesFilter = ({ category, country, distance, geo, name, slug }
   return { variables };
 };
 
-const GET_AVAILABLE_COUNTRIES = gql`
-  query GetAvailableCountries($where: venues_bool_exp!) {
-    venues(where: $where, distinct_on: country, order_by: { country: asc }) {
-      country
-    }
-  }
-`;
-
 const GET_PUBLIC_VENUES = gql`
   query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
     venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -94,12 +86,13 @@ const GET_PUBLIC_VENUES = gql`
       emails
       website
       phone_numbers
+      social_links
       slug
       status
       owner_id
       user_id
     }
-    venues_aggregate(where: $where) {
+    venues_aggregate {
       aggregate {
         count
       }
@@ -193,32 +186,6 @@ export const useVenues = () => {
     [updateStatus, loading, error],
   );
 
-  /**
-   * Get list of distinct countries where active venues exist.
-   * Useful for populating country filter dropdowns.
-   */
-  const useAvailableCountries = () => {
-    const { data, error, loading } = useQuery(GET_AVAILABLE_COUNTRIES, {
-      variables: {
-        where: {
-          _and: [
-            { status: { _eq: "ACTIVE" } },
-            { country: { _is_null: false } },
-            { country: { _neq: "" } }, // Exclude empty strings
-          ],
-        },
-      },
-    });
-
-    const countries = data?.venues?.map((venue: { country: string }) => venue.country).filter(Boolean) ?? [];
-
-    return {
-      countries,
-      error,
-      loading,
-    };
-  };
-
   const useAdminVenues = (params: APIParams) => useGraphApi<GetAdminVenuesQuery["venues"]>(GET_ADMIN_VENUES, params);
 
   const useUserVenues = (params?: APIParams) => {
@@ -257,7 +224,6 @@ export const useVenues = () => {
   return {
     updateVenueStatus,
     useAdminVenues,
-    useAvailableCountries,
     useGetVenue,
     usePublicVenues,
     useUserVenues,

@@ -75,8 +75,11 @@ select_permissions:
         - user_id
         - website
       filter:
-        status:
-          _eq: ACTIVE
+        _or:
+          - status:
+              _eq: ACTIVE
+          - status:
+              _eq: ARCHIVED
       allow_aggregations: true
     comment: ""
   - role: user
@@ -110,6 +113,8 @@ select_permissions:
               _eq: ACTIVE
           - user_id:
               _eq: X-Hasura-User-Id
+          - status:
+              _eq: ARCHIVED
       allow_aggregations: true
     comment: ""
 update_permissions:

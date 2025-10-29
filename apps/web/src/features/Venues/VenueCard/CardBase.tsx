@@ -4,9 +4,9 @@ import clsx from "clsx";
 import { MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
 
+import { Card } from "~/components/ui";
 import { constants } from "~/lib/constants";
 import { GetPublicVenuesQuery, Locale } from "~/types";
 
@@ -173,7 +173,7 @@ export const CardBase = ({ hasImage = false, variant, venue }: CardBaseProps) =>
   const CardWrapper = variant.startsWith("list") ? "article" : "div";
 
   return (
-    <Link className={config.containerClasses} href={`/venues/${venue.slug}`}>
+    <Card className={config.containerClasses} href={`/venues/${venue.slug}`}>
       <CardWrapper className={config.innerContainerClasses}>
         {hasImage && mainImage && (
           <div className={config.imageContainerClasses}>
@@ -243,9 +243,9 @@ export const CardBase = ({ hasImage = false, variant, venue }: CardBaseProps) =>
             (variant === "masonry-half" && !hasImage && (
               <CardMetadata hideUntilHover variant={variant.startsWith("list") ? "list" : "grid"} venue={venue} />
             ))}
-          <CardFooter hideUntilHover={!isMobile} venue={venue} />
+          <CardFooter hideUntilHover={!isMobile} isInsideLink venue={venue} />
         </div>
       </CardWrapper>
-    </Link>
+    </Card>
   );
 };

@@ -1,12 +1,12 @@
 "use client";
 
 import clsx from "clsx";
-import { LayoutDashboard, LocateFixed } from "lucide-react";
+import { LayoutDashboard, LocateFixed, MapPinOff } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
-import { Button, Input, ProgressBar, RichText, Select } from "~/components/ui";
+import { Button, EmptyState, Input, ProgressBar, RichText, Select } from "~/components/ui";
 import { useTheme } from "~/contexts/ThemeContext";
 import { useListControls } from "~/hooks/useListControls";
 import { useNotifications } from "~/hooks/useNotifications";
@@ -377,7 +377,7 @@ export const Venues = ({ slug }: VenuesProps) => {
                   text-sm
                   sm:text-base
                 `, isReady ? `visible` : `hidden`)}>
-                  {i18n("Shown **{total}** venues", { total })}
+                  {i18n("Shown **{amount}** venues of **{total}**", { amount: data.length, total })}
                 </RichText>
               </div>
             </div>
@@ -397,10 +397,22 @@ export const Venues = ({ slug }: VenuesProps) => {
               hidden
               md:block
             `}>
-              <div className={`
-                -mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
-                pt-0.5
-              `}>{venueCards}</div>
+              {!(venueCards?.length || loading) ? (
+                <div className="flex h-full w-full items-center justify-center">
+                  <EmptyState
+                    body={i18n("Try adjusting your filters or search terms")}
+                    heading={i18n("No venues found")}
+                    icon={<MapPinOff size={50} />}
+                  />
+                </div>
+              ) : (
+                <div className={`
+                  -mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
+                  pt-0.5
+                `}>
+                  {venueCards}
+                </div>
+              )}
             </div>
 
             <div className="relative col-span-1 h-full">

@@ -6,7 +6,7 @@ import { Venue_Category_Enum } from "~/types";
 
 const MAX_IMAGES = 6;
 
-export const venueDescriptionMaxCharsCount = 2000;
+export const venueDescriptionMaxCharsCount = 3000;
 
 export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
   return z.object({

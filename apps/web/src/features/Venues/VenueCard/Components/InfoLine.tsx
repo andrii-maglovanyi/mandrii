@@ -3,36 +3,45 @@
 import clsx from "clsx";
 import { ArrowUpRight, Copy } from "lucide-react";
 
-import { Tooltip } from "~/components/ui";
+import { ActionButton, Tooltip } from "~/components/ui";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
+import { processPhoneNumber } from "~/lib/utils";
 
 interface InfoLineProps {
   hideUntilHover?: boolean;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   info?: null | string;
+  isAddress?: boolean;
+  isEmail?: boolean;
   isLink?: boolean;
+  isPhoneNumber?: boolean;
   tooltipText: string;
 }
 
 /**
  * Displays a single line of venue information with icon and interactive element.
  * Can be either a clickable link or a copy-to-clipboard button.
- *
- * @param {InfoLineProps} props - Component props.
- * @returns {JSX.Element | null} The info line component or null if no info.
  */
-export const InfoLine = ({ hideUntilHover = false, icon, info, isLink = false, tooltipText }: InfoLineProps) => {
+export const InfoLine = ({
+  hideUntilHover,
+  icon = <></>,
+  info,
+  isAddress,
+  isEmail,
+  isLink,
+  isPhoneNumber,
+  tooltipText,
+}: InfoLineProps) => {
   const { showSuccess } = useNotifications();
   const i18n = useI18n();
 
-  // Early return if no info to display
   if (!info) {
     return null;
   }
 
-  const handleCopy = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -46,47 +55,119 @@ export const InfoLine = ({ hideUntilHover = false, icon, info, isLink = false, t
     sendToMixpanel("Clicked Venue URL", { link: info });
   };
 
-  const iconClasses = clsx(
-    "ml-auto stroke-neutral-disabled",
-    hideUntilHover &&
-      `
-        opacity-0 transition-opacity
-        group-hover/info:opacity-100
-      `,
+  const hideClasses = hideUntilHover ? "opacity-0 transition-opacity group-hover/info:opacity-100" : "";
+
+  // Render link-based info lines (email, address, phone)
+  const renderLinkLine = (href: string, copyLabel: string, leadingIcon?: React.ReactNode) => (
+    <div className="flex min-w-0 flex-1 justify-between py-0.5 pr-2 pl-4">
+      <div className="flex min-w-0 items-center gap-2 text-neutral">
+        {leadingIcon || icon}
+        <a className="min-w-0 truncate" href={href} onClick={handleLinkClick} rel="noopener noreferrer" target="_blank">
+          {info}
+        </a>
+      </div>
+
+      <ActionButton
+        aria-label={copyLabel}
+        className={hideClasses}
+        icon={<Copy size={16} />}
+        onClick={handleCopy}
+        size="sm"
+        variant="ghost"
+      />
+    </div>
   );
 
+  // Phone number with country flag
+  if (isPhoneNumber) {
+    const data = processPhoneNumber(info);
+    return (
+      <div className={`
+        group/info flex w-full items-center justify-between text-left
+        hover:bg-on-surface/5
+      `}>
+        {renderLinkLine(`tel:${data.formatted}`, i18n("Copy phone number"), data.detectedCountry?.flag)}
+      </div>
+    );
+  }
+
+  // Email
+  if (isEmail) {
+    return (
+      <div className={`
+        group/info flex w-full items-center justify-between text-left
+        hover:bg-on-surface/5
+      `}>
+        {renderLinkLine(`mailto:${info}`, i18n("Copy email address"))}
+      </div>
+    );
+  }
+
+  // Address (Google Maps)
+  if (isAddress) {
+    return (
+      <div className={`
+        group/info flex w-full items-center justify-between text-left
+        hover:bg-on-surface/5
+      `}>
+        {renderLinkLine(
+          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(info)}`,
+          i18n("Copy address"),
+        )}
+      </div>
+    );
+  }
+
+  // External link with arrow
+  if (isLink) {
+    return (
+      <div className={`
+        group/info flex w-full items-center justify-between text-left
+        hover:bg-on-surface/5
+      `}>
+        <div className={`
+          flex min-w-0 flex-1 items-center justify-between px-4 py-2
+        `}>
+          <div className="flex min-w-0 items-center gap-2 text-neutral">
+            {icon}
+            <a
+              className="min-w-0 truncate"
+              href={info}
+              onClick={handleLinkClick}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {info}
+            </a>
+          </div>
+
+          <ArrowUpRight className={clsx(hideClasses, `
+            ml-auto stroke-neutral-disabled
+          `)} size={16} />
+        </div>
+      </div>
+    );
+  }
+
+  // Default: copy-to-clipboard button
   return (
     <div className={`
       group/info flex w-full items-center justify-between text-left
       hover:bg-on-surface/5
     `}>
-      {isLink ? (
-        <a
-          className="flex min-w-0 flex-1 items-center gap-2 px-4 py-1.5"
-          href={info}
-          onClick={handleLinkClick}
-          rel="noopener noreferrer"
-          target="_blank"
+      <Tooltip className="w-full! flex-1" label={tooltipText}>
+        <button
+          className={`
+            flex w-full min-w-0 cursor-pointer items-center gap-2 px-4 py-2
+            text-left
+          `}
+          onClick={handleCopy}
         >
           {icon}
           <span className="min-w-0 truncate">{info}</span>
-          <ArrowUpRight className={iconClasses} size={16} />
-        </a>
-      ) : (
-        <Tooltip className="w-full! flex-1" label={tooltipText}>
-          <button
-            className={`
-              flex w-full min-w-0 cursor-pointer items-center gap-2 px-4 py-1.5
-              text-left
-            `}
-            onClick={handleCopy}
-          >
-            {icon}
-            <span className="min-w-0 truncate">{info}</span>
-            <Copy className={iconClasses} size={16} />
-          </button>
-        </Tooltip>
-      )}
+          <Copy className={hideClasses} size={16} />
+        </button>
+      </Tooltip>
     </div>
   );
 };

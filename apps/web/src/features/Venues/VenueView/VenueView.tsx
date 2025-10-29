@@ -144,7 +144,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
           <div className={logoUrl ? `
             pl-28
             md:pl-40
-            lg:pl-36
+            lg:pl-40
             xl:pl-32
           ` : ""}>
             <CardHeader hideUntilHover={false} venue={venue} />
@@ -205,7 +205,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                     lg:text-base
                   `}
                 >
-                  <CardMetadata variant="list" venue={venue} />
+                  <CardMetadata expanded variant="list" venue={venue} />
                 </section>
               </div>
             </div>

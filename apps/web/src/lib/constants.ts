@@ -4,8 +4,8 @@ import { UrlHelper } from "./url-helper";
 const countries = {
   ge: {
     label: {
-      en: "Germany",
-      uk: "Німеччина",
+      en: "Georgia",
+      uk: "Грузія",
     },
   },
   nl: {

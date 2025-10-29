@@ -11,7 +11,6 @@ import { getIcon } from "~/lib/icons/icons";
 import { Locale, Venue_Category_Enum } from "~/types";
 
 interface VenuesListFilterProps {
-  availableCountries: string[];
   category?: undefined | Venue_Category_Enum;
   country?: string;
   onCategoryChange: (category: undefined | Venue_Category_Enum) => void;
@@ -21,7 +20,6 @@ interface VenuesListFilterProps {
 }
 
 export const VenuesListFilter = ({
-  availableCountries,
   category,
   country,
   onCategoryChange,
@@ -66,12 +64,12 @@ export const VenuesListFilter = ({
         label: i18n("All countries"),
         value: "",
       },
-      ...(availableCountries || []).map((countryName) => ({
-        label: countryName,
-        value: countryName,
+      ...Object.values(constants.whitelisted_countries).map((country) => ({
+        label: country.label[locale],
+        value: country.label.en,
       })),
     ],
-    [availableCountries, i18n],
+    [i18n, locale],
   );
 
   return (
