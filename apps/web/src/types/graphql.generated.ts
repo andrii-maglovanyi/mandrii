@@ -992,6 +992,7 @@ export type GetPublicVenuesQuery = {
     owner_id?: null | UUID;
     phone_numbers?: Array<string> | null;
     slug: string;
+    social_links: Json;
     status: Venue_Status_Enum;
     user_id?: null | UUID;
     website?: null | string;
@@ -4422,6 +4423,7 @@ export const GetPublicVenuesDocument = gql`
       emails
       website
       phone_numbers
+      social_links
       slug
       status
       owner_id

@@ -136,8 +136,6 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, setValues }: Venu
             addPhoneNumber,
             removePhoneNumber,
             {
-              showCountryFlag: true,
-              showPhoneValidation: true,
               type: "tel",
             },
           )}

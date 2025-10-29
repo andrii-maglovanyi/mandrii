@@ -116,6 +116,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
                 <ActionButton
                   aria-label={i18n("Publish venue")}
                   color="primary"
+                  disabled={meta.status === Venue_Status_Enum.Active}
                   icon={<Rocket />}
                   onClick={() => {
                     updateVenueStatus(data[0].id, Venue_Status_Enum.Active);
@@ -127,6 +128,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
                 <ActionButton
                   aria-label={i18n("Reject venue")}
                   color="danger"
+                  disabled={meta.status === Venue_Status_Enum.Rejected}
                   icon={<Ban />}
                   onClick={() => {
                     updateVenueStatus(data[0].id, Venue_Status_Enum.Rejected);

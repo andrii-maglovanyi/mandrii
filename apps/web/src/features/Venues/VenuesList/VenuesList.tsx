@@ -121,13 +121,11 @@ export const VenuesList = () => {
   const [country, setCountry] = useState<string | undefined>();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { useAvailableCountries, usePublicVenues } = useVenues();
+  const { usePublicVenues } = useVenues();
 
   const { handleFilter, handlePaginate, listState } = useListControls({ limit: ITEMS_LIMIT });
 
   const { data: venues, loading, total } = usePublicVenues(listState);
-
-  const { countries: availableCountries } = useAvailableCountries();
 
   // Calculate pagination
   const totalPages = useMemo(() => {
@@ -180,7 +178,6 @@ export const VenuesList = () => {
   return (
     <div className="flex flex-col gap-6">
       <VenuesListFilter
-        availableCountries={availableCountries}
         category={category}
         country={country}
         onCategoryChange={handleCategoryChange}

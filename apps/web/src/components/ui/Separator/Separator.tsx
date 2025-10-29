@@ -1,4 +1,7 @@
+import clsx from "clsx";
+
 type SeparatorProps = {
+  align?: "center" | "left" | "right";
   className?: string;
   text?: string;
   variant?: "full" | "margin" | "tight";
@@ -10,20 +13,35 @@ const variantClasses = {
   tight: "w-fit mx-auto px-4",
 };
 
-export const Separator = ({ className = "", text, variant = "full" }: SeparatorProps) => {
+const alignClasses = {
+  center: "justify-center",
+  left: "justify-start",
+  right: "justify-end",
+};
+
+export const Separator = ({ align = "center", className = "", text, variant = "full" }: SeparatorProps) => {
   return (
-    <div
-      className={`
-        relative my-3 text-center text-sm text-nowrap text-neutral-500
-        select-none
-        ${variantClasses[variant]}
-        ${className}
-        before:absolute before:inset-y-1/2 before:left-0 before:h-px
-        before:w-full before:border-t before:border-neutral-500/50
-      `}
-      data-testid="separator"
-    >
-      {text && <span className="relative z-10 bg-surface px-3">{text}</span>}
+    <div className={`
+      relative flex items-center py-3
+      ${variantClasses[variant]}
+      ${className}
+    `} data-testid="separator">
+      <div className={clsx("min-w-2 border-t border-neutral-500/30", align !== "left" && `
+        grow
+      `)} />
+      {text && (
+        <span
+          className={clsx(
+            `flex px-3 text-sm text-nowrap text-neutral-500 select-none`,
+            variant === "full" && alignClasses[align],
+          )}
+        >
+          {text}
+        </span>
+      )}
+      <div className={clsx("min-w-2 border-t border-neutral-500/30", align !== "right" && `
+        grow
+      `)} />
     </div>
   );
 };
