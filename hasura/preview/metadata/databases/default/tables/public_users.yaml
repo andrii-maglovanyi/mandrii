@@ -27,12 +27,20 @@ select_permissions:
   - role: user
     permission:
       columns:
+        - city
         - email
+        - events_created
         - id
         - image
+        - is_verified_contributor
+        - level
         - name
+        - points
+        - reviews_created
         - role
         - status
+        - thank_you_count
+        - venues_created
       filter:
         id:
           _eq: X-Hasura-User-Id

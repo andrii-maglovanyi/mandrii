@@ -38,12 +38,12 @@ interface ContentFilters {
 interface PaginatedResult<T> {
   data: T[];
   pagination: {
+    count: number;
+    countPages: number;
     hasNext: boolean;
     hasPrev: boolean;
     page: number;
     pageSize: number;
-    total: number;
-    totalPages: number;
   };
 }
 
@@ -313,12 +313,12 @@ class MarkdownContentManager {
     return {
       data: [],
       pagination: {
+        count: 0,
+        countPages: 0,
         hasNext: false,
         hasPrev: false,
         page,
         pageSize,
-        total: 0,
-        totalPages: 0,
       },
     };
   }
@@ -336,8 +336,8 @@ class MarkdownContentManager {
   private paginateResults(sortedContent: ContentData[], filters?: ContentFilters): PaginatedResult<ContentData> {
     const page = filters?.page || 1;
     const pageSize = filters?.pageSize || filters?.limit || 10;
-    const total = sortedContent.length;
-    const totalPages = Math.ceil(total / pageSize);
+    const count = sortedContent.length;
+    const countPages = Math.ceil(count / pageSize);
 
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -346,12 +346,12 @@ class MarkdownContentManager {
     return {
       data,
       pagination: {
-        hasNext: page < totalPages,
+        count,
+        countPages,
+        hasNext: page < countPages,
         hasPrev: page > 1,
         page,
         pageSize,
-        total,
-        totalPages,
       },
     };
   }

@@ -40,7 +40,8 @@ export const useGraphApi = <T extends Record<string, unknown>[]>(
   const aggregateKey: string = `${dataKey}_aggregate`;
 
   const items: T = data?.[dataKey] ?? [];
-  const total: number = data?.[aggregateKey]?.aggregate?.count ?? 0;
+  const count: number = data?.[aggregateKey]?.aggregate?.count ?? 0;
+  const total: number = data?.total?.aggregate?.count ?? 0;
 
   useEffect(() => {
     if (!isMobile) return;
@@ -54,7 +55,7 @@ export const useGraphApi = <T extends Record<string, unknown>[]>(
         return;
       }
 
-      if (items.length >= total) {
+      if (items.length >= count) {
         return;
       }
 
@@ -91,12 +92,13 @@ export const useGraphApi = <T extends Record<string, unknown>[]>(
     };
 
     loadMore();
-  }, [isMobile, variables, items.length, total, isFetchingMore, loading, fetchMore, dataKey, aggregateKey]);
+  }, [isMobile, variables, items.length, count, isFetchingMore, loading, fetchMore, dataKey, aggregateKey]);
 
   return {
+    count,
     data: items,
     error,
-    hasMore: items.length < total,
+    hasMore: items.length < count,
     isFetchingMore,
     isInitialLoading: loading && items.length === 0,
     loading: loading || isFetchingMore,

@@ -64,7 +64,8 @@ export const CardHeader = ({ expanded, hideUntilHover = false, venue }: CardHead
   const renderActiveVenueControls = () => {
     return (
       <div className="flex items-center gap-1">
-        {profileData && (profileData.id === venue.owner_id || profileData.id === venue.user_id) ? (
+        {profileData &&
+        (profileData.id === venue.owner_id || profileData.id === venue.user_id || profileData.role === "admin") ? (
           <ActionButton
             aria-label={i18n("Manage venue")}
             className="group"

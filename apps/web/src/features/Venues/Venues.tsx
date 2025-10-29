@@ -108,7 +108,7 @@ export const Venues = ({ slug }: VenuesProps) => {
     query: "(max-width: 768px)",
   });
 
-  const { data, loading, total } = usePublicVenues(listState);
+  const { count, data, loading, total } = usePublicVenues(listState);
 
   const isReady = mapIsLoaded && !loading;
 
@@ -377,7 +377,7 @@ export const Venues = ({ slug }: VenuesProps) => {
                   text-sm
                   sm:text-base
                 `, isReady ? `visible` : `hidden`)}>
-                  {i18n("Shown **{amount}** venues of **{total}**", { amount: data.length, total })}
+                  {i18n("Showing **{count}** of **{total}**", { count, total })}
                 </RichText>
               </div>
             </div>

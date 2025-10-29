@@ -6,7 +6,7 @@ import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useMediaQuery } from "react-responsive";
 
-import { Card } from "~/components/ui";
+import { Card, RichText } from "~/components/ui";
 import { constants } from "~/lib/constants";
 import { GetPublicVenuesQuery, Locale } from "~/types";
 
@@ -233,9 +233,12 @@ export const CardBase = ({ hasImage = false, variant, venue }: CardBaseProps) =>
             )}
 
             {config.showDescription && description && (
-              <p className={config.descriptionClasses}>
+              <RichText className={clsx(`
+                prose max-w-none
+                dark:prose-invert
+              `, config.descriptionClasses)}>
                 {variant.startsWith("list") ? truncatedDescription : description}
-              </p>
+              </RichText>
             )}
           </div>
 

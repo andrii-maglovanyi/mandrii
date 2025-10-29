@@ -1,25 +1,25 @@
 import { Button } from "../Button/Button";
 
 export interface NumberedPaginationProps {
+  count: number;
   index: number;
   nextText?: string;
   onChange: (page: number) => void;
   prevText?: string;
   size?: "lg" | "md" | "sm";
-  total: number;
 }
 
 const RANGE = 7;
 
-function getVisiblePages(index: number, total: number): (number | string)[] {
-  if (total <= RANGE) return Array.from({ length: total }, (_, i) => i + 1);
+function getVisiblePages(index: number, count: number): (number | string)[] {
+  if (count <= RANGE) return Array.from({ length: count }, (_, i) => i + 1);
 
   const pages: (number | string)[] = [1];
   const showStartEllipsis = index > 4;
-  const showEndEllipsis = index < total - 3;
+  const showEndEllipsis = index < count - 3;
 
-  const start = Math.max(2, Math.min(index - 1, total - 4));
-  const end = Math.min(total - 1, start + 3);
+  const start = Math.max(2, Math.min(index - 1, count - 4));
+  const end = Math.min(count - 1, start + 3);
 
   if (showStartEllipsis) pages.push("start-ellipsis");
 
@@ -27,19 +27,19 @@ function getVisiblePages(index: number, total: number): (number | string)[] {
 
   if (showEndEllipsis) pages.push("end-ellipsis");
 
-  pages.push(total);
+  pages.push(count);
   return pages;
 }
 
 export const NumberedPagination = ({
+  count,
   index,
   nextText = "Next",
   onChange,
   prevText = "Back",
   size = "md",
-  total,
 }: NumberedPaginationProps) => {
-  const pages = getVisiblePages(index, total);
+  const pages = getVisiblePages(index, count);
 
   const renderPage = (page: number | string) => {
     if (typeof page === "string") {
@@ -73,8 +73,8 @@ export const NumberedPagination = ({
 
       <Button
         data-testid="next-page"
-        disabled={index === total}
-        onClick={() => onChange(Math.min(index + 1, total))}
+        disabled={index === count}
+        onClick={() => onChange(Math.min(index + 1, count))}
         size={size}
         variant="ghost"
       >

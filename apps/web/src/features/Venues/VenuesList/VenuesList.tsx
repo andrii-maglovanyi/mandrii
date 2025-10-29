@@ -125,13 +125,13 @@ export const VenuesList = () => {
 
   const { handleFilter, handlePaginate, listState } = useListControls({ limit: ITEMS_LIMIT });
 
-  const { data: venues, loading, total } = usePublicVenues(listState);
+  const { count, data: venues, loading } = usePublicVenues(listState);
 
   // Calculate pagination
-  const totalPages = useMemo(() => {
+  const countPages = useMemo(() => {
     if (!venues) return 0;
-    return Math.ceil(total / ITEMS_LIMIT);
-  }, [total, venues]);
+    return Math.ceil(count / ITEMS_LIMIT);
+  }, [count, venues]);
 
   // Reset to page 1 when filters change
   const handleCategoryChange = (newCategory: undefined | Venue_Category_Enum) => {
@@ -170,10 +170,10 @@ export const VenuesList = () => {
     if (!venues || viewMode !== "grid") return [];
 
     const currentPage = Math.floor((listState.offset ?? 0) / ITEMS_LIMIT) + 1;
-    const layouts = generateVenueLayouts(venues, currentPage < totalPages);
+    const layouts = generateVenueLayouts(venues, currentPage < countPages);
 
     return layouts;
-  }, [venues, viewMode, listState.offset, totalPages]);
+  }, [venues, viewMode, listState.offset, countPages]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -187,22 +187,26 @@ export const VenuesList = () => {
       />
 
       <div className="flex flex-wrap items-center justify-between">
-        <RichText as="div" className={`
-          text-sm
-          sm:text-base
-        `}>
-          {(() => {
-            const currentOffset = listState.offset ?? 0;
-            const start = currentOffset + 1;
-            const end = Math.min(currentOffset + venues.length, total);
+        {count ? (
+          <RichText as="div" className={`
+            text-sm
+            sm:text-base
+          `}>
+            {(() => {
+              const currentOffset = listState.offset ?? 0;
+              const start = currentOffset + 1;
+              const end = Math.min(currentOffset + venues.length, count);
 
-            return i18n("Showing **{start}**-**{end}** of **{total}** venues", {
-              end: end,
-              start: start,
-              total: total,
-            });
-          })()}
-        </RichText>
+              return i18n("Showing **{start}**-**{end}** of **{count}** venues", {
+                count,
+                end,
+                start,
+              });
+            })()}
+          </RichText>
+        ) : (
+          <div>...</div>
+        )}
 
         <div className="flex gap-1 rounded-lg bg-surface-tint p-1">
           <ActionButton
@@ -260,12 +264,12 @@ export const VenuesList = () => {
 
       <div className="mt-6 flex justify-center">
         <Pagination
+          count={countPages}
           index={(listState.offset ?? 0) / ITEMS_LIMIT + 1}
           loading={loading}
           nextText={i18n("Next")}
           onPaginate={handlePageChange}
           prevText={i18n("Back")}
-          total={totalPages}
         />
       </div>
     </div>
