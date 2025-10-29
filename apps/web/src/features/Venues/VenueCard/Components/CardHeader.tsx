@@ -16,11 +16,12 @@ import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
 import { ClaimOwnershipDialog } from "../../ClaimOwnershipDialog";
 
 interface CardHeaderProps {
+  expanded?: boolean;
   hideUntilHover?: boolean;
   venue: GetPublicVenuesQuery["venues"][number];
 }
 
-export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) => {
+export const CardHeader = ({ expanded, hideUntilHover = false, venue }: CardHeaderProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const { data: profileData } = useUser();
@@ -65,7 +66,7 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
       <div className="flex items-center gap-1">
         {profileData && (profileData.id === venue.owner_id || profileData.id === venue.user_id) ? (
           <ActionButton
-            aria-label={i18n("Edit venue")}
+            aria-label={i18n("Manage venue")}
             className="group"
             icon={<PenTool className={hideUntilHover ? `
               hidden
@@ -132,7 +133,19 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
       {venue.status === Venue_Status_Enum.Active ? (
         renderActiveVenueControls()
       ) : (
-        <VenueStatus expanded status={venue.status} />
+        <div className="flex items-center gap-2">
+          <VenueStatus expanded={expanded} status={venue.status} />
+          {profileData?.role === "admin" && (
+            <ActionButton
+              aria-label={i18n("Manage venue")}
+              className="group"
+              icon={<PenTool size={18} />}
+              onClick={handleManageClick}
+              size="sm"
+              variant="ghost"
+            />
+          )}
+        </div>
       )}
     </div>
   );

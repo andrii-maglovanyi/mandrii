@@ -147,7 +147,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
             lg:pl-40
             xl:pl-32
           ` : ""}>
-            <CardHeader hideUntilHover={false} venue={venue} />
+            <CardHeader expanded hideUntilHover={false} venue={venue} />
           </div>
         </div>
       </div>

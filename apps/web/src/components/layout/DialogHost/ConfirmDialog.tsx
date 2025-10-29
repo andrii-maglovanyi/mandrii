@@ -4,19 +4,19 @@ import { useI18n } from "~/i18n/useI18n";
 
 export interface ConfirmDialogProps extends ConfirmProps, ModalProps {
   message: string;
-  onConfirm: () => void;
 }
 
 export type ConfirmProps = {
   message: string;
+  onConfirm?: () => void;
 } & Pick<ModalProps, "title">;
 
 export const ConfirmDialog = ({ message, onClose, onConfirm, ...props }: ConfirmDialogProps) => {
   const i18n = useI18n();
 
   return (
-    <Modal {...props} onClose={onClose}>
-      <p>{message}</p>
+    <Modal {...props} className="mb-0" onClose={onClose}>
+      <p className="my-8">{message}</p>
 
       <div className="flex justify-end gap-3">
         <Button onClick={onClose} variant="ghost">

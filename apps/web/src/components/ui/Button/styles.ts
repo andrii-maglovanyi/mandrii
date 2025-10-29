@@ -6,7 +6,7 @@ export const variantClasses = {
   featured:
     "from-primary text-surface font-medium to-secondary rounded-xl bg-gradient-to-r transition-transform duration-300 ease-in-out hover:scale-105 z-10",
   filled: {
-    danger: "bg-danger text-white hover:bg-danger-hover disabled:bg-danger-disabled disabled:text-white/80",
+    danger: "bg-danger text-white hover:bg-danger-hover disabled:bg-danger-disabled disabled:text-surface/80",
     neutral: "bg-neutral text-surface hover:bg-neutral-hover disabled:bg-neutral-disabled disabled:text-surface/80",
     primary: "bg-primary text-surface hover:bg-primary-hover disabled:bg-primary-disabled disabled:text-surface/80",
   },

@@ -2,7 +2,7 @@
 
 import { useApolloClient } from "@apollo/client";
 import { format } from "date-fns";
-import { Ban, Bug, Rocket, Search } from "lucide-react";
+import { Archive, Bug, CheckCircle2, Search, XCircle } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { RichText, Tooltip } from "~/components/ui";
 import { ActionButton } from "~/components/ui";
 import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
 import { EmptyState } from "~/components/ui/EmptyState/EmptyState";
+import { useDialog } from "~/contexts/DialogContext";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useVenues } from "~/hooks/useVenues";
@@ -32,6 +33,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
   const i18n = useI18n();
   const router = useRouter();
   const { updateVenueStatus, useGetVenue } = useVenues();
+  const { openConfirmDialog } = useDialog();
 
   const { data: profileData } = useUser();
   const { data, error, loading } = useGetVenue(slug);
@@ -112,14 +114,21 @@ export const EditVenue = ({ slug }: VenueProps) => {
             <span>&bull;</span>
             <VenueStatus expanded status={meta.status} />
             {profileData?.role === "admin" && (
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                |
                 <ActionButton
                   aria-label={i18n("Publish venue")}
                   color="primary"
                   disabled={meta.status === Venue_Status_Enum.Active}
-                  icon={<Rocket />}
+                  icon={<CheckCircle2 />}
                   onClick={() => {
-                    updateVenueStatus(data[0].id, Venue_Status_Enum.Active);
+                    openConfirmDialog({
+                      message: i18n("Are you sure you want to publish this venue?"),
+                      onConfirm: () => {
+                        updateVenueStatus(data[0].id, Venue_Status_Enum.Active);
+                      },
+                      title: i18n("Publish venue"),
+                    });
                   }}
                   tooltipPosition="left"
                   type="button"
@@ -129,9 +138,34 @@ export const EditVenue = ({ slug }: VenueProps) => {
                   aria-label={i18n("Reject venue")}
                   color="danger"
                   disabled={meta.status === Venue_Status_Enum.Rejected}
-                  icon={<Ban />}
+                  icon={<XCircle />}
                   onClick={() => {
-                    updateVenueStatus(data[0].id, Venue_Status_Enum.Rejected);
+                    openConfirmDialog({
+                      message: i18n("Are you sure you want to reject this venue?"),
+                      onConfirm: () => {
+                        updateVenueStatus(data[0].id, Venue_Status_Enum.Rejected);
+                      },
+                      title: i18n("Reject venue"),
+                    });
+                  }}
+                  tooltipPosition="left"
+                  type="button"
+                  variant="filled"
+                />
+                <span>&bull;</span>
+                <ActionButton
+                  aria-label={i18n("Archive venue")}
+                  color="neutral"
+                  disabled={meta.status === Venue_Status_Enum.Archived}
+                  icon={<Archive />}
+                  onClick={() => {
+                    openConfirmDialog({
+                      message: i18n("Are you sure you want to archive this venue?"),
+                      onConfirm: () => {
+                        updateVenueStatus(data[0].id, Venue_Status_Enum.Archived);
+                      },
+                      title: i18n("Archive venue"),
+                    });
                   }}
                   tooltipPosition="left"
                   type="button"

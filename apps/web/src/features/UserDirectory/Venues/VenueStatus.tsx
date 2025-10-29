@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { Archive, CheckCircle2, Clock, EyeOff, XCircle } from "lucide-react";
 
 import { Tooltip } from "~/components/ui";
@@ -12,34 +13,30 @@ interface VenueStatusProps {
 export const VenueStatus = ({ expanded, status }: VenueStatusProps) => {
   const i18n = useI18n();
 
-  let icon = <Clock className="fill-blue-500/10 stroke-blue-500" size={18} />;
+  let icon = <Clock className="stroke-surface" size={18} />;
   let label = i18n("Pending");
 
   if (status === Venue_Status_Enum.Active) {
     label = i18n("Active");
-    icon = <CheckCircle2 className="fill-green-500/10 stroke-green-500" size={18} />;
+    icon = <CheckCircle2 className="stroke-surface" size={18} />;
   } else if (status === Venue_Status_Enum.Rejected) {
     label = i18n("Rejected");
-    icon = <XCircle className="fill-red-500/10 stroke-red-500" size={18} />;
+    icon = <XCircle className="stroke-surface" size={18} />;
   } else if (status === Venue_Status_Enum.Archived) {
     label = i18n("Archived");
-    icon = <Archive className="fill-gray-500/10 stroke-gray-500" size={18} />;
+    icon = <Archive className="stroke-surface" size={18} />;
   } else if (status === Venue_Status_Enum.Hidden) {
     label = i18n("Hidden");
-    icon = <EyeOff className="fill-slate-500/10 stroke-slate-500" size={18} />;
+    icon = <EyeOff className="stroke-surface" size={18} />;
   }
 
   const expandedStatusView = (
-    <div className="flex items-center text-sm">
-      {icon} <span className="ml-2">{label}</span>
+    <div className="flex items-center">
+      {icon} <span className="ml-1">{label}</span>
     </div>
   );
 
-  if (expanded) {
-    return expandedStatusView;
-  }
-
-  return (
+  const statusView = (
     <>
       <div className={`
         hidden grow justify-center align-middle
@@ -49,5 +46,39 @@ export const VenueStatus = ({ expanded, status }: VenueStatusProps) => {
       </div>
       <div className="md:hidden">{expandedStatusView}</div>
     </>
+  );
+
+  return (
+    <div
+      className={clsx(
+        "w-min cursor-default p-1 text-xs font-medium uppercase",
+        status === Venue_Status_Enum.Active && `
+          bg-green-600/75 text-surface
+          dark:bg-green-400/75
+        `,
+        status === Venue_Status_Enum.Rejected && `
+          bg-red-600/75 text-surface
+          dark:bg-red-400/75
+        `,
+        status === Venue_Status_Enum.Archived && `
+          bg-gray-600/75 text-surface
+          dark:bg-gray-400/75
+        `,
+        status === Venue_Status_Enum.Hidden && `
+          bg-slate-600/25 text-surface
+          dark:bg-slate-500/25
+        `,
+        status === Venue_Status_Enum.Pending && `
+          bg-blue-600/75 text-surface
+          dark:bg-blue-400/75
+        `,
+        expanded ? "rounded-xl px-2 py-1" : `
+          rounded-xl p-1.5
+          md:rounded-full
+        `,
+      )}
+    >
+      {expanded ? expandedStatusView : statusView}
+    </div>
   );
 };
