@@ -1,9 +1,9 @@
 "use client";
 
-import { Link } from "~/i18n/navigation";
 import { usePathname } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
 
+import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 
 import CookieConsentBanner from "../CookieConsentBanner/CookieConsentBanner";
