@@ -55,9 +55,7 @@ const SignIn = ({ callbackUrl }: SignInProps) => {
         locale,
         token,
       },
-      {
-        callbackUrl,
-      },
+      callbackUrl ? { callbackUrl } : undefined,
     );
   };
 
