@@ -1,4 +1,4 @@
-// import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from "next-intl/plugin";
 import { execSync } from "node:child_process";
 
@@ -65,17 +65,15 @@ const nextConfig = {
   serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
 };
 
-// export default withSentryConfig(withNextIntl(nextConfig), {
-//   authToken: process.env.SENTRY_AUTH_TOKEN,
-//   automaticVercelMonitors: true,
-//   disableLogger: true,
-//   org: "mandrii",
-//   project: "mandrii",
-//   reactComponentAnnotation: {
-//     enabled: true,
-//   },
-//   silent: !process.env.CI,
-//   widenClientFileUpload: true,
-// });
-
-export default withNextIntl(nextConfig);
+export default withSentryConfig(withNextIntl(nextConfig), {
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  automaticVercelMonitors: true,
+  disableLogger: true,
+  org: "mandrii",
+  project: "mandrii",
+  reactComponentAnnotation: {
+    enabled: true,
+  },
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+});
