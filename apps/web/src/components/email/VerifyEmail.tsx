@@ -1,6 +1,7 @@
 import { Heading, Hr, Section, Text } from "@react-email/components";
 import * as React from "react";
 
+import { EmailActionBackup } from "./blocks/ActionBackup";
 import { EmailActionButton } from "./blocks/ActionButton";
 import { Wrapper } from "./blocks/Wrapper";
 
@@ -20,6 +21,8 @@ export default function VerifyEmail({ i18n = (value) => value, url }: Readonly<S
       <Section className="mt-6 text-center text-white">
         <EmailActionButton url={url}>{i18n("Verify email")}</EmailActionButton>
       </Section>
+
+      <EmailActionBackup i18n={i18n} url={url} />
 
       <Hr className="my-10 border-neutral-300" />
 
