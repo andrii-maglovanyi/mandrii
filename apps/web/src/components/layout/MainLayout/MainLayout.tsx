@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-// import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "react-responsive";
 
 import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
@@ -24,24 +24,21 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
     </>
   );
 
-  // const isMobile = useMediaQuery({
-  //   query: "(max-width: 768px)",
-  // });
+  const isMobile = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
 
   return (
     <div className="flex min-h-screen flex-col">
-      <div className={`
-        block
-        md:hidden
-      `}>
-        <MobileLayout navLinks={navLinks}>{children}</MobileLayout>
-      </div>
-      <div className={`
-        hidden
-        md:block
-      `}>
-        <DesktopLayout navLinks={navLinks}>{children}</DesktopLayout>
-      </div>
+      {isMobile ? (
+        <MobileLayout key="mobile" navLinks={navLinks}>
+          {children}
+        </MobileLayout>
+      ) : (
+        <DesktopLayout key="desktop" navLinks={navLinks}>
+          {children}
+        </DesktopLayout>
+      )}
       <CookieConsentBanner />
       {!pathname.includes("/map") && <Footer />}
     </div>
