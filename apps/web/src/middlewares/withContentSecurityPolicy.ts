@@ -1,9 +1,14 @@
-import { NextFetchEvent, NextRequest } from "next/server";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 import { MiddlewareFactory } from "./stackHandler";
 
 export const withContentSecurityPolicy: MiddlewareFactory = (next) => {
   return async (request: NextRequest, event: NextFetchEvent) => {
+    // Pass through OPTIONS requests
+    if (request.method === "OPTIONS") {
+      return NextResponse.next();
+    }
+
     const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
     const cspHeader = `
