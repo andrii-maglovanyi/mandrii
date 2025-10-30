@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
 
+import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 
 import CookieConsentBanner from "../CookieConsentBanner/CookieConsentBanner";
@@ -31,9 +31,13 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
   return (
     <div className="flex min-h-screen flex-col">
       {isMobile ? (
-        <MobileLayout navLinks={navLinks}>{children}</MobileLayout>
+        <MobileLayout key="mobile" navLinks={navLinks}>
+          {children}
+        </MobileLayout>
       ) : (
-        <DesktopLayout navLinks={navLinks}>{children}</DesktopLayout>
+        <DesktopLayout key="desktop" navLinks={navLinks}>
+          {children}
+        </DesktopLayout>
       )}
       <CookieConsentBanner />
       {!pathname.includes("/map") && <Footer />}

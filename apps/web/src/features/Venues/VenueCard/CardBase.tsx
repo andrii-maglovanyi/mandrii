@@ -150,7 +150,7 @@ const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): LayoutConfi
     innerContainerClasses: "w-full flex",
     showDescription: true,
     titleClasses:
-      "text-lg sm:text-xl group-hover/card:text-primary mb-2 line-clamp-1 font-bold transition-colors group-hover/card:underline",
+      "text-lg sm:text-xl text-primary mb-2 line-clamp-1 font-bold transition-colors group-hover/card:underline",
   };
 };
 
