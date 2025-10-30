@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useMediaQuery } from "react-responsive";
 
 import { useI18n } from "~/i18n/useI18n";
 
@@ -24,17 +23,20 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
     </>
   );
 
-  const isMobile = useMediaQuery({
-    query: "(max-width: 768px)",
-  });
-
   return (
     <div className="flex min-h-screen flex-col">
-      {isMobile ? (
+      <div className={`
+        block
+        md:hidden
+      `}>
         <MobileLayout navLinks={navLinks}>{children}</MobileLayout>
-      ) : (
+      </div>
+      <div className={`
+        hidden
+        md:block
+      `}>
         <DesktopLayout navLinks={navLinks}>{children}</DesktopLayout>
-      )}
+      </div>
       <CookieConsentBanner />
       {!pathname.includes("/map") && <Footer />}
     </div>
