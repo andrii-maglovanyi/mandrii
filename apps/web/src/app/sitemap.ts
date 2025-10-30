@@ -38,5 +38,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.2,
       url: "https://mandrii.com/the-idea",
     },
+    {
+      alternates: {
+        languages: {
+          en: "https://mandrii.com/en/venues",
+          uk: "https://mandrii.com/uk/venues",
+        },
+      },
+      changeFrequency: "weekly",
+      lastModified: new Date(),
+      priority: 0.7,
+      url: "https://mandrii.com/venues",
+    },
+    {
+      alternates: {
+        languages: {
+          en: "https://mandrii.com/en/events",
+          uk: "https://mandrii.com/uk/events",
+        },
+      },
+      changeFrequency: "weekly",
+      lastModified: new Date(),
+      priority: 0.7,
+      url: "https://mandrii.com/events",
+    },
   ];
 }
