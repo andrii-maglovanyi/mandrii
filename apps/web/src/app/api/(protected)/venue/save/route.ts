@@ -67,7 +67,7 @@ export const POST = (req: Request) =>
     }
 
     if (address) {
-      const geo = await geocodeAddress(address.trim(), privateConfig.maps.apiKey);
+      const geo = await geocodeAddress(address.trim(), privateConfig.maps.apiKey, { fullArea: true });
 
       if (!geo) {
         throw new BadRequestError("Invalid address");
@@ -75,6 +75,7 @@ export const POST = (req: Request) =>
 
       const { city, coordinates, country, postcode } = geo;
       venueData.address = geo.address;
+      venueData.area = geo.area;
       venueData.country = country;
       venueData.city = city;
       venueData.postcode = postcode;
