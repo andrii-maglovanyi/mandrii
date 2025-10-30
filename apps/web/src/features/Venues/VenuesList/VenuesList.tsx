@@ -233,7 +233,7 @@ export const VenuesList = () => {
           heading={i18n("No venues found")}
           icon={<MapPinOff size={50} />}
         />
-      ) : viewMode === "grid" ? (
+      ) : viewMode === "grid" && !isMobile ? (
         <div className={`
           grid auto-rows-auto grid-cols-1 gap-4
           sm:grid-cols-2

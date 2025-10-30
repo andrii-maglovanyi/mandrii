@@ -38,14 +38,14 @@ export const extractLocationData = (response: GeocodeResponse) => {
       city = component.long_name;
     } else if (component.types.includes("country")) {
       country = component.long_name;
-    } else if (component.types.includes("route")) {
+    } else if (component.types.includes("sublocality_level_1")) {
       area = component.short_name;
     } else if (component.types.includes("postal_code")) {
       postcode = component.short_name;
     }
   }
 
-  if (!city || !country || !area || !postcode || !address) return null;
+  if (!city || !country || !postcode || !address) return null;
 
   return { address, area, city, coordinates, country, postcode };
 };

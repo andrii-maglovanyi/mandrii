@@ -375,6 +375,8 @@ export enum Venues_Select_Column {
   /** column name */
   Address = "address",
   /** column name */
+  Area = "area",
+  /** column name */
   Category = "category",
   /** column name */
   City = "city",
@@ -422,6 +424,8 @@ export enum Venues_Select_Column {
 export enum Venues_Update_Column {
   /** column name */
   Address = "address",
+  /** column name */
+  Area = "area",
   /** column name */
   Category = "category",
   /** column name */
@@ -964,17 +968,12 @@ export type GetAdminVenuesQueryVariables = Exact<{
   where: Venues_Bool_Exp;
 }>;
 
-export type GetAvailableCountriesQuery = {
-  __typename?: "query_root";
-  venues: Array<{ __typename?: "venues"; country?: null | string }>;
-};
-
-export type GetAvailableCountriesQueryVariables = Exact<{
-  where: Venues_Bool_Exp;
-}>;
-
 export type GetPublicVenuesQuery = {
   __typename?: "query_root";
+  total: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
   venues: Array<{
     __typename?: "venues";
     address?: null | string;
@@ -3817,6 +3816,7 @@ export type Venue_StatusVenuesArgs = {
 export type Venues = {
   __typename?: "venues";
   address?: Maybe<Scalars["String"]["output"]>;
+  area?: Maybe<Scalars["String"]["output"]>;
   category: Venue_Category_Enum;
   city?: Maybe<Scalars["String"]["output"]>;
   country?: Maybe<Scalars["String"]["output"]>;
@@ -3900,6 +3900,7 @@ export type Venues_Bool_Exp = {
   _not?: InputMaybe<Venues_Bool_Exp>;
   _or?: InputMaybe<Array<Venues_Bool_Exp>>;
   address?: InputMaybe<String_Comparison_Exp>;
+  area?: InputMaybe<String_Comparison_Exp>;
   category?: InputMaybe<Venue_Category_Enum_Comparison_Exp>;
   city?: InputMaybe<String_Comparison_Exp>;
   country?: InputMaybe<String_Comparison_Exp>;
@@ -3930,6 +3931,7 @@ export type Venues_Bool_Exp = {
 /** input type for inserting data into table "venues" */
 export type Venues_Insert_Input = {
   address?: InputMaybe<Scalars["String"]["input"]>;
+  area?: InputMaybe<Scalars["String"]["input"]>;
   category?: InputMaybe<Venue_Category_Enum>;
   city?: InputMaybe<Scalars["String"]["input"]>;
   country?: InputMaybe<Scalars["String"]["input"]>;
@@ -3961,6 +3963,7 @@ export type Venues_Insert_Input = {
 export type Venues_Max_Fields = {
   __typename?: "venues_max_fields";
   address?: Maybe<Scalars["String"]["output"]>;
+  area?: Maybe<Scalars["String"]["output"]>;
   city?: Maybe<Scalars["String"]["output"]>;
   country?: Maybe<Scalars["String"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
@@ -3983,6 +3986,7 @@ export type Venues_Max_Fields = {
 /** order by max() on columns of table "venues" */
 export type Venues_Max_Order_By = {
   address?: InputMaybe<Order_By>;
+  area?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
   country?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
@@ -4006,6 +4010,7 @@ export type Venues_Max_Order_By = {
 export type Venues_Min_Fields = {
   __typename?: "venues_min_fields";
   address?: Maybe<Scalars["String"]["output"]>;
+  area?: Maybe<Scalars["String"]["output"]>;
   city?: Maybe<Scalars["String"]["output"]>;
   country?: Maybe<Scalars["String"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
@@ -4028,6 +4033,7 @@ export type Venues_Min_Fields = {
 /** order by min() on columns of table "venues" */
 export type Venues_Min_Order_By = {
   address?: InputMaybe<Order_By>;
+  area?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
   country?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
@@ -4066,6 +4072,7 @@ export type Venues_On_Conflict = {
 /** Ordering options when selecting data from "venues". */
 export type Venues_Order_By = {
   address?: InputMaybe<Order_By>;
+  area?: InputMaybe<Order_By>;
   category?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
   country?: InputMaybe<Order_By>;
@@ -4101,6 +4108,7 @@ export type Venues_Pk_Columns_Input = {
 /** input type for updating data in table "venues" */
 export type Venues_Set_Input = {
   address?: InputMaybe<Scalars["String"]["input"]>;
+  area?: InputMaybe<Scalars["String"]["input"]>;
   category?: InputMaybe<Venue_Category_Enum>;
   city?: InputMaybe<Scalars["String"]["input"]>;
   country?: InputMaybe<Scalars["String"]["input"]>;
@@ -4135,6 +4143,7 @@ export type Venues_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Venues_Stream_Cursor_Value_Input = {
   address?: InputMaybe<Scalars["String"]["input"]>;
+  area?: InputMaybe<Scalars["String"]["input"]>;
   category?: InputMaybe<Venue_Category_Enum>;
   city?: InputMaybe<Scalars["String"]["input"]>;
   country?: InputMaybe<Scalars["String"]["input"]>;
@@ -4333,7 +4342,7 @@ export function useGetUserProfileLazyQuery(
  * });
  */
 export function useGetUserProfileQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -4344,67 +4353,6 @@ export function useGetUserProfileSuspenseQuery(
 ) {
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
-}
-export const GetAvailableCountriesDocument = gql`
-  query GetAvailableCountries($where: venues_bool_exp!) {
-    venues(where: $where, distinct_on: country, order_by: { country: asc }) {
-      country
-    }
-  }
-`;
-
-export type GetAvailableCountriesLazyQueryHookResult = ReturnType<typeof useGetAvailableCountriesLazyQuery>;
-export type GetAvailableCountriesQueryHookResult = ReturnType<typeof useGetAvailableCountriesQuery>;
-export type GetAvailableCountriesQueryResult = Apollo.QueryResult<
-  GetAvailableCountriesQuery,
-  GetAvailableCountriesQueryVariables
->;
-export type GetAvailableCountriesSuspenseQueryHookResult = ReturnType<typeof useGetAvailableCountriesSuspenseQuery>;
-export function useGetAvailableCountriesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>(
-    GetAvailableCountriesDocument,
-    options,
-  );
-}
-/**
- * __useGetAvailableCountriesQuery__
- *
- * To run a query within a React component, call `useGetAvailableCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAvailableCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAvailableCountriesQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetAvailableCountriesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAvailableCountriesQueryVariables }) &
-    Apollo.QueryHookOptions<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>(
-    GetAvailableCountriesDocument,
-    options,
-  );
-}
-export function useGetAvailableCountriesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>,
-) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<GetAvailableCountriesQuery, GetAvailableCountriesQueryVariables>(
-    GetAvailableCountriesDocument,
-    options,
-  );
 }
 export const GetPublicVenuesDocument = gql`
   query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
@@ -4430,6 +4378,11 @@ export const GetPublicVenuesDocument = gql`
       user_id
     }
     venues_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    total: venues_aggregate {
       aggregate {
         count
       }
@@ -4467,7 +4420,7 @@ export function useGetPublicVenuesLazyQuery(
  * });
  */
 export function useGetPublicVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -4541,7 +4494,7 @@ export function useGetUserVenuesLazyQuery(
  * });
  */
 export function useGetUserVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -4607,7 +4560,7 @@ export function useGetAdminVenuesLazyQuery(
  * });
  */
 export function useGetAdminVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
