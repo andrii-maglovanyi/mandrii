@@ -114,7 +114,7 @@ msgstr ""
 msgid "Find me"
 msgstr ""
 
-msgid "Shown **{amount}** venues of **{total}**"
+msgid "Showing **{count}** of **{total}**"
 msgstr ""
 
 msgid "Try adjusting your filters or search terms"
@@ -162,7 +162,7 @@ msgstr ""
 msgid "Search venues..."
 msgstr ""
 
-msgid "Showing **{start}**-**{end}** of **{total}** venues"
+msgid "Showing **{start}**-**{end}** of **{count}** venues"
 msgstr ""
 
 msgid "Grid view"
@@ -183,7 +183,7 @@ msgstr ""
 msgid "Venue not found"
 msgstr ""
 
-msgid "View on map"
+msgid "Map"
 msgstr ""
 
 msgid "Events"
@@ -208,6 +208,9 @@ msgid "Expand venue details"
 msgstr ""
 
 msgid "Copied"
+msgstr ""
+
+msgid "This venue is archived"
 msgstr ""
 
 msgid "Copy phone number"
@@ -525,9 +528,6 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
-msgid "Map"
-msgstr ""
-
 msgid "Posts"
 msgstr ""
 
@@ -655,6 +655,9 @@ msgid "If you didn't request this email, you can ignore it"
 msgstr ""
 
 msgid "Tap the button below to access your account"
+msgstr ""
+
+msgid "If the button doesn't work, copy and paste this link into your browser:"
 msgstr ""
 
 msgid "Confirm your subscription"

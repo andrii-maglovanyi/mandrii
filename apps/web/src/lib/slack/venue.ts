@@ -35,7 +35,7 @@ const getMedia = ({ images, logo, name }: Partial<Venues>) => {
 
 export const sendSlackNotification = async (
   user: User,
-  { category, city, country, description_en, description_uk, id, images, logo, name }: Partial<Venues>,
+  { category, city, country, description_en, description_uk, id, images, logo, name, slug }: Partial<Venues>,
 ) => {
   const media = getMedia({ images, logo, name });
 
@@ -98,7 +98,7 @@ export const sendSlackNotification = async (
           type: "plain_text" as const,
         },
         type: "button" as const,
-        url: "https://admin.mandrii.com",
+        url: `https://mandrii.${envName === "production" ? "com" : "vercel.app"}/user-directory/venues/${slug}`,
       },
       text: {
         text: `*${categoryText}*${locationText}`,

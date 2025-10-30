@@ -8,6 +8,7 @@ import { validateRequest } from "~/lib/api/validate";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { privateConfig } from "~/lib/config/private";
 import { constants } from "~/lib/constants";
+import { sendNewsletterSubscriptionNotification } from "~/lib/slack/newsletter";
 import { getEmailSchema } from "~/lib/validation/email";
 
 const resend = new Resend(privateConfig.email.resendApiKey);
@@ -89,6 +90,8 @@ export const POST = (req: Request): Promise<Response> =>
       i18n,
       locale,
     });
+
+    sendNewsletterSubscriptionNotification(email);
 
     return Response.json({ status: "verification_email_sent" });
   });

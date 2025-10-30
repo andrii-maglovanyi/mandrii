@@ -71,6 +71,7 @@
     "@graphql-codegen/typescript-operations": "^4.6.1",
     "@graphql-codegen/typescript-react-apollo": "^4.3.3",
     "@playwright/test": "^1.54.1",
+    "@react-email/preview-server": "4.2.8",
     "@storybook/addon-docs": "^9.0.18",
     "@storybook/addon-themes": "^9.0.18",
     "@storybook/nextjs": "^9.0.18",

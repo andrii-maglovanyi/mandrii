@@ -5,6 +5,7 @@ import { BadGateway, BadRequestError, NotFoundError } from "~/lib/api/errors";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { privateConfig } from "~/lib/config/private";
 import { constants } from "~/lib/constants";
+import { sendNewsletterConfirmationNotification } from "~/lib/slack/newsletter";
 
 const resend = new Resend(privateConfig.email.resendApiKey);
 const { audienceId, baseUrl } = constants;
@@ -42,6 +43,8 @@ export const GET = (req: Request): Promise<Response> =>
     if (updateResult.error) {
       throw new BadGateway(`Failed to verify subscription: ${updateResult.error.message}`);
     }
+
+    sendNewsletterConfirmationNotification(contact.data.email);
 
     return Response.redirect(`${baseUrl}/${locale}/newsletter/subscribed`, 302);
   });

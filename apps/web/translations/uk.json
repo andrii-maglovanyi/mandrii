@@ -6,7 +6,7 @@
   "Map": "Карта",
   "Events": "Події",
   "Posts": "Дописи",
-  "Loading your session___": "Завантажуємо вашу сесію...",
+  "Loading your session___": "Завантажую твою сесію...",
   "Sign in": "Увійти",
   "You can do so much more if you have a profile": "Ти зможеш зробити набагато більше, якщо матимеш профіль",
   "Email address": "Електронна адреса",
@@ -238,14 +238,12 @@
   "Simple steps to verify and manage your venue": "Прості кроки, щоб підтвердити й керувати своїм закладом.",
   "Ready to claim your venue?": "Готовий підтвердити свій заклад?",
   "Browse venues": "Переглянути заклади",
-  "View on map": "Переглянути на мапі",
   "No description available": "Опис відсутній",
   "Collapse venue details": "Згорнути деталі закладу",
   "Expand venue details": "Розгорнути деталі закладу",
   "Verified venue with owner": "Підтверджений заклад із власником",
   "↑ The slug serves as a unique identifier for your venue and must be URL-friendly_ Once created, it cannot be changed_": "↑ Слугує унікальним ідентифікатором твого закладу і має підходити для URL-адреси. Після створення його не можна змінити.",
   "Legal owners have additional management privileges_ This setting cannot be changed_": "Власники закладу отримують додаткові можливості керування. Це налаштування не можна змінити.",
-  "Shown **{count}** venues of **{total}**": "Показано {count, plural,\n  one {# заклад}\n  few {# заклади}\n  many {# закладів}\n  other {# закладів}\n} з **{total}**",
   "Copy phone number": "Копіювати номер телефону",
   "Copy email address": "Копіювати адресу електронної пошти",
   "Copy address": "Копіювати адресу",
@@ -255,5 +253,8 @@
   "Reject venue": "Відхилити заклад",
   "Are you sure you want to reject this venue?": "Точно хочеш відхилити цей заклад?",
   "Archive venue": "Архівувати заклад",
-  "Are you sure you want to archive this venue?": "Точно хочеш архівувати цей заклад?"
+  "Are you sure you want to archive this venue?": "Точно хочеш архівувати цей заклад?",
+  "Showing **{count}** of **{total}**": "Показано **{count}** з **{total}*",
+  "This venue is archived": "Цей заклад архівовано",
+  "If the button doesn't work, copy and paste this link into your browser:": "Якщо кнопка не працює, скопіюй та встав це посилання у браузер:"
 }

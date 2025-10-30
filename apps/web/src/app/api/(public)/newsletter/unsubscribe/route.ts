@@ -5,6 +5,7 @@ import { BadGateway, BadRequestError, NotFoundError } from "~/lib/api/errors";
 import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { privateConfig } from "~/lib/config/private";
 import { constants } from "~/lib/constants";
+import { sendNewsletterUnsubscribeNotification } from "~/lib/slack/newsletter";
 
 const resend = new Resend(privateConfig.email.resendApiKey);
 const { audienceId, baseUrl } = constants;
@@ -45,6 +46,8 @@ export const GET = (req: Request): Promise<Response> =>
     if (updateResult.error) {
       throw new BadGateway(`Failed to unsubscribe: ${updateResult.error.message}`);
     }
+
+    sendNewsletterUnsubscribeNotification(contact.data.email);
 
     return Response.redirect(`${baseUrl}/${locale}/newsletter/unsubscribed`, 302);
   });
