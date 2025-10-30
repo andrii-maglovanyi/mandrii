@@ -20,6 +20,8 @@ export const config = {
      * - manifest.json (PWA manifest)
      * - static (static assets)
      */
+    "/",
+    "/(en|uk)/:path*",
     {
       missing: [
         { key: "next-router-prefetch", type: "header" },
