@@ -9,13 +9,6 @@ const intlMiddleware = createMiddleware(routing);
 
 export const withLanguage: MiddlewareFactory = (next) => {
   return async function middleware(request: NextRequest, event: NextFetchEvent) {
-    // Skip middleware for RSC requests to avoid conflicts
-    const isRSCRequest = request.headers.get("RSC") === "1" || request.nextUrl.searchParams.has("_rsc");
-
-    if (isRSCRequest) {
-      return next(request, event);
-    }
-
     const intlResponse = await intlMiddleware(request);
 
     // If intl handled the response, return it (i.e. redirect or locale injection)
