@@ -1,6 +1,8 @@
 import createMiddleware from "next-intl/middleware";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+
 import { routing } from "~/i18n/routing";
+
 import { MiddlewareFactory } from "./stackHandler";
 
 const intlMiddleware = createMiddleware(routing);
