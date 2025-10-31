@@ -76,7 +76,7 @@ export const Footer = () => {
         )}
       </RichText>
       <div style={{ display: "none" }}>
-        {`${environment} | ${commitSha} | ${new Date(buildTime).toLocaleDateString()}`}
+        {`${environment} | ${commitSha} | ${new Date(buildTime).toLocaleDateString()} ${new Date(buildTime).toLocaleTimeString()}`}
       </div>
     </footer>
   );
