@@ -2,6 +2,12 @@ import { IconName } from "./icons/icons";
 import { UrlHelper } from "./url-helper";
 
 const countries = {
+  es: {
+    label: {
+      en: "Spain",
+      uk: "Іспанія",
+    },
+  },
   ge: {
     label: {
       en: "Georgia",

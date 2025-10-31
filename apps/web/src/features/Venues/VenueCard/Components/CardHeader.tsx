@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 
 import { ActionButton, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
-import { VenueStatus } from "~/features/UserDirectory/Venues/VenueStatus";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
@@ -16,12 +15,11 @@ import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
 import { ClaimOwnershipDialog } from "../../ClaimOwnershipDialog";
 
 interface CardHeaderProps {
-  expanded?: boolean;
   hideUntilHover?: boolean;
   venue: GetPublicVenuesQuery["venues"][number];
 }
 
-export const CardHeader = ({ expanded, hideUntilHover = false, venue }: CardHeaderProps) => {
+export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const { data: profileData } = useUser();
@@ -41,15 +39,27 @@ export const CardHeader = ({ expanded, hideUntilHover = false, venue }: CardHead
     });
   };
 
-  const handleShareClick = (e: React.MouseEvent) => {
+  const handleShareClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const url = `${globalThis.location.origin}/venues/${venue.slug}`;
     sendToMixpanel("Clicked Share Venue", { slug: venue.slug });
-    navigator.clipboard.writeText(url);
-
-    showSuccess(i18n("Copied venue URL"));
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          text: "Check this out!",
+          title: "Page Title",
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+        navigator.clipboard.writeText(window.location.href);
+        showSuccess(i18n("Copied venue URL"));
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      showSuccess(i18n("Copied venue URL"));
+    }
   };
 
   const handleManageClick = (e: React.MouseEvent) => {
@@ -125,17 +135,18 @@ export const CardHeader = ({ expanded, hideUntilHover = false, venue }: CardHead
   };
 
   return (
-    <div className="mb-2 flex h-8 justify-between">
-      <div className={`flex h-full items-center gap-1 text-sm text-on-surface`}>
+    <div className="mb-2 flex h-8 justify-between gap-2">
+      <div className={`
+        flex h-full min-w-0 flex-1 items-center gap-1 text-sm text-on-surface
+      `}>
         {getIcon(iconName, { size: 18 })}
-        {label[locale]}
+        <span className="block min-w-0 flex-1 truncate">{label[locale]}</span>
       </div>
 
       {venue.status === Venue_Status_Enum.Active ? (
         renderActiveVenueControls()
       ) : (
         <div className="flex items-center gap-2">
-          <VenueStatus expanded={expanded} status={venue.status} />
           {profileData?.role === "admin" && (
             <ActionButton
               aria-label={i18n("Manage venue")}

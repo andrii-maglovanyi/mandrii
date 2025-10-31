@@ -16,6 +16,7 @@ import { CardMetadata } from "./Components/CardMetadata";
 
 interface CardBaseProps {
   hasImage?: boolean;
+  showFlag?: boolean;
   variant: LayoutVariant;
   venue: GetPublicVenuesQuery["venues"][number];
 }
@@ -28,6 +29,7 @@ interface LayoutConfig {
   imageSizes: string;
   innerContainerClasses: string;
   showDescription: boolean;
+
   titleClasses: string;
 }
 
@@ -160,7 +162,7 @@ const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): LayoutConfi
  * @param {CardBaseProps} props - Component props.
  * @returns {JSX.Element} The venue card.
  */
-export const CardBase = ({ hasImage = false, variant, venue }: CardBaseProps) => {
+export const CardBase = ({ hasImage = false, showFlag, variant, venue }: CardBaseProps) => {
   const locale = useLocale() as Locale;
 
   const description = (locale === "uk" ? venue.description_uk : venue.description_en) || "";
@@ -246,7 +248,7 @@ export const CardBase = ({ hasImage = false, variant, venue }: CardBaseProps) =>
             (variant === "masonry-half" && !hasImage && (
               <CardMetadata hideUntilHover variant={variant.startsWith("list") ? "list" : "grid"} venue={venue} />
             ))}
-          <CardFooter hideUntilHover={!isMobile} isInsideLink venue={venue} />
+          <CardFooter hideUntilHover={!isMobile} isInsideLink showFlag={showFlag} venue={venue} />
         </div>
       </CardWrapper>
     </Card>

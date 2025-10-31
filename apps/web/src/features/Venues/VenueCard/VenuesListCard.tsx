@@ -3,6 +3,7 @@ import { GetPublicVenuesQuery } from "~/types";
 import { CardBase } from "./CardBase";
 
 interface VenuesListCardProps {
+  showFlag?: boolean;
   venue: GetPublicVenuesQuery["venues"][number];
 }
 
@@ -12,8 +13,8 @@ interface VenuesListCardProps {
  * @param {VenuesListCardProps} props - Component props.
  * @returns {JSX.Element} The venue list card.
  */
-export const VenuesListCard = ({ venue }: VenuesListCardProps) => {
+export const VenuesListCard = ({ showFlag, venue }: VenuesListCardProps) => {
   const mainImage = venue.logo ?? venue.images?.[0];
 
-  return <CardBase hasImage={!!mainImage} variant="list" venue={venue} />;
+  return <CardBase hasImage={!!mainImage} showFlag={showFlag} variant="list" venue={venue} />;
 };

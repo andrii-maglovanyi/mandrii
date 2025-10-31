@@ -5,6 +5,7 @@ import { CardBase } from "./CardBase";
 interface VenuesMasonryCardProps {
   hasImage?: boolean;
   layoutSize: "full" | "half" | "small" | "third";
+  showFlag?: boolean;
   venue: GetPublicVenuesQuery["venues"][number];
 }
 
@@ -14,7 +15,7 @@ interface VenuesMasonryCardProps {
  * @param {VenuesMasonryCardProps} props - Component props.
  * @returns {JSX.Element} The venue masonry card.
  */
-export const VenuesMasonryCard = ({ hasImage = false, layoutSize, venue }: VenuesMasonryCardProps) => {
+export const VenuesMasonryCard = ({ hasImage = false, layoutSize, showFlag, venue }: VenuesMasonryCardProps) => {
   const variantMap = {
     full: "masonry-full" as const,
     half: "masonry-half" as const,
@@ -22,5 +23,5 @@ export const VenuesMasonryCard = ({ hasImage = false, layoutSize, venue }: Venue
     third: "masonry-third" as const,
   };
 
-  return <CardBase hasImage={hasImage} variant={variantMap[layoutSize]} venue={venue} />;
+  return <CardBase hasImage={hasImage} showFlag={showFlag} variant={variantMap[layoutSize]} venue={venue} />;
 };
