@@ -112,7 +112,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
               {format(new Date(meta.createdAt), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
             </Tooltip>
             <span>&bull;</span>
-            <VenueStatus expanded status={meta.status} />
+            <VenueStatus status={meta.status} />
             {profileData?.role === "admin" && (
               <div className="flex items-center gap-2">
                 |

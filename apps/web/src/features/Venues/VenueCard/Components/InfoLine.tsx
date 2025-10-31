@@ -6,6 +6,7 @@ import { ArrowUpRight, Copy } from "lucide-react";
 import { ActionButton, Tooltip } from "~/components/ui";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useI18n } from "~/i18n/useI18n";
+import { getFlagComponent } from "~/lib/icons/flags";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { processPhoneNumber } from "~/lib/utils";
 
@@ -96,12 +97,17 @@ export const InfoLine = ({
   // Phone number with country flag
   if (isPhoneNumber) {
     const data = processPhoneNumber(info);
+    const CountryFlag = getFlagComponent(data.detectedCountry?.country);
     return (
       <div className={`
         group/info flex w-full items-center justify-between text-left
         hover:bg-on-surface/5
       `}>
-        {renderLinkLine(`tel:${data.formatted}`, i18n("Copy phone number"), data.detectedCountry?.flag)}
+        {renderLinkLine(
+          `tel:${data.formatted}`,
+          i18n("Copy phone number"),
+          CountryFlag ? <CountryFlag className="h-3 w-4 rounded-xs" /> : null,
+        )}
       </div>
     );
   }

@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Phone, Search } from "lucide-react";
 import { Ref, useEffect, useId, useMemo, useRef, useState } from "react";
 
+import { getFlagComponent } from "~/lib/icons/flags";
 import { CountryPhoneConfig, processPhoneNumber } from "~/lib/utils/phone-number";
 
 import { FieldErrorMessage } from "../FieldErrorMessage/FieldErrorMessage";
@@ -165,11 +166,14 @@ export function Input<K extends string, T extends string>({
 
   const renderLeftIcon = () => {
     if (isPhoneInput) {
+      const CountryFlag = getFlagComponent(detectedCountry?.country);
       return (
         <span className={iconWrapperClass}>
-          {detectedCountry ? detectedCountry.flag : <Phone className={`
-            mx-1 text-neutral-disabled
-          `} size={20} />}
+          {CountryFlag ? (
+            <CountryFlag className="h-4 w-6 rounded-sm" />
+          ) : (
+            <Phone className={`mx-1 text-neutral-disabled`} size={20} />
+          )}
         </span>
       );
     }

@@ -205,7 +205,7 @@ export const VenuesList = () => {
             })()}
           </RichText>
         ) : (
-          <div>...</div>
+          <div />
         )}
 
         <div className="flex gap-1 rounded-lg bg-surface-tint p-1">
@@ -244,6 +244,7 @@ export const VenuesList = () => {
               hasImage={item.hasImage}
               key={item.venue.id}
               layoutSize={item.layoutSize}
+              showFlag={!country}
               venue={item.venue}
             />
           ))}
@@ -251,7 +252,7 @@ export const VenuesList = () => {
       ) : (
         <div className="flex flex-col gap-4">
           {venues.map((venue) => (
-            <VenuesListCard key={venue.id} venue={venue} />
+            <VenuesListCard key={venue.id} showFlag={!country} venue={venue} />
           ))}
         </div>
       )}

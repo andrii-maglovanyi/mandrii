@@ -30,24 +30,6 @@ export const VenueStatus = ({ expanded, status }: VenueStatusProps) => {
     icon = <EyeOff className="stroke-surface" size={18} />;
   }
 
-  const expandedStatusView = (
-    <div className="flex items-center">
-      {icon} <span className="ml-1">{label}</span>
-    </div>
-  );
-
-  const statusView = (
-    <>
-      <div className={`
-        hidden grow justify-center align-middle
-        md:flex
-      `}>
-        <Tooltip label={label}>{icon}</Tooltip>
-      </div>
-      <div className="md:hidden">{expandedStatusView}</div>
-    </>
-  );
-
   return (
     <div
       className={clsx(
@@ -75,13 +57,18 @@ export const VenueStatus = ({ expanded, status }: VenueStatusProps) => {
           bg-blue-600/75 text-surface
           dark:bg-blue-400/75
         `,
-        expanded ? "rounded-md px-2 py-1" : `
-          rounded-md p-1.5
-          md:rounded-full
-        `,
+        expanded ? `rounded-md px-3 py-1.5` : `rounded-full p-2`,
       )}
     >
-      {expanded ? expandedStatusView : statusView}
+      {expanded ? (
+        <div className="flex items-center">
+          {icon} <span className="ml-1">{label}</span>
+        </div>
+      ) : (
+        <div className={`flex grow justify-center align-middle`}>
+          <Tooltip label={label}>{icon}</Tooltip>
+        </div>
+      )}
     </div>
   );
 };

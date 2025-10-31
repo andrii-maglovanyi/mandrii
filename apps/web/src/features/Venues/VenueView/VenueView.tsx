@@ -7,10 +7,11 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, TabPane, Tabs } from "~/components/ui";
+import { VenueStatus } from "~/features/UserDirectory/Venues/VenueStatus";
 import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
-import { Locale } from "~/types";
+import { Locale, Venue_Status_Enum } from "~/types";
 
 import { CardHeader } from "../VenueCard/Components/CardHeader";
 import { CardMetadata } from "../VenueCard/Components/CardMetadata";
@@ -64,6 +65,14 @@ export const VenueView = ({ slug }: VenueViewProps) => {
         relative w-full pb-2
         md:pb-4
       `}>
+        <div className="relative mx-auto max-w-5xl">
+          {/* Pending Status Badge for no-image state */}
+          {venue.status === Venue_Status_Enum.Pending && (
+            <div className="absolute top-4 right-4 z-10 max-w-5xl">
+              <VenueStatus expanded status={venue.status} />
+            </div>
+          )}
+        </div>
         {images.length ? (
           <div className={`
             relative aspect-video w-full
@@ -108,6 +117,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
               >
                 {venue.name}
               </h1>
+
               {venue.address && (
                 <div
                   className={clsx(
@@ -149,15 +159,13 @@ export const VenueView = ({ slug }: VenueViewProps) => {
           </div>
         )}
 
-        <div className={`mx-auto mt-2 w-full max-w-5xl px-4`}>
-          <div className={logoUrl ? `
-            pl-28
-            md:pl-40
-            lg:pl-40
-            xl:pl-32
-          ` : ""}>
-            <CardHeader expanded hideUntilHover={false} venue={venue} />
-          </div>
+        <div className={clsx(logoUrl && `
+          pl-28
+          md:pl-40
+          lg:pl-40
+          xl:pl-32
+        `, `mx-auto mt-2 w-full max-w-5xl px-4`)}>
+          <CardHeader hideUntilHover={false} venue={venue} />
         </div>
       </div>
 
@@ -166,7 +174,6 @@ export const VenueView = ({ slug }: VenueViewProps) => {
         mx-auto w-full max-w-5xl px-4 py-2
         lg:py-4
       `}>
-        {/* Tabs for About and Events */}
         <Tabs defaultActiveKey="about">
           <TabPane tab={i18n("Events")}>
             <EmptyState
