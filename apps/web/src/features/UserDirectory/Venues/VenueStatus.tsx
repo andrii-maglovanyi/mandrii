@@ -51,7 +51,10 @@ export const VenueStatus = ({ expanded, status }: VenueStatusProps) => {
   return (
     <div
       className={clsx(
-        "w-min cursor-default p-1 text-xs font-medium uppercase",
+        `
+          flex w-min cursor-default items-center justify-center text-xs
+          font-medium uppercase
+        `,
         status === Venue_Status_Enum.Active && `
           bg-green-600/75 text-surface
           dark:bg-green-400/75
@@ -72,8 +75,8 @@ export const VenueStatus = ({ expanded, status }: VenueStatusProps) => {
           bg-blue-600/75 text-surface
           dark:bg-blue-400/75
         `,
-        expanded ? "rounded-xl px-2 py-1" : `
-          rounded-xl p-1.5
+        expanded ? "rounded-md px-2 py-1" : `
+          rounded-md p-1.5
           md:rounded-full
         `,
       )}

@@ -48,15 +48,12 @@ const SignIn = ({ callbackUrl }: SignInProps) => {
 
     sendToMixpanel("Signed In", { method: "email" });
 
-    await signIn(
-      "resend",
-      {
-        ...values,
-        locale,
-        token,
-      },
-      callbackUrl ? { callbackUrl } : undefined,
-    );
+    await signIn("resend", {
+      ...values,
+      callbackUrl: callbackUrl || `/${locale}`,
+      locale,
+      token,
+    });
   };
 
   const { error, onChange, value } = getFieldProps("email");

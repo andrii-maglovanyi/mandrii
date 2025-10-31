@@ -8,7 +8,7 @@ interface EmailActionBackupProps {
 export const EmailActionBackup = ({ i18n = (value: string) => value, url }: EmailActionBackupProps) =>
   url ? (
     <Section className="mt-4 text-center">
-      <Text className="text-sm text-neutral-500">
+      <Text className="text-sm text-neutral-400">
         {i18n("If the button doesn't work, copy and paste this link into your browser:")}
       </Text>
 

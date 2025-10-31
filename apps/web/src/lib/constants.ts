@@ -38,6 +38,7 @@ const categories: Record<
     };
   }
 > = {
+  ACCOMMODATION: { iconName: "BedDouble", label: { en: "Accommodation", uk: "Житло" } },
   BEAUTY_SALON: { iconName: "Wand2", label: { en: "Beauty salon", uk: "Салон краси" } },
   CAFE: { iconName: "Coffee", label: { en: "Cafe", uk: "Кав'ярня" } },
   CATERING: { iconName: "ChefHat", label: { en: "Catering", uk: "Кейтеринг" } },
