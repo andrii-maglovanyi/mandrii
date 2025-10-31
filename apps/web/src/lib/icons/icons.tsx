@@ -1,4 +1,5 @@
 import {
+  BedDouble,
   Book,
   Building,
   ChefHat,
@@ -15,6 +16,7 @@ import {
 import { renderToStaticMarkup } from "react-dom/server";
 
 const ICONS = {
+  BedDouble,
   Book,
   Building,
   ChefHat,
