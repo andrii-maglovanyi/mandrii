@@ -1,0 +1,4 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- CREATE INDEX idx_venues_chain_id ON venues(chain_id);
+-- CREATE INDEX idx_chains_slug ON chains(slug);

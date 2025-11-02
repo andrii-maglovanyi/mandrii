@@ -76,6 +76,90 @@ export enum Accounts_Update_Column {
   UserId = "userId",
 }
 
+/** unique or primary key constraints on table "chains" */
+export enum Chains_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ChainsPkey = "chains_pkey",
+  /** unique or primary key constraint on columns "slug" */
+  ChainsSlugKey = "chains_slug_key",
+}
+
+/** select columns of table "chains" */
+export enum Chains_Select_Column {
+  /** column name */
+  ChainId = "chain_id",
+  /** column name */
+  City = "city",
+  /** column name */
+  Country = "country",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  Emails = "emails",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Logo = "logo",
+  /** column name */
+  Name = "name",
+  /** column name */
+  OwnerId = "owner_id",
+  /** column name */
+  PhoneNumbers = "phone_numbers",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  SocialLinks = "social_links",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  Website = "website",
+}
+
+/** update columns of table "chains" */
+export enum Chains_Update_Column {
+  /** column name */
+  ChainId = "chain_id",
+  /** column name */
+  City = "city",
+  /** column name */
+  Country = "country",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  Emails = "emails",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Logo = "logo",
+  /** column name */
+  Name = "name",
+  /** column name */
+  OwnerId = "owner_id",
+  /** column name */
+  PhoneNumbers = "phone_numbers",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  SocialLinks = "social_links",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  Website = "website",
+}
+
 /** ordering argument of a cursor */
 export enum Cursor_Ordering {
   /** ascending ordering of the cursor */
@@ -231,6 +315,8 @@ export enum Users_Select_Column {
   /** column name */
   IsVerifiedContributor = "is_verified_contributor",
   /** column name */
+  LastActivityAt = "last_activity_at",
+  /** column name */
   Level = "level",
   /** column name */
   Name = "name",
@@ -276,6 +362,8 @@ export enum Users_Update_Column {
   Image = "image",
   /** column name */
   IsVerifiedContributor = "is_verified_contributor",
+  /** column name */
+  LastActivityAt = "last_activity_at",
   /** column name */
   Level = "level",
   /** column name */
@@ -380,6 +468,8 @@ export enum Venues_Select_Column {
   /** column name */
   Category = "category",
   /** column name */
+  ChainId = "chain_id",
+  /** column name */
   City = "city",
   /** column name */
   Country = "country",
@@ -429,6 +519,8 @@ export enum Venues_Update_Column {
   Area = "area",
   /** column name */
   Category = "category",
+  /** column name */
+  ChainId = "chain_id",
   /** column name */
   City = "city",
   /** column name */
@@ -879,6 +971,446 @@ export type Boolean_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars["Boolean"]["input"]>>;
 };
 
+export type ChainFieldsFragment = {
+  __typename?: "chains";
+  description_en?: null | string;
+  description_uk?: null | string;
+  emails?: Array<string> | null;
+  id: UUID;
+  logo?: null | string;
+  name: string;
+  phone_numbers?: Array<string> | null;
+  slug: string;
+  social_links: Json;
+  website?: null | string;
+};
+
+/** columns and relationships of "chains" */
+export type Chains = {
+  __typename?: "chains";
+  /** An object relationship */
+  chain?: Maybe<Chains>;
+  chain_id?: Maybe<Scalars["uuid"]["output"]>;
+  /** An array relationship */
+  chains: Array<Chains>;
+  /** An aggregate relationship */
+  chains_aggregate: Chains_Aggregate;
+  city?: Maybe<Scalars["String"]["output"]>;
+  country?: Maybe<Scalars["String"]["output"]>;
+  created_at: Scalars["timestamptz"]["output"];
+  description_en?: Maybe<Scalars["String"]["output"]>;
+  description_uk?: Maybe<Scalars["String"]["output"]>;
+  emails?: Maybe<Array<Scalars["String"]["output"]>>;
+  id: Scalars["uuid"]["output"];
+  logo?: Maybe<Scalars["String"]["output"]>;
+  name: Scalars["String"]["output"];
+  owner_id?: Maybe<Scalars["uuid"]["output"]>;
+  phone_numbers?: Maybe<Array<Scalars["String"]["output"]>>;
+  slug: Scalars["String"]["output"];
+  social_links: Scalars["json"]["output"];
+  updated_at: Scalars["timestamptz"]["output"];
+  user_id: Scalars["uuid"]["output"];
+  /** An array relationship */
+  venues: Array<Venues>;
+  /** An aggregate relationship */
+  venues_aggregate: Venues_Aggregate;
+  website?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregated selection of "chains" */
+export type Chains_Aggregate = {
+  __typename?: "chains_aggregate";
+  aggregate?: Maybe<Chains_Aggregate_Fields>;
+  nodes: Array<Chains>;
+};
+
+export type Chains_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Chains_Aggregate_Bool_Exp_Count>;
+};
+
+export type Chains_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Chains_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Chains_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "chains" */
+export type Chains_Aggregate_Fields = {
+  __typename?: "chains_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Chains_Max_Fields>;
+  min?: Maybe<Chains_Min_Fields>;
+};
+
+/** aggregate fields of "chains" */
+export type Chains_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Chains_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "chains" */
+export type Chains_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Chains_Max_Order_By>;
+  min?: InputMaybe<Chains_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "chains" */
+export type Chains_Arr_Rel_Insert_Input = {
+  data: Array<Chains_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Chains_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "chains". All fields are combined with a logical 'AND'. */
+export type Chains_Bool_Exp = {
+  _and?: InputMaybe<Array<Chains_Bool_Exp>>;
+  _not?: InputMaybe<Chains_Bool_Exp>;
+  _or?: InputMaybe<Array<Chains_Bool_Exp>>;
+  chain?: InputMaybe<Chains_Bool_Exp>;
+  chain_id?: InputMaybe<Uuid_Comparison_Exp>;
+  chains?: InputMaybe<Chains_Bool_Exp>;
+  chains_aggregate?: InputMaybe<Chains_Aggregate_Bool_Exp>;
+  city?: InputMaybe<String_Comparison_Exp>;
+  country?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  description_en?: InputMaybe<String_Comparison_Exp>;
+  description_uk?: InputMaybe<String_Comparison_Exp>;
+  emails?: InputMaybe<String_Array_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  logo?: InputMaybe<String_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  owner_id?: InputMaybe<Uuid_Comparison_Exp>;
+  phone_numbers?: InputMaybe<String_Array_Comparison_Exp>;
+  slug?: InputMaybe<String_Comparison_Exp>;
+  social_links?: InputMaybe<Json_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  venues?: InputMaybe<Venues_Bool_Exp>;
+  venues_aggregate?: InputMaybe<Venues_Aggregate_Bool_Exp>;
+  website?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** input type for inserting data into table "chains" */
+export type Chains_Insert_Input = {
+  chain?: InputMaybe<Chains_Obj_Rel_Insert_Input>;
+  chain_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  chains?: InputMaybe<Chains_Arr_Rel_Insert_Input>;
+  city?: InputMaybe<Scalars["String"]["input"]>;
+  country?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  description_en?: InputMaybe<Scalars["String"]["input"]>;
+  description_uk?: InputMaybe<Scalars["String"]["input"]>;
+  emails?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  logo?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  owner_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  phone_numbers?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  social_links?: InputMaybe<Scalars["json"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  venues?: InputMaybe<Venues_Arr_Rel_Insert_Input>;
+  website?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Chains_Max_Fields = {
+  __typename?: "chains_max_fields";
+  chain_id?: Maybe<Scalars["uuid"]["output"]>;
+  city?: Maybe<Scalars["String"]["output"]>;
+  country?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  description_en?: Maybe<Scalars["String"]["output"]>;
+  description_uk?: Maybe<Scalars["String"]["output"]>;
+  emails?: Maybe<Array<Scalars["String"]["output"]>>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  logo?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  owner_id?: Maybe<Scalars["uuid"]["output"]>;
+  phone_numbers?: Maybe<Array<Scalars["String"]["output"]>>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  website?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** order by max() on columns of table "chains" */
+export type Chains_Max_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+  city?: InputMaybe<Order_By>;
+  country?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  description_en?: InputMaybe<Order_By>;
+  description_uk?: InputMaybe<Order_By>;
+  emails?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  logo?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  owner_id?: InputMaybe<Order_By>;
+  phone_numbers?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  website?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Chains_Min_Fields = {
+  __typename?: "chains_min_fields";
+  chain_id?: Maybe<Scalars["uuid"]["output"]>;
+  city?: Maybe<Scalars["String"]["output"]>;
+  country?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  description_en?: Maybe<Scalars["String"]["output"]>;
+  description_uk?: Maybe<Scalars["String"]["output"]>;
+  emails?: Maybe<Array<Scalars["String"]["output"]>>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  logo?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  owner_id?: Maybe<Scalars["uuid"]["output"]>;
+  phone_numbers?: Maybe<Array<Scalars["String"]["output"]>>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  website?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** order by min() on columns of table "chains" */
+export type Chains_Min_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+  city?: InputMaybe<Order_By>;
+  country?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  description_en?: InputMaybe<Order_By>;
+  description_uk?: InputMaybe<Order_By>;
+  emails?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  logo?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  owner_id?: InputMaybe<Order_By>;
+  phone_numbers?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  website?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "chains" */
+export type Chains_Mutation_Response = {
+  __typename?: "chains_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Chains>;
+};
+
+/** input type for inserting object relation for remote table "chains" */
+export type Chains_Obj_Rel_Insert_Input = {
+  data: Chains_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Chains_On_Conflict>;
+};
+
+/** on_conflict condition type for table "chains" */
+export type Chains_On_Conflict = {
+  constraint: Chains_Constraint;
+  update_columns?: Array<Chains_Update_Column>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "chains". */
+export type Chains_Order_By = {
+  chain?: InputMaybe<Chains_Order_By>;
+  chain_id?: InputMaybe<Order_By>;
+  chains_aggregate?: InputMaybe<Chains_Aggregate_Order_By>;
+  city?: InputMaybe<Order_By>;
+  country?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  description_en?: InputMaybe<Order_By>;
+  description_uk?: InputMaybe<Order_By>;
+  emails?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  logo?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  owner_id?: InputMaybe<Order_By>;
+  phone_numbers?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  social_links?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  venues_aggregate?: InputMaybe<Venues_Aggregate_Order_By>;
+  website?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: chains */
+export type Chains_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** input type for updating data in table "chains" */
+export type Chains_Set_Input = {
+  chain_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  city?: InputMaybe<Scalars["String"]["input"]>;
+  country?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  description_en?: InputMaybe<Scalars["String"]["input"]>;
+  description_uk?: InputMaybe<Scalars["String"]["input"]>;
+  emails?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  logo?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  owner_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  phone_numbers?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  social_links?: InputMaybe<Scalars["json"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  website?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Streaming cursor of the table "chains" */
+export type Chains_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Chains_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Chains_Stream_Cursor_Value_Input = {
+  chain_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  city?: InputMaybe<Scalars["String"]["input"]>;
+  country?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  description_en?: InputMaybe<Scalars["String"]["input"]>;
+  description_uk?: InputMaybe<Scalars["String"]["input"]>;
+  emails?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  logo?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  owner_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  phone_numbers?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  social_links?: InputMaybe<Scalars["json"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  website?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type Chains_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Chains_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Chains_Bool_Exp;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsChains_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsChainsArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsSocial_LinksArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsVenues_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+export type ChainWithChainsFragment = {
+  __typename?: "chains";
+  chains: Array<{
+    __typename?: "chains";
+    country?: null | string;
+    id: UUID;
+    name: string;
+    slug: string;
+    venues: Array<{
+      __typename?: "venues";
+      city?: null | string;
+      country?: null | string;
+      id: UUID;
+      name: string;
+      slug: string;
+    }>;
+    venues_aggregate: {
+      __typename?: "venues_aggregate";
+      aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+    };
+  }>;
+  chains_aggregate: {
+    __typename?: "chains_aggregate";
+    aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+  };
+  description_en?: null | string;
+  description_uk?: null | string;
+  emails?: Array<string> | null;
+  id: UUID;
+  logo?: null | string;
+  name: string;
+  phone_numbers?: Array<string> | null;
+  slug: string;
+  social_links: Json;
+  website?: null | string;
+};
+
+export type ChainWithVenuesFragment = {
+  __typename?: "chains";
+  description_en?: null | string;
+  description_uk?: null | string;
+  emails?: Array<string> | null;
+  id: UUID;
+  logo?: null | string;
+  name: string;
+  phone_numbers?: Array<string> | null;
+  slug: string;
+  social_links: Json;
+  venues: Array<{
+    __typename?: "venues";
+    city?: null | string;
+    country?: null | string;
+    id: UUID;
+    name: string;
+    slug: string;
+  }>;
+  venues_aggregate: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+  website?: null | string;
+};
+
 export type Geography_Cast_Exp = {
   geometry?: InputMaybe<Geometry_Comparison_Exp>;
 };
@@ -945,6 +1477,8 @@ export type GetAdminVenuesQuery = {
     __typename?: "venues";
     address?: null | string;
     category: Venue_Category_Enum;
+    city?: null | string;
+    country?: null | string;
     created_at: Timestamp;
     description_en?: null | string;
     description_uk?: null | string;
@@ -952,9 +1486,12 @@ export type GetAdminVenuesQuery = {
     geo?: Geography | null;
     id: UUID;
     images?: Array<string> | null;
+    logo?: null | string;
     name: string;
+    owner_id?: null | UUID;
     phone_numbers?: Array<string> | null;
     slug: string;
+    social_links: Json;
     status: Venue_Status_Enum;
     user_id?: null | UUID;
     website?: null | string;
@@ -966,6 +1503,102 @@ export type GetAdminVenuesQuery = {
 };
 
 export type GetAdminVenuesQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+}>;
+
+export type GetAdminVenuesWithChainQuery = {
+  __typename?: "query_root";
+  venues: Array<{
+    __typename?: "venues";
+    address?: null | string;
+    category: Venue_Category_Enum;
+    chain?: {
+      __typename?: "chains";
+      chain?: {
+        __typename?: "chains";
+        chains: Array<{
+          __typename?: "chains";
+          country?: null | string;
+          id: UUID;
+          name: string;
+          slug: string;
+          venues: Array<{
+            __typename?: "venues";
+            city?: null | string;
+            country?: null | string;
+            id: UUID;
+            name: string;
+            slug: string;
+          }>;
+          venues_aggregate: {
+            __typename?: "venues_aggregate";
+            aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+          };
+        }>;
+        chains_aggregate: {
+          __typename?: "chains_aggregate";
+          aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+        };
+        description_en?: null | string;
+        description_uk?: null | string;
+        emails?: Array<string> | null;
+        id: UUID;
+        logo?: null | string;
+        name: string;
+        phone_numbers?: Array<string> | null;
+        slug: string;
+        social_links: Json;
+        website?: null | string;
+      } | null;
+      description_en?: null | string;
+      description_uk?: null | string;
+      emails?: Array<string> | null;
+      id: UUID;
+      logo?: null | string;
+      name: string;
+      phone_numbers?: Array<string> | null;
+      slug: string;
+      social_links: Json;
+      venues: Array<{
+        __typename?: "venues";
+        city?: null | string;
+        country?: null | string;
+        id: UUID;
+        name: string;
+        slug: string;
+      }>;
+      venues_aggregate: {
+        __typename?: "venues_aggregate";
+        aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+      };
+      website?: null | string;
+    } | null;
+    city?: null | string;
+    country?: null | string;
+    created_at: Timestamp;
+    description_en?: null | string;
+    description_uk?: null | string;
+    emails?: Array<string> | null;
+    geo?: Geography | null;
+    id: UUID;
+    images?: Array<string> | null;
+    logo?: null | string;
+    name: string;
+    owner_id?: null | UUID;
+    phone_numbers?: Array<string> | null;
+    slug: string;
+    social_links: Json;
+    status: Venue_Status_Enum;
+    user_id?: null | UUID;
+    website?: null | string;
+  }>;
+  venues_aggregate: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type GetAdminVenuesWithChainQueryVariables = Exact<{
   where: Venues_Bool_Exp;
 }>;
 
@@ -1004,6 +1637,108 @@ export type GetPublicVenuesQuery = {
 };
 
 export type GetPublicVenuesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
+  where: Venues_Bool_Exp;
+}>;
+
+export type GetPublicVenuesWithChainQuery = {
+  __typename?: "query_root";
+  total: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+  venues: Array<{
+    __typename?: "venues";
+    address?: null | string;
+    category: Venue_Category_Enum;
+    chain?: {
+      __typename?: "chains";
+      chain?: {
+        __typename?: "chains";
+        chains: Array<{
+          __typename?: "chains";
+          country?: null | string;
+          id: UUID;
+          name: string;
+          slug: string;
+          venues: Array<{
+            __typename?: "venues";
+            city?: null | string;
+            country?: null | string;
+            id: UUID;
+            name: string;
+            slug: string;
+          }>;
+          venues_aggregate: {
+            __typename?: "venues_aggregate";
+            aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+          };
+        }>;
+        chains_aggregate: {
+          __typename?: "chains_aggregate";
+          aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+        };
+        description_en?: null | string;
+        description_uk?: null | string;
+        emails?: Array<string> | null;
+        id: UUID;
+        logo?: null | string;
+        name: string;
+        phone_numbers?: Array<string> | null;
+        slug: string;
+        social_links: Json;
+        website?: null | string;
+      } | null;
+      description_en?: null | string;
+      description_uk?: null | string;
+      emails?: Array<string> | null;
+      id: UUID;
+      logo?: null | string;
+      name: string;
+      phone_numbers?: Array<string> | null;
+      slug: string;
+      social_links: Json;
+      venues: Array<{
+        __typename?: "venues";
+        city?: null | string;
+        country?: null | string;
+        id: UUID;
+        name: string;
+        slug: string;
+      }>;
+      venues_aggregate: {
+        __typename?: "venues_aggregate";
+        aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+      };
+      website?: null | string;
+    } | null;
+    city?: null | string;
+    country?: null | string;
+    description_en?: null | string;
+    description_uk?: null | string;
+    emails?: Array<string> | null;
+    geo?: Geography | null;
+    id: UUID;
+    images?: Array<string> | null;
+    logo?: null | string;
+    name: string;
+    owner_id?: null | UUID;
+    phone_numbers?: Array<string> | null;
+    slug: string;
+    social_links: Json;
+    status: Venue_Status_Enum;
+    user_id?: null | UUID;
+    website?: null | string;
+  }>;
+  venues_aggregate: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type GetPublicVenuesWithChainQueryVariables = Exact<{
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
@@ -1069,6 +1804,105 @@ export type GetUserVenuesQueryVariables = Exact<{
   where: Venues_Bool_Exp;
 }>;
 
+export type GetUserVenuesWithChainQuery = {
+  __typename?: "query_root";
+  venues: Array<{
+    __typename?: "venues";
+    address?: null | string;
+    category: Venue_Category_Enum;
+    chain?: {
+      __typename?: "chains";
+      chain?: {
+        __typename?: "chains";
+        chains: Array<{
+          __typename?: "chains";
+          country?: null | string;
+          id: UUID;
+          name: string;
+          slug: string;
+          venues: Array<{
+            __typename?: "venues";
+            city?: null | string;
+            country?: null | string;
+            id: UUID;
+            name: string;
+            slug: string;
+          }>;
+          venues_aggregate: {
+            __typename?: "venues_aggregate";
+            aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+          };
+        }>;
+        chains_aggregate: {
+          __typename?: "chains_aggregate";
+          aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+        };
+        description_en?: null | string;
+        description_uk?: null | string;
+        emails?: Array<string> | null;
+        id: UUID;
+        logo?: null | string;
+        name: string;
+        phone_numbers?: Array<string> | null;
+        slug: string;
+        social_links: Json;
+        website?: null | string;
+      } | null;
+      description_en?: null | string;
+      description_uk?: null | string;
+      emails?: Array<string> | null;
+      id: UUID;
+      logo?: null | string;
+      name: string;
+      phone_numbers?: Array<string> | null;
+      slug: string;
+      social_links: Json;
+      venues: Array<{
+        __typename?: "venues";
+        city?: null | string;
+        country?: null | string;
+        id: UUID;
+        name: string;
+        slug: string;
+      }>;
+      venues_aggregate: {
+        __typename?: "venues_aggregate";
+        aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+      };
+      website?: null | string;
+    } | null;
+    city?: null | string;
+    country?: null | string;
+    created_at: Timestamp;
+    description_en?: null | string;
+    description_uk?: null | string;
+    emails?: Array<string> | null;
+    geo?: Geography | null;
+    id: UUID;
+    images?: Array<string> | null;
+    logo?: null | string;
+    name: string;
+    owner_id?: null | UUID;
+    phone_numbers?: Array<string> | null;
+    postcode?: null | string;
+    slug: string;
+    social_links: Json;
+    status: Venue_Status_Enum;
+    website?: null | string;
+  }>;
+  venues_aggregate: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type GetUserVenuesWithChainQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
+  where: Venues_Bool_Exp;
+}>;
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars["Int"]["input"]>;
@@ -1102,6 +1936,10 @@ export type Mutation_Root = {
   delete_accounts?: Maybe<Accounts_Mutation_Response>;
   /** delete single row from the table: "accounts" */
   delete_accounts_by_pk?: Maybe<Accounts>;
+  /** delete data from the table: "chains" */
+  delete_chains?: Maybe<Chains_Mutation_Response>;
+  /** delete single row from the table: "chains" */
+  delete_chains_by_pk?: Maybe<Chains>;
   /** delete data from the table: "provider_type" */
   delete_provider_type?: Maybe<Provider_Type_Mutation_Response>;
   /** delete single row from the table: "provider_type" */
@@ -1142,6 +1980,10 @@ export type Mutation_Root = {
   insert_accounts?: Maybe<Accounts_Mutation_Response>;
   /** insert a single row into the table: "accounts" */
   insert_accounts_one?: Maybe<Accounts>;
+  /** insert data into the table: "chains" */
+  insert_chains?: Maybe<Chains_Mutation_Response>;
+  /** insert a single row into the table: "chains" */
+  insert_chains_one?: Maybe<Chains>;
   /** insert data into the table: "provider_type" */
   insert_provider_type?: Maybe<Provider_Type_Mutation_Response>;
   /** insert a single row into the table: "provider_type" */
@@ -1184,6 +2026,12 @@ export type Mutation_Root = {
   update_accounts_by_pk?: Maybe<Accounts>;
   /** update multiples rows of table: "accounts" */
   update_accounts_many?: Maybe<Array<Maybe<Accounts_Mutation_Response>>>;
+  /** update data of the table: "chains" */
+  update_chains?: Maybe<Chains_Mutation_Response>;
+  /** update single row of the table: "chains" */
+  update_chains_by_pk?: Maybe<Chains>;
+  /** update multiples rows of table: "chains" */
+  update_chains_many?: Maybe<Array<Maybe<Chains_Mutation_Response>>>;
   /** update data of the table: "provider_type" */
   update_provider_type?: Maybe<Provider_Type_Mutation_Response>;
   /** update single row of the table: "provider_type" */
@@ -1248,6 +2096,16 @@ export type Mutation_RootDelete_Accounts_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootDelete_AccountsArgs = {
   where: Accounts_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Chains_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_ChainsArgs = {
+  where: Chains_Bool_Exp;
 };
 
 /** mutation root */
@@ -1350,6 +2208,18 @@ export type Mutation_RootInsert_Accounts_OneArgs = {
 export type Mutation_RootInsert_AccountsArgs = {
   objects: Array<Accounts_Insert_Input>;
   on_conflict?: InputMaybe<Accounts_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Chains_OneArgs = {
+  object: Chains_Insert_Input;
+  on_conflict?: InputMaybe<Chains_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_ChainsArgs = {
+  objects: Array<Chains_Insert_Input>;
+  on_conflict?: InputMaybe<Chains_On_Conflict>;
 };
 
 /** mutation root */
@@ -1477,6 +2347,23 @@ export type Mutation_RootUpdate_AccountsArgs = {
   _inc?: InputMaybe<Accounts_Inc_Input>;
   _set?: InputMaybe<Accounts_Set_Input>;
   where: Accounts_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Chains_By_PkArgs = {
+  _set?: InputMaybe<Chains_Set_Input>;
+  pk_columns: Chains_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Chains_ManyArgs = {
+  updates: Array<Chains_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_ChainsArgs = {
+  _set?: InputMaybe<Chains_Set_Input>;
+  where: Chains_Bool_Exp;
 };
 
 /** mutation root */
@@ -1778,6 +2665,12 @@ export type Query_Root = {
   accounts_aggregate: Accounts_Aggregate;
   /** fetch data from the table: "accounts" using primary key columns */
   accounts_by_pk?: Maybe<Accounts>;
+  /** An array relationship */
+  chains: Array<Chains>;
+  /** An aggregate relationship */
+  chains_aggregate: Chains_Aggregate;
+  /** fetch data from the table: "chains" using primary key columns */
+  chains_by_pk?: Maybe<Chains>;
   /** fetch data from the table: "provider_type" */
   provider_type: Array<Provider_Type>;
   /** fetch aggregated fields from the table: "provider_type" */
@@ -1852,6 +2745,26 @@ export type Query_RootAccountsArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Accounts_Order_By>>;
   where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
+export type Query_RootChains_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+export type Query_RootChains_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootChainsArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
 };
 
 export type Query_RootProvider_Type_AggregateArgs = {
@@ -2044,6 +2957,7 @@ export type Scalars = {
   Int: { input: number; output: number };
   json: { input: Json; output: Json };
   String: { input: string; output: string };
+  timestamp: { input: Timestamp; output: Timestamp };
   timestamptz: { input: Timestamp; output: Timestamp };
   uuid: { input: UUID; output: UUID };
 };
@@ -2292,6 +3206,14 @@ export type Subscription_Root = {
   accounts_by_pk?: Maybe<Accounts>;
   /** fetch data from the table in a streaming manner: "accounts" */
   accounts_stream: Array<Accounts>;
+  /** An array relationship */
+  chains: Array<Chains>;
+  /** An aggregate relationship */
+  chains_aggregate: Chains_Aggregate;
+  /** fetch data from the table: "chains" using primary key columns */
+  chains_by_pk?: Maybe<Chains>;
+  /** fetch data from the table in a streaming manner: "chains" */
+  chains_stream: Array<Chains>;
   /** fetch data from the table: "provider_type" */
   provider_type: Array<Provider_Type>;
   /** fetch aggregated fields from the table: "provider_type" */
@@ -2390,6 +3312,32 @@ export type Subscription_RootAccountsArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Accounts_Order_By>>;
   where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
+export type Subscription_RootChains_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+export type Subscription_RootChains_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootChains_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Chains_Stream_Cursor_Input>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+export type Subscription_RootChainsArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
 };
 
 export type Subscription_RootProvider_Type_AggregateArgs = {
@@ -2624,6 +3572,19 @@ export type Subscription_RootVerification_TokensArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
   where?: InputMaybe<Verification_Tokens_Bool_Exp>;
+};
+
+/** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
+export type Timestamp_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _gt?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _gte?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["timestamp"]["input"]>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _lte?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _neq?: InputMaybe<Scalars["timestamp"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["timestamp"]["input"]>>;
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
@@ -2969,6 +3930,7 @@ export type Users = {
   id: Scalars["uuid"]["output"];
   image?: Maybe<Scalars["String"]["output"]>;
   is_verified_contributor: Scalars["Boolean"]["output"];
+  last_activity_at?: Maybe<Scalars["timestamp"]["output"]>;
   level: Scalars["Int"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
   points: Scalars["Int"]["output"];
@@ -3100,6 +4062,7 @@ export type Users_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   image?: InputMaybe<String_Comparison_Exp>;
   is_verified_contributor?: InputMaybe<Boolean_Comparison_Exp>;
+  last_activity_at?: InputMaybe<Timestamp_Comparison_Exp>;
   level?: InputMaybe<Int_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   points?: InputMaybe<Int_Comparison_Exp>;
@@ -3134,6 +4097,7 @@ export type Users_Insert_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   image?: InputMaybe<Scalars["String"]["input"]>;
   is_verified_contributor?: InputMaybe<Scalars["Boolean"]["input"]>;
+  last_activity_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   level?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   points?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3156,6 +4120,7 @@ export type Users_Max_Fields = {
   events_created?: Maybe<Scalars["Int"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   image?: Maybe<Scalars["String"]["output"]>;
+  last_activity_at?: Maybe<Scalars["timestamp"]["output"]>;
   level?: Maybe<Scalars["Int"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   points?: Maybe<Scalars["Int"]["output"]>;
@@ -3172,6 +4137,7 @@ export type Users_Max_Order_By = {
   events_created?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
+  last_activity_at?: InputMaybe<Order_By>;
   level?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
@@ -3189,6 +4155,7 @@ export type Users_Min_Fields = {
   events_created?: Maybe<Scalars["Int"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   image?: Maybe<Scalars["String"]["output"]>;
+  last_activity_at?: Maybe<Scalars["timestamp"]["output"]>;
   level?: Maybe<Scalars["Int"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   points?: Maybe<Scalars["Int"]["output"]>;
@@ -3205,6 +4172,7 @@ export type Users_Min_Order_By = {
   events_created?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
+  last_activity_at?: InputMaybe<Order_By>;
   level?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
@@ -3246,6 +4214,7 @@ export type Users_Order_By = {
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
   is_verified_contributor?: InputMaybe<Order_By>;
+  last_activity_at?: InputMaybe<Order_By>;
   level?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
@@ -3273,6 +4242,7 @@ export type Users_Set_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   image?: InputMaybe<Scalars["String"]["input"]>;
   is_verified_contributor?: InputMaybe<Scalars["Boolean"]["input"]>;
+  last_activity_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   level?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   points?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3363,6 +4333,7 @@ export type Users_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   image?: InputMaybe<Scalars["String"]["input"]>;
   is_verified_contributor?: InputMaybe<Scalars["Boolean"]["input"]>;
+  last_activity_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   level?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   points?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3813,12 +4784,120 @@ export type Venue_StatusVenuesArgs = {
   where?: InputMaybe<Venues_Bool_Exp>;
 };
 
+export type VenueFieldsFragment = {
+  __typename?: "venues";
+  address?: null | string;
+  category: Venue_Category_Enum;
+  city?: null | string;
+  country?: null | string;
+  description_en?: null | string;
+  description_uk?: null | string;
+  emails?: Array<string> | null;
+  geo?: Geography | null;
+  id: UUID;
+  images?: Array<string> | null;
+  logo?: null | string;
+  name: string;
+  owner_id?: null | UUID;
+  phone_numbers?: Array<string> | null;
+  slug: string;
+  social_links: Json;
+  status: Venue_Status_Enum;
+  website?: null | string;
+};
+
+export type VenueFieldsWithChainFragment = {
+  __typename?: "venues";
+  address?: null | string;
+  category: Venue_Category_Enum;
+  chain?: {
+    __typename?: "chains";
+    chain?: {
+      __typename?: "chains";
+      chains: Array<{
+        __typename?: "chains";
+        country?: null | string;
+        id: UUID;
+        name: string;
+        slug: string;
+        venues: Array<{
+          __typename?: "venues";
+          city?: null | string;
+          country?: null | string;
+          id: UUID;
+          name: string;
+          slug: string;
+        }>;
+        venues_aggregate: {
+          __typename?: "venues_aggregate";
+          aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+        };
+      }>;
+      chains_aggregate: {
+        __typename?: "chains_aggregate";
+        aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+      };
+      description_en?: null | string;
+      description_uk?: null | string;
+      emails?: Array<string> | null;
+      id: UUID;
+      logo?: null | string;
+      name: string;
+      phone_numbers?: Array<string> | null;
+      slug: string;
+      social_links: Json;
+      website?: null | string;
+    } | null;
+    description_en?: null | string;
+    description_uk?: null | string;
+    emails?: Array<string> | null;
+    id: UUID;
+    logo?: null | string;
+    name: string;
+    phone_numbers?: Array<string> | null;
+    slug: string;
+    social_links: Json;
+    venues: Array<{
+      __typename?: "venues";
+      city?: null | string;
+      country?: null | string;
+      id: UUID;
+      name: string;
+      slug: string;
+    }>;
+    venues_aggregate: {
+      __typename?: "venues_aggregate";
+      aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+    };
+    website?: null | string;
+  } | null;
+  city?: null | string;
+  country?: null | string;
+  description_en?: null | string;
+  description_uk?: null | string;
+  emails?: Array<string> | null;
+  geo?: Geography | null;
+  id: UUID;
+  images?: Array<string> | null;
+  logo?: null | string;
+  name: string;
+  owner_id?: null | UUID;
+  phone_numbers?: Array<string> | null;
+  slug: string;
+  social_links: Json;
+  status: Venue_Status_Enum;
+  website?: null | string;
+};
+
 /** columns and relationships of "venues" */
 export type Venues = {
   __typename?: "venues";
   address?: Maybe<Scalars["String"]["output"]>;
   area?: Maybe<Scalars["String"]["output"]>;
   category: Venue_Category_Enum;
+  /** An object relationship */
+  chain?: Maybe<Chains>;
+  chain_id?: Maybe<Scalars["uuid"]["output"]>;
   city?: Maybe<Scalars["String"]["output"]>;
   country?: Maybe<Scalars["String"]["output"]>;
   created_at: Scalars["timestamptz"]["output"];
@@ -3903,6 +4982,8 @@ export type Venues_Bool_Exp = {
   address?: InputMaybe<String_Comparison_Exp>;
   area?: InputMaybe<String_Comparison_Exp>;
   category?: InputMaybe<Venue_Category_Enum_Comparison_Exp>;
+  chain?: InputMaybe<Chains_Bool_Exp>;
+  chain_id?: InputMaybe<Uuid_Comparison_Exp>;
   city?: InputMaybe<String_Comparison_Exp>;
   country?: InputMaybe<String_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -3934,6 +5015,8 @@ export type Venues_Insert_Input = {
   address?: InputMaybe<Scalars["String"]["input"]>;
   area?: InputMaybe<Scalars["String"]["input"]>;
   category?: InputMaybe<Venue_Category_Enum>;
+  chain?: InputMaybe<Chains_Obj_Rel_Insert_Input>;
+  chain_id?: InputMaybe<Scalars["uuid"]["input"]>;
   city?: InputMaybe<Scalars["String"]["input"]>;
   country?: InputMaybe<Scalars["String"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -3965,6 +5048,7 @@ export type Venues_Max_Fields = {
   __typename?: "venues_max_fields";
   address?: Maybe<Scalars["String"]["output"]>;
   area?: Maybe<Scalars["String"]["output"]>;
+  chain_id?: Maybe<Scalars["uuid"]["output"]>;
   city?: Maybe<Scalars["String"]["output"]>;
   country?: Maybe<Scalars["String"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
@@ -3988,6 +5072,7 @@ export type Venues_Max_Fields = {
 export type Venues_Max_Order_By = {
   address?: InputMaybe<Order_By>;
   area?: InputMaybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
   country?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
@@ -4012,6 +5097,7 @@ export type Venues_Min_Fields = {
   __typename?: "venues_min_fields";
   address?: Maybe<Scalars["String"]["output"]>;
   area?: Maybe<Scalars["String"]["output"]>;
+  chain_id?: Maybe<Scalars["uuid"]["output"]>;
   city?: Maybe<Scalars["String"]["output"]>;
   country?: Maybe<Scalars["String"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
@@ -4035,6 +5121,7 @@ export type Venues_Min_Fields = {
 export type Venues_Min_Order_By = {
   address?: InputMaybe<Order_By>;
   area?: InputMaybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
   country?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
@@ -4075,6 +5162,8 @@ export type Venues_Order_By = {
   address?: InputMaybe<Order_By>;
   area?: InputMaybe<Order_By>;
   category?: InputMaybe<Order_By>;
+  chain?: InputMaybe<Chains_Order_By>;
+  chain_id?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
   country?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
@@ -4111,6 +5200,7 @@ export type Venues_Set_Input = {
   address?: InputMaybe<Scalars["String"]["input"]>;
   area?: InputMaybe<Scalars["String"]["input"]>;
   category?: InputMaybe<Venue_Category_Enum>;
+  chain_id?: InputMaybe<Scalars["uuid"]["input"]>;
   city?: InputMaybe<Scalars["String"]["input"]>;
   country?: InputMaybe<Scalars["String"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -4146,6 +5236,7 @@ export type Venues_Stream_Cursor_Value_Input = {
   address?: InputMaybe<Scalars["String"]["input"]>;
   area?: InputMaybe<Scalars["String"]["input"]>;
   category?: InputMaybe<Venue_Category_Enum>;
+  chain_id?: InputMaybe<Scalars["uuid"]["input"]>;
   city?: InputMaybe<Scalars["String"]["input"]>;
   country?: InputMaybe<Scalars["String"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -4299,6 +5390,119 @@ export type Verification_Tokens_Updates = {
   where: Verification_Tokens_Bool_Exp;
 };
 
+export const VenueFieldsFragmentDoc = gql`
+  fragment VenueFields on venues {
+    id
+    name
+    address
+    city
+    country
+    logo
+    images
+    description_uk
+    description_en
+    geo
+    category
+    emails
+    website
+    phone_numbers
+    social_links
+    slug
+    status
+    owner_id
+  }
+`;
+export const ChainFieldsFragmentDoc = gql`
+  fragment ChainFields on chains {
+    id
+    name
+    slug
+    logo
+    description_uk
+    description_en
+    phone_numbers
+    emails
+    website
+    social_links
+  }
+`;
+export const ChainWithVenuesFragmentDoc = gql`
+  fragment ChainWithVenues on chains {
+    ...ChainFields
+    venues {
+      id
+      name
+      slug
+      city
+      country
+    }
+    venues_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+  ${ChainFieldsFragmentDoc}
+`;
+export const ChainWithChainsFragmentDoc = gql`
+  fragment ChainWithChains on chains {
+    ...ChainFields
+    chains {
+      id
+      name
+      slug
+      country
+      venues {
+        id
+        name
+        slug
+        city
+        country
+      }
+      venues_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    chains_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+  ${ChainFieldsFragmentDoc}
+`;
+export const VenueFieldsWithChainFragmentDoc = gql`
+  fragment VenueFieldsWithChain on venues {
+    id
+    name
+    address
+    city
+    country
+    logo
+    images
+    description_uk
+    description_en
+    geo
+    category
+    emails
+    website
+    phone_numbers
+    social_links
+    slug
+    status
+    owner_id
+    chain {
+      ...ChainWithVenues
+      chain {
+        ...ChainWithChains
+      }
+    }
+  }
+  ${ChainWithVenuesFragmentDoc}
+  ${ChainWithChainsFragmentDoc}
+`;
 export const GetUserProfileDocument = gql`
   query GetUserProfile($id: uuid!) {
     users_by_pk(id: $id) {
@@ -4343,7 +5547,7 @@ export function useGetUserProfileLazyQuery(
  * });
  */
 export function useGetUserProfileQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -4358,24 +5562,7 @@ export function useGetUserProfileSuspenseQuery(
 export const GetPublicVenuesDocument = gql`
   query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
     venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
-      id
-      name
-      address
-      city
-      country
-      logo
-      images
-      description_uk
-      description_en
-      geo
-      category
-      emails
-      website
-      phone_numbers
-      social_links
-      slug
-      status
-      owner_id
+      ...VenueFields
       user_id
     }
     venues_aggregate(where: $where) {
@@ -4389,6 +5576,7 @@ export const GetPublicVenuesDocument = gql`
       }
     }
   }
+  ${VenueFieldsFragmentDoc}
 `;
 
 export type GetPublicVenuesLazyQueryHookResult = ReturnType<typeof useGetPublicVenuesLazyQuery>;
@@ -4421,7 +5609,7 @@ export function useGetPublicVenuesLazyQuery(
  * });
  */
 export function useGetPublicVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -4433,29 +5621,90 @@ export function useGetPublicVenuesSuspenseQuery(
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
 }
+export const GetPublicVenuesWithChainDocument = gql`
+  query GetPublicVenuesWithChain($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+      ...VenueFieldsWithChain
+      user_id
+    }
+    venues_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    total: venues_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+  ${VenueFieldsWithChainFragmentDoc}
+`;
+
+export type GetPublicVenuesWithChainLazyQueryHookResult = ReturnType<typeof useGetPublicVenuesWithChainLazyQuery>;
+export type GetPublicVenuesWithChainQueryHookResult = ReturnType<typeof useGetPublicVenuesWithChainQuery>;
+export type GetPublicVenuesWithChainQueryResult = Apollo.QueryResult<
+  GetPublicVenuesWithChainQuery,
+  GetPublicVenuesWithChainQueryVariables
+>;
+export type GetPublicVenuesWithChainSuspenseQueryHookResult = ReturnType<
+  typeof useGetPublicVenuesWithChainSuspenseQuery
+>;
+export function useGetPublicVenuesWithChainLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPublicVenuesWithChainQuery, GetPublicVenuesWithChainQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPublicVenuesWithChainQuery, GetPublicVenuesWithChainQueryVariables>(
+    GetPublicVenuesWithChainDocument,
+    options,
+  );
+}
+/**
+ * __useGetPublicVenuesWithChainQuery__
+ *
+ * To run a query within a React component, call `useGetPublicVenuesWithChainQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicVenuesWithChainQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicVenuesWithChainQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      order_by: // value for 'order_by'
+ *   },
+ * });
+ */
+export function useGetPublicVenuesWithChainQuery(
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesWithChainQueryVariables; }) &
+    Apollo.QueryHookOptions<GetPublicVenuesWithChainQuery, GetPublicVenuesWithChainQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPublicVenuesWithChainQuery, GetPublicVenuesWithChainQueryVariables>(
+    GetPublicVenuesWithChainDocument,
+    options,
+  );
+}
+export function useGetPublicVenuesWithChainSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetPublicVenuesWithChainQuery, GetPublicVenuesWithChainQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetPublicVenuesWithChainQuery, GetPublicVenuesWithChainQueryVariables>(
+    GetPublicVenuesWithChainDocument,
+    options,
+  );
+}
 export const GetUserVenuesDocument = gql`
   query GetUserVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
     venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
-      id
-      name
-      address
-      city
-      country
+      ...VenueFields
       postcode
-      logo
-      images
-      category
       created_at
-      description_uk
-      description_en
-      geo
-      emails
-      website
-      phone_numbers
-      social_links
-      status
-      owner_id
-      slug
     }
     venues_aggregate(where: $where) {
       aggregate {
@@ -4463,6 +5712,7 @@ export const GetUserVenuesDocument = gql`
       }
     }
   }
+  ${VenueFieldsFragmentDoc}
 `;
 
 export type GetUserVenuesLazyQueryHookResult = ReturnType<typeof useGetUserVenuesLazyQuery>;
@@ -4495,7 +5745,7 @@ export function useGetUserVenuesLazyQuery(
  * });
  */
 export function useGetUserVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -4507,24 +5757,12 @@ export function useGetUserVenuesSuspenseQuery(
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
 }
-export const GetAdminVenuesDocument = gql`
-  query GetAdminVenues($where: venues_bool_exp!) {
-    venues(where: $where, order_by: { updated_at: desc }) {
-      id
-      name
-      address
-      images
-      category
+export const GetUserVenuesWithChainDocument = gql`
+  query GetUserVenuesWithChain($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+      ...VenueFieldsWithChain
+      postcode
       created_at
-      description_uk
-      description_en
-      geo
-      emails
-      website
-      phone_numbers
-      status
-      user_id
-      slug
     }
     venues_aggregate(where: $where) {
       aggregate {
@@ -4532,6 +5770,79 @@ export const GetAdminVenuesDocument = gql`
       }
     }
   }
+  ${VenueFieldsWithChainFragmentDoc}
+`;
+
+export type GetUserVenuesWithChainLazyQueryHookResult = ReturnType<typeof useGetUserVenuesWithChainLazyQuery>;
+export type GetUserVenuesWithChainQueryHookResult = ReturnType<typeof useGetUserVenuesWithChainQuery>;
+export type GetUserVenuesWithChainQueryResult = Apollo.QueryResult<
+  GetUserVenuesWithChainQuery,
+  GetUserVenuesWithChainQueryVariables
+>;
+export type GetUserVenuesWithChainSuspenseQueryHookResult = ReturnType<typeof useGetUserVenuesWithChainSuspenseQuery>;
+export function useGetUserVenuesWithChainLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetUserVenuesWithChainQuery, GetUserVenuesWithChainQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserVenuesWithChainQuery, GetUserVenuesWithChainQueryVariables>(
+    GetUserVenuesWithChainDocument,
+    options,
+  );
+}
+/**
+ * __useGetUserVenuesWithChainQuery__
+ *
+ * To run a query within a React component, call `useGetUserVenuesWithChainQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserVenuesWithChainQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserVenuesWithChainQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      order_by: // value for 'order_by'
+ *   },
+ * });
+ */
+export function useGetUserVenuesWithChainQuery(
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesWithChainQueryVariables; }) &
+    Apollo.QueryHookOptions<GetUserVenuesWithChainQuery, GetUserVenuesWithChainQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUserVenuesWithChainQuery, GetUserVenuesWithChainQueryVariables>(
+    GetUserVenuesWithChainDocument,
+    options,
+  );
+}
+export function useGetUserVenuesWithChainSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetUserVenuesWithChainQuery, GetUserVenuesWithChainQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetUserVenuesWithChainQuery, GetUserVenuesWithChainQueryVariables>(
+    GetUserVenuesWithChainDocument,
+    options,
+  );
+}
+export const GetAdminVenuesDocument = gql`
+  query GetAdminVenues($where: venues_bool_exp!) {
+    venues(where: $where, order_by: { updated_at: desc }) {
+      ...VenueFields
+      created_at
+      user_id
+    }
+    venues_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+  ${VenueFieldsFragmentDoc}
 `;
 
 export type GetAdminVenuesLazyQueryHookResult = ReturnType<typeof useGetAdminVenuesLazyQuery>;
@@ -4561,7 +5872,7 @@ export function useGetAdminVenuesLazyQuery(
  * });
  */
 export function useGetAdminVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -4572,6 +5883,75 @@ export function useGetAdminVenuesSuspenseQuery(
 ) {
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
+}
+export const GetAdminVenuesWithChainDocument = gql`
+  query GetAdminVenuesWithChain($where: venues_bool_exp!) {
+    venues(where: $where, order_by: { updated_at: desc }) {
+      ...VenueFieldsWithChain
+      created_at
+      user_id
+    }
+    venues_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+  ${VenueFieldsWithChainFragmentDoc}
+`;
+
+export type GetAdminVenuesWithChainLazyQueryHookResult = ReturnType<typeof useGetAdminVenuesWithChainLazyQuery>;
+export type GetAdminVenuesWithChainQueryHookResult = ReturnType<typeof useGetAdminVenuesWithChainQuery>;
+export type GetAdminVenuesWithChainQueryResult = Apollo.QueryResult<
+  GetAdminVenuesWithChainQuery,
+  GetAdminVenuesWithChainQueryVariables
+>;
+export type GetAdminVenuesWithChainSuspenseQueryHookResult = ReturnType<typeof useGetAdminVenuesWithChainSuspenseQuery>;
+export function useGetAdminVenuesWithChainLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAdminVenuesWithChainQuery, GetAdminVenuesWithChainQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAdminVenuesWithChainQuery, GetAdminVenuesWithChainQueryVariables>(
+    GetAdminVenuesWithChainDocument,
+    options,
+  );
+}
+/**
+ * __useGetAdminVenuesWithChainQuery__
+ *
+ * To run a query within a React component, call `useGetAdminVenuesWithChainQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdminVenuesWithChainQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdminVenuesWithChainQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAdminVenuesWithChainQuery(
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesWithChainQueryVariables; }) &
+    Apollo.QueryHookOptions<GetAdminVenuesWithChainQuery, GetAdminVenuesWithChainQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAdminVenuesWithChainQuery, GetAdminVenuesWithChainQueryVariables>(
+    GetAdminVenuesWithChainDocument,
+    options,
+  );
+}
+export function useGetAdminVenuesWithChainSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetAdminVenuesWithChainQuery, GetAdminVenuesWithChainQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetAdminVenuesWithChainQuery, GetAdminVenuesWithChainQueryVariables>(
+    GetAdminVenuesWithChainDocument,
+    options,
+  );
 }
 export const UpdateVenueStatusDocument = gql`
   mutation UpdateVenueStatus($id: uuid!, $status: venue_status_enum!) {

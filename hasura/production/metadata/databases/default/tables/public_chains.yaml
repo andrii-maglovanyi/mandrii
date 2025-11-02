@@ -1,5 +1,5 @@
 table:
-  name: venues
+  name: chains
   schema: public
 object_relationships:
   - name: chain
@@ -11,141 +11,100 @@ object_relationships:
         remote_table:
           name: chains
           schema: public
-  - name: owner
+array_relationships:
+  - name: chains
     using:
       manual_configuration:
         column_mapping:
-          owner_id: id
+          id: chain_id
         insertion_order: null
         remote_table:
-          name: users
+          name: chains
           schema: public
-  - name: user
+  - name: venues
     using:
       manual_configuration:
         column_mapping:
-          user_id: id
+          id: chain_id
         insertion_order: null
         remote_table:
-          name: users
+          name: venues
           schema: public
-  - name: venue_category
-    using:
-      foreign_key_constraint_on: category
-  - name: venue_status
-    using:
-      foreign_key_constraint_on: status
 insert_permissions:
   - role: user
     permission:
       check: {}
       columns:
-        - address
-        - category
         - chain_id
         - city
         - country
         - description_en
         - description_uk
         - emails
-        - geo
-        - images
         - logo
         - name
         - phone_numbers
-        - postcode
         - slug
         - social_links
-        - user_id
         - website
     comment: ""
 select_permissions:
   - role: public
     permission:
       columns:
-        - address
-        - area
-        - category
+        - chain_id
         - city
         - country
-        - created_at
         - description_en
         - description_uk
         - emails
-        - geo
-        - id
-        - images
         - logo
         - name
-        - owner_id
         - phone_numbers
-        - postcode
         - slug
         - social_links
-        - status
-        - user_id
         - website
       filter:
-        _or:
-          - status:
-              _eq: ACTIVE
-          - status:
-              _eq: ARCHIVED
+        venues:
+          status:
+            _eq: ACTIVE
       allow_aggregations: true
     comment: ""
   - role: user
     permission:
       columns:
-        - address
-        - area
-        - category
+        - chain_id
         - city
         - country
-        - created_at
         - description_en
         - description_uk
         - emails
-        - geo
         - id
-        - images
         - logo
         - name
         - owner_id
         - phone_numbers
-        - postcode
         - slug
         - social_links
-        - status
-        - updated_at
         - user_id
         - website
-      filter:
-        _or:
-          - status:
-              _eq: ACTIVE
-          - user_id:
-              _eq: X-Hasura-User-Id
-          - status:
-              _eq: ARCHIVED
+      filter: {}
       allow_aggregations: true
     comment: ""
 update_permissions:
   - role: user
     permission:
       columns:
-        - address
-        - category
+        - chain_id
         - city
         - country
         - description_en
         - description_uk
         - emails
-        - geo
-        - images
         - logo
         - name
         - phone_numbers
-        - postcode
+        - slug
         - social_links
         - website
       filter:

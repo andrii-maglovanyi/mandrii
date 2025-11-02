@@ -15,6 +15,7 @@ import { Locale, Venue_Status_Enum } from "~/types";
 
 import { CardHeader } from "../VenueCard/Components/CardHeader";
 import { CardMetadata } from "../VenueCard/Components/CardMetadata";
+import { ChainMetadata } from "../VenueCard/Components/ChainMetadata";
 
 interface VenueViewProps {
   slug: string;
@@ -26,8 +27,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
   const { useGetVenue } = useVenues();
   const router = useRouter();
 
-  const { data: venues, loading } = useGetVenue(slug);
-  const venue = venues?.[0];
+  const { data: venue, loading } = useGetVenue(slug, { includeChainData: true });
 
   if (loading) {
     return (
@@ -210,7 +210,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
               </div>
 
               {/* Info Cards - Right side (1/3) */}
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-4">
                 <section
                   className={`
                     group/card rounded-xl border border-primary/0
@@ -220,6 +220,16 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                   `}
                 >
                   <CardMetadata expanded variant="list" venue={venue} />
+                </section>
+                <section
+                  className={`
+                    group/card rounded-xl border border-primary/0
+                    bg-surface-tint/50 p-4 transition-all duration-300
+                    hover:border-primary/20 hover:shadow-lg
+                    lg:text-base
+                  `}
+                >
+                  <ChainMetadata venue={venue} />
                 </section>
               </div>
             </div>

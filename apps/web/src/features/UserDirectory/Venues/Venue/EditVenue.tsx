@@ -41,10 +41,10 @@ export const EditVenue = ({ slug }: VenueProps) => {
   const [meta, setMeta] = useState<{ createdAt: string; status: string } | null>(null);
 
   useEffect(() => {
-    if (data?.length) {
+    if (data) {
       setMeta({
-        createdAt: data[0].created_at,
-        status: data[0].status!,
+        createdAt: data.created_at,
+        status: data.status!,
       });
     }
   }, [data]);
@@ -89,7 +89,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
       );
     }
 
-    if (!data.length && slug) {
+    if (!data && slug) {
       return (
         <EmptyState
           body={i18n("Please check the venue URL and try again, or return to your [venues list]({venues_list_url})", {
@@ -103,7 +103,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
 
     return (
       <>
-        {meta ? (
+        {data && meta ? (
           <div className={`
             flex cursor-default items-center justify-end space-x-3 text-sm
             text-neutral-disabled
@@ -125,7 +125,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
                     openConfirmDialog({
                       message: i18n("Are you sure you want to publish this venue?"),
                       onConfirm: () => {
-                        updateVenueStatus(data[0].id, Venue_Status_Enum.Active);
+                        updateVenueStatus(data.id, Venue_Status_Enum.Active);
                       },
                       title: i18n("Publish venue"),
                     });
@@ -143,7 +143,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
                     openConfirmDialog({
                       message: i18n("Are you sure you want to reject this venue?"),
                       onConfirm: () => {
-                        updateVenueStatus(data[0].id, Venue_Status_Enum.Rejected);
+                        updateVenueStatus(data.id, Venue_Status_Enum.Rejected);
                       },
                       title: i18n("Reject venue"),
                     });
@@ -162,7 +162,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
                     openConfirmDialog({
                       message: i18n("Are you sure you want to archive this venue?"),
                       onConfirm: () => {
-                        updateVenueStatus(data[0].id, Venue_Status_Enum.Archived);
+                        updateVenueStatus(data.id, Venue_Status_Enum.Archived);
                       },
                       title: i18n("Archive venue"),
                     });
@@ -185,7 +185,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
               )}
         </RichText>
         <VenueForm
-          initialValues={{ ...data[0], is_owner: Boolean(data[0]?.owner_id), ...(data[0]?.social_links ?? {}) }}
+          initialValues={{ ...data, is_owner: Boolean(data?.owner_id), ...(data?.social_links ?? {}) }}
           onSubmit={submitVenue}
           onSuccess={handleSuccess}
         />

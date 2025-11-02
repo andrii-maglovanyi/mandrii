@@ -70,7 +70,7 @@ export const UserProfile = () => {
 
   return (
     <div className={`
-      flex flex-grow flex-col gap-8 py-4
+      flex grow flex-col gap-8 py-4
       md:py-8
     `}>
       <div className={`
@@ -80,7 +80,7 @@ export const UserProfile = () => {
         <div className="mb-8">
           <h2
             className={`
-              mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text
+              mb-2 bg-linear-to-r from-primary to-secondary bg-clip-text
               text-2xl font-bold text-transparent
               md:text-3xl
             `}
@@ -101,7 +101,7 @@ export const UserProfile = () => {
       <div>
         <h3
           className={`
-            mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-xl
+            mb-4 bg-linear-to-r from-primary to-secondary bg-clip-text text-xl
             font-bold text-transparent
             md:text-2xl
           `}
@@ -116,7 +116,7 @@ export const UserProfile = () => {
             <div
               className={`
                 group relative overflow-hidden rounded-xl border
-                border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5
+                border-primary/20 bg-linear-to-br from-primary/10 to-primary/5
                 p-4 transition-all duration-300
                 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10
               `}
@@ -135,7 +135,7 @@ export const UserProfile = () => {
                   <span className="text-sm font-medium text-neutral">{label}</span>
                   <span
                     className={`
-                      bg-gradient-to-r from-primary to-secondary bg-clip-text
+                      bg-linear-to-r from-primary to-secondary bg-clip-text
                       text-3xl font-bold text-transparent
                       md:text-4xl
                     `}
