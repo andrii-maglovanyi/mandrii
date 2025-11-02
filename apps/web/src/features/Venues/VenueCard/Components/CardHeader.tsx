@@ -10,6 +10,7 @@ import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
+import { UrlHelper } from "~/lib/url-helper";
 import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
 
 import { ClaimOwnershipDialog } from "../../ClaimOwnershipDialog";
@@ -47,8 +48,8 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
     if (navigator.share) {
       try {
         await navigator.share({
-          text: "Check this out!",
-          title: "Page Title",
+          text: i18n("Check out this venue on {appHost}!", { appHost: UrlHelper.getHostname() }),
+          title: venue.name,
           url: window.location.href,
         });
       } catch (err) {

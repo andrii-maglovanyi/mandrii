@@ -1,6 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import {
   APIParams,
@@ -28,69 +28,192 @@ interface VenuesParams {
 }
 
 export const getVenuesFilter = ({ category, country, distance, geo, name, slug }: VenuesParams) => {
-  const variables: { where: FilterParams } = {
-    where: {},
-  };
+  const where: FilterParams = {};
 
   if (slug) {
-    variables.where.slug = {
-      _eq: slug,
-    };
-  } else {
-    if (geo) {
-      variables.where.geo = {
-        _st_d_within: {
-          distance,
-          from: {
-            coordinates: [geo.lng, geo.lat],
-            type: "Point",
-          },
-        },
-      };
-    }
-
-    if (category) {
-      variables.where.category = { _eq: category.toUpperCase() };
-    }
-
-    if (country) {
-      variables.where.country = { _eq: country };
-    }
-
-    if (name) {
-      variables.where._or = [
-        { name: { _ilike: `%${name}%` } },
-        { city: { _ilike: `%${name}%` } },
-        { area: { _ilike: `%${name}%` } },
-        { address: { _ilike: `%${name}%` } },
-      ];
-    }
+    where.slug = { _eq: slug };
+    return { variables: { where } };
   }
 
-  return { variables };
+  if (geo) {
+    where.geo = {
+      _st_d_within: {
+        distance,
+        from: {
+          coordinates: [geo.lng, geo.lat],
+          type: "Point",
+        },
+      },
+    };
+  }
+
+  if (category) {
+    where.category = { _eq: category.toUpperCase() };
+  }
+
+  if (country) {
+    where.country = { _eq: country };
+  }
+
+  if (name) {
+    where._or = [
+      { name: { _ilike: `%${name}%` } },
+      { city: { _ilike: `%${name}%` } },
+      { area: { _ilike: `%${name}%` } },
+      { address: { _ilike: `%${name}%` } },
+    ];
+  }
+
+  return { variables: { where } };
 };
 
-const GET_PUBLIC_VENUES = gql`
-  query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
-    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+const CHAIN_FRAGMENT = gql`
+  fragment ChainFields on chains {
+    id
+    name
+    slug
+    logo
+    country
+    description_uk
+    description_en
+    phone_numbers
+    emails
+    website
+    social_links
+  }
+`;
+
+// Extended chain fragment with full tree structure
+const CHAIN_WITH_VENUES_FRAGMENT = gql`
+  ${CHAIN_FRAGMENT}
+  fragment ChainWithVenues on chains {
+    ...ChainFields
+    venues {
       id
       name
-      address
+      slug
       city
       country
-      logo
-      images
-      description_uk
-      description_en
-      geo
-      category
-      emails
-      website
-      phone_numbers
-      social_links
+    }
+    venues_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+const CHAIN_WITH_CHAINS_FRAGMENT = gql`
+  ${CHAIN_FRAGMENT}
+  fragment ChainWithChains on chains {
+    ...ChainFields
+    chains {
+      id
+      name
       slug
-      status
-      owner_id
+      country
+      venues {
+        id
+        name
+        slug
+        city
+        country
+      }
+      venues_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    chains_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+// Basic venue fields fragment (no chain details)
+const VENUE_FIELDS_FRAGMENT = gql`
+  fragment VenueFields on venues {
+    id
+    name
+    address
+    city
+    country
+    logo
+    images
+    description_uk
+    description_en
+    geo
+    category
+    emails
+    website
+    phone_numbers
+    social_links
+    slug
+    status
+    owner_id
+  }
+`;
+
+// Extended venue fields with full chain tree
+const VENUE_FIELDS_WITH_CHAIN_FRAGMENT = gql`
+  ${CHAIN_WITH_VENUES_FRAGMENT}
+  ${CHAIN_WITH_CHAINS_FRAGMENT}
+  fragment VenueFieldsWithChain on venues {
+    id
+    name
+    address
+    city
+    country
+    logo
+    images
+    description_uk
+    description_en
+    geo
+    category
+    emails
+    website
+    phone_numbers
+    social_links
+    slug
+    status
+    owner_id
+    chain {
+      ...ChainWithVenues
+      chain {
+        ...ChainWithChains
+      }
+    }
+  }
+`;
+
+const GET_PUBLIC_VENUES = gql`
+  ${VENUE_FIELDS_FRAGMENT}
+  query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+      ...VenueFields
+      user_id
+    }
+    venues_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    total: venues_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+const GET_PUBLIC_VENUES_WITH_CHAIN = gql`
+  ${VENUE_FIELDS_WITH_CHAIN_FRAGMENT}
+  query GetPublicVenuesWithChain($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+      ...VenueFieldsWithChain
       user_id
     }
     venues_aggregate(where: $where) {
@@ -107,28 +230,28 @@ const GET_PUBLIC_VENUES = gql`
 `;
 
 const GET_USER_VENUES = gql`
+  ${VENUE_FIELDS_FRAGMENT}
   query GetUserVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
     venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
-      id
-      name
-      address
-      city
-      country
+      ...VenueFields
       postcode
-      logo
-      images
-      category
       created_at
-      description_uk
-      description_en
-      geo
-      emails
-      website
-      phone_numbers
-      social_links
-      status
-      owner_id
-      slug
+    }
+    venues_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+const GET_USER_VENUES_WITH_CHAIN = gql`
+  ${VENUE_FIELDS_WITH_CHAIN_FRAGMENT}
+  query GetUserVenuesWithChain($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+      ...VenueFieldsWithChain
+      postcode
+      created_at
     }
     venues_aggregate(where: $where) {
       aggregate {
@@ -139,23 +262,28 @@ const GET_USER_VENUES = gql`
 `;
 
 const GET_ADMIN_VENUES = gql`
+  ${VENUE_FIELDS_FRAGMENT}
   query GetAdminVenues($where: venues_bool_exp!) {
     venues(where: $where, order_by: { updated_at: desc }) {
-      id
-      name
-      address
-      images
-      category
+      ...VenueFields
       created_at
-      description_uk
-      description_en
-      geo
-      emails
-      website
-      phone_numbers
-      status
       user_id
-      slug
+    }
+    venues_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+const GET_ADMIN_VENUES_WITH_CHAIN = gql`
+  ${VENUE_FIELDS_WITH_CHAIN_FRAGMENT}
+  query GetAdminVenuesWithChain($where: venues_bool_exp!) {
+    venues(where: $where, order_by: { updated_at: desc }) {
+      ...VenueFieldsWithChain
+      created_at
+      user_id
     }
     venues_aggregate(where: $where) {
       aggregate {
@@ -175,10 +303,71 @@ export const UPDATE_VENUE_STATUS = gql`
   }
 `;
 
+const getChainFallback = <T>(
+  venueValue: null | T | undefined,
+  chainValue: null | T | undefined,
+  parentChainValue: null | T | undefined,
+): null | T | undefined => {
+  return venueValue || chainValue || parentChainValue;
+};
+
+const getArrayFallback = <T>(
+  venueArr?: null | T[],
+  chainArr?: null | T[],
+  parentChainArr?: null | T[],
+): T[] | undefined => {
+  if (venueArr?.length) return venueArr;
+  if (chainArr?.length) return chainArr;
+  if (parentChainArr?.length) return parentChainArr;
+  return undefined;
+};
+
+const getVenueData = <T extends Partial<GetAdminVenuesQuery["venues"][number]>>(venue: T) => {
+  // Type-safe chain access - only attempt if chain property might exist
+  const venueWithChain = venue as {
+    chain?: {
+      chain?: {
+        description_en?: null | string;
+        description_uk?: null | string;
+        emails?: null | string[];
+        logo?: null | string;
+        phone_numbers?: null | string[];
+        social_links?: null | Record<string, string>;
+        website?: null | string;
+      } | null;
+      description_en?: null | string;
+      description_uk?: null | string;
+      emails?: null | string[];
+      logo?: null | string;
+      phone_numbers?: null | string[];
+      social_links?: null | Record<string, string>;
+      website?: null | string;
+    } | null;
+  } & T;
+
+  const parentChain = venueWithChain.chain?.chain;
+  const chain = venueWithChain.chain;
+
+  return {
+    ...venue,
+    description_en: getChainFallback(venue.description_en, chain?.description_en, parentChain?.description_en),
+    description_uk: getChainFallback(venue.description_uk, chain?.description_uk, parentChain?.description_uk),
+    emails: getArrayFallback(venue.emails, chain?.emails, parentChain?.emails),
+    logo: getChainFallback(venue.logo, chain?.logo, parentChain?.logo),
+    phone_numbers: getArrayFallback(venue.phone_numbers, chain?.phone_numbers, parentChain?.phone_numbers),
+    social_links: {
+      ...(parentChain?.social_links || {}),
+      ...(chain?.social_links || {}),
+      ...(venue.social_links || {}),
+    },
+    website: getChainFallback(venue.website, chain?.website, parentChain?.website),
+  };
+};
+
 export const useVenues = () => {
   const [updateStatus, { error, loading }] = useMutation(UPDATE_VENUE_STATUS, {
     awaitRefetchQueries: true,
-    refetchQueries: ["GetAdminVenues"],
+    refetchQueries: ["GetAdminVenues", "GetAdminVenuesWithChain"],
   });
 
   const updateVenueStatus = useCallback(
@@ -192,40 +381,77 @@ export const useVenues = () => {
     [updateStatus, loading, error],
   );
 
-  const useAdminVenues = (params: APIParams) => useGraphApi<GetAdminVenuesQuery["venues"]>(GET_ADMIN_VENUES, params);
+  const useAdminVenues = (params: APIParams, options?: { includeChainData?: boolean }) => {
+    const query = options?.includeChainData ? GET_ADMIN_VENUES_WITH_CHAIN : GET_ADMIN_VENUES;
+    const result = useGraphApi<GetAdminVenuesQuery["venues"]>(query, params);
 
-  const useUserVenues = (params?: APIParams) => {
-    const { data } = useSession();
+    const transformedData = useMemo(() => result.data?.map(getVenueData), [result.data]);
 
-    return useGraphApi<GetUserVenuesQuery["venues"]>(
-      GET_USER_VENUES,
-      {
+    return {
+      ...result,
+      data: transformedData,
+    };
+  };
+
+  const useUserVenues = (params?: APIParams, options?: { includeChainData?: boolean }) => {
+    const { data: session } = useSession();
+
+    const mergedParams = useMemo(
+      () => ({
         ...params,
         where: {
-          _and: [{ user_id: { _eq: data?.user.id } }, ...(params?.where ? [params.where] : [])],
+          _and: [{ user_id: { _eq: session?.user.id } }, ...(params?.where ? [params.where] : [])],
         },
-      },
-      {
-        pause: !data?.user.id,
-      },
+      }),
+      [params, session?.user.id],
     );
+
+    const query = options?.includeChainData ? GET_USER_VENUES_WITH_CHAIN : GET_USER_VENUES;
+    const result = useGraphApi<GetUserVenuesQuery["venues"]>(query, mergedParams, {
+      pause: !session?.user.id,
+    });
+
+    const transformedData = useMemo(() => result.data?.map(getVenueData), [result.data]);
+
+    return {
+      ...result,
+      data: transformedData,
+    };
   };
 
-  const usePublicVenues = (params: APIParams) => {
-    return useGraphApi<GetPublicVenuesQuery["venues"]>(GET_PUBLIC_VENUES, params);
+  const usePublicVenues = (params: APIParams, options?: { includeChainData?: boolean }) => {
+    const query = options?.includeChainData ? GET_PUBLIC_VENUES_WITH_CHAIN : GET_PUBLIC_VENUES;
+    const result = useGraphApi<GetPublicVenuesQuery["venues"]>(query, params);
+
+    const transformedData = useMemo(() => result.data?.map(getVenueData), [result.data]);
+
+    return {
+      ...result,
+      data: transformedData,
+    };
   };
 
-  const useGetVenue = (slug?: string) =>
-    useGraphApi<GetUserVenuesQuery["venues"]>(
-      GET_USER_VENUES,
-      {
+  const useGetVenue = (slug?: string, options?: { includeChainData?: boolean }) => {
+    const queryParams = useMemo(
+      () => ({
         limit: 1,
         where: {
           slug: { _eq: slug },
         },
-      },
-      { skip: !slug },
+      }),
+      [slug],
     );
+
+    const query = options?.includeChainData ? GET_USER_VENUES_WITH_CHAIN : GET_USER_VENUES;
+    const result = useGraphApi<GetUserVenuesQuery["venues"]>(query, queryParams, { skip: !slug });
+
+    const transformedData = useMemo(() => (result.data?.[0] ? getVenueData(result.data[0]) : undefined), [result.data]);
+
+    return {
+      ...result,
+      data: transformedData,
+    };
+  };
 
   return {
     updateVenueStatus,

@@ -201,12 +201,10 @@ export const CardBase = ({ hasImage = false, showFlag, variant, venue }: CardBas
 
         {hasImage && !mainImage && variant.startsWith("masonry") && (
           <div className={config.imageContainerClasses}>
-            <div
-              className={`
-                flex h-full items-center justify-center bg-gradient-to-br
-                from-primary/10 to-secondary/10
-              `}
-            >
+            <div className={`
+              flex h-full items-center justify-center bg-linear-to-br
+              from-primary/10 to-secondary/10
+            `}>
               <MapPin className="text-neutral opacity-30" size={48} />
             </div>
             <div

@@ -260,7 +260,7 @@ export function Table<T>({
   const renderColgroup = (column: Column<T>) => {
     const key = getDataPath(column);
 
-    return isExpandColumn(column) ? <col className="w-[32px]" key={key} /> : <col key={key} />;
+    return isExpandColumn(column) ? <col className="w-8" key={key} /> : <col key={key} />;
   };
 
   const renderCell = (record: T, { align, className, width, ...column }: Column<T>) => {

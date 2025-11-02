@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit2, ExternalLink, Plus } from "lucide-react";
+import { ArrowUpRight, Edit2, Plus } from "lucide-react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -52,13 +52,13 @@ const Venues = () => {
               target="_blank"
             >
               {String(name)}
-              <ExternalLink
+              <ArrowUpRight
                 className={`
-                  mb-1.5 ml-1 inline-block align-bottom opacity-0
+                  mb-1.5 ml-0.5 inline-block align-bottom text-neutral opacity-0
                   group-hover:opacity-100
-                  md:mb-0.5
+                  md:mb-1
                 `}
-                size={18}
+                size={16}
               />
             </Link>
             <span className={`

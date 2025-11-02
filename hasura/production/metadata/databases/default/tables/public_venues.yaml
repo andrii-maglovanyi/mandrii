@@ -2,6 +2,15 @@ table:
   name: venues
   schema: public
 object_relationships:
+  - name: chain
+    using:
+      manual_configuration:
+        column_mapping:
+          chain_id: id
+        insertion_order: null
+        remote_table:
+          name: chains
+          schema: public
   - name: owner
     using:
       manual_configuration:
@@ -33,6 +42,7 @@ insert_permissions:
       columns:
         - address
         - category
+        - chain_id
         - city
         - country
         - description_en
