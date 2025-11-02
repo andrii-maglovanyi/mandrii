@@ -14,7 +14,7 @@ interface VenuesListCardProps {
  * @returns {JSX.Element} The venue list card.
  */
 export const VenuesListCard = ({ showFlag, venue }: VenuesListCardProps) => {
-  const mainImage = venue.logo ?? venue.images?.[0];
+  const mainImage = venue.logo ?? venue.chain?.logo ?? venue.chain?.chain?.logo ?? venue.images?.[0];
 
   return <CardBase hasImage={!!mainImage} showFlag={showFlag} variant="list" venue={venue} />;
 };
