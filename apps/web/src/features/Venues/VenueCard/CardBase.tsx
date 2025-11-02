@@ -167,7 +167,7 @@ export const CardBase = ({ hasImage = false, showFlag, variant, venue }: CardBas
 
   const description = (locale === "uk" ? venue.description_uk : venue.description_en) || "";
   const truncatedDescription = description.length > 120 ? `${description.substring(0, 120)}...` : description;
-  const mainImage = venue.logo ?? venue.images?.[0];
+  const mainImage = venue.logo ?? venue.chain?.logo ?? venue.chain?.chain?.logo ?? venue.images?.[0];
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const config = getLayoutConfig(variant, hasImage);

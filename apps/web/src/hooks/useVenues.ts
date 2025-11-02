@@ -154,6 +154,12 @@ const VENUE_FIELDS_FRAGMENT = gql`
     slug
     status
     owner_id
+    chain {
+      logo
+      chain {
+        logo
+      }
+    }
   }
 `;
 
