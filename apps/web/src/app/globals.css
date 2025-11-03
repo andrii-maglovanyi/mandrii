@@ -80,13 +80,13 @@
   html,
   body {
     height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
     position: relative;
   }
 
   body {
     @apply bg-surface text-on-surface;
+
     max-height: 100vh;
     max-height: 100dvh;
   }

@@ -25,7 +25,7 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
   );
 
   const isMobile = useMediaQuery({
-    query: "(max-width: 768px)",
+    query: "(max-width: 1024px)",
   });
 
   return (

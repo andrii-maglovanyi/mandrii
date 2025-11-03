@@ -52,7 +52,7 @@ export default function VenuesPage() {
         >
           {i18n("Discover venues")}
         </h1>
-        <Button className="gap-2" color="primary" onClick={handleAddVenue} variant="filled">
+        <Button className="ml-auto gap-2" color="primary" onClick={handleAddVenue} variant="filled">
           {isAuthenticated ? (
             <>
               <Plus size={20} />

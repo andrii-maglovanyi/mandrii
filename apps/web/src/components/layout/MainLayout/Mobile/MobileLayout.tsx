@@ -69,15 +69,17 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
       </header>
 
       <div
+        aria-hidden={!isOpen}
         className={clsx(
           `
             fixed top-0 left-0 z-40 h-full w-full transform overflow-hidden py-4
             transition-transform duration-300
-            md:hidden
           `,
           "bg-surface",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
+        id="mobile-menu"
+        style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
       >
         <nav className="mt-16 flex flex-col space-y-3 p-6 text-xl">
           <MobileAuth>{navLinks}</MobileAuth>

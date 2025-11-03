@@ -6,6 +6,7 @@ import { ArrowUpRight, Copy } from "lucide-react";
 import { ActionButton, Tooltip } from "~/components/ui";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useI18n } from "~/i18n/useI18n";
+import { copyToClipboard } from "~/lib/clipboard";
 import { getFlagComponent } from "~/lib/icons/flags";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { processPhoneNumber } from "~/lib/utils";
@@ -44,13 +45,18 @@ export const InfoLine = ({
     return null;
   }
 
-  const handleCopy = (e: React.MouseEvent) => {
+  const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     sendToMixpanel("Copied Venue Info", { info });
-    navigator.clipboard.writeText(info);
-    showSuccess(info, { header: i18n("Copied") });
+
+    try {
+      await copyToClipboard(info);
+      showSuccess(info, { header: i18n("Copied") });
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
   };
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {

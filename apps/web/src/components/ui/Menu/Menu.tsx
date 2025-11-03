@@ -28,7 +28,7 @@ export function Menu<K extends React.ReactNode, T>({ onSelect, options, ref }: R
     <div
       aria-activedescendant={focusedIndex !== null ? `option-${focusedIndex}` : undefined}
       className={`
-        absolute top-[100%] z-50 mt-1.5 h-max max-h-80 w-fit min-w-full
+        absolute top-[100%] z-50 mt-1.5 h-max max-h-80 w-max min-w-full
         overflow-y-scroll rounded-lg bg-surface p-1 text-on-surface shadow-xl
       `}
       onKeyDown={(e) =>
@@ -49,7 +49,7 @@ export function Menu<K extends React.ReactNode, T>({ onSelect, options, ref }: R
         <div
           aria-selected={focusedIndex === index}
           className={`
-            cursor-pointer rounded-lg px-4 py-3 text-nowrap
+            cursor-pointer rounded-lg px-4 py-3 whitespace-nowrap
             hover:bg-surface-tint
             focus:bg-surface-tint
           `}

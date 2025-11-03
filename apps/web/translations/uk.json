@@ -119,7 +119,6 @@
   "Slug must be at least 10 characters": "Ідентифікатор має містити щонайменше 10 символів",
   "Slug must be less than 150 characters": "Ідентифікатор має містити менше 150 символів",
   "Slug must contain only lowercase letters, numbers, and hyphens": "Ідентифікатор може містити лише малі літери, цифри та дефіси",
-  "The address appears to be incomplete": "Адреса, здається, неповна",
   "Longitude must be between -180 and 180": "Довгота має бути в діапазоні від -180 до 180",
   "Latitude must be between -90 and 90": "Широта має бути в діапазоні від -90 до 90",
   "Please choose a category": "Будь ласка, обери категорію",
@@ -129,9 +128,7 @@
   "Slug": "Ідентифікатор",
   "Contacts": "Контакти",
   "Images": "Зображення",
-  "If you provide an address, it will appear on the [interactive map]({map_link}), where users can find it nearby or search within a specified area_<br/>The address and location won't be saved unless you verify the address_": "Якщо ти вкажеш адресу, вона з’явиться на [інтерактивній мапі]({map_link}), де користувачі зможуть знайти її поблизу або шукати в зазначеній області.<br/>Адресу та розташування не буде збережено, поки ти не підтвердиш адресу.",
   "Verify address": "Підтвердити адресу",
-  "Can not find the address, please correct it and try again": "Не вдалося знайти адресу. Будь ласка, виправ її та спробуй ще раз.",
   "Please make sure the pin location on the map points to the right place_<br />You can adjust coordinates within 100m radius from the original point if it's not quite right": "Переконайся, що позначка на мапі вказує на правильне місце.<br/>Ти можеш скорегувати координати в радіусі 100 м від початкової точки, якщо вона не зовсім точна.",
   "Latitude": "Широта",
   "orig_": "ориг.",
@@ -256,5 +253,14 @@
   "Are you sure you want to archive this venue?": "Точно хочеш архівувати цей заклад?",
   "Showing **{count}** of **{total}**": "Показано **{count}** з **{total}**",
   "This venue is archived": "Цей заклад архівовано",
-  "If the button doesn't work, copy and paste this link into your browser:": "Якщо кнопка не працює, скопіюй та встав це посилання у браузер:"
+  "If the button doesn't work, copy and paste this link into your browser:": "Якщо кнопка не працює, скопіюй та встав це посилання у браузер:",
+  "Physical venues require a complete address with a street number (e_g_, '10 Oxford St, London W1D 1AW')": "Фізичні заклади потребують повної адреси з номером будинку (наприклад, \"10 Oxford St, London W1D 1AW\")",
+  "Sign in to add venue": "Увійди, щоб додати заклад",
+  "{number} countries": "{number, plural,\n  one {# країна}\n  few {# країни}\n  many {# країн}\n  other {# країн}\n}",
+  "{number} venues": "{number, plural,\n  one {# заклад}\n  few {# заклади}\n  many {# закладів}\n  other {# закладів}\n}",
+  "Check out this venue on {appHost}!": "Переглянь цей заклад на {appHost}!",
+  "Has a physical location": "Має фізичне розташування",
+  "Verifying address": "Перевірка адреси",
+  "Searchable venue details": "Деталі закладу для пошуку",
+  "These details are collected automatically and will help users find your venue_ You can adjust them if needed_": "Ці дані збираються автоматично й допоможуть користувачам знайти твій заклад. За потреби ти можеш їх відредагувати."
 }

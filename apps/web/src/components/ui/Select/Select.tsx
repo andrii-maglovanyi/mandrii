@@ -85,7 +85,7 @@ export function Select<K extends React.ReactNode, T>({
   };
 
   const selectClass = clsx(
-    "px-3 pr-10 text-left text-nowrap",
+    "flex items-center px-3 pr-10 text-left",
     sizeClasses.md,
     error ? "border-red-500" : "border-neutral",
     commonClass,
@@ -116,16 +116,12 @@ export function Select<K extends React.ReactNode, T>({
           ref={ref}
           type="button"
         >
-          {selectedLabel}
+          <span className="min-w-0 flex-1 truncate">{selectedLabel}</span>
           <ChevronDown
             aria-hidden
-            className={clsx(
-              `
-                absolute top-1/2 right-3 -translate-y-1/2 text-neutral-500
-                transition-transform
-              `,
-              focused && "rotate-180",
-            )}
+            className={clsx(`
+              ml-2 shrink-0 text-neutral-500 transition-transform
+            `, focused && `rotate-180`)}
             size={18}
           />
         </button>
