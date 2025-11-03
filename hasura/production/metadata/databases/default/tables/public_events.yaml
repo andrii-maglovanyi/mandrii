@@ -1,0 +1,211 @@
+table:
+  name: events
+  schema: public
+object_relationships:
+  - name: event_status
+    using:
+      foreign_key_constraint_on: status
+  - name: event_type
+    using:
+      foreign_key_constraint_on: event_type
+  - name: owner
+    using:
+      manual_configuration:
+        column_mapping:
+          owner_id: id
+        insertion_order: null
+        remote_table:
+          name: users
+          schema: public
+  - name: price_type
+    using:
+      foreign_key_constraint_on: price_type
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  - name: venue
+    using:
+      foreign_key_constraint_on: venue_id
+array_relationships:
+  - name: events_event_tags
+    using:
+      foreign_key_constraint_on:
+        column: event_id
+        table:
+          name: events_event_tags
+          schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      set:
+        user_id: x-hasura-User-Id
+        status: PENDING
+      columns:
+        - accessibility_info
+        - age_restriction
+        - capacity
+        - city
+        - country
+        - custom_location_address
+        - custom_location_name
+        - description_en
+        - description_uk
+        - end_date
+        - event_type
+        - external_url
+        - geo
+        - image
+        - images
+        - is_online
+        - is_recurring
+        - language
+        - organizer_contact
+        - organizer_name
+        - owner_id
+        - price_amount
+        - price_currency
+        - price_type
+        - recurrence_rule
+        - registration_required
+        - registration_url
+        - slug
+        - social_links
+        - start_date
+        - title
+        - venue_id
+    comment: ""
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - accessibility_info
+        - age_restriction
+        - capacity
+        - city
+        - country
+        - created_at
+        - custom_location_address
+        - custom_location_name
+        - description_en
+        - description_uk
+        - end_date
+        - event_type
+        - external_url
+        - geo
+        - id
+        - image
+        - images
+        - is_online
+        - is_recurring
+        - language
+        - organizer_contact
+        - organizer_name
+        - owner_id
+        - price_amount
+        - price_currency
+        - price_type
+        - recurrence_rule
+        - registration_required
+        - registration_url
+        - slug
+        - social_links
+        - start_date
+        - status
+        - title
+        - updated_at
+        - venue_id
+      filter:
+        status:
+          _eq: ACTIVE
+      allow_aggregations: true
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - accessibility_info
+        - age_restriction
+        - capacity
+        - city
+        - country
+        - created_at
+        - custom_location_address
+        - custom_location_name
+        - description_en
+        - description_uk
+        - end_date
+        - event_type
+        - external_url
+        - geo
+        - id
+        - image
+        - images
+        - is_online
+        - is_recurring
+        - language
+        - organizer_contact
+        - organizer_name
+        - owner_id
+        - price_amount
+        - price_currency
+        - price_type
+        - recurrence_rule
+        - registration_required
+        - registration_url
+        - slug
+        - social_links
+        - start_date
+        - status
+        - title
+        - updated_at
+        - user_id
+        - venue_id
+      filter:
+        _or:
+          - status:
+              _eq: ACTIVE
+          - user_id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - accessibility_info
+        - age_restriction
+        - capacity
+        - city
+        - country
+        - custom_location_address
+        - custom_location_name
+        - description_en
+        - description_uk
+        - end_date
+        - event_type
+        - external_url
+        - geo
+        - image
+        - images
+        - is_online
+        - is_recurring
+        - language
+        - organizer_contact
+        - organizer_name
+        - owner_id
+        - price_amount
+        - price_currency
+        - price_type
+        - recurrence_rule
+        - registration_required
+        - registration_url
+        - slug
+        - social_links
+        - start_date
+        - title
+        - venue_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
