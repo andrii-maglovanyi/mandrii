@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { Calendar, MapPin } from "lucide-react";
+import { BookMarked, Calendar, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -125,7 +125,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                     `flex items-center gap-4`,
                   )}
                 >
-                  <MapPin />
+                  {venue.geo ? <MapPin /> : <BookMarked />}
                   <span className={`
                     text-base font-medium
                     md:text-lg
