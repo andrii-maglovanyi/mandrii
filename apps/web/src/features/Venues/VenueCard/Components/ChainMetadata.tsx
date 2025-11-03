@@ -9,10 +9,10 @@ import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getFlagComponent } from "~/lib/icons/flags";
 import { getIcon } from "~/lib/icons/icons";
-import { GetPublicVenuesQuery, GetPublicVenuesWithChainQuery } from "~/types";
+import { GetPublicVenuesQuery } from "~/types";
 
 interface ChainMetadataProps {
-  venue: GetPublicVenuesQuery["venues"][number] | GetPublicVenuesWithChainQuery["venues"][number];
+  venue: GetPublicVenuesQuery["venues"][number];
 }
 
 interface TreeNodeProps {
