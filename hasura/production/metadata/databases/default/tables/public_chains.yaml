@@ -58,6 +58,7 @@ select_permissions:
         - description_en
         - description_uk
         - emails
+        - id
         - logo
         - name
         - phone_numbers
@@ -65,9 +66,18 @@ select_permissions:
         - social_links
         - website
       filter:
-        venues:
-          status:
-            _eq: ACTIVE
+        _or:
+          - venues:
+              status:
+                _eq: ACTIVE
+          - chain:
+              venues:
+                status:
+                  _eq: ACTIVE
+          - chains:
+              venues:
+                status:
+                  _eq: ACTIVE
       allow_aggregations: true
     comment: ""
   - role: user
@@ -88,7 +98,30 @@ select_permissions:
         - social_links
         - user_id
         - website
-      filter: {}
+      filter:
+        _or:
+          - venues:
+              status:
+                _eq: ACTIVE
+          - chain:
+              venues:
+                status:
+                  _eq: ACTIVE
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - venues:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - chains:
+              venues:
+                status:
+                  _eq: ACTIVE
+          - chain:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - chains:
+              user_id:
+                _eq: X-Hasura-User-Id
       allow_aggregations: true
     comment: ""
 update_permissions:

@@ -3,7 +3,7 @@
 msgid "Sign in to Mandrii"
 msgstr ""
 
-msgid "The address appears to be incomplete"
+msgid "Address is required"
 msgstr ""
 
 msgid "Please choose a category"
@@ -57,7 +57,7 @@ msgstr ""
 msgid "Message is too long"
 msgstr ""
 
-msgid "Address is required"
+msgid "Physical venues require a complete address with a street number (e.g., '10 Oxford St, London W1D 1AW')"
 msgstr ""
 
 msgid "Someone"
@@ -127,6 +127,12 @@ msgid "Showing {number} results"
 msgstr ""
 
 msgid "Nothing found"
+msgstr ""
+
+msgid "Add venue"
+msgstr ""
+
+msgid "Sign in to add venue"
 msgstr ""
 
 msgid "Update and manage venue information"
@@ -222,6 +228,12 @@ msgstr ""
 msgid "Copy address"
 msgstr ""
 
+msgid "{number} countries"
+msgstr ""
+
+msgid "{number} venues"
+msgstr ""
+
 msgid "Website"
 msgstr ""
 
@@ -235,6 +247,9 @@ msgid "Phone number"
 msgstr ""
 
 msgid "Address"
+msgstr ""
+
+msgid "Check out this venue on {appHost}!"
 msgstr ""
 
 msgid "Copied venue URL"
@@ -414,16 +429,19 @@ msgstr ""
 msgid "**🌍 Auto-detection enabled**.<br />Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.<br /><br />  You can add up to three phone numbers."
 msgstr ""
 
-msgid "If you provide an address, it will appear on the [interactive map]({map_link}), where users can find it nearby or search within a specified area.<br/>The address and location won't be saved unless you verify the address."
+msgid ""
+msgstr ""
+
+msgid "Has a physical location"
+msgstr ""
+
+msgid "Verifying address"
 msgstr ""
 
 msgid "Verify address"
 msgstr ""
 
 msgid "Dismiss alert"
-msgstr ""
-
-msgid "Can not find the address, please correct it and try again"
 msgstr ""
 
 msgid "Please make sure the pin location on the map points to the right place.<br />You can adjust coordinates within 100m radius from the original point if it's not quite right"
@@ -439,6 +457,12 @@ msgid "Longitude"
 msgstr ""
 
 msgid "Reset coordinates to original"
+msgstr ""
+
+msgid "Searchable venue details"
+msgstr ""
+
+msgid "These details are collected automatically and will help users find your venue. You can adjust them if needed."
 msgstr ""
 
 msgid "Venue updated successfully"
@@ -766,9 +790,6 @@ msgid "Didn't get the email? Check your spam folder or try again."
 msgstr ""
 
 msgid "Profile"
-msgstr ""
-
-msgid "Add venue"
 msgstr ""
 
 msgid "Edit venue"

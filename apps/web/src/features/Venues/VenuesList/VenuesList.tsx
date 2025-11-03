@@ -115,7 +115,7 @@ const generateVenueLayouts = (venues: GetPublicVenuesQuery["venues"], isNotLastP
 
 export const VenuesList = () => {
   const i18n = useI18n();
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [category, setCategory] = useState<undefined | Venue_Category_Enum>();
   const [country, setCountry] = useState<string | undefined>();
@@ -210,7 +210,7 @@ export const VenuesList = () => {
 
         <div className={`
           hidden gap-1 rounded-lg bg-surface-tint p-1
-          md:flex
+          lg:flex
         `}>
           <ActionButton
             aria-label={i18n("Grid view")}

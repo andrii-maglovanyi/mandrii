@@ -50,15 +50,38 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
     if (!dialog) return;
 
     if (isOpen) {
-      dialog.showModal();
-      requestAnimationFrame(() => {
+      // Check if dialog is already open to prevent InvalidStateError on Safari/iPad
+      if (!dialog.open) {
+        try {
+          dialog.showModal();
+          requestAnimationFrame(() => {
+            setIsVisible(true);
+          });
+        } catch (err) {
+          console.error("Failed to show modal:", err);
+          // Fallback: try to reset the dialog state
+          try {
+            dialog.close();
+            dialog.showModal();
+            requestAnimationFrame(() => {
+              setIsVisible(true);
+            });
+          } catch (retryErr) {
+            console.error("Failed to show modal after retry:", retryErr);
+          }
+        }
+      } else {
+        // Dialog is already open, just make it visible
         setIsVisible(true);
-      });
+      }
     } else {
       setIsVisible(false);
 
       const timeout = setTimeout(() => {
-        dialog.close();
+        // Only close if dialog is actually open
+        if (dialog.open) {
+          dialog.close();
+        }
       }, MODAL_ANIMATION_TIMEOUT);
 
       return () => clearTimeout(timeout);
@@ -78,9 +101,14 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
   const layoutClass = "bg-surface text-on-surface w-full z-50 rounded-xl p-6 shadow-x overflow-visible";
   const mobileClass = "bottom-0 mt-auto mx-auto mb-4";
 
-  const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `
-    fixed
-  `);
+  const modalClass = clsx(
+    layoutClass,
+    positionClass,
+    animationClass,
+    backdropClass,
+    mobileClass,
+    `fixed`,
+  );
 
   return ReactDOM.createPortal(
     <dialog aria-labelledby="modal-title" aria-modal="true" className={modalClass} ref={dialogRef}>

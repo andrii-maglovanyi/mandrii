@@ -7,6 +7,7 @@ import { useDialog } from "~/contexts/DialogContext";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
+import { copyToClipboard } from "~/lib/clipboard";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
@@ -45,21 +46,29 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
     e.stopPropagation();
 
     sendToMixpanel("Clicked Share Venue", { slug: venue.slug });
+
+    const url = window.location.href;
+
     if (navigator.share) {
       try {
         await navigator.share({
           text: i18n("Check out this venue on {appHost}!", { appHost: UrlHelper.getHostname() }),
           title: venue.name,
-          url: window.location.href,
+          url,
         });
+        return; // Successfully shared, no need to copy
       } catch (err) {
         console.error("Error sharing:", err);
-        navigator.clipboard.writeText(window.location.href);
-        showSuccess(i18n("Copied venue URL"));
+        // Fall through to clipboard copy
       }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
+    }
+
+    // Fallback to clipboard copy
+    try {
+      await copyToClipboard(url);
       showSuccess(i18n("Copied venue URL"));
+    } catch (err) {
+      console.error("Failed to copy to clipboard:", err);
     }
   };
 
