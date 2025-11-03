@@ -53,7 +53,7 @@ const TreeNode = ({ children, className, defaultOpen = false, icon, label, metad
 export const ChainMetadata = ({ venue }: ChainMetadataProps) => {
   const i18n = useI18n();
 
-  if (!("chain" in venue) || !venue.chain) {
+  if (!venue.chain) {
     return null;
   }
 

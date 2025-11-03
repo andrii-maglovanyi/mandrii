@@ -69,7 +69,7 @@ export const MapListCard = ({ onClick, selectedId, venue }: MapListCardProps) =>
           </h3>
 
           {description && (
-            <RichText as="p" className="line-clamp-3 text-sm text-neutral">
+            <RichText as="div" className="line-clamp-3 text-sm text-neutral">
               {description.replaceAll("\n", "<br />")}
             </RichText>
           )}

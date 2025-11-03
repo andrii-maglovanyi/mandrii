@@ -27,12 +27,12 @@ interface MapProps {
   showMe?: boolean;
   userLocation: google.maps.LatLngLiteral | undefined;
   venues?: GetPublicVenuesQuery["venues"];
+  zoom?: number;
 }
 
 type Polyline = google.maps.Polyline;
 
 const MAP_STYLES = { height: "100%", width: "100%" };
-const MAP_ZOOM = 18;
 
 const libraries: Libraries = ["marker", "places"];
 
@@ -47,6 +47,7 @@ export const VenuesMap = ({
   showMe,
   userLocation,
   venues,
+  zoom = 18,
 }: MapProps) => {
   const i18n = useI18n();
 
@@ -157,7 +158,7 @@ export const VenuesMap = ({
       mapContainerStyle={MAP_STYLES}
       onLoad={onLoad}
       options={MAP_CONFIGS}
-      zoom={MAP_ZOOM}
+      zoom={zoom}
     />
   );
 };

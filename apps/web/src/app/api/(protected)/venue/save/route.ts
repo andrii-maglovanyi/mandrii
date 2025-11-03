@@ -26,12 +26,14 @@ export const POST = (req: Request) =>
 
     const {
       address,
+      area,
       category,
       description_en,
       description_uk,
       emails,
       images,
       is_owner,
+      is_physical,
       latitude,
       logo,
       longitude,
@@ -67,7 +69,7 @@ export const POST = (req: Request) =>
     }
 
     if (address) {
-      const geo = await geocodeAddress(address.trim(), privateConfig.maps.apiKey, { fullArea: true });
+      const geo = await geocodeAddress(address.trim(), privateConfig.maps.apiKey);
 
       if (!geo) {
         throw new BadRequestError("Invalid address");
@@ -75,21 +77,25 @@ export const POST = (req: Request) =>
 
       const { city, coordinates, country, postcode } = geo;
       venueData.address = geo.address;
-      venueData.area = geo.area;
+      venueData.area = area || geo.area;
       venueData.country = country;
       venueData.city = city;
       venueData.postcode = postcode;
 
-      if (longitude && latitude && checkCoordinatesWithinRange(coordinates, [longitude, latitude])) {
-        venueData.geo = {
-          coordinates: [longitude, latitude],
-          type: "Point",
-        };
+      if (is_physical) {
+        if (longitude && latitude && checkCoordinatesWithinRange(coordinates, [longitude, latitude])) {
+          venueData.geo = {
+            coordinates: [longitude, latitude],
+            type: "Point",
+          };
+        } else {
+          venueData.geo = {
+            coordinates,
+            type: "Point",
+          };
+        }
       } else {
-        venueData.geo = {
-          coordinates,
-          type: "Point",
-        };
+        venueData.geo = null;
       }
     }
 

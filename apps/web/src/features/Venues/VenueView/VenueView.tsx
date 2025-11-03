@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { Calendar, MapPin } from "lucide-react";
+import { BookMarked, Calendar, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -125,14 +125,21 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                     `flex items-center gap-4`,
                   )}
                 >
-                  <MapPin />
+                  {venue.geo ? <MapPin /> : <BookMarked />}
                   <span className={`
                     text-base font-medium
                     md:text-lg
                   `}>{venue.address}</span>{" "}
-                  <Button color="primary" onClick={() => router.push(`/map/${venue.slug}`)} size="sm" variant="filled">
-                    {i18n("Map")}
-                  </Button>
+                  {venue.geo ? (
+                    <Button
+                      color="primary"
+                      onClick={() => router.push(`/map/${venue.slug}`)}
+                      size="sm"
+                      variant="filled"
+                    >
+                      {i18n("Map")}
+                    </Button>
+                  ) : null}
                 </div>
               )}
             </div>
@@ -160,10 +167,10 @@ export const VenueView = ({ slug }: VenueViewProps) => {
         )}
 
         <div className={clsx(logoUrl && `
-          pl-28
-          md:pl-40
+          pl-32
+          md:pl-44
           lg:pl-40
-          xl:pl-32
+          xl:pl-36
         `, `mx-auto mt-2 w-full max-w-5xl px-4`)}>
           <CardHeader hideUntilHover={false} venue={venue} />
         </div>
@@ -221,16 +228,18 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                 >
                   <CardMetadata expanded variant="list" venue={venue} />
                 </section>
-                <section
-                  className={`
-                    group/card rounded-xl border border-primary/0
-                    bg-surface-tint/50 p-4 transition-all duration-300
-                    hover:border-primary/20 hover:shadow-lg
-                    lg:text-base
-                  `}
-                >
-                  <ChainMetadata venue={venue} />
-                </section>
+                {venue.chain && (
+                  <section
+                    className={`
+                      group/card rounded-xl border border-primary/0
+                      bg-surface-tint/50 p-4 transition-all duration-300
+                      hover:border-primary/20 hover:shadow-lg
+                      lg:text-base
+                    `}
+                  >
+                    <ChainMetadata venue={venue} />
+                  </section>
+                )}
               </div>
             </div>
           </TabPane>

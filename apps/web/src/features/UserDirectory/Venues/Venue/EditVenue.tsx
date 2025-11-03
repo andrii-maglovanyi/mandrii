@@ -175,7 +175,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
             )}
           </div>
         ) : null}
-        <RichText as="p" className="mb-6 text-sm text-neutral">
+        <RichText as="div" className="mb-6 text-sm text-neutral">
           {slug
             ? i18n(
                 "Edit your venue details below.<br/>You can update all fields except the slug, which is locked after the first creation.",
@@ -185,7 +185,12 @@ export const EditVenue = ({ slug }: VenueProps) => {
               )}
         </RichText>
         <VenueForm
-          initialValues={{ ...data, is_owner: Boolean(data?.owner_id), ...(data?.social_links ?? {}) }}
+          initialValues={{
+            ...data,
+            is_owner: Boolean(data?.owner_id),
+            is_physical: Boolean(data?.geo?.coordinates),
+            ...(data?.social_links ?? {}),
+          }}
           onSubmit={submitVenue}
           onSuccess={handleSuccess}
         />

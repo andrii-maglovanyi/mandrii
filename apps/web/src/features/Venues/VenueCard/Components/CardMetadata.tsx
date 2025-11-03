@@ -67,7 +67,7 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
         <Section title={i18n("Website")}>
           <InfoLine
             hideUntilHover={hideUntilHover}
-            icon={<Globe size={16} />}
+            icon={<Globe className="min-h-4 min-w-4" size={16} />}
             info={website}
             isLink
             tooltipText="Copy website"
@@ -81,7 +81,7 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
           {socialLinks.facebook && (
             <InfoLine
               hideUntilHover={hideUntilHover}
-              icon={<Facebook size={16} />}
+              icon={<Facebook className="min-h-4 min-w-4" size={16} />}
               info={socialLinks.facebook.toString()}
               isLink
               tooltipText="Copy Facebook link"
@@ -90,7 +90,7 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
           {socialLinks.instagram && (
             <InfoLine
               hideUntilHover={hideUntilHover}
-              icon={<Instagram size={16} />}
+              icon={<Instagram className="min-h-4 min-w-4" size={16} />}
               info={socialLinks.instagram.toString()}
               isLink
               tooltipText="Copy Instagram link"
@@ -100,12 +100,12 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
       )}
 
       {/* Email */}
-      {showEmail && emails?.length ? (
+      {showEmail && emails?.length && emails[0] ? (
         <Section title={i18n("Email")}>
           {emails.map((email) => (
             <InfoLine
               hideUntilHover={hideUntilHover}
-              icon={<AtSign size={16} />}
+              icon={<AtSign className="min-h-4 min-w-4" size={16} />}
               info={email}
               isEmail
               key={email}
@@ -117,7 +117,7 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
       ) : null}
 
       {/* Phone Numbers */}
-      {showPhone && phoneNumbers?.length ? (
+      {showPhone && phoneNumbers?.length && phoneNumbers[0] ? (
         <Section title={i18n("Phone number")}>
           {phoneNumbers.map((number) => (
             <InfoLine
@@ -137,7 +137,7 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
         <Section title={i18n("Address")}>
           <InfoLine
             hideUntilHover={hideUntilHover}
-            icon={<MapPin size={16} />}
+            icon={<MapPin className="min-h-4 min-w-4" size={16} />}
             info={address}
             isAddress
             tooltipText="Copy address"

@@ -76,7 +76,7 @@ export const Alert = ({ children, className, dismissLabel, fadeAfter, onDismiss,
         )}
         role="alert"
       >
-        <div className="mr-3 flex-shrink-0">
+        <div className="mr-3 shrink-0">
           <Icon aria-hidden="true" size={18} />
         </div>
 

@@ -1,12 +1,14 @@
 "use client";
 
 import { Clock } from "lucide-react";
+import { useLocale } from "next-intl";
 
+import { Tooltip } from "~/components/ui";
 import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getFlagComponent } from "~/lib/icons/flags";
-import { GetPublicVenuesQuery, Venue_Status_Enum } from "~/types";
+import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
 
 interface CardFooterProps {
   hideUntilHover?: boolean;
@@ -17,6 +19,7 @@ interface CardFooterProps {
 
 export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: CardFooterProps) => {
   const i18n = useI18n();
+  const locale = useLocale() as Locale;
 
   const linkContent = (
     <>
@@ -58,11 +61,23 @@ export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: Ca
             <Clock size={14} />
             <span className="capitalize">{venue.status?.toLowerCase()}</span>
           </>
-        ) : CountryFlag ? (
-          <CountryFlag className={`
-            h-4 w-6 rounded-sm opacity-60
-            group-hover/card:opacity-100
-          `} />
+        ) : CountryFlag && countryCode ? (
+          <Tooltip
+            label={
+              constants.whitelisted_countries[countryCode as keyof typeof constants.whitelisted_countries]?.label[
+                locale
+              ] ?? venue.country
+            }
+          >
+            <div className="inline-block h-4 w-6 cursor-help">
+              <CountryFlag
+                className={`
+                  pointer-events-none h-4 w-6 rounded-sm opacity-60
+                  group-hover/card:opacity-100
+                `}
+              />
+            </div>
+          </Tooltip>
         ) : null}
       </div>
 

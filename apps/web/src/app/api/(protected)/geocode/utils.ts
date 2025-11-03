@@ -28,6 +28,7 @@ export const extractLocationData = (response: GeocodeResponse) => {
   let city: null | string = null;
   let country: null | string = null;
   let area: null | string = null;
+  const areaSlug: null | string = null;
   let postcode: null | string = null;
   const address = res.formatted_address;
   const { lat, lng } = res.geometry.location;
@@ -45,7 +46,7 @@ export const extractLocationData = (response: GeocodeResponse) => {
     }
   }
 
-  if (!city || !country || !postcode || !address) return null;
+  if (!country || !address) return null;
 
-  return { address, area, city, coordinates, country, postcode };
+  return { address, area, areaSlug, city, coordinates, country, postcode };
 };
