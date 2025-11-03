@@ -1,7 +1,7 @@
 import { RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Alert, Button, Input, RichText } from "~/components/ui";
+import { Alert, Button, Input, RichText, Separator, Textarea } from "~/components/ui";
 import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
 import { useTheme } from "~/contexts/ThemeContext";
 import { FormProps } from "~/hooks/form/useForm";
@@ -159,11 +159,11 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
             />
           </div>
 
-          <RichText as="p" className="py-6 text-sm text-neutral">
+          <p className="py-6 text-sm text-neutral">
             {i18n(
               "Please make sure the pin location on the map points to the right place.<br />You can adjust coordinates within 100m radius from the original point if it's not quite right",
             )}
-          </RichText>
+          </p>
           <div className={`
             flex w-full flex-col
             md:flex-row md:space-x-4
@@ -187,9 +187,28 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
               type="number"
               {...getFieldProps("longitude")}
             />
+
             <Button className="md:mt-6" onClick={resetCoordinates} variant="outlined">
               <RotateCcw className="mr-2" /> {i18n("Reset coordinates to original")}
             </Button>
+          </div>
+
+          <Separator className="my-4" />
+
+          <div>
+            <Textarea
+              disabled={isBusy}
+              label={i18n("Searchable venue details")}
+              placeholder="Puzata Hata, 10 Oxford St, London W1D 1AW, United Kingdom"
+              rows={3}
+              {...getFieldProps("area")}
+            />
+
+            <p className="text-sm text-neutral">
+              {i18n(
+                "These details are collected automatically and will help users find your venue. You can adjust them if needed.",
+              )}
+            </p>
           </div>
         </>
       )}

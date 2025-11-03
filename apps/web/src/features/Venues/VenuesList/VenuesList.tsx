@@ -208,7 +208,10 @@ export const VenuesList = () => {
           <div />
         )}
 
-        <div className="flex gap-1 rounded-lg bg-surface-tint p-1">
+        <div className={`
+          hidden gap-1 rounded-lg bg-surface-tint p-1
+          md:flex
+        `}>
           <ActionButton
             aria-label={i18n("Grid view")}
             color="primary"

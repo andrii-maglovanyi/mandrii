@@ -1,9 +1,6 @@
-import { extractLocationData } from "./utils";
+import removeAccents from "remove-accents";
 
-interface GeocodeOptions {
-  fullArea?: boolean;
-  lang?: string; // main language preference (default 'en')
-}
+import { extractLocationData } from "./utils";
 
 const AREA_HIERARCHY = [
   "neighbourhood",
@@ -71,37 +68,45 @@ const getAreaFromOSM = async (
 };
 
 /**
- * Fetches combined area data (EN + UK) if fullArea = true.
+ * Fetches combined area data (EN + UK) and returns both full and slug-friendly versions.
  */
 const getCombinedAreaFromOSM = async (
   locationData: ReturnType<typeof extractLocationData>,
-  fullArea = false,
-): Promise<null | string> => {
-  if (!fullArea) {
-    const area = await getAreaFromOSM(locationData, false, "en");
-    return area?.[0] || null;
-  }
-
-  // Run both requests in parallel
+): Promise<{ area: null | string; areaSlug: null | string }> => {
   const [enArea, ukArea] = await Promise.all([
     getAreaFromOSM(locationData, true, "en"),
     getAreaFromOSM(locationData, true, "uk"),
   ]);
 
-  // Merge and deduplicate
-  const merged = [...new Set([...(enArea || []), ...(ukArea || [])])];
-  return merged.length ? merged.join(", ") : null;
+  // Merge original results
+  const allAreas = [...(enArea || []), ...(ukArea || [])];
+
+  if (allAreas.length === 0) {
+    return { area: null, areaSlug: null };
+  }
+
+  // Pick the first (smallest) area for slug
+  const slugValue = allAreas[0];
+
+  // Add accent-free versions
+  const withAccentFree = [...allAreas, ...allAreas.map((area) => removeAccents(area))];
+
+  // Remove duplicates (case-sensitive comparison)
+  const merged = [...new Set(withAccentFree)];
+
+  return {
+    area: merged.join(", "),
+    areaSlug: slugValue,
+  };
 };
 
 /**
  * Geocodes an address using Google Maps API and enriches it with OSM data.
  */
-export const geocodeAddress = async (address: string, apiKey: string, options: GeocodeOptions = {}) => {
-  const { fullArea = false, lang = "en" } = options;
-
+export const geocodeAddress = async (address: string, apiKey: string) => {
   const googleUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
     address,
-  )}&key=${apiKey}&language=${lang}`;
+  )}&key=${apiKey}`;
 
   try {
     const googleResponse = await fetch(googleUrl);
@@ -118,9 +123,13 @@ export const geocodeAddress = async (address: string, apiKey: string, options: G
     const locationData = extractLocationData(googleData);
     if (!locationData) return null;
 
-    locationData.area = await getCombinedAreaFromOSM(locationData, fullArea);
+    const { area, areaSlug } = await getCombinedAreaFromOSM(locationData);
 
-    return locationData;
+    return {
+      ...locationData,
+      area,
+      areaSlug,
+    };
   } catch (error) {
     console.error("Geocoding error:", error);
     return null;
