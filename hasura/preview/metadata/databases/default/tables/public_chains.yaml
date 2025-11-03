@@ -58,6 +58,7 @@ select_permissions:
         - description_en
         - description_uk
         - emails
+        - id
         - logo
         - name
         - phone_numbers

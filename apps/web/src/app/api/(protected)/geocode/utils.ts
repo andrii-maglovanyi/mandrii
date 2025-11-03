@@ -46,7 +46,7 @@ export const extractLocationData = (response: GeocodeResponse) => {
     }
   }
 
-  if (!city || !country || !postcode || !address) return null;
+  if (!country || !address) return null;
 
   return { address, area, areaSlug, city, coordinates, country, postcode };
 };

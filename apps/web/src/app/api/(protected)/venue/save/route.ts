@@ -33,6 +33,7 @@ export const POST = (req: Request) =>
       emails,
       images,
       is_owner,
+      is_physical,
       latitude,
       logo,
       longitude,
@@ -81,16 +82,20 @@ export const POST = (req: Request) =>
       venueData.city = city;
       venueData.postcode = postcode;
 
-      if (longitude && latitude && checkCoordinatesWithinRange(coordinates, [longitude, latitude])) {
-        venueData.geo = {
-          coordinates: [longitude, latitude],
-          type: "Point",
-        };
+      if (is_physical) {
+        if (longitude && latitude && checkCoordinatesWithinRange(coordinates, [longitude, latitude])) {
+          venueData.geo = {
+            coordinates: [longitude, latitude],
+            type: "Point",
+          };
+        } else {
+          venueData.geo = {
+            coordinates,
+            type: "Point",
+          };
+        }
       } else {
-        venueData.geo = {
-          coordinates,
-          type: "Point",
-        };
+        venueData.geo = null;
       }
     }
 

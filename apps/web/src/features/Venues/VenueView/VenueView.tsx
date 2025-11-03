@@ -130,9 +130,16 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                     text-base font-medium
                     md:text-lg
                   `}>{venue.address}</span>{" "}
-                  <Button color="primary" onClick={() => router.push(`/map/${venue.slug}`)} size="sm" variant="filled">
-                    {i18n("Map")}
-                  </Button>
+                  {venue.geo ? (
+                    <Button
+                      color="primary"
+                      onClick={() => router.push(`/map/${venue.slug}`)}
+                      size="sm"
+                      variant="filled"
+                    >
+                      {i18n("Map")}
+                    </Button>
+                  ) : null}
                 </div>
               )}
             </div>

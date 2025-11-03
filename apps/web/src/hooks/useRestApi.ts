@@ -62,7 +62,22 @@ export const useRestApi = <T = unknown>(
         const response = await fetch(url, fetchOptions);
 
         if (!response.ok) {
-          throw new Error(`API Error: ${response.status} ${response.statusText}`);
+          // Try to parse error response from API
+          try {
+            const errorData = await response.json();
+            // Check if it's a validation error with detailed message
+            if (errorData.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+              throw new Error(errorData.errors[0].message);
+            }
+            // Otherwise use generic error message
+            throw new Error(errorData.error || `API Error: ${response.status} ${response.statusText}`);
+          } catch (parseError) {
+            // If JSON parsing fails, use default error
+            if (parseError instanceof Error && parseError.message !== "Unexpected end of JSON input") {
+              throw parseError;
+            }
+            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+          }
         }
 
         const result = await response.json();

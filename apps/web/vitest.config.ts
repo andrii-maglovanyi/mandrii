@@ -12,12 +12,12 @@ export default defineConfig({
   test: {
     coverage: {
       exclude: ["**/.storybook/**", "**/*.stories.*", "**/storybook-static/**"],
-      include: ["src/components/**/*.ts?(x)", "src/hooks/**/*.ts"],
+      include: ["src/components/**/*.ts?(x)", "src/hooks/**/*.ts", "src/lib/**/*.ts"],
       provider: "v8",
     },
     environment: "jsdom",
     globals: true,
-    include: ["src/components/**/*.test.ts?(x)", "src/hooks/**/*.test.ts"],
+    include: ["src/components/**/*.test.ts?(x)", "src/hooks/**/*.test.ts", "src/lib/**/*.test.ts"],
     name: "unit",
     setupFiles: ["./vitest.setup.ts"],
   },

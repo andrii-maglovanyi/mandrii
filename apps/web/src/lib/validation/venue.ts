@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { getI18n } from "~/i18n/getI18n";
-import { isEmail, isPotentiallyValidAddress, isWebsite, validatePhoneNumber } from "~/lib/utils";
+import { isEmail, isWebsite, validatePhoneNumber } from "~/lib/utils";
 import { Venue_Category_Enum } from "~/types";
 
 const MAX_IMAGES = 6;
@@ -10,21 +10,15 @@ export const venueDescriptionMaxCharsCount = 3000;
 
 export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
   return z.object({
-    address: z
-      .string()
-      .refine(isPotentiallyValidAddress, {
-        message: i18n("The address appears to be incomplete"),
-      })
-      .optional()
-      .nullable(),
+    address: z.string().min(3, i18n("Address is required")).optional().nullable(),
     area: z.string().optional().nullable(),
     category: z.enum(Object.values(Venue_Category_Enum), {
       message: i18n("Please choose a category"),
     }),
-
     city: z.string().optional().nullable(),
 
     country: z.string().optional().nullable(),
+
     description_en: z
       .string()
       .max(venueDescriptionMaxCharsCount, i18n("Description is too long"))
@@ -77,7 +71,6 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       )
       .optional()
       .nullable(),
-
     id: z.string().optional(),
 
     images: z
@@ -115,6 +108,8 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       .nullable(),
 
     is_owner: z.coerce.boolean().optional(),
+
+    is_physical: z.coerce.boolean().optional(),
 
     latitude: z
       .union([z.string().transform((val) => Number.parseFloat(val)), z.number()])

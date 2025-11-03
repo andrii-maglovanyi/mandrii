@@ -1,15 +1,19 @@
 "use client";
 
 import clsx from "clsx";
-import { LayoutDashboard, LocateFixed, MapPinOff } from "lucide-react";
+import { LayoutDashboard, LocateFixed, LogIn, MapPinOff, Plus } from "lucide-react";
 import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
+import { SignInForm } from "~/components/layout/Auth/SignInForm";
 import { Button, EmptyState, Input, ProgressBar, RichText, Select } from "~/components/ui";
+import { useDialog } from "~/contexts/DialogContext";
 import { useTheme } from "~/contexts/ThemeContext";
 import { useListControls } from "~/hooks/useListControls";
 import { useNotifications } from "~/hooks/useNotifications";
+import { useUser } from "~/hooks/useUser";
 import { getVenuesFilter, useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -36,6 +40,11 @@ const MAX_DISTANCE = 100000;
 export const Venues = ({ slug }: VenuesProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
+  const router = useRouter();
+  const { data: session } = useUser();
+  const { openCustomDialog } = useDialog();
+
+  const isAuthenticated = !!session;
 
   const categoryOptions = useMemo(
     () => [
@@ -117,6 +126,21 @@ export const Venues = ({ slug }: VenuesProps) => {
       sessionTokenRef.current = new google.maps.places.AutocompleteSessionToken();
     }
   }, []);
+
+  const handleAddVenue = useCallback(() => {
+    sendToMixpanel("Clicked Add Venue", {
+      authenticated: isAuthenticated,
+      source: "map_page",
+    });
+
+    if (isAuthenticated) {
+      router.push("/user-directory/venues");
+    } else {
+      openCustomDialog({
+        children: <SignInForm callbackUrl="/user-directory/venues" />,
+      });
+    }
+  }, [isAuthenticated, router, openCustomDialog]);
 
   // SECURITY: Using geolocation is justified and necessary.
   // - Triggered only by explicit user action (clicking the "Find me" button).
@@ -442,7 +466,7 @@ export const Venues = ({ slug }: VenuesProps) => {
                 venues={data}
               />
 
-              <div className="absolute top-0 mt-3 ml-3">
+              <div className="absolute top-0 left-0 mt-3 ml-3">
                 <p className={`
                   rounded-md bg-on-surface/70 px-3 py-1 text-sm text-surface
                 `}>
@@ -451,6 +475,23 @@ export const Venues = ({ slug }: VenuesProps) => {
                     : i18n("Nothing found")}
                 </p>
               </div>
+
+              <div className="absolute top-0 right-0 mt-3 mr-3">
+                <Button className="gap-2" color="primary" onClick={handleAddVenue} size="sm" variant="filled">
+                  {isAuthenticated ? (
+                    <>
+                      <Plus size={16} />
+                      {i18n("Add venue")}
+                    </>
+                  ) : (
+                    <>
+                      <LogIn size={16} />
+                      {i18n("Sign in to add venue")}
+                    </>
+                  )}
+                </Button>
+              </div>
+
               {selectedCard}
             </div>
           </div>
