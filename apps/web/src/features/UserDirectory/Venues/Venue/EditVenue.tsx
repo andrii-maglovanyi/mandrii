@@ -64,7 +64,6 @@ export const EditVenue = ({ slug }: VenueProps) => {
   }
 
   async function submitVenue(body: FormData) {
-    console.log(">>>body", body);
     const res = await fetch(`/api/venue/save?locale=${locale}`, {
       body,
       method: "POST",
