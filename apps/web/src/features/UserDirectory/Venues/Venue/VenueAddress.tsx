@@ -135,7 +135,11 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
         </Alert>
       )}
 
-      {isAddressLoading && <AnimatedEllipsis centered size="lg" />}
+      {isAddressLoading && (
+        <div className="flex h-max min-h-96 flex-1 items-center justify-center">
+          <AnimatedEllipsis centered size="lg" />
+        </div>
+      )}
 
       {hasVerifiedAddress && (
         <>
