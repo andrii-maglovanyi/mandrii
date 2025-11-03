@@ -34,14 +34,12 @@ const TreeNode = ({ children, className, defaultOpen = false, icon, label, metad
         className="flex cursor-pointer items-center gap-2 rounded py-1"
         onClick={() => hasChildren && setIsOpen(!isOpen)}
       >
-        {hasChildren ? isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} /> : <span className={`
-          w-4
-        `} />}
+        {hasChildren ? isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} /> : <span className={`w-4`} />}
         <div className="group/chain flex items-center">
           <div className="shrink-0 pr-3">{icon}</div>
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             <div className="text-neutral">{label}</div>
-            {metadata && <div className="text-xs text-neutral">{metadata}</div>}
+            {metadata && <div className="text-neutral text-xs">{metadata}</div>}
           </div>
         </div>
       </div>
@@ -53,7 +51,7 @@ const TreeNode = ({ children, className, defaultOpen = false, icon, label, metad
 export const ChainMetadata = ({ venue }: ChainMetadataProps) => {
   const i18n = useI18n();
 
-  if (!("chain" in venue) || !venue.chain) {
+  if (!venue.chain) {
     return null;
   }
 
@@ -91,10 +89,7 @@ export const ChainMetadata = ({ venue }: ChainMetadataProps) => {
                       <CountryFlag
                         className={clsx(
                           "h-4 w-5 rounded-sm",
-                          id !== chain.id && `
-                            opacity-60
-                            group-hover/chain:opacity-100
-                          `,
+                          id !== chain.id && `opacity-60 group-hover/chain:opacity-100`,
                         )}
                       />
                     ) : (
@@ -112,10 +107,7 @@ export const ChainMetadata = ({ venue }: ChainMetadataProps) => {
                         icon={
                           <MapPin
                             className={clsx(
-                              v.id === venue.id ? "text-on-surface" : `
-                                text-neutral/60
-                                group-hover/chain:text-neutral
-                              `,
+                              v.id === venue.id ? "text-on-surface" : `text-neutral/60 group-hover/chain:text-neutral`,
                             )}
                             size={18}
                           />
@@ -150,10 +142,7 @@ export const ChainMetadata = ({ venue }: ChainMetadataProps) => {
                   icon={
                     <MapPin
                       className={clsx(
-                        id === venue.id ? "text-on-surface" : `
-                          text-neutral/50
-                          group-hover/chain:text-neutral
-                        `,
+                        id === venue.id ? "text-on-surface" : `text-neutral/50 group-hover/chain:text-neutral`,
                       )}
                       size={18}
                     />
