@@ -1,4 +1,20 @@
--- Create event_type table
+-- Create event_type enum
+CREATE TYPE public.event_type_enum AS ENUM (
+  'GATHERING',
+  'CELEBRATION',
+  'CONCERT',
+  'WORKSHOP',
+  'EXHIBITION',
+  'FESTIVAL',
+  'CONFERENCE',
+  'THEATER',
+  'SCREENING',
+  'SPORTS',
+  'CHARITY',
+  'OTHER'
+);
+
+-- Create event_type table for descriptions (optional, for UI)
 CREATE TABLE public.event_type (
   value TEXT PRIMARY KEY,
   description TEXT

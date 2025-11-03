@@ -12,8 +12,8 @@ CREATE TABLE public.events (
   start_date TIMESTAMPTZ NOT NULL,
   end_date TIMESTAMPTZ,
   
-  -- Event Type (foreign key to event_type table)
-  event_type TEXT NOT NULL REFERENCES public.event_type(value),
+  -- Event Type (using enum)
+  event_type public.event_type_enum NOT NULL,
   
   -- Location (flexible - one of three options)
   venue_id UUID REFERENCES public.venues(id),
@@ -32,8 +32,8 @@ CREATE TABLE public.events (
   organizer_name TEXT NOT NULL,
   organizer_contact TEXT,
   
-  -- Pricing (foreign key to price_type table)
-  price_type TEXT NOT NULL REFERENCES public.price_type(value),
+  -- Pricing (using enum)
+  price_type public.price_type_enum NOT NULL,
   price_amount NUMERIC(10,2),
   price_currency TEXT DEFAULT 'EUR',
   
@@ -53,8 +53,8 @@ CREATE TABLE public.events (
   is_recurring BOOLEAN DEFAULT false,
   recurrence_rule TEXT,
   
-  -- Admin (foreign key to event_status table)
-  status TEXT NOT NULL DEFAULT 'PENDING' REFERENCES public.event_status(value),
+  -- Admin (using enum for status)
+  status public.event_status_enum NOT NULL DEFAULT 'PENDING',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   user_id UUID REFERENCES public.users(id) NOT NULL,

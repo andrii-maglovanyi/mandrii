@@ -1,4 +1,12 @@
--- Create price_type table
+-- Create price_type enum
+CREATE TYPE public.price_type_enum AS ENUM (
+  'FREE',
+  'PAID',
+  'DONATION',
+  'SUGGESTED_DONATION'
+);
+
+-- Create price_type table for descriptions (optional, for UI)
 CREATE TABLE public.price_type (
   value TEXT PRIMARY KEY,
   description TEXT

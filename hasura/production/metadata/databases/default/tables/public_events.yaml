@@ -2,12 +2,6 @@ table:
   name: events
   schema: public
 object_relationships:
-  - name: event_status
-    using:
-      foreign_key_constraint_on: status
-  - name: event_type
-    using:
-      foreign_key_constraint_on: event_type
   - name: owner
     using:
       manual_configuration:
@@ -17,9 +11,6 @@ object_relationships:
         remote_table:
           name: users
           schema: public
-  - name: price_type
-    using:
-      foreign_key_constraint_on: price_type
   - name: user
     using:
       foreign_key_constraint_on: user_id

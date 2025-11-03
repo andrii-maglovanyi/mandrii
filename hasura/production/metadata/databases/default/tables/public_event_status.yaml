@@ -1,14 +1,6 @@
 table:
   name: event_status
   schema: public
-array_relationships:
-  - name: events
-    using:
-      foreign_key_constraint_on:
-        column: status
-        table:
-          name: events
-          schema: public
 select_permissions:
   - role: public
     permission:

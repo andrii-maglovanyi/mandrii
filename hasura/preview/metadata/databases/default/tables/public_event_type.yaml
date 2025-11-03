@@ -1,14 +1,6 @@
 table:
   name: event_type
   schema: public
-array_relationships:
-  - name: events
-    using:
-      foreign_key_constraint_on:
-        column: event_type
-        table:
-          name: events
-          schema: public
 select_permissions:
   - role: public
     permission:

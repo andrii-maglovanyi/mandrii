@@ -1,14 +1,6 @@
 table:
   name: price_type
   schema: public
-array_relationships:
-  - name: events
-    using:
-      foreign_key_constraint_on:
-        column: price_type
-        table:
-          name: events
-          schema: public
 select_permissions:
   - role: public
     permission:
