@@ -27,7 +27,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
   const { useGetVenue } = useVenues();
   const router = useRouter();
 
-  const { data: venue, loading } = useGetVenue(slug, { includeChainData: true });
+  const { data: venue, loading } = useGetVenue(slug);
 
   if (loading) {
     return (
