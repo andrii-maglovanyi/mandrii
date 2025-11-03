@@ -296,6 +296,14 @@
 
 ### Linear Tickets
 
+- [ ] **MNDR-8: Add Events Database Schema & Hasura Setup**
+  - **Status**: 🟡 In Progress - Started November 3, 2025
+  - **Branch**: `MNDR-008_add-events-database-schema`
+  - **Ticket Folder**: `tickets/MNDR-008/`
+  - **Summary**: Implement complete database schema for Events feature including enum tables, main events table, tags, relationships, and permissions. Foundation for event management on mandrii.com.
+  - **Current Phase**: Database schema creation
+  - **See**: `tickets/MNDR-008/task.md` for detailed implementation plan
+
 - [x] **MNDR-7: Add generic README description based on website functionality**
   - **Status**: ✅ Completed - January 18, 2025
   - **Branch**: `MNDR-007_add-readme-description`
