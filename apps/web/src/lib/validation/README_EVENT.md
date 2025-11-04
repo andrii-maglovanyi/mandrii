@@ -20,6 +20,7 @@ Events on mandrii.com support flexible location handling:
 ## Event Enums
 
 ### Event Types (`Event_Type_Enum`)
+
 - `GATHERING` - Informal gathering or meetup
 - `CELEBRATION` - Celebration or party
 - `CONCERT` - Music concert or performance
@@ -34,12 +35,14 @@ Events on mandrii.com support flexible location handling:
 - `OTHER` - Other type of event
 
 ### Price Types (`Price_Type_Enum`)
+
 - `FREE` - Free event with no cost
 - `PAID` - Paid event with fixed ticket price (requires `price_amount`)
 - `DONATION` - Donation-based event
 - `SUGGESTED_DONATION` - Event with suggested donation amount (requires `price_amount`)
 
 ### Event Status (`Event_Status_Enum`)
+
 - `DRAFT` - Draft event not yet submitted
 - `PENDING` - Awaiting moderation approval
 - `ACTIVE` - Published and visible to public
@@ -53,6 +56,7 @@ Events on mandrii.com support flexible location handling:
 The `getEventSchema` function returns a Zod schema with the following validations:
 
 ### Required Fields
+
 - `title` - Event name (1-200 characters)
 - `slug` - URL-friendly identifier (10-150 characters, lowercase with hyphens)
 - `start_date` - Event start date/time
@@ -61,11 +65,13 @@ The `getEventSchema` function returns a Zod schema with the following validation
 - `price_type` - Pricing type from enum
 
 ### Location (at least one required)
+
 - `venue_id` - UUID of existing venue, OR
 - `custom_location_name` - Custom location name, OR
 - `is_online` - Set to true for online events
 
 ### Optional Fields
+
 - `description_en` - English description (max 3000 characters)
 - `description_uk` - Ukrainian description (max 3000 characters)
 - `end_date` - Event end date/time (must be after start_date)
@@ -90,6 +96,7 @@ The `getEventSchema` function returns a Zod schema with the following validation
 - `event_tags` - Array of event tag UUIDs
 
 ### Cross-field Validations
+
 1. End date must be after start date
 2. At least one location type must be specified
 3. Price amount is required for PAID and SUGGESTED_DONATION price types
@@ -99,8 +106,8 @@ The `getEventSchema` function returns a Zod schema with the following validation
 ### Basic Event with Venue
 
 ```typescript
-import { getEventSchema, Event_Type_Enum, Price_Type_Enum } from '~/lib/validation/event';
-import { getI18n } from '~/i18n/getI18n';
+import { getEventSchema, Event_Type_Enum, Price_Type_Enum } from "~/lib/validation/event";
+import { getI18n } from "~/i18n/getI18n";
 
 const i18n = await getI18n();
 const schema = getEventSchema(i18n);
@@ -153,7 +160,7 @@ const eventData = {
   is_online: true,
   organizer_name: "Language Academy",
   price_type: Price_Type_Enum.PAID,
-  price_amount: 25.00,
+  price_amount: 25.0,
   price_currency: "EUR",
   registration_url: "https://academy.example.com/register",
   registration_required: true,
@@ -165,6 +172,7 @@ const eventData = {
 The `~/types/event.ts` file provides:
 
 ### Core Types
+
 - `Event` - Main event interface matching database schema
 - `EventWithVenue` - Event with venue relationship
 - `EventWithTags` - Event with tags relationship
@@ -174,11 +182,13 @@ The `~/types/event.ts` file provides:
 - `EventFormData` - Inferred type from validation schema
 
 ### Helper Types
+
 - `EventFilters` - Filter options for event queries
 - `EventSortBy`, `EventSortOrder` - Sorting options
 - `EventLocationType` - Location type classification
 
 ### Helper Functions
+
 - `getEventLocationType(event)` - Determine event's location type
 - `isEventUpcoming(event)` - Check if event is in the future
 - `isEventOngoing(event)` - Check if event is currently happening
@@ -186,6 +196,7 @@ The `~/types/event.ts` file provides:
 - `formatEventPrice(event)` - Format event price for display
 
 ### UI Labels
+
 - `eventStatusLabels` - Human-readable status labels
 - `eventTypeLabels` - Human-readable event type labels
 - `priceTypeLabels` - Human-readable price type labels
@@ -199,6 +210,7 @@ pnpm --filter web test event.test.ts
 ```
 
 Tests cover:
+
 - Valid event data scenarios (venue, custom, online, hybrid)
 - All required field validations
 - Cross-field validations (end date > start date, location required, price amount for paid events)
