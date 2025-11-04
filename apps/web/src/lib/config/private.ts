@@ -21,6 +21,7 @@ interface PrivateConfig {
   };
   rewards: {
     pointsPerVenueCreation: number;
+    pointsPerEventCreation: number;
   };
   slack: {
     botToken: string;
@@ -61,6 +62,7 @@ export const privateConfig: PrivateConfig = {
   },
   rewards: {
     pointsPerVenueCreation: 20,
+    pointsPerEventCreation: 15,
   },
   slack: {
     botToken: getEnvVar("NEXT_PRIVATE_SLACK_BOT_TOKEN"),

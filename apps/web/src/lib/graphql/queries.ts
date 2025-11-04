@@ -68,3 +68,52 @@ export async function fetchVenueBySlug(slug: string, adminSecret?: string): Prom
     return null;
   }
 }
+
+const GET_EVENT_BY_SLUG = `
+  query GetEventBySlug($slug: String!) {
+    events(where: { slug: { _eq: $slug } }, limit: 1) {
+      id
+      slug
+    }
+  }
+`;
+
+/**
+ * Fetch an event by its slug from Hasura GraphQL API.
+ *
+ * @param slug - The event slug to search for.
+ * @param adminSecret - Optional admin secret for admin access.
+ * @returns The event data or null if not found.
+ */
+export async function fetchEventBySlug(
+  slug: string,
+  adminSecret?: string,
+): Promise<null | { id: string; slug: string }> {
+  try {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (adminSecret) {
+      headers["x-hasura-admin-secret"] = adminSecret;
+    }
+
+    const response = await fetch(publicConfig.hasura.endpoint, {
+      body: JSON.stringify({ query: GET_EVENT_BY_SLUG, variables: { slug } }),
+      headers,
+      method: "POST",
+    });
+
+    const result: GraphQLResponse<{ events: Array<{ id: string; slug: string }> }> = await response.json();
+
+    if (result.errors) {
+      console.error("GraphQL errors:", result.errors);
+      return null;
+    }
+
+    return result.data?.events?.[0] || null;
+  } catch (error) {
+    console.error("Failed to fetch event:", error);
+    return null;
+  }
+}
