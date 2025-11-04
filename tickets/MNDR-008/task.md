@@ -1,12 +1,10 @@
 # MNDR-008: Add Events Database Schema & Hasura Setup# [TICKET-ID]: [Ticket Title]
 
+**Status**: 🟡 In Progress **Linear Ticket**: [Link to Linear ticket]
 
+**Created**: November 3, 2025 **Branch**: `[TICKET-ID]_description`
 
-**Status**: 🟡 In Progress  **Linear Ticket**: [Link to Linear ticket]  
-
-**Created**: November 3, 2025  **Branch**: `[TICKET-ID]_description`  
-
-**Branch**: `MNDR-008_add-events-database-schema`**Started**: [Date]  
+**Branch**: `MNDR-008_add-events-database-schema`**Started**: [Date]
 
 **Status**: In Progress
 
@@ -34,8 +32,6 @@ The Events feature will allow users to create and discover Ukrainian community e
 
 - **Online**: Virtual events with no physical location- [ ] [Criterion 3]
 
-
-
 Events will support:---
 
 - Multilingual content (English/Ukrainian)
@@ -56,11 +52,7 @@ Events will support:---
 
 ## Implementation Tasks- [ ] Review related documentation
 
-
-
 ### Phase 1: Database Schema Creation### 2. Implementation Tasks
-
-
 
 - [ ] **Create `event_type` enum table**- [ ] [Specific task 1]
 
@@ -173,10 +165,12 @@ Events will support:---
 - [ ] Ready to create pull request
 
 - [ ] **Configure `users` table relationships**
+
   - [ ] Array relationship: `events` (users → events via user_id)
   - [ ] Array relationship: `owned_events` (users → events via owner_id)
 
 - [ ] **Configure `venues` table relationships**
+
   - [ ] Array relationship: `events` (venues → events via venue_id)
 
 - [ ] **Configure `event_tags` table relationships**
@@ -185,6 +179,7 @@ Events will support:---
 ### Phase 3: Hasura Permissions
 
 - [ ] **Configure `events` table permissions**
+
   - [ ] **Public role (SELECT)**:
     - Filter: `status: { _eq: ACTIVE }`
     - Columns: All except user_id, owner_id
@@ -202,10 +197,12 @@ Events will support:---
     - Columns: All except id, created_at, updated_at, status, user_id
 
 - [ ] **Configure enum tables permissions**
+
   - [ ] Public role: SELECT all rows, all columns
   - [ ] User role: SELECT all rows, all columns
 
 - [ ] **Configure `event_tags` permissions**
+
   - [ ] Public role: SELECT all rows, all columns
   - [ ] User role: SELECT all rows, all columns
 
@@ -216,6 +213,7 @@ Events will support:---
 ### Phase 4: Metadata Configuration
 
 - [ ] **Update Hasura metadata files**
+
   - [ ] Add all tables to `tables.yaml`
   - [ ] Create individual table YAML files for each new table
   - [ ] Configure computed fields (if needed)
@@ -228,11 +226,13 @@ Events will support:---
 ### Phase 5: Testing & Validation
 
 - [ ] **Test enum tables**
+
   - [ ] Verify all enum values are inserted
   - [ ] Test public access to enum tables
   - [ ] Verify descriptions are present
 
 - [ ] **Test events table**
+
   - [ ] Test INSERT as authenticated user
   - [ ] Verify status defaults to PENDING
   - [ ] Verify user_id is auto-set
@@ -240,6 +240,7 @@ Events will support:---
   - [ ] Test foreign key constraints
 
 - [ ] **Test relationships**
+
   - [ ] Query event with venue details
   - [ ] Query event with creator details
   - [ ] Query event with tags
@@ -247,6 +248,7 @@ Events will support:---
   - [ ] Query venue's events
 
 - [ ] **Test permissions**
+
   - [ ] Verify public can only see ACTIVE events
   - [ ] Verify users can see their own DRAFT/PENDING events
   - [ ] Verify users can insert events
@@ -271,20 +273,20 @@ Events will support:---
 ```sql
 CREATE TABLE events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Core Info
   title TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
   description_en TEXT,
   description_uk TEXT,
-  
+
   -- Date/Time
   start_date TIMESTAMPTZ NOT NULL,
   end_date TIMESTAMPTZ,
-  
+
   -- Event Type
   event_type event_type_enum NOT NULL,
-  
+
   -- Location (flexible - one of three options)
   venue_id UUID REFERENCES venues(id),
   custom_location_name TEXT,
@@ -293,36 +295,36 @@ CREATE TABLE events (
   city TEXT,
   country TEXT,
   is_online BOOLEAN DEFAULT false,
-  
+
   -- Media
   image TEXT,
   images TEXT[],
-  
+
   -- Organizer
   organizer_name TEXT NOT NULL,
   organizer_contact TEXT,
-  
+
   -- Pricing
   price_type price_type_enum NOT NULL,
   price_amount NUMERIC(10,2),
   price_currency TEXT DEFAULT 'EUR',
-  
+
   -- Registration
   registration_url TEXT,
   registration_required BOOLEAN DEFAULT false,
   external_url TEXT,
-  
+
   -- Social & Metadata
   social_links JSONB DEFAULT '{}',
   language TEXT[],
   capacity INTEGER,
   age_restriction TEXT,
   accessibility_info TEXT,
-  
+
   -- Recurring
   is_recurring BOOLEAN DEFAULT false,
   recurrence_rule TEXT,
-  
+
   -- Admin
   status event_status_enum NOT NULL DEFAULT 'PENDING',
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -352,6 +354,7 @@ CREATE INDEX idx_events_geo ON events USING GIST(geo);
 ## Files Modified/Created
 
 ### Hasura Migration Files (Preview)
+
 - `hasura/preview/migrations/default/[timestamp]_create_event_type_enum/up.sql`
 - `hasura/preview/migrations/default/[timestamp]_create_event_type_enum/down.sql`
 - `hasura/preview/migrations/default/[timestamp]_create_event_status_enum/up.sql`
@@ -368,9 +371,11 @@ CREATE INDEX idx_events_geo ON events USING GIST(geo);
 - `hasura/preview/migrations/default/[timestamp]_alter_users_add_events_created/down.sql`
 
 ### Hasura Migration Files (Production)
+
 - Mirror all preview migrations in `hasura/production/migrations/default/`
 
 ### Hasura Metadata Files (Preview)
+
 - `hasura/preview/metadata/databases/default/tables/public_events.yaml`
 - `hasura/preview/metadata/databases/default/tables/public_event_type.yaml`
 - `hasura/preview/metadata/databases/default/tables/public_event_status.yaml`
@@ -382,6 +387,7 @@ CREATE INDEX idx_events_geo ON events USING GIST(geo);
 - `hasura/preview/metadata/databases/default/tables/public_venues.yaml` (updated)
 
 ### Hasura Metadata Files (Production)
+
 - Mirror all preview metadata in `hasura/production/metadata/`
 
 ---
@@ -417,6 +423,7 @@ CREATE INDEX idx_events_geo ON events USING GIST(geo);
 ## Next Tickets
 
 After completing this ticket:
+
 - **MNDR-009**: Event validation schemas & TypeScript types
 - **MNDR-010**: Event creation form & API routes
 - **MNDR-011**: Public events listing & filtering

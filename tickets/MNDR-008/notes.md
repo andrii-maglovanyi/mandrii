@@ -1,70 +1,124 @@
-# [TICKET-ID] - Development Notes
+# MNDR-008 Implementation Notes# [TICKET-ID] - Development Notes
 
-**Ticket**: [Ticket Title]  
+## Progress Summary**Ticket**: [Ticket Title]
+
 **Date Started**: [Date]
 
+**Last Updated**: November 3, 2025
+
 ---
+
+### Completed Phases
 
 ## Initial Exploration
 
+#### ✅ Phase 1: Database Schema Creation (100%)
+
 [Document your initial code exploration and understanding]
 
+All migration files created successfully - ready to apply to Hasura!
+
 ---
+
+**Migrations created:**
 
 ## Problem-Solving Journal
 
-### [Date] - [Topic]
+1. ✅ **Event Type Enum** - 12 event types
 
-**Problem**: [Describe the problem you encountered]
+2. ✅ **Event Status Enum** - 7 statuses### [Date] - [Topic]
 
-**Approaches Tried**:
+3. ✅ **Price Type Enum** - 4 pricing options
 
-1. [Approach 1] - [Result]
-2. [Approach 2] - [Result]
+4. ✅ **Events Main Table** - Complete with all fields, 8 indexes, foreign keys**Problem**: [Describe the problem you encountered]
 
-**Solution**: [What ultimately worked]
+5. ✅ **Event Tags Table** - With 12 initial tags
 
-**Learning**: [What you learned from this]
+6. ✅ **Events-Tags Junction** - Many-to-many with CASCADE deletes**Approaches Tried**:
 
----
+7. ✅ **Migrations mirrored** to both preview and production environments
 
-## Code Discoveries
+8. [Approach 1] - [Result]
 
-- **File**: `path/to/file.ts`
-  - [Interesting finding or pattern]
-- **Pattern**: [Pattern name]
+### Next Steps2. [Approach 2] - [Result]
+
+**Phase 2**: Create Hasura metadata YAML files for relationships and permissions.**Solution**: [What ultimately worked]
+
+---**Learning**: [What you learned from this]
+
+## Key Decisions---
+
+### 1. Flexible Location Model## Code Discoveries
+
+Three location types in one table:
+
+- `venue_id` - Events at existing venues- **File**: `path/to/file.ts`
+
+- `custom_location_name/address` - One-off locations - [Interesting finding or pattern]
+
+- `is_online` - Virtual events- **Pattern**: [Pattern name]
+
   - [How it's used in the codebase]
 
+**Why**: Simplifies queries, allows type transitions
+
 ---
 
-## Useful Resources
+### 2. Default Status = PENDING
 
-- [Link to documentation]
+All events require moderation approval.## Useful Resources
+
+**Why**: Maintains quality, prevents spam, matches venue workflow- [Link to documentation]
+
 - [Stack Overflow answer that helped]
-- [GitHub issue or PR reference]
+
+### 3. Separate Tags Table- [GitHub issue or PR reference]
+
+Junction table pattern for event tags.
 
 ---
+
+**Why**: Better management, analytics, performance
 
 ## Questions & Answers
 
-**Q**: [Question you had]  
-**A**: [Answer you found]
-
 ---
 
-## Performance Considerations
+**Q**: [Question you had]
 
-[Any performance-related observations]
+## Database Highlights**A**: [Answer you found]
+
+- **PostGIS Geography** for spatial queries---
+
+- **8 strategic indexes** for performance
+
+- **Auto-update trigger** for `updated_at`## Performance Considerations
+
+- **CASCADE deletes** maintain integrity
+
+- **JSONB social_links** for flexibility[Any performance-related observations]
+
+- **TEXT[] languages** supports multilingual events
+
+---
 
 ---
 
 ## Security Considerations
 
+## Next Session TODO
+
 [Any security-related observations]
 
----
+1. Apply migrations to Hasura via Console
 
-## Future Improvements
+2. Create metadata YAML files---
+
+3. Configure relationships
+
+4. Set up permissions## Future Improvements
+
+5. Test with GraphQL queries
 
 [Ideas for future improvements related to this work]
 
