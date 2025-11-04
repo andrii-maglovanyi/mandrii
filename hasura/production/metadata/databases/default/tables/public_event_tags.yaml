@@ -16,8 +16,10 @@ select_permissions:
         - category
         - created_at
         - id
-        - name
+        - name_en
+        - name_uk
         - slug
+        - updated_at
       filter: {}
     comment: ""
   - role: user
@@ -26,7 +28,9 @@ select_permissions:
         - category
         - created_at
         - id
-        - name
+        - name_en
+        - name_uk
         - slug
+        - updated_at
       filter: {}
     comment: ""

@@ -1,6 +1,7 @@
 table:
   name: event_status
   schema: public
+is_enum: true
 select_permissions:
   - role: public
     permission:

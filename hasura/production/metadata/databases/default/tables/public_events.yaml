@@ -30,8 +30,8 @@ insert_permissions:
     permission:
       check: {}
       set:
-        user_id: x-hasura-User-Id
         status: PENDING
+        user_id: x-hasura-User-Id
       columns:
         - accessibility_info
         - age_restriction
