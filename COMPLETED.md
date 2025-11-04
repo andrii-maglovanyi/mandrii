@@ -1,8 +1,126 @@
 # Mandrii - Completed Tasks
 
-**Last Updated**: January 18, 2025
+**Last Updated**: November 4, 2025
 
 > This file tracks historical record of completed tasks, improvements, and fixes for the Mandrii project. For active tasks, see `TASK.md`. For architectural decisions, see `DECISIONS.md`.
+
+---
+
+## November 2025
+
+### MNDR-008: Add Events Database Schema & Hasura Setup
+
+**Completed**: November 4, 2025  
+**Linear Ticket**: MNDR-8  
+**Branch**: `MNDR-008_add-events-database-schema`  
+**Ticket Folder**: `tickets/archived/MNDR-008/`
+
+**Summary**:
+Implemented complete database schema and Hasura GraphQL configuration for the Events feature, enabling users to create and discover Ukrainian community events. The schema supports venue-based events, custom locations, and online events with multilingual content, flexible tagging, and a moderation workflow.
+
+**Key Deliverables**:
+
+- ✅ 6 new PostgreSQL tables (events, event_tags, events_event_tags, 3 enum lookup tables)
+- ✅ 8 database migrations with full rollback support
+- ✅ PostgreSQL native ENUMs for type safety (event_type, event_status, price_type)
+- ✅ Multilingual event tags with English and Ukrainian names
+- ✅ Complete Hasura metadata with relationships and permissions
+- ✅ Deployed to both preview and production environments
+
+**Technical Impact**:
+
+**Database Architecture**:
+
+- **67 fields** in events table covering all event requirements
+- **8 strategic indexes** for performance optimization
+- **PostGIS Geography** type for spatial event queries
+- **TIMESTAMPTZ** fields for timezone-aware date handling
+- **JSONB** for flexible social links storage
+- **TEXT[] arrays** for multilingual language support
+
+**Type Safety Improvements**:
+
+- Native PostgreSQL ENUMs provide database-level validation
+- Hybrid approach: ENUM types + lookup tables for UI descriptions
+- Matches existing venue_status_enum and venue_category_enum patterns
+- Better performance (ENUMs stored as integers internally)
+
+**Flexible Location Model**:
+
+- Venue-based events (linked to existing venues)
+- Custom location events (one-off addresses with geo coordinates)
+- Online events (virtual with no physical location)
+- All three types supported in single table for query simplicity
+
+**Permission Model**:
+
+- Public users: View ACTIVE events only
+- Authenticated users: View own events (any status) + all ACTIVE events
+- Auto-set user_id on INSERT, default status to PENDING
+- Users can only UPDATE their own events
+- Moderation workflow matches existing venue approval process
+
+**Files Modified**:
+
+**Migrations** (16 files: 8 up.sql + 8 down.sql):
+
+- `1762209599000_create_update_timestamp_function/`
+- `1762209600000_create_event_type_enum/`
+- `1762209601000_create_event_status_enum/`
+- `1762209602000_create_price_type_enum/`
+- `1762209603000_create_events_table/`
+- `1762209604000_create_event_tags_table/`
+- `1762209605000_create_events_event_tags_junction/`
+- `1762238028909_alter_event_tags_add_multilingual_and_timestamps/`
+
+**Metadata** (9 files):
+
+- `public_events.yaml` (new)
+- `public_event_tags.yaml` (new)
+- `public_events_event_tags.yaml` (new)
+- `public_event_type.yaml` (new)
+- `public_event_status.yaml` (new)
+- `public_price_type.yaml` (new)
+- `tables.yaml` (updated)
+- `public_users.yaml` (updated - added events relationships)
+- `public_venues.yaml` (updated - added events relationship)
+
+**Documentation**:
+
+- `tickets/MNDR-008/task.md` - Complete implementation plan
+- `tickets/MNDR-008/notes.md` - Development notes and learnings
+- `tickets/MNDR-008/files/test-queries.md` - GraphQL test queries
+
+**Challenges Overcome**:
+
+1. **Missing Timestamp Function**: Created helper function migration before tables that depend on it
+2. **Metadata Naming Conflicts**: Resolved column/relationship name conflicts by using camelCase for relationships
+3. **ENUM Foreign Keys**: Removed invalid FK relationships from metadata after converting to native ENUMs
+4. **Multilingual Requirements**: Enhanced event_tags table with name_en/name_uk after initial implementation
+
+**Key Learnings**:
+
+1. PostgreSQL native ENUMs provide better type safety than TEXT columns with foreign keys
+2. Migration order matters - helper functions must exist before tables use them
+3. Hasura relationship names cannot conflict with column names
+4. Hybrid ENUM approach (type + lookup table) gives both safety and UI flexibility
+5. Plan for multilingual support from the start to avoid schema changes
+6. Always use TIMESTAMPTZ for date/time fields to prevent timezone bugs
+
+**Statistics**:
+
+- **Database Tables**: 6 new
+- **Migration Files**: 16 total (up + down)
+- **Metadata Files**: 6 new + 3 updated
+- **Total Fields**: 67 in events table
+- **Indexes**: 8 for performance
+- **Relationships**: 9 configured
+- **Permission Rules**: 8 across 2 roles
+- **Commits**: 3
+- **Time**: 2 days
+- **Production Ready**: ✅ Yes
+
+**Next Steps**: MNDR-009 will add Zod validation schemas, TypeScript types, and form validation utilities to support event creation in the frontend.
 
 ---
 
@@ -36,6 +154,7 @@ Added comprehensive README.md documentation describing the Mandrii website's dua
 **Content Documented**:
 
 **User-Facing Features**:
+
 - Interactive map with Google Maps integration
 - Venue search and filtering capabilities
 - Community reviews and ratings system
@@ -48,6 +167,7 @@ Added comprehensive README.md documentation describing the Mandrii website's dua
 - Contact form
 
 **Technology Stack**:
+
 - Frontend: Next.js 15, React 19, Tailwind CSS v4, Apollo Client
 - Backend: Hasura GraphQL, PostgreSQL (Neon), FastAPI
 - Development: TypeScript, Vitest, Playwright, ESLint, Sentry

@@ -35,6 +35,14 @@ object_relationships:
   - name: venue_status
     using:
       foreign_key_constraint_on: status
+array_relationships:
+  - name: events
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: events
+          schema: public
 insert_permissions:
   - role: user
     permission:

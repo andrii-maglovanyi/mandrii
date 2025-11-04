@@ -1,0 +1,19 @@
+table:
+  name: event_status
+  schema: public
+is_enum: true
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - description
+        - value
+      filter: {}
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - description
+        - value
+      filter: {}
+    comment: ""

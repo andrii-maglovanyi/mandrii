@@ -1,7 +1,7 @@
 # Mandrii - Active Tasks
 
-**Last Updated**: January 16, 2025  
-**Current Branch**: preview
+**Last Updated**: November 4, 2025  
+**Current Branch**: MNDR-008_add-events-database-schema
 
 > This file tracks active tasks, improvements, and fixes for the Mandrii project. Tasks are organized by priority and category. For completed tasks, see `COMPLETED.md`. For architectural decisions, see `DECISIONS.md`.
 
@@ -296,7 +296,17 @@
 
 ### Linear Tickets
 
+- [x] **MNDR-8: Add Events Database Schema & Hasura Setup**
+
+  - **Status**: ✅ Completed - November 4, 2025
+  - **Branch**: `MNDR-008_add-events-database-schema`
+  - **Ticket Folder**: `tickets/archived/MNDR-008/`
+  - **PR**: Ready to create
+  - **Summary**: Implemented complete database schema with 6 tables, PostgreSQL ENUMs, multilingual tags, and Hasura configuration. Deployed to preview and production.
+  - **See**: `COMPLETED.md` for full details
+
 - [x] **MNDR-7: Add generic README description based on website functionality**
+
   - **Status**: ✅ Completed - January 18, 2025
   - **Branch**: `MNDR-007_add-readme-description`
   - **Commit**: `5574566`

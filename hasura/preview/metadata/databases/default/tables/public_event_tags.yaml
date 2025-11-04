@@ -1,0 +1,36 @@
+table:
+  name: event_tags
+  schema: public
+array_relationships:
+  - name: events_event_tags
+    using:
+      foreign_key_constraint_on:
+        column: tag_id
+        table:
+          name: events_event_tags
+          schema: public
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - category
+        - created_at
+        - id
+        - name_en
+        - name_uk
+        - slug
+        - updated_at
+      filter: {}
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - category
+        - created_at
+        - id
+        - name_en
+        - name_uk
+        - slug
+        - updated_at
+      filter: {}
+    comment: ""
