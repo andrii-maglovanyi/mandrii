@@ -12,7 +12,7 @@ export const Container = ({ children }: ContainerProps) => {
   const pathname = usePathname();
 
   // Match full-width pages with locale prefix (en or uk)
-  const fullWidthPattern = /^\/(en|uk)\/(map(\/[^/]+)?|venues\/[^/]+)$/;
+  const fullWidthPattern = /^\/(en|uk)\/(map(\/[^/]+)?|venues\/[^/]+|events\/[^/]+)$/;
 
   return <main className={clsx(COMMON_CLASS, !fullWidthPattern.test(pathname) && DEFAULT_CLASS)}>{children}</main>;
 };

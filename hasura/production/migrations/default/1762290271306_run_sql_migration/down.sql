@@ -1,0 +1,4 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- DROP TYPE event_status_enum;
+-- DROP TYPE event_type_enum;

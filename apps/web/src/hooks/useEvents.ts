@@ -1,36 +1,45 @@
-import { gql } from "@apollo/client";
-import { useMemo } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { useSession } from "next-auth/react";
+import { useCallback, useMemo } from "react";
 
-import { APIParams, FilterParams } from "~/types";
-import { Event_Status_Enum, Event_Type_Enum, Price_Type_Enum } from "~/lib/validation/event";
+import {
+  APIParams,
+  Event_Status_Enum,
+  Event_Type_Enum,
+  FilterParams,
+  GetPublicEventsQuery,
+  GetUserEventsQuery,
+  Price_Type_Enum,
+} from "~/types";
+import { UUID } from "~/types/uuid";
 
 import { useGraphApi } from "./useGraphApi";
 
 interface EventsParams {
-  eventType?: Event_Type_Enum;
-  priceType?: Price_Type_Enum;
+  dateFrom?: string;
+  dateTo?: string;
   distance?: string;
   geo?: {
     lat: number;
     lng: number;
   };
-  name?: string;
-  slug?: string;
-  dateFrom?: string;
-  dateTo?: string;
   isOnline?: boolean;
+  name?: string;
+  priceType?: Price_Type_Enum;
+  slug?: string;
+  type?: Event_Type_Enum;
 }
 
 export const getEventsFilter = ({
-  eventType,
-  priceType,
-  distance,
-  geo,
-  name,
-  slug,
   dateFrom,
   dateTo,
+  distance,
+  geo,
   isOnline,
+  name,
+  priceType,
+  slug,
+  type,
 }: EventsParams) => {
   const where: FilterParams = {};
 
@@ -39,33 +48,14 @@ export const getEventsFilter = ({
     return { variables: { where } };
   }
 
-  // Only show active events
-  where.status = { _eq: Event_Status_Enum.ACTIVE };
-
-  // Filter by online/offline events
   if (isOnline !== undefined) {
     where.is_online = { _eq: isOnline };
   }
 
-  // Geographic filtering for in-person events
-  if (geo && !isOnline) {
-    where.geo = {
-      _st_d_within: {
-        distance,
-        from: {
-          coordinates: [geo.lng, geo.lat],
-          type: "Point",
-        },
-      },
-    };
+  if (type) {
+    where.type = { _eq: type };
   }
 
-  // Event type filter
-  if (eventType) {
-    where.event_type = { _eq: eventType };
-  }
-
-  // Price type filter
   if (priceType) {
     where.price_type = { _eq: priceType };
   }
@@ -73,27 +63,42 @@ export const getEventsFilter = ({
   // Date range filter - only show upcoming/ongoing events
   const now = new Date().toISOString();
   if (dateFrom) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (where.start_date as any) = { _gte: dateFrom };
+    where.start_date = { _gte: dateFrom };
   } else {
     // By default, only show future events
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (where.end_date as any) = { _gte: now };
+    where.end_date = { _gte: now };
   }
 
   if (dateTo) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (where.start_date as any) = { _lte: dateTo };
+    where.start_date = { ...where.start_date, _lte: dateTo };
   }
 
-  // Search by name, description, or venue
+  if (geo && isOnline !== true) {
+    const geoFilter = {
+      _st_d_within: {
+        distance: distance || "100000", // default to 100km if distance not provided
+        from: {
+          coordinates: [geo.lng, geo.lat] as [number, number],
+          type: "Point" as const,
+        },
+      },
+    };
+
+    where._and = [
+      {
+        _or: [{ geo: geoFilter }, { venue: { geo: geoFilter } }],
+      },
+    ];
+  }
+
   if (name) {
     where._or = [
       { title: { _ilike: `%${name}%` } },
       { description_en: { _ilike: `%${name}%` } },
       { description_uk: { _ilike: `%${name}%` } },
+      { area: { _ilike: `%${name}%` } },
       { city: { _ilike: `%${name}%` } },
-      { address: { _ilike: `%${name}%` } },
+      { custom_location_address: { _ilike: `%${name}%` } },
       { venue: { name: { _ilike: `%${name}%` } } },
     ];
   }
@@ -101,7 +106,6 @@ export const getEventsFilter = ({
   return { variables: { where } };
 };
 
-// Event fields fragment with venue relationship
 const EVENT_FIELDS_FRAGMENT = gql`
   fragment EventFields on events {
     id
@@ -109,35 +113,39 @@ const EVENT_FIELDS_FRAGMENT = gql`
     slug
     description_en
     description_uk
-    event_type
+    type
     price_type
     price_amount
     price_currency
     start_date
     end_date
     is_online
-    online_url
-    address
+    external_url
+    custom_location_address
+    custom_location_name
+    area
     city
     country
-    postcode
     geo
-    image
     images
     registration_url
-    registration_email
-    max_attendees
-    min_age
-    max_age
+    registration_required
+    capacity
+    age_restriction
     language
-    accessibility_notes
-    cancellation_policy
-    terms_and_conditions
+    accessibility_info
     social_links
     status
     created_at
     updated_at
+    is_recurring
+    recurrence_rule
+    organizer_name
+    organizer_phone_number
+    organizer_email
+    owner_id
     venue_id
+    user_id
     venue {
       id
       name
@@ -167,7 +175,7 @@ const GET_PUBLIC_EVENTS = gql`
         count
       }
     }
-    total: events_aggregate(where: { status: { _eq: ACTIVE } }) {
+    total: events_aggregate {
       aggregate {
         count
       }
@@ -175,7 +183,47 @@ const GET_PUBLIC_EVENTS = gql`
   }
 `;
 
+const GET_USER_EVENTS = gql`
+  ${EVENT_FIELDS_FRAGMENT}
+  query GetUserEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
+    events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+      ...EventFields
+    }
+    events_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+const UPDATE_EVENT_STATUS = gql`
+  mutation UpdateEventStatus($id: uuid!, $status: event_status_enum!) {
+    update_events_by_pk(pk_columns: { id: $id }, _set: { status: $status }) {
+      id
+      status
+      updated_at
+    }
+  }
+`;
+
 export const useEvents = () => {
+  const [updateStatus, { error, loading }] = useMutation(UPDATE_EVENT_STATUS, {
+    awaitRefetchQueries: true,
+    refetchQueries: ["GetUserEvents"],
+  });
+
+  const updateEventStatus = useCallback(
+    async (id: UUID, status: Event_Status_Enum) => {
+      const { data } = await updateStatus({
+        variables: { id, status },
+      });
+
+      return { data, error, loading };
+    },
+    [updateStatus, loading, error],
+  );
+
   const usePublicEvents = (params: APIParams) => {
     const mergedParams = useMemo(
       () => ({
@@ -185,13 +233,57 @@ export const useEvents = () => {
       [params],
     );
 
-    type EventsData = Array<Record<string, unknown>>;
-    const result = useGraphApi<EventsData>(GET_PUBLIC_EVENTS, mergedParams);
+    const result = useGraphApi<GetPublicEventsQuery["events"]>(GET_PUBLIC_EVENTS, mergedParams);
+
+    return result;
+  };
+
+  const useGetEvent = (slug?: string) => {
+    const queryParams = useMemo(
+      () => ({
+        limit: 1,
+        where: {
+          slug: { _eq: slug },
+        },
+      }),
+      [slug],
+    );
+
+    const result = useGraphApi<GetPublicEventsQuery["events"]>(GET_USER_EVENTS, queryParams, { skip: !slug });
+
+    const transformedData = useMemo(() => (result.data?.[0] ? result.data[0] : undefined), [result.data]);
+
+    return {
+      ...result,
+      data: transformedData,
+    };
+  };
+
+  const useUserEvents = (params?: APIParams) => {
+    const { data: session } = useSession();
+
+    const mergedParams = useMemo(
+      () => ({
+        ...params,
+        order_by: params?.order_by ?? [{ updated_at: "desc" }],
+        where: {
+          _and: [{ user_id: { _eq: session?.user.id } }, ...(params?.where ? [params.where] : [])],
+        },
+      }),
+      [params, session?.user.id],
+    );
+
+    const result = useGraphApi<GetUserEventsQuery["events"]>(GET_USER_EVENTS, mergedParams, {
+      pause: !session?.user.id,
+    });
 
     return result;
   };
 
   return {
+    updateEventStatus,
+    useGetEvent,
     usePublicEvents,
+    useUserEvents,
   };
 };

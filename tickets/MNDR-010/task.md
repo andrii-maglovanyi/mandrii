@@ -30,9 +30,15 @@
 
 ### 2. Implementation Tasks
 
-- [ ] [Specific task 1]
-- [ ] [Specific task 2]
-- [ ] [Specific task 3]
+- [x] Create EventForm.tsx with all event fields
+- [x] Fix GraphQL field mapping errors in useEvents.ts
+- [x] Create event model (saveEvent function)
+- [x] Add image upload functionality to EventForm
+- [x] Create enhanced EventCard component with proper UI
+- [x] Add venue selector dropdown to EventForm
+- [x] Implement search and filter functionality (text, date range, type, price, location)
+- [x] Add status change UI to EditEvent component
+- [x] Create RecurrencePicker visual component for recurring events
 
 ### 3. Testing
 
@@ -58,8 +64,15 @@
 
 ## Files to Modify
 
-- `path/to/file1.ts` - [Description of changes]
-- `path/to/file2.tsx` - [Description of changes]
+- `apps/web/src/features/Events/EventCard/CardBase.tsx` - Main event card component with layout variants
+- `apps/web/src/features/Events/EventCard/EventsListCard.tsx` - List card wrapper
+- `apps/web/src/features/Events/EventCard/Components/CardHeader.tsx` - Card header with event type and actions
+- `apps/web/src/features/Events/EventCard/Components/CardFooter.tsx` - Card footer with location and CTA
+- `apps/web/src/features/Events/EventCard/Components/CardMetadata.tsx` - Event metadata (date, time, location, price)
+- `apps/web/src/features/Events/Events.tsx` - Updated to use EventsListCard component
+- `apps/web/src/features/UserDirectory/Events/Event/EventForm.tsx` - Event creation/editing form
+- `apps/web/src/hooks/useEvents.ts` - Fixed GraphQL field mapping
+- `apps/web/src/lib/models/event.ts` - Event save function
 
 ---
 

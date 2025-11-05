@@ -38,10 +38,10 @@ export const getVenuesFilter = ({ category, country, distance, geo, name, slug }
   if (geo) {
     where.geo = {
       _st_d_within: {
-        distance,
+        distance: distance || "100000", // default to 100km if distance not provided
         from: {
-          coordinates: [geo.lng, geo.lat],
-          type: "Point",
+          coordinates: [geo.lng, geo.lat] as [number, number],
+          type: "Point" as const,
         },
       },
     };
@@ -83,7 +83,6 @@ const CHAIN_FRAGMENT = gql`
   }
 `;
 
-// Extended chain fragment with full tree structure
 const CHAIN_WITH_VENUES_FRAGMENT = gql`
   ${CHAIN_FRAGMENT}
   fragment ChainWithVenues on chains {
@@ -156,6 +155,12 @@ const VENUE_FIELDS_FRAGMENT = gql`
     slug
     status
     owner_id
+    user_id
+    events_aggregate {
+      aggregate {
+        count
+      }
+    }
     chain {
       ...ChainWithVenues
       chain {
@@ -170,7 +175,6 @@ const GET_PUBLIC_VENUES = gql`
   query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
     venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       ...VenueFields
-      user_id
     }
     venues_aggregate(where: $where) {
       aggregate {
@@ -207,7 +211,6 @@ const GET_ADMIN_VENUES = gql`
     venues(where: $where, order_by: { updated_at: desc }) {
       ...VenueFields
       created_at
-      user_id
     }
     venues_aggregate(where: $where) {
       aggregate {

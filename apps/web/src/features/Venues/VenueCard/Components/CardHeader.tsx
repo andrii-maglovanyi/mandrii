@@ -1,4 +1,4 @@
-import { BadgeCheck, Crown, PenTool, Share2 } from "lucide-react";
+import { BadgeCheck, Calendar, Crown, PenTool, Share2 } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -6,11 +6,12 @@ import { ActionButton, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
+import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
-import { copyToClipboard } from "~/lib/clipboard";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
+import { shareItem } from "~/lib/share";
 import { UrlHelper } from "~/lib/url-helper";
 import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
 
@@ -30,6 +31,8 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
   const { showSuccess } = useNotifications();
   const { iconName, label } = constants.categories[venue.category as keyof typeof constants.categories];
 
+  const hasEvents = Boolean(venue.events_aggregate?.aggregate?.count);
+
   const handleOwnerClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -41,36 +44,17 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
     });
   };
 
-  const handleShareClick = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    sendToMixpanel("Clicked Share Venue", { slug: venue.slug });
-
-    const url = window.location.href;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          text: i18n("Check out this venue on {appHost}!", { appHost: UrlHelper.getHostname() }),
-          title: venue.name,
-          url,
-        });
-        return; // Successfully shared, no need to copy
-      } catch (err) {
-        console.error("Error sharing:", err);
-        // Fall through to clipboard copy
-      }
-    }
-
-    // Fallback to clipboard copy
-    try {
-      await copyToClipboard(url);
-      showSuccess(i18n("Copied venue URL"));
-    } catch (err) {
-      console.error("Failed to copy to clipboard:", err);
-    }
-  };
+  const handleShareClick = async (e: React.MouseEvent) =>
+    shareItem(e, {
+      cb: () => {
+        showSuccess(i18n("Copied venue URL"));
+      },
+      item: {
+        text: i18n("Check out this venue on {appHost}", { appHost: UrlHelper.getHostname() }),
+        title: venue.name,
+        url: `${window.location.origin}/venues/${venue.slug}`,
+      },
+    });
 
   const handleManageClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -81,11 +65,37 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
     router.push(`/user-directory/venues/${venue.slug}`);
   };
 
-  const renderActiveVenueControls = () => {
+  const renderVenueControls = () => {
+    if (venue.status === Venue_Status_Enum.Active) {
+      return (
+        <div className="flex items-center gap-2">
+          {profileData?.role === "admin" && (
+            <ActionButton
+              aria-label={i18n("Manage venue")}
+              className="group"
+              icon={<PenTool size={18} />}
+              onClick={handleManageClick}
+              size="sm"
+              variant="ghost"
+            />
+          )}
+        </div>
+      );
+    }
+
+    // Check if user can manage this venue:
+    // 1. Admin users can manage any venue
+    // 2. Owner can manage (venue.owner_id matches user)
+    // 3. Creator can manage if no owner claimed it (venue.user_id matches user AND owner_id is null)
+    const canManage =
+      profileData &&
+      (profileData.role === "admin" ||
+        profileData.id === venue.owner_id ||
+        (profileData.id === venue.user_id && !venue.owner_id));
+
     return (
       <div className="flex items-center gap-1">
-        {profileData &&
-        (profileData.id === venue.owner_id || profileData.id === venue.user_id || profileData.role === "admin") ? (
+        {canManage ? (
           <ActionButton
             aria-label={i18n("Manage venue")}
             className="group"
@@ -132,14 +142,14 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
           size="sm"
           variant="ghost"
         />
-        {venue.owner_id ? (
-          <Tooltip label={i18n("Verified venue with owner")} position="left">
+        {Boolean(venue.owner_id) && (
+          <Tooltip label={i18n("Verified venue")} position="left">
             <BadgeCheck className={`
               stroke-green-600
               dark:stroke-green-400
             `} />
           </Tooltip>
-        ) : null}
+        )}
       </div>
     );
   };
@@ -151,24 +161,27 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
       `}>
         {getIcon(iconName, { size: 18 })}
         <span className="block min-w-0 flex-1 truncate">{label[locale]}</span>
+
+        {hasEvents && (
+          <Link
+            className={`
+              flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5
+              text-xs font-medium text-primary transition-colors
+              hover:bg-primary/20
+            `}
+            href={`/venues/${venue.slug}#Events`}
+            onClick={(e) => {
+              e.stopPropagation();
+              sendToMixpanel("Clicked Venue Events Badge", { slug: venue.slug });
+            }}
+          >
+            <Calendar size={12} />
+            <span>{i18n("Events")}</span>
+          </Link>
+        )}
       </div>
 
-      {venue.status === Venue_Status_Enum.Active ? (
-        renderActiveVenueControls()
-      ) : (
-        <div className="flex items-center gap-2">
-          {profileData?.role === "admin" && (
-            <ActionButton
-              aria-label={i18n("Manage venue")}
-              className="group"
-              icon={<PenTool size={18} />}
-              onClick={handleManageClick}
-              size="sm"
-              variant="ghost"
-            />
-          )}
-        </div>
-      )}
+      {renderVenueControls()}
     </div>
   );
 };

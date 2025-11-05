@@ -1,11 +1,7 @@
 import { CreateContactResponse, GetContactResponse, Resend } from "resend";
 
 import VerifyEmail from "~/components/email/VerifyEmail";
-import { getApiContext } from "~/lib/api/context";
-import { BadGateway } from "~/lib/api/errors";
-import { verifyCaptcha } from "~/lib/api/recaptcha";
-import { validateRequest } from "~/lib/api/validate";
-import { withErrorHandling } from "~/lib/api/withErrorHandling";
+import { BadGateway, getApiContext, validateRequest, verifyCaptcha, withErrorHandling } from "~/lib/api";
 import { privateConfig } from "~/lib/config/private";
 import { constants } from "~/lib/constants";
 import { sendNewsletterSubscriptionNotification } from "~/lib/slack/newsletter";

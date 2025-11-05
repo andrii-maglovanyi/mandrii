@@ -116,7 +116,7 @@ export function Select<K extends React.ReactNode, T>({
           ref={ref}
           type="button"
         >
-          <span className="min-w-0 flex-1 truncate">{selectedLabel}</span>
+          <span className="max-w-max min-w-full flex-1 truncate">{selectedLabel}</span>
           <ChevronDown
             aria-hidden
             className={clsx(`

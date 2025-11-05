@@ -4,6 +4,8 @@ import { getI18n } from "~/i18n/getI18n";
 import { isEmail, isWebsite, validatePhoneNumber } from "~/lib/utils";
 import { Venue_Category_Enum } from "~/types";
 
+import { FACEBOOK_HOSTS, INSTAGRAM_HOSTS, validateHost } from "./utils/social-links";
+
 const MAX_IMAGES = 6;
 
 export const venueDescriptionMaxCharsCount = 3000;
@@ -45,30 +47,12 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       .nullable(),
     facebook: z
       .string()
-      .refine(
-        (val) => {
-          if (!val) return true;
-          try {
-            const url = new URL(val);
-            const hostname = url.hostname.toLowerCase();
-            return (
-              hostname === "facebook.com" ||
-              hostname === "www.facebook.com" ||
-              hostname === "fb.com" ||
-              hostname === "www.fb.com" ||
-              hostname === "m.facebook.com"
-            );
-          } catch {
-            return false;
-          }
-        },
-        {
-          message: i18n("Please enter a valid {name} URL (e.g., {example})", {
-            example: "facebook.com/your-page",
-            name: "Facebook",
-          }),
-        },
-      )
+      .refine((val) => validateHost(val, FACEBOOK_HOSTS), {
+        message: i18n("Please enter a valid {name} URL (e.g., {example})", {
+          example: "facebook.com/your-page",
+          name: "Facebook",
+        }),
+      })
       .optional()
       .nullable(),
     id: z.string().optional(),
@@ -81,29 +65,12 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
 
     instagram: z
       .string()
-      .refine(
-        (val) => {
-          if (!val) return true;
-          try {
-            const url = new URL(val);
-            const hostname = url.hostname.toLowerCase();
-            return (
-              hostname === "instagram.com" ||
-              hostname === "www.instagram.com" ||
-              hostname === "instagr.am" ||
-              hostname === "www.instagr.am"
-            );
-          } catch {
-            return false;
-          }
-        },
-        {
-          message: i18n("Please enter a valid {name} URL (e.g., {example})", {
-            example: "instagram.com/your-profile",
-            name: "Instagram",
-          }),
-        },
-      )
+      .refine((val) => validateHost(val, INSTAGRAM_HOSTS), {
+        message: i18n("Please enter a valid {name} URL (e.g., {example})", {
+          example: "instagram.com/your-profile",
+          name: "Instagram",
+        }),
+      })
       .optional()
       .nullable(),
 

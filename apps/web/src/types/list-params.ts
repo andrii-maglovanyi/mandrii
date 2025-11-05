@@ -41,17 +41,17 @@ export interface FilterProps {
 
 export type FilterTypes = {
   [FILTER_TYPES.eq]?: boolean | string;
-  [FILTER_TYPES.gt]?: string;
-  [FILTER_TYPES.gte]?: Date;
+  [FILTER_TYPES.gt]?: Date | string;
+  [FILTER_TYPES.gte]?: Date | string;
   [FILTER_TYPES.ilike]?: string;
   [FILTER_TYPES.in]?: Array<string>;
   [FILTER_TYPES.is_null]?: boolean;
   [FILTER_TYPES.like]?: string;
-  [FILTER_TYPES.lt]?: Date;
-  [FILTER_TYPES.lte]?: string;
+  [FILTER_TYPES.lt]?: Date | string;
+  [FILTER_TYPES.lte]?: Date | string;
   [FILTER_TYPES.nilike]?: string;
   [FILTER_TYPES.st_d_within]?: {
-    distance?: string;
+    distance: string;
     from: {
       coordinates: [number, number];
       type: "Point";

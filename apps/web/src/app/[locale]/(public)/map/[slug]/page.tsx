@@ -1,5 +1,5 @@
 import { MixpanelTracker } from "~/components/layout";
-import { Venues } from "~/features";
+import { VenuesMap } from "~/features/Venues/Map/VenuesMap";
 
 interface MapVenuePage {
   params: Promise<{
@@ -12,7 +12,7 @@ export default async function MapVenuePage({ params }: Readonly<MapVenuePage>) {
 
   return (
     <>
-      <Venues slug={slug} />
+      <VenuesMap slug={slug} />
       <MixpanelTracker event="Viewed Venue" props={{ slug }} />
     </>
   );

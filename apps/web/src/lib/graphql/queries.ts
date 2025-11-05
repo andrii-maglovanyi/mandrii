@@ -74,6 +74,8 @@ const GET_EVENT_BY_SLUG = `
     events(where: { slug: { _eq: $slug } }, limit: 1) {
       id
       slug
+      user_id
+      owner_id
     }
   }
 `;
@@ -88,7 +90,7 @@ const GET_EVENT_BY_SLUG = `
 export async function fetchEventBySlug(
   slug: string,
   adminSecret?: string,
-): Promise<null | { id: string; slug: string }> {
+): Promise<{ id: string; owner_id: null | string; slug: string; user_id: string; } | null> {
   try {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -104,7 +106,9 @@ export async function fetchEventBySlug(
       method: "POST",
     });
 
-    const result: GraphQLResponse<{ events: Array<{ id: string; slug: string }> }> = await response.json();
+    const result: GraphQLResponse<{
+      events: Array<{ id: string; owner_id: null | string; slug: string; user_id: string; }>;
+    }> = await response.json();
 
     if (result.errors) {
       console.error("GraphQL errors:", result.errors);

@@ -28,6 +28,7 @@ interface VenueFormProps {
 export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueFormProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
+
   const {
     errors,
     getFieldProps,
@@ -50,19 +51,17 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
   });
 
   useEffect(() => {
-    if (initialValues.id) return;
+    if (initialValues.id || !values.name) return;
 
-    if (values.name) {
-      const nameWithArea = values.area ? `${values.name} ${values.area}` : values.name;
+    const nameWithArea = values.area ? `${values.name} ${values.area}` : values.name;
 
-      setValues((prev) => ({
-        ...prev,
-        slug: slugify(nameWithArea, {
-          lower: true,
-          strict: true,
-        }),
-      }));
-    }
+    setValues((prev) => ({
+      ...prev,
+      slug: slugify(nameWithArea, {
+        lower: true,
+        strict: true,
+      }),
+    }));
   }, [initialValues.id, setValues, values.name, values.area]);
 
   const categoryOptions = Object.values(Venue_Category_Enum).map((value) => {

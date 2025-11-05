@@ -1,0 +1,1 @@
+export { VenuesCatalog } from "./VenuesCatalog";
