@@ -4,12 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Alert, Button, Checkbox, Input, RichText, Separator, Textarea } from "~/components/ui";
 import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
 import { useTheme } from "~/contexts/ThemeContext";
+import { PinMap } from "~/features/Venues/Map/PinMap";
 import { FormProps } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { getLatitudeBounds, getLongitudeBounds } from "~/lib/utils";
 import { VenueSchema } from "~/lib/validation/venue";
 
-import { VenuesMap } from "../../../Venues/VenuesMap";
 import { useGeocode } from "./hooks";
 
 interface Geocode {
@@ -168,7 +168,7 @@ After verification, you can fine-tune the pin location within a 100m radius if n
             {fullAddress.address}
           </Alert>
           <div className="relative my-4 h-96 overflow-hidden rounded-2xl">
-            <VenuesMap
+            <PinMap
               colorScheme={isDark ? "DARK" : "LIGHT"}
               distance={100}
               showMe={Boolean(values.is_physical)}

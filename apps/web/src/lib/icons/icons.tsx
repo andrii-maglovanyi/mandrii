@@ -2,15 +2,23 @@ import {
   BedDouble,
   Book,
   Building,
+  CalendarHeart,
   ChefHat,
   Church,
+  Clapperboard,
   Coffee,
   GalleryHorizontal,
+  Gift,
   Globe,
   GraduationCap,
   Hospital,
   Music,
+  Palette,
+  PartyPopper,
   ShoppingCart,
+  Star,
+  Trophy,
+  Users,
   Utensils,
   Wand2,
 } from "lucide-react";
@@ -20,15 +28,23 @@ const ICONS = {
   BedDouble,
   Book,
   Building,
+  CalendarHeart,
   ChefHat,
   Church,
+  Clapperboard,
   Coffee,
   GalleryHorizontal,
+  Gift,
   Globe,
   GraduationCap,
   Hospital,
   Music,
+  Palette,
+  PartyPopper,
   ShoppingCart,
+  Star,
+  Trophy,
+  Users,
   Utensils,
   Wand2,
 } as const;
@@ -52,9 +68,10 @@ export function getIcon(
 
   if (!IconComponent) return null;
 
-  const element = <IconComponent {...props} />;
+  const { asString, size = 16, ...restProps } = props || {};
+  const element = <IconComponent size={size} {...restProps} />;
 
-  if (props?.asString) {
+  if (asString) {
     return renderToStaticMarkup(element);
   }
 

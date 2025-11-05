@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import { MixpanelTracker, PostCard } from "~/components/layout";
+import { EventsBanner } from "~/features/Events";
 import { VenuesBanner } from "~/features/Venues/VenuesBanner";
 import { useI18n } from "~/i18n/useI18n";
 import { ContentData, contentManager } from "~/lib/mdx/reader";
@@ -96,9 +97,11 @@ const HomePageLayout = ({ locale, posts }: HomePageLayoutProps) => {
         </h1>
       </header>
 
+      <EventsBanner />
+
       {hasContent ? (
         <main className={`
-          mb-8 flex flex-col gap-6
+          my-12 flex flex-col gap-6
           md:flex-row
         `}>
           {leftColumn.length > 0 && <PostColumn isLeftColumn locale={locale} posts={leftColumn} type={CONTENT_TYPE} />}

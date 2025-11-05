@@ -1,10 +1,7 @@
 import { Resend } from "resend";
 
-import { getApiContext } from "~/lib/api/context";
-import { BadGateway } from "~/lib/api/errors";
+import { BadGateway, getApiContext, validateRequest, withErrorHandling } from "~/lib/api";
 import { verifyCaptcha } from "~/lib/api/recaptcha";
-import { validateRequest } from "~/lib/api/validate";
-import { withErrorHandling } from "~/lib/api/withErrorHandling";
 import { privateConfig } from "~/lib/config/private";
 import { constants } from "~/lib/constants";
 import { getContactSchema } from "~/lib/validation/contact";

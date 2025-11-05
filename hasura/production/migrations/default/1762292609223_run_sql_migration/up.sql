@@ -1,0 +1,9 @@
+ALTER TABLE events
+ADD CONSTRAINT events_type_fkey
+FOREIGN KEY (type) REFERENCES event_type(value);
+
+-- For price_type (assuming it's referenced by a prices or events table)
+-- Replace 'prices' with the actual table name that has the price_type column
+ALTER TABLE events
+ADD CONSTRAINT prices_type_fkey
+FOREIGN KEY (price_type) REFERENCES price_type(value);

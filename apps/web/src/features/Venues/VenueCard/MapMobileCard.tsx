@@ -17,13 +17,6 @@ interface MapMobileCardInterface {
   venue: GetPublicVenuesQuery["venues"][number];
 }
 
-/**
- * Mobile-optimized expandable venue card for map view.
- * Shows venue details in a bottom sheet that can expand to full screen.
- *
- * @param {MapMobileCardInterface} props - Component props.
- * @returns {JSX.Element} The bottom card component.
- */
 export function MapMobileCard({ venue }: Readonly<MapMobileCardInterface>) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [innerHeight, setInnerHeight] = useState<null | number>(null);

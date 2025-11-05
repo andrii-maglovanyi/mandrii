@@ -1,7 +1,6 @@
 table:
   name: venue_category
   schema: public
-is_enum: true
 array_relationships:
   - name: venues
     using:
@@ -10,3 +9,16 @@ array_relationships:
         table:
           name: venues
           schema: public
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - value
+      filter: {}
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - value
+      filter: {}
+    comment: ""

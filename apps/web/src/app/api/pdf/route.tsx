@@ -4,9 +4,7 @@ import path from "node:path";
 import puppeteer, { LaunchOptions } from "puppeteer-core";
 import React from "react";
 
-import { getApiContext } from "~/lib/api/context";
-import { BadRequestError, InternalServerError, NotFoundError } from "~/lib/api/errors";
-import { withErrorHandling } from "~/lib/api/withErrorHandling";
+import { BadRequestError, getApiContext, InternalServerError, NotFoundError, withErrorHandling } from "~/lib/api";
 import { isDevelopment } from "~/lib/config/env";
 import { compileMDX } from "~/lib/mdx/compiler";
 import { contentManager } from "~/lib/mdx/reader";

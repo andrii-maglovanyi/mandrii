@@ -5,16 +5,11 @@ import { format } from "date-fns";
 import { Archive, Bug, CheckCircle2, Search, XCircle } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { RichText, Tooltip } from "~/components/ui";
-import { ActionButton } from "~/components/ui";
-import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
-import { EmptyState } from "~/components/ui/EmptyState/EmptyState";
+import { ActionButton, AnimatedEllipsis, EmptyState, RichText, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
-import { useNotifications } from "~/hooks/useNotifications";
-import { useUser } from "~/hooks/useUser";
-import { useVenues } from "~/hooks/useVenues";
+import { useNotifications, useUser, useVenues } from "~/hooks";
 import { useI18n } from "~/i18n/useI18n";
 import { toDateLocale } from "~/lib/utils";
 import { Locale, Venue_Status_Enum } from "~/types";
@@ -38,7 +33,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
   const { data: profileData } = useUser();
   const { data, error, loading } = useGetVenue(slug);
 
-  const [meta, setMeta] = useState<{ createdAt: string; status: string } | null>(null);
+  const [meta, setMeta] = useState<{ createdAt: string; status: Venue_Status_Enum } | null>(null);
 
   useEffect(() => {
     if (data) {
@@ -49,7 +44,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
     }
   }, [data]);
 
-  async function handleSuccess() {
+  const handleSuccess = useCallback(async () => {
     showSuccess(i18n("Venue updated successfully"));
     router.push(`/user-directory#${i18n("Venues")}`);
 
@@ -61,18 +56,21 @@ export const EditVenue = ({ slug }: VenueProps) => {
         cache.gc();
       },
     });
-  }
+  }, [i18n, router, showSuccess, client]);
 
-  async function submitVenue(body: FormData) {
-    const res = await fetch(`/api/venue/save?locale=${locale}`, {
-      body,
-      method: "POST",
-    });
+  const submitVenue = useCallback(
+    async (body: FormData) => {
+      const res = await fetch(`/api/venue/save?locale=${locale}`, {
+        body,
+        method: "POST",
+      });
 
-    const result = await res.json();
+      const result = await res.json();
 
-    return { errors: result.errors, ok: res.ok };
-  }
+      return { errors: result.errors, ok: res.ok };
+    },
+    [locale],
+  );
 
   const renderLayout = () => {
     if (loading) {

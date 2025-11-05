@@ -18,13 +18,6 @@ interface MapListCardProps {
   venue: GetPublicVenuesQuery["venues"][number];
 }
 
-/**
- * Desktop list view venue card component.
- * Shows venue details in a list format with selection state.
- *
- * @param {MapListCardProps} props - Component props.
- * @returns {JSX.Element} The list card component.
- */
 export const MapListCard = ({ onClick, selectedId, venue }: MapListCardProps) => {
   const locale = useLocale() as Locale;
 
