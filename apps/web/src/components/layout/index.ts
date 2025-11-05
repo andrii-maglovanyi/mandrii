@@ -8,4 +8,5 @@ export { MainLayout } from "./MainLayout/MainLayout";
 export { MixpanelTracker } from "./MixpanelTracker/MixpanelTracker";
 export { NotificationsTicker } from "./NotificationsTicker/NotificationsTicker";
 export { PostCard } from "./Posts/PostCard";
+export { RecurrencePicker } from "./RecurrencePicker/RecurrencePicker";
 export { ThemeToggle } from "./ThemeToggle/ThemeToggle";

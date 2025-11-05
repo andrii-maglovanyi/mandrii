@@ -16,6 +16,7 @@ generates:
         geometry: "./geometry#Geometry"
         json: "./json#Json"
         jsonb: "./json#Json"
+        numeric: "./numeric#Numeric"
         timestamp: "./timestamp#Timestamp"
         timestamptz: "./timestamp#Timestamp"
         uuid: "./uuid#UUID"

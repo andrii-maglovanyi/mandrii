@@ -66,6 +66,8 @@ update_permissions:
     permission:
       columns:
         - name
-      filter: {}
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
       check: null
     comment: ""

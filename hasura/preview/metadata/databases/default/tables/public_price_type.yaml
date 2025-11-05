@@ -1,7 +1,6 @@
 table:
   name: price_type
   schema: public
-is_enum: true
 select_permissions:
   - role: public
     permission:

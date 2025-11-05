@@ -8,7 +8,7 @@ import { MixpanelTracker } from "~/components/layout";
 import { SignInForm } from "~/components/layout/Auth/SignInForm";
 import { Breadcrumbs, Button } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
-import { VenuesList } from "~/features/Venues/VenuesList";
+import { VenuesCatalog } from "~/features/Venues";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
@@ -37,7 +37,7 @@ export default function VenuesPage() {
   }, [isAuthenticated, router, openCustomDialog]);
 
   return (
-    <>
+    <div className="container mx-auto">
       <Breadcrumbs items={[{ title: i18n("Home"), url: `/` }]} />
       <div className={`
         mb-12 flex flex-col items-start justify-between gap-4
@@ -70,9 +70,9 @@ export default function VenuesPage() {
       <div className="container mx-auto">
         <p className="text-neutral">{i18n("Explore Ukrainian venues and community spaces around the world")}</p>
 
-        <VenuesList />
-        <MixpanelTracker event="Viewed Venues Page" />
+        <VenuesCatalog />
+        <MixpanelTracker event="Viewed Venues Catalog Page" />
       </div>
-    </>
+    </div>
   );
 }

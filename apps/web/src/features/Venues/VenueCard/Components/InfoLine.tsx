@@ -20,7 +20,8 @@ interface InfoLineProps {
   isLink?: boolean;
   isPhoneNumber?: boolean;
   strikethrough?: boolean;
-  tooltipText: string;
+  tooltipText?: string;
+  withCopy?: boolean;
 }
 
 /**
@@ -37,6 +38,7 @@ export const InfoLine = ({
   isPhoneNumber,
   strikethrough,
   tooltipText,
+  withCopy = false,
 }: InfoLineProps) => {
   const { showSuccess } = useNotifications();
   const i18n = useI18n();
@@ -176,25 +178,40 @@ export const InfoLine = ({
     );
   }
 
-  // Default: copy-to-clipboard button
+  // Default: copy-to-clipboard button or plain text
+  if (withCopy && tooltipText) {
+    return (
+      <div className={`
+        group/info flex w-full items-center justify-between text-left
+        hover:bg-on-surface/5
+      `}>
+        <Tooltip className="w-full! flex-1" label={tooltipText}>
+          <button
+            className={`
+              flex w-full min-w-0 cursor-pointer items-center justify-between
+              gap-2 px-4 py-2 text-left
+            `}
+            onClick={handleCopy}
+          >
+            <div className="flex min-w-0 items-center gap-2">
+              {icon}
+              <span className="min-w-0 truncate">{info}</span>
+            </div>
+            <Copy className={hideClasses} size={16} />
+          </button>
+        </Tooltip>
+      </div>
+    );
+  }
+
+  // Plain text (not withCopy)
   return (
     <div className={`
-      group/info flex w-full items-center justify-between text-left
+      flex w-full items-center px-4 py-2 text-left
       hover:bg-on-surface/5
     `}>
-      <Tooltip className="w-full! flex-1" label={tooltipText}>
-        <button
-          className={`
-            flex w-full min-w-0 cursor-pointer items-center gap-2 px-4 py-2
-            text-left
-          `}
-          onClick={handleCopy}
-        >
-          {icon}
-          <span className="min-w-0 truncate">{info}</span>
-          <Copy className={hideClasses} size={16} />
-        </button>
-      </Tooltip>
+      {icon && <span className="mr-2">{icon}</span>}
+      <span className="min-w-0 truncate text-neutral">{info}</span>
     </div>
   );
 };

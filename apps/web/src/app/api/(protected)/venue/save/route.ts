@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { getApiContext } from "~/lib/api/context";
-import { BadRequestError, InternalServerError, ValidationError } from "~/lib/api/errors";
-import { validateRequest } from "~/lib/api/validate";
-import { withErrorHandling } from "~/lib/api/withErrorHandling";
+import {
+  BadRequestError,
+  getApiContext,
+  InternalServerError,
+  validateRequest,
+  ValidationError,
+  withErrorHandling,
+} from "~/lib/api";
 import { envName } from "~/lib/config/env";
 import { privateConfig } from "~/lib/config/private";
 import { saveUser } from "~/lib/models/user";

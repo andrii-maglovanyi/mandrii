@@ -1,11 +1,11 @@
 import { MixpanelTracker } from "~/components/layout";
-import { Venues } from "~/features";
+import { MapView } from "~/features/Map/MapView";
 
 export default function MapPage() {
   return (
     <>
-      <Venues />
-      <MixpanelTracker event="Viewed Venues Map Page" />
+      <MapView />
+      <MixpanelTracker event="Viewed Map Page" />
     </>
   );
 }

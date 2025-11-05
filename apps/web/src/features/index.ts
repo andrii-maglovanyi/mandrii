@@ -1,4 +1,3 @@
 export { ClaimOwnership } from "./ClaimOwnership/ClaimOwnership";
-export { EditVenue, UserDirectory } from "./UserDirectory";
+export { EditEvent, EditVenue, UserDirectory } from "./UserDirectory";
 export { UserProfile } from "./UserProfile/UserProfile";
-export { Venues } from "./Venues/Venues";

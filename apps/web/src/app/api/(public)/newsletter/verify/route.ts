@@ -1,8 +1,6 @@
 import { Resend } from "resend";
 
-import { getApiContext } from "~/lib/api/context";
-import { BadGateway, BadRequestError, NotFoundError } from "~/lib/api/errors";
-import { withErrorHandling } from "~/lib/api/withErrorHandling";
+import { BadGateway, BadRequestError, getApiContext, NotFoundError, withErrorHandling } from "~/lib/api";
 import { privateConfig } from "~/lib/config/private";
 import { constants } from "~/lib/constants";
 import { sendNewsletterConfirmationNotification } from "~/lib/slack/newsletter";

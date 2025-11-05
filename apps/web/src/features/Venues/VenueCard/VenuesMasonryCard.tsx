@@ -9,12 +9,6 @@ interface VenuesMasonryCardProps {
   venue: GetPublicVenuesQuery["venues"][number];
 }
 
-/**
- * Masonry-style venue card component with flexible layout sizes.
- *
- * @param {VenuesMasonryCardProps} props - Component props.
- * @returns {JSX.Element} The venue masonry card.
- */
 export const VenuesMasonryCard = ({ hasImage = false, layoutSize, showFlag, venue }: VenuesMasonryCardProps) => {
   const variantMap = {
     full: "masonry-full" as const,

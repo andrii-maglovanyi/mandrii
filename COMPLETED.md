@@ -8,6 +8,122 @@
 
 ## November 2025
 
+### Event Validation Schemas & TypeScript Types
+
+**Completed**: November 4, 2025  
+**Type**: Feature Implementation  
+**Related**: MNDR-008 (Events Database Schema)
+
+**Summary**:
+Created comprehensive validation schemas and TypeScript types for the Events feature, providing type-safe form validation, database schema alignment, and developer-friendly helper functions. This establishes the foundation for building event forms and displays on mandrii.com.
+
+**Key Deliverables**:
+
+- ✅ **`event.ts`** - Complete Zod validation schema with 40+ fields
+- ✅ **`event.test.ts`** - 20+ unit tests covering all validation scenarios
+- ✅ **`types/event.ts`** - TypeScript interfaces and helper functions
+- ✅ **`README_EVENT.md`** - Comprehensive documentation with examples
+
+**Files Created**:
+
+- `/apps/web/src/lib/validation/event.ts` (390 lines)
+- `/apps/web/src/lib/validation/event.test.ts` (460 lines)
+- `/apps/web/src/types/event.ts` (330 lines)
+- `/apps/web/src/lib/validation/README_EVENT.md` (270 lines)
+- Updated `/apps/web/src/types/index.ts` to export event types
+
+**Technical Implementation**:
+
+**Validation Schema Features**:
+
+- **3 TypeScript Enums**: `Event_Type_Enum` (12 types), `Price_Type_Enum` (4 types), `Event_Status_Enum` (7 statuses)
+- **Flexible Location Validation**: Supports venue-based, custom location, online, or hybrid events
+- **Cross-field Validation**:
+  - End date must be after start date
+  - At least one location type required
+  - Price amount required for paid events
+- **URL Validation**: Facebook, Instagram, registration, and external URLs
+- **Geographic Validation**: Latitude (-90 to 90), Longitude (-180 to 180)
+- **Multilingual Support**: description_en, description_uk fields
+- **Type Coercion**: Automatically converts string dates, numbers, and booleans
+
+**TypeScript Types**:
+
+- **Core Interface**: `Event` matching database schema exactly
+- **Relationship Types**: `EventWithVenue`, `EventWithTags`, `EventWithOwner`, `EventWithRelations`
+- **Display Types**: `EventCardData` for minimal list/card displays
+- **Filter Types**: `EventFilters`, `EventSortBy`, `EventSortOrder` for queries
+- **Helper Functions**:
+  - `getEventLocationType()` - Determine venue/custom/online/hybrid
+  - `isEventUpcoming()`, `isEventOngoing()`, `isEventPast()` - Time-based checks
+  - `formatEventPrice()` - Format price with currency for display
+- **UI Labels**: Pre-defined labels for all enum values
+
+**Test Coverage**:
+
+- ✅ Valid event data (venue, custom, online, all optional fields)
+- ✅ Required field validation
+- ✅ Cross-field validation (dates, location, price)
+- ✅ Coordinate validation
+- ✅ URL validation (social media, registration)
+- ✅ Enum validation (all types accepted)
+- ✅ Type coercion (strings → dates, numbers, booleans)
+
+**Alignment with Database Schema**:
+
+- Matches all 67 fields from `public.events` table
+- Uses same enum values as PostgreSQL ENUMs
+- Validates JSONB social_links structure
+- Supports TEXT[] arrays for language field
+- Compatible with PostGIS Geography type
+
+**Developer Experience**:
+
+- **Comprehensive Documentation**: README with usage examples, field descriptions, and best practices
+- **Type Safety**: Full TypeScript coverage with inferred types
+- **Internationalization**: Error messages use i18n function
+- **Consistent Patterns**: Follows existing venue validation patterns
+- **Test-Driven**: All validation rules covered by unit tests
+
+**Example Usage**:
+
+```typescript
+import { getEventSchema, Event_Type_Enum, Price_Type_Enum } from '~/lib/validation/event';
+
+const schema = getEventSchema(i18n);
+const result = schema.safeParse({
+  title: "Ukrainian Cultural Night",
+  slug: "ukrainian-cultural-night-2025",
+  start_date: new Date("2025-12-01T19:00:00Z"),
+  event_type: Event_Type_Enum.GATHERING,
+  venue_id: "550e8400-e29b-41d4-a716-446655440000",
+  organizer_name: "Kyiv Community Center",
+  price_type: Price_Type_Enum.FREE,
+});
+```
+
+**Key Learnings**:
+
+1. **Schema-First Validation**: Creating validation schemas immediately after database design ensures type safety and catches issues early
+2. **Helper Functions**: Utility functions for common operations (price formatting, time checks) improve code reusability
+3. **Comprehensive Testing**: Testing edge cases (invalid dates, missing required location, invalid coordinates) prevents production bugs
+4. **Documentation First**: Writing README during implementation helps clarify requirements and provides instant onboarding for future developers
+
+**Next Steps**:
+
+- Create event form components using the validation schema
+- Build event list/detail pages with TypeScript types
+- Implement GraphQL queries/mutations for events
+- Add event creation/editing UI flows
+
+**Impact**:
+
+- **Type Safety**: Full compile-time checking for event data
+- **Form Validation**: Ready-to-use validation for event forms
+- **Developer Productivity**: Clear types and documentation accelerate development
+- **Code Quality**: Comprehensive tests ensure reliability
+- **Maintainability**: Centralized validation logic and type definitions
+
 ### MNDR-008: Add Events Database Schema & Hasura Setup
 
 **Completed**: November 4, 2025  
