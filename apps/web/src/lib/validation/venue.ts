@@ -13,12 +13,12 @@ export const venueDescriptionMaxCharsCount = 3000;
 export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
   return z.object({
     address: z.string().min(3, i18n("Address is required")).optional().nullable(),
+
     area: z.string().optional().nullable(),
     category: z.enum(Object.values(Venue_Category_Enum), {
       message: i18n("Please choose a category"),
     }),
     city: z.string().optional().nullable(),
-
     country: z.string().optional().nullable(),
 
     description_en: z

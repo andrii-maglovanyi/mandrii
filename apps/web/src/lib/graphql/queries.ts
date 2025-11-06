@@ -90,7 +90,7 @@ const GET_EVENT_BY_SLUG = `
 export async function fetchEventBySlug(
   slug: string,
   adminSecret?: string,
-): Promise<{ id: string; owner_id: null | string; slug: string; user_id: string; } | null> {
+): Promise<{ id: string; owner_id: null | string; slug: string; user_id: string } | null> {
   try {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -107,7 +107,7 @@ export async function fetchEventBySlug(
     });
 
     const result: GraphQLResponse<{
-      events: Array<{ id: string; owner_id: null | string; slug: string; user_id: string; }>;
+      events: Array<{ id: string; owner_id: null | string; slug: string; user_id: string }>;
     }> = await response.json();
 
     if (result.errors) {

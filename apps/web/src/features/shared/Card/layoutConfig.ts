@@ -30,11 +30,14 @@ export const baseCardClasses = clsx(
  */
 const masonryVariants = {
   "masonry-full": {
-    containerClasses: clsx(baseCardClasses, `
-      col-span-1 min-h-[300px]
-      sm:col-span-2
-      lg:col-span-4
-    `),
+    containerClasses: clsx(
+      baseCardClasses,
+      `
+        col-span-1 min-h-[300px]
+        sm:col-span-2
+        lg:col-span-4
+      `,
+    ),
     descriptionClasses: "text-neutral text-sm line-clamp-3",
     imageClasses: { horizontal: "h-full min-h-[300px] w-full sm:w-2/5", vertical: "h-48 w-full sm:h-56" },
     imageSizes: "(max-width: 768px) 100vw, 40vw",
@@ -43,11 +46,14 @@ const masonryVariants = {
     titleClasses: "text-xl sm:text-2xl",
   },
   "masonry-half": {
-    containerClasses: clsx(baseCardClasses, `
-      col-span-1 min-h-[300px]
-      sm:col-span-2
-      lg:col-span-2
-    `),
+    containerClasses: clsx(
+      baseCardClasses,
+      `
+        col-span-1 min-h-[300px]
+        sm:col-span-2
+        lg:col-span-2
+      `,
+    ),
     descriptionClasses: "text-neutral text-sm line-clamp-2",
     imageClasses: { horizontal: "h-full min-h-[300px] w-full sm:w-1/2", vertical: "h-44 w-full sm:h-52" },
     imageSizes: "(max-width: 768px) 100vw, 50vw",

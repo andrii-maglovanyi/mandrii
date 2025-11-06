@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 import { enUS, uk } from "date-fns/locale";
-import { ArrowUpRight, Calendar, Edit2, MapPin, Plus } from "lucide-react";
+import { ArrowUpRight, Calendar, Edit2, Headset, LayoutDashboard, Map, MapPin, Plus } from "lucide-react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -61,9 +61,36 @@ const Events = () => {
           venue?: { name: string; slug: string } | null;
         },
       ) => {
-        const locationText = is_online
-          ? i18n("Online")
-          : venue?.name || custom_location_name || (city && country ? `${city}, ${country}` : i18n("Location TBD"));
+        let locationInfo = <>{i18n("Location TBD")}</>;
+
+        if (is_online) {
+          locationInfo = (
+            <>
+              <Headset size={14} /> {i18n("Online")}
+            </>
+          );
+        } else if (venue) {
+          locationInfo = (
+            <>
+              <LayoutDashboard size={14} />{" "}
+              <Link className="underline" href={`/user-directory/venues/${venue.slug}`} target="_blank">
+                {venue.name}
+              </Link>
+            </>
+          );
+        } else if (custom_location_name) {
+          locationInfo = (
+            <>
+              <MapPin size={14} /> {custom_location_name}
+            </>
+          );
+        } else if (city && country) {
+          locationInfo = (
+            <>
+              <Map size={14} /> {`${city}, ${country}`}
+            </>
+          );
+        }
 
         return (
           <div className="flex flex-col">
@@ -92,8 +119,7 @@ const Events = () => {
               <Calendar className="mr-1" size={14} />
               {format(new Date(start_date), "PPP", { locale: dateLocale })}
               <span className="mx-2">•</span>
-              <MapPin className="mr-1" size={14} />
-              {locationText}
+              <div className="flex items-center gap-1">{locationInfo}</div>
             </span>
           </div>
         );

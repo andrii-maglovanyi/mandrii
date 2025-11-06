@@ -3,10 +3,10 @@
 msgid "Sign in to Mandrii"
 msgstr ""
 
-msgid "Address is required"
+msgid "Please choose a category"
 msgstr ""
 
-msgid "Please choose a category"
+msgid "Address is required"
 msgstr ""
 
 msgid "Description is too long"
@@ -51,6 +51,69 @@ msgstr ""
 msgid "Invalid user ID"
 msgstr ""
 
+msgid "Accessibility info is too long"
+msgstr ""
+
+msgid "Age restriction is too long"
+msgstr ""
+
+msgid "Capacity must be a whole number"
+msgstr ""
+
+msgid "Capacity must be at least 1"
+msgstr ""
+
+msgid "Location name is too long"
+msgstr ""
+
+msgid "End date must be a valid date"
+msgstr ""
+
+msgid "External URL is invalid"
+msgstr ""
+
+msgid "Organizer name is too long"
+msgstr ""
+
+msgid "Price must be 0 or greater"
+msgstr ""
+
+msgid "Currency must be a 3-letter code (e.g., EUR, GBP)"
+msgstr ""
+
+msgid "Please choose a price type"
+msgstr ""
+
+msgid "Recurrence rule is too long"
+msgstr ""
+
+msgid "Registration URL is invalid"
+msgstr ""
+
+msgid "Start date is required and must be a valid date"
+msgstr ""
+
+msgid "Title is required"
+msgstr ""
+
+msgid "Title must be less than 200 characters"
+msgstr ""
+
+msgid "Please choose an event type"
+msgstr ""
+
+msgid "Invalid venue ID"
+msgstr ""
+
+msgid "End date must be after start date"
+msgstr ""
+
+msgid "Please specify a venue, custom location, or mark as online event"
+msgstr ""
+
+msgid "Price amount is required for paid events"
+msgstr ""
+
 msgid "Message is required"
 msgstr ""
 
@@ -63,9 +126,6 @@ msgstr ""
 msgid "Someone"
 msgstr ""
 
-msgid "Loading map..."
-msgstr ""
-
 msgid "Let's unite, Ukrainians!"
 msgstr ""
 
@@ -76,6 +136,135 @@ msgid "Whether you're looking for a familiar place, a taste of home, feeling of 
 msgstr ""
 
 msgid "Explore the Map"
+msgstr ""
+
+msgid "Update and manage venue information"
+msgstr ""
+
+msgid "Host and promote events"
+msgstr ""
+
+msgid "Connect with local community"
+msgstr ""
+
+msgid "View analytics and more"
+msgstr ""
+
+msgid "Claim your ownership"
+msgstr ""
+
+msgid "What you'll get:"
+msgstr ""
+
+msgid "Sign in to claim ownership of this venue"
+msgstr ""
+
+msgid "Sign in"
+msgstr ""
+
+msgid "I will verify your ownership before granting access to enhanced features"
+msgstr ""
+
+msgid "The venue you're looking for doesn't exist or has been removed"
+msgstr ""
+
+msgid "Venue not found"
+msgstr ""
+
+msgid "Map"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
+msgid "Happening now"
+msgstr ""
+
+msgid "{count} ongoing"
+msgstr ""
+
+msgid "LIVE"
+msgstr ""
+
+msgid "Upcoming events"
+msgstr ""
+
+msgid "{count} upcoming"
+msgstr ""
+
+msgid "Check back later for updates!"
+msgstr ""
+
+msgid "No upcoming events at this time"
+msgstr ""
+
+msgid "About venue"
+msgstr ""
+
+msgid "No description available"
+msgstr ""
+
+msgid "Collapse venue details"
+msgstr ""
+
+msgid "Expand venue details"
+msgstr ""
+
+msgid "Copied"
+msgstr ""
+
+msgid "This venue is archived"
+msgstr ""
+
+msgid "Copy phone number"
+msgstr ""
+
+msgid "Copy email address"
+msgstr ""
+
+msgid "Copy address"
+msgstr ""
+
+msgid "{number} countries"
+msgstr ""
+
+msgid "{number} venues"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Social media"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Phone number"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "Copied venue URL"
+msgstr ""
+
+msgid "Check out this venue on {appHost}"
+msgstr ""
+
+msgid "Manage venue"
+msgstr ""
+
+msgid "I own this venue"
+msgstr ""
+
+msgid "Share this venue"
+msgstr ""
+
+msgid "Verified venue"
+msgstr ""
+
+msgid "Discover"
 msgstr ""
 
 msgid "All categories"
@@ -135,37 +324,13 @@ msgstr ""
 msgid "Sign in to add venue"
 msgstr ""
 
-msgid "Update and manage venue information"
-msgstr ""
-
-msgid "Host and promote events"
-msgstr ""
-
-msgid "Connect with local community"
-msgstr ""
-
-msgid "View analytics and more"
-msgstr ""
-
-msgid "Claim your ownership"
-msgstr ""
-
-msgid "What you'll get:"
-msgstr ""
-
-msgid "Sign in to claim ownership of this venue"
-msgstr ""
-
-msgid "Sign in"
-msgstr ""
-
-msgid "I will verify your ownership before granting access to enhanced features"
+msgid "Loading map..."
 msgstr ""
 
 msgid "All countries"
 msgstr ""
 
-msgid "Search venues..."
+msgid "Search venues by title or location..."
 msgstr ""
 
 msgid "Showing **{start}**-**{end}** of **{count}** venues"
@@ -181,93 +346,6 @@ msgid "Next"
 msgstr ""
 
 msgid "Back"
-msgstr ""
-
-msgid "The venue you're looking for doesn't exist or has been removed"
-msgstr ""
-
-msgid "Venue not found"
-msgstr ""
-
-msgid "Map"
-msgstr ""
-
-msgid "Events"
-msgstr ""
-
-msgid "Check back later for updates!"
-msgstr ""
-
-msgid "No upcoming events at this time"
-msgstr ""
-
-msgid "About"
-msgstr ""
-
-msgid "No description available"
-msgstr ""
-
-msgid "Collapse venue details"
-msgstr ""
-
-msgid "Expand venue details"
-msgstr ""
-
-msgid "Copied"
-msgstr ""
-
-msgid "This venue is archived"
-msgstr ""
-
-msgid "Copy phone number"
-msgstr ""
-
-msgid "Copy email address"
-msgstr ""
-
-msgid "Copy address"
-msgstr ""
-
-msgid "{number} countries"
-msgstr ""
-
-msgid "{number} venues"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
-msgid "Social media"
-msgstr ""
-
-msgid "Email"
-msgstr ""
-
-msgid "Phone number"
-msgstr ""
-
-msgid "Address"
-msgstr ""
-
-msgid "Check out this venue on {appHost}!"
-msgstr ""
-
-msgid "Copied venue URL"
-msgstr ""
-
-msgid "Manage venue"
-msgstr ""
-
-msgid "I own this venue"
-msgstr ""
-
-msgid "Share this venue"
-msgstr ""
-
-msgid "Verified venue with owner"
-msgstr ""
-
-msgid "Discover"
 msgstr ""
 
 msgid "This is the glitch you get when there is no profile data available. Please contact me."
@@ -429,10 +507,16 @@ msgstr ""
 msgid "**🌍 Auto-detection enabled**.<br />Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.<br /><br />  You can add up to three phone numbers."
 msgstr ""
 
-msgid ""
+msgid "Adding an address helps users find your venue on the [interactive map]({map_link}) and search by location."
 msgstr ""
 
 msgid "Has a physical location"
+msgstr ""
+
+msgid "Enter exact address for accurate map placement. You can fine-tune the pin location within a 100m radius if needed."
+msgstr ""
+
+msgid "Enter approximate location and your venue will be discoverable in search by name or region without showing an exact pin."
 msgstr ""
 
 msgid "Verifying address"
@@ -507,6 +591,345 @@ msgstr ""
 msgid "Start adding your venue by selecting its category and name.<br/>The slug is auto-generated the URL and can only be edited during the first creation."
 msgstr ""
 
+msgid "Online"
+msgstr ""
+
+msgid "Location TBD"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Add new event"
+msgstr ""
+
+msgid "No events added yet. Click the button above to add the first one and start managing your events!"
+msgstr ""
+
+msgid "No events added yet"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "Completed"
+msgstr ""
+
+msgid "Postponed"
+msgstr ""
+
+msgid "Choose at least one: mark as online event, select a venue, or enter a custom location"
+msgstr ""
+
+msgid "This is an online event"
+msgstr ""
+
+msgid "Online event URL"
+msgstr ""
+
+msgid "Venue"
+msgstr ""
+
+msgid "Select a venue..."
+msgstr ""
+
+msgid "**Enter a custom location** if the event isn't at a registered venue. Provide the full address for accurate map placement."
+msgstr ""
+
+msgid "Location name"
+msgstr ""
+
+msgid "Community Center, Conference Hall A"
+msgstr ""
+
+msgid "Searchable event location details"
+msgstr ""
+
+msgid "These details are collected automatically and will help users find your event. You can adjust them if needed."
+msgstr ""
+
+msgid "Organizer name"
+msgstr ""
+
+msgid "Price & registration"
+msgstr ""
+
+msgid "Price type"
+msgstr ""
+
+msgid "Price amount"
+msgstr ""
+
+msgid "Currency"
+msgstr ""
+
+msgid "Registration required"
+msgstr ""
+
+msgid "Registration URL"
+msgstr ""
+
+msgid "Capacity"
+msgstr ""
+
+msgid "Additional Information"
+msgstr ""
+
+msgid "Age restriction"
+msgstr ""
+
+msgid "18+, Family-friendly, etc."
+msgstr ""
+
+msgid "Accessibility Information"
+msgstr ""
+
+msgid "Wheelchair accessible, Sign language interpretation available, etc."
+msgstr ""
+
+msgid "No venue (custom location)"
+msgstr ""
+
+msgid "Event type"
+msgstr ""
+
+msgid "Event title"
+msgstr ""
+
+msgid "Ukrainian Festival 2025"
+msgstr ""
+
+msgid "↑ The slug serves as a unique identifier for your event and must be URL-friendly. Once created, it cannot be changed."
+msgstr ""
+
+msgid "Add location, date & time, descriptions, images, and other information below."
+msgstr ""
+
+msgid "Date & Time"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "End date"
+msgstr ""
+
+msgid "This is a recurring event"
+msgstr ""
+
+msgid "Recurrence pattern"
+msgstr ""
+
+msgid "Organizer email"
+msgstr ""
+
+msgid "Organizer phone number"
+msgstr ""
+
+msgid "Email or phone number for event inquiries"
+msgstr ""
+
+msgid "Event updated successfully"
+msgstr ""
+
+msgid "Please check the event URL and try again, or return to your [events list]({events_list_url})"
+msgstr ""
+
+msgid "Could not find that event"
+msgstr ""
+
+msgid "Publish event"
+msgstr ""
+
+msgid "Are you sure you want to publish this event?"
+msgstr ""
+
+msgid "Cancel event"
+msgstr ""
+
+msgid "Are you sure you want to cancel this event?"
+msgstr ""
+
+msgid "Archive event"
+msgstr ""
+
+msgid "Are you sure you want to archive this event?"
+msgstr ""
+
+msgid "Edit your event details below.<br/>You can update all fields except the slug, which is locked after the first creation."
+msgstr ""
+
+msgid "Start adding your event by entering its title and type.<br/>The slug is auto-generated from the title and can only be edited during the first creation."
+msgstr ""
+
+msgid "View all"
+msgstr ""
+
+msgid "All types"
+msgstr ""
+
+msgid "Select event type..."
+msgstr ""
+
+msgid "Try adjusting your filters or search location"
+msgstr ""
+
+msgid "No events found"
+msgstr ""
+
+msgid "Add event"
+msgstr ""
+
+msgid "The event you're looking for doesn't exist or has been removed"
+msgstr ""
+
+msgid "Event not found"
+msgstr ""
+
+msgid "Every day"
+msgstr ""
+
+msgid "Every {count} days"
+msgstr ""
+
+msgid "Every week"
+msgstr ""
+
+msgid "Every {count} weeks"
+msgstr ""
+
+msgid "Friday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Thursday"
+msgstr ""
+
+msgid "Tuesday"
+msgstr ""
+
+msgid "Wednesday"
+msgstr ""
+
+msgid "on"
+msgstr ""
+
+msgid "Every month"
+msgstr ""
+
+msgid "Every {count} months"
+msgstr ""
+
+msgid "Every year"
+msgstr ""
+
+msgid "Every {count} years"
+msgstr ""
+
+msgid "{n} times"
+msgstr ""
+
+msgid "until"
+msgstr ""
+
+msgid "Online event"
+msgstr ""
+
+msgid "Register Now"
+msgstr ""
+
+msgid "Learn More"
+msgstr ""
+
+msgid "About event"
+msgstr ""
+
+msgid "Event Details"
+msgstr ""
+
+msgid "Organizer"
+msgstr ""
+
+msgid "Copy organizer email"
+msgstr ""
+
+msgid "Copy organizer phone"
+msgstr ""
+
+msgid "Copy date"
+msgstr ""
+
+msgid "Copy time"
+msgstr ""
+
+msgid "Price"
+msgstr ""
+
+msgid "Copy location name"
+msgstr ""
+
+msgid "Copy link"
+msgstr ""
+
+msgid "Registration"
+msgstr ""
+
+msgid "Copy registration link"
+msgstr ""
+
+msgid "people"
+msgstr ""
+
+msgid "Collapse event details"
+msgstr ""
+
+msgid "Expand event details"
+msgstr ""
+
+msgid "Copied event URL"
+msgstr ""
+
+msgid "Check out this event on {appHost}"
+msgstr ""
+
+msgid "Manage event"
+msgstr ""
+
+msgid "Share this event"
+msgstr ""
+
+msgid "Verified event"
+msgstr ""
+
+msgid "View details"
+msgstr ""
+
+msgid "All price types"
+msgstr ""
+
+msgid "Search events by title or location..."
+msgstr ""
+
+msgid "From"
+msgstr ""
+
+msgid "To"
+msgstr ""
+
+msgid "Showing **{start}**-**{end}** of **{count}** events"
+msgstr ""
+
 msgid "I manage {name} ({slug}) and would like to claim ownership of its venue."
 msgstr ""
 
@@ -517,6 +940,72 @@ msgid "Light mode"
 msgstr ""
 
 msgid "Dark mode"
+msgstr ""
+
+msgid "Daily"
+msgstr ""
+
+msgid "Weekly"
+msgstr ""
+
+msgid "Monthly"
+msgstr ""
+
+msgid "Yearly"
+msgstr ""
+
+msgid "Never"
+msgstr ""
+
+msgid "After"
+msgstr ""
+
+msgid "On date"
+msgstr ""
+
+msgid "Mon"
+msgstr ""
+
+msgid "Tue"
+msgstr ""
+
+msgid "Wed"
+msgstr ""
+
+msgid "Thu"
+msgstr ""
+
+msgid "Fri"
+msgstr ""
+
+msgid "Sat"
+msgstr ""
+
+msgid "Sun"
+msgstr ""
+
+msgid "Repeats"
+msgstr ""
+
+msgid "{count} times"
+msgstr ""
+
+msgid "Frequency"
+msgstr ""
+
+msgid "Every"
+msgstr ""
+
+msgid "Repeat on"
+msgstr ""
+
+msgid "Select days or leave empty to repeat on the same day as the start date"
+msgstr ""
+
+msgid "Ends"
+msgstr ""
+
+msgid "Number of occurrences"
 msgstr ""
 
 msgid "Hold up - **{email}**, you're already subscribed!"
@@ -732,6 +1221,15 @@ msgstr ""
 msgid "Thank you for being part of this adventure."
 msgstr ""
 
+msgid "Explore events"
+msgstr ""
+
+msgid "Sign in to add event"
+msgstr ""
+
+msgid "Explore Ukrainian events and gatherings around the world"
+msgstr ""
+
 msgid "Take control of your venue's profile. Update information, create events, and connect with your community."
 msgstr ""
 
@@ -793,4 +1291,7 @@ msgid "Profile"
 msgstr ""
 
 msgid "Edit venue"
+msgstr ""
+
+msgid "Edit event"
 msgstr ""
