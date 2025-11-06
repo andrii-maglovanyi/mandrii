@@ -243,7 +243,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                 {ongoingEvents.length > 0 && (
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-semibold">{i18n("Happening Now")}</h3>
+                      <h3 className="text-lg font-semibold">{i18n("Happening now")}</h3>
                       <span className={`
                         rounded-full bg-primary/20 px-3 py-1 text-xs font-medium
                         text-primary
@@ -258,10 +258,12 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                     `}>
                       {ongoingEvents.map((event) => (
                         <div className="relative" key={event.id as string}>
-                          <div className={`
-                            absolute -top-2 -right-2 z-10 rounded-full border-2
-                            border-primary/30 bg-primary/10 px-3 py-1
-                          `}>
+                          <div
+                            className={`
+                              absolute -top-2 -right-2 z-10 rounded-full
+                              border-2 border-primary/30 bg-primary/10 px-3 py-1
+                            `}
+                          >
                             <span className="text-xs font-bold text-primary">{i18n("LIVE")}</span>
                           </div>
                           <EventsListCard event={event} />
@@ -271,11 +273,10 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                   </div>
                 )}
 
-                {/* Upcoming events */}
                 {upcomingEvents.length > 0 && (
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-semibold">{i18n("Upcoming Events")}</h3>
+                      <h3 className="text-lg font-semibold">{i18n("Upcoming events")}</h3>
                       <span className={`
                         rounded-full bg-surface-tint px-3 py-1 text-xs
                         font-medium text-neutral

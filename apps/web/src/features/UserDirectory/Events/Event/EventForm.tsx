@@ -127,11 +127,11 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
           md:flex-row md:space-x-4
         `}>
           <div className="flex flex-3 flex-col">
-            <Select label={i18n("Event Type")} options={eventTypeOptions} required {...getFieldProps("type")} />
+            <Select label={i18n("Event type")} options={eventTypeOptions} required {...getFieldProps("type")} />
           </div>
           <div className="flex flex-4 flex-col">
             <Input
-              label={i18n("Event Title")}
+              label={i18n("Event title")}
               placeholder={i18n("Ukrainian Festival 2025")}
               required
               type="text"

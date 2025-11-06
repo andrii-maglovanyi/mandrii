@@ -2,42 +2,18 @@ table:
   name: events
   schema: public
 object_relationships:
-  - name: event_price
+  - name: event_price_type
     using:
-      manual_configuration:
-        column_mapping:
-          price_type: value
-        insertion_order: null
-        remote_table:
-          name: price_type
-          schema: public
+      foreign_key_constraint_on: price_type
   - name: event_status
     using:
-      manual_configuration:
-        column_mapping:
-          status: value
-        insertion_order: null
-        remote_table:
-          name: event_status
-          schema: public
+      foreign_key_constraint_on: status
   - name: event_type
     using:
-      manual_configuration:
-        column_mapping:
-          type: value
-        insertion_order: null
-        remote_table:
-          name: event_type
-          schema: public
+      foreign_key_constraint_on: type
   - name: owner
     using:
-      manual_configuration:
-        column_mapping:
-          owner_id: id
-        insertion_order: null
-        remote_table:
-          name: users
-          schema: public
+      foreign_key_constraint_on: owner_id
   - name: user
     using:
       foreign_key_constraint_on: user_id

@@ -23,7 +23,7 @@ export const EventDate = ({ getFieldProps, setValues, values }: EventInfoProps) 
       `}>
         <div className="flex flex-1 flex-col">
           <Input
-            label={i18n("Start Date")}
+            label={i18n("Start date")}
             required
             type="datetime-local"
             {...getFieldProps("start_date")}
@@ -32,7 +32,7 @@ export const EventDate = ({ getFieldProps, setValues, values }: EventInfoProps) 
         </div>
         <div className="flex flex-1 flex-col">
           <Input
-            label={i18n("End Date")}
+            label={i18n("End date")}
             type="datetime-local"
             {...getFieldProps("end_date")}
             value={formatDateForInput(values.end_date)}
@@ -44,7 +44,7 @@ export const EventDate = ({ getFieldProps, setValues, values }: EventInfoProps) 
 
       {values.is_recurring && (
         <div>
-          <label className="mb-2 block text-sm font-medium">{i18n("Recurrence Pattern")}</label>
+          <label className="mb-2 block text-sm font-medium">{i18n("Recurrence pattern")}</label>
           <RecurrencePicker
             onChange={(value) => {
               setValues((prev) => ({

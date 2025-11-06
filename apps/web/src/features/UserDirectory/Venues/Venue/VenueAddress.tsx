@@ -102,7 +102,7 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
     <>
       <RichText as="div" className="py-6 text-sm text-neutral">
         {i18n(
-          `Adding an address helps users find your venue on the [interactive map]({map_link}) and search by location.`,
+          "Adding an address helps users find your venue on the [interactive map]({map_link}) and search by location.",
           {
             map_link: "/map",
           },
@@ -113,13 +113,15 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
 
       {values.is_physical ? (
         <RichText as="div" className="pb-6 text-sm text-neutral">
-          {i18n(`**Enter a complete address** (e.g., "10 Oxford St, London W1D 1AW") for accurate map placement.
-After verification, you can fine-tune the pin location within a 100m radius if needed.`)}
+          {i18n(
+            "Enter exact address for accurate map placement. You can fine-tune the pin location within a 100m radius if needed.",
+          )}
         </RichText>
       ) : (
         <RichText as="div" className="pb-6 text-sm text-neutral">
-          {i18n(`**Enter a general area** (e.g., "Greenwich, London") and your venue won't appear on the map. 
- It will still be discoverable in search by name or by region without showing an exact pin`)}
+          {i18n(
+            "Enter approximate location and your venue will be discoverable in search by name or region without showing an exact pin.",
+          )}
         </RichText>
       )}
 
