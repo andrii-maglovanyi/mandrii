@@ -221,7 +221,7 @@ export const EventView = ({ slug }: EventViewProps) => {
                       <span className={`
                         text-base font-medium
                         md:text-lg
-                      `}>{i18n("Online Event")}</span>
+                      `}>{i18n("Online event")}</span>
                     </div>
                   )}
                 </div>

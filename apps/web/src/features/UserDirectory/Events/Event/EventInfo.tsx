@@ -27,7 +27,7 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
     <>
       <Input
         label={i18n("Organizer name")}
-        placeholder={i18n("PMK Event Agency")}
+        placeholder="PMK Event Agency"
         type="text"
         {...getFieldProps("organizer_name")}
       />
@@ -52,7 +52,7 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
       <div className="space-y-4 border-t border-primary/10 pt-4">
         <h3 className="text-lg font-medium text-primary">{i18n("Price & registration")}</h3>
 
-        <Select label={i18n("Price Type")} options={priceTypeOptions} required {...getFieldProps("price_type")} />
+        <Select label={i18n("Price type")} options={priceTypeOptions} required {...getFieldProps("price_type")} />
 
         {showPriceAmount && (
           <div className={`
@@ -61,7 +61,7 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
           `}>
             <div className="flex flex-1 flex-col">
               <Input
-                label={i18n("Price Amount")}
+                label={i18n("Price amount")}
                 min={0}
                 placeholder="10.00"
                 required={showPriceAmount}
@@ -101,7 +101,7 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
         <h3 className="text-lg font-medium text-primary">{i18n("Additional Information")}</h3>
 
         <Input
-          label={i18n("Age Restriction")}
+          label={i18n("Age restriction")}
           placeholder={i18n("18+, Family-friendly, etc.")}
           type="text"
           {...getFieldProps("age_restriction")}

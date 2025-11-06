@@ -121,7 +121,7 @@ export const EventLocation = ({
       {values.is_online && (
         <Input
           disabled={isBusy}
-          label={i18n("Online Event URL")}
+          label={i18n("Online event URL")}
           placeholder="https://zoom.us/j/..."
           type="url"
           {...getFieldProps("external_url")}
@@ -148,7 +148,7 @@ export const EventLocation = ({
 
           <Input
             disabled={isBusy}
-            label={i18n("Location Name")}
+            label={i18n("Location name")}
             placeholder={i18n("Community Center, Conference Hall A")}
             type="text"
             {...getFieldProps("custom_location_name")}

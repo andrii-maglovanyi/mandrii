@@ -28,7 +28,7 @@ export const EventContacts = ({ getFieldProps }: EventContactsProps) => {
     <div className="space-y-4">
       <Input
         label={i18n("Organizer email")}
-        placeholder={i18n("contact@example.com")}
+        placeholder="contact@example.com"
         type="email"
         {...getFieldProps("organizer_email")}
       />
@@ -40,7 +40,7 @@ export const EventContacts = ({ getFieldProps }: EventContactsProps) => {
         </RichText>
         <Input
           label={i18n("Organizer phone number")}
-          placeholder={i18n("+44 123 456 789")}
+          placeholder="+44 123 456 789"
           type="tel"
           {...getFieldProps("organizer_phone_number")}
         />

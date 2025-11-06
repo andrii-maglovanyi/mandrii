@@ -49,11 +49,13 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
               sizes={config.imageSizes}
               src={`${constants.vercelBlobStorageUrl}/${String(mainImage)}`}
             />
-            <div className={`
-              absolute inset-0 bg-linear-to-t from-black/40 via-black/10
-              to-transparent opacity-0 transition-opacity
-              group-hover/card:opacity-100
-            `} />
+            <div
+              className={`
+                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
+                to-transparent opacity-0 transition-opacity
+                group-hover/card:opacity-100
+              `}
+            />
           </div>
         )}
 
@@ -65,11 +67,13 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
             `}>
               <Calendar className="text-neutral opacity-30" size={48} />
             </div>
-            <div className={`
-              absolute inset-0 bg-linear-to-t from-black/40 via-black/10
-              to-transparent opacity-0 transition-opacity
-              group-hover/card:opacity-100
-            `} />
+            <div
+              className={`
+                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
+                to-transparent opacity-0 transition-opacity
+                group-hover/card:opacity-100
+              `}
+            />
           </div>
         )}
 

@@ -79,11 +79,13 @@ export function MapMobileCard({ event }: Readonly<MapMobileCardInterface>) {
         <div className="px-8">
           <CardHeader event={event} />
 
-          <h3 className={`
-            mb-2 line-clamp-2 text-lg font-bold text-primary transition-colors
-            group-hover/card:underline
-            sm:text-xl
-          `}>
+          <h3
+            className={`
+              mb-2 line-clamp-2 text-lg font-bold text-primary transition-colors
+              group-hover/card:underline
+              sm:text-xl
+            `}
+          >
             <Link href={`/events/${String(event.slug)}`}>{String(event.title)}</Link>
           </h3>
 

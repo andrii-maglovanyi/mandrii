@@ -24,13 +24,10 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
         .pipe(z.number().int(i18n("Capacity must be a whole number")).min(1, i18n("Capacity must be at least 1")))
         .optional()
         .nullable(),
+      city: z.string().optional().nullable(),
 
-      city: z.string().max(100, i18n("City name is too long")).optional().nullable(),
-
-      country: z.string().max(100, i18n("Country name is too long")).optional().nullable(),
-
-      custom_location_address: z.string().max(500, i18n("Address is too long")).optional().nullable(),
-
+      country: z.string().optional().nullable(),
+      custom_location_address: z.string().min(3, i18n("Address is required")).optional().nullable(),
       custom_location_name: z.string().max(200, i18n("Location name is too long")).optional().nullable(),
 
       description_en: z

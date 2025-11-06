@@ -2,10 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Input, Select } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
-
-import { Input } from "../../ui/Input/Input";
-import { Select } from "../../ui/Select/Select";
 
 type DayOfWeek = "FR" | "MO" | "SA" | "SU" | "TH" | "TU" | "WE";
 type EndType = "COUNT" | "DATE" | "NEVER";
@@ -196,12 +194,12 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
 
     // Frequency
     if (frequency === "DAILY") {
-      desc += interval === 1 ? ` ${i18n("daily")}` : ` ${i18n("every {n} days", { n: interval })}`;
+      desc += interval === 1 ? ` ${i18n("Daily")}` : ` ${i18n("Every {count} days", { count: interval })}`;
     } else if (frequency === "WEEKLY") {
       if (interval === 1) {
-        desc += ` ${i18n("weekly")}`;
+        desc += ` ${i18n("Weekly")}`;
       } else {
-        desc += ` ${i18n("every {n} weeks", { n: interval })}`;
+        desc += ` ${i18n("Every {count} weeks", { count: interval })}`;
       }
       if (selectedDays.length > 0) {
         const dayLabels = selectedDays
@@ -211,14 +209,14 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
         desc += ` ${i18n("on")} ${dayLabels}`;
       }
     } else if (frequency === "MONTHLY") {
-      desc += interval === 1 ? ` ${i18n("monthly")}` : ` ${i18n("every {n} months", { n: interval })}`;
+      desc += interval === 1 ? ` ${i18n("Monthly")}` : ` ${i18n("Every {count} months", { count: interval })}`;
     } else if (frequency === "YEARLY") {
-      desc += interval === 1 ? ` ${i18n("yearly")}` : ` ${i18n("every {n} years", { n: interval })}`;
+      desc += interval === 1 ? ` ${i18n("Yearly")}` : ` ${i18n("Every {count} years", { count: interval })}`;
     }
 
     // End condition
     if (endType === "COUNT") {
-      desc += `, ${i18n("{n} times", { n: count })}`;
+      desc += `, ${i18n("{count} times", { count })}`;
     } else if (endType === "DATE" && endDate) {
       const date = new Date(endDate);
       desc += `, ${i18n("until")} ${date.toLocaleDateString()}`;

@@ -1,6 +1,7 @@
 table:
   name: venue_status
   schema: public
+is_enum: true
 array_relationships:
   - name: venues
     using:
