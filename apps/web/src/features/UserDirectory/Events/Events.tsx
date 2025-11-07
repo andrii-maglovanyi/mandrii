@@ -13,7 +13,7 @@ import { useListControls } from "~/hooks/useListControls";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
-import { Locale } from "~/types";
+import { GetPublicEventsQuery, Locale } from "~/types";
 
 import { EventStatus } from "./EventStatus";
 
@@ -42,7 +42,7 @@ const Events = () => {
       dataIndex: "title",
       key: "title",
       render: (
-        title: unknown,
+        title_uk: unknown,
         {
           city,
           country,
@@ -50,16 +50,9 @@ const Events = () => {
           is_online,
           slug,
           start_date,
+          title_en,
           venue,
-        }: {
-          city: null | string;
-          country: null | string;
-          custom_location_name: null | string;
-          is_online: boolean;
-          slug: string;
-          start_date: string;
-          venue?: { name: string; slug: string } | null;
-        },
+        }: GetPublicEventsQuery["events"][number],
       ) => {
         let locationInfo = <>{i18n("Location TBD")}</>;
 
@@ -102,7 +95,7 @@ const Events = () => {
               href={`/events/${slug}`}
               target="_blank"
             >
-              {String(title)}
+              {String(title_uk)} ({title_en})
               <ArrowUpRight
                 className={`
                   mb-1.5 ml-0.5 inline-block align-bottom text-neutral opacity-0

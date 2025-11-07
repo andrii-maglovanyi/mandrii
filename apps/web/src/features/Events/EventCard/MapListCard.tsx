@@ -21,12 +21,13 @@ interface MapListCardProps {
 export const MapListCard = ({ event, onClick, selectedId }: MapListCardProps) => {
   const locale = useLocale() as Locale;
 
+  const title = locale === "uk" ? event.title_uk : event.title_en;
   const description = (locale === "uk" ? event.description_uk : event.description_en) || "";
 
   return (
-    <div className="flex flex-col pt-0.5 pb-2" id={String(event.id)} key={String(event.id)}>
+    <div className="flex flex-col pt-0.5 pb-2" id={event.id} key={event.id}>
       <section
-        aria-label={`Event: ${String(event.title)}`}
+        aria-label={`Event: ${title}`}
         className={clsx(
           `
             group/card flex w-full overflow-x-hidden rounded-xl border
@@ -58,12 +59,12 @@ export const MapListCard = ({ event, onClick, selectedId }: MapListCardProps) =>
               sm:text-xl
             `}
           >
-            <Link href={`/events/${String(event.slug)}`}>{String(event.title)}</Link>
+            <Link href={`/events/${event.slug}`}>{title}</Link>
           </h3>
 
           {description && (
             <RichText as="div" className="line-clamp-3 text-sm text-neutral">
-              {String(description).replaceAll("\n", "<br />")}
+              {description.replaceAll("\n", "<br />")}
             </RichText>
           )}
 

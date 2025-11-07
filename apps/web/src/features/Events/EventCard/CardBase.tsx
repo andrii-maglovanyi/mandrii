@@ -24,10 +24,14 @@ interface CardBaseProps {
 export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) => {
   const locale = useLocale() as Locale;
 
+  const title = locale === "uk" ? event.title_uk : event.title_en;
   const description = (locale === "uk" ? event.description_uk : event.description_en) || "";
+
   const truncatedDescription =
     typeof description === "string" && description.length > 120 ? `${description.substring(0, 120)}...` : description;
+
   const mainImage = event.images?.[0];
+
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const config = getLayoutConfig(variant, hasImage);
@@ -40,14 +44,14 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
         {hasImage && mainImage && (
           <div className={config.imageContainerClasses}>
             <Image
-              alt={String(event.title)}
+              alt={title}
               className={`
                 object-cover transition-transform duration-300
                 group-hover/card:scale-110
               `}
               fill
               sizes={config.imageSizes}
-              src={`${constants.vercelBlobStorageUrl}/${String(mainImage)}`}
+              src={`${constants.vercelBlobStorageUrl}/${mainImage}`}
             />
             <div
               className={`
@@ -81,14 +85,14 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
           <div className="flex-1">
             <CardHeader event={event} hideUntilHover={!isMobile} />
 
-            <h3 className={config.titleClasses}>{String(event.title)}</h3>
+            <h3 className={config.titleClasses}>{title}</h3>
 
             {config.showDescription && description && (
               <RichText className={clsx(`
                 prose max-w-none
                 dark:prose-invert
               `, config.descriptionClasses)}>
-                {variant.startsWith("list") ? String(truncatedDescription) : String(description)}
+                {variant.startsWith("list") ? truncatedDescription : description}
               </RichText>
             )}
           </div>

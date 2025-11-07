@@ -24,6 +24,7 @@ export function MapMobileCard({ event }: Readonly<MapMobileCardInterface>) {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
 
+  const title = locale === "uk" ? event.title_uk : event.title_en;
   const description = (locale === "uk" ? event.description_uk : event.description_en) || "";
 
   useEffect(() => {
@@ -86,13 +87,13 @@ export function MapMobileCard({ event }: Readonly<MapMobileCardInterface>) {
               sm:text-xl
             `}
           >
-            <Link href={`/events/${String(event.slug)}`}>{String(event.title)}</Link>
+            <Link href={`/events/${event.slug}`}>{title}</Link>
           </h3>
 
           {description && <RichText className={`
             prose max-w-none
             dark:prose-invert
-          `}>{String(description)}</RichText>}
+          `}>{description}</RichText>}
 
           <CardMetadata event={event} variant="map" />
           <CardFooter event={event} />

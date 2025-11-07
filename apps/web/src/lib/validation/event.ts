@@ -199,7 +199,6 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
         .max(150, i18n("Slug must be less than 150 characters"))
         .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, i18n("Slug must contain only lowercase letters, numbers, and hyphens")),
 
-      // Date/Time
       start_date: z.union([z.string(), z.date()]).refine(
         (val) => {
           try {
@@ -215,7 +214,8 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       ),
 
       status: z.enum(Object.values(Event_Status_Enum)).default(Event_Status_Enum.Pending).optional(),
-      title: z.string().min(1, i18n("Title is required")).max(200, i18n("Title must be less than 200 characters")),
+      title_en: z.string().min(1, i18n("Title is required")),
+      title_uk: z.string().min(1, i18n("Title is required")),
       type: z.enum(Object.values(Event_Type_Enum), {
         message: i18n("Please choose an event type"),
       }),

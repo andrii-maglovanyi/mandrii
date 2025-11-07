@@ -93,7 +93,8 @@ export const getEventsFilter = ({
 
   if (name) {
     where._or = [
-      { title: { _ilike: `%${name}%` } },
+      { title_en: { _ilike: `%${name}%` } },
+      { title_uk: { _ilike: `%${name}%` } },
       { description_en: { _ilike: `%${name}%` } },
       { description_uk: { _ilike: `%${name}%` } },
       { area: { _ilike: `%${name}%` } },
@@ -109,7 +110,8 @@ export const getEventsFilter = ({
 const EVENT_FIELDS_FRAGMENT = gql`
   fragment EventFields on events {
     id
-    title
+    title_en
+    title_uk
     slug
     description_en
     description_uk
