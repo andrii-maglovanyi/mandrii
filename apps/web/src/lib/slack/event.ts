@@ -13,14 +13,14 @@ const app = new App({
   token: process.env.NEXT_PRIVATE_SLACK_BOT_TOKEN,
 });
 
-const getMedia = ({ images, title }: Partial<Events>) => {
+const getMedia = ({ images, title_en, title_uk }: Partial<Events>) => {
   if (!images?.length) return null;
 
   const imageUrl = `${constants.vercelBlobStorageUrl}/${images[0]}`;
 
   return {
     accessory: {
-      alt_text: title,
+      alt_text: title_uk || title_en || "Event image",
       image_url: imageUrl,
       type: "image" as const,
     },
@@ -29,9 +29,10 @@ const getMedia = ({ images, title }: Partial<Events>) => {
 
 export const sendSlackNotification = async (
   user: User,
-  { city, country, description_en, description_uk, id, images, slug, title, type }: Partial<Events>,
+  { city, country, description_en, description_uk, id, images, slug, title_en, title_uk, type }: Partial<Events>,
 ) => {
-  const media = getMedia({ images, title });
+  const title = title_uk || title_en || "Untitled Event";
+  const media = getMedia({ images, title_en, title_uk });
 
   const categoryText = type ? constants.categories[type].label.uk : "[no type]";
 

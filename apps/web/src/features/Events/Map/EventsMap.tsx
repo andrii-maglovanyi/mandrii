@@ -300,7 +300,7 @@ export const EventsMap = () => {
         onClick={() => {
           sendToMixpanel("Selected Event Card", {
             id: event.id,
-            name: event.title,
+            name: event.title_en ?? event.title_uk,
           });
           setSelectedEventId(event.id as UUID);
         }}
