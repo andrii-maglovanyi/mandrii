@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
-import { Event_Type_Enum, GetPublicEventsQuery } from "~/types";
+import { Event_Type_Enum, GetPublicEventsQuery, Locale } from "~/types";
 import { UUID } from "~/types/uuid";
 
 import { COLOR_STYLES } from "../../Venues/constants";
@@ -28,6 +28,7 @@ type Props = {
   events?: GetPublicEventsQuery["events"];
   isLoaded: boolean;
   labelSpansRef: React.RefObject<Map<number | string, HTMLSpanElement>>;
+  locale: Locale;
   mapRef: React.RefObject<google.maps.Map | null>;
   markersRef: React.RefObject<Map<UUID, AdvancedMarkerElement>>;
   onEventSelected?: (id: UUID) => void;
@@ -104,7 +105,8 @@ function createAndAddMarker(
   props: Props,
   STYLES: typeof COLOR_STYLES.LIGHT,
 ) {
-  const { geo, id, title, type, venue } = event;
+  const { geo, id, title_en, title_uk, type, venue } = event;
+  const title = props.locale === "uk" ? title_uk : title_en;
   const { labelSpansRef, mapRef, markersRef, onEventSelected, selectedEventId } = props;
 
   // Use event's geo if available, otherwise use venue's geo

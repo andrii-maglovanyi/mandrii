@@ -1,8 +1,10 @@
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
+import { useLocale } from "next-intl";
 import { Ref, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 
 import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
+import { Locale } from "~/types";
 import { GetPublicEventsQuery } from "~/types/graphql.generated";
 import { UUID } from "~/types/uuid";
 
@@ -50,6 +52,7 @@ export const PinMap = ({
   zoom = 18,
 }: PinMapProps) => {
   const i18n = useI18n();
+  const locale = useLocale() as Locale;
 
   const mapRef = useRef<GoogleMapInstance | null>(null);
   const dashedCircleRef = useRef<null | Polyline>(null);
@@ -141,6 +144,7 @@ export const PinMap = ({
     events,
     isLoaded,
     labelSpansRef,
+    locale,
     mapRef,
     markersRef,
     onEventSelected,

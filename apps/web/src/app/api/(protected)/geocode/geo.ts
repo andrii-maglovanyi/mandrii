@@ -22,6 +22,61 @@ const AREA_HIERARCHY = [
   "country",
 ];
 
+interface OSMRequestOptions {
+  address?: string;
+  lang?: string;
+  lat?: number;
+  lon?: number;
+}
+
+const fetchFromOSM = async (options: OSMRequestOptions) => {
+  const { address, lang = "en", lat, lon } = options;
+
+  const headers = {
+    "User-Agent": "Mandrii/1.x",
+  };
+
+  // Try address search first
+  if (address) {
+    try {
+      const searchUrl = `https://nominatim.osm.org/search?q=${encodeURIComponent(
+        address,
+      )}&format=json&addressdetails=1&limit=1&accept-language=${lang}`;
+
+      const response = await fetch(searchUrl, { headers });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) {
+          return data;
+        }
+      }
+    } catch (error) {
+      console.error(`OSM search by address failed (${lang}):`, error);
+    }
+  }
+
+  // Fallback to reverse geocoding if coordinates are available
+  if (lat !== undefined && lon !== undefined) {
+    try {
+      const reverseUrl = `https://nominatim.osm.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1&accept-language=${lang}`;
+
+      const response = await fetch(reverseUrl, { headers });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data && !data.error) {
+          return [data]; // Wrap in array to match search format
+        }
+      }
+    } catch (error) {
+      console.error(`OSM reverse geocoding error (${lang}):`, error);
+    }
+  }
+
+  return null;
+};
+
 /**
  * Fetches and extracts area information from OpenStreetMap in the given language.
  */
@@ -30,25 +85,19 @@ const getAreaFromOSM = async (
   fullArea = false,
   lang = "en",
 ): Promise<null | string[]> => {
-  if (!locationData?.address) return locationData?.area ? [locationData.area] : null;
+  if (!locationData?.address && !locationData?.coordinates.length) {
+    return locationData?.area ? [locationData.area] : null;
+  }
 
   try {
-    const osmUrl = `https://nominatim.osm.org/search?q=${encodeURIComponent(
-      locationData.address,
-    )}&format=json&addressdetails=1&limit=1&accept-language=${lang}`;
-
-    const osmResponse = await fetch(osmUrl, {
-      headers: {
-        "User-Agent": "Mandrii/1.x",
-      },
+    const osmData = await fetchFromOSM({
+      address: locationData.address,
+      lang,
+      lat: locationData.coordinates[1],
+      lon: locationData.coordinates[0],
     });
-    if (!osmResponse.ok) {
-      console.error("OSM request failed:", osmResponse.status, osmResponse.statusText);
-      return locationData.area ? [locationData.area] : null;
-    }
 
-    const osmData = await osmResponse.json();
-    if (!Array.isArray(osmData) || osmData.length === 0) {
+    if (!osmData) {
       return locationData.area ? [locationData.area] : null;
     }
 
