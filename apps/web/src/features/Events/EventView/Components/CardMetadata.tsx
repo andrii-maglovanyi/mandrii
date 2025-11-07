@@ -59,7 +59,7 @@ export const CardMetadata = ({
     );
 
   return (
-    <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
+    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col text-sm">
       {/* Date & Time */}
       {startDate && (
         <Section title={i18n("Date & Time")}>
@@ -81,9 +81,9 @@ export const CardMetadata = ({
       )}{" "}
       {event.is_recurring && event.recurrence_rule && (
         <Section>
-          <div className="my-2 border-primary/20 bg-primary/10 px-4 py-2">
-            <div className="flex items-start gap-2 text-primary">
-              <Repeat className="mt-0.5 min-h-4 min-w-4 shrink-0 text-neutral" size={16} />
+          <div className="border-primary/20 bg-primary/10 my-2 px-4 py-2">
+            <div className="text-primary flex items-start gap-2">
+              <Repeat className="text-neutral mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
               <p className="text-sm font-medium">{formatRecurrenceRule(event.recurrence_rule)}</p>
             </div>
           </div>
@@ -95,19 +95,11 @@ export const CardMetadata = ({
       {!isOnline && (
         <Section title={i18n("Location")}>
           {event.venue_id && event.venue ? (
-            <div className={`
-              group/info flex w-full items-center justify-between text-left
-              hover:bg-on-surface/5
-            `}>
-              <div className={`
-                flex min-w-0 flex-1 items-center gap-2 px-4 py-2 text-neutral
-              `}>
-                <MapPin className="min-h-4 min-w-4 text-primary" size={16} />
+            <div className={`group/info hover:bg-on-surface/5 flex w-full items-center justify-between text-left`}>
+              <div className={`text-neutral flex min-w-0 flex-1 items-center gap-2 px-4 py-2`}>
+                <MapPin className="text-primary min-h-4 min-w-4" size={16} />
                 <Link
-                  className={`
-                    min-w-0 truncate font-medium text-primary
-                    hover:underline
-                  `}
+                  className={`text-primary min-w-0 truncate font-medium hover:underline`}
                   href={`/venues/${event.venue.slug}`}
                 >
                   {event.venue.name}

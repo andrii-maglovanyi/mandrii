@@ -54,23 +54,14 @@ export function MapMobileCard({ event }: Readonly<MapMobileCardInterface>) {
 
   return (
     <div
-      className={`
-        fixed right-0 bottom-0 left-0 z-30 overflow-hidden rounded-t-2xl
-        border-neutral-hover bg-surface shadow-lg transition-all duration-500
-        ease-in-out
-        md:hidden
-        ${isExpanded ? "" : `border-t`}
-      `}
+      className={`border-neutral-hover bg-surface fixed right-0 bottom-0 left-0 z-30 overflow-hidden rounded-t-2xl shadow-lg transition-all duration-500 ease-in-out md:hidden ${isExpanded ? "" : `border-t`} `}
       style={{
         height: isExpanded && innerHeight ? `${innerHeight}px` : "33vh",
       }}
     >
       <button
         aria-label={isExpanded ? i18n("Collapse event details") : i18n("Expand event details")}
-        className={`
-          flex h-10 w-full cursor-pointer items-center justify-center
-          hover:bg-on-surface/5
-        `}
+        className={`hover:bg-on-surface/5 flex h-10 w-full cursor-pointer items-center justify-center`}
         onClick={toggle}
       >
         {isExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
@@ -81,19 +72,12 @@ export function MapMobileCard({ event }: Readonly<MapMobileCardInterface>) {
           <CardHeader event={event} />
 
           <h3
-            className={`
-              mb-2 line-clamp-2 text-lg font-bold text-primary transition-colors
-              group-hover/card:underline
-              sm:text-xl
-            `}
+            className={`text-primary mb-2 line-clamp-2 text-lg font-bold transition-colors group-hover/card:underline sm:text-xl`}
           >
             <Link href={`/events/${event.slug}`}>{title}</Link>
           </h3>
 
-          {description && <RichText className={`
-            prose max-w-none
-            dark:prose-invert
-          `}>{description}</RichText>}
+          {description && <RichText className={`prose dark:prose-invert max-w-none`}>{description}</RichText>}
 
           <CardMetadata event={event} variant="map" />
           <CardFooter event={event} />

@@ -41,7 +41,7 @@ export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps
   }, [activeIndex, children]);
 
   return (
-    <div className="relative border-b border-neutral-disabled pt-2">
+    <div className="border-neutral-disabled relative border-b pt-2">
       <div className="flex overflow-y-hidden px-1 pt-2">
         {React.Children.map(children, (child, index) => {
           if (
@@ -73,10 +73,7 @@ export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps
       </div>
       <div
         aria-selected
-        className={`
-          absolute bottom-0 h-1 translate-y-0.5 rounded-full bg-primary
-          transition-transform duration-200
-        `}
+        className={`bg-primary absolute bottom-0 h-1 translate-y-0.5 rounded-full transition-transform duration-200`}
         ref={indicatorRef}
         style={{ width: 0 }}
       />

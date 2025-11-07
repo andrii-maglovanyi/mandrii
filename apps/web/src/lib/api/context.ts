@@ -2,7 +2,7 @@ import { getI18n } from "~/i18n/getI18n";
 import { Locale, Users } from "~/types";
 
 import { auth } from "../auth";
-import { getUserById } from "../models/user";
+import { UserModel } from "../models/user";
 import { UnauthorizedError } from "./errors";
 
 export type AuthenticatedSession = {
@@ -37,7 +37,8 @@ const getUserContext = async () => {
     return null;
   }
 
-  const user = await getUserById(session.user.id, { accessToken });
+  const userModel = new UserModel(session as unknown as AuthenticatedSession);
+  const user = await userModel.findById(session.user.id);
 
   if (!user) {
     throw new UnauthorizedError("User not found");

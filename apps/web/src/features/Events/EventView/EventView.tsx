@@ -138,51 +138,30 @@ export const EventView = ({ slug }: EventViewProps) => {
   return (
     <div className="flex flex-col">
       {/* Hero section. Edge to edge image carousel */}
-      <div className={`
-        relative w-full pb-2
-        md:pb-4
-      `}>
+      <div className={`relative w-full pb-2 md:pb-4`}>
         {images.length ? (
-          <div className={`
-            relative aspect-video w-full
-            md:aspect-21/9
-          `}>
+          <div className={`relative aspect-video w-full md:aspect-21/9`}>
             <ImageCarousel images={images} showDots />
             {/* Gradient overlay */}
             <div
-              className={`
-                pointer-events-none absolute inset-0 bg-linear-to-t
-                from-neutral-900 via-neutral-900/30 to-transparent
-              `}
+              className={`pointer-events-none absolute inset-0 bg-linear-to-t from-neutral-900 via-neutral-900/30 to-transparent`}
             />
           </div>
         ) : (
           <div
-            className={`
-              relative aspect-video w-full bg-linear-to-br from-primary/30
-              via-primary/15 to-secondary/30
-              md:aspect-21/9
-            `}
+            className={`from-primary/30 via-primary/15 to-secondary/30 relative aspect-video w-full bg-linear-to-br md:aspect-21/9`}
           />
         )}
 
         {/* Event title overlay on image */}
-        <div className={`
-          absolute right-0 bottom-24 left-0 px-4 pb-4
-          md:bottom-20 md:px-8
-        `}>
+        <div className={`absolute right-0 bottom-24 left-0 px-4 pb-4 md:bottom-20 md:px-8`}>
           <div className="mx-auto max-w-5xl">
             <div className="flex items-end justify-between gap-4">
               <div className="min-w-0 flex-1">
                 <h1
                   className={clsx(
                     images.length ? "text-neutral-0" : "text-on-surface",
-                    `
-                      mb-3 text-3xl leading-tight font-black tracking-tight
-                      drop-shadow-2xl
-                      md:text-5xl
-                      lg:text-6xl
-                    `,
+                    `mb-3 text-3xl leading-tight font-black tracking-tight drop-shadow-2xl md:text-5xl lg:text-6xl`,
                   )}
                 >
                   {title}
@@ -192,37 +171,25 @@ export const EventView = ({ slug }: EventViewProps) => {
                 <div
                   className={clsx(
                     images.length ? "text-neutral-0/80" : "text-on-surface/80",
-                    `
-                      flex flex-col gap-2
-                      md:flex-row md:items-center md:gap-4
-                    `,
+                    `flex flex-col gap-2 md:flex-row md:items-center md:gap-4`,
                   )}
                 >
                   <div className="flex items-center gap-2">
                     <Calendar className="shrink-0" size={20} />
-                    <span className={`
-                      text-base font-medium
-                      md:text-lg
-                    `}>{formatDate(startDate)}</span>
+                    <span className={`text-base font-medium md:text-lg`}>{formatDate(startDate)}</span>
                   </div>
 
                   {!event.is_online && event.city && (
                     <div className="flex items-center gap-2">
                       <MapPin className="shrink-0" size={20} />
-                      <span className={`
-                        text-base font-medium
-                        md:text-lg
-                      `}>{event.city}</span>
+                      <span className={`text-base font-medium md:text-lg`}>{event.city}</span>
                     </div>
                   )}
 
                   {event.is_online && (
                     <div className="flex items-center gap-2">
                       <Globe className="shrink-0" size={20} />
-                      <span className={`
-                        text-base font-medium
-                        md:text-lg
-                      `}>{i18n("Online event")}</span>
+                      <span className={`text-base font-medium md:text-lg`}>{i18n("Online event")}</span>
                     </div>
                   )}
                 </div>
@@ -230,10 +197,7 @@ export const EventView = ({ slug }: EventViewProps) => {
 
               {/* Registration Button */}
               {event.registration_url && (
-                <div className={`
-                  hidden shrink-0
-                  md:block
-                `}>
+                <div className={`hidden shrink-0 md:block`}>
                   <a href={event.registration_url} rel="noopener noreferrer" target="_blank">
                     <Button color="primary" size="lg" variant="filled">
                       {event.registration_required ? i18n("Register Now") : i18n("Learn More")}
@@ -248,10 +212,7 @@ export const EventView = ({ slug }: EventViewProps) => {
 
         {/* Registration Button - Mobile (below hero) */}
         {event.registration_url && (
-          <div className={`
-            absolute right-0 bottom-0 left-0 px-4
-            md:hidden
-          `}>
+          <div className={`absolute right-0 bottom-0 left-0 px-4 md:hidden`}>
             <div className="mx-auto max-w-5xl">
               <a href={event.registration_url} rel="noopener noreferrer" target="_blank">
                 <Button color="primary" variant="filled">
@@ -269,30 +230,17 @@ export const EventView = ({ slug }: EventViewProps) => {
       </div>
 
       {/* Main Content */}
-      <div className={`
-        mx-auto w-full max-w-5xl px-4 py-2
-        lg:py-4
-      `}>
+      <div className={`mx-auto w-full max-w-5xl px-4 py-2 lg:py-4`}>
         <Tabs defaultActiveKey="about">
           <TabPane tab={i18n("About event")}>
-            <div className={`
-              grid grid-cols-1 gap-4
-              lg:grid-cols-3
-            `}>
+            <div className={`grid grid-cols-1 gap-4 lg:grid-cols-3`}>
               {/* Description - Left side (2/3) */}
               <div className="lg:col-span-2">
                 {description ? (
-                  <RichText className={`
-                    prose max-w-none
-                    dark:prose-invert
-                  `}>{description}</RichText>
+                  <RichText className={`prose dark:prose-invert max-w-none`}>{description}</RichText>
                 ) : (
                   <div
-                    className={`
-                      flex items-center justify-center rounded-2xl border-2
-                      border-dashed border-gray-200 py-16
-                      dark:border-gray-700
-                    `}
+                    className={`flex items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 py-16 dark:border-gray-700`}
                   >
                     <p className="text-neutral/60">{i18n("No description available")}</p>
                   </div>
@@ -303,12 +251,7 @@ export const EventView = ({ slug }: EventViewProps) => {
               <div className="flex flex-col gap-4">
                 {/* Event Details Card */}
                 <section
-                  className={`
-                    group/card rounded-xl border border-primary/0
-                    bg-surface-tint/50 p-4 transition-all duration-300
-                    hover:border-primary/20 hover:shadow-lg
-                    lg:text-base
-                  `}
+                  className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
                 >
                   <h3 className="mb-4 text-lg font-bold">{i18n("Event Details")}</h3>
                   <CardMetadata
@@ -324,12 +267,7 @@ export const EventView = ({ slug }: EventViewProps) => {
                 {/* Additional Information */}
                 {(event.capacity || event.language || event.age_restriction || event.accessibility_info) && (
                   <section
-                    className={`
-                      group/card rounded-xl border border-primary/0
-                      bg-surface-tint/50 p-4 transition-all duration-300
-                      hover:border-primary/20 hover:shadow-lg
-                      lg:text-base
-                    `}
+                    className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
                   >
                     <h3 className="mb-4 text-lg font-bold">{i18n("Additional Information")}</h3>
                     <AdditionalInfo event={event} expanded locale={locale} />
@@ -339,12 +277,7 @@ export const EventView = ({ slug }: EventViewProps) => {
                 {/* Organizer */}
                 {event.organizer_name && (
                   <section
-                    className={`
-                      group/card rounded-xl border border-primary/0
-                      bg-surface-tint/50 p-4 transition-all duration-300
-                      hover:border-primary/20 hover:shadow-lg
-                      lg:text-base
-                    `}
+                    className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
                   >
                     <h3 className="mb-4 text-lg font-bold">{i18n("Organizer")}</h3>
                     <OrganizerInfo event={event} expanded locale={locale} />

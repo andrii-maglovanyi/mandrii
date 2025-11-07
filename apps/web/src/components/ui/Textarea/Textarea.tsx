@@ -59,7 +59,7 @@ export function Textarea({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-sm font-medium text-on-surface" htmlFor={textareaId}>
+        <label className="text-on-surface text-sm font-medium" htmlFor={textareaId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>

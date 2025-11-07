@@ -33,11 +33,7 @@ export const EventsBanner = () => {
         </Link>
       </div>
 
-      <div className={`
-        grid grid-cols-1 gap-4
-        md:grid-cols-2
-        lg:grid-cols-3
-      `}>
+      <div className={`grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3`}>
         {events.map((event, index) => (
           <EventsMasonryCard event={event} key={event.id} layoutSize={index === 0 ? "full" : "small"} />
         ))}

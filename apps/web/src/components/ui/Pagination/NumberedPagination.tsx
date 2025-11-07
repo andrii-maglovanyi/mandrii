@@ -44,7 +44,7 @@ export const NumberedPagination = ({
   const renderPage = (page: number | string) => {
     if (typeof page === "string") {
       return (
-        <span className="mx-2 px-1.5 text-neutral" key={page}>
+        <span className="text-neutral mx-2 px-1.5" key={page}>
           ...
         </span>
       );

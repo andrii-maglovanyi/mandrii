@@ -1,6 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 
 import { ApiError, InternalServerError, ValidationError } from "./errors";
+import { envName } from "../config/env";
 
 export async function withErrorHandling(handler: () => Promise<Response | undefined>): Promise<Response> {
   try {
@@ -8,6 +9,10 @@ export async function withErrorHandling(handler: () => Promise<Response | undefi
 
     return result ?? new Response(null, { status: 204 });
   } catch (error) {
+    if (envName !== "production") {
+      console.error("API Error:", error);
+    }
+
     captureException(error);
 
     if (error instanceof ApiError) {

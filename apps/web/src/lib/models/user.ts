@@ -2,6 +2,7 @@ import { AuthenticatedSession } from "~/lib/api/context";
 import { BadGateway, BadRequestError, NotFoundError, UnauthorizedError } from "~/lib/api/errors";
 import { publicConfig } from "~/lib/config/public";
 import { Users } from "~/types";
+import { privateConfig } from "../config/private";
 
 const USER_FIELDS = `
   id
@@ -11,6 +12,7 @@ const USER_FIELDS = `
   role
   status
   points
+  events_created
   venues_created
 `;
 
@@ -30,72 +32,157 @@ const UPDATE_USER_MUTATION = `
   }
 `;
 
-const executeGraphQLQuery = async <T>(
-  query: string,
-  variables: Record<string, unknown>,
-  accessToken: string,
-): Promise<T> => {
-  const response = await fetch(publicConfig.hasura.endpoint, {
-    body: JSON.stringify({ query, variables }),
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
+type AuthContext = { type: "user"; accessToken: string } | { type: "admin"; adminSecret: string };
+
+export class UserModel {
+  private session: AuthenticatedSession | null;
+
+  constructor(session: AuthenticatedSession | null = null) {
+    this.session = session;
+  }
+
+  private async executeQuery<T>(query: string, variables: Record<string, unknown>, auth: AuthContext): Promise<T> {
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
-    },
-    method: "POST",
-  });
+    };
 
-  if (!response.ok) {
-    throw new BadGateway("Failed to execute GraphQL query");
+    if (auth.type === "user") {
+      headers["Authorization"] = `Bearer ${auth.accessToken}`;
+    } else if (auth.type === "admin") {
+      headers["x-hasura-admin-secret"] = auth.adminSecret;
+    }
+
+    const response = await fetch(publicConfig.hasura.endpoint, {
+      body: JSON.stringify({ query, variables }),
+      headers,
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      throw new BadGateway("Failed to execute GraphQL query");
+    }
+
+    const result = await response.json();
+
+    if (result.errors) {
+      throw new Error(result.errors[0].message);
+    }
+
+    return result.data;
   }
 
-  const result = await response.json();
+  private getAuthContext(useAdmin: boolean = false): AuthContext {
+    if (useAdmin) {
+      return { type: "admin", adminSecret: privateConfig.hasura.adminSecret };
+    }
 
-  if (result.errors) {
-    throw new Error(result.errors[0].message);
+    if (!this.session?.accessToken) {
+      throw new UnauthorizedError("Session is required for user operations");
+    }
+
+    return { type: "user", accessToken: this.session.accessToken };
   }
 
-  return result.data;
-};
+  async findById(id: string): Promise<Users | null> {
+    const result = await this.executeQuery<{ users_by_pk: null | Users }>(
+      GET_USER_BY_ID_QUERY,
+      { id },
+      this.getAuthContext(),
+    );
 
-export const getUserById = async (id: string, session: { accessToken: string }) => {
-  if (!session.accessToken) {
-    throw new UnauthorizedError("Access token is required");
+    return result.users_by_pk;
   }
 
-  const result = await executeGraphQLQuery<{ users_by_pk: null | Users }>(
-    GET_USER_BY_ID_QUERY,
-    { id },
-    session.accessToken,
-  );
+  async update(variables: Partial<Users>): Promise<Users> {
+    const { id, ...updateFields } = variables;
 
-  return result.users_by_pk;
-};
+    if (!id) {
+      throw new BadRequestError("User ID is required for updates");
+    }
 
-export const saveUser = async (variables: Partial<Users>, session: AuthenticatedSession) => {
-  const { id, ...updateFields } = variables;
+    const cleanedFields = Object.fromEntries(Object.entries(updateFields).filter(([, v]) => v !== undefined));
 
-  if (!id) {
-    throw new BadRequestError("User ID is required for updates");
+    if (Object.keys(cleanedFields).length === 0) {
+      throw new BadRequestError("No fields to update");
+    }
+
+    const result = await this.executeQuery<{ update_users_by_pk: Users | null }>(
+      UPDATE_USER_MUTATION,
+      {
+        _set: cleanedFields,
+        id,
+      },
+      this.getAuthContext(),
+    );
+
+    if (!result.update_users_by_pk) {
+      throw new NotFoundError("User not found");
+    }
+
+    return result.update_users_by_pk;
   }
 
-  const cleanedFields = Object.fromEntries(Object.entries(updateFields).filter(([, v]) => v !== undefined));
+  private async updateAsAdmin(variables: Partial<Users>): Promise<Users> {
+    const { id, ...updateFields } = variables;
 
-  if (Object.keys(cleanedFields).length === 0) {
-    throw new BadRequestError("No fields to update");
+    if (!id) {
+      throw new BadRequestError("User ID is required for updates");
+    }
+
+    const cleanedFields = Object.fromEntries(Object.entries(updateFields).filter(([, v]) => v !== undefined));
+
+    if (Object.keys(cleanedFields).length === 0) {
+      throw new BadRequestError("No fields to update");
+    }
+
+    const result = await this.executeQuery<{ update_users_by_pk: Users | null }>(
+      UPDATE_USER_MUTATION,
+      {
+        _set: cleanedFields,
+        id,
+      },
+      this.getAuthContext(true),
+    );
+
+    if (!result.update_users_by_pk) {
+      throw new NotFoundError("User not found");
+    }
+
+    return result.update_users_by_pk;
   }
 
-  const result = await executeGraphQLQuery<{ update_users_by_pk: { id: string } }>(
-    UPDATE_USER_MUTATION,
-    {
-      _set: cleanedFields,
-      id,
-    },
-    session.accessToken,
-  );
+  async incrementEventCreation(): Promise<Users> {
+    if (!this.session) {
+      throw new UnauthorizedError("Session is required");
+    }
 
-  if (!result.update_users_by_pk) {
-    throw new NotFoundError("User not found");
+    return await this.updateAsAdmin({
+      events_created: (this.session.user.events_created ?? 0) + 1,
+      id: this.session.user.id,
+      points: (this.session.user.points ?? 0) + privateConfig.rewards.pointsPerEventCreation,
+    });
   }
 
-  return result.update_users_by_pk.id;
-};
+  async incrementVenueCreation(): Promise<Users> {
+    if (!this.session) {
+      throw new UnauthorizedError("Session is required");
+    }
+
+    return await this.updateAsAdmin({
+      id: this.session.user.id,
+      venues_created: (this.session.user.venues_created ?? 0) + 1,
+      points: (this.session.user.points ?? 0) + privateConfig.rewards.pointsPerVenueCreation,
+    });
+  }
+
+  async addPoints(pointsToAdd: number): Promise<Users> {
+    if (!this.session) {
+      throw new UnauthorizedError("Session is required");
+    }
+
+    return await this.updateAsAdmin({
+      id: this.session.user.id,
+      points: (this.session.user.points ?? 0) + pointsToAdd,
+    });
+  }
+}

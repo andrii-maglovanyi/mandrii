@@ -100,7 +100,7 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
 
   return (
     <>
-      <RichText as="div" className="py-6 text-sm text-neutral">
+      <RichText as="div" className="text-neutral py-6 text-sm">
         {i18n(
           "Adding an address helps users find your venue on the [interactive map]({map_link}) and search by location.",
           {
@@ -112,23 +112,20 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
       <Checkbox label={i18n("Has a physical location")} {...getFieldProps("is_physical")} disabled={isBusy} />
 
       {values.is_physical ? (
-        <RichText as="div" className="pb-6 text-sm text-neutral">
+        <RichText as="div" className="text-neutral pb-6 text-sm">
           {i18n(
             "Enter exact address for accurate map placement. You can fine-tune the pin location within a 100m radius if needed.",
           )}
         </RichText>
       ) : (
-        <RichText as="div" className="pb-6 text-sm text-neutral">
+        <RichText as="div" className="text-neutral pb-6 text-sm">
           {i18n(
             "Enter approximate location and your venue will be discoverable in search by name or region without showing an exact pin.",
           )}
         </RichText>
       )}
 
-      <div className={`
-        flex flex-col
-        md:flex-row md:space-x-4
-      `}>
+      <div className={`flex flex-col md:flex-row md:space-x-4`}>
         <div className="flex grow flex-col">
           <Input
             className="w-96"
@@ -139,10 +136,7 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
             {...getFieldProps("address")}
           />
         </div>
-        <div className={`
-          flex flex-col
-          md:pt-6
-        `}>
+        <div className={`flex flex-col md:pt-6`}>
           <Button busy={isAddressLoading} disabled={isVerifyDisabled} onClick={handleVerifyAddress} variant="filled">
             {isAddressLoading ? i18n("Verifying address") : i18n("Verify address")}
           </Button>
@@ -163,10 +157,7 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
 
       {hasVerifiedAddress && !isAddressError && (
         <>
-          <Alert className={`
-            mt-8
-            md:mt-2
-          `} variant="success">
+          <Alert className={`mt-8 md:mt-2`} variant="success">
             {fullAddress.address}
           </Alert>
           <div className="relative my-4 h-96 overflow-hidden rounded-2xl">
@@ -181,15 +172,12 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
 
           {values.is_physical ? (
             <>
-              <RichText as="div" className="py-6 text-sm text-neutral">
+              <RichText as="div" className="text-neutral py-6 text-sm">
                 {i18n(
                   "Please make sure the pin location on the map points to the right place.<br />You can adjust coordinates within 100m radius from the original point if it's not quite right",
                 )}
               </RichText>
-              <div className={`
-                flex w-full flex-col
-                md:flex-row md:space-x-4
-              `}>
+              <div className={`flex w-full flex-col md:flex-row md:space-x-4`}>
                 <Input
                   label={`${i18n("Latitude")} (${i18n("orig.")} ${fullAddress.coordinates[1]})`}
                   max={bounds?.latitude.maxLat}
@@ -226,7 +214,7 @@ export const VenueAddress = ({ errors, getFieldProps, isBusy, setValues, values 
               {...getFieldProps("area")}
             />
 
-            <p className="text-sm text-neutral">
+            <p className="text-neutral text-sm">
               {i18n(
                 "These details are collected automatically and will help users find your venue. You can adjust them if needed.",
               )}

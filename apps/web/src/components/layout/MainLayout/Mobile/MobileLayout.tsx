@@ -16,9 +16,7 @@ import { Container } from "../Container";
 import { Logo } from "../Logo";
 
 const AnimatedIconSwap = ({ isOpen }: { isOpen: boolean }) => (
-  <span className={`
-    relative inline-block h-6 w-6 transition-transform duration-300
-  `}>
+  <span className={`relative inline-block h-6 w-6 transition-transform duration-300`}>
     <Menu
       className={clsx(
         "absolute inset-0 transition-transform duration-300",
@@ -50,9 +48,7 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
 
   return (
     <>
-      <header className={`
-        relative z-50 flex h-16 items-center justify-end px-4 shadow-md
-      `}>
+      <header className={`relative z-50 flex h-16 items-center justify-end px-4 shadow-md`}>
         <span className="absolute left-1/2 -translate-x-1/2 transform">
           <Logo />
         </span>
@@ -71,10 +67,7 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
       <div
         aria-hidden={!isOpen}
         className={clsx(
-          `
-            fixed top-0 left-0 z-40 h-full w-full transform overflow-hidden py-4
-            transition-transform duration-300
-          `,
+          `fixed top-0 left-0 z-40 h-full w-full transform overflow-hidden py-4 transition-transform duration-300`,
           "bg-surface",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}

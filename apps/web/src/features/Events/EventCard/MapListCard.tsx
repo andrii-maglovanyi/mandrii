@@ -29,14 +29,9 @@ export const MapListCard = ({ event, onClick, selectedId }: MapListCardProps) =>
       <section
         aria-label={`Event: ${title}`}
         className={clsx(
-          `
-            group/card flex w-full overflow-x-hidden rounded-xl border
-            bg-surface-tint/50 transition-all duration-300
-            hover:border-primary/20 hover:shadow-lg
-            lg:text-base
-          `,
+          `group/card bg-surface-tint/50 hover:border-primary/20 flex w-full overflow-x-hidden rounded-xl border transition-all duration-300 hover:shadow-lg lg:text-base`,
           selectedId === event.id
-            ? "border-primary/20 shadow-xl ring-2 ring-primary ring-offset-1"
+            ? "border-primary/20 ring-primary shadow-xl ring-2 ring-offset-1"
             : `border-primary/0`,
         )}
         onClick={onClick}
@@ -53,17 +48,13 @@ export const MapListCard = ({ event, onClick, selectedId }: MapListCardProps) =>
           <CardHeader event={event} hideUntilHover />
 
           <h3
-            className={`
-              mb-2 line-clamp-2 text-lg font-bold text-primary transition-colors
-              group-hover/card:underline
-              sm:text-xl
-            `}
+            className={`text-primary mb-2 line-clamp-2 text-lg font-bold transition-colors group-hover/card:underline sm:text-xl`}
           >
             <Link href={`/events/${event.slug}`}>{title}</Link>
           </h3>
 
           {description && (
-            <RichText as="div" className="line-clamp-3 text-sm text-neutral">
+            <RichText as="div" className="text-neutral line-clamp-3 text-sm">
               {description.replaceAll("\n", "<br />")}
             </RichText>
           )}

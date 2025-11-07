@@ -24,10 +24,7 @@ export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: Ca
   const linkContent = (
     <>
       {i18n("Discover")}
-      <span className={`
-        transition-transform
-        group-hover/card:translate-x-1
-      `}>→</span>
+      <span className={`transition-transform group-hover/card:translate-x-1`}>→</span>
     </>
   );
 
@@ -52,10 +49,8 @@ export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: Ca
   const CountryFlag = countryCode ? getFlagComponent(countryCode) : null;
 
   return (
-    <div className={`
-      flex items-center justify-between border-t border-primary/5 pt-3
-    `}>
-      <div className="flex items-center gap-2 text-xs text-neutral">
+    <div className={`border-primary/5 flex items-center justify-between border-t pt-3`}>
+      <div className="text-neutral flex items-center gap-2 text-xs">
         {venue.status === Venue_Status_Enum.Pending ? (
           <>
             <Clock size={14} />
@@ -71,10 +66,7 @@ export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: Ca
           >
             <div className="inline-block h-4 w-6 cursor-help">
               <CountryFlag
-                className={`
-                  pointer-events-none h-4 w-6 rounded-sm opacity-60
-                  group-hover/card:opacity-100
-                `}
+                className={`pointer-events-none h-4 w-6 rounded-sm opacity-60 group-hover/card:opacity-100`}
               />
             </div>
           </Tooltip>
@@ -82,10 +74,7 @@ export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: Ca
       </div>
 
       {isInsideLink ? (
-        <span className={`
-          ${linkClassName}
-          pointer-events-none
-        `}>{linkContent}</span>
+        <span className={` ${linkClassName} pointer-events-none`}>{linkContent}</span>
       ) : (
         <Link className={linkClassName} href={`/venues/${venue.slug}`}>
           {linkContent}

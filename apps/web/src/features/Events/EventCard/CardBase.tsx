@@ -45,38 +45,24 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
           <div className={config.imageContainerClasses}>
             <Image
               alt={title}
-              className={`
-                object-cover transition-transform duration-300
-                group-hover/card:scale-110
-              `}
+              className={`object-cover transition-transform duration-300 group-hover/card:scale-110`}
               fill
               sizes={config.imageSizes}
               src={`${constants.vercelBlobStorageUrl}/${mainImage}`}
             />
             <div
-              className={`
-                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
-                to-transparent opacity-0 transition-opacity
-                group-hover/card:opacity-100
-              `}
+              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
             />
           </div>
         )}
 
         {hasImage && !mainImage && variant.startsWith("masonry") && (
           <div className={config.imageContainerClasses}>
-            <div className={`
-              flex h-full items-center justify-center bg-linear-to-br
-              from-primary/10 to-secondary/10
-            `}>
+            <div className={`from-primary/10 to-secondary/10 flex h-full items-center justify-center bg-linear-to-br`}>
               <Calendar className="text-neutral opacity-30" size={48} />
             </div>
             <div
-              className={`
-                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
-                to-transparent opacity-0 transition-opacity
-                group-hover/card:opacity-100
-              `}
+              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
             />
           </div>
         )}
@@ -88,10 +74,7 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
             <h3 className={config.titleClasses}>{title}</h3>
 
             {config.showDescription && description && (
-              <RichText className={clsx(`
-                prose max-w-none
-                dark:prose-invert
-              `, config.descriptionClasses)}>
+              <RichText className={clsx(`prose dark:prose-invert max-w-none`, config.descriptionClasses)}>
                 {variant.startsWith("list") ? truncatedDescription : description}
               </RichText>
             )}

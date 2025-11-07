@@ -15,14 +15,8 @@ export const FormFooter = ({ handleCancel, hasChanges, isFormValid, status }: Fo
   const isBusy = status === "processing";
 
   return (
-    <div className={`
-      mt-2 flex grow flex-col gap-3
-      md:mt-16 md:flex-row md:justify-end
-    `}>
-      <div className={`
-        flex h-11 grow
-        md:-mt-0.5
-      `}>
+    <div className={`mt-2 flex grow flex-col gap-3 md:mt-16 md:flex-row md:justify-end`}>
+      <div className={`flex h-11 grow md:-mt-0.5`}>
         {status === "error" && (
           <Alert className="w-full" fadeAfter={10000} variant="error">
             {i18n("Failed to save data. Please try again.")}
@@ -30,10 +24,7 @@ export const FormFooter = ({ handleCancel, hasChanges, isFormValid, status }: Fo
         )}
       </div>
 
-      <div className={`
-        flex flex-col-reverse gap-2
-        md:flex-row md:space-x-3
-      `}>
+      <div className={`flex flex-col-reverse gap-2 md:flex-row md:space-x-3`}>
         <Button disabled={isBusy} onClick={handleCancel} variant="ghost">
           {i18n("Cancel")}
         </Button>

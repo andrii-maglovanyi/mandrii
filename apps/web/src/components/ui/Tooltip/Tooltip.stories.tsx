@@ -29,10 +29,7 @@ type Story = StoryObj<typeof Tooltip>;
 
 const Template: StoryFn<typeof Tooltip> = (args) => (
   <Tooltip {...args}>
-    <span className={`
-      inline-block cursor-default rounded bg-surface px-3 py-2 transition
-      hover:bg-surface-tint
-    `}>
+    <span className={`bg-surface hover:bg-surface-tint inline-block cursor-default rounded px-3 py-2 transition`}>
       Hover me
     </span>
   </Tooltip>

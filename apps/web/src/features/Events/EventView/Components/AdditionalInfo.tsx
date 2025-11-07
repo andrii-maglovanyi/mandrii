@@ -39,7 +39,7 @@ export const AdditionalInfo = ({ event: evt, expanded = true }: AdditionalInfoPr
   );
 
   return (
-    <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
+    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col text-sm">
       {/* Capacity */}
       {capacity && (
         <Section>

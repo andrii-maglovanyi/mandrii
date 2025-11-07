@@ -49,16 +49,13 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
       />
 
       {/* Price & registration */}
-      <div className="space-y-4 border-t border-primary/10 pt-4">
-        <h3 className="text-lg font-medium text-primary">{i18n("Price & registration")}</h3>
+      <div className="border-primary/10 space-y-4 border-t pt-4">
+        <h3 className="text-primary text-lg font-medium">{i18n("Price & registration")}</h3>
 
         <Select label={i18n("Price type")} options={priceTypeOptions} required {...getFieldProps("price_type")} />
 
         {showPriceAmount && (
-          <div className={`
-            flex grow flex-col gap-4
-            lg:flex-row
-          `}>
+          <div className={`flex grow flex-col gap-4 lg:flex-row`}>
             <div className="flex flex-1 flex-col">
               <Input
                 label={i18n("Price amount")}
@@ -97,8 +94,8 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
       </div>
 
       {/* Additional information */}
-      <div className="space-y-4 border-t border-primary/10 pt-4">
-        <h3 className="text-lg font-medium text-primary">{i18n("Additional Information")}</h3>
+      <div className="border-primary/10 space-y-4 border-t pt-4">
+        <h3 className="text-primary text-lg font-medium">{i18n("Additional Information")}</h3>
 
         <Input
           label={i18n("Age restriction")}
@@ -108,6 +105,7 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
         />
 
         <MDEditor
+          isDark={isDark}
           label={i18n("Accessibility Information")}
           placeholder={i18n("Wheelchair accessible, Sign language interpretation available, etc.")}
           {...getFieldProps("accessibility_info")}

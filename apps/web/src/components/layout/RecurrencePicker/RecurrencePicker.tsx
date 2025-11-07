@@ -226,14 +226,9 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
   };
 
   return (
-    <div className={`
-      space-y-4 rounded-lg border border-neutral/20 bg-surface p-4
-    `}>
+    <div className={`border-neutral/20 bg-surface space-y-4 rounded-lg border p-4`}>
       {/* Frequency */}
-      <div className={`
-        flex flex-col gap-4
-        sm:flex-row
-      `}>
+      <div className={`flex flex-col gap-4 sm:flex-row`}>
         <div className="flex-1">
           <Select
             disabled={disabled}
@@ -265,19 +260,9 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
               const isSelected = state.selectedDays.includes(day);
               return (
                 <button
-                  className={`
-                    rounded-lg border px-4 py-2 text-sm font-medium
-                    transition-colors
-                    ${
-                    isSelected ? "border-primary bg-primary" : `
-                      border-neutral/20 bg-surface
-                      hover:border-primary/50
-                    `
-                  }
-                    ${disabled ? "cursor-not-allowed opacity-50" : `
-                      cursor-pointer
-                    `}
-                  `}
+                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                    isSelected ? "border-primary bg-primary" : `border-neutral/20 bg-surface hover:border-primary/50`
+                  } ${disabled ? "cursor-not-allowed opacity-50" : `cursor-pointer`} `}
                   disabled={disabled}
                   key={day}
                   onClick={() => handleDayToggle(day)}
@@ -289,7 +274,7 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
             })}
           </div>
           {state.selectedDays.length === 0 && (
-            <p className="mt-2 text-xs text-neutral">
+            <p className="text-neutral mt-2 text-xs">
               {i18n("Select days or leave empty to repeat on the same day as the start date")}
             </p>
           )}
@@ -330,8 +315,8 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
       )}
 
       {/* Description */}
-      <div className="rounded-lg bg-primary/5 p-3">
-        <p className="text-sm font-medium text-neutral">{getDescription()}</p>
+      <div className="bg-primary/5 rounded-lg p-3">
+        <p className="text-neutral text-sm font-medium">{getDescription()}</p>
       </div>
     </div>
   );

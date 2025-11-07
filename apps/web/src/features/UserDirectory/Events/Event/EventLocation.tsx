@@ -112,7 +112,7 @@ export const EventLocation = ({
 
   return (
     <>
-      <RichText as="div" className="py-6 text-sm text-neutral">
+      <RichText as="div" className="text-neutral py-6 text-sm">
         {i18n("Choose at least one: mark as online event, select a venue, or enter a custom location")}
       </RichText>
 
@@ -140,7 +140,7 @@ export const EventLocation = ({
       {showCustomLocation && (
         <>
           <Separator className="my-4" />
-          <RichText as="div" className="py-6 text-sm text-neutral">
+          <RichText as="div" className="text-neutral py-6 text-sm">
             {i18n(
               "**Enter a custom location** if the event isn't at a registered venue. Provide the full address for accurate map placement.",
             )}
@@ -154,10 +154,7 @@ export const EventLocation = ({
             {...getFieldProps("custom_location_name")}
           />
 
-          <div className={`
-            flex flex-col
-            md:flex-row md:space-x-4
-          `}>
+          <div className={`flex flex-col md:flex-row md:space-x-4`}>
             <div className="flex grow flex-col">
               <Input
                 disabled={isBusy || isAddressLoading}
@@ -167,10 +164,7 @@ export const EventLocation = ({
                 {...getFieldProps("custom_location_address")}
               />
             </div>
-            <div className={`
-              flex flex-col
-              md:pt-6
-            `}>
+            <div className={`flex flex-col md:pt-6`}>
               <Button
                 busy={isAddressLoading}
                 disabled={isVerifyDisabled}
@@ -189,19 +183,14 @@ export const EventLocation = ({
           )}
 
           {isAddressLoading && (
-            <div className={`
-              flex h-max min-h-96 flex-1 items-center justify-center
-            `}>
+            <div className={`flex h-max min-h-96 flex-1 items-center justify-center`}>
               <AnimatedEllipsis centered size="lg" />
             </div>
           )}
 
           {hasVerifiedAddress && !isAddressError && (
             <>
-              <Alert className={`
-                mt-8
-                md:mt-2
-              `} variant="success">
+              <Alert className={`mt-8 md:mt-2`} variant="success">
                 {fullAddress.address}
               </Alert>
               <div className="relative my-4 h-96 overflow-hidden rounded-2xl">
@@ -214,16 +203,13 @@ export const EventLocation = ({
                 />
               </div>
 
-              <RichText as="div" className="py-6 text-sm text-neutral">
+              <RichText as="div" className="text-neutral py-6 text-sm">
                 {i18n(
                   "Please make sure the pin location on the map points to the right place.<br />You can adjust coordinates within 100m radius from the original point if it's not quite right",
                 )}
               </RichText>
 
-              <div className={`
-                flex w-full flex-col
-                md:flex-row md:space-x-4
-              `}>
+              <div className={`flex w-full flex-col md:flex-row md:space-x-4`}>
                 <Input
                   label={`${i18n("Latitude")} (${i18n("orig.")} ${fullAddress.coordinates[1]})`}
                   max={bounds?.latitude.maxLat}
@@ -260,7 +246,7 @@ export const EventLocation = ({
                   {...getFieldProps("area")}
                 />
 
-                <p className="text-sm text-neutral">
+                <p className="text-neutral text-sm">
                   {i18n(
                     "These details are collected automatically and will help users find your event. You can adjust them if needed.",
                   )}
