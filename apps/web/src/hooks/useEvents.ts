@@ -137,7 +137,6 @@ const EVENT_FIELDS_FRAGMENT = gql`
     social_links
     status
     created_at
-    updated_at
     is_recurring
     recurrence_rule
     organizer_name
@@ -155,11 +154,6 @@ const EVENT_FIELDS_FRAGMENT = gql`
       logo
       category
       geo
-    }
-    owner {
-      id
-      name
-      image
     }
   }
 `;
@@ -188,6 +182,12 @@ const GET_USER_EVENTS = gql`
   query GetUserEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
     events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       ...EventFields
+      updated_at
+      owner {
+        id
+        name
+        image
+      }
     }
     events_aggregate(where: $where) {
       aggregate {

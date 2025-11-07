@@ -3,10 +3,10 @@
 msgid "Sign in to Mandrii"
 msgstr ""
 
-msgid "Please choose a category"
+msgid "Address is required"
 msgstr ""
 
-msgid "Address is required"
+msgid "Please choose a category"
 msgstr ""
 
 msgid "Description is too long"
@@ -591,10 +591,10 @@ msgstr ""
 msgid "Start adding your venue by selecting its category and name.<br/>The slug is auto-generated the URL and can only be edited during the first creation."
 msgstr ""
 
-msgid "Online"
+msgid "Location TBD"
 msgstr ""
 
-msgid "Location TBD"
+msgid "Online"
 msgstr ""
 
 msgid "Type"

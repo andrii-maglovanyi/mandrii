@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { RichText } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
-import { publicConfig } from "~/lib/config/public";
 
 import { NewsletterForm } from "../Newsletter/NewsletterForm";
 import { SOCIAL_LINKS, SUPPORT_LINKS } from "../PlatformLinks/link-configs";
@@ -10,8 +9,6 @@ import { PlatformLink } from "../PlatformLinks/PlatformLink";
 
 export const Footer = () => {
   const i18n = useI18n();
-
-  const { buildTime, commitSha, environment } = publicConfig.deploymentInfo;
 
   return (
     <footer className={`
@@ -75,9 +72,6 @@ export const Footer = () => {
           },
         )}
       </RichText>
-      <div style={{ display: "none" }}>
-        {`${environment} | ${commitSha} | ${new Date(buildTime).toLocaleDateString()} ${new Date(buildTime).toLocaleTimeString()}`}
-      </div>
     </footer>
   );
 };

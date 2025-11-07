@@ -172,7 +172,7 @@ export function Input<K extends string, T extends string>({
           {CountryFlag ? (
             <CountryFlag className="h-4 w-6 rounded-sm" />
           ) : (
-            <Phone className={`mx-1 text-neutral-disabled`} size={20} />
+            <Phone className="mx-1 text-neutral-disabled" size={20} />
           )}
         </span>
       );

@@ -3,6 +3,7 @@ import "../globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { MainLayout } from "~/components/layout";
@@ -38,8 +39,8 @@ export async function generateMetadata({ params }: RootLayoutProps): Promise<Met
       title: isUkrainian ? "Мандрій" : "Mandrii",
     },
     description: isUkrainian
-      ? "мандруй / мрій / дій - простір для мандрівників та мрійників"
-      : "travel / dream / act - a space for travelers and dreamers",
+      ? "мандруй / мрій / дій - простір для діячів, мандрівників та мрійників"
+      : "travel / dream / act - a space for creators, travelers and dreamers",
     icons: {
       apple: [{ sizes: "180x180", url: "/static/apple-touch-icon.png" }],
       icon: [
@@ -52,7 +53,7 @@ export async function generateMetadata({ params }: RootLayoutProps): Promise<Met
     openGraph: {
       description: isUkrainian ? "мандруй / мрій / дій" : "travel / dream / act",
       images: ["/assets/logo/mandrii.png"],
-      locale: isUkrainian ? "uk_UA" : "en_US",
+      locale: isUkrainian ? "uk_UA" : "en_GB",
       siteName: isUkrainian ? "Мандрій" : "Mandrii",
       title: isUkrainian ? "Мандрій" : "Mandrii",
       type: "website",
@@ -64,13 +65,20 @@ export async function generateMetadata({ params }: RootLayoutProps): Promise<Met
 const setInitialTheme = `
   (function() {
     try {
-      const theme = localStorage.getItem('mndr.theme');
+      const storageTheme = localStorage.getItem('mndr.theme');
+      const cookieMatch = document.cookie.split('; ').find(function (row) {
+        return row.startsWith('mndr.theme=');
+      });
+      const cookieTheme = cookieMatch ? cookieMatch.split('=')[1] : null;
+      const resolvedTheme = storageTheme || cookieTheme;
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (theme === 'dark' || (!theme && prefersDark)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      const shouldUseDark = resolvedTheme === 'dark' || (!resolvedTheme && prefersDark);
+
+      document.documentElement.classList.toggle('dark', shouldUseDark);
+
+      const nextTheme = shouldUseDark ? 'dark' : 'light';
+      localStorage.setItem('mndr.theme', nextTheme);
+      document.cookie = 'mndr.theme=' + nextTheme + '; path=/; max-age=31536000; SameSite=Lax';
     } catch (_) {}
   })();
 `;
@@ -81,12 +89,18 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
     notFound();
   }
 
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get("mndr.theme");
+  const themeCookieValue = themeCookie?.value;
+  const hasThemeCookie = themeCookieValue === "dark" || themeCookieValue === "light";
+  const isDarkFromCookie = hasThemeCookie ? themeCookieValue === "dark" : undefined;
+
   return (
-    <html lang={locale}>
+    <html className={isDarkFromCookie === true ? "dark" : undefined} lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: setInitialTheme }} />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <ApolloWrapper>
           <AuthProvider>
             <ThemeProvider>

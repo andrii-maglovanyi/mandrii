@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useId, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 export type Position = "bottom-end" | "bottom-start" | "bottom" | "left" | "right" | "top-end" | "top-start" | "top";
@@ -8,162 +8,178 @@ export type Position = "bottom-end" | "bottom-start" | "bottom" | "left" | "righ
 type TooltipProps = {
   children: ReactNode;
   className?: string;
+  delay?: number;
   label: string;
   position?: Position;
 };
 
-export const Tooltip = ({ children, className = "", label, position = "top" }: TooltipProps) => {
-  const id = useId();
+const POSITION_CONFIGS = {
+  bottom: {
+    arrow: { bottom: "-6px", left: "50%", transform: "translateX(-50%)" },
+    getCoords: (rect: DOMRect, scroll: { x: number; y: number }) => ({
+      left: rect.left + scroll.x + rect.width / 2,
+      top: rect.bottom + scroll.y + 8,
+    }),
+    transform: "translateX(-50%)",
+  },
+  "bottom-end": {
+    arrow: { right: "16px", top: "-3px" },
+    getCoords: (rect: DOMRect, scroll: { x: number; y: number }) => ({
+      left: rect.right + scroll.x,
+      top: rect.bottom + scroll.y + 8,
+    }),
+    transform: "translateX(-100%)",
+  },
+  "bottom-start": {
+    arrow: { left: "16px", top: "-3px" },
+    getCoords: (rect: DOMRect, scroll: { x: number; y: number }) => ({
+      left: rect.left + scroll.x,
+      top: rect.bottom + scroll.y + 8,
+    }),
+    transform: undefined,
+  },
+  left: {
+    arrow: { right: "-1px", top: "50%", transform: "translateY(-50%)" },
+    getCoords: (rect: DOMRect, scroll: { x: number; y: number }) => ({
+      left: rect.left + scroll.x - 8,
+      top: rect.top + scroll.y + rect.height / 2,
+    }),
+    transform: "translate(-100%, -50%)",
+  },
+  right: {
+    arrow: { left: "-6px", top: "50%", transform: "translateY(-50%)" },
+    getCoords: (rect: DOMRect, scroll: { x: number; y: number }) => ({
+      left: rect.right + scroll.x + 8,
+      top: rect.top + scroll.y + rect.height / 2,
+    }),
+    transform: "translateY(-50%)",
+  },
+  top: {
+    arrow: { bottom: "-6px", left: "50%", transform: "translateX(-50%)" },
+    getCoords: (rect: DOMRect, scroll: { x: number; y: number }) => ({
+      left: rect.left + scroll.x + rect.width / 2,
+      top: rect.top + scroll.y - 32,
+    }),
+    transform: "translateX(-50%)",
+  },
+  "top-end": {
+    arrow: { bottom: "-3px", right: "16px" },
+    getCoords: (rect: DOMRect, scroll: { x: number; y: number }) => ({
+      left: rect.right + scroll.x,
+      top: rect.top + scroll.y - 32,
+    }),
+    transform: "translateX(-100%)",
+  },
+  "top-start": {
+    arrow: { bottom: "-3px", left: "16px" },
+    getCoords: (rect: DOMRect, scroll: { x: number; y: number }) => ({
+      left: rect.left + scroll.x,
+      top: rect.top + scroll.y - 32,
+    }),
+    transform: undefined,
+  },
+} as const;
+
+export const Tooltip = ({ children, className = "", delay = 0, label, position = "top" }: TooltipProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ left: 0, top: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
+  const isMountedRef = useRef(true);
 
-  const handleInteraction = () => {
-    if (triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      const scrollY = window.scrollY || window.pageYOffset;
-      const scrollX = window.scrollX || window.pageXOffset;
+  const updatePosition = useCallback(() => {
+    if (!triggerRef.current) return;
 
-      // Calculate position based on tooltip position prop
-      let top = 0;
-      let left = 0;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const scroll = {
+      x: window.scrollX,
+      y: window.scrollY,
+    };
 
-      switch (position) {
-        case "bottom":
-          top = rect.bottom + scrollY + 8;
-          left = rect.left + scrollX + rect.width / 2;
-          break;
-        case "bottom-end":
-          top = rect.bottom + scrollY + 8;
-          left = rect.right + scrollX;
-          break;
-        case "bottom-start":
-          top = rect.bottom + scrollY + 8;
-          left = rect.left + scrollX;
-          break;
-        case "left":
-          top = rect.top + scrollY + rect.height / 2;
-          left = rect.left + scrollX - 8;
-          break;
-        case "right":
-          top = rect.top + scrollY + rect.height / 2;
-          left = rect.right + scrollX + 8;
-          break;
-        case "top":
-          top = rect.top + scrollY - 32; // tooltip height + gap
-          left = rect.left + scrollX + rect.width / 2;
-          break;
-        case "top-end":
-          top = rect.top + scrollY - 32;
-          left = rect.right + scrollX;
-          break;
-        case "top-start":
-          top = rect.top + scrollY - 32;
-          left = rect.left + scrollX;
-          break;
-      }
+    const config = POSITION_CONFIGS[position];
+    const coords = config.getCoords(rect, scroll);
 
-      setTooltipPosition({ left, top });
+    if (isMountedRef.current) {
+      setTooltipPosition(coords);
     }
-    setIsVisible(true);
-  };
+  }, [position]);
 
-  const handleLeave = () => {
+  const showTooltip = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    if (delay > 0) {
+      timeoutRef.current = setTimeout(() => {
+        if (isMountedRef.current) {
+          updatePosition();
+          setIsVisible(true);
+        }
+      }, delay);
+    } else {
+      updatePosition();
+      setIsVisible(true);
+    }
+  }, [delay, updatePosition]);
+
+  const hideTooltip = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     setIsVisible(false);
-  };
+  }, []);
 
-  const handleClick = () => {
-    // Toggle for touch devices
-    setIsVisible((prev) => !prev);
-  };
+  const toggleTooltip = useCallback(() => {
+    setIsVisible((prev) => {
+      if (!prev) {
+        updatePosition();
+      }
+      return !prev;
+    });
+  }, [updatePosition]);
 
-  // Hide tooltip on scroll
   useEffect(() => {
+    if (!isVisible) return;
+
     const handleScroll = () => {
-      if (isVisible) {
-        setIsVisible(false);
+      hideTooltip();
+    };
+
+    window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll, { capture: true });
+    };
+  }, [isVisible, hideTooltip]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
     };
+  }, []);
 
-    if (isVisible) {
-      window.addEventListener("scroll", handleScroll, true); // Use capture phase to catch all scrolls
-    }
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll, true);
-    };
-  }, [isVisible]);
+  const config = POSITION_CONFIGS[position];
 
   const tooltipContent = isVisible
     ? createPortal(
         <div
           className={`
             pointer-events-none fixed z-9999 rounded-md bg-neutral-hover px-2
-            py-1 text-xs whitespace-nowrap text-surface shadow
+            py-1 text-xs whitespace-nowrap text-surface opacity-100 shadow
             transition-opacity duration-200
-            ${
-            isVisible ? "opacity-100" : "opacity-0"
-          }
           `}
-          id={id}
           role="tooltip"
           style={{
             left: `${tooltipPosition.left}px`,
             top: `${tooltipPosition.top}px`,
-            transform:
-              position === "top" || position === "bottom"
-                ? "translateX(-50%)"
-                : position === "top-end" || position === "bottom-end"
-                  ? "translateX(-100%)"
-                  : position === "left"
-                    ? "translate(-100%, -50%)"
-                    : position === "right"
-                      ? "translateY(-50%)"
-                      : undefined,
+            transform: config.transform,
           }}
         >
           {label}
-          <div
-            className="absolute h-2 w-2 rotate-45 bg-neutral-hover"
-            style={{
-              ...(position === "top" && {
-                bottom: "-6px",
-                left: "50%",
-                transform: "translateX(-50%)",
-              }),
-              ...(position === "top-start" && {
-                bottom: "-3px",
-                left: "16px",
-              }),
-              ...(position === "top-end" && {
-                bottom: "-3px",
-                right: "16px",
-              }),
-              ...(position === "bottom" && {
-                left: "50%",
-                top: "-1px",
-                transform: "translateX(-50%)",
-              }),
-              ...(position === "bottom-start" && {
-                left: "16px",
-                top: "-3px",
-              }),
-              ...(position === "bottom-end" && {
-                right: "16px",
-                top: "-3px",
-              }),
-              ...(position === "left" && {
-                right: "-1px",
-                top: "50%",
-                transform: "translateY(-50%)",
-              }),
-              ...(position === "right" && {
-                left: "-6px",
-                top: "50%",
-                transform: "translateY(-50%)",
-              }),
-            }}
-          />
+          <div className="absolute h-2 w-2 rotate-45 bg-neutral-hover" style={config.arrow} />
         </div>,
         document.body,
       )
@@ -173,17 +189,15 @@ export const Tooltip = ({ children, className = "", label, position = "top" }: T
     <>
       <div
         className={`
-          group/tooltip relative inline-block w-fit
+          group/tooltip pointer-events-auto relative inline-block w-fit
           ${className}
         `}
-        onClick={handleClick}
-        onMouseEnter={handleInteraction}
-        onMouseLeave={handleLeave}
+        onClick={toggleTooltip}
+        onMouseEnter={showTooltip}
+        onMouseLeave={hideTooltip}
         ref={triggerRef}
       >
-        <span aria-describedby={id} className="pointer-events-auto" data-testid={`target-${id}`}>
-          {children}
-        </span>
+        {children}
       </div>
       {tooltipContent}
     </>

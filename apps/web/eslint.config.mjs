@@ -30,7 +30,7 @@ const config = [
       ...betterTailwindcss.configs["recommended-error"].rules,
       "better-tailwindcss/no-unregistered-classes": [
         "error",
-        { ignore: ["^(?:group|peer)(?:\\/(\\S*))?$", "^mndr(-[\\w-]+)?$"] },
+        { ignore: ["^(?:group|peer)(?:\\/(\\S*))?$", "^mndr(-[\\w-]+)?$", "dark"] },
       ],
     },
     settings: {
