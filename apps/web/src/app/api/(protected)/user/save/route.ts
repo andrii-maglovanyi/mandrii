@@ -23,15 +23,11 @@ export const POST = (req: Request) =>
     const prefix = [envName, "users", profileData.id].join("/");
     profileData.image = (await processImages(image ? [image] : [], [prefix, "image"].join("/")))[0] ?? "";
 
-    try {
-      const id = await saveUser(profileData, session);
+    const id = await saveUser(profileData, session);
 
-      if (!id) {
-        throw new InternalServerError("Failed to save user");
-      }
-      return NextResponse.json({ id, success: true }, { status: 200 });
-    } catch (error) {
-      console.error("Error saving user profile:", error);
-      throw error;
+    if (!id) {
+      throw new InternalServerError("Failed to save user");
     }
+
+    return NextResponse.json({ id, success: true }, { status: 200 });
   });
