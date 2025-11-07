@@ -33,7 +33,7 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
       },
       item: {
         text: i18n("Check out this event on {appHost}", { appHost: UrlHelper.getHostname() }),
-        title: event.title,
+        title: locale === "uk" ? event.title_uk : event.title_en,
         url: `${window.location.origin}/events/${event.slug}`,
       },
     });
@@ -81,7 +81,10 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
           <ActionButton
             aria-label={i18n("Manage event")}
             className="group"
-            icon={<PenTool className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+            icon={<PenTool className={hideUntilHover ? `
+              hidden
+              group-hover/card:flex
+            ` : ""} size={18} />}
             onClick={handleManageClick}
             size="sm"
             variant="ghost"
@@ -90,14 +93,20 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
         <ActionButton
           aria-label={i18n("Share this event")}
           className="group"
-          icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+          icon={<Share2 className={hideUntilHover ? `
+            hidden
+            group-hover/card:flex
+          ` : ""} size={18} />}
           onClick={handleShareClick}
           size="sm"
           variant="ghost"
         />
         {Boolean(event.owner_id) && (
           <Tooltip label={i18n("Verified event")} position="left">
-            <BadgeCheck className={`stroke-green-600 dark:stroke-green-400`} />
+            <BadgeCheck className={`
+              stroke-green-600
+              dark:stroke-green-400
+            `} />
           </Tooltip>
         )}
       </div>
@@ -106,7 +115,9 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
 
   return (
     <div className="mb-2 flex h-8 justify-between gap-2">
-      <div className={`text-on-surface flex h-full min-w-0 flex-1 items-center gap-1 text-sm`}>
+      <div className={`
+        flex h-full min-w-0 flex-1 items-center gap-1 text-sm text-on-surface
+      `}>
         {getIcon(iconName, { size: 18 })}
         <span className="block min-w-0 flex-1 truncate">{label[locale]}</span>
 

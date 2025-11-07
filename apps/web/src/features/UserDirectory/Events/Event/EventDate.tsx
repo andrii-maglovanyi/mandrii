@@ -17,7 +17,10 @@ export const EventDate = ({ getFieldProps, setValues, values }: EventInfoProps) 
   const i18n = useI18n();
   return (
     <>
-      <div className={`flex grow flex-col gap-4 lg:flex-row`}>
+      <div className={`
+        flex grow flex-col gap-4
+        lg:flex-row
+      `}>
         <div className="flex flex-1 flex-col">
           <Input
             label={i18n("Start date")}

@@ -119,8 +119,14 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className={`flex grow flex-col justify-evenly lg:flex-row lg:space-x-4`}>
-        <div className={`flex flex-3 flex-col justify-evenly md:flex-row md:space-x-4`}>
+      <div className={`
+        flex grow flex-col justify-evenly
+        lg:flex-row lg:space-x-4
+      `}>
+        <div className={`
+          flex flex-3 flex-col justify-evenly
+          md:flex-row md:space-x-4
+        `}>
           <div className="flex flex-3 flex-col">
             <Select label={i18n("Event type")} options={eventTypeOptions} required {...getFieldProps("type")} />
           </div>
@@ -150,7 +156,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
             type="text"
             {...getFieldProps("slug")}
           />
-          <p className="text-neutral mt-1.5 text-sm">
+          <p className="mt-1.5 text-sm text-neutral">
             {i18n(
               "↑ The slug serves as a unique identifier for your event and must be URL-friendly. Once created, it cannot be changed.",
             )}

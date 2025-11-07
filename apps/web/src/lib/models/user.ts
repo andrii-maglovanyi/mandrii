@@ -2,6 +2,7 @@ import { AuthenticatedSession } from "~/lib/api/context";
 import { BadGateway, BadRequestError, NotFoundError, UnauthorizedError } from "~/lib/api/errors";
 import { publicConfig } from "~/lib/config/public";
 import { Users } from "~/types";
+
 import { privateConfig } from "../config/private";
 
 const USER_FIELDS = `
@@ -32,13 +33,87 @@ const UPDATE_USER_MUTATION = `
   }
 `;
 
-type AuthContext = { type: "user"; accessToken: string } | { type: "admin"; adminSecret: string };
+type AuthContext = { accessToken: string; type: "user"; } | { adminSecret: string; type: "admin"; };
 
 export class UserModel {
   private session: AuthenticatedSession | null;
 
   constructor(session: AuthenticatedSession | null = null) {
     this.session = session;
+  }
+
+  async addPoints(pointsToAdd: number): Promise<Users> {
+    if (!this.session) {
+      throw new UnauthorizedError("Session is required");
+    }
+
+    return await this.updateAsAdmin({
+      id: this.session.user.id,
+      points: (this.session.user.points ?? 0) + pointsToAdd,
+    });
+  }
+
+  async findById(id: string): Promise<null | Users> {
+    const result = await this.executeQuery<{ users_by_pk: null | Users }>(
+      GET_USER_BY_ID_QUERY,
+      { id },
+      this.getAuthContext(),
+    );
+
+    return result.users_by_pk;
+  }
+
+  async incrementEventCreation(): Promise<Users> {
+    if (!this.session) {
+      throw new UnauthorizedError("Session is required");
+    }
+
+    return await this.updateAsAdmin({
+      events_created: (this.session.user.events_created ?? 0) + 1,
+      id: this.session.user.id,
+      points: (this.session.user.points ?? 0) + privateConfig.rewards.pointsPerEventCreation,
+    });
+  }
+
+  async incrementVenueCreation(): Promise<Users> {
+    if (!this.session) {
+      throw new UnauthorizedError("Session is required");
+    }
+
+    return await this.updateAsAdmin({
+      id: this.session.user.id,
+      points: (this.session.user.points ?? 0) + privateConfig.rewards.pointsPerVenueCreation,
+      venues_created: (this.session.user.venues_created ?? 0) + 1,
+    });
+  }
+
+  async update(variables: Partial<Users>): Promise<Users> {
+    const { id, ...updateFields } = variables;
+
+    if (!id) {
+      throw new BadRequestError("User ID is required for updates");
+    }
+
+    const cleanedFields = Object.fromEntries(Object.entries(updateFields).filter(([, v]) => v !== undefined));
+
+    if (Object.keys(cleanedFields).length === 0) {
+      throw new BadRequestError("No fields to update");
+    }
+
+    const result = await this.executeQuery<{ update_users_by_pk: null | Users }>(
+      UPDATE_USER_MUTATION,
+      {
+        _set: cleanedFields,
+        id,
+      },
+      this.getAuthContext(),
+    );
+
+    if (!result.update_users_by_pk) {
+      throw new NotFoundError("User not found");
+    }
+
+    return result.update_users_by_pk;
   }
 
   private async executeQuery<T>(query: string, variables: Record<string, unknown>, auth: AuthContext): Promise<T> {
@@ -73,53 +148,14 @@ export class UserModel {
 
   private getAuthContext(useAdmin: boolean = false): AuthContext {
     if (useAdmin) {
-      return { type: "admin", adminSecret: privateConfig.hasura.adminSecret };
+      return { adminSecret: privateConfig.hasura.adminSecret, type: "admin" };
     }
 
     if (!this.session?.accessToken) {
       throw new UnauthorizedError("Session is required for user operations");
     }
 
-    return { type: "user", accessToken: this.session.accessToken };
-  }
-
-  async findById(id: string): Promise<Users | null> {
-    const result = await this.executeQuery<{ users_by_pk: null | Users }>(
-      GET_USER_BY_ID_QUERY,
-      { id },
-      this.getAuthContext(),
-    );
-
-    return result.users_by_pk;
-  }
-
-  async update(variables: Partial<Users>): Promise<Users> {
-    const { id, ...updateFields } = variables;
-
-    if (!id) {
-      throw new BadRequestError("User ID is required for updates");
-    }
-
-    const cleanedFields = Object.fromEntries(Object.entries(updateFields).filter(([, v]) => v !== undefined));
-
-    if (Object.keys(cleanedFields).length === 0) {
-      throw new BadRequestError("No fields to update");
-    }
-
-    const result = await this.executeQuery<{ update_users_by_pk: Users | null }>(
-      UPDATE_USER_MUTATION,
-      {
-        _set: cleanedFields,
-        id,
-      },
-      this.getAuthContext(),
-    );
-
-    if (!result.update_users_by_pk) {
-      throw new NotFoundError("User not found");
-    }
-
-    return result.update_users_by_pk;
+    return { accessToken: this.session.accessToken, type: "user" };
   }
 
   private async updateAsAdmin(variables: Partial<Users>): Promise<Users> {
@@ -135,7 +171,7 @@ export class UserModel {
       throw new BadRequestError("No fields to update");
     }
 
-    const result = await this.executeQuery<{ update_users_by_pk: Users | null }>(
+    const result = await this.executeQuery<{ update_users_by_pk: null | Users }>(
       UPDATE_USER_MUTATION,
       {
         _set: cleanedFields,
@@ -149,40 +185,5 @@ export class UserModel {
     }
 
     return result.update_users_by_pk;
-  }
-
-  async incrementEventCreation(): Promise<Users> {
-    if (!this.session) {
-      throw new UnauthorizedError("Session is required");
-    }
-
-    return await this.updateAsAdmin({
-      events_created: (this.session.user.events_created ?? 0) + 1,
-      id: this.session.user.id,
-      points: (this.session.user.points ?? 0) + privateConfig.rewards.pointsPerEventCreation,
-    });
-  }
-
-  async incrementVenueCreation(): Promise<Users> {
-    if (!this.session) {
-      throw new UnauthorizedError("Session is required");
-    }
-
-    return await this.updateAsAdmin({
-      id: this.session.user.id,
-      venues_created: (this.session.user.venues_created ?? 0) + 1,
-      points: (this.session.user.points ?? 0) + privateConfig.rewards.pointsPerVenueCreation,
-    });
-  }
-
-  async addPoints(pointsToAdd: number): Promise<Users> {
-    if (!this.session) {
-      throw new UnauthorizedError("Session is required");
-    }
-
-    return await this.updateAsAdmin({
-      id: this.session.user.id,
-      points: (this.session.user.points ?? 0) + pointsToAdd,
-    });
   }
 }

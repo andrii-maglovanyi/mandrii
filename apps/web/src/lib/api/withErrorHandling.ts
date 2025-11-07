@@ -1,7 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 
-import { ApiError, InternalServerError, ValidationError } from "./errors";
 import { envName } from "../config/env";
+import { ApiError, InternalServerError, ValidationError } from "./errors";
 
 export async function withErrorHandling(handler: () => Promise<Response | undefined>): Promise<Response> {
   try {

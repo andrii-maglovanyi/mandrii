@@ -86,7 +86,7 @@ const executeGraphQLQuery = async <T>(
   return result.data;
 };
 
-export const saveEvent = async (variables: Partial<Events>, session: AuthenticatedSession, isOwner = false) => {
+export const saveEvent = async (variables: Partial<Events>, session: AuthenticatedSession) => {
   const isUpdate = !!variables.id;
 
   if (isUpdate) {

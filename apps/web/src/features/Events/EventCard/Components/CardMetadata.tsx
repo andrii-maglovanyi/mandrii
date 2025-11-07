@@ -45,7 +45,7 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
   const showPrice = variant === "list" || variant === "map";
 
   return (
-    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col gap-2 text-sm">
+    <div className="-mx-4 mt-4 mb-2 flex flex-col gap-2 text-sm text-on-surface">
       {/* Date and time */}
       {startDate && (
         <div className="flex items-start gap-2 px-4">
@@ -55,7 +55,7 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
               {format(startDate, "MMM d, yyyy")}
               {endDate && endDate.getTime() !== startDate.getTime() && <span> - {format(endDate, "MMM d, yyyy")}</span>}
             </div>
-            <div className="text-neutral text-xs">
+            <div className="text-xs text-neutral">
               {format(startDate, "h:mm a")}
               {endDate && <span> - {format(endDate, "h:mm a")}</span>}
             </div>
@@ -99,7 +99,7 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
       {showPrice && (
         <div className="flex items-start gap-2 px-4">
           <PoundSterling className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
-          <span className="text-primary font-medium">{priceInfo}</span>
+          <span className="font-medium text-primary">{priceInfo}</span>
         </div>
       )}
     </div>

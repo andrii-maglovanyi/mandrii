@@ -39,9 +39,16 @@ export default function EventsPage() {
   return (
     <div className="container mx-auto">
       <Breadcrumbs items={[{ title: i18n("Home"), url: `/` }]} />
-      <div className={`mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center`}>
+      <div className={`
+        mb-12 flex flex-col items-start justify-between gap-4
+        sm:flex-row sm:items-center
+      `}>
         <h1
-          className={`from-primary to-secondary bg-gradient-to-r bg-clip-text text-3xl font-extrabold text-transparent md:text-5xl`}
+          className={`
+            bg-gradient-to-r from-primary to-secondary bg-clip-text text-3xl
+            font-extrabold text-transparent
+            md:text-5xl
+          `}
         >
           {i18n("Explore events")}
         </h1>

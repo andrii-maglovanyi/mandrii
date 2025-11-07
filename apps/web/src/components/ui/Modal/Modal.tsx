@@ -101,7 +101,9 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
   const layoutClass = "bg-surface text-on-surface w-full z-50 rounded-xl p-6 shadow-x overflow-visible";
   const mobileClass = "bottom-0 mt-auto mx-auto mb-4";
 
-  const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `fixed`);
+  const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `
+    fixed
+  `);
 
   return ReactDOM.createPortal(
     <dialog aria-labelledby="modal-title" aria-modal="true" className={modalClass} ref={dialogRef}>
@@ -115,7 +117,9 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
           variant="ghost"
         />
       </div>
-      <div className="mb-4 flex items-center">{title && <h2 className={`text-xl font-normal`}>{title}</h2>}</div>
+      <div className="mb-4 flex items-center">{title && <h2 className={`
+        text-xl font-normal
+      `}>{title}</h2>}</div>
       <div className={className}>{children}</div>
     </dialog>,
     document.body,

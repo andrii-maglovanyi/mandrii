@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 import { getApiContext, InternalServerError, validateRequest, ValidationError, withErrorHandling } from "~/lib/api";
 import { envName } from "~/lib/config/env";
-
 import { saveEvent } from "~/lib/models/event";
 import { UserModel } from "~/lib/models/user";
 import { sendSlackNotification } from "~/lib/slack/event";

@@ -26,9 +26,17 @@ export default function CookieConsentBanner() {
 
   return (
     <div
-      className={`bg-surface text-on-surface fixed bottom-4 left-1/2 z-50 flex min-w-max -translate-x-1/2 flex-col items-center justify-between rounded-lg px-6 py-3 text-sm shadow-lg lg:flex-row`}
+      className={`
+        fixed bottom-4 left-1/2 z-50 flex min-w-max -translate-x-1/2 flex-col
+        items-center justify-between rounded-lg bg-surface px-6 py-3 text-sm
+        text-on-surface shadow-lg
+        lg:flex-row
+      `}
     >
-      <div className={`mb-2 flex items-center text-pretty lg:mr-8 lg:mb-0`}>
+      <div className={`
+        mb-2 flex items-center text-pretty
+        lg:mr-8 lg:mb-0
+      `}>
         <Cookie className="mr-2" />
         <span className="flex-1 break-words">{i18n("I use cookies to make your visit smoother")}</span>
       </div>

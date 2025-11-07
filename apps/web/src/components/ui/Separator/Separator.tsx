@@ -21,8 +21,14 @@ const alignClasses = {
 
 export const Separator = ({ align = "center", className = "", text, variant = "full" }: SeparatorProps) => {
   return (
-    <div className={`relative flex items-center py-3 ${variantClasses[variant]} ${className} `} data-testid="separator">
-      <div className={clsx("min-w-2 border-t border-neutral-500/30", align !== "left" && `grow`)} />
+    <div className={`
+      relative flex items-center py-3
+      ${variantClasses[variant]}
+      ${className}
+    `} data-testid="separator">
+      <div className={clsx("min-w-2 border-t border-neutral-500/30", align !== "left" && `
+        grow
+      `)} />
       {text && (
         <span
           className={clsx(
@@ -33,7 +39,9 @@ export const Separator = ({ align = "center", className = "", text, variant = "f
           {text}
         </span>
       )}
-      <div className={clsx("min-w-2 border-t border-neutral-500/30", align !== "right" && `grow`)} />
+      <div className={clsx("min-w-2 border-t border-neutral-500/30", align !== "right" && `
+        grow
+      `)} />
     </div>
   );
 };

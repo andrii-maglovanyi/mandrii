@@ -17,7 +17,10 @@ const EventPageLayout = ({ slug }: EditEventPageLayoutProps) => {
   return (
     <>
       <Breadcrumbs items={[{ title: i18n("Events"), url: `/user-directory#Events` }]} />
-      <h1 className={`text-on-surface mb-12 text-3xl font-extrabold md:text-5xl`}>{i18n("Edit event")}</h1>
+      <h1 className={`
+        mb-12 text-3xl font-extrabold text-on-surface
+        md:text-5xl
+      `}>{i18n("Edit event")}</h1>
 
       <EditEvent slug={slug} />
     </>
