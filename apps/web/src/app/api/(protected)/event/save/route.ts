@@ -2,9 +2,8 @@ import { NextResponse } from "next/server";
 
 import { getApiContext, InternalServerError, validateRequest, ValidationError, withErrorHandling } from "~/lib/api";
 import { envName } from "~/lib/config/env";
-import { privateConfig } from "~/lib/config/private";
 import { saveEvent } from "~/lib/models/event";
-import { saveUser } from "~/lib/models/user";
+import { UserModel } from "~/lib/models/user";
 import { sendSlackNotification } from "~/lib/slack/event";
 import { processImages } from "~/lib/utils/images";
 import { getEventSchema } from "~/lib/validation/event";
@@ -51,7 +50,8 @@ export const POST = (req: Request) =>
       registration_url,
       slug,
       start_date,
-      title,
+      title_en,
+      title_uk,
       type,
       venue_id,
     } = data;
@@ -76,7 +76,6 @@ export const POST = (req: Request) =>
       organizer_email,
       organizer_name: organizer_name?.trim(),
       organizer_phone_number,
-      owner_id: session.user.id as UUID,
       price_amount,
       price_currency,
       price_type,
@@ -88,7 +87,8 @@ export const POST = (req: Request) =>
         instagram: data.instagram?.trim() || null,
       },
       start_date: start_date as Timestamp,
-      title: title.trim(),
+      title_en: title_en.trim(),
+      title_uk: title_uk.trim(),
       type,
       venue_id: venue_id as UUID,
     };
@@ -133,20 +133,9 @@ export const POST = (req: Request) =>
       throw new InternalServerError("Failed to save event");
     }
 
-    // Update user points and events_created only for new events
     if (!eventData.id) {
-      const userId = await saveUser(
-        {
-          events_created: (session.user.events_created ?? 0) + 1,
-          id: session.user.id,
-          points: (session.user.points ?? 0) + privateConfig.rewards.pointsPerEventCreation,
-        },
-        session,
-      );
-
-      if (!userId) {
-        throw new InternalServerError("Failed to save user");
-      }
+      const userModel = new UserModel(session);
+      await userModel.incrementEventCreation();
     }
 
     sendSlackNotification(session.user, eventData);

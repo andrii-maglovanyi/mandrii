@@ -10,7 +10,7 @@ import {
 } from "~/lib/api";
 import { envName } from "~/lib/config/env";
 import { privateConfig } from "~/lib/config/private";
-import { saveUser } from "~/lib/models/user";
+import { UserModel } from "~/lib/models";
 import { saveVenue } from "~/lib/models/venue";
 import { sendSlackNotification } from "~/lib/slack/venue";
 import { processImages } from "~/lib/utils/images";
@@ -113,20 +113,9 @@ export const POST = (req: Request) =>
       throw new InternalServerError("Failed to save venue");
     }
 
-    // Update user points and venues_created only for new venues
     if (!venueData.id) {
-      const userId = await saveUser(
-        {
-          id: session.user.id,
-          points: (session.user.points ?? 0) + privateConfig.rewards.pointsPerVenueCreation,
-          venues_created: (session.user.venues_created ?? 0) + 1,
-        },
-        session,
-      );
-
-      if (!userId) {
-        throw new InternalServerError("Failed to save user");
-      }
+      const userModel = new UserModel(session);
+      await userModel.incrementVenueCreation();
     }
 
     sendSlackNotification(session.user, venueData);

@@ -33,7 +33,7 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
       },
       item: {
         text: i18n("Check out this event on {appHost}", { appHost: UrlHelper.getHostname() }),
-        title: event.title,
+        title: locale === "uk" ? event.title_uk : event.title_en,
         url: `${window.location.origin}/events/${event.slug}`,
       },
     });

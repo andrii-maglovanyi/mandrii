@@ -108,6 +108,7 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
         />
 
         <MDEditor
+          isDark={isDark}
           label={i18n("Accessibility Information")}
           placeholder={i18n("Wheelchair accessible, Sign language interpretation available, etc.")}
           {...getFieldProps("accessibility_info")}

@@ -5,7 +5,8 @@ import { Events } from "~/types";
 
 const EVENT_FIELDS = `
   id
-  title
+  title_en
+  title_uk
   slug
   description_en
   description_uk
@@ -38,7 +39,6 @@ const EVENT_FIELDS = `
   organizer_name
   organizer_phone_number
   organizer_email
-  owner_id
   venue_id
   user_id
 `;
@@ -86,7 +86,7 @@ const executeGraphQLQuery = async <T>(
   return result.data;
 };
 
-export const saveEvent = async (variables: Partial<Events>, session: AuthenticatedSession, isOwner = false) => {
+export const saveEvent = async (variables: Partial<Events>, session: AuthenticatedSession) => {
   const isUpdate = !!variables.id;
 
   if (isUpdate) {
@@ -120,7 +120,7 @@ export const saveEvent = async (variables: Partial<Events>, session: Authenticat
     const result = await executeGraphQLQuery<{ insert_events_one: { id: string } }>(
       INSERT_EVENT_MUTATION,
       {
-        object: { ...variables, owner_id: isOwner ? session.user.id : null, user_id: session.user.id },
+        object: { ...variables, user_id: session.user.id },
       },
       session.accessToken,
     );

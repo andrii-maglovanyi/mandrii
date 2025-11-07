@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getApiContext, InternalServerError, validateRequest, withErrorHandling } from "~/lib/api";
 import { envName } from "~/lib/config/env";
-import { saveUser } from "~/lib/models/user";
+import { UserModel } from "~/lib/models";
 import { processImages } from "~/lib/utils/images";
 import { getUserSchema } from "~/lib/validation/user";
 import { Users } from "~/types";
@@ -23,7 +23,8 @@ export const POST = (req: Request) =>
     const prefix = [envName, "users", profileData.id].join("/");
     profileData.image = (await processImages(image ? [image] : [], [prefix, "image"].join("/")))[0] ?? "";
 
-    const id = await saveUser(profileData, session);
+    const userModel = new UserModel(session);
+    const { id } = await userModel.update(profileData);
 
     if (!id) {
       throw new InternalServerError("Failed to save user");

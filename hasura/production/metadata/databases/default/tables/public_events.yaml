@@ -61,6 +61,7 @@ insert_permissions:
         - slug
         - social_links
         - start_date
+        - title_en
         - title_uk
         - type
         - user_id
