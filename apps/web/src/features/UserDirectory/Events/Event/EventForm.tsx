@@ -61,22 +61,23 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
     onSuccess,
   });
 
-  // Auto-generate slug from title + area/venue (matching venue slug generation pattern)
   useEffect(() => {
-    if (initialValues.id || !values.title) return;
+    const title = values.title_uk ?? values.title_en;
 
-    let titleWithSuffix = values.title;
+    if (initialValues.id || !title) return;
+
+    let titleWithSuffix = title;
 
     // If venue is selected, append venue slug
     if (values.venue_id && venues) {
       const selectedVenue = venues.find((v) => v.id === values.venue_id);
       if (selectedVenue?.slug) {
-        titleWithSuffix = `${values.title} ${selectedVenue.slug}`;
+        titleWithSuffix = `${titleWithSuffix} ${selectedVenue.slug}`;
       }
     }
     // If custom location with area, append area (like venues do)
     else if (values.area && !values.venue_id) {
-      titleWithSuffix = `${values.title} ${values.area}`;
+      titleWithSuffix = `${titleWithSuffix} ${values.area}`;
     }
 
     setValues((prev) => ({
@@ -86,7 +87,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
         strict: true,
       }),
     }));
-  }, [initialValues.id, setValues, values.title, values.area, values.venue_id, venues]);
+  }, [initialValues.id, setValues, values.title_en, values.title_uk, values.area, values.venue_id, venues]);
 
   const eventTypeOptions = Object.values(Event_Type_Enum).map((value) => {
     const { iconName, label } = constants.eventTypes[value as keyof typeof constants.eventTypes];
@@ -131,11 +132,18 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
           </div>
           <div className="flex flex-4 flex-col">
             <Input
-              label={i18n("Event title")}
-              placeholder={i18n("Ukrainian Festival 2025")}
+              label={"Назва події (🇺🇦 Українською)"}
+              placeholder={"Український фестиваль 2026"}
               required
               type="text"
-              {...getFieldProps("title")}
+              {...getFieldProps("title_uk")}
+            />
+            <Input
+              label={"Event title (🇬🇧 English)"}
+              placeholder={"Ukrainian Festival 2026"}
+              required
+              type="text"
+              {...getFieldProps("title_en")}
             />
           </div>
         </div>

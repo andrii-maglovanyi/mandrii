@@ -65,6 +65,7 @@ update_permissions:
   - role: user
     permission:
       columns:
+        - image
         - name
       filter:
         id:

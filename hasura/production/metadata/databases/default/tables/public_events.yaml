@@ -61,7 +61,7 @@ insert_permissions:
         - slug
         - social_links
         - start_date
-        - title
+        - title_uk
         - type
         - user_id
         - venue_id
@@ -103,7 +103,8 @@ select_permissions:
         - social_links
         - start_date
         - status
-        - title
+        - title_en
+        - title_uk
         - type
         - user_id
         - venue_id
@@ -153,7 +154,8 @@ select_permissions:
         - social_links
         - start_date
         - status
-        - title
+        - title_en
+        - title_uk
         - type
         - updated_at
         - user_id
@@ -201,7 +203,8 @@ update_permissions:
         - registration_url
         - social_links
         - start_date
-        - title
+        - title_en
+        - title_uk
         - type
         - venue_id
       filter:

@@ -404,7 +404,9 @@ export enum Events_Select_Column {
   /** column name */
   Status = "status",
   /** column name */
-  Title = "title",
+  TitleEn = "title_en",
+  /** column name */
+  TitleUk = "title_uk",
   /** column name */
   Type = "type",
   /** column name */
@@ -504,7 +506,9 @@ export enum Events_Update_Column {
   /** column name */
   Status = "status",
   /** column name */
-  Title = "title",
+  TitleEn = "title_en",
+  /** column name */
+  TitleUk = "title_uk",
   /** column name */
   Type = "type",
   /** column name */
@@ -2256,7 +2260,6 @@ export type EventFieldsFragment = {
   organizer_email?: null | string;
   organizer_name?: null | string;
   organizer_phone_number?: null | string;
-  owner?: { __typename?: "users"; id: UUID; image?: null | string; name?: null | string } | null;
   owner_id?: null | UUID;
   price_amount?: null | Numeric;
   price_currency?: null | string;
@@ -2268,9 +2271,9 @@ export type EventFieldsFragment = {
   social_links?: Json | null;
   start_date: Timestamp;
   status: Event_Status_Enum;
-  title: string;
+  title_en: string;
+  title_uk: string;
   type: Event_Type_Enum;
-  updated_at: Timestamp;
   user_id: UUID;
   venue?: {
     __typename?: "venues";
@@ -2303,11 +2306,11 @@ export type Events = {
   description_uk?: Maybe<Scalars["String"]["output"]>;
   end_date?: Maybe<Scalars["timestamptz"]["output"]>;
   /** An object relationship */
-  event_price?: Maybe<Price_Type>;
+  event_price_type: Price_Type;
   /** An object relationship */
-  event_status?: Maybe<Event_Status>;
+  event_status: Event_Status;
   /** An object relationship */
-  event_type?: Maybe<Event_Type>;
+  event_type: Event_Type;
   /** An array relationship */
   events_event_tags: Array<Events_Event_Tags>;
   /** An aggregate relationship */
@@ -2335,7 +2338,8 @@ export type Events = {
   social_links?: Maybe<Scalars["jsonb"]["output"]>;
   start_date: Scalars["timestamptz"]["output"];
   status: Event_Status_Enum;
-  title: Scalars["String"]["output"];
+  title_en: Scalars["String"]["output"];
+  title_uk: Scalars["String"]["output"];
   type: Event_Type_Enum;
   updated_at: Scalars["timestamptz"]["output"];
   /** An object relationship */
@@ -2459,7 +2463,7 @@ export type Events_Bool_Exp = {
   description_en?: InputMaybe<String_Comparison_Exp>;
   description_uk?: InputMaybe<String_Comparison_Exp>;
   end_date?: InputMaybe<Timestamptz_Comparison_Exp>;
-  event_price?: InputMaybe<Price_Type_Bool_Exp>;
+  event_price_type?: InputMaybe<Price_Type_Bool_Exp>;
   event_status?: InputMaybe<Event_Status_Bool_Exp>;
   event_type?: InputMaybe<Event_Type_Bool_Exp>;
   events_event_tags?: InputMaybe<Events_Event_Tags_Bool_Exp>;
@@ -2486,7 +2490,8 @@ export type Events_Bool_Exp = {
   social_links?: InputMaybe<Jsonb_Comparison_Exp>;
   start_date?: InputMaybe<Timestamptz_Comparison_Exp>;
   status?: InputMaybe<Event_Status_Enum_Comparison_Exp>;
-  title?: InputMaybe<String_Comparison_Exp>;
+  title_en?: InputMaybe<String_Comparison_Exp>;
+  title_uk?: InputMaybe<String_Comparison_Exp>;
   type?: InputMaybe<Event_Type_Enum_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
@@ -2700,7 +2705,7 @@ export type Events_Insert_Input = {
   description_en?: InputMaybe<Scalars["String"]["input"]>;
   description_uk?: InputMaybe<Scalars["String"]["input"]>;
   end_date?: InputMaybe<Scalars["timestamptz"]["input"]>;
-  event_price?: InputMaybe<Price_Type_Obj_Rel_Insert_Input>;
+  event_price_type?: InputMaybe<Price_Type_Obj_Rel_Insert_Input>;
   event_status?: InputMaybe<Event_Status_Obj_Rel_Insert_Input>;
   event_type?: InputMaybe<Event_Type_Obj_Rel_Insert_Input>;
   events_event_tags?: InputMaybe<Events_Event_Tags_Arr_Rel_Insert_Input>;
@@ -2726,7 +2731,8 @@ export type Events_Insert_Input = {
   social_links?: InputMaybe<Scalars["jsonb"]["input"]>;
   start_date?: InputMaybe<Scalars["timestamptz"]["input"]>;
   status?: InputMaybe<Event_Status_Enum>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_en?: InputMaybe<Scalars["String"]["input"]>;
+  title_uk?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Event_Type_Enum>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
@@ -2765,7 +2771,8 @@ export type Events_Max_Fields = {
   registration_url?: Maybe<Scalars["String"]["output"]>;
   slug?: Maybe<Scalars["String"]["output"]>;
   start_date?: Maybe<Scalars["timestamptz"]["output"]>;
-  title?: Maybe<Scalars["String"]["output"]>;
+  title_en?: Maybe<Scalars["String"]["output"]>;
+  title_uk?: Maybe<Scalars["String"]["output"]>;
   updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
   venue_id?: Maybe<Scalars["uuid"]["output"]>;
@@ -2800,7 +2807,8 @@ export type Events_Max_Order_By = {
   registration_url?: InputMaybe<Order_By>;
   slug?: InputMaybe<Order_By>;
   start_date?: InputMaybe<Order_By>;
-  title?: InputMaybe<Order_By>;
+  title_en?: InputMaybe<Order_By>;
+  title_uk?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
   venue_id?: InputMaybe<Order_By>;
@@ -2836,7 +2844,8 @@ export type Events_Min_Fields = {
   registration_url?: Maybe<Scalars["String"]["output"]>;
   slug?: Maybe<Scalars["String"]["output"]>;
   start_date?: Maybe<Scalars["timestamptz"]["output"]>;
-  title?: Maybe<Scalars["String"]["output"]>;
+  title_en?: Maybe<Scalars["String"]["output"]>;
+  title_uk?: Maybe<Scalars["String"]["output"]>;
   updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
   venue_id?: Maybe<Scalars["uuid"]["output"]>;
@@ -2871,7 +2880,8 @@ export type Events_Min_Order_By = {
   registration_url?: InputMaybe<Order_By>;
   slug?: InputMaybe<Order_By>;
   start_date?: InputMaybe<Order_By>;
-  title?: InputMaybe<Order_By>;
+  title_en?: InputMaybe<Order_By>;
+  title_uk?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
   venue_id?: InputMaybe<Order_By>;
@@ -2914,7 +2924,7 @@ export type Events_Order_By = {
   description_en?: InputMaybe<Order_By>;
   description_uk?: InputMaybe<Order_By>;
   end_date?: InputMaybe<Order_By>;
-  event_price?: InputMaybe<Price_Type_Order_By>;
+  event_price_type?: InputMaybe<Price_Type_Order_By>;
   event_status?: InputMaybe<Event_Status_Order_By>;
   event_type?: InputMaybe<Event_Type_Order_By>;
   events_event_tags_aggregate?: InputMaybe<Events_Event_Tags_Aggregate_Order_By>;
@@ -2940,7 +2950,8 @@ export type Events_Order_By = {
   social_links?: InputMaybe<Order_By>;
   start_date?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
-  title?: InputMaybe<Order_By>;
+  title_en?: InputMaybe<Order_By>;
+  title_uk?: InputMaybe<Order_By>;
   type?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user?: InputMaybe<Users_Order_By>;
@@ -2995,7 +3006,8 @@ export type Events_Set_Input = {
   social_links?: InputMaybe<Scalars["jsonb"]["input"]>;
   start_date?: InputMaybe<Scalars["timestamptz"]["input"]>;
   status?: InputMaybe<Event_Status_Enum>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_en?: InputMaybe<Scalars["String"]["input"]>;
+  title_uk?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Event_Type_Enum>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -3085,7 +3097,8 @@ export type Events_Stream_Cursor_Value_Input = {
   social_links?: InputMaybe<Scalars["jsonb"]["input"]>;
   start_date?: InputMaybe<Scalars["timestamptz"]["input"]>;
   status?: InputMaybe<Event_Status_Enum>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_en?: InputMaybe<Scalars["String"]["input"]>;
+  title_uk?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Event_Type_Enum>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -3374,7 +3387,6 @@ export type GetPublicEventsQuery = {
     organizer_email?: null | string;
     organizer_name?: null | string;
     organizer_phone_number?: null | string;
-    owner?: { __typename?: "users"; id: UUID; image?: null | string; name?: null | string } | null;
     owner_id?: null | UUID;
     price_amount?: null | Numeric;
     price_currency?: null | string;
@@ -3386,9 +3398,9 @@ export type GetPublicEventsQuery = {
     social_links?: Json | null;
     start_date: Timestamp;
     status: Event_Status_Enum;
-    title: string;
+    title_en: string;
+    title_uk: string;
     type: Event_Type_Enum;
-    updated_at: Timestamp;
     user_id: UUID;
     venue?: {
       __typename?: "venues";
@@ -3554,7 +3566,7 @@ export type GetUserEventsQuery = {
     organizer_email?: null | string;
     organizer_name?: null | string;
     organizer_phone_number?: null | string;
-    owner?: { __typename?: "users"; id: UUID; image?: null | string; name?: null | string } | null;
+    owner?: { __typename?: "users"; id: UUID; image?: null | string; name?: null | string; } | null;
     owner_id?: null | UUID;
     price_amount?: null | Numeric;
     price_currency?: null | string;
@@ -3566,7 +3578,8 @@ export type GetUserEventsQuery = {
     social_links?: Json | null;
     start_date: Timestamp;
     status: Event_Status_Enum;
-    title: string;
+    title_en: string;
+    title_uk: string;
     type: Event_Type_Enum;
     updated_at: Timestamp;
     user_id: UUID;
@@ -8156,7 +8169,8 @@ export type Verification_Tokens_Updates = {
 export const EventFieldsFragmentDoc = gql`
   fragment EventFields on events {
     id
-    title
+    title_en
+    title_uk
     slug
     description_en
     description_uk
@@ -8184,7 +8198,6 @@ export const EventFieldsFragmentDoc = gql`
     social_links
     status
     created_at
-    updated_at
     is_recurring
     recurrence_rule
     organizer_name
@@ -8202,11 +8215,6 @@ export const EventFieldsFragmentDoc = gql`
       logo
       category
       geo
-    }
-    owner {
-      id
-      name
-      image
     }
   }
 `;
@@ -8352,7 +8360,7 @@ export function useGetUserProfileLazyQuery(
  * });
  */
 export function useGetUserProfileQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8413,7 +8421,7 @@ export function useGetPublicEventsLazyQuery(
  * });
  */
 export function useGetPublicEventsQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicEventsQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicEventsQueryVariables; }) &
     Apollo.QueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8429,6 +8437,12 @@ export const GetUserEventsDocument = gql`
   query GetUserEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
     events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       ...EventFields
+      updated_at
+      owner {
+        id
+        name
+        image
+      }
     }
     events_aggregate(where: $where) {
       aggregate {
@@ -8469,7 +8483,7 @@ export function useGetUserEventsLazyQuery(
  * });
  */
 export function useGetUserEventsQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserEventsQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserEventsQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8577,7 +8591,7 @@ export function useGetPublicVenuesLazyQuery(
  * });
  */
 export function useGetPublicVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8635,7 +8649,7 @@ export function useGetUserVenuesLazyQuery(
  * });
  */
 export function useGetUserVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8689,7 +8703,7 @@ export function useGetAdminVenuesLazyQuery(
  * });
  */
 export function useGetAdminVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };

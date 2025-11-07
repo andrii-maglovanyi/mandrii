@@ -46,6 +46,7 @@ export const EventView = ({ slug }: EventViewProps) => {
     );
   }
 
+  const title = locale === "uk" ? event.title_uk : event.title_en;
   const description = (locale === "uk" ? event.description_uk : event.description_en) || "";
   const normalizeUrl = (path?: null | string) => {
     if (!path) return undefined;
@@ -184,7 +185,7 @@ export const EventView = ({ slug }: EventViewProps) => {
                     `,
                   )}
                 >
-                  {event.title}
+                  {title}
                 </h1>
 
                 {/* Date & location */}
