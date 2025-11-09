@@ -1,111 +1,986 @@
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
+
 import { Geography } from './geography';
 import { Geometry } from './geometry';
 import { Json } from './json';
 import { Numeric } from './numeric';
 import { Timestamp } from './timestamp';
 import { UUID } from './uuid';
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Incremental<T> = { [P in keyof T]?: P extends '__typename' | ' $fragmentName' ? T[P] : never } | T;
+export type InputMaybe<T> = Maybe<T>;
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type MakeMaybe<T, K extends keyof T> = { [SubKey in K]: Maybe<T[SubKey]> } & Omit<T, K>;
+export type MakeOptional<T, K extends keyof T> = { [SubKey in K]?: Maybe<T[SubKey]> } & Omit<T, K>;
+export type Maybe<T> = null | T;
 const defaultOptions = {} as const;
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  geography: { input: Geography; output: Geography; }
-  geometry: { input: Geometry; output: Geometry; }
-  json: { input: Json; output: Json; }
-  jsonb: { input: Json; output: Json; }
-  numeric: { input: Numeric; output: Numeric; }
-  timestamp: { input: Timestamp; output: Timestamp; }
-  timestamptz: { input: Timestamp; output: Timestamp; }
-  uuid: { input: UUID; output: UUID; }
-};
+/** unique or primary key constraints on table "accounts" */
+export enum Accounts_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AccountsPkey = 'accounts_pkey'
+}
 
-/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
-export type Boolean_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['Boolean']['input']>;
-  _gt?: InputMaybe<Scalars['Boolean']['input']>;
-  _gte?: InputMaybe<Scalars['Boolean']['input']>;
-  _in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
-  _lt?: InputMaybe<Scalars['Boolean']['input']>;
-  _lte?: InputMaybe<Scalars['Boolean']['input']>;
-  _neq?: InputMaybe<Scalars['Boolean']['input']>;
-  _nin?: InputMaybe<Array<Scalars['Boolean']['input']>>;
-};
+/** select columns of table "accounts" */
+export enum Accounts_Select_Column {
+  /** column name */
+  AccessToken = 'access_token',
+  /** column name */
+  ExpiresAt = 'expires_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IdToken = 'id_token',
+  /** column name */
+  Provider = 'provider',
+  /** column name */
+  ProviderAccountId = 'providerAccountId',
+  /** column name */
+  RefreshToken = 'refresh_token',
+  /** column name */
+  Scope = 'scope',
+  /** column name */
+  SessionState = 'session_state',
+  /** column name */
+  TokenType = 'token_type',
+  /** column name */
+  Type = 'type',
+  /** column name */
+  UserId = 'userId'
+}
 
-/** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
-export type Int_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['Int']['input']>;
-  _gt?: InputMaybe<Scalars['Int']['input']>;
-  _gte?: InputMaybe<Scalars['Int']['input']>;
-  _in?: InputMaybe<Array<Scalars['Int']['input']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
-  _lt?: InputMaybe<Scalars['Int']['input']>;
-  _lte?: InputMaybe<Scalars['Int']['input']>;
-  _neq?: InputMaybe<Scalars['Int']['input']>;
-  _nin?: InputMaybe<Array<Scalars['Int']['input']>>;
-};
+/** update columns of table "accounts" */
+export enum Accounts_Update_Column {
+  /** column name */
+  AccessToken = 'access_token',
+  /** column name */
+  ExpiresAt = 'expires_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IdToken = 'id_token',
+  /** column name */
+  Provider = 'provider',
+  /** column name */
+  ProviderAccountId = 'providerAccountId',
+  /** column name */
+  RefreshToken = 'refresh_token',
+  /** column name */
+  Scope = 'scope',
+  /** column name */
+  SessionState = 'session_state',
+  /** column name */
+  TokenType = 'token_type',
+  /** column name */
+  Type = 'type',
+  /** column name */
+  UserId = 'userId'
+}
 
-/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
-export type String_Array_Comparison_Exp = {
-  /** is the array contained in the given array value */
-  _contained_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** does the array contain the given value */
-  _contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  _eq?: InputMaybe<Array<Scalars['String']['input']>>;
-  _gt?: InputMaybe<Array<Scalars['String']['input']>>;
-  _gte?: InputMaybe<Array<Scalars['String']['input']>>;
-  _in?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
-  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
-  _lt?: InputMaybe<Array<Scalars['String']['input']>>;
-  _lte?: InputMaybe<Array<Scalars['String']['input']>>;
-  _neq?: InputMaybe<Array<Scalars['String']['input']>>;
-  _nin?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
-};
+/** unique or primary key constraints on table "chains" */
+export enum Chains_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ChainsPkey = 'chains_pkey',
+  /** unique or primary key constraint on columns "slug" */
+  ChainsSlugKey = 'chains_slug_key'
+}
 
-/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
-export type String_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['String']['input']>;
-  _gt?: InputMaybe<Scalars['String']['input']>;
-  _gte?: InputMaybe<Scalars['String']['input']>;
-  /** does the column match the given case-insensitive pattern */
-  _ilike?: InputMaybe<Scalars['String']['input']>;
-  _in?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** does the column match the given POSIX regular expression, case insensitive */
-  _iregex?: InputMaybe<Scalars['String']['input']>;
-  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
-  /** does the column match the given pattern */
-  _like?: InputMaybe<Scalars['String']['input']>;
-  _lt?: InputMaybe<Scalars['String']['input']>;
-  _lte?: InputMaybe<Scalars['String']['input']>;
-  _neq?: InputMaybe<Scalars['String']['input']>;
-  /** does the column NOT match the given case-insensitive pattern */
-  _nilike?: InputMaybe<Scalars['String']['input']>;
-  _nin?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** does the column NOT match the given POSIX regular expression, case insensitive */
-  _niregex?: InputMaybe<Scalars['String']['input']>;
-  /** does the column NOT match the given pattern */
-  _nlike?: InputMaybe<Scalars['String']['input']>;
-  /** does the column NOT match the given POSIX regular expression, case sensitive */
-  _nregex?: InputMaybe<Scalars['String']['input']>;
-  /** does the column NOT match the given SQL regular expression */
-  _nsimilar?: InputMaybe<Scalars['String']['input']>;
-  /** does the column match the given POSIX regular expression, case sensitive */
-  _regex?: InputMaybe<Scalars['String']['input']>;
-  /** does the column match the given SQL regular expression */
-  _similar?: InputMaybe<Scalars['String']['input']>;
-};
+/** select columns of table "chains" */
+export enum Chains_Select_Column {
+  /** column name */
+  ChainId = 'chain_id',
+  /** column name */
+  City = 'city',
+  /** column name */
+  Country = 'country',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DescriptionEn = 'description_en',
+  /** column name */
+  DescriptionUk = 'description_uk',
+  /** column name */
+  Emails = 'emails',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Logo = 'logo',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  OwnerId = 'owner_id',
+  /** column name */
+  PhoneNumbers = 'phone_numbers',
+  /** column name */
+  Slug = 'slug',
+  /** column name */
+  SocialLinks = 'social_links',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id',
+  /** column name */
+  Website = 'website'
+}
+
+/** update columns of table "chains" */
+export enum Chains_Update_Column {
+  /** column name */
+  ChainId = 'chain_id',
+  /** column name */
+  City = 'city',
+  /** column name */
+  Country = 'country',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DescriptionEn = 'description_en',
+  /** column name */
+  DescriptionUk = 'description_uk',
+  /** column name */
+  Emails = 'emails',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Logo = 'logo',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  OwnerId = 'owner_id',
+  /** column name */
+  PhoneNumbers = 'phone_numbers',
+  /** column name */
+  Slug = 'slug',
+  /** column name */
+  SocialLinks = 'social_links',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id',
+  /** column name */
+  Website = 'website'
+}
+
+/** ordering argument of a cursor */
+export enum Cursor_Ordering {
+  /** ascending ordering of the cursor */
+  Asc = 'ASC',
+  /** descending ordering of the cursor */
+  Desc = 'DESC'
+}
+
+/** unique or primary key constraints on table "event_status" */
+export enum Event_Status_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  EventStatusPkey = 'event_status_pkey'
+}
+
+export enum Event_Status_Enum {
+  /** Published and visible to public */
+  Active = 'ACTIVE',
+  /** Event is archived and hidden */
+  Archived = 'ARCHIVED',
+  /** Event has been cancelled */
+  Cancelled = 'CANCELLED',
+  /** Event has already occurred */
+  Completed = 'COMPLETED',
+  /** Draft event not yet submitted */
+  Draft = 'DRAFT',
+  /** Awaiting moderation approval */
+  Pending = 'PENDING',
+  /** Event has been postponed to new date */
+  Postponed = 'POSTPONED'
+}
+
+/** select columns of table "event_status" */
+export enum Event_Status_Select_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+
+/** update columns of table "event_status" */
+export enum Event_Status_Update_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** unique or primary key constraints on table "event_tags" */
+export enum Event_Tags_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  EventTagsPkey = 'event_tags_pkey',
+  /** unique or primary key constraint on columns "slug" */
+  EventTagsSlugKey = 'event_tags_slug_key'
+}
+
+/** select columns of table "event_tags" */
+export enum Event_Tags_Select_Column {
+  /** column name */
+  Category = 'category',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  NameEn = 'name_en',
+  /** column name */
+  NameUk = 'name_uk',
+  /** column name */
+  Slug = 'slug',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** update columns of table "event_tags" */
+export enum Event_Tags_Update_Column {
+  /** column name */
+  Category = 'category',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  NameEn = 'name_en',
+  /** column name */
+  NameUk = 'name_uk',
+  /** column name */
+  Slug = 'slug',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** unique or primary key constraints on table "event_type" */
+export enum Event_Type_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  EventTypePkey = 'event_type_pkey'
+}
+
+export enum Event_Type_Enum {
+  /** Celebration or party */
+  Celebration = 'CELEBRATION',
+  /** Charity or fundraising event */
+  Charity = 'CHARITY',
+  /** Music concert or performance */
+  Concert = 'CONCERT',
+  /** Conference or seminar */
+  Conference = 'CONFERENCE',
+  /** Art or cultural exhibition */
+  Exhibition = 'EXHIBITION',
+  /** Festival or large-scale event */
+  Festival = 'FESTIVAL',
+  /** Informal gathering or meetup */
+  Gathering = 'GATHERING',
+  /** Other type of event */
+  Other = 'OTHER',
+  /** Film or video screening */
+  Screening = 'SCREENING',
+  /** Sports event or activity */
+  Sports = 'SPORTS',
+  /** Theater performance */
+  Theater = 'THEATER',
+  /** Educational workshop or class */
+  Workshop = 'WORKSHOP'
+}
+
+/** select columns of table "event_type" */
+export enum Event_Type_Select_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** update columns of table "event_type" */
+export enum Event_Type_Update_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** unique or primary key constraints on table "events" */
+export enum Events_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  EventsPkey = 'events_pkey',
+  /** unique or primary key constraint on columns "slug" */
+  EventsSlugKey = 'events_slug_key'
+}
+
+/** unique or primary key constraints on table "events_event_tags" */
+export enum Events_Event_Tags_Constraint {
+  /** unique or primary key constraint on columns "tag_id", "event_id" */
+  EventsEventTagsPkey = 'events_event_tags_pkey'
+}
+
+/** select columns of table "events_event_tags" */
+export enum Events_Event_Tags_Select_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  EventId = 'event_id',
+  /** column name */
+  TagId = 'tag_id'
+}
+
+/** update columns of table "events_event_tags" */
+export enum Events_Event_Tags_Update_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  EventId = 'event_id',
+  /** column name */
+  TagId = 'tag_id'
+}
+
+/** select columns of table "events" */
+export enum Events_Select_Column {
+  /** column name */
+  AccessibilityInfo = 'accessibility_info',
+  /** column name */
+  AgeRestriction = 'age_restriction',
+  /** column name */
+  Area = 'area',
+  /** column name */
+  Capacity = 'capacity',
+  /** column name */
+  City = 'city',
+  /** column name */
+  Country = 'country',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  CustomLocationAddress = 'custom_location_address',
+  /** column name */
+  CustomLocationName = 'custom_location_name',
+  /** column name */
+  DescriptionEn = 'description_en',
+  /** column name */
+  DescriptionUk = 'description_uk',
+  /** column name */
+  EndDate = 'end_date',
+  /** column name */
+  ExternalUrl = 'external_url',
+  /** column name */
+  Geo = 'geo',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Images = 'images',
+  /** column name */
+  IsOnline = 'is_online',
+  /** column name */
+  IsRecurring = 'is_recurring',
+  /** column name */
+  Language = 'language',
+  /** column name */
+  OrganizerEmail = 'organizer_email',
+  /** column name */
+  OrganizerName = 'organizer_name',
+  /** column name */
+  OrganizerPhoneNumber = 'organizer_phone_number',
+  /** column name */
+  OwnerId = 'owner_id',
+  /** column name */
+  PriceAmount = 'price_amount',
+  /** column name */
+  PriceCurrency = 'price_currency',
+  /** column name */
+  PriceType = 'price_type',
+  /** column name */
+  RecurrenceRule = 'recurrence_rule',
+  /** column name */
+  RegistrationRequired = 'registration_required',
+  /** column name */
+  RegistrationUrl = 'registration_url',
+  /** column name */
+  Slug = 'slug',
+  /** column name */
+  SocialLinks = 'social_links',
+  /** column name */
+  StartDate = 'start_date',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  TitleEn = 'title_en',
+  /** column name */
+  TitleUk = 'title_uk',
+  /** column name */
+  Type = 'type',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id',
+  /** column name */
+  VenueId = 'venue_id'
+}
+
+/** select "events_aggregate_bool_exp_bool_and_arguments_columns" columns of table "events" */
+export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsOnline = 'is_online',
+  /** column name */
+  IsRecurring = 'is_recurring',
+  /** column name */
+  RegistrationRequired = 'registration_required'
+}
+
+/** select "events_aggregate_bool_exp_bool_or_arguments_columns" columns of table "events" */
+export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsOnline = 'is_online',
+  /** column name */
+  IsRecurring = 'is_recurring',
+  /** column name */
+  RegistrationRequired = 'registration_required'
+}
+
+/** update columns of table "events" */
+export enum Events_Update_Column {
+  /** column name */
+  AccessibilityInfo = 'accessibility_info',
+  /** column name */
+  AgeRestriction = 'age_restriction',
+  /** column name */
+  Area = 'area',
+  /** column name */
+  Capacity = 'capacity',
+  /** column name */
+  City = 'city',
+  /** column name */
+  Country = 'country',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  CustomLocationAddress = 'custom_location_address',
+  /** column name */
+  CustomLocationName = 'custom_location_name',
+  /** column name */
+  DescriptionEn = 'description_en',
+  /** column name */
+  DescriptionUk = 'description_uk',
+  /** column name */
+  EndDate = 'end_date',
+  /** column name */
+  ExternalUrl = 'external_url',
+  /** column name */
+  Geo = 'geo',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Images = 'images',
+  /** column name */
+  IsOnline = 'is_online',
+  /** column name */
+  IsRecurring = 'is_recurring',
+  /** column name */
+  Language = 'language',
+  /** column name */
+  OrganizerEmail = 'organizer_email',
+  /** column name */
+  OrganizerName = 'organizer_name',
+  /** column name */
+  OrganizerPhoneNumber = 'organizer_phone_number',
+  /** column name */
+  OwnerId = 'owner_id',
+  /** column name */
+  PriceAmount = 'price_amount',
+  /** column name */
+  PriceCurrency = 'price_currency',
+  /** column name */
+  PriceType = 'price_type',
+  /** column name */
+  RecurrenceRule = 'recurrence_rule',
+  /** column name */
+  RegistrationRequired = 'registration_required',
+  /** column name */
+  RegistrationUrl = 'registration_url',
+  /** column name */
+  Slug = 'slug',
+  /** column name */
+  SocialLinks = 'social_links',
+  /** column name */
+  StartDate = 'start_date',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  TitleEn = 'title_en',
+  /** column name */
+  TitleUk = 'title_uk',
+  /** column name */
+  Type = 'type',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id',
+  /** column name */
+  VenueId = 'venue_id'
+}
+
+/** column ordering options */
+export enum Order_By {
+  /** in ascending order, nulls last */
+  Asc = 'asc',
+  /** in ascending order, nulls first */
+  AscNullsFirst = 'asc_nulls_first',
+  /** in ascending order, nulls last */
+  AscNullsLast = 'asc_nulls_last',
+  /** in descending order, nulls first */
+  Desc = 'desc',
+  /** in descending order, nulls first */
+  DescNullsFirst = 'desc_nulls_first',
+  /** in descending order, nulls last */
+  DescNullsLast = 'desc_nulls_last'
+}
+
+/** unique or primary key constraints on table "price_type" */
+export enum Price_Type_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  PriceTypePkey = 'price_type_pkey'
+}
+
+export enum Price_Type_Enum {
+  /** Donation-based event */
+  Donation = 'DONATION',
+  /** Free event with no cost */
+  Free = 'FREE',
+  /** Paid event with fixed ticket price */
+  Paid = 'PAID',
+  /** Event with suggested donation amount */
+  SuggestedDonation = 'SUGGESTED_DONATION'
+}
+
+/** select columns of table "price_type" */
+export enum Price_Type_Select_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** update columns of table "price_type" */
+export enum Price_Type_Update_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** unique or primary key constraints on table "provider_type" */
+export enum Provider_Type_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ProviderTypePkey = 'provider_type_pkey'
+}
+
+/** select columns of table "provider_type" */
+export enum Provider_Type_Select_Column {
+  /** column name */
+  Value = 'value'
+}
+
+/** update columns of table "provider_type" */
+export enum Provider_Type_Update_Column {
+  /** column name */
+  Value = 'value'
+}
+
+/** unique or primary key constraints on table "sessions" */
+export enum Sessions_Constraint {
+  /** unique or primary key constraint on columns "sessionToken" */
+  SessionsPkey = 'sessions_pkey'
+}
+
+/** select columns of table "sessions" */
+export enum Sessions_Select_Column {
+  /** column name */
+  Expires = 'expires',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  SessionToken = 'sessionToken',
+  /** column name */
+  UserId = 'userId'
+}
+
+/** update columns of table "sessions" */
+export enum Sessions_Update_Column {
+  /** column name */
+  Expires = 'expires',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  SessionToken = 'sessionToken',
+  /** column name */
+  UserId = 'userId'
+}
+
+/** unique or primary key constraints on table "user_role" */
+export enum User_Role_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  UserRolePkey = 'user_role_pkey'
+}
+
+export enum User_Role_Enum {
+  /** Administrator with full access */
+  Admin = 'admin',
+  /** Regular user with standard access */
+  User = 'user'
+}
+
+/** select columns of table "user_role" */
+export enum User_Role_Select_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** update columns of table "user_role" */
+export enum User_Role_Update_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** unique or primary key constraints on table "user_status" */
+export enum User_Status_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  UserStatusPkey = 'user_status_pkey'
+}
+
+export enum User_Status_Enum {
+  /** Currently active and able to log in */
+  Active = 'active',
+  /** Inactive but can be reactivated */
+  Inactive = 'inactive'
+}
+
+/** select columns of table "user_status" */
+export enum User_Status_Select_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** update columns of table "user_status" */
+export enum User_Status_Update_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** unique or primary key constraints on table "users" */
+export enum Users_Constraint {
+  /** unique or primary key constraint on columns "email" */
+  UsersEmailKey = 'users_email_key',
+  /** unique or primary key constraint on columns "id" */
+  UsersPkey = 'users_pkey'
+}
+
+/** select columns of table "users" */
+export enum Users_Select_Column {
+  /** column name */
+  City = 'city',
+  /** column name */
+  Email = 'email',
+  /** column name */
+  EmailVerified = 'emailVerified',
+  /** column name */
+  EventsCreated = 'events_created',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Image = 'image',
+  /** column name */
+  IsVerifiedContributor = 'is_verified_contributor',
+  /** column name */
+  LastActivityAt = 'last_activity_at',
+  /** column name */
+  Level = 'level',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Points = 'points',
+  /** column name */
+  ReviewsCreated = 'reviews_created',
+  /** column name */
+  Role = 'role',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  ThankYouCount = 'thank_you_count',
+  /** column name */
+  VenuesCreated = 'venues_created'
+}
+
+/** select "users_aggregate_bool_exp_bool_and_arguments_columns" columns of table "users" */
+export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsVerifiedContributor = 'is_verified_contributor'
+}
+
+
+/** select "users_aggregate_bool_exp_bool_or_arguments_columns" columns of table "users" */
+export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsVerifiedContributor = 'is_verified_contributor'
+}
+
+
+/** update columns of table "users" */
+export enum Users_Update_Column {
+  /** column name */
+  City = 'city',
+  /** column name */
+  Email = 'email',
+  /** column name */
+  EmailVerified = 'emailVerified',
+  /** column name */
+  EventsCreated = 'events_created',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Image = 'image',
+  /** column name */
+  IsVerifiedContributor = 'is_verified_contributor',
+  /** column name */
+  LastActivityAt = 'last_activity_at',
+  /** column name */
+  Level = 'level',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Points = 'points',
+  /** column name */
+  ReviewsCreated = 'reviews_created',
+  /** column name */
+  Role = 'role',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  ThankYouCount = 'thank_you_count',
+  /** column name */
+  VenuesCreated = 'venues_created'
+}
+
+
+/** unique or primary key constraints on table "venue_category" */
+export enum Venue_Category_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  VenueCategoryPkey = 'venue_category_pkey'
+}
+
+
+export enum Venue_Category_Enum {
+  Accommodation = 'ACCOMMODATION',
+  BeautySalon = 'BEAUTY_SALON',
+  Cafe = 'CAFE',
+  Catering = 'CATERING',
+  Church = 'CHURCH',
+  Club = 'CLUB',
+  CulturalCentre = 'CULTURAL_CENTRE',
+  Delivery = 'DELIVERY',
+  DentalClinic = 'DENTAL_CLINIC',
+  GroceryStore = 'GROCERY_STORE',
+  Library = 'LIBRARY',
+  Organization = 'ORGANIZATION',
+  Restaurant = 'RESTAURANT',
+  School = 'SCHOOL',
+  Shop = 'SHOP'
+}
+
+
+/** select columns of table "venue_category" */
+export enum Venue_Category_Select_Column {
+  /** column name */
+  Value = 'value'
+}
+
+/** update columns of table "venue_category" */
+export enum Venue_Category_Update_Column {
+  /** column name */
+  Value = 'value'
+}
+
+/** unique or primary key constraints on table "venue_status" */
+export enum Venue_Status_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  VenueStatusPkey = 'venue_status_pkey'
+}
+
+export enum Venue_Status_Enum {
+  /** Verified and visible to the public */
+  Active = 'ACTIVE',
+  /** No longer active but kept for reference */
+  Archived = 'ARCHIVED',
+  /** Temporarily hidden from public view */
+  Hidden = 'HIDDEN',
+  /** Submitted but not yet reviewed */
+  Pending = 'PENDING',
+  /** Rejected by moderator/admin */
+  Rejected = 'REJECTED'
+}
+
+/** select columns of table "venue_status" */
+export enum Venue_Status_Select_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+
+/** update columns of table "venue_status" */
+export enum Venue_Status_Update_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Value = 'value'
+}
+
+/** unique or primary key constraints on table "venues" */
+export enum Venues_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  VenuePkey = 'venue_pkey',
+  /** unique or primary key constraint on columns "slug" */
+  VenueSlugKey = 'venue_slug_key'
+}
+
+/** select columns of table "venues" */
+export enum Venues_Select_Column {
+  /** column name */
+  Address = 'address',
+  /** column name */
+  Area = 'area',
+  /** column name */
+  Category = 'category',
+  /** column name */
+  ChainId = 'chain_id',
+  /** column name */
+  City = 'city',
+  /** column name */
+  Country = 'country',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DescriptionEn = 'description_en',
+  /** column name */
+  DescriptionUk = 'description_uk',
+  /** column name */
+  Emails = 'emails',
+  /** column name */
+  Geo = 'geo',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Images = 'images',
+  /** column name */
+  Logo = 'logo',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  OwnerId = 'owner_id',
+  /** column name */
+  PhoneNumbers = 'phone_numbers',
+  /** column name */
+  Postcode = 'postcode',
+  /** column name */
+  Slug = 'slug',
+  /** column name */
+  SocialLinks = 'social_links',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id',
+  /** column name */
+  Website = 'website'
+}
+
+/** update columns of table "venues" */
+export enum Venues_Update_Column {
+  /** column name */
+  Address = 'address',
+  /** column name */
+  Area = 'area',
+  /** column name */
+  Category = 'category',
+  /** column name */
+  ChainId = 'chain_id',
+  /** column name */
+  City = 'city',
+  /** column name */
+  Country = 'country',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DescriptionEn = 'description_en',
+  /** column name */
+  DescriptionUk = 'description_uk',
+  /** column name */
+  Emails = 'emails',
+  /** column name */
+  Geo = 'geo',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Images = 'images',
+  /** column name */
+  Logo = 'logo',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  OwnerId = 'owner_id',
+  /** column name */
+  PhoneNumbers = 'phone_numbers',
+  /** column name */
+  Postcode = 'postcode',
+  /** column name */
+  Slug = 'slug',
+  /** column name */
+  SocialLinks = 'social_links',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id',
+  /** column name */
+  Website = 'website'
+}
+
+/** unique or primary key constraints on table "verification_tokens" */
+export enum Verification_Tokens_Constraint {
+  /** unique or primary key constraint on columns "token" */
+  VerificationTokensPkey = 'verification_tokens_pkey'
+}
+
+/** select columns of table "verification_tokens" */
+export enum Verification_Tokens_Select_Column {
+  /** column name */
+  Expires = 'expires',
+  /** column name */
+  Identifier = 'identifier',
+  /** column name */
+  Token = 'token'
+}
+
+/** update columns of table "verification_tokens" */
+export enum Verification_Tokens_Update_Column {
+  /** column name */
+  Expires = 'expires',
+  /** column name */
+  Identifier = 'identifier',
+  /** column name */
+  Token = 'token'
+}
 
 /** columns and relationships of "accounts" */
 export type Accounts = {
@@ -115,9 +990,9 @@ export type Accounts = {
   id: Scalars['uuid']['output'];
   id_token?: Maybe<Scalars['String']['output']>;
   provider: Scalars['String']['output'];
-  providerAccountId: Scalars['String']['output'];
   /** An object relationship */
   provider_type: Provider_Type;
+  providerAccountId: Scalars['String']['output'];
   refresh_token?: Maybe<Scalars['String']['output']>;
   scope?: Maybe<Scalars['String']['output']>;
   session_state?: Maybe<Scalars['String']['output']>;
@@ -161,7 +1036,6 @@ export type Accounts_Aggregate_Fields = {
   var_samp?: Maybe<Accounts_Var_Samp_Fields>;
   variance?: Maybe<Accounts_Variance_Fields>;
 };
-
 
 /** aggregate fields of "accounts" */
 export type Accounts_Aggregate_FieldsCountArgs = {
@@ -212,8 +1086,8 @@ export type Accounts_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   id_token?: InputMaybe<String_Comparison_Exp>;
   provider?: InputMaybe<String_Comparison_Exp>;
-  providerAccountId?: InputMaybe<String_Comparison_Exp>;
   provider_type?: InputMaybe<Provider_Type_Bool_Exp>;
+  providerAccountId?: InputMaybe<String_Comparison_Exp>;
   refresh_token?: InputMaybe<String_Comparison_Exp>;
   scope?: InputMaybe<String_Comparison_Exp>;
   session_state?: InputMaybe<String_Comparison_Exp>;
@@ -222,12 +1096,6 @@ export type Accounts_Bool_Exp = {
   user?: InputMaybe<Users_Bool_Exp>;
   userId?: InputMaybe<Uuid_Comparison_Exp>;
 };
-
-/** unique or primary key constraints on table "accounts" */
-export enum Accounts_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  AccountsPkey = 'accounts_pkey'
-}
 
 /** input type for incrementing numeric columns in table "accounts" */
 export type Accounts_Inc_Input = {
@@ -241,8 +1109,8 @@ export type Accounts_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   id_token?: InputMaybe<Scalars['String']['input']>;
   provider?: InputMaybe<Scalars['String']['input']>;
-  providerAccountId?: InputMaybe<Scalars['String']['input']>;
   provider_type?: InputMaybe<Provider_Type_Obj_Rel_Insert_Input>;
+  providerAccountId?: InputMaybe<Scalars['String']['input']>;
   refresh_token?: InputMaybe<Scalars['String']['input']>;
   scope?: InputMaybe<Scalars['String']['input']>;
   session_state?: InputMaybe<Scalars['String']['input']>;
@@ -327,6 +1195,7 @@ export type Accounts_Mutation_Response = {
   returning: Array<Accounts>;
 };
 
+
 /** on_conflict condition type for table "accounts" */
 export type Accounts_On_Conflict = {
   constraint: Accounts_Constraint;
@@ -341,8 +1210,8 @@ export type Accounts_Order_By = {
   id?: InputMaybe<Order_By>;
   id_token?: InputMaybe<Order_By>;
   provider?: InputMaybe<Order_By>;
-  providerAccountId?: InputMaybe<Order_By>;
   provider_type?: InputMaybe<Provider_Type_Order_By>;
+  providerAccountId?: InputMaybe<Order_By>;
   refresh_token?: InputMaybe<Order_By>;
   scope?: InputMaybe<Order_By>;
   session_state?: InputMaybe<Order_By>;
@@ -356,34 +1225,6 @@ export type Accounts_Order_By = {
 export type Accounts_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
 };
-
-/** select columns of table "accounts" */
-export enum Accounts_Select_Column {
-  /** column name */
-  AccessToken = 'access_token',
-  /** column name */
-  ExpiresAt = 'expires_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  IdToken = 'id_token',
-  /** column name */
-  Provider = 'provider',
-  /** column name */
-  ProviderAccountId = 'providerAccountId',
-  /** column name */
-  RefreshToken = 'refresh_token',
-  /** column name */
-  Scope = 'scope',
-  /** column name */
-  SessionState = 'session_state',
-  /** column name */
-  TokenType = 'token_type',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  UserId = 'userId'
-}
 
 /** input type for updating data in table "accounts" */
 export type Accounts_Set_Input = {
@@ -469,34 +1310,6 @@ export type Accounts_Sum_Order_By = {
   expires_at?: InputMaybe<Order_By>;
 };
 
-/** update columns of table "accounts" */
-export enum Accounts_Update_Column {
-  /** column name */
-  AccessToken = 'access_token',
-  /** column name */
-  ExpiresAt = 'expires_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  IdToken = 'id_token',
-  /** column name */
-  Provider = 'provider',
-  /** column name */
-  ProviderAccountId = 'providerAccountId',
-  /** column name */
-  RefreshToken = 'refresh_token',
-  /** column name */
-  Scope = 'scope',
-  /** column name */
-  SessionState = 'session_state',
-  /** column name */
-  TokenType = 'token_type',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  UserId = 'userId'
-}
-
 export type Accounts_Updates = {
   /** increments the numeric columns with given value of the filtered values */
   _inc?: InputMaybe<Accounts_Inc_Input>;
@@ -534,10 +1347,27 @@ export type Accounts_Variance_Fields = {
   expires_at?: Maybe<Scalars['Float']['output']>;
 };
 
+
 /** order by variance() on columns of table "accounts" */
 export type Accounts_Variance_Order_By = {
   expires_at?: InputMaybe<Order_By>;
 };
+
+
+/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
+export type Boolean_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['Boolean']['input']>;
+  _gt?: InputMaybe<Scalars['Boolean']['input']>;
+  _gte?: InputMaybe<Scalars['Boolean']['input']>;
+  _in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['Boolean']['input']>;
+  _lte?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Scalars['Boolean']['input']>;
+  _nin?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+};
+
+export type ChainFieldsFragment = { __typename?: 'chains', country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json; website?: null | string, };
 
 /** columns and relationships of "chains" */
 export type Chains = {
@@ -572,51 +1402,6 @@ export type Chains = {
 };
 
 
-/** columns and relationships of "chains" */
-export type ChainsChainsArgs = {
-  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Chains_Order_By>>;
-  where?: InputMaybe<Chains_Bool_Exp>;
-};
-
-
-/** columns and relationships of "chains" */
-export type ChainsChains_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Chains_Order_By>>;
-  where?: InputMaybe<Chains_Bool_Exp>;
-};
-
-
-/** columns and relationships of "chains" */
-export type ChainsSocial_LinksArgs = {
-  path?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-/** columns and relationships of "chains" */
-export type ChainsVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
-};
-
-
-/** columns and relationships of "chains" */
-export type ChainsVenues_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
-};
-
 /** aggregated selection of "chains" */
 export type Chains_Aggregate = {
   __typename?: 'chains_aggregate';
@@ -642,7 +1427,6 @@ export type Chains_Aggregate_Fields = {
   max?: Maybe<Chains_Max_Fields>;
   min?: Maybe<Chains_Min_Fields>;
 };
-
 
 /** aggregate fields of "chains" */
 export type Chains_Aggregate_FieldsCountArgs = {
@@ -692,14 +1476,6 @@ export type Chains_Bool_Exp = {
   venues_aggregate?: InputMaybe<Venues_Aggregate_Bool_Exp>;
   website?: InputMaybe<String_Comparison_Exp>;
 };
-
-/** unique or primary key constraints on table "chains" */
-export enum Chains_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  ChainsPkey = 'chains_pkey',
-  /** unique or primary key constraint on columns "slug" */
-  ChainsSlugKey = 'chains_slug_key'
-}
 
 /** input type for inserting data into table "chains" */
 export type Chains_Insert_Input = {
@@ -859,44 +1635,6 @@ export type Chains_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
 };
 
-/** select columns of table "chains" */
-export enum Chains_Select_Column {
-  /** column name */
-  ChainId = 'chain_id',
-  /** column name */
-  City = 'city',
-  /** column name */
-  Country = 'country',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  DescriptionEn = 'description_en',
-  /** column name */
-  DescriptionUk = 'description_uk',
-  /** column name */
-  Emails = 'emails',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Logo = 'logo',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  OwnerId = 'owner_id',
-  /** column name */
-  PhoneNumbers = 'phone_numbers',
-  /** column name */
-  Slug = 'slug',
-  /** column name */
-  SocialLinks = 'social_links',
-  /** column name */
-  UpdatedAt = 'updated_at',
-  /** column name */
-  UserId = 'user_id',
-  /** column name */
-  Website = 'website'
-}
-
 /** input type for updating data in table "chains" */
 export type Chains_Set_Input = {
   chain_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -926,6 +1664,7 @@ export type Chains_Stream_Cursor_Input = {
   ordering?: InputMaybe<Cursor_Ordering>;
 };
 
+
 /** Initial value of the column from where the streaming should start */
 export type Chains_Stream_Cursor_Value_Input = {
   chain_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -947,44 +1686,6 @@ export type Chains_Stream_Cursor_Value_Input = {
   website?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "chains" */
-export enum Chains_Update_Column {
-  /** column name */
-  ChainId = 'chain_id',
-  /** column name */
-  City = 'city',
-  /** column name */
-  Country = 'country',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  DescriptionEn = 'description_en',
-  /** column name */
-  DescriptionUk = 'description_uk',
-  /** column name */
-  Emails = 'emails',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Logo = 'logo',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  OwnerId = 'owner_id',
-  /** column name */
-  PhoneNumbers = 'phone_numbers',
-  /** column name */
-  Slug = 'slug',
-  /** column name */
-  SocialLinks = 'social_links',
-  /** column name */
-  UpdatedAt = 'updated_at',
-  /** column name */
-  UserId = 'user_id',
-  /** column name */
-  Website = 'website'
-}
-
 export type Chains_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Chains_Set_Input>;
@@ -992,13 +1693,50 @@ export type Chains_Updates = {
   where: Chains_Bool_Exp;
 };
 
-/** ordering argument of a cursor */
-export enum Cursor_Ordering {
-  /** ascending ordering of the cursor */
-  Asc = 'ASC',
-  /** descending ordering of the cursor */
-  Desc = 'DESC'
-}
+/** columns and relationships of "chains" */
+export type ChainsChains_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsChainsArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsSocial_LinksArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsVenues_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+export type ChainWithChainsFragment = { __typename?: 'chains', chains: Array<{ __typename?: 'chains', country?: null | string, id: UUID, name: string, slug: string, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null }; country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, website?: null | string, };
+
+export type ChainWithVenuesFragment = { __typename?: 'chains', country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }; website?: null | string, };
 
 /** columns and relationships of "event_status" */
 export type Event_Status = {
@@ -1022,7 +1760,6 @@ export type Event_Status_Aggregate_Fields = {
   min?: Maybe<Event_Status_Min_Fields>;
 };
 
-
 /** aggregate fields of "event_status" */
 export type Event_Status_Aggregate_FieldsCountArgs = {
   columns?: InputMaybe<Array<Event_Status_Select_Column>>;
@@ -1037,29 +1774,6 @@ export type Event_Status_Bool_Exp = {
   description?: InputMaybe<String_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
-
-/** unique or primary key constraints on table "event_status" */
-export enum Event_Status_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  EventStatusPkey = 'event_status_pkey'
-}
-
-export enum Event_Status_Enum {
-  /** Published and visible to public */
-  Active = 'ACTIVE',
-  /** Event is archived and hidden */
-  Archived = 'ARCHIVED',
-  /** Event has been cancelled */
-  Cancelled = 'CANCELLED',
-  /** Event has already occurred */
-  Completed = 'COMPLETED',
-  /** Draft event not yet submitted */
-  Draft = 'DRAFT',
-  /** Awaiting moderation approval */
-  Pending = 'PENDING',
-  /** Event has been postponed to new date */
-  Postponed = 'POSTPONED'
-}
 
 /** Boolean expression to compare columns of type "event_status_enum". All fields are combined with logical 'AND'. */
 export type Event_Status_Enum_Comparison_Exp = {
@@ -1106,6 +1820,7 @@ export type Event_Status_Obj_Rel_Insert_Input = {
   on_conflict?: InputMaybe<Event_Status_On_Conflict>;
 };
 
+
 /** on_conflict condition type for table "event_status" */
 export type Event_Status_On_Conflict = {
   constraint: Event_Status_Constraint;
@@ -1113,24 +1828,18 @@ export type Event_Status_On_Conflict = {
   where?: InputMaybe<Event_Status_Bool_Exp>;
 };
 
+
 /** Ordering options when selecting data from "event_status". */
 export type Event_Status_Order_By = {
   description?: InputMaybe<Order_By>;
   value?: InputMaybe<Order_By>;
 };
 
+
 /** primary key columns input for table: event_status */
 export type Event_Status_Pk_Columns_Input = {
   value: Scalars['String']['input'];
 };
-
-/** select columns of table "event_status" */
-export enum Event_Status_Select_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
 
 /** input type for updating data in table "event_status" */
 export type Event_Status_Set_Input = {
@@ -1151,14 +1860,6 @@ export type Event_Status_Stream_Cursor_Value_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
-
-/** update columns of table "event_status" */
-export enum Event_Status_Update_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
 
 export type Event_Status_Updates = {
   /** sets the columns of the filtered rows to the given values */
@@ -1183,32 +1884,13 @@ export type Event_Tags = {
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
-
-/** Tags for categorizing and filtering events */
-export type Event_TagsEvents_Event_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
-};
-
-
-/** Tags for categorizing and filtering events */
-export type Event_TagsEvents_Event_Tags_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
-};
-
 /** aggregated selection of "event_tags" */
 export type Event_Tags_Aggregate = {
   __typename?: 'event_tags_aggregate';
   aggregate?: Maybe<Event_Tags_Aggregate_Fields>;
   nodes: Array<Event_Tags>;
 };
+
 
 /** aggregate fields of "event_tags" */
 export type Event_Tags_Aggregate_Fields = {
@@ -1217,7 +1899,6 @@ export type Event_Tags_Aggregate_Fields = {
   max?: Maybe<Event_Tags_Max_Fields>;
   min?: Maybe<Event_Tags_Min_Fields>;
 };
-
 
 /** aggregate fields of "event_tags" */
 export type Event_Tags_Aggregate_FieldsCountArgs = {
@@ -1240,14 +1921,6 @@ export type Event_Tags_Bool_Exp = {
   slug?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
-
-/** unique or primary key constraints on table "event_tags" */
-export enum Event_Tags_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  EventTagsPkey = 'event_tags_pkey',
-  /** unique or primary key constraint on columns "slug" */
-  EventTagsSlugKey = 'event_tags_slug_key'
-}
 
 /** input type for inserting data into table "event_tags" */
 export type Event_Tags_Insert_Input = {
@@ -1325,24 +1998,6 @@ export type Event_Tags_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
 };
 
-/** select columns of table "event_tags" */
-export enum Event_Tags_Select_Column {
-  /** column name */
-  Category = 'category',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  NameEn = 'name_en',
-  /** column name */
-  NameUk = 'name_uk',
-  /** column name */
-  Slug = 'slug',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
 /** input type for updating data in table "event_tags" */
 export type Event_Tags_Set_Input = {
   category?: InputMaybe<Scalars['String']['input']>;
@@ -1373,29 +2028,30 @@ export type Event_Tags_Stream_Cursor_Value_Input = {
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
-/** update columns of table "event_tags" */
-export enum Event_Tags_Update_Column {
-  /** column name */
-  Category = 'category',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  NameEn = 'name_en',
-  /** column name */
-  NameUk = 'name_uk',
-  /** column name */
-  Slug = 'slug',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
 export type Event_Tags_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Event_Tags_Set_Input>;
   /** filter the rows which have to be updated */
   where: Event_Tags_Bool_Exp;
+};
+
+/** Tags for categorizing and filtering events */
+export type Event_TagsEvents_Event_Tags_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
+};
+
+
+/** Tags for categorizing and filtering events */
+export type Event_TagsEvents_Event_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
 /** columns and relationships of "event_type" */
@@ -1420,7 +2076,6 @@ export type Event_Type_Aggregate_Fields = {
   min?: Maybe<Event_Type_Min_Fields>;
 };
 
-
 /** aggregate fields of "event_type" */
 export type Event_Type_Aggregate_FieldsCountArgs = {
   columns?: InputMaybe<Array<Event_Type_Select_Column>>;
@@ -1435,39 +2090,6 @@ export type Event_Type_Bool_Exp = {
   description?: InputMaybe<String_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
-
-/** unique or primary key constraints on table "event_type" */
-export enum Event_Type_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  EventTypePkey = 'event_type_pkey'
-}
-
-export enum Event_Type_Enum {
-  /** Celebration or party */
-  Celebration = 'CELEBRATION',
-  /** Charity or fundraising event */
-  Charity = 'CHARITY',
-  /** Music concert or performance */
-  Concert = 'CONCERT',
-  /** Conference or seminar */
-  Conference = 'CONFERENCE',
-  /** Art or cultural exhibition */
-  Exhibition = 'EXHIBITION',
-  /** Festival or large-scale event */
-  Festival = 'FESTIVAL',
-  /** Informal gathering or meetup */
-  Gathering = 'GATHERING',
-  /** Other type of event */
-  Other = 'OTHER',
-  /** Film or video screening */
-  Screening = 'SCREENING',
-  /** Sports event or activity */
-  Sports = 'SPORTS',
-  /** Theater performance */
-  Theater = 'THEATER',
-  /** Educational workshop or class */
-  Workshop = 'WORKSHOP'
-}
 
 /** Boolean expression to compare columns of type "event_type_enum". All fields are combined with logical 'AND'. */
 export type Event_Type_Enum_Comparison_Exp = {
@@ -1532,14 +2154,6 @@ export type Event_Type_Pk_Columns_Input = {
   value: Scalars['String']['input'];
 };
 
-/** select columns of table "event_type" */
-export enum Event_Type_Select_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
-
 /** input type for updating data in table "event_type" */
 export type Event_Type_Set_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
@@ -1560,20 +2174,14 @@ export type Event_Type_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "event_type" */
-export enum Event_Type_Update_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
-
 export type Event_Type_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Event_Type_Set_Input>;
   /** filter the rows which have to be updated */
   where: Event_Type_Bool_Exp;
 };
+
+export type EventFieldsFragment = { __typename?: 'events', accessibility_info?: null | string, age_restriction?: null | string, area?: null | string, capacity?: null | number, city?: null | string, country?: null | string, created_at: Timestamp, custom_location_address?: null | string, custom_location_name?: null | string, description_en?: null | string, description_uk?: null | string, end_date?: null | Timestamp, external_url?: null | string, geo?: Geography | null, id: UUID, images?: Array<string> | null, is_online: boolean, is_recurring: boolean, language?: Array<string> | null, organizer_email?: null | string, organizer_name?: null | string, organizer_phone_number?: null | string, owner_id?: null | UUID, price_amount?: null | Numeric, price_currency?: null | string, price_type: Price_Type_Enum, recurrence_rule?: null | string, registration_required: boolean, registration_url?: null | string, slug: string, social_links?: Json | null, start_date: Timestamp, status: Event_Status_Enum, title_en: string, title_uk: string, type: Event_Type_Enum, user_id: UUID, venue?: { __typename?: 'venues', category: Venue_Category_Enum, city?: null | string, country?: null | string, geo?: Geography | null; id: UUID, logo?: null | string, name: string, slug: string, } | null; venue_id?: null | UUID, };
 
 /** Events at Ukrainian venues or custom locations */
 export type Events = {
@@ -1636,32 +2244,6 @@ export type Events = {
   venue_id?: Maybe<Scalars['uuid']['output']>;
 };
 
-
-/** Events at Ukrainian venues or custom locations */
-export type EventsEvents_Event_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
-};
-
-
-/** Events at Ukrainian venues or custom locations */
-export type EventsEvents_Event_Tags_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
-};
-
-
-/** Events at Ukrainian venues or custom locations */
-export type EventsSocial_LinksArgs = {
-  path?: InputMaybe<Scalars['String']['input']>;
-};
-
 /** aggregated selection of "events" */
 export type Events_Aggregate = {
   __typename?: 'events_aggregate';
@@ -1711,7 +2293,6 @@ export type Events_Aggregate_Fields = {
   var_samp?: Maybe<Events_Var_Samp_Fields>;
   variance?: Maybe<Events_Variance_Fields>;
 };
-
 
 /** aggregate fields of "events" */
 export type Events_Aggregate_FieldsCountArgs = {
@@ -1813,14 +2394,6 @@ export type Events_Bool_Exp = {
   venue_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "events" */
-export enum Events_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  EventsPkey = 'events_pkey',
-  /** unique or primary key constraint on columns "slug" */
-  EventsSlugKey = 'events_slug_key'
-}
-
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 export type Events_Delete_At_Path_Input = {
   social_links?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -1874,7 +2447,6 @@ export type Events_Event_Tags_Aggregate_Fields = {
   min?: Maybe<Events_Event_Tags_Min_Fields>;
 };
 
-
 /** aggregate fields of "events_event_tags" */
 export type Events_Event_Tags_Aggregate_FieldsCountArgs = {
   columns?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
@@ -1906,12 +2478,6 @@ export type Events_Event_Tags_Bool_Exp = {
   event_tag?: InputMaybe<Event_Tags_Bool_Exp>;
   tag_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
-
-/** unique or primary key constraints on table "events_event_tags" */
-export enum Events_Event_Tags_Constraint {
-  /** unique or primary key constraint on columns "tag_id", "event_id" */
-  EventsEventTagsPkey = 'events_event_tags_pkey'
-}
 
 /** input type for inserting data into table "events_event_tags" */
 export type Events_Event_Tags_Insert_Input = {
@@ -1983,16 +2549,6 @@ export type Events_Event_Tags_Pk_Columns_Input = {
   tag_id: Scalars['uuid']['input'];
 };
 
-/** select columns of table "events_event_tags" */
-export enum Events_Event_Tags_Select_Column {
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  EventId = 'event_id',
-  /** column name */
-  TagId = 'tag_id'
-}
-
 /** input type for updating data in table "events_event_tags" */
 export type Events_Event_Tags_Set_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -2014,16 +2570,6 @@ export type Events_Event_Tags_Stream_Cursor_Value_Input = {
   event_id?: InputMaybe<Scalars['uuid']['input']>;
   tag_id?: InputMaybe<Scalars['uuid']['input']>;
 };
-
-/** update columns of table "events_event_tags" */
-export enum Events_Event_Tags_Update_Column {
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  EventId = 'event_id',
-  /** column name */
-  TagId = 'tag_id'
-}
 
 export type Events_Event_Tags_Updates = {
   /** sets the columns of the filtered rows to the given values */
@@ -2126,6 +2672,7 @@ export type Events_Max_Fields = {
   venue_id?: Maybe<Scalars['uuid']['output']>;
 };
 
+
 /** order by max() on columns of table "events" */
 export type Events_Max_Order_By = {
   accessibility_info?: InputMaybe<Order_By>;
@@ -2161,6 +2708,7 @@ export type Events_Max_Order_By = {
   user_id?: InputMaybe<Order_By>;
   venue_id?: InputMaybe<Order_By>;
 };
+
 
 /** aggregate min on columns */
 export type Events_Min_Fields = {
@@ -2199,6 +2747,7 @@ export type Events_Min_Fields = {
   venue_id?: Maybe<Scalars['uuid']['output']>;
 };
 
+
 /** order by min() on columns of table "events" */
 export type Events_Min_Order_By = {
   accessibility_info?: InputMaybe<Order_By>;
@@ -2235,6 +2784,7 @@ export type Events_Min_Order_By = {
   venue_id?: InputMaybe<Order_By>;
 };
 
+
 /** response of any mutation on the table "events" */
 export type Events_Mutation_Response = {
   __typename?: 'events_mutation_response';
@@ -2244,6 +2794,7 @@ export type Events_Mutation_Response = {
   returning: Array<Events>;
 };
 
+
 /** input type for inserting object relation for remote table "events" */
 export type Events_Obj_Rel_Insert_Input = {
   data: Events_Insert_Input;
@@ -2251,12 +2802,14 @@ export type Events_Obj_Rel_Insert_Input = {
   on_conflict?: InputMaybe<Events_On_Conflict>;
 };
 
+
 /** on_conflict condition type for table "events" */
 export type Events_On_Conflict = {
   constraint: Events_Constraint;
   update_columns?: Array<Events_Update_Column>;
   where?: InputMaybe<Events_Bool_Exp>;
 };
+
 
 /** Ordering options when selecting data from "events". */
 export type Events_Order_By = {
@@ -2308,117 +2861,18 @@ export type Events_Order_By = {
   venue_id?: InputMaybe<Order_By>;
 };
 
+
 /** primary key columns input for table: events */
 export type Events_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
 };
+
 
 /** prepend existing jsonb value of filtered columns with new jsonb value */
 export type Events_Prepend_Input = {
   social_links?: InputMaybe<Scalars['jsonb']['input']>;
 };
 
-/** select columns of table "events" */
-export enum Events_Select_Column {
-  /** column name */
-  AccessibilityInfo = 'accessibility_info',
-  /** column name */
-  AgeRestriction = 'age_restriction',
-  /** column name */
-  Area = 'area',
-  /** column name */
-  Capacity = 'capacity',
-  /** column name */
-  City = 'city',
-  /** column name */
-  Country = 'country',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  CustomLocationAddress = 'custom_location_address',
-  /** column name */
-  CustomLocationName = 'custom_location_name',
-  /** column name */
-  DescriptionEn = 'description_en',
-  /** column name */
-  DescriptionUk = 'description_uk',
-  /** column name */
-  EndDate = 'end_date',
-  /** column name */
-  ExternalUrl = 'external_url',
-  /** column name */
-  Geo = 'geo',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Images = 'images',
-  /** column name */
-  IsOnline = 'is_online',
-  /** column name */
-  IsRecurring = 'is_recurring',
-  /** column name */
-  Language = 'language',
-  /** column name */
-  OrganizerEmail = 'organizer_email',
-  /** column name */
-  OrganizerName = 'organizer_name',
-  /** column name */
-  OrganizerPhoneNumber = 'organizer_phone_number',
-  /** column name */
-  OwnerId = 'owner_id',
-  /** column name */
-  PriceAmount = 'price_amount',
-  /** column name */
-  PriceCurrency = 'price_currency',
-  /** column name */
-  PriceType = 'price_type',
-  /** column name */
-  RecurrenceRule = 'recurrence_rule',
-  /** column name */
-  RegistrationRequired = 'registration_required',
-  /** column name */
-  RegistrationUrl = 'registration_url',
-  /** column name */
-  Slug = 'slug',
-  /** column name */
-  SocialLinks = 'social_links',
-  /** column name */
-  StartDate = 'start_date',
-  /** column name */
-  Status = 'status',
-  /** column name */
-  TitleEn = 'title_en',
-  /** column name */
-  TitleUk = 'title_uk',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  UpdatedAt = 'updated_at',
-  /** column name */
-  UserId = 'user_id',
-  /** column name */
-  VenueId = 'venue_id'
-}
-
-/** select "events_aggregate_bool_exp_bool_and_arguments_columns" columns of table "events" */
-export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  IsOnline = 'is_online',
-  /** column name */
-  IsRecurring = 'is_recurring',
-  /** column name */
-  RegistrationRequired = 'registration_required'
-}
-
-/** select "events_aggregate_bool_exp_bool_or_arguments_columns" columns of table "events" */
-export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  IsOnline = 'is_online',
-  /** column name */
-  IsRecurring = 'is_recurring',
-  /** column name */
-  RegistrationRequired = 'registration_required'
-}
 
 /** input type for updating data in table "events" */
 export type Events_Set_Input = {
@@ -2464,6 +2918,7 @@ export type Events_Set_Input = {
   venue_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
+
 /** aggregate stddev on columns */
 export type Events_Stddev_Fields = {
   __typename?: 'events_stddev_fields';
@@ -2471,11 +2926,13 @@ export type Events_Stddev_Fields = {
   price_amount?: Maybe<Scalars['Float']['output']>;
 };
 
+
 /** order by stddev() on columns of table "events" */
 export type Events_Stddev_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
 };
+
 
 /** aggregate stddev_pop on columns */
 export type Events_Stddev_Pop_Fields = {
@@ -2484,11 +2941,13 @@ export type Events_Stddev_Pop_Fields = {
   price_amount?: Maybe<Scalars['Float']['output']>;
 };
 
+
 /** order by stddev_pop() on columns of table "events" */
 export type Events_Stddev_Pop_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
 };
+
 
 /** aggregate stddev_samp on columns */
 export type Events_Stddev_Samp_Fields = {
@@ -2497,11 +2956,13 @@ export type Events_Stddev_Samp_Fields = {
   price_amount?: Maybe<Scalars['Float']['output']>;
 };
 
+
 /** order by stddev_samp() on columns of table "events" */
 export type Events_Stddev_Samp_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
 };
+
 
 /** Streaming cursor of the table "events" */
 export type Events_Stream_Cursor_Input = {
@@ -2510,6 +2971,7 @@ export type Events_Stream_Cursor_Input = {
   /** cursor ordering */
   ordering?: InputMaybe<Cursor_Ordering>;
 };
+
 
 /** Initial value of the column from where the streaming should start */
 export type Events_Stream_Cursor_Value_Input = {
@@ -2555,6 +3017,7 @@ export type Events_Stream_Cursor_Value_Input = {
   venue_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
+
 /** aggregate sum on columns */
 export type Events_Sum_Fields = {
   __typename?: 'events_sum_fields';
@@ -2562,93 +3025,13 @@ export type Events_Sum_Fields = {
   price_amount?: Maybe<Scalars['numeric']['output']>;
 };
 
+
 /** order by sum() on columns of table "events" */
 export type Events_Sum_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
 };
 
-/** update columns of table "events" */
-export enum Events_Update_Column {
-  /** column name */
-  AccessibilityInfo = 'accessibility_info',
-  /** column name */
-  AgeRestriction = 'age_restriction',
-  /** column name */
-  Area = 'area',
-  /** column name */
-  Capacity = 'capacity',
-  /** column name */
-  City = 'city',
-  /** column name */
-  Country = 'country',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  CustomLocationAddress = 'custom_location_address',
-  /** column name */
-  CustomLocationName = 'custom_location_name',
-  /** column name */
-  DescriptionEn = 'description_en',
-  /** column name */
-  DescriptionUk = 'description_uk',
-  /** column name */
-  EndDate = 'end_date',
-  /** column name */
-  ExternalUrl = 'external_url',
-  /** column name */
-  Geo = 'geo',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Images = 'images',
-  /** column name */
-  IsOnline = 'is_online',
-  /** column name */
-  IsRecurring = 'is_recurring',
-  /** column name */
-  Language = 'language',
-  /** column name */
-  OrganizerEmail = 'organizer_email',
-  /** column name */
-  OrganizerName = 'organizer_name',
-  /** column name */
-  OrganizerPhoneNumber = 'organizer_phone_number',
-  /** column name */
-  OwnerId = 'owner_id',
-  /** column name */
-  PriceAmount = 'price_amount',
-  /** column name */
-  PriceCurrency = 'price_currency',
-  /** column name */
-  PriceType = 'price_type',
-  /** column name */
-  RecurrenceRule = 'recurrence_rule',
-  /** column name */
-  RegistrationRequired = 'registration_required',
-  /** column name */
-  RegistrationUrl = 'registration_url',
-  /** column name */
-  Slug = 'slug',
-  /** column name */
-  SocialLinks = 'social_links',
-  /** column name */
-  StartDate = 'start_date',
-  /** column name */
-  Status = 'status',
-  /** column name */
-  TitleEn = 'title_en',
-  /** column name */
-  TitleUk = 'title_uk',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  UpdatedAt = 'updated_at',
-  /** column name */
-  UserId = 'user_id',
-  /** column name */
-  VenueId = 'venue_id'
-}
 
 export type Events_Updates = {
   /** append existing jsonb value of filtered columns with new jsonb value */
@@ -2669,6 +3052,7 @@ export type Events_Updates = {
   where: Events_Bool_Exp;
 };
 
+
 /** aggregate var_pop on columns */
 export type Events_Var_Pop_Fields = {
   __typename?: 'events_var_pop_fields';
@@ -2676,11 +3060,13 @@ export type Events_Var_Pop_Fields = {
   price_amount?: Maybe<Scalars['Float']['output']>;
 };
 
+
 /** order by var_pop() on columns of table "events" */
 export type Events_Var_Pop_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
 };
+
 
 /** aggregate var_samp on columns */
 export type Events_Var_Samp_Fields = {
@@ -2689,11 +3075,13 @@ export type Events_Var_Samp_Fields = {
   price_amount?: Maybe<Scalars['Float']['output']>;
 };
 
+
 /** order by var_samp() on columns of table "events" */
 export type Events_Var_Samp_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
 };
+
 
 /** aggregate variance on columns */
 export type Events_Variance_Fields = {
@@ -2702,15 +3090,44 @@ export type Events_Variance_Fields = {
   price_amount?: Maybe<Scalars['Float']['output']>;
 };
 
+
 /** order by variance() on columns of table "events" */
 export type Events_Variance_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
 };
 
+
+/** Events at Ukrainian venues or custom locations */
+export type EventsEvents_Event_Tags_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
+};
+
+
+/** Events at Ukrainian venues or custom locations */
+export type EventsEvents_Event_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
+};
+
+
+/** Events at Ukrainian venues or custom locations */
+export type EventsSocial_LinksArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type Geography_Cast_Exp = {
   geometry?: InputMaybe<Geometry_Comparison_Exp>;
 };
+
 
 /** Boolean expression to compare columns of type "geography". All fields are combined with logical 'AND'. */
 export type Geography_Comparison_Exp = {
@@ -2730,9 +3147,11 @@ export type Geography_Comparison_Exp = {
   _st_intersects?: InputMaybe<Scalars['geography']['input']>;
 };
 
+
 export type Geometry_Cast_Exp = {
   geography?: InputMaybe<Geography_Comparison_Exp>;
 };
+
 
 /** Boolean expression to compare columns of type "geometry". All fields are combined with logical 'AND'. */
 export type Geometry_Comparison_Exp = {
@@ -2768,6 +3187,81 @@ export type Geometry_Comparison_Exp = {
   _st_within?: InputMaybe<Scalars['geometry']['input']>;
 };
 
+
+export type GetAdminVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', address?: null | string, category: Venue_Category_Enum, chain?: { __typename?: 'chains', chain?: { __typename?: 'chains', chains: Array<{ __typename?: 'chains', country?: null | string, id: UUID, name: string, slug: string, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null }; country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, website?: null | string, } | null, country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }; website?: null | string, } | null; city?: null | string, country?: null | string, created_at: Timestamp, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, geo?: Geography | null, id: UUID, images?: Array<string> | null, logo?: null | string, name: string, owner_id?: null | UUID, phone_numbers?: Array<string> | null, slug: string, social_links: Json, status: Venue_Status_Enum, user_id?: null | UUID, website?: null | string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
+
+
+export type GetAdminVenuesQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+}>;
+
+
+export type GetPublicEventsQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', accessibility_info?: null | string, age_restriction?: null | string, area?: null | string, capacity?: null | number, city?: null | string, country?: null | string, created_at: Timestamp, custom_location_address?: null | string, custom_location_name?: null | string, description_en?: null | string, description_uk?: null | string, end_date?: null | Timestamp, external_url?: null | string, geo?: Geography | null, id: UUID, images?: Array<string> | null, is_online: boolean, is_recurring: boolean, language?: Array<string> | null, organizer_email?: null | string, organizer_name?: null | string, organizer_phone_number?: null | string, owner_id?: null | UUID, price_amount?: null | Numeric, price_currency?: null | string, price_type: Price_Type_Enum, recurrence_rule?: null | string, registration_required: boolean, registration_url?: null | string, slug: string, social_links?: Json | null, start_date: Timestamp, status: Event_Status_Enum, title_en: string, title_uk: string, type: Event_Type_Enum, user_id: UUID, venue?: { __typename?: 'venues', category: Venue_Category_Enum, city?: null | string, country?: null | string, geo?: Geography | null; id: UUID, logo?: null | string, name: string, slug: string, } | null; venue_id?: null | UUID, }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, total: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null } };
+
+
+export type GetPublicEventsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Order_By> | Events_Order_By>;
+  where: Events_Bool_Exp;
+}>;
+
+
+export type GetPublicVenuesQuery = { __typename?: 'query_root', total: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }; venues: Array<{ __typename?: 'venues', address?: null | string, category: Venue_Category_Enum, chain?: { __typename?: 'chains', chain?: { __typename?: 'chains', chains: Array<{ __typename?: 'chains', country?: null | string, id: UUID, name: string, slug: string, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null }; country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, website?: null | string, } | null, country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }; website?: null | string, } | null; city?: null | string, country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, geo?: Geography | null, id: UUID, images?: Array<string> | null, logo?: null | string, name: string, owner_id?: null | UUID, phone_numbers?: Array<string> | null, slug: string, social_links: Json, status: Venue_Status_Enum, user_id?: null | UUID, website?: null | string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }, };
+
+
+export type GetPublicVenuesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
+  where: Venues_Bool_Exp;
+}>;
+
+
+export type GetUserEventsQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', accessibility_info?: null | string, age_restriction?: null | string, area?: null | string, capacity?: null | number, city?: null | string, country?: null | string, created_at: Timestamp, custom_location_address?: null | string, custom_location_name?: null | string, description_en?: null | string, description_uk?: null | string, end_date?: null | Timestamp, external_url?: null | string, geo?: Geography | null, id: UUID, images?: Array<string> | null, is_online: boolean, is_recurring: boolean, language?: Array<string> | null, organizer_email?: null | string, organizer_name?: null | string, organizer_phone_number?: null | string, owner?: { __typename?: 'users', id: UUID, image?: null | string; name?: null | string, } | null, owner_id?: null | UUID, price_amount?: null | Numeric, price_currency?: null | string, price_type: Price_Type_Enum, recurrence_rule?: null | string, registration_required: boolean, registration_url?: null | string, slug: string, social_links?: Json | null, start_date: Timestamp, status: Event_Status_Enum, title_en: string, title_uk: string, type: Event_Type_Enum, updated_at: Timestamp, user_id: UUID, venue?: { __typename?: 'venues', category: Venue_Category_Enum, city?: null | string, country?: null | string, geo?: Geography | null; id: UUID, logo?: null | string, name: string, slug: string, } | null; venue_id?: null | UUID, }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null } };
+
+
+export type GetUserEventsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Order_By> | Events_Order_By>;
+  where: Events_Bool_Exp;
+}>;
+
+
+export type GetUserProfileQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', email: string, events_created: number, id: UUID, image?: null | string, level: number; name?: null | string, points: number, role: User_Role_Enum, status: User_Status_Enum, venues_created: number, } | null };
+
+
+export type GetUserProfileQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type GetUserVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', address?: null | string, category: Venue_Category_Enum, chain?: { __typename?: 'chains', chain?: { __typename?: 'chains', chains: Array<{ __typename?: 'chains', country?: null | string, id: UUID, name: string, slug: string, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null }; country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, website?: null | string, } | null, country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }; website?: null | string, } | null; city?: null | string, country?: null | string, created_at: Timestamp, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, geo?: Geography | null, id: UUID, images?: Array<string> | null, logo?: null | string, name: string, owner_id?: null | UUID, phone_numbers?: Array<string> | null, postcode?: null | string, slug: string, social_links: Json, status: Venue_Status_Enum, user_id?: null | UUID, website?: null | string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
+
+
+export type GetUserVenuesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
+  where: Venues_Bool_Exp;
+}>;
+
+
+/** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
+export type Int_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['Int']['input']>;
+  _gt?: InputMaybe<Scalars['Int']['input']>;
+  _gte?: InputMaybe<Scalars['Int']['input']>;
+  _in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['Int']['input']>;
+  _lte?: InputMaybe<Scalars['Int']['input']>;
+  _neq?: InputMaybe<Scalars['Int']['input']>;
+  _nin?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+
 /** Boolean expression to compare columns of type "json". All fields are combined with logical 'AND'. */
 export type Json_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['json']['input']>;
@@ -2781,9 +3275,11 @@ export type Json_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['json']['input']>>;
 };
 
+
 export type Jsonb_Cast_Exp = {
   String?: InputMaybe<String_Comparison_Exp>;
 };
+
 
 /** Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'. */
 export type Jsonb_Comparison_Exp = {
@@ -2808,6 +3304,7 @@ export type Jsonb_Comparison_Exp = {
   _neq?: InputMaybe<Scalars['jsonb']['input']>;
   _nin?: InputMaybe<Array<Scalars['jsonb']['input']>>;
 };
+
 
 /** mutation root */
 export type Mutation_Root = {
@@ -3054,13 +3551,19 @@ export type Mutation_Root = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Accounts_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_AccountsArgs = {
   where: Accounts_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_Accounts_By_PkArgs = {
+export type Mutation_RootDelete_Chains_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -3072,8 +3575,8 @@ export type Mutation_RootDelete_ChainsArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Chains_By_PkArgs = {
-  id: Scalars['uuid']['input'];
+export type Mutation_RootDelete_Event_Status_By_PkArgs = {
+  value: Scalars['String']['input'];
 };
 
 
@@ -3084,8 +3587,8 @@ export type Mutation_RootDelete_Event_StatusArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Event_Status_By_PkArgs = {
-  value: Scalars['String']['input'];
+export type Mutation_RootDelete_Event_Tags_By_PkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -3096,8 +3599,8 @@ export type Mutation_RootDelete_Event_TagsArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Event_Tags_By_PkArgs = {
-  id: Scalars['uuid']['input'];
+export type Mutation_RootDelete_Event_Type_By_PkArgs = {
+  value: Scalars['String']['input'];
 };
 
 
@@ -3108,26 +3611,8 @@ export type Mutation_RootDelete_Event_TypeArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Event_Type_By_PkArgs = {
-  value: Scalars['String']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_EventsArgs = {
-  where: Events_Bool_Exp;
-};
-
-
-/** mutation root */
 export type Mutation_RootDelete_Events_By_PkArgs = {
   id: Scalars['uuid']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Events_Event_TagsArgs = {
-  where: Events_Event_Tags_Bool_Exp;
 };
 
 
@@ -3139,13 +3624,31 @@ export type Mutation_RootDelete_Events_Event_Tags_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Events_Event_TagsArgs = {
+  where: Events_Event_Tags_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_EventsArgs = {
+  where: Events_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Price_Type_By_PkArgs = {
+  value: Scalars['String']['input'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_Price_TypeArgs = {
   where: Price_Type_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_Price_Type_By_PkArgs = {
+export type Mutation_RootDelete_Provider_Type_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
@@ -3157,8 +3660,8 @@ export type Mutation_RootDelete_Provider_TypeArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Provider_Type_By_PkArgs = {
-  value: Scalars['String']['input'];
+export type Mutation_RootDelete_Sessions_By_PkArgs = {
+  sessionToken: Scalars['String']['input'];
 };
 
 
@@ -3169,8 +3672,8 @@ export type Mutation_RootDelete_SessionsArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Sessions_By_PkArgs = {
-  sessionToken: Scalars['String']['input'];
+export type Mutation_RootDelete_User_Role_By_PkArgs = {
+  value: Scalars['String']['input'];
 };
 
 
@@ -3181,7 +3684,7 @@ export type Mutation_RootDelete_User_RoleArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_User_Role_By_PkArgs = {
+export type Mutation_RootDelete_User_Status_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
@@ -3193,8 +3696,8 @@ export type Mutation_RootDelete_User_StatusArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_User_Status_By_PkArgs = {
-  value: Scalars['String']['input'];
+export type Mutation_RootDelete_Users_By_PkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -3205,8 +3708,8 @@ export type Mutation_RootDelete_UsersArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Users_By_PkArgs = {
-  id: Scalars['uuid']['input'];
+export type Mutation_RootDelete_Venue_Category_By_PkArgs = {
+  value: Scalars['String']['input'];
 };
 
 
@@ -3217,7 +3720,7 @@ export type Mutation_RootDelete_Venue_CategoryArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_Category_By_PkArgs = {
+export type Mutation_RootDelete_Venue_Status_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
@@ -3229,8 +3732,8 @@ export type Mutation_RootDelete_Venue_StatusArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_Status_By_PkArgs = {
-  value: Scalars['String']['input'];
+export type Mutation_RootDelete_Venues_By_PkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -3241,27 +3744,14 @@ export type Mutation_RootDelete_VenuesArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Venues_By_PkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Verification_TokensArgs = {
-  where: Verification_Tokens_Bool_Exp;
-};
-
-
-/** mutation root */
 export type Mutation_RootDelete_Verification_Tokens_By_PkArgs = {
   token: Scalars['String']['input'];
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_AccountsArgs = {
-  objects: Array<Accounts_Insert_Input>;
-  on_conflict?: InputMaybe<Accounts_On_Conflict>;
+export type Mutation_RootDelete_Verification_TokensArgs = {
+  where: Verification_Tokens_Bool_Exp;
 };
 
 
@@ -3273,9 +3763,9 @@ export type Mutation_RootInsert_Accounts_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_ChainsArgs = {
-  objects: Array<Chains_Insert_Input>;
-  on_conflict?: InputMaybe<Chains_On_Conflict>;
+export type Mutation_RootInsert_AccountsArgs = {
+  objects: Array<Accounts_Insert_Input>;
+  on_conflict?: InputMaybe<Accounts_On_Conflict>;
 };
 
 
@@ -3287,9 +3777,9 @@ export type Mutation_RootInsert_Chains_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Event_StatusArgs = {
-  objects: Array<Event_Status_Insert_Input>;
-  on_conflict?: InputMaybe<Event_Status_On_Conflict>;
+export type Mutation_RootInsert_ChainsArgs = {
+  objects: Array<Chains_Insert_Input>;
+  on_conflict?: InputMaybe<Chains_On_Conflict>;
 };
 
 
@@ -3301,9 +3791,9 @@ export type Mutation_RootInsert_Event_Status_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Event_TagsArgs = {
-  objects: Array<Event_Tags_Insert_Input>;
-  on_conflict?: InputMaybe<Event_Tags_On_Conflict>;
+export type Mutation_RootInsert_Event_StatusArgs = {
+  objects: Array<Event_Status_Insert_Input>;
+  on_conflict?: InputMaybe<Event_Status_On_Conflict>;
 };
 
 
@@ -3315,9 +3805,9 @@ export type Mutation_RootInsert_Event_Tags_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Event_TypeArgs = {
-  objects: Array<Event_Type_Insert_Input>;
-  on_conflict?: InputMaybe<Event_Type_On_Conflict>;
+export type Mutation_RootInsert_Event_TagsArgs = {
+  objects: Array<Event_Tags_Insert_Input>;
+  on_conflict?: InputMaybe<Event_Tags_On_Conflict>;
 };
 
 
@@ -3329,22 +3819,22 @@ export type Mutation_RootInsert_Event_Type_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_EventsArgs = {
-  objects: Array<Events_Insert_Input>;
-  on_conflict?: InputMaybe<Events_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Events_Event_TagsArgs = {
-  objects: Array<Events_Event_Tags_Insert_Input>;
-  on_conflict?: InputMaybe<Events_Event_Tags_On_Conflict>;
+export type Mutation_RootInsert_Event_TypeArgs = {
+  objects: Array<Event_Type_Insert_Input>;
+  on_conflict?: InputMaybe<Event_Type_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootInsert_Events_Event_Tags_OneArgs = {
   object: Events_Event_Tags_Insert_Input;
+  on_conflict?: InputMaybe<Events_Event_Tags_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Events_Event_TagsArgs = {
+  objects: Array<Events_Event_Tags_Insert_Input>;
   on_conflict?: InputMaybe<Events_Event_Tags_On_Conflict>;
 };
 
@@ -3357,9 +3847,9 @@ export type Mutation_RootInsert_Events_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Price_TypeArgs = {
-  objects: Array<Price_Type_Insert_Input>;
-  on_conflict?: InputMaybe<Price_Type_On_Conflict>;
+export type Mutation_RootInsert_EventsArgs = {
+  objects: Array<Events_Insert_Input>;
+  on_conflict?: InputMaybe<Events_On_Conflict>;
 };
 
 
@@ -3371,9 +3861,9 @@ export type Mutation_RootInsert_Price_Type_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Provider_TypeArgs = {
-  objects: Array<Provider_Type_Insert_Input>;
-  on_conflict?: InputMaybe<Provider_Type_On_Conflict>;
+export type Mutation_RootInsert_Price_TypeArgs = {
+  objects: Array<Price_Type_Insert_Input>;
+  on_conflict?: InputMaybe<Price_Type_On_Conflict>;
 };
 
 
@@ -3385,9 +3875,9 @@ export type Mutation_RootInsert_Provider_Type_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_SessionsArgs = {
-  objects: Array<Sessions_Insert_Input>;
-  on_conflict?: InputMaybe<Sessions_On_Conflict>;
+export type Mutation_RootInsert_Provider_TypeArgs = {
+  objects: Array<Provider_Type_Insert_Input>;
+  on_conflict?: InputMaybe<Provider_Type_On_Conflict>;
 };
 
 
@@ -3399,9 +3889,9 @@ export type Mutation_RootInsert_Sessions_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_User_RoleArgs = {
-  objects: Array<User_Role_Insert_Input>;
-  on_conflict?: InputMaybe<User_Role_On_Conflict>;
+export type Mutation_RootInsert_SessionsArgs = {
+  objects: Array<Sessions_Insert_Input>;
+  on_conflict?: InputMaybe<Sessions_On_Conflict>;
 };
 
 
@@ -3413,9 +3903,9 @@ export type Mutation_RootInsert_User_Role_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_User_StatusArgs = {
-  objects: Array<User_Status_Insert_Input>;
-  on_conflict?: InputMaybe<User_Status_On_Conflict>;
+export type Mutation_RootInsert_User_RoleArgs = {
+  objects: Array<User_Role_Insert_Input>;
+  on_conflict?: InputMaybe<User_Role_On_Conflict>;
 };
 
 
@@ -3427,9 +3917,9 @@ export type Mutation_RootInsert_User_Status_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_UsersArgs = {
-  objects: Array<Users_Insert_Input>;
-  on_conflict?: InputMaybe<Users_On_Conflict>;
+export type Mutation_RootInsert_User_StatusArgs = {
+  objects: Array<User_Status_Insert_Input>;
+  on_conflict?: InputMaybe<User_Status_On_Conflict>;
 };
 
 
@@ -3441,9 +3931,9 @@ export type Mutation_RootInsert_Users_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_CategoryArgs = {
-  objects: Array<Venue_Category_Insert_Input>;
-  on_conflict?: InputMaybe<Venue_Category_On_Conflict>;
+export type Mutation_RootInsert_UsersArgs = {
+  objects: Array<Users_Insert_Input>;
+  on_conflict?: InputMaybe<Users_On_Conflict>;
 };
 
 
@@ -3455,9 +3945,9 @@ export type Mutation_RootInsert_Venue_Category_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_StatusArgs = {
-  objects: Array<Venue_Status_Insert_Input>;
-  on_conflict?: InputMaybe<Venue_Status_On_Conflict>;
+export type Mutation_RootInsert_Venue_CategoryArgs = {
+  objects: Array<Venue_Category_Insert_Input>;
+  on_conflict?: InputMaybe<Venue_Category_On_Conflict>;
 };
 
 
@@ -3469,9 +3959,9 @@ export type Mutation_RootInsert_Venue_Status_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_VenuesArgs = {
-  objects: Array<Venues_Insert_Input>;
-  on_conflict?: InputMaybe<Venues_On_Conflict>;
+export type Mutation_RootInsert_Venue_StatusArgs = {
+  objects: Array<Venue_Status_Insert_Input>;
+  on_conflict?: InputMaybe<Venue_Status_On_Conflict>;
 };
 
 
@@ -3483,9 +3973,9 @@ export type Mutation_RootInsert_Venues_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Verification_TokensArgs = {
-  objects: Array<Verification_Tokens_Insert_Input>;
-  on_conflict?: InputMaybe<Verification_Tokens_On_Conflict>;
+export type Mutation_RootInsert_VenuesArgs = {
+  objects: Array<Venues_Insert_Input>;
+  on_conflict?: InputMaybe<Venues_On_Conflict>;
 };
 
 
@@ -3497,12 +3987,10 @@ export type Mutation_RootInsert_Verification_Tokens_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_AccountsArgs = {
-  _inc?: InputMaybe<Accounts_Inc_Input>;
-  _set?: InputMaybe<Accounts_Set_Input>;
-  where: Accounts_Bool_Exp;
+export type Mutation_RootInsert_Verification_TokensArgs = {
+  objects: Array<Verification_Tokens_Insert_Input>;
+  on_conflict?: InputMaybe<Verification_Tokens_On_Conflict>;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Accounts_By_PkArgs = {
@@ -3511,10 +3999,27 @@ export type Mutation_RootUpdate_Accounts_By_PkArgs = {
   pk_columns: Accounts_Pk_Columns_Input;
 };
 
-
 /** mutation root */
 export type Mutation_RootUpdate_Accounts_ManyArgs = {
   updates: Array<Accounts_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_AccountsArgs = {
+  _inc?: InputMaybe<Accounts_Inc_Input>;
+  _set?: InputMaybe<Accounts_Set_Input>;
+  where: Accounts_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Chains_By_PkArgs = {
+  _set?: InputMaybe<Chains_Set_Input>;
+  pk_columns: Chains_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Chains_ManyArgs = {
+  updates: Array<Chains_Updates>;
 };
 
 
@@ -3524,19 +4029,16 @@ export type Mutation_RootUpdate_ChainsArgs = {
   where: Chains_Bool_Exp;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_Chains_By_PkArgs = {
-  _set?: InputMaybe<Chains_Set_Input>;
-  pk_columns: Chains_Pk_Columns_Input;
+export type Mutation_RootUpdate_Event_Status_By_PkArgs = {
+  _set?: InputMaybe<Event_Status_Set_Input>;
+  pk_columns: Event_Status_Pk_Columns_Input;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_Chains_ManyArgs = {
-  updates: Array<Chains_Updates>;
+export type Mutation_RootUpdate_Event_Status_ManyArgs = {
+  updates: Array<Event_Status_Updates>;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Event_StatusArgs = {
@@ -3544,19 +4046,16 @@ export type Mutation_RootUpdate_Event_StatusArgs = {
   where: Event_Status_Bool_Exp;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_Event_Status_By_PkArgs = {
-  _set?: InputMaybe<Event_Status_Set_Input>;
-  pk_columns: Event_Status_Pk_Columns_Input;
+export type Mutation_RootUpdate_Event_Tags_By_PkArgs = {
+  _set?: InputMaybe<Event_Tags_Set_Input>;
+  pk_columns: Event_Tags_Pk_Columns_Input;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_Event_Status_ManyArgs = {
-  updates: Array<Event_Status_Updates>;
+export type Mutation_RootUpdate_Event_Tags_ManyArgs = {
+  updates: Array<Event_Tags_Updates>;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Event_TagsArgs = {
@@ -3564,52 +4063,22 @@ export type Mutation_RootUpdate_Event_TagsArgs = {
   where: Event_Tags_Bool_Exp;
 };
 
-
-/** mutation root */
-export type Mutation_RootUpdate_Event_Tags_By_PkArgs = {
-  _set?: InputMaybe<Event_Tags_Set_Input>;
-  pk_columns: Event_Tags_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Event_Tags_ManyArgs = {
-  updates: Array<Event_Tags_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Event_TypeArgs = {
-  _set?: InputMaybe<Event_Type_Set_Input>;
-  where: Event_Type_Bool_Exp;
-};
-
-
 /** mutation root */
 export type Mutation_RootUpdate_Event_Type_By_PkArgs = {
   _set?: InputMaybe<Event_Type_Set_Input>;
   pk_columns: Event_Type_Pk_Columns_Input;
 };
 
-
 /** mutation root */
 export type Mutation_RootUpdate_Event_Type_ManyArgs = {
   updates: Array<Event_Type_Updates>;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_EventsArgs = {
-  _append?: InputMaybe<Events_Append_Input>;
-  _delete_at_path?: InputMaybe<Events_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Events_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Events_Delete_Key_Input>;
-  _inc?: InputMaybe<Events_Inc_Input>;
-  _prepend?: InputMaybe<Events_Prepend_Input>;
-  _set?: InputMaybe<Events_Set_Input>;
-  where: Events_Bool_Exp;
+export type Mutation_RootUpdate_Event_TypeArgs = {
+  _set?: InputMaybe<Event_Type_Set_Input>;
+  where: Event_Type_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Events_By_PkArgs = {
@@ -3623,6 +4092,16 @@ export type Mutation_RootUpdate_Events_By_PkArgs = {
   pk_columns: Events_Pk_Columns_Input;
 };
 
+/** mutation root */
+export type Mutation_RootUpdate_Events_Event_Tags_By_PkArgs = {
+  _set?: InputMaybe<Events_Event_Tags_Set_Input>;
+  pk_columns: Events_Event_Tags_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Events_Event_Tags_ManyArgs = {
+  updates: Array<Events_Event_Tags_Updates>;
+};
 
 /** mutation root */
 export type Mutation_RootUpdate_Events_Event_TagsArgs = {
@@ -3630,32 +4109,22 @@ export type Mutation_RootUpdate_Events_Event_TagsArgs = {
   where: Events_Event_Tags_Bool_Exp;
 };
 
-
-/** mutation root */
-export type Mutation_RootUpdate_Events_Event_Tags_By_PkArgs = {
-  _set?: InputMaybe<Events_Event_Tags_Set_Input>;
-  pk_columns: Events_Event_Tags_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Events_Event_Tags_ManyArgs = {
-  updates: Array<Events_Event_Tags_Updates>;
-};
-
-
 /** mutation root */
 export type Mutation_RootUpdate_Events_ManyArgs = {
   updates: Array<Events_Updates>;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_Price_TypeArgs = {
-  _set?: InputMaybe<Price_Type_Set_Input>;
-  where: Price_Type_Bool_Exp;
+export type Mutation_RootUpdate_EventsArgs = {
+  _append?: InputMaybe<Events_Append_Input>;
+  _delete_at_path?: InputMaybe<Events_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Events_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Events_Delete_Key_Input>;
+  _inc?: InputMaybe<Events_Inc_Input>;
+  _prepend?: InputMaybe<Events_Prepend_Input>;
+  _set?: InputMaybe<Events_Set_Input>;
+  where: Events_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Price_Type_By_PkArgs = {
@@ -3663,19 +4132,16 @@ export type Mutation_RootUpdate_Price_Type_By_PkArgs = {
   pk_columns: Price_Type_Pk_Columns_Input;
 };
 
-
 /** mutation root */
 export type Mutation_RootUpdate_Price_Type_ManyArgs = {
   updates: Array<Price_Type_Updates>;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_Provider_TypeArgs = {
-  _set?: InputMaybe<Provider_Type_Set_Input>;
-  where: Provider_Type_Bool_Exp;
+export type Mutation_RootUpdate_Price_TypeArgs = {
+  _set?: InputMaybe<Price_Type_Set_Input>;
+  where: Price_Type_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Provider_Type_By_PkArgs = {
@@ -3691,18 +4157,16 @@ export type Mutation_RootUpdate_Provider_Type_ManyArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_SessionsArgs = {
-  _set?: InputMaybe<Sessions_Set_Input>;
-  where: Sessions_Bool_Exp;
+export type Mutation_RootUpdate_Provider_TypeArgs = {
+  _set?: InputMaybe<Provider_Type_Set_Input>;
+  where: Provider_Type_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Sessions_By_PkArgs = {
   _set?: InputMaybe<Sessions_Set_Input>;
   pk_columns: Sessions_Pk_Columns_Input;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Sessions_ManyArgs = {
@@ -3711,11 +4175,10 @@ export type Mutation_RootUpdate_Sessions_ManyArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_User_RoleArgs = {
-  _set?: InputMaybe<User_Role_Set_Input>;
-  where: User_Role_Bool_Exp;
+export type Mutation_RootUpdate_SessionsArgs = {
+  _set?: InputMaybe<Sessions_Set_Input>;
+  where: Sessions_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_User_Role_By_PkArgs = {
@@ -3723,19 +4186,16 @@ export type Mutation_RootUpdate_User_Role_By_PkArgs = {
   pk_columns: User_Role_Pk_Columns_Input;
 };
 
-
 /** mutation root */
 export type Mutation_RootUpdate_User_Role_ManyArgs = {
   updates: Array<User_Role_Updates>;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_User_StatusArgs = {
-  _set?: InputMaybe<User_Status_Set_Input>;
-  where: User_Status_Bool_Exp;
+export type Mutation_RootUpdate_User_RoleArgs = {
+  _set?: InputMaybe<User_Role_Set_Input>;
+  where: User_Role_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_User_Status_By_PkArgs = {
@@ -3743,20 +4203,16 @@ export type Mutation_RootUpdate_User_Status_By_PkArgs = {
   pk_columns: User_Status_Pk_Columns_Input;
 };
 
-
 /** mutation root */
 export type Mutation_RootUpdate_User_Status_ManyArgs = {
   updates: Array<User_Status_Updates>;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_UsersArgs = {
-  _inc?: InputMaybe<Users_Inc_Input>;
-  _set?: InputMaybe<Users_Set_Input>;
-  where: Users_Bool_Exp;
+export type Mutation_RootUpdate_User_StatusArgs = {
+  _set?: InputMaybe<User_Status_Set_Input>;
+  where: User_Status_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Users_By_PkArgs = {
@@ -3765,19 +4221,17 @@ export type Mutation_RootUpdate_Users_By_PkArgs = {
   pk_columns: Users_Pk_Columns_Input;
 };
 
-
 /** mutation root */
 export type Mutation_RootUpdate_Users_ManyArgs = {
   updates: Array<Users_Updates>;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_Venue_CategoryArgs = {
-  _set?: InputMaybe<Venue_Category_Set_Input>;
-  where: Venue_Category_Bool_Exp;
+export type Mutation_RootUpdate_UsersArgs = {
+  _inc?: InputMaybe<Users_Inc_Input>;
+  _set?: InputMaybe<Users_Set_Input>;
+  where: Users_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Venue_Category_By_PkArgs = {
@@ -3785,19 +4239,16 @@ export type Mutation_RootUpdate_Venue_Category_By_PkArgs = {
   pk_columns: Venue_Category_Pk_Columns_Input;
 };
 
-
 /** mutation root */
 export type Mutation_RootUpdate_Venue_Category_ManyArgs = {
   updates: Array<Venue_Category_Updates>;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_Venue_StatusArgs = {
-  _set?: InputMaybe<Venue_Status_Set_Input>;
-  where: Venue_Status_Bool_Exp;
+export type Mutation_RootUpdate_Venue_CategoryArgs = {
+  _set?: InputMaybe<Venue_Category_Set_Input>;
+  where: Venue_Category_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Venue_Status_By_PkArgs = {
@@ -3805,26 +4256,22 @@ export type Mutation_RootUpdate_Venue_Status_By_PkArgs = {
   pk_columns: Venue_Status_Pk_Columns_Input;
 };
 
-
 /** mutation root */
 export type Mutation_RootUpdate_Venue_Status_ManyArgs = {
   updates: Array<Venue_Status_Updates>;
 };
 
-
 /** mutation root */
-export type Mutation_RootUpdate_VenuesArgs = {
-  _set?: InputMaybe<Venues_Set_Input>;
-  where: Venues_Bool_Exp;
+export type Mutation_RootUpdate_Venue_StatusArgs = {
+  _set?: InputMaybe<Venue_Status_Set_Input>;
+  where: Venue_Status_Bool_Exp;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Venues_By_PkArgs = {
   _set?: InputMaybe<Venues_Set_Input>;
   pk_columns: Venues_Pk_Columns_Input;
 };
-
 
 /** mutation root */
 export type Mutation_RootUpdate_Venues_ManyArgs = {
@@ -3833,9 +4280,9 @@ export type Mutation_RootUpdate_Venues_ManyArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Verification_TokensArgs = {
-  _set?: InputMaybe<Verification_Tokens_Set_Input>;
-  where: Verification_Tokens_Bool_Exp;
+export type Mutation_RootUpdate_VenuesArgs = {
+  _set?: InputMaybe<Venues_Set_Input>;
+  where: Venues_Bool_Exp;
 };
 
 
@@ -3851,6 +4298,14 @@ export type Mutation_RootUpdate_Verification_Tokens_ManyArgs = {
   updates: Array<Verification_Tokens_Updates>;
 };
 
+
+/** mutation root */
+export type Mutation_RootUpdate_Verification_TokensArgs = {
+  _set?: InputMaybe<Verification_Tokens_Set_Input>;
+  where: Verification_Tokens_Bool_Exp;
+};
+
+
 /** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
 export type Numeric_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['numeric']['input']>;
@@ -3864,21 +4319,6 @@ export type Numeric_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['numeric']['input']>>;
 };
 
-/** column ordering options */
-export enum Order_By {
-  /** in ascending order, nulls last */
-  Asc = 'asc',
-  /** in ascending order, nulls first */
-  AscNullsFirst = 'asc_nulls_first',
-  /** in ascending order, nulls last */
-  AscNullsLast = 'asc_nulls_last',
-  /** in descending order, nulls first */
-  Desc = 'desc',
-  /** in descending order, nulls first */
-  DescNullsFirst = 'desc_nulls_first',
-  /** in descending order, nulls last */
-  DescNullsLast = 'desc_nulls_last'
-}
 
 /** columns and relationships of "price_type" */
 export type Price_Type = {
@@ -3887,12 +4327,14 @@ export type Price_Type = {
   value: Scalars['String']['output'];
 };
 
+
 /** aggregated selection of "price_type" */
 export type Price_Type_Aggregate = {
   __typename?: 'price_type_aggregate';
   aggregate?: Maybe<Price_Type_Aggregate_Fields>;
   nodes: Array<Price_Type>;
 };
+
 
 /** aggregate fields of "price_type" */
 export type Price_Type_Aggregate_Fields = {
@@ -3909,6 +4351,7 @@ export type Price_Type_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
 /** Boolean expression to filter rows from the table "price_type". All fields are combined with a logical 'AND'. */
 export type Price_Type_Bool_Exp = {
   _and?: InputMaybe<Array<Price_Type_Bool_Exp>>;
@@ -3918,22 +4361,6 @@ export type Price_Type_Bool_Exp = {
   value?: InputMaybe<String_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "price_type" */
-export enum Price_Type_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  PriceTypePkey = 'price_type_pkey'
-}
-
-export enum Price_Type_Enum {
-  /** Donation-based event */
-  Donation = 'DONATION',
-  /** Free event with no cost */
-  Free = 'FREE',
-  /** Paid event with fixed ticket price */
-  Paid = 'PAID',
-  /** Event with suggested donation amount */
-  SuggestedDonation = 'SUGGESTED_DONATION'
-}
 
 /** Boolean expression to compare columns of type "price_type_enum". All fields are combined with logical 'AND'. */
 export type Price_Type_Enum_Comparison_Exp = {
@@ -3944,11 +4371,13 @@ export type Price_Type_Enum_Comparison_Exp = {
   _nin?: InputMaybe<Array<Price_Type_Enum>>;
 };
 
+
 /** input type for inserting data into table "price_type" */
 export type Price_Type_Insert_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** aggregate max on columns */
 export type Price_Type_Max_Fields = {
@@ -3957,12 +4386,14 @@ export type Price_Type_Max_Fields = {
   value?: Maybe<Scalars['String']['output']>;
 };
 
+
 /** aggregate min on columns */
 export type Price_Type_Min_Fields = {
   __typename?: 'price_type_min_fields';
   description?: Maybe<Scalars['String']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
+
 
 /** response of any mutation on the table "price_type" */
 export type Price_Type_Mutation_Response = {
@@ -3973,12 +4404,14 @@ export type Price_Type_Mutation_Response = {
   returning: Array<Price_Type>;
 };
 
+
 /** input type for inserting object relation for remote table "price_type" */
 export type Price_Type_Obj_Rel_Insert_Input = {
   data: Price_Type_Insert_Input;
   /** upsert condition */
   on_conflict?: InputMaybe<Price_Type_On_Conflict>;
 };
+
 
 /** on_conflict condition type for table "price_type" */
 export type Price_Type_On_Conflict = {
@@ -3987,30 +4420,26 @@ export type Price_Type_On_Conflict = {
   where?: InputMaybe<Price_Type_Bool_Exp>;
 };
 
+
 /** Ordering options when selecting data from "price_type". */
 export type Price_Type_Order_By = {
   description?: InputMaybe<Order_By>;
   value?: InputMaybe<Order_By>;
 };
 
+
 /** primary key columns input for table: price_type */
 export type Price_Type_Pk_Columns_Input = {
   value: Scalars['String']['input'];
 };
 
-/** select columns of table "price_type" */
-export enum Price_Type_Select_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
 
 /** input type for updating data in table "price_type" */
 export type Price_Type_Set_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** Streaming cursor of the table "price_type" */
 export type Price_Type_Stream_Cursor_Input = {
@@ -4020,19 +4449,13 @@ export type Price_Type_Stream_Cursor_Input = {
   ordering?: InputMaybe<Cursor_Ordering>;
 };
 
+
 /** Initial value of the column from where the streaming should start */
 export type Price_Type_Stream_Cursor_Value_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "price_type" */
-export enum Price_Type_Update_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
 
 export type Price_Type_Updates = {
   /** sets the columns of the filtered rows to the given values */
@@ -4040,6 +4463,7 @@ export type Price_Type_Updates = {
   /** filter the rows which have to be updated */
   where: Price_Type_Bool_Exp;
 };
+
 
 /** columns and relationships of "provider_type" */
 export type Provider_Type = {
@@ -4052,31 +4476,13 @@ export type Provider_Type = {
 };
 
 
-/** columns and relationships of "provider_type" */
-export type Provider_TypeAccountsArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
-};
-
-
-/** columns and relationships of "provider_type" */
-export type Provider_TypeAccounts_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
-};
-
 /** aggregated selection of "provider_type" */
 export type Provider_Type_Aggregate = {
   __typename?: 'provider_type_aggregate';
   aggregate?: Maybe<Provider_Type_Aggregate_Fields>;
   nodes: Array<Provider_Type>;
 };
+
 
 /** aggregate fields of "provider_type" */
 export type Provider_Type_Aggregate_Fields = {
@@ -4093,6 +4499,7 @@ export type Provider_Type_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
 /** Boolean expression to filter rows from the table "provider_type". All fields are combined with a logical 'AND'. */
 export type Provider_Type_Bool_Exp = {
   _and?: InputMaybe<Array<Provider_Type_Bool_Exp>>;
@@ -4103,11 +4510,6 @@ export type Provider_Type_Bool_Exp = {
   value?: InputMaybe<String_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "provider_type" */
-export enum Provider_Type_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  ProviderTypePkey = 'provider_type_pkey'
-}
 
 /** input type for inserting data into table "provider_type" */
 export type Provider_Type_Insert_Input = {
@@ -4115,17 +4517,20 @@ export type Provider_Type_Insert_Input = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
+
 /** aggregate max on columns */
 export type Provider_Type_Max_Fields = {
   __typename?: 'provider_type_max_fields';
   value?: Maybe<Scalars['String']['output']>;
 };
 
+
 /** aggregate min on columns */
 export type Provider_Type_Min_Fields = {
   __typename?: 'provider_type_min_fields';
   value?: Maybe<Scalars['String']['output']>;
 };
+
 
 /** response of any mutation on the table "provider_type" */
 export type Provider_Type_Mutation_Response = {
@@ -4136,12 +4541,14 @@ export type Provider_Type_Mutation_Response = {
   returning: Array<Provider_Type>;
 };
 
+
 /** input type for inserting object relation for remote table "provider_type" */
 export type Provider_Type_Obj_Rel_Insert_Input = {
   data: Provider_Type_Insert_Input;
   /** upsert condition */
   on_conflict?: InputMaybe<Provider_Type_On_Conflict>;
 };
+
 
 /** on_conflict condition type for table "provider_type" */
 export type Provider_Type_On_Conflict = {
@@ -4150,27 +4557,25 @@ export type Provider_Type_On_Conflict = {
   where?: InputMaybe<Provider_Type_Bool_Exp>;
 };
 
+
 /** Ordering options when selecting data from "provider_type". */
 export type Provider_Type_Order_By = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Order_By>;
   value?: InputMaybe<Order_By>;
 };
 
+
 /** primary key columns input for table: provider_type */
 export type Provider_Type_Pk_Columns_Input = {
   value: Scalars['String']['input'];
 };
 
-/** select columns of table "provider_type" */
-export enum Provider_Type_Select_Column {
-  /** column name */
-  Value = 'value'
-}
 
 /** input type for updating data in table "provider_type" */
 export type Provider_Type_Set_Input = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** Streaming cursor of the table "provider_type" */
 export type Provider_Type_Stream_Cursor_Input = {
@@ -4180,16 +4585,12 @@ export type Provider_Type_Stream_Cursor_Input = {
   ordering?: InputMaybe<Cursor_Ordering>;
 };
 
+
 /** Initial value of the column from where the streaming should start */
 export type Provider_Type_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "provider_type" */
-export enum Provider_Type_Update_Column {
-  /** column name */
-  Value = 'value'
-}
 
 export type Provider_Type_Updates = {
   /** sets the columns of the filtered rows to the given values */
@@ -4197,6 +4598,27 @@ export type Provider_Type_Updates = {
   /** filter the rows which have to be updated */
   where: Provider_Type_Bool_Exp;
 };
+
+
+/** columns and relationships of "provider_type" */
+export type Provider_TypeAccounts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "provider_type" */
+export type Provider_TypeAccountsArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
 
 export type Query_Root = {
   __typename?: 'query_root';
@@ -4305,15 +4727,6 @@ export type Query_Root = {
 };
 
 
-export type Query_RootAccountsArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
-};
-
-
 export type Query_RootAccounts_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -4328,12 +4741,12 @@ export type Query_RootAccounts_By_PkArgs = {
 };
 
 
-export type Query_RootChainsArgs = {
-  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+export type Query_RootAccountsArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Chains_Order_By>>;
-  where?: InputMaybe<Chains_Bool_Exp>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
 };
 
 
@@ -4351,12 +4764,12 @@ export type Query_RootChains_By_PkArgs = {
 };
 
 
-export type Query_RootEvent_StatusArgs = {
-  distinct_on?: InputMaybe<Array<Event_Status_Select_Column>>;
+export type Query_RootChainsArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Event_Status_Order_By>>;
-  where?: InputMaybe<Event_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
 };
 
 
@@ -4373,15 +4786,13 @@ export type Query_RootEvent_Status_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
-
-export type Query_RootEvent_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Event_Tags_Select_Column>>;
+export type Query_RootEvent_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Event_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Event_Tags_Order_By>>;
-  where?: InputMaybe<Event_Tags_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Status_Order_By>>;
+  where?: InputMaybe<Event_Status_Bool_Exp>;
 };
-
 
 export type Query_RootEvent_Tags_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Event_Tags_Select_Column>>;
@@ -4391,20 +4802,17 @@ export type Query_RootEvent_Tags_AggregateArgs = {
   where?: InputMaybe<Event_Tags_Bool_Exp>;
 };
 
-
 export type Query_RootEvent_Tags_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
-
-export type Query_RootEvent_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Event_Type_Select_Column>>;
+export type Query_RootEvent_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Event_Tags_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Event_Type_Order_By>>;
-  where?: InputMaybe<Event_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Tags_Order_By>>;
+  where?: InputMaybe<Event_Tags_Bool_Exp>;
 };
-
 
 export type Query_RootEvent_Type_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Event_Type_Select_Column>>;
@@ -4419,15 +4827,13 @@ export type Query_RootEvent_Type_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
-
-export type Query_RootEventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+export type Query_RootEvent_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Event_Type_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Type_Order_By>>;
+  where?: InputMaybe<Event_Type_Bool_Exp>;
 };
-
 
 export type Query_RootEvents_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Events_Select_Column>>;
@@ -4437,20 +4843,9 @@ export type Query_RootEvents_AggregateArgs = {
   where?: InputMaybe<Events_Bool_Exp>;
 };
 
-
 export type Query_RootEvents_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
-
-
-export type Query_RootEvents_Event_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
-};
-
 
 export type Query_RootEvents_Event_Tags_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
@@ -4460,21 +4855,26 @@ export type Query_RootEvents_Event_Tags_AggregateArgs = {
   where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
-
 export type Query_RootEvents_Event_Tags_By_PkArgs = {
   event_id: Scalars['uuid']['input'];
   tag_id: Scalars['uuid']['input'];
 };
 
-
-export type Query_RootPrice_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Price_Type_Select_Column>>;
+export type Query_RootEvents_Event_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Price_Type_Order_By>>;
-  where?: InputMaybe<Price_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
+export type Query_RootEventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
 
 export type Query_RootPrice_Type_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Price_Type_Select_Column>>;
@@ -4484,20 +4884,17 @@ export type Query_RootPrice_Type_AggregateArgs = {
   where?: InputMaybe<Price_Type_Bool_Exp>;
 };
 
-
 export type Query_RootPrice_Type_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
-
-export type Query_RootProvider_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Provider_Type_Select_Column>>;
+export type Query_RootPrice_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Price_Type_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Provider_Type_Order_By>>;
-  where?: InputMaybe<Provider_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Price_Type_Order_By>>;
+  where?: InputMaybe<Price_Type_Bool_Exp>;
 };
-
 
 export type Query_RootProvider_Type_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Provider_Type_Select_Column>>;
@@ -4507,20 +4904,17 @@ export type Query_RootProvider_Type_AggregateArgs = {
   where?: InputMaybe<Provider_Type_Bool_Exp>;
 };
 
-
 export type Query_RootProvider_Type_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
-
-export type Query_RootSessionsArgs = {
-  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
+export type Query_RootProvider_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Provider_Type_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Sessions_Order_By>>;
-  where?: InputMaybe<Sessions_Bool_Exp>;
+  order_by?: InputMaybe<Array<Provider_Type_Order_By>>;
+  where?: InputMaybe<Provider_Type_Bool_Exp>;
 };
-
 
 export type Query_RootSessions_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
@@ -4530,20 +4924,17 @@ export type Query_RootSessions_AggregateArgs = {
   where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
-
 export type Query_RootSessions_By_PkArgs = {
   sessionToken: Scalars['String']['input'];
 };
 
-
-export type Query_RootUser_RoleArgs = {
-  distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
+export type Query_RootSessionsArgs = {
+  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Role_Order_By>>;
-  where?: InputMaybe<User_Role_Bool_Exp>;
+  order_by?: InputMaybe<Array<Sessions_Order_By>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
 };
-
 
 export type Query_RootUser_Role_AggregateArgs = {
   distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
@@ -4553,20 +4944,17 @@ export type Query_RootUser_Role_AggregateArgs = {
   where?: InputMaybe<User_Role_Bool_Exp>;
 };
 
-
 export type Query_RootUser_Role_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
-
-export type Query_RootUser_StatusArgs = {
-  distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
+export type Query_RootUser_RoleArgs = {
+  distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Status_Order_By>>;
-  where?: InputMaybe<User_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Role_Order_By>>;
+  where?: InputMaybe<User_Role_Bool_Exp>;
 };
-
 
 export type Query_RootUser_Status_AggregateArgs = {
   distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
@@ -4576,18 +4964,16 @@ export type Query_RootUser_Status_AggregateArgs = {
   where?: InputMaybe<User_Status_Bool_Exp>;
 };
 
-
 export type Query_RootUser_Status_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
-
-export type Query_RootUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+export type Query_RootUser_StatusArgs = {
+  distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Status_Order_By>>;
+  where?: InputMaybe<User_Status_Bool_Exp>;
 };
 
 
@@ -4605,12 +4991,12 @@ export type Query_RootUsers_By_PkArgs = {
 };
 
 
-export type Query_RootVenue_CategoryArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
+export type Query_RootUsersArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
-  where?: InputMaybe<Venue_Category_Bool_Exp>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 
@@ -4628,12 +5014,12 @@ export type Query_RootVenue_Category_By_PkArgs = {
 };
 
 
-export type Query_RootVenue_StatusArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Status_Select_Column>>;
+export type Query_RootVenue_CategoryArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venue_Status_Order_By>>;
-  where?: InputMaybe<Venue_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
+  where?: InputMaybe<Venue_Category_Bool_Exp>;
 };
 
 
@@ -4651,12 +5037,12 @@ export type Query_RootVenue_Status_By_PkArgs = {
 };
 
 
-export type Query_RootVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+export type Query_RootVenue_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Status_Order_By>>;
+  where?: InputMaybe<Venue_Status_Bool_Exp>;
 };
 
 
@@ -4674,12 +5060,12 @@ export type Query_RootVenues_By_PkArgs = {
 };
 
 
-export type Query_RootVerification_TokensArgs = {
-  distinct_on?: InputMaybe<Array<Verification_Tokens_Select_Column>>;
+export type Query_RootVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
-  where?: InputMaybe<Verification_Tokens_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
 };
 
 
@@ -4696,6 +5082,34 @@ export type Query_RootVerification_Tokens_By_PkArgs = {
   token: Scalars['String']['input'];
 };
 
+
+export type Query_RootVerification_TokensArgs = {
+  distinct_on?: InputMaybe<Array<Verification_Tokens_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
+  where?: InputMaybe<Verification_Tokens_Bool_Exp>;
+};
+
+
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  Boolean: { input: boolean; output: boolean; }
+  Float: { input: number; output: number; }
+  geography: { input: Geography; output: Geography; }
+  geometry: { input: Geometry; output: Geometry; }
+  ID: { input: string; output: string; }
+  Int: { input: number; output: number; }
+  json: { input: Json; output: Json; }
+  jsonb: { input: Json; output: Json; }
+  numeric: { input: Numeric; output: Numeric; }
+  String: { input: string; output: string; }
+  timestamp: { input: Timestamp; output: Timestamp; }
+  timestamptz: { input: Timestamp; output: Timestamp; }
+  uuid: { input: UUID; output: UUID; }
+};
+
+
 /** columns and relationships of "sessions" */
 export type Sessions = {
   __typename?: 'sessions';
@@ -4707,6 +5121,7 @@ export type Sessions = {
   userId: Scalars['uuid']['output'];
 };
 
+
 /** aggregated selection of "sessions" */
 export type Sessions_Aggregate = {
   __typename?: 'sessions_aggregate';
@@ -4714,9 +5129,11 @@ export type Sessions_Aggregate = {
   nodes: Array<Sessions>;
 };
 
+
 export type Sessions_Aggregate_Bool_Exp = {
   count?: InputMaybe<Sessions_Aggregate_Bool_Exp_Count>;
 };
+
 
 export type Sessions_Aggregate_Bool_Exp_Count = {
   arguments?: InputMaybe<Array<Sessions_Select_Column>>;
@@ -4724,6 +5141,7 @@ export type Sessions_Aggregate_Bool_Exp_Count = {
   filter?: InputMaybe<Sessions_Bool_Exp>;
   predicate: Int_Comparison_Exp;
 };
+
 
 /** aggregate fields of "sessions" */
 export type Sessions_Aggregate_Fields = {
@@ -4740,6 +5158,7 @@ export type Sessions_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
 /** order by aggregate values of table "sessions" */
 export type Sessions_Aggregate_Order_By = {
   count?: InputMaybe<Order_By>;
@@ -4747,12 +5166,14 @@ export type Sessions_Aggregate_Order_By = {
   min?: InputMaybe<Sessions_Min_Order_By>;
 };
 
+
 /** input type for inserting array relation for remote table "sessions" */
 export type Sessions_Arr_Rel_Insert_Input = {
   data: Array<Sessions_Insert_Input>;
   /** upsert condition */
   on_conflict?: InputMaybe<Sessions_On_Conflict>;
 };
+
 
 /** Boolean expression to filter rows from the table "sessions". All fields are combined with a logical 'AND'. */
 export type Sessions_Bool_Exp = {
@@ -4766,11 +5187,6 @@ export type Sessions_Bool_Exp = {
   userId?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "sessions" */
-export enum Sessions_Constraint {
-  /** unique or primary key constraint on columns "sessionToken" */
-  SessionsPkey = 'sessions_pkey'
-}
 
 /** input type for inserting data into table "sessions" */
 export type Sessions_Insert_Input = {
@@ -4781,6 +5197,7 @@ export type Sessions_Insert_Input = {
   userId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
+
 /** aggregate max on columns */
 export type Sessions_Max_Fields = {
   __typename?: 'sessions_max_fields';
@@ -4790,6 +5207,7 @@ export type Sessions_Max_Fields = {
   userId?: Maybe<Scalars['uuid']['output']>;
 };
 
+
 /** order by max() on columns of table "sessions" */
 export type Sessions_Max_Order_By = {
   expires?: InputMaybe<Order_By>;
@@ -4797,6 +5215,7 @@ export type Sessions_Max_Order_By = {
   sessionToken?: InputMaybe<Order_By>;
   userId?: InputMaybe<Order_By>;
 };
+
 
 /** aggregate min on columns */
 export type Sessions_Min_Fields = {
@@ -4807,6 +5226,7 @@ export type Sessions_Min_Fields = {
   userId?: Maybe<Scalars['uuid']['output']>;
 };
 
+
 /** order by min() on columns of table "sessions" */
 export type Sessions_Min_Order_By = {
   expires?: InputMaybe<Order_By>;
@@ -4814,6 +5234,7 @@ export type Sessions_Min_Order_By = {
   sessionToken?: InputMaybe<Order_By>;
   userId?: InputMaybe<Order_By>;
 };
+
 
 /** response of any mutation on the table "sessions" */
 export type Sessions_Mutation_Response = {
@@ -4824,12 +5245,14 @@ export type Sessions_Mutation_Response = {
   returning: Array<Sessions>;
 };
 
+
 /** on_conflict condition type for table "sessions" */
 export type Sessions_On_Conflict = {
   constraint: Sessions_Constraint;
   update_columns?: Array<Sessions_Update_Column>;
   where?: InputMaybe<Sessions_Bool_Exp>;
 };
+
 
 /** Ordering options when selecting data from "sessions". */
 export type Sessions_Order_By = {
@@ -4840,22 +5263,12 @@ export type Sessions_Order_By = {
   userId?: InputMaybe<Order_By>;
 };
 
+
 /** primary key columns input for table: sessions */
 export type Sessions_Pk_Columns_Input = {
   sessionToken: Scalars['String']['input'];
 };
 
-/** select columns of table "sessions" */
-export enum Sessions_Select_Column {
-  /** column name */
-  Expires = 'expires',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  SessionToken = 'sessionToken',
-  /** column name */
-  UserId = 'userId'
-}
 
 /** input type for updating data in table "sessions" */
 export type Sessions_Set_Input = {
@@ -4865,6 +5278,7 @@ export type Sessions_Set_Input = {
   userId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
+
 /** Streaming cursor of the table "sessions" */
 export type Sessions_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -4872,6 +5286,7 @@ export type Sessions_Stream_Cursor_Input = {
   /** cursor ordering */
   ordering?: InputMaybe<Cursor_Ordering>;
 };
+
 
 /** Initial value of the column from where the streaming should start */
 export type Sessions_Stream_Cursor_Value_Input = {
@@ -4881,17 +5296,6 @@ export type Sessions_Stream_Cursor_Value_Input = {
   userId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
-/** update columns of table "sessions" */
-export enum Sessions_Update_Column {
-  /** column name */
-  Expires = 'expires',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  SessionToken = 'sessionToken',
-  /** column name */
-  UserId = 'userId'
-}
 
 export type Sessions_Updates = {
   /** sets the columns of the filtered rows to the given values */
@@ -4900,16 +5304,71 @@ export type Sessions_Updates = {
   where: Sessions_Bool_Exp;
 };
 
+
 export type St_D_Within_Geography_Input = {
   distance: Scalars['Float']['input'];
   from: Scalars['geography']['input'];
   use_spheroid?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
 export type St_D_Within_Input = {
   distance: Scalars['Float']['input'];
   from: Scalars['geometry']['input'];
 };
+
+
+/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
+export type String_Array_Comparison_Exp = {
+  /** is the array contained in the given array value */
+  _contained_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** does the array contain the given value */
+  _contains?: InputMaybe<Array<Scalars['String']['input']>>;
+  _eq?: InputMaybe<Array<Scalars['String']['input']>>;
+  _gt?: InputMaybe<Array<Scalars['String']['input']>>;
+  _gte?: InputMaybe<Array<Scalars['String']['input']>>;
+  _in?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Array<Scalars['String']['input']>>;
+  _lte?: InputMaybe<Array<Scalars['String']['input']>>;
+  _neq?: InputMaybe<Array<Scalars['String']['input']>>;
+  _nin?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
+};
+
+
+/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
+export type String_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['String']['input']>;
+  _gt?: InputMaybe<Scalars['String']['input']>;
+  _gte?: InputMaybe<Scalars['String']['input']>;
+  /** does the column match the given case-insensitive pattern */
+  _ilike?: InputMaybe<Scalars['String']['input']>;
+  _in?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** does the column match the given POSIX regular expression, case insensitive */
+  _iregex?: InputMaybe<Scalars['String']['input']>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  /** does the column match the given pattern */
+  _like?: InputMaybe<Scalars['String']['input']>;
+  _lt?: InputMaybe<Scalars['String']['input']>;
+  _lte?: InputMaybe<Scalars['String']['input']>;
+  _neq?: InputMaybe<Scalars['String']['input']>;
+  /** does the column NOT match the given case-insensitive pattern */
+  _nilike?: InputMaybe<Scalars['String']['input']>;
+  _nin?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** does the column NOT match the given POSIX regular expression, case insensitive */
+  _niregex?: InputMaybe<Scalars['String']['input']>;
+  /** does the column NOT match the given pattern */
+  _nlike?: InputMaybe<Scalars['String']['input']>;
+  /** does the column NOT match the given POSIX regular expression, case sensitive */
+  _nregex?: InputMaybe<Scalars['String']['input']>;
+  /** does the column NOT match the given SQL regular expression */
+  _nsimilar?: InputMaybe<Scalars['String']['input']>;
+  /** does the column match the given POSIX regular expression, case sensitive */
+  _regex?: InputMaybe<Scalars['String']['input']>;
+  /** does the column match the given SQL regular expression */
+  _similar?: InputMaybe<Scalars['String']['input']>;
+};
+
 
 export type Subscription_Root = {
   __typename?: 'subscription_root';
@@ -5052,15 +5511,6 @@ export type Subscription_Root = {
 };
 
 
-export type Subscription_RootAccountsArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
-};
-
-
 export type Subscription_RootAccounts_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -5082,12 +5532,12 @@ export type Subscription_RootAccounts_StreamArgs = {
 };
 
 
-export type Subscription_RootChainsArgs = {
-  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+export type Subscription_RootAccountsArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Chains_Order_By>>;
-  where?: InputMaybe<Chains_Bool_Exp>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
 };
 
 
@@ -5112,12 +5562,12 @@ export type Subscription_RootChains_StreamArgs = {
 };
 
 
-export type Subscription_RootEvent_StatusArgs = {
-  distinct_on?: InputMaybe<Array<Event_Status_Select_Column>>;
+export type Subscription_RootChainsArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Event_Status_Order_By>>;
-  where?: InputMaybe<Event_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
 };
 
 
@@ -5142,12 +5592,12 @@ export type Subscription_RootEvent_Status_StreamArgs = {
 };
 
 
-export type Subscription_RootEvent_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Event_Tags_Select_Column>>;
+export type Subscription_RootEvent_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Event_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Event_Tags_Order_By>>;
-  where?: InputMaybe<Event_Tags_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Status_Order_By>>;
+  where?: InputMaybe<Event_Status_Bool_Exp>;
 };
 
 
@@ -5172,12 +5622,12 @@ export type Subscription_RootEvent_Tags_StreamArgs = {
 };
 
 
-export type Subscription_RootEvent_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Event_Type_Select_Column>>;
+export type Subscription_RootEvent_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Event_Tags_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Event_Type_Order_By>>;
-  where?: InputMaybe<Event_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Tags_Order_By>>;
+  where?: InputMaybe<Event_Tags_Bool_Exp>;
 };
 
 
@@ -5202,12 +5652,12 @@ export type Subscription_RootEvent_Type_StreamArgs = {
 };
 
 
-export type Subscription_RootEventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+export type Subscription_RootEvent_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Event_Type_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Type_Order_By>>;
+  where?: InputMaybe<Event_Type_Bool_Exp>;
 };
 
 
@@ -5222,15 +5672,6 @@ export type Subscription_RootEvents_AggregateArgs = {
 
 export type Subscription_RootEvents_By_PkArgs = {
   id: Scalars['uuid']['input'];
-};
-
-
-export type Subscription_RootEvents_Event_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
 
@@ -5255,6 +5696,13 @@ export type Subscription_RootEvents_Event_Tags_StreamArgs = {
   where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
+export type Subscription_RootEvents_Event_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
+};
 
 export type Subscription_RootEvents_StreamArgs = {
   batch_size: Scalars['Int']['input'];
@@ -5262,13 +5710,12 @@ export type Subscription_RootEvents_StreamArgs = {
   where?: InputMaybe<Events_Bool_Exp>;
 };
 
-
-export type Subscription_RootPrice_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Price_Type_Select_Column>>;
+export type Subscription_RootEventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Price_Type_Order_By>>;
-  where?: InputMaybe<Price_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
 };
 
 
@@ -5285,20 +5732,18 @@ export type Subscription_RootPrice_Type_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
-
 export type Subscription_RootPrice_Type_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Price_Type_Stream_Cursor_Input>>;
   where?: InputMaybe<Price_Type_Bool_Exp>;
 };
 
-
-export type Subscription_RootProvider_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Provider_Type_Select_Column>>;
+export type Subscription_RootPrice_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Price_Type_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Provider_Type_Order_By>>;
-  where?: InputMaybe<Provider_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Price_Type_Order_By>>;
+  where?: InputMaybe<Price_Type_Bool_Exp>;
 };
 
 
@@ -5310,11 +5755,9 @@ export type Subscription_RootProvider_Type_AggregateArgs = {
   where?: InputMaybe<Provider_Type_Bool_Exp>;
 };
 
-
 export type Subscription_RootProvider_Type_By_PkArgs = {
   value: Scalars['String']['input'];
 };
-
 
 export type Subscription_RootProvider_Type_StreamArgs = {
   batch_size: Scalars['Int']['input'];
@@ -5322,15 +5765,13 @@ export type Subscription_RootProvider_Type_StreamArgs = {
   where?: InputMaybe<Provider_Type_Bool_Exp>;
 };
 
-
-export type Subscription_RootSessionsArgs = {
-  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
+export type Subscription_RootProvider_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Provider_Type_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Sessions_Order_By>>;
-  where?: InputMaybe<Sessions_Bool_Exp>;
+  order_by?: InputMaybe<Array<Provider_Type_Order_By>>;
+  where?: InputMaybe<Provider_Type_Bool_Exp>;
 };
-
 
 export type Subscription_RootSessions_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
@@ -5340,11 +5781,9 @@ export type Subscription_RootSessions_AggregateArgs = {
   where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
-
 export type Subscription_RootSessions_By_PkArgs = {
   sessionToken: Scalars['String']['input'];
 };
-
 
 export type Subscription_RootSessions_StreamArgs = {
   batch_size: Scalars['Int']['input'];
@@ -5352,15 +5791,13 @@ export type Subscription_RootSessions_StreamArgs = {
   where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
-
-export type Subscription_RootUser_RoleArgs = {
-  distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
+export type Subscription_RootSessionsArgs = {
+  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Role_Order_By>>;
-  where?: InputMaybe<User_Role_Bool_Exp>;
+  order_by?: InputMaybe<Array<Sessions_Order_By>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
 };
-
 
 export type Subscription_RootUser_Role_AggregateArgs = {
   distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
@@ -5370,11 +5807,9 @@ export type Subscription_RootUser_Role_AggregateArgs = {
   where?: InputMaybe<User_Role_Bool_Exp>;
 };
 
-
 export type Subscription_RootUser_Role_By_PkArgs = {
   value: Scalars['String']['input'];
 };
-
 
 export type Subscription_RootUser_Role_StreamArgs = {
   batch_size: Scalars['Int']['input'];
@@ -5382,15 +5817,13 @@ export type Subscription_RootUser_Role_StreamArgs = {
   where?: InputMaybe<User_Role_Bool_Exp>;
 };
 
-
-export type Subscription_RootUser_StatusArgs = {
-  distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
+export type Subscription_RootUser_RoleArgs = {
+  distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Status_Order_By>>;
-  where?: InputMaybe<User_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Role_Order_By>>;
+  where?: InputMaybe<User_Role_Bool_Exp>;
 };
-
 
 export type Subscription_RootUser_Status_AggregateArgs = {
   distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
@@ -5400,11 +5833,9 @@ export type Subscription_RootUser_Status_AggregateArgs = {
   where?: InputMaybe<User_Status_Bool_Exp>;
 };
 
-
 export type Subscription_RootUser_Status_By_PkArgs = {
   value: Scalars['String']['input'];
 };
-
 
 export type Subscription_RootUser_Status_StreamArgs = {
   batch_size: Scalars['Int']['input'];
@@ -5412,15 +5843,13 @@ export type Subscription_RootUser_Status_StreamArgs = {
   where?: InputMaybe<User_Status_Bool_Exp>;
 };
 
-
-export type Subscription_RootUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+export type Subscription_RootUser_StatusArgs = {
+  distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Status_Order_By>>;
+  where?: InputMaybe<User_Status_Bool_Exp>;
 };
-
 
 export type Subscription_RootUsers_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Users_Select_Column>>;
@@ -5430,11 +5859,9 @@ export type Subscription_RootUsers_AggregateArgs = {
   where?: InputMaybe<Users_Bool_Exp>;
 };
 
-
 export type Subscription_RootUsers_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
-
 
 export type Subscription_RootUsers_StreamArgs = {
   batch_size: Scalars['Int']['input'];
@@ -5442,13 +5869,12 @@ export type Subscription_RootUsers_StreamArgs = {
   where?: InputMaybe<Users_Bool_Exp>;
 };
 
-
-export type Subscription_RootVenue_CategoryArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
+export type Subscription_RootUsersArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
-  where?: InputMaybe<Venue_Category_Bool_Exp>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 
@@ -5465,20 +5891,18 @@ export type Subscription_RootVenue_Category_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
-
 export type Subscription_RootVenue_Category_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Venue_Category_Stream_Cursor_Input>>;
   where?: InputMaybe<Venue_Category_Bool_Exp>;
 };
 
-
-export type Subscription_RootVenue_StatusArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Status_Select_Column>>;
+export type Subscription_RootVenue_CategoryArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venue_Status_Order_By>>;
-  where?: InputMaybe<Venue_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
+  where?: InputMaybe<Venue_Category_Bool_Exp>;
 };
 
 
@@ -5490,11 +5914,9 @@ export type Subscription_RootVenue_Status_AggregateArgs = {
   where?: InputMaybe<Venue_Status_Bool_Exp>;
 };
 
-
 export type Subscription_RootVenue_Status_By_PkArgs = {
   value: Scalars['String']['input'];
 };
-
 
 export type Subscription_RootVenue_Status_StreamArgs = {
   batch_size: Scalars['Int']['input'];
@@ -5502,15 +5924,13 @@ export type Subscription_RootVenue_Status_StreamArgs = {
   where?: InputMaybe<Venue_Status_Bool_Exp>;
 };
 
-
-export type Subscription_RootVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+export type Subscription_RootVenue_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Status_Order_By>>;
+  where?: InputMaybe<Venue_Status_Bool_Exp>;
 };
-
 
 export type Subscription_RootVenues_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
@@ -5520,11 +5940,9 @@ export type Subscription_RootVenues_AggregateArgs = {
   where?: InputMaybe<Venues_Bool_Exp>;
 };
 
-
 export type Subscription_RootVenues_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
-
 
 export type Subscription_RootVenues_StreamArgs = {
   batch_size: Scalars['Int']['input'];
@@ -5532,15 +5950,13 @@ export type Subscription_RootVenues_StreamArgs = {
   where?: InputMaybe<Venues_Bool_Exp>;
 };
 
-
-export type Subscription_RootVerification_TokensArgs = {
-  distinct_on?: InputMaybe<Array<Verification_Tokens_Select_Column>>;
+export type Subscription_RootVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
-  where?: InputMaybe<Verification_Tokens_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
 };
-
 
 export type Subscription_RootVerification_Tokens_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Verification_Tokens_Select_Column>>;
@@ -5550,15 +5966,21 @@ export type Subscription_RootVerification_Tokens_AggregateArgs = {
   where?: InputMaybe<Verification_Tokens_Bool_Exp>;
 };
 
-
 export type Subscription_RootVerification_Tokens_By_PkArgs = {
   token: Scalars['String']['input'];
 };
 
-
 export type Subscription_RootVerification_Tokens_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Verification_Tokens_Stream_Cursor_Input>>;
+  where?: InputMaybe<Verification_Tokens_Bool_Exp>;
+};
+
+export type Subscription_RootVerification_TokensArgs = {
+  distinct_on?: InputMaybe<Array<Verification_Tokens_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
   where?: InputMaybe<Verification_Tokens_Bool_Exp>;
 };
 
@@ -5588,6 +6010,20 @@ export type Timestamptz_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['timestamptz']['input']>>;
 };
 
+export type UpdateEventStatusMutation = { __typename?: 'mutation_root', update_events_by_pk?: { __typename?: 'events', id: UUID, status: Event_Status_Enum, updated_at: Timestamp } | null };
+
+export type UpdateEventStatusMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  status: Event_Status_Enum;
+}>;
+
+export type UpdateVenueStatusMutation = { __typename?: 'mutation_root', update_venues_by_pk?: { __typename?: 'venues', id: UUID, status: Venue_Status_Enum, updated_at: Timestamp } | null };
+
+export type UpdateVenueStatusMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  status: Venue_Status_Enum;
+}>;
+
 /** columns and relationships of "user_role" */
 export type User_Role = {
   __typename?: 'user_role';
@@ -5599,32 +6035,13 @@ export type User_Role = {
   value: Scalars['String']['output'];
 };
 
-
-/** columns and relationships of "user_role" */
-export type User_RoleUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-/** columns and relationships of "user_role" */
-export type User_RoleUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
 /** aggregated selection of "user_role" */
 export type User_Role_Aggregate = {
   __typename?: 'user_role_aggregate';
   aggregate?: Maybe<User_Role_Aggregate_Fields>;
   nodes: Array<User_Role>;
 };
+
 
 /** aggregate fields of "user_role" */
 export type User_Role_Aggregate_Fields = {
@@ -5641,6 +6058,7 @@ export type User_Role_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
 /** Boolean expression to filter rows from the table "user_role". All fields are combined with a logical 'AND'. */
 export type User_Role_Bool_Exp = {
   _and?: InputMaybe<Array<User_Role_Bool_Exp>>;
@@ -5652,18 +6070,6 @@ export type User_Role_Bool_Exp = {
   value?: InputMaybe<String_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "user_role" */
-export enum User_Role_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  UserRolePkey = 'user_role_pkey'
-}
-
-export enum User_Role_Enum {
-  /** Administrator with full access */
-  Admin = 'admin',
-  /** Regular user with standard access */
-  User = 'user'
-}
 
 /** Boolean expression to compare columns of type "user_role_enum". All fields are combined with logical 'AND'. */
 export type User_Role_Enum_Comparison_Exp = {
@@ -5674,12 +6080,14 @@ export type User_Role_Enum_Comparison_Exp = {
   _nin?: InputMaybe<Array<User_Role_Enum>>;
 };
 
+
 /** input type for inserting data into table "user_role" */
 export type User_Role_Insert_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
   users?: InputMaybe<Users_Arr_Rel_Insert_Input>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** aggregate max on columns */
 export type User_Role_Max_Fields = {
@@ -5688,12 +6096,14 @@ export type User_Role_Max_Fields = {
   value?: Maybe<Scalars['String']['output']>;
 };
 
+
 /** aggregate min on columns */
 export type User_Role_Min_Fields = {
   __typename?: 'user_role_min_fields';
   description?: Maybe<Scalars['String']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
+
 
 /** response of any mutation on the table "user_role" */
 export type User_Role_Mutation_Response = {
@@ -5730,14 +6140,6 @@ export type User_Role_Pk_Columns_Input = {
   value: Scalars['String']['input'];
 };
 
-/** select columns of table "user_role" */
-export enum User_Role_Select_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
-
 /** input type for updating data in table "user_role" */
 export type User_Role_Set_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
@@ -5752,25 +6154,36 @@ export type User_Role_Stream_Cursor_Input = {
   ordering?: InputMaybe<Cursor_Ordering>;
 };
 
+
 /** Initial value of the column from where the streaming should start */
 export type User_Role_Stream_Cursor_Value_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "user_role" */
-export enum User_Role_Update_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
-
 export type User_Role_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<User_Role_Set_Input>;
   /** filter the rows which have to be updated */
   where: User_Role_Bool_Exp;
+};
+
+/** columns and relationships of "user_role" */
+export type User_RoleUsers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
+};
+
+/** columns and relationships of "user_role" */
+export type User_RoleUsersArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** columns and relationships of "user_status" */
@@ -5782,26 +6195,6 @@ export type User_Status = {
   /** An aggregate relationship */
   users_aggregate: Users_Aggregate;
   value: Scalars['String']['output'];
-};
-
-
-/** columns and relationships of "user_status" */
-export type User_StatusUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-/** columns and relationships of "user_status" */
-export type User_StatusUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** aggregated selection of "user_status" */
@@ -5819,7 +6212,6 @@ export type User_Status_Aggregate_Fields = {
   min?: Maybe<User_Status_Min_Fields>;
 };
 
-
 /** aggregate fields of "user_status" */
 export type User_Status_Aggregate_FieldsCountArgs = {
   columns?: InputMaybe<Array<User_Status_Select_Column>>;
@@ -5836,19 +6228,6 @@ export type User_Status_Bool_Exp = {
   users_aggregate?: InputMaybe<Users_Aggregate_Bool_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
-
-/** unique or primary key constraints on table "user_status" */
-export enum User_Status_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  UserStatusPkey = 'user_status_pkey'
-}
-
-export enum User_Status_Enum {
-  /** Currently active and able to log in */
-  Active = 'active',
-  /** Inactive but can be reactivated */
-  Inactive = 'inactive'
-}
 
 /** Boolean expression to compare columns of type "user_status_enum". All fields are combined with logical 'AND'. */
 export type User_Status_Enum_Comparison_Exp = {
@@ -5915,14 +6294,6 @@ export type User_Status_Pk_Columns_Input = {
   value: Scalars['String']['input'];
 };
 
-/** select columns of table "user_status" */
-export enum User_Status_Select_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
-
 /** input type for updating data in table "user_status" */
 export type User_Status_Set_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
@@ -5943,19 +6314,29 @@ export type User_Status_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "user_status" */
-export enum User_Status_Update_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
-
 export type User_Status_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<User_Status_Set_Input>;
   /** filter the rows which have to be updated */
   where: User_Status_Bool_Exp;
+};
+
+/** columns and relationships of "user_status" */
+export type User_StatusUsers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
+};
+
+/** columns and relationships of "user_status" */
+export type User_StatusUsersArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** columns and relationships of "users" */
@@ -5997,86 +6378,6 @@ export type Users = {
   /** An object relationship */
   user_status: User_Status;
   venues_created: Scalars['Int']['output'];
-};
-
-
-/** columns and relationships of "users" */
-export type UsersAccountsArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersAccounts_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersEventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersEvents_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersOwned_EventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersOwned_Events_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersSessionsArgs = {
-  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Sessions_Order_By>>;
-  where?: InputMaybe<Sessions_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersSessions_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Sessions_Order_By>>;
-  where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
 /** aggregated selection of "users" */
@@ -6128,7 +6429,6 @@ export type Users_Aggregate_Fields = {
   var_samp?: Maybe<Users_Var_Samp_Fields>;
   variance?: Maybe<Users_Variance_Fields>;
 };
-
 
 /** aggregate fields of "users" */
 export type Users_Aggregate_FieldsCountArgs = {
@@ -6211,14 +6511,6 @@ export type Users_Bool_Exp = {
   user_status?: InputMaybe<User_Status_Bool_Exp>;
   venues_created?: InputMaybe<Int_Comparison_Exp>;
 };
-
-/** unique or primary key constraints on table "users" */
-export enum Users_Constraint {
-  /** unique or primary key constraint on columns "email" */
-  UsersEmailKey = 'users_email_key',
-  /** unique or primary key constraint on columns "id" */
-  UsersPkey = 'users_pkey'
-}
 
 /** input type for incrementing numeric columns in table "users" */
 export type Users_Inc_Input = {
@@ -6309,6 +6601,7 @@ export type Users_Min_Fields = {
   venues_created?: Maybe<Scalars['Int']['output']>;
 };
 
+
 /** order by min() on columns of table "users" */
 export type Users_Min_Order_By = {
   city?: InputMaybe<Order_By>;
@@ -6325,6 +6618,7 @@ export type Users_Min_Order_By = {
   thank_you_count?: InputMaybe<Order_By>;
   venues_created?: InputMaybe<Order_By>;
 };
+
 
 /** response of any mutation on the table "users" */
 export type Users_Mutation_Response = {
@@ -6348,6 +6642,7 @@ export type Users_On_Conflict = {
   update_columns?: Array<Users_Update_Column>;
   where?: InputMaybe<Users_Bool_Exp>;
 };
+
 
 /** Ordering options when selecting data from "users". */
 export type Users_Order_By = {
@@ -6379,54 +6674,6 @@ export type Users_Order_By = {
 export type Users_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
 };
-
-/** select columns of table "users" */
-export enum Users_Select_Column {
-  /** column name */
-  City = 'city',
-  /** column name */
-  Email = 'email',
-  /** column name */
-  EmailVerified = 'emailVerified',
-  /** column name */
-  EventsCreated = 'events_created',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Image = 'image',
-  /** column name */
-  IsVerifiedContributor = 'is_verified_contributor',
-  /** column name */
-  LastActivityAt = 'last_activity_at',
-  /** column name */
-  Level = 'level',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  Points = 'points',
-  /** column name */
-  ReviewsCreated = 'reviews_created',
-  /** column name */
-  Role = 'role',
-  /** column name */
-  Status = 'status',
-  /** column name */
-  ThankYouCount = 'thank_you_count',
-  /** column name */
-  VenuesCreated = 'venues_created'
-}
-
-/** select "users_aggregate_bool_exp_bool_and_arguments_columns" columns of table "users" */
-export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  IsVerifiedContributor = 'is_verified_contributor'
-}
-
-/** select "users_aggregate_bool_exp_bool_or_arguments_columns" columns of table "users" */
-export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  IsVerifiedContributor = 'is_verified_contributor'
-}
 
 /** input type for updating data in table "users" */
 export type Users_Set_Input = {
@@ -6560,42 +6807,6 @@ export type Users_Sum_Order_By = {
   venues_created?: InputMaybe<Order_By>;
 };
 
-/** update columns of table "users" */
-export enum Users_Update_Column {
-  /** column name */
-  City = 'city',
-  /** column name */
-  Email = 'email',
-  /** column name */
-  EmailVerified = 'emailVerified',
-  /** column name */
-  EventsCreated = 'events_created',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Image = 'image',
-  /** column name */
-  IsVerifiedContributor = 'is_verified_contributor',
-  /** column name */
-  LastActivityAt = 'last_activity_at',
-  /** column name */
-  Level = 'level',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  Points = 'points',
-  /** column name */
-  ReviewsCreated = 'reviews_created',
-  /** column name */
-  Role = 'role',
-  /** column name */
-  Status = 'status',
-  /** column name */
-  ThankYouCount = 'thank_you_count',
-  /** column name */
-  VenuesCreated = 'venues_created'
-}
-
 export type Users_Updates = {
   /** increments the numeric columns with given value of the filtered values */
   _inc?: InputMaybe<Users_Inc_Input>;
@@ -6668,6 +6879,81 @@ export type Users_Variance_Order_By = {
   venues_created?: InputMaybe<Order_By>;
 };
 
+
+/** columns and relationships of "users" */
+export type UsersAccounts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersAccountsArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersEvents_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersEventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersOwned_Events_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersOwned_EventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersSessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Sessions_Order_By>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersSessionsArgs = {
+  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Sessions_Order_By>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
+};
+
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
 export type Uuid_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['uuid']['input']>;
@@ -6691,26 +6977,6 @@ export type Venue_Category = {
   venues_aggregate: Venues_Aggregate;
 };
 
-
-/** columns and relationships of "venue_category" */
-export type Venue_CategoryVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
-};
-
-
-/** columns and relationships of "venue_category" */
-export type Venue_CategoryVenues_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
-};
-
 /** aggregated selection of "venue_category" */
 export type Venue_Category_Aggregate = {
   __typename?: 'venue_category_aggregate';
@@ -6725,7 +6991,6 @@ export type Venue_Category_Aggregate_Fields = {
   max?: Maybe<Venue_Category_Max_Fields>;
   min?: Maybe<Venue_Category_Min_Fields>;
 };
-
 
 /** aggregate fields of "venue_category" */
 export type Venue_Category_Aggregate_FieldsCountArgs = {
@@ -6742,30 +7007,6 @@ export type Venue_Category_Bool_Exp = {
   venues?: InputMaybe<Venues_Bool_Exp>;
   venues_aggregate?: InputMaybe<Venues_Aggregate_Bool_Exp>;
 };
-
-/** unique or primary key constraints on table "venue_category" */
-export enum Venue_Category_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  VenueCategoryPkey = 'venue_category_pkey'
-}
-
-export enum Venue_Category_Enum {
-  Accommodation = 'ACCOMMODATION',
-  BeautySalon = 'BEAUTY_SALON',
-  Cafe = 'CAFE',
-  Catering = 'CATERING',
-  Church = 'CHURCH',
-  Club = 'CLUB',
-  CulturalCentre = 'CULTURAL_CENTRE',
-  Delivery = 'DELIVERY',
-  DentalClinic = 'DENTAL_CLINIC',
-  GroceryStore = 'GROCERY_STORE',
-  Library = 'LIBRARY',
-  Organization = 'ORGANIZATION',
-  Restaurant = 'RESTAURANT',
-  School = 'SCHOOL',
-  Shop = 'SHOP'
-}
 
 /** Boolean expression to compare columns of type "venue_category_enum". All fields are combined with logical 'AND'. */
 export type Venue_Category_Enum_Comparison_Exp = {
@@ -6828,16 +7069,11 @@ export type Venue_Category_Pk_Columns_Input = {
   value: Scalars['String']['input'];
 };
 
-/** select columns of table "venue_category" */
-export enum Venue_Category_Select_Column {
-  /** column name */
-  Value = 'value'
-}
-
 /** input type for updating data in table "venue_category" */
 export type Venue_Category_Set_Input = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** Streaming cursor of the table "venue_category" */
 export type Venue_Category_Stream_Cursor_Input = {
@@ -6847,22 +7083,36 @@ export type Venue_Category_Stream_Cursor_Input = {
   ordering?: InputMaybe<Cursor_Ordering>;
 };
 
+
 /** Initial value of the column from where the streaming should start */
 export type Venue_Category_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "venue_category" */
-export enum Venue_Category_Update_Column {
-  /** column name */
-  Value = 'value'
-}
 
 export type Venue_Category_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Venue_Category_Set_Input>;
   /** filter the rows which have to be updated */
   where: Venue_Category_Bool_Exp;
+};
+
+/** columns and relationships of "venue_category" */
+export type Venue_CategoryVenues_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+/** columns and relationships of "venue_category" */
+export type Venue_CategoryVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
 };
 
 /** columns and relationships of "venue_status" */
@@ -6876,32 +7126,13 @@ export type Venue_Status = {
   venues_aggregate: Venues_Aggregate;
 };
 
-
-/** columns and relationships of "venue_status" */
-export type Venue_StatusVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
-};
-
-
-/** columns and relationships of "venue_status" */
-export type Venue_StatusVenues_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
-};
-
 /** aggregated selection of "venue_status" */
 export type Venue_Status_Aggregate = {
   __typename?: 'venue_status_aggregate';
   aggregate?: Maybe<Venue_Status_Aggregate_Fields>;
   nodes: Array<Venue_Status>;
 };
+
 
 /** aggregate fields of "venue_status" */
 export type Venue_Status_Aggregate_Fields = {
@@ -6910,7 +7141,6 @@ export type Venue_Status_Aggregate_Fields = {
   max?: Maybe<Venue_Status_Max_Fields>;
   min?: Maybe<Venue_Status_Min_Fields>;
 };
-
 
 /** aggregate fields of "venue_status" */
 export type Venue_Status_Aggregate_FieldsCountArgs = {
@@ -6928,25 +7158,6 @@ export type Venue_Status_Bool_Exp = {
   venues?: InputMaybe<Venues_Bool_Exp>;
   venues_aggregate?: InputMaybe<Venues_Aggregate_Bool_Exp>;
 };
-
-/** unique or primary key constraints on table "venue_status" */
-export enum Venue_Status_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  VenueStatusPkey = 'venue_status_pkey'
-}
-
-export enum Venue_Status_Enum {
-  /** Verified and visible to the public */
-  Active = 'ACTIVE',
-  /** No longer active but kept for reference */
-  Archived = 'ARCHIVED',
-  /** Temporarily hidden from public view */
-  Hidden = 'HIDDEN',
-  /** Submitted but not yet reviewed */
-  Pending = 'PENDING',
-  /** Rejected by moderator/admin */
-  Rejected = 'REJECTED'
-}
 
 /** Boolean expression to compare columns of type "venue_status_enum". All fields are combined with logical 'AND'. */
 export type Venue_Status_Enum_Comparison_Exp = {
@@ -7013,14 +7224,6 @@ export type Venue_Status_Pk_Columns_Input = {
   value: Scalars['String']['input'];
 };
 
-/** select columns of table "venue_status" */
-export enum Venue_Status_Select_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
-
 /** input type for updating data in table "venue_status" */
 export type Venue_Status_Set_Input = {
   description?: InputMaybe<Scalars['String']['input']>;
@@ -7041,20 +7244,32 @@ export type Venue_Status_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "venue_status" */
-export enum Venue_Status_Update_Column {
-  /** column name */
-  Description = 'description',
-  /** column name */
-  Value = 'value'
-}
-
 export type Venue_Status_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Venue_Status_Set_Input>;
   /** filter the rows which have to be updated */
   where: Venue_Status_Bool_Exp;
 };
+
+/** columns and relationships of "venue_status" */
+export type Venue_StatusVenues_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+/** columns and relationships of "venue_status" */
+export type Venue_StatusVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+export type VenueFieldsFragment = { __typename?: 'venues', address?: null | string, category: Venue_Category_Enum, chain?: { __typename?: 'chains', chain?: { __typename?: 'chains', chains: Array<{ __typename?: 'chains', country?: null | string, id: UUID, name: string, slug: string, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null }; country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, website?: null | string, } | null, country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, id: UUID, logo?: null | string, name: string, phone_numbers?: Array<string> | null, slug: string, social_links: Json, venues: Array<{ __typename?: 'venues', city?: null | string, country?: null | string; id: UUID, name: string, slug: string, }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }; website?: null | string, } | null; city?: null | string, country?: null | string, description_en?: null | string, description_uk?: null | string, emails?: Array<string> | null, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, geo?: Geography | null, id: UUID, images?: Array<string> | null, logo?: null | string, name: string, owner_id?: null | UUID, phone_numbers?: Array<string> | null, slug: string, social_links: Json, status: Venue_Status_Enum, user_id?: null | UUID, website?: null | string, };
 
 /** columns and relationships of "venues" */
 export type Venues = {
@@ -7097,32 +7312,6 @@ export type Venues = {
   /** An object relationship */
   venue_status: Venue_Status;
   website?: Maybe<Scalars['String']['output']>;
-};
-
-
-/** columns and relationships of "venues" */
-export type VenuesEventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-
-/** columns and relationships of "venues" */
-export type VenuesEvents_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-
-/** columns and relationships of "venues" */
-export type VenuesSocial_LinksArgs = {
-  path?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregated selection of "venues" */
@@ -7209,14 +7398,6 @@ export type Venues_Bool_Exp = {
   venue_status?: InputMaybe<Venue_Status_Bool_Exp>;
   website?: InputMaybe<String_Comparison_Exp>;
 };
-
-/** unique or primary key constraints on table "venues" */
-export enum Venues_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  VenuePkey = 'venue_pkey',
-  /** unique or primary key constraint on columns "slug" */
-  VenueSlugKey = 'venue_slug_key'
-}
 
 /** input type for inserting data into table "venues" */
 export type Venues_Insert_Input = {
@@ -7412,58 +7593,6 @@ export type Venues_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
 };
 
-/** select columns of table "venues" */
-export enum Venues_Select_Column {
-  /** column name */
-  Address = 'address',
-  /** column name */
-  Area = 'area',
-  /** column name */
-  Category = 'category',
-  /** column name */
-  ChainId = 'chain_id',
-  /** column name */
-  City = 'city',
-  /** column name */
-  Country = 'country',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  DescriptionEn = 'description_en',
-  /** column name */
-  DescriptionUk = 'description_uk',
-  /** column name */
-  Emails = 'emails',
-  /** column name */
-  Geo = 'geo',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Images = 'images',
-  /** column name */
-  Logo = 'logo',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  OwnerId = 'owner_id',
-  /** column name */
-  PhoneNumbers = 'phone_numbers',
-  /** column name */
-  Postcode = 'postcode',
-  /** column name */
-  Slug = 'slug',
-  /** column name */
-  SocialLinks = 'social_links',
-  /** column name */
-  Status = 'status',
-  /** column name */
-  UpdatedAt = 'updated_at',
-  /** column name */
-  UserId = 'user_id',
-  /** column name */
-  Website = 'website'
-}
-
 /** input type for updating data in table "venues" */
 export type Venues_Set_Input = {
   address?: InputMaybe<Scalars['String']['input']>;
@@ -7528,63 +7657,36 @@ export type Venues_Stream_Cursor_Value_Input = {
   website?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "venues" */
-export enum Venues_Update_Column {
-  /** column name */
-  Address = 'address',
-  /** column name */
-  Area = 'area',
-  /** column name */
-  Category = 'category',
-  /** column name */
-  ChainId = 'chain_id',
-  /** column name */
-  City = 'city',
-  /** column name */
-  Country = 'country',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  DescriptionEn = 'description_en',
-  /** column name */
-  DescriptionUk = 'description_uk',
-  /** column name */
-  Emails = 'emails',
-  /** column name */
-  Geo = 'geo',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Images = 'images',
-  /** column name */
-  Logo = 'logo',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  OwnerId = 'owner_id',
-  /** column name */
-  PhoneNumbers = 'phone_numbers',
-  /** column name */
-  Postcode = 'postcode',
-  /** column name */
-  Slug = 'slug',
-  /** column name */
-  SocialLinks = 'social_links',
-  /** column name */
-  Status = 'status',
-  /** column name */
-  UpdatedAt = 'updated_at',
-  /** column name */
-  UserId = 'user_id',
-  /** column name */
-  Website = 'website'
-}
 
 export type Venues_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Venues_Set_Input>;
   /** filter the rows which have to be updated */
   where: Venues_Bool_Exp;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesEvents_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesEventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+
+/** columns and relationships of "venues" */
+export type VenuesSocial_LinksArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** columns and relationships of "verification_tokens" */
@@ -7594,6 +7696,7 @@ export type Verification_Tokens = {
   identifier: Scalars['String']['output'];
   token: Scalars['String']['output'];
 };
+
 
 /** aggregated selection of "verification_tokens" */
 export type Verification_Tokens_Aggregate = {
@@ -7627,12 +7730,6 @@ export type Verification_Tokens_Bool_Exp = {
   token?: InputMaybe<String_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "verification_tokens" */
-export enum Verification_Tokens_Constraint {
-  /** unique or primary key constraint on columns "token" */
-  VerificationTokensPkey = 'verification_tokens_pkey'
-}
-
 /** input type for inserting data into table "verification_tokens" */
 export type Verification_Tokens_Insert_Input = {
   expires?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7665,6 +7762,7 @@ export type Verification_Tokens_Mutation_Response = {
   returning: Array<Verification_Tokens>;
 };
 
+
 /** on_conflict condition type for table "verification_tokens" */
 export type Verification_Tokens_On_Conflict = {
   constraint: Verification_Tokens_Constraint;
@@ -7679,20 +7777,11 @@ export type Verification_Tokens_Order_By = {
   token?: InputMaybe<Order_By>;
 };
 
+
 /** primary key columns input for table: verification_tokens */
 export type Verification_Tokens_Pk_Columns_Input = {
   token: Scalars['String']['input'];
 };
-
-/** select columns of table "verification_tokens" */
-export enum Verification_Tokens_Select_Column {
-  /** column name */
-  Expires = 'expires',
-  /** column name */
-  Identifier = 'identifier',
-  /** column name */
-  Token = 'token'
-}
 
 /** input type for updating data in table "verification_tokens" */
 export type Verification_Tokens_Set_Input = {
@@ -7700,6 +7789,7 @@ export type Verification_Tokens_Set_Input = {
   identifier?: InputMaybe<Scalars['String']['input']>;
   token?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** Streaming cursor of the table "verification_tokens" */
 export type Verification_Tokens_Stream_Cursor_Input = {
@@ -7716,15 +7806,6 @@ export type Verification_Tokens_Stream_Cursor_Value_Input = {
   token?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "verification_tokens" */
-export enum Verification_Tokens_Update_Column {
-  /** column name */
-  Expires = 'expires',
-  /** column name */
-  Identifier = 'identifier',
-  /** column name */
-  Token = 'token'
-}
 
 export type Verification_Tokens_Updates = {
   /** sets the columns of the filtered rows to the given values */
@@ -7732,86 +7813,6 @@ export type Verification_Tokens_Updates = {
   /** filter the rows which have to be updated */
   where: Verification_Tokens_Bool_Exp;
 };
-
-export type GetUserProfileQueryVariables = Exact<{
-  id: Scalars['uuid']['input'];
-}>;
-
-
-export type GetUserProfileQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', id: UUID, name?: string | null, email: string, role: User_Role_Enum, status: User_Status_Enum, image?: string | null, points: number, venues_created: number, events_created: number, level: number } | null };
-
-export type EventFieldsFragment = { __typename?: 'events', id: UUID, title_en: string, title_uk: string, slug: string, description_en?: string | null, description_uk?: string | null, type: Event_Type_Enum, price_type: Price_Type_Enum, price_amount?: Numeric | null, price_currency?: string | null, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, external_url?: string | null, custom_location_address?: string | null, custom_location_name?: string | null, area?: string | null, city?: string | null, country?: string | null, geo?: Geography | null, images?: Array<string> | null, registration_url?: string | null, registration_required: boolean, capacity?: number | null, age_restriction?: string | null, language?: Array<string> | null, accessibility_info?: string | null, social_links?: Json | null, status: Event_Status_Enum, created_at: Timestamp, is_recurring: boolean, recurrence_rule?: string | null, organizer_name?: string | null, organizer_phone_number?: string | null, organizer_email?: string | null, owner_id?: UUID | null, venue_id?: UUID | null, user_id: UUID, venue?: { __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null, logo?: string | null, category: Venue_Category_Enum, geo?: Geography | null } | null };
-
-export type GetPublicEventsQueryVariables = Exact<{
-  where: Events_Bool_Exp;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By> | Events_Order_By>;
-}>;
-
-
-export type GetPublicEventsQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', id: UUID, title_en: string, title_uk: string, slug: string, description_en?: string | null, description_uk?: string | null, type: Event_Type_Enum, price_type: Price_Type_Enum, price_amount?: Numeric | null, price_currency?: string | null, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, external_url?: string | null, custom_location_address?: string | null, custom_location_name?: string | null, area?: string | null, city?: string | null, country?: string | null, geo?: Geography | null, images?: Array<string> | null, registration_url?: string | null, registration_required: boolean, capacity?: number | null, age_restriction?: string | null, language?: Array<string> | null, accessibility_info?: string | null, social_links?: Json | null, status: Event_Status_Enum, created_at: Timestamp, is_recurring: boolean, recurrence_rule?: string | null, organizer_name?: string | null, organizer_phone_number?: string | null, organizer_email?: string | null, owner_id?: UUID | null, venue_id?: UUID | null, user_id: UUID, venue?: { __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null, logo?: string | null, category: Venue_Category_Enum, geo?: Geography | null } | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, total: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null } };
-
-export type GetUserEventsQueryVariables = Exact<{
-  where: Events_Bool_Exp;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Events_Order_By> | Events_Order_By>;
-}>;
-
-
-export type GetUserEventsQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', updated_at: Timestamp, id: UUID, title_en: string, title_uk: string, slug: string, description_en?: string | null, description_uk?: string | null, type: Event_Type_Enum, price_type: Price_Type_Enum, price_amount?: Numeric | null, price_currency?: string | null, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, external_url?: string | null, custom_location_address?: string | null, custom_location_name?: string | null, area?: string | null, city?: string | null, country?: string | null, geo?: Geography | null, images?: Array<string> | null, registration_url?: string | null, registration_required: boolean, capacity?: number | null, age_restriction?: string | null, language?: Array<string> | null, accessibility_info?: string | null, social_links?: Json | null, status: Event_Status_Enum, created_at: Timestamp, is_recurring: boolean, recurrence_rule?: string | null, organizer_name?: string | null, organizer_phone_number?: string | null, organizer_email?: string | null, owner_id?: UUID | null, venue_id?: UUID | null, user_id: UUID, owner?: { __typename?: 'users', id: UUID, name?: string | null, image?: string | null } | null, venue?: { __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null, logo?: string | null, category: Venue_Category_Enum, geo?: Geography | null } | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null } };
-
-export type UpdateEventStatusMutationVariables = Exact<{
-  id: Scalars['uuid']['input'];
-  status: Event_Status_Enum;
-}>;
-
-
-export type UpdateEventStatusMutation = { __typename?: 'mutation_root', update_events_by_pk?: { __typename?: 'events', id: UUID, status: Event_Status_Enum, updated_at: Timestamp } | null };
-
-export type ChainFieldsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json };
-
-export type ChainWithVenuesFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export type ChainWithChainsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } };
-
-export type VenueFieldsFragment = { __typename?: 'venues', id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null };
-
-export type GetPublicVenuesQueryVariables = Exact<{
-  where: Venues_Bool_Exp;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
-}>;
-
-
-export type GetPublicVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }, total: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export type GetUserVenuesQueryVariables = Exact<{
-  where: Venues_Bool_Exp;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
-}>;
-
-
-export type GetUserVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', postcode?: string | null, created_at: Timestamp, id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export type GetAdminVenuesQueryVariables = Exact<{
-  where: Venues_Bool_Exp;
-}>;
-
-
-export type GetAdminVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', created_at: Timestamp, id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export type UpdateVenueStatusMutationVariables = Exact<{
-  id: Scalars['uuid']['input'];
-  status: Venue_Status_Enum;
-}>;
-
-
-export type UpdateVenueStatusMutation = { __typename?: 'mutation_root', update_venues_by_pk?: { __typename?: 'venues', id: UUID, status: Venue_Status_Enum, updated_at: Timestamp } | null };
 
 export const EventFieldsFragmentDoc = gql`
     fragment EventFields on events {
@@ -7977,6 +7978,14 @@ export const GetUserProfileDocument = gql`
 }
     `;
 
+export type GetUserProfileLazyQueryHookResult = ReturnType<typeof useGetUserProfileLazyQuery>;
+export type GetUserProfileQueryHookResult = ReturnType<typeof useGetUserProfileQuery>;
+export type GetUserProfileQueryResult = Apollo.QueryResult<GetUserProfileQuery, GetUserProfileQueryVariables>;
+export type GetUserProfileSuspenseQueryHookResult = ReturnType<typeof useGetUserProfileSuspenseQuery>;
+export function useGetUserProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
+        }
 /**
  * __useGetUserProfileQuery__
  *
@@ -7993,22 +8002,14 @@ export const GetUserProfileDocument = gql`
  *   },
  * });
  */
-export function useGetUserProfileQuery(baseOptions: Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables> & ({ variables: GetUserProfileQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetUserProfileQuery(baseOptions: ({ skip: boolean; } | { skip?: boolean; variables: GetUserProfileQueryVariables; }) & Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables> ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
       }
-export function useGetUserProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
-        }
 export function useGetUserProfileSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
         }
-export type GetUserProfileQueryHookResult = ReturnType<typeof useGetUserProfileQuery>;
-export type GetUserProfileLazyQueryHookResult = ReturnType<typeof useGetUserProfileLazyQuery>;
-export type GetUserProfileSuspenseQueryHookResult = ReturnType<typeof useGetUserProfileSuspenseQuery>;
-export type GetUserProfileQueryResult = Apollo.QueryResult<GetUserProfileQuery, GetUserProfileQueryVariables>;
 export const GetPublicEventsDocument = gql`
     query GetPublicEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
   events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -8027,6 +8028,14 @@ export const GetPublicEventsDocument = gql`
 }
     ${EventFieldsFragmentDoc}`;
 
+export type GetPublicEventsLazyQueryHookResult = ReturnType<typeof useGetPublicEventsLazyQuery>;
+export type GetPublicEventsQueryHookResult = ReturnType<typeof useGetPublicEventsQuery>;
+export type GetPublicEventsQueryResult = Apollo.QueryResult<GetPublicEventsQuery, GetPublicEventsQueryVariables>;
+export type GetPublicEventsSuspenseQueryHookResult = ReturnType<typeof useGetPublicEventsSuspenseQuery>;
+export function useGetPublicEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicEventsQuery, GetPublicEventsQueryVariables>(GetPublicEventsDocument, options);
+        }
 /**
  * __useGetPublicEventsQuery__
  *
@@ -8046,22 +8055,14 @@ export const GetPublicEventsDocument = gql`
  *   },
  * });
  */
-export function useGetPublicEventsQuery(baseOptions: Apollo.QueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables> & ({ variables: GetPublicEventsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetPublicEventsQuery(baseOptions: ({ skip: boolean; } | { skip?: boolean; variables: GetPublicEventsQueryVariables; }) & Apollo.QueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables> ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetPublicEventsQuery, GetPublicEventsQueryVariables>(GetPublicEventsDocument, options);
       }
-export function useGetPublicEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPublicEventsQuery, GetPublicEventsQueryVariables>(GetPublicEventsDocument, options);
-        }
 export function useGetPublicEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetPublicEventsQuery, GetPublicEventsQueryVariables>(GetPublicEventsDocument, options);
         }
-export type GetPublicEventsQueryHookResult = ReturnType<typeof useGetPublicEventsQuery>;
-export type GetPublicEventsLazyQueryHookResult = ReturnType<typeof useGetPublicEventsLazyQuery>;
-export type GetPublicEventsSuspenseQueryHookResult = ReturnType<typeof useGetPublicEventsSuspenseQuery>;
-export type GetPublicEventsQueryResult = Apollo.QueryResult<GetPublicEventsQuery, GetPublicEventsQueryVariables>;
 export const GetUserEventsDocument = gql`
     query GetUserEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
   events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -8081,6 +8082,14 @@ export const GetUserEventsDocument = gql`
 }
     ${EventFieldsFragmentDoc}`;
 
+export type GetUserEventsLazyQueryHookResult = ReturnType<typeof useGetUserEventsLazyQuery>;
+export type GetUserEventsQueryHookResult = ReturnType<typeof useGetUserEventsQuery>;
+export type GetUserEventsQueryResult = Apollo.QueryResult<GetUserEventsQuery, GetUserEventsQueryVariables>;
+export type GetUserEventsSuspenseQueryHookResult = ReturnType<typeof useGetUserEventsSuspenseQuery>;
+export function useGetUserEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserEventsQuery, GetUserEventsQueryVariables>(GetUserEventsDocument, options);
+        }
 /**
  * __useGetUserEventsQuery__
  *
@@ -8100,22 +8109,14 @@ export const GetUserEventsDocument = gql`
  *   },
  * });
  */
-export function useGetUserEventsQuery(baseOptions: Apollo.QueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables> & ({ variables: GetUserEventsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetUserEventsQuery(baseOptions: ({ skip: boolean; } | { skip?: boolean; variables: GetUserEventsQueryVariables; }) & Apollo.QueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables> ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetUserEventsQuery, GetUserEventsQueryVariables>(GetUserEventsDocument, options);
       }
-export function useGetUserEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserEventsQuery, GetUserEventsQueryVariables>(GetUserEventsDocument, options);
-        }
 export function useGetUserEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetUserEventsQuery, GetUserEventsQueryVariables>(GetUserEventsDocument, options);
         }
-export type GetUserEventsQueryHookResult = ReturnType<typeof useGetUserEventsQuery>;
-export type GetUserEventsLazyQueryHookResult = ReturnType<typeof useGetUserEventsLazyQuery>;
-export type GetUserEventsSuspenseQueryHookResult = ReturnType<typeof useGetUserEventsSuspenseQuery>;
-export type GetUserEventsQueryResult = Apollo.QueryResult<GetUserEventsQuery, GetUserEventsQueryVariables>;
 export const UpdateEventStatusDocument = gql`
     mutation UpdateEventStatus($id: uuid!, $status: event_status_enum!) {
   update_events_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
@@ -8127,6 +8128,9 @@ export const UpdateEventStatusDocument = gql`
     `;
 export type UpdateEventStatusMutationFn = Apollo.MutationFunction<UpdateEventStatusMutation, UpdateEventStatusMutationVariables>;
 
+export type UpdateEventStatusMutationHookResult = ReturnType<typeof useUpdateEventStatusMutation>;
+export type UpdateEventStatusMutationOptions = Apollo.BaseMutationOptions<UpdateEventStatusMutation, UpdateEventStatusMutationVariables>;
+export type UpdateEventStatusMutationResult = Apollo.MutationResult<UpdateEventStatusMutation>;
 /**
  * __useUpdateEventStatusMutation__
  *
@@ -8149,9 +8153,6 @@ export function useUpdateEventStatusMutation(baseOptions?: Apollo.MutationHookOp
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useMutation<UpdateEventStatusMutation, UpdateEventStatusMutationVariables>(UpdateEventStatusDocument, options);
       }
-export type UpdateEventStatusMutationHookResult = ReturnType<typeof useUpdateEventStatusMutation>;
-export type UpdateEventStatusMutationResult = Apollo.MutationResult<UpdateEventStatusMutation>;
-export type UpdateEventStatusMutationOptions = Apollo.BaseMutationOptions<UpdateEventStatusMutation, UpdateEventStatusMutationVariables>;
 export const GetPublicVenuesDocument = gql`
     query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
   venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -8170,6 +8171,14 @@ export const GetPublicVenuesDocument = gql`
 }
     ${VenueFieldsFragmentDoc}`;
 
+export type GetPublicVenuesLazyQueryHookResult = ReturnType<typeof useGetPublicVenuesLazyQuery>;
+export type GetPublicVenuesQueryHookResult = ReturnType<typeof useGetPublicVenuesQuery>;
+export type GetPublicVenuesQueryResult = Apollo.QueryResult<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>;
+export type GetPublicVenuesSuspenseQueryHookResult = ReturnType<typeof useGetPublicVenuesSuspenseQuery>;
+export function useGetPublicVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
+        }
 /**
  * __useGetPublicVenuesQuery__
  *
@@ -8189,22 +8198,14 @@ export const GetPublicVenuesDocument = gql`
  *   },
  * });
  */
-export function useGetPublicVenuesQuery(baseOptions: Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables> & ({ variables: GetPublicVenuesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetPublicVenuesQuery(baseOptions: ({ skip: boolean; } | { skip?: boolean; variables: GetPublicVenuesQueryVariables; }) & Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables> ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
       }
-export function useGetPublicVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
-        }
 export function useGetPublicVenuesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
         }
-export type GetPublicVenuesQueryHookResult = ReturnType<typeof useGetPublicVenuesQuery>;
-export type GetPublicVenuesLazyQueryHookResult = ReturnType<typeof useGetPublicVenuesLazyQuery>;
-export type GetPublicVenuesSuspenseQueryHookResult = ReturnType<typeof useGetPublicVenuesSuspenseQuery>;
-export type GetPublicVenuesQueryResult = Apollo.QueryResult<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>;
 export const GetUserVenuesDocument = gql`
     query GetUserVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
   venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -8220,6 +8221,14 @@ export const GetUserVenuesDocument = gql`
 }
     ${VenueFieldsFragmentDoc}`;
 
+export type GetUserVenuesLazyQueryHookResult = ReturnType<typeof useGetUserVenuesLazyQuery>;
+export type GetUserVenuesQueryHookResult = ReturnType<typeof useGetUserVenuesQuery>;
+export type GetUserVenuesQueryResult = Apollo.QueryResult<GetUserVenuesQuery, GetUserVenuesQueryVariables>;
+export type GetUserVenuesSuspenseQueryHookResult = ReturnType<typeof useGetUserVenuesSuspenseQuery>;
+export function useGetUserVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
+        }
 /**
  * __useGetUserVenuesQuery__
  *
@@ -8239,22 +8248,14 @@ export const GetUserVenuesDocument = gql`
  *   },
  * });
  */
-export function useGetUserVenuesQuery(baseOptions: Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables> & ({ variables: GetUserVenuesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetUserVenuesQuery(baseOptions: ({ skip: boolean; } | { skip?: boolean; variables: GetUserVenuesQueryVariables; }) & Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables> ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
       }
-export function useGetUserVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
-        }
 export function useGetUserVenuesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
         }
-export type GetUserVenuesQueryHookResult = ReturnType<typeof useGetUserVenuesQuery>;
-export type GetUserVenuesLazyQueryHookResult = ReturnType<typeof useGetUserVenuesLazyQuery>;
-export type GetUserVenuesSuspenseQueryHookResult = ReturnType<typeof useGetUserVenuesSuspenseQuery>;
-export type GetUserVenuesQueryResult = Apollo.QueryResult<GetUserVenuesQuery, GetUserVenuesQueryVariables>;
 export const GetAdminVenuesDocument = gql`
     query GetAdminVenues($where: venues_bool_exp!) {
   venues(where: $where, order_by: {updated_at: desc}) {
@@ -8269,6 +8270,14 @@ export const GetAdminVenuesDocument = gql`
 }
     ${VenueFieldsFragmentDoc}`;
 
+export type GetAdminVenuesLazyQueryHookResult = ReturnType<typeof useGetAdminVenuesLazyQuery>;
+export type GetAdminVenuesQueryHookResult = ReturnType<typeof useGetAdminVenuesQuery>;
+export type GetAdminVenuesQueryResult = Apollo.QueryResult<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>;
+export type GetAdminVenuesSuspenseQueryHookResult = ReturnType<typeof useGetAdminVenuesSuspenseQuery>;
+export function useGetAdminVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
+        }
 /**
  * __useGetAdminVenuesQuery__
  *
@@ -8285,22 +8294,14 @@ export const GetAdminVenuesDocument = gql`
  *   },
  * });
  */
-export function useGetAdminVenuesQuery(baseOptions: Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables> & ({ variables: GetAdminVenuesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetAdminVenuesQuery(baseOptions: ({ skip: boolean; } | { skip?: boolean; variables: GetAdminVenuesQueryVariables; }) & Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables> ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
       }
-export function useGetAdminVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
-        }
 export function useGetAdminVenuesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
         }
-export type GetAdminVenuesQueryHookResult = ReturnType<typeof useGetAdminVenuesQuery>;
-export type GetAdminVenuesLazyQueryHookResult = ReturnType<typeof useGetAdminVenuesLazyQuery>;
-export type GetAdminVenuesSuspenseQueryHookResult = ReturnType<typeof useGetAdminVenuesSuspenseQuery>;
-export type GetAdminVenuesQueryResult = Apollo.QueryResult<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>;
 export const UpdateVenueStatusDocument = gql`
     mutation UpdateVenueStatus($id: uuid!, $status: venue_status_enum!) {
   update_venues_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
@@ -8312,6 +8313,9 @@ export const UpdateVenueStatusDocument = gql`
     `;
 export type UpdateVenueStatusMutationFn = Apollo.MutationFunction<UpdateVenueStatusMutation, UpdateVenueStatusMutationVariables>;
 
+export type UpdateVenueStatusMutationHookResult = ReturnType<typeof useUpdateVenueStatusMutation>;
+export type UpdateVenueStatusMutationOptions = Apollo.BaseMutationOptions<UpdateVenueStatusMutation, UpdateVenueStatusMutationVariables>;
+export type UpdateVenueStatusMutationResult = Apollo.MutationResult<UpdateVenueStatusMutation>;
 /**
  * __useUpdateVenueStatusMutation__
  *
@@ -8334,6 +8338,3 @@ export function useUpdateVenueStatusMutation(baseOptions?: Apollo.MutationHookOp
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useMutation<UpdateVenueStatusMutation, UpdateVenueStatusMutationVariables>(UpdateVenueStatusDocument, options);
       }
-export type UpdateVenueStatusMutationHookResult = ReturnType<typeof useUpdateVenueStatusMutation>;
-export type UpdateVenueStatusMutationResult = Apollo.MutationResult<UpdateVenueStatusMutation>;
-export type UpdateVenueStatusMutationOptions = Apollo.BaseMutationOptions<UpdateVenueStatusMutation, UpdateVenueStatusMutationVariables>;
