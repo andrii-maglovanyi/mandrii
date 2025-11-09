@@ -53,16 +53,24 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
   useEffect(() => {
     if (initialValues.id || !values.name) return;
 
-    const nameWithArea = values.area ? `${values.name} ${values.area?.split(",")[0].trim()}` : values.name;
+    let slugConstructor = values.name;
+
+    if (values.area) {
+      slugConstructor = `${slugConstructor} ${values.area?.split(",")[0].trim()}`;
+    }
+
+    if (values.category) {
+      slugConstructor = `${values.category} ${slugConstructor}`;
+    }
 
     setValues((prev) => ({
       ...prev,
-      slug: slugify(nameWithArea, {
+      slug: slugify(slugConstructor, {
         lower: true,
         strict: true,
       }),
     }));
-  }, [initialValues.id, setValues, values.name, values.area]);
+  }, [initialValues.id, setValues, values.name, values.area, values.category]);
 
   const categoryOptions = Object.values(Venue_Category_Enum).map((value) => {
     const { iconName, label } = constants.categories[value as keyof typeof constants.categories];
