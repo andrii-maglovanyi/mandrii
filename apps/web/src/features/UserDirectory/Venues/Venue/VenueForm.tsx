@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import slugify from "slugify";
 
 import { FormFooter } from "~/components/layout";
-import { Checkbox, Input, Select, TabPane, Tabs } from "~/components/ui";
+import { Checkbox, Input, RichText, Select, TabPane, Tabs } from "~/components/ui";
 import { InitialValuesType, OnFormSubmitHandler, useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -53,7 +53,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
   useEffect(() => {
     if (initialValues.id || !values.name) return;
 
-    const nameWithArea = values.area ? `${values.name} ${values.area}` : values.name;
+    const nameWithArea = values.area ? `${values.name} ${values.area?.split(",")[0].trim()}` : values.name;
 
     setValues((prev) => ({
       ...prev,
@@ -105,11 +105,11 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
             {...getFieldProps("slug")}
             disabled={isBusy || Boolean(initialValues.id)}
           />
-          <p className="mt-1.5 text-sm text-neutral">
+          <RichText as="p" className="mt-1.5 text-sm text-neutral">
             {i18n(
-              "↑ The slug serves as a unique identifier for your venue and must be URL-friendly. Once created, it cannot be changed.",
+              "↑ This is the unique identifier which must be URL-friendly and **at least 10 characters long**. Once created, it cannot be changed.",
             )}
-          </p>
+          </RichText>
         </div>
       </div>
 

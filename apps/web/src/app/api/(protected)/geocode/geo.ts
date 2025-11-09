@@ -121,21 +121,17 @@ const getAreaFromOSM = async (
  */
 const getCombinedAreaFromOSM = async (
   locationData: ReturnType<typeof extractLocationData>,
-): Promise<{ area: null | string; areaSlug: null | string }> => {
+): Promise<{ area: null | string }> => {
   const [enArea, ukArea] = await Promise.all([
     getAreaFromOSM(locationData, true, "en"),
     getAreaFromOSM(locationData, true, "uk"),
   ]);
 
-  // Merge original results
   const allAreas = [...(enArea || []), ...(ukArea || [])];
 
   if (allAreas.length === 0) {
-    return { area: null, areaSlug: null };
+    return { area: null };
   }
-
-  // Pick the first (smallest) area for slug
-  const slugValue = allAreas[0];
 
   // Add accent-free versions
   const withAccentFree = [...allAreas, ...allAreas.map((area) => removeAccents(area))];
@@ -145,7 +141,6 @@ const getCombinedAreaFromOSM = async (
 
   return {
     area: merged.join(", "),
-    areaSlug: slugValue,
   };
 };
 
@@ -172,12 +167,11 @@ export const geocodeAddress = async (address: string, apiKey: string) => {
     const locationData = extractLocationData(googleData);
     if (!locationData) return null;
 
-    const { area, areaSlug } = await getCombinedAreaFromOSM(locationData);
+    const { area } = await getCombinedAreaFromOSM(locationData);
 
     return {
       ...locationData,
       area,
-      areaSlug,
     };
   } catch (error) {
     console.error("Geocoding error:", error);

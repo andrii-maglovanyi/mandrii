@@ -1,8 +1,7 @@
 import { App } from "@slack/bolt";
-import { User } from "next-auth";
 import slackifyMarkdown from "slackify-markdown";
 
-import { Venues } from "~/types";
+import { UserSession, Venues } from "~/types";
 
 import { envName } from "../config/env";
 import { privateConfig } from "../config/private";
@@ -34,9 +33,13 @@ const getMedia = ({ images, logo, name }: Partial<Venues>) => {
 };
 
 export const sendSlackNotification = async (
-  user: User,
+  user: UserSession,
   { category, city, country, description_en, description_uk, id, images, logo, name, slug }: Partial<Venues>,
 ) => {
+  if (user.role === "admin") {
+    return;
+  }
+
   const media = getMedia({ images, logo, name });
 
   const categoryText = category ? constants.categories[category].label.uk : "[no category]";

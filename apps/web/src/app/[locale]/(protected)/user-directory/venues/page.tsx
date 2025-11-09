@@ -8,7 +8,7 @@ const VenuePageLayout = () => {
 
   return (
     <>
-      <Breadcrumbs items={[{ title: i18n("Venues"), url: `/user-directory#Venues` }]} />
+      <Breadcrumbs items={[{ title: i18n("My directory"), url: `/user-directory#Venues` }]} />
       <h1 className={`
         mb-12 text-3xl font-extrabold text-on-surface
         md:text-5xl

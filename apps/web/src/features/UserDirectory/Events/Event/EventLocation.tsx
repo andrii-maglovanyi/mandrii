@@ -13,7 +13,7 @@ import { EventSchema } from "~/lib/validation/event";
 import { useGeocode } from "../../Venues/Venue/hooks";
 
 interface EventLocationProps
-  extends Pick<FormProps<EventSchema["shape"]>, "errors" | "getFieldProps" | "setValues" | "values"> {
+  extends Pick<FormProps<EventSchema["shape"]>, "errors" | "getFieldProps" | "setErrors" | "setValues" | "values"> {
   isBusy: boolean;
   venueOptions: Array<{ label: string; value: string }>;
   venuesLoading: boolean;
@@ -32,6 +32,7 @@ export const EventLocation = ({
   errors,
   getFieldProps,
   isBusy,
+  setErrors,
   setValues,
   values,
   venueOptions,
@@ -111,10 +112,15 @@ export const EventLocation = ({
   const showCustomLocation = !values.venue_id && !values.is_online;
 
   return (
-    <>
-      <RichText as="div" className="py-6 text-sm text-neutral">
-        {i18n("Choose at least one: mark as online event, select a venue, or enter a custom location")}
-      </RichText>
+    <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-5">
+      <div className="flex items-center gap-1 py-6 text-sm text-neutral">
+        <span className="ml-0.5 text-red-500">*</span>
+        <RichText as="span">
+          {i18n(
+            "**Choose at least one!** Mark as online event, select a venue from the list, or enter a custom location name and address.",
+          )}
+        </RichText>
+      </div>
 
       <Checkbox label={i18n("This is an online event")} {...getFieldProps("is_online")} />
 
@@ -122,9 +128,21 @@ export const EventLocation = ({
         <Input
           disabled={isBusy}
           label={i18n("Online event URL")}
-          placeholder="https://zoom.us/j/..."
+          placeholder="https://meet.google.com/..."
+          required={values.is_online}
           type="url"
           {...getFieldProps("external_url")}
+          onBlur={(e) => {
+            getFieldProps("external_url").onBlur();
+
+            // Manually validate since refine won't run until all required fields are filled
+            if (!e.target.value?.trim()) {
+              setErrors((prev) => ({
+                ...prev,
+                external_url: i18n("External URL is required for online events"),
+              }));
+            }
+          }}
         />
       )}
 
@@ -139,7 +157,7 @@ export const EventLocation = ({
 
       {showCustomLocation && (
         <>
-          <Separator className="my-4" />
+          <Separator text={i18n("or")} />
           <RichText as="div" className="py-6 text-sm text-neutral">
             {i18n(
               "**Enter a custom location** if the event isn't at a registered venue. Provide the full address for accurate map placement.",
@@ -270,6 +288,6 @@ export const EventLocation = ({
           )}
         </>
       )}
-    </>
+    </div>
   );
 };

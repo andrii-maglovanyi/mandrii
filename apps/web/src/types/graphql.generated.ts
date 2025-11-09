@@ -3566,7 +3566,7 @@ export type GetUserEventsQuery = {
     organizer_email?: null | string;
     organizer_name?: null | string;
     organizer_phone_number?: null | string;
-    owner?: { __typename?: "users"; id: UUID; image?: null | string; name?: null | string; } | null;
+    owner?: { __typename?: "users"; id: UUID; image?: null | string; name?: null | string } | null;
     owner_id?: null | UUID;
     price_amount?: null | Numeric;
     price_currency?: null | string;
@@ -8360,7 +8360,7 @@ export function useGetUserProfileLazyQuery(
  * });
  */
 export function useGetUserProfileQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables; }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables }) &
     Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8421,7 +8421,7 @@ export function useGetPublicEventsLazyQuery(
  * });
  */
 export function useGetPublicEventsQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicEventsQueryVariables; }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicEventsQueryVariables }) &
     Apollo.QueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8483,7 +8483,7 @@ export function useGetUserEventsLazyQuery(
  * });
  */
 export function useGetUserEventsQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserEventsQueryVariables; }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserEventsQueryVariables }) &
     Apollo.QueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8591,7 +8591,7 @@ export function useGetPublicVenuesLazyQuery(
  * });
  */
 export function useGetPublicVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables; }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables }) &
     Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8649,7 +8649,7 @@ export function useGetUserVenuesLazyQuery(
  * });
  */
 export function useGetUserVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables; }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables }) &
     Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8703,7 +8703,7 @@ export function useGetAdminVenuesLazyQuery(
  * });
  */
 export function useGetAdminVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables; }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables }) &
     Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };

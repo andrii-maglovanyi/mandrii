@@ -8,7 +8,7 @@ const NewEventPageLayout = () => {
 
   return (
     <>
-      <Breadcrumbs items={[{ title: i18n("Events"), url: `/user-directory#Events` }]} />
+      <Breadcrumbs items={[{ title: i18n("My directory"), url: `/user-directory#Events` }]} />
       <h1 className={`
         mb-12 text-3xl font-extrabold text-on-surface
         md:text-5xl

@@ -187,6 +187,9 @@ export const EditEvent = ({ slug }: EventProps) => {
             is_online: Boolean(data?.is_online),
             is_recurring: Boolean(data?.recurrence_rule),
             registration_required: Boolean(data?.registration_required),
+            slug: data?.slug || "",
+            title_en: data?.title_en || "",
+            title_uk: data?.title_uk || "",
             ...(data?.social_links ?? {}),
           }}
           onSubmit={submitEvent}

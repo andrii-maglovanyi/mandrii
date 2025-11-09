@@ -187,6 +187,8 @@ export const EditVenue = ({ slug }: VenueProps) => {
             ...data,
             is_owner: Boolean(data?.owner_id),
             is_physical: Boolean(data?.geo?.coordinates),
+            name: data?.name || "",
+            slug: data?.slug || "",
             ...(data?.social_links ?? {}),
           }}
           onSubmit={submitVenue}

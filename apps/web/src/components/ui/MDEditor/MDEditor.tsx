@@ -12,6 +12,7 @@ export type MDEditorProps = {
   "data-testid"?: string;
   disabled?: boolean;
   error?: string;
+  height?: number;
   id?: string;
   isDark?: boolean;
   label?: string;
@@ -33,6 +34,7 @@ export const MDEditor = forwardRef<HTMLDivElement, Readonly<MDEditorProps>>(
       "data-testid": testId = "md-editor",
       disabled = false,
       error,
+      height = 400,
       id,
       isDark,
       label,
@@ -88,7 +90,7 @@ export const MDEditor = forwardRef<HTMLDivElement, Readonly<MDEditorProps>>(
               return cmd;
             }}
             data-color-mode={isDark ? "dark" : "light"}
-            height={400}
+            height={height}
             onBlur={onBlur}
             onChange={handleMDChange}
             textareaProps={{

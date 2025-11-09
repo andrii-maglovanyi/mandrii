@@ -39,10 +39,10 @@ const Events = () => {
       title: i18n("Status"),
     },
     {
-      dataIndex: "title",
-      key: "title",
+      dataIndex: "title_en",
+      key: "title_en",
       render: (
-        title_uk: unknown,
+        _: unknown,
         {
           city,
           country,
@@ -51,6 +51,7 @@ const Events = () => {
           slug,
           start_date,
           title_en,
+          title_uk,
           venue,
         }: GetPublicEventsQuery["events"][number],
       ) => {
@@ -95,7 +96,7 @@ const Events = () => {
               href={`/events/${slug}`}
               target="_blank"
             >
-              {String(title_uk)} ({title_en})
+              {locale === "uk" ? title_uk : title_en}
               <ArrowUpRight
                 className={`
                   mb-1.5 ml-0.5 inline-block align-bottom text-neutral opacity-0

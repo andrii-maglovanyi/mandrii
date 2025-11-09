@@ -8,9 +8,9 @@ import { constants } from "~/lib/constants";
 import { eventDescriptionMaxCharsCount, EventSchema } from "~/lib/validation/event";
 import { Locale, Price_Type_Enum } from "~/types";
 
-type EventInfoProps = Pick<FormProps<EventSchema["shape"]>, "getFieldProps" | "values">;
+type EventInfoProps = Pick<FormProps<EventSchema["shape"]>, "getFieldProps" | "setErrors" | "values">;
 
-export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
+export const EventInfo = ({ getFieldProps, setErrors, values }: EventInfoProps) => {
   const { isDark } = useTheme();
   const i18n = useI18n();
   const locale = useLocale() as Locale;
@@ -25,63 +25,82 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
 
   return (
     <>
-      <Input
-        label={i18n("Organizer name")}
-        placeholder="PMK Event Agency"
-        type="text"
-        {...getFieldProps("organizer_name")}
-      />
-
-      <MDEditor
-        isDark={isDark}
-        label="Опис (🇺🇦 Українською)"
-        placeholder="Цей бандуристичний фестиваль просто зриває дах"
-        {...getFieldProps("description_uk")}
-        maxChars={eventDescriptionMaxCharsCount}
-      />
-
-      <MDEditor
-        isDark={isDark}
-        label="Description (🇬🇧 English)"
-        placeholder="This bandura festival is just mind-blowing"
-        {...getFieldProps("description_en")}
-        maxChars={eventDescriptionMaxCharsCount}
-      />
-
-      {/* Price & registration */}
-      <div className="space-y-4 border-t border-primary/10 pt-4">
-        <h3 className="text-lg font-medium text-primary">{i18n("Price & registration")}</h3>
-
+      <div className={`
+        mb-4 rounded-lg border-2 border-primary/20 bg-primary/5 p-5
+      `}>
         <Select label={i18n("Price type")} options={priceTypeOptions} required {...getFieldProps("price_type")} />
 
         {showPriceAmount && (
           <div className={`
-            flex grow flex-col gap-4
+            flex grow gap-4
             lg:flex-row
           `}>
-            <div className="flex flex-1 flex-col">
-              <Input
-                label={i18n("Price amount")}
-                min={0}
-                placeholder="10.00"
-                required={showPriceAmount}
-                step={0.01}
-                type="number"
-                {...getFieldProps("price_amount")}
-              />
-            </div>
-            <div className="flex flex-1 flex-col">
-              <Input
-                label={i18n("Currency")}
-                placeholder="EUR"
-                required
-                type="text"
-                {...getFieldProps("price_currency")}
-              />
-            </div>
+            <Input
+              className="max-w-80"
+              label={i18n("Price amount")}
+              min={0}
+              placeholder="10.00"
+              required={showPriceAmount}
+              step={0.01}
+              type="number"
+              {...getFieldProps("price_amount")}
+              onBlur={(e) => {
+                getFieldProps("external_url").onBlur();
+
+                // Manually validate since refine won't run until all required fields are filled
+                if (!e.target.value?.trim()) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    price_amount: i18n("Price amount is required"),
+                  }));
+                }
+              }}
+            />
+
+            <Input
+              className="max-w-24"
+              label={i18n("Currency")}
+              placeholder="EUR"
+              required
+              type="text"
+              {...getFieldProps("price_currency")}
+              onBlur={(e) => {
+                getFieldProps("price_currency").onBlur();
+
+                // Manually validate since refine won't run until all required fields are filled
+                if (!e.target.value?.trim()) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    price_currency: i18n("Currency is required"),
+                  }));
+                }
+              }}
+            />
           </div>
         )}
+      </div>
 
+      <div className="my-8">
+        <MDEditor
+          isDark={isDark}
+          label="Опис (🇺🇦 Українською)"
+          placeholder="Цей бандуристичний фестиваль просто зриває дах"
+          {...getFieldProps("description_uk")}
+          maxChars={eventDescriptionMaxCharsCount}
+        />
+
+        <MDEditor
+          isDark={isDark}
+          label="Description (🇬🇧 English)"
+          placeholder="This bandura festival is just mind-blowing"
+          {...getFieldProps("description_en")}
+          maxChars={eventDescriptionMaxCharsCount}
+        />
+      </div>
+
+      <div className={`
+        mb-8 rounded-lg border-2 border-primary/20 bg-primary/5 p-5
+      `}>
         <Checkbox label={i18n("Registration required")} {...getFieldProps("registration_required")} />
 
         {values.registration_required && (
@@ -92,28 +111,31 @@ export const EventInfo = ({ getFieldProps, values }: EventInfoProps) => {
             {...getFieldProps("registration_url")}
           />
         )}
-
-        <Input label={i18n("Capacity")} min={1} placeholder="100" type="number" {...getFieldProps("capacity")} />
       </div>
 
-      {/* Additional information */}
-      <div className="space-y-4 border-t border-primary/10 pt-4">
-        <h3 className="text-lg font-medium text-primary">{i18n("Additional Information")}</h3>
+      <Input
+        label={i18n("Age restriction")}
+        placeholder={i18n("18+, Family-friendly, etc.")}
+        type="text"
+        {...getFieldProps("age_restriction")}
+      />
 
-        <Input
-          label={i18n("Age restriction")}
-          placeholder={i18n("18+, Family-friendly, etc.")}
-          type="text"
-          {...getFieldProps("age_restriction")}
-        />
+      <MDEditor
+        height={200}
+        isDark={isDark}
+        label={i18n("Accessibility Information")}
+        placeholder={i18n("Wheelchair accessible, Sign language interpretation available, etc.")}
+        {...getFieldProps("accessibility_info")}
+      />
 
-        <MDEditor
-          isDark={isDark}
-          label={i18n("Accessibility Information")}
-          placeholder={i18n("Wheelchair accessible, Sign language interpretation available, etc.")}
-          {...getFieldProps("accessibility_info")}
-        />
-      </div>
+      <Input
+        className="max-w-48"
+        label={i18n("Capacity")}
+        min={1}
+        placeholder="100"
+        type="number"
+        {...getFieldProps("capacity")}
+      />
     </>
   );
 };
