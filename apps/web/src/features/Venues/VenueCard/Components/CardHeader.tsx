@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { BadgeCheck, Calendar, Crown, PenTool, Share2 } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -13,7 +14,7 @@ import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { shareItem } from "~/lib/share";
 import { UrlHelper } from "~/lib/url-helper";
-import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
+import { GetPublicVenuesQuery, Locale } from "~/types";
 
 import { ClaimOwnershipDialog } from "../../ClaimOwnershipDialog";
 
@@ -66,23 +67,6 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
   };
 
   const renderVenueControls = () => {
-    if (venue.status === Venue_Status_Enum.Active) {
-      return (
-        <div className="flex items-center gap-2">
-          {profileData?.role === "admin" && (
-            <ActionButton
-              aria-label={i18n("Manage venue")}
-              className="group"
-              icon={<PenTool size={18} />}
-              onClick={handleManageClick}
-              size="sm"
-              variant="ghost"
-            />
-          )}
-        </div>
-      );
-    }
-
     // Check if user can manage this venue:
     // 1. Admin users can manage any venue
     // 2. Owner can manage (venue.owner_id matches user)
@@ -108,10 +92,9 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
             variant="ghost"
           />
         ) : (
-          <div className={hideUntilHover ? `
-            hidden
+          <div className={clsx(hideUntilHover && "hidden", `
             group-hover/card:flex
-          ` : ""}>
+          `)}>
             <ActionButton
               aria-label={i18n("I own this venue")}
               className="group"

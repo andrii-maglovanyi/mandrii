@@ -18,7 +18,7 @@ export const EventDate = ({ getFieldProps, setValues, values }: EventInfoProps) 
   return (
     <>
       <div className={`
-        flex grow flex-col gap-4
+        mb-2 flex grow flex-col gap-4
         lg:flex-row
       `}>
         <div className="flex flex-1 flex-col">

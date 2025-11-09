@@ -66,7 +66,7 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
 
       external_url: z
         .string()
-        .refine((val) => !val || isWebsite(val), {
+        .refine((val) => !val || val.trim() === "" || isWebsite(val), {
           message: i18n("External URL is invalid"),
         })
         .optional()
@@ -214,13 +214,17 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       ),
 
       status: z.enum(Object.values(Event_Status_Enum)).default(Event_Status_Enum.Pending).optional(),
-      title_en: z.string().min(1, i18n("Title is required")),
-      title_uk: z.string().min(1, i18n("Title is required")),
+      title_en: z.string().min(1, i18n("Title is required")).trim(),
+      title_uk: z.string().min(1, i18n("Title is required")).trim(),
       type: z.enum(Object.values(Event_Type_Enum), {
         message: i18n("Please choose an event type"),
       }),
 
-      venue_id: z.string().uuid(i18n("Invalid venue ID")).optional().nullable(),
+      venue_id: z
+        .union([z.uuid(i18n("Invalid venue ID")), z.literal("")])
+        .transform((val) => (val === "" ? null : val))
+        .optional()
+        .nullable(),
     })
     .refine(
       (data) => {
@@ -237,11 +241,27 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
     )
     .refine(
       (data) => {
-        // At least one location type must be specified
-        return data.venue_id || data.custom_location_name || data.is_online;
+        // For online events, external_url is required
+        if (data.is_online) {
+          return !!data.external_url && data.external_url.trim() !== "";
+        }
+        return true;
       },
       {
-        message: i18n("Please specify a venue, custom location, or mark as online event"),
+        message: i18n("External URL is required for online events"),
+        path: ["external_url"],
+      },
+    )
+    .refine(
+      (data) => {
+        // For non-online events, at least venue_id or custom_location_name is required
+        if (!data.is_online) {
+          return !!data.venue_id || !!data.custom_location_name;
+        }
+        return true;
+      },
+      {
+        message: i18n("Please specify a venue or custom location"),
         path: ["venue_id"],
       },
     )
@@ -254,7 +274,7 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
         return true;
       },
       {
-        message: i18n("Price amount is required for paid events"),
+        message: i18n("Price amount is required"),
         path: ["price_amount"],
       },
     );

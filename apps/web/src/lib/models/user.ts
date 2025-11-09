@@ -33,7 +33,7 @@ const UPDATE_USER_MUTATION = `
   }
 `;
 
-type AuthContext = { accessToken: string; type: "user"; } | { adminSecret: string; type: "admin"; };
+type AuthContext = { accessToken: string; type: "user" } | { adminSecret: string; type: "admin" };
 
 export class UserModel {
   private session: AuthenticatedSession | null;

@@ -27,6 +27,12 @@ export const EventContacts = ({ getFieldProps }: EventContactsProps) => {
   return (
     <div className="space-y-4">
       <Input
+        label={i18n("Organizer name")}
+        placeholder="PMK Event Agency"
+        type="text"
+        {...getFieldProps("organizer_name")}
+      />
+      <Input
         label={i18n("Organizer email")}
         placeholder="contact@example.com"
         type="email"
@@ -44,11 +50,12 @@ export const EventContacts = ({ getFieldProps }: EventContactsProps) => {
           type="tel"
           {...getFieldProps("organizer_phone_number")}
         />
-        <p className="mt-1 text-sm text-neutral">{i18n("Email or phone number for event inquiries")}</p>
       </div>
 
-      {renderSocialMediaInput(<Facebook />, "facebook", "Facebook", "https://facebook.com/puzatahata")}
-      {renderSocialMediaInput(<Instagram />, "instagram", "Instagram", "https://instagram.com/puzatahata")}
+      <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-5">
+        {renderSocialMediaInput(<Facebook />, "facebook", "Facebook", "https://facebook.com/puzatahata")}
+        {renderSocialMediaInput(<Instagram />, "instagram", "Instagram", "https://instagram.com/puzatahata")}
+      </div>
     </div>
   );
 };

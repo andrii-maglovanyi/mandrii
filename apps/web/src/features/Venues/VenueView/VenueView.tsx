@@ -226,7 +226,6 @@ export const VenueView = ({ slug }: VenueViewProps) => {
         </div>
       </div>
 
-      {/* Main content */}
       <div className={`
         mx-auto w-full max-w-5xl px-4 py-2
         lg:py-4
@@ -239,7 +238,6 @@ export const VenueView = ({ slug }: VenueViewProps) => {
               </div>
             ) : ongoingEvents.length > 0 || upcomingEvents.length > 0 ? (
               <div className="space-y-6">
-                {/* Ongoing events */}
                 {ongoingEvents.length > 0 && (
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">

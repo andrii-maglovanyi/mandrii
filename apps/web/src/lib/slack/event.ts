@@ -1,8 +1,7 @@
 import { App } from "@slack/bolt";
-import { User } from "next-auth";
 import slackifyMarkdown from "slackify-markdown";
 
-import { Events } from "~/types";
+import { Events, UserSession } from "~/types";
 
 import { envName } from "../config/env";
 import { privateConfig } from "../config/private";
@@ -28,9 +27,13 @@ const getMedia = ({ images, title_en, title_uk }: Partial<Events>) => {
 };
 
 export const sendSlackNotification = async (
-  user: User,
+  user: UserSession,
   { city, country, description_en, description_uk, id, images, slug, title_en, title_uk, type }: Partial<Events>,
 ) => {
+  if (user.role === "admin") {
+    return;
+  }
+
   const title = title_uk || title_en || "Untitled Event";
   const media = getMedia({ images, title_en, title_uk });
 
@@ -113,7 +116,7 @@ export const sendSlackNotification = async (
   await app.client.chat.postMessage({
     blocks,
     channel: envName === "production" ? "events" : "events-dev",
-    text: `New event "${name}" added by ${user.name}`,
+    text: `New event "${title}" added by ${user.name}`,
     token: privateConfig.slack.botToken,
   });
 };

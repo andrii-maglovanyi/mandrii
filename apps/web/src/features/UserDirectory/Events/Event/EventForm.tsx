@@ -5,7 +5,7 @@ import { useEffect, useMemo } from "react";
 import slugify from "slugify";
 
 import { FormFooter } from "~/components/layout";
-import { Input, Select, TabPane, Tabs } from "~/components/ui";
+import { Input, RichText, Select, TabPane, Tabs } from "~/components/ui";
 import { InitialValuesType, OnFormSubmitHandler, useForm } from "~/hooks/form/useForm";
 import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
@@ -47,6 +47,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
     hasChanges,
     isFormValid,
     resetForm,
+    setErrors,
     setValues,
     useFormSubmit,
     useImagePreviews,
@@ -77,7 +78,11 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
     }
     // If custom location with area, append area (like venues do)
     else if (values.area && !values.venue_id) {
-      titleWithSuffix = `${titleWithSuffix} ${values.area}`;
+      titleWithSuffix = `${titleWithSuffix} ${values.area?.split(",")[0].trim()}`;
+    }
+
+    if (values.type) {
+      titleWithSuffix = `${values.type} ${titleWithSuffix}`;
     }
 
     setValues((prev) => ({
@@ -87,7 +92,16 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
         strict: true,
       }),
     }));
-  }, [initialValues.id, setValues, values.title_en, values.title_uk, values.area, values.venue_id, venues]);
+  }, [
+    initialValues.id,
+    setValues,
+    values.type,
+    values.title_en,
+    values.title_uk,
+    values.area,
+    values.venue_id,
+    venues,
+  ]);
 
   const eventTypeOptions = Object.values(Event_Type_Enum).map((value) => {
     const { iconName, label } = constants.eventTypes[value as keyof typeof constants.eventTypes];
@@ -102,7 +116,6 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
     };
   });
 
-  // Venue dropdown options
   const venueOptions = useMemo(() => {
     if (!venues) return [{ label: i18n("No venue (custom location)"), value: "" }];
 
@@ -121,52 +134,61 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className={`
         flex grow flex-col justify-evenly
-        lg:flex-row lg:space-x-4
+        lg:space-x-4
       `}>
         <div className={`
-          flex flex-3 flex-col justify-evenly
+          flex flex-col justify-evenly
           md:flex-row md:space-x-4
         `}>
-          <div className="flex flex-3 flex-col">
-            <Select label={i18n("Event type")} options={eventTypeOptions} required {...getFieldProps("type")} />
-          </div>
-          <div className="flex flex-4 flex-col">
+          <div className="flex flex-1 flex-col">
             <Input
               label={"Назва події (🇺🇦 Українською)"}
-              placeholder={"Український фестиваль 2026"}
+              placeholder={`Український фестиваль ${new Date().getFullYear()}`}
               required
               type="text"
               {...getFieldProps("title_uk")}
             />
+          </div>
+          <div className="flex flex-1 flex-col">
             <Input
               label={"Event title (🇬🇧 English)"}
-              placeholder={"Ukrainian Festival 2026"}
+              placeholder={`Ukrainian Festival ${new Date().getFullYear()}`}
               required
               type="text"
               {...getFieldProps("title_en")}
             />
           </div>
         </div>
-        <div className="flex flex-2 flex-col">
-          <Input
-            disabled={isBusy || Boolean(initialValues.id)}
-            label={i18n("Slug")}
-            placeholder="ukrainian-festival-2025"
-            required
-            type="text"
-            {...getFieldProps("slug")}
-          />
-          <p className="mt-1.5 text-sm text-neutral">
-            {i18n(
-              "↑ The slug serves as a unique identifier for your event and must be URL-friendly. Once created, it cannot be changed.",
-            )}
-          </p>
+        <div className={`
+          mt-1 flex flex-col justify-evenly
+          md:flex-row md:space-x-4
+        `}>
+          <div className="flex flex-2 flex-col">
+            <Select label={i18n("Event type")} options={eventTypeOptions} required {...getFieldProps("type")} />
+          </div>
+          <div className="flex flex-3 flex-col">
+            <Input
+              disabled={isBusy || Boolean(initialValues.id)}
+              label={i18n("Slug")}
+              placeholder={`ukrainian-festival-${new Date().getFullYear()}`}
+              required
+              type="text"
+              {...getFieldProps("slug")}
+            />
+            <RichText as="p" className="mt-1.5 text-sm text-neutral">
+              {i18n(
+                "↑ This is the unique identifier which must be URL-friendly and **at least 10 characters long**. Once created, it cannot be changed.",
+              )}
+            </RichText>
+          </div>
         </div>
       </div>
 
-      <p className="mt-8 text-sm">
-        {i18n("Add location, date & time, descriptions, images, and other information below.")}
-      </p>
+      <RichText className="mt-8 text-sm">
+        {i18n(
+          "Add your event details below. To publish, you'll need to provide at least **location, price, and date & time**.",
+        )}
+      </RichText>
 
       <Tabs>
         <TabPane tab={i18n("Location")}>
@@ -174,6 +196,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
             errors={errors}
             getFieldProps={getFieldProps}
             isBusy={isBusy}
+            setErrors={setErrors}
             setValues={setValues}
             values={values}
             venueOptions={venueOptions}
@@ -181,7 +204,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
           />
         </TabPane>
         <TabPane tab={i18n("Info")}>
-          <EventInfo getFieldProps={getFieldProps} values={values} />
+          <EventInfo getFieldProps={getFieldProps} setErrors={setErrors} values={values} />
         </TabPane>
         <TabPane tab={i18n("Date & Time")}>
           <EventDate getFieldProps={getFieldProps} setValues={setValues} values={values} />
