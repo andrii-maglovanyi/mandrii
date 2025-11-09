@@ -11,6 +11,7 @@ const VENUE_FIELDS = `
   emails
   category
   city
+  area
   country
   postcode
   geo

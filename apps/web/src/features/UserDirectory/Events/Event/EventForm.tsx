@@ -67,27 +67,24 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
 
     if (initialValues.id || !title) return;
 
-    let titleWithSuffix = title;
+    let slugConstructor = title;
 
-    // If venue is selected, append venue slug
     if (values.venue_id && venues) {
       const selectedVenue = venues.find((v) => v.id === values.venue_id);
       if (selectedVenue?.slug) {
-        titleWithSuffix = `${titleWithSuffix} ${selectedVenue.slug}`;
+        slugConstructor = `${slugConstructor} ${selectedVenue.slug}`;
       }
-    }
-    // If custom location with area, append area (like venues do)
-    else if (values.area && !values.venue_id) {
-      titleWithSuffix = `${titleWithSuffix} ${values.area?.split(",")[0].trim()}`;
+    } else if (values.area && !values.venue_id) {
+      slugConstructor = `${slugConstructor} ${values.area?.split(",")[0].trim()}`;
     }
 
     if (values.type) {
-      titleWithSuffix = `${values.type} ${titleWithSuffix}`;
+      slugConstructor = `${values.type} ${slugConstructor}`;
     }
 
     setValues((prev) => ({
       ...prev,
-      slug: slugify(titleWithSuffix, {
+      slug: slugify(slugConstructor, {
         lower: true,
         strict: true,
       }),
