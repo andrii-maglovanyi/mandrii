@@ -96,9 +96,6 @@ msgstr ""
 msgid "Title is required"
 msgstr ""
 
-msgid "Title must be less than 200 characters"
-msgstr ""
-
 msgid "Please choose an event type"
 msgstr ""
 
@@ -108,10 +105,13 @@ msgstr ""
 msgid "End date must be after start date"
 msgstr ""
 
-msgid "Please specify a venue, custom location, or mark as online event"
+msgid "External URL is required for online events"
 msgstr ""
 
-msgid "Price amount is required for paid events"
+msgid "Please specify a venue or custom location"
+msgstr ""
+
+msgid "Price amount is required"
 msgstr ""
 
 msgid "Message is required"
@@ -175,18 +175,6 @@ msgid "Map"
 msgstr ""
 
 msgid "Events"
-msgstr ""
-
-msgid "Happening now"
-msgstr ""
-
-msgid "{count} ongoing"
-msgstr ""
-
-msgid "LIVE"
-msgstr ""
-
-msgid "Upcoming events"
 msgstr ""
 
 msgid "{count} upcoming"
@@ -265,6 +253,9 @@ msgid "Verified venue"
 msgstr ""
 
 msgid "Discover"
+msgstr ""
+
+msgid "{count} events"
 msgstr ""
 
 msgid "All categories"
@@ -474,7 +465,7 @@ msgstr ""
 msgid "Slug"
 msgstr ""
 
-msgid "↑ The slug serves as a unique identifier for your venue and must be URL-friendly. Once created, it cannot be changed."
+msgid "↑ This is the unique identifier which must be URL-friendly and **at least 10 characters long**. Once created, it cannot be changed."
 msgstr ""
 
 msgid "Legal owners have additional management privileges. This setting cannot be changed."
@@ -621,7 +612,7 @@ msgstr ""
 msgid "Postponed"
 msgstr ""
 
-msgid "Choose at least one: mark as online event, select a venue, or enter a custom location"
+msgid "**Choose at least one!** Mark as online event, select a venue from the list, or enter a custom location name and address."
 msgstr ""
 
 msgid "This is an online event"
@@ -634,6 +625,9 @@ msgid "Venue"
 msgstr ""
 
 msgid "Select a venue..."
+msgstr ""
+
+msgid "or"
 msgstr ""
 
 msgid "**Enter a custom location** if the event isn't at a registered venue. Provide the full address for accurate map placement."
@@ -651,12 +645,6 @@ msgstr ""
 msgid "These details are collected automatically and will help users find your event. You can adjust them if needed."
 msgstr ""
 
-msgid "Organizer name"
-msgstr ""
-
-msgid "Price & registration"
-msgstr ""
-
 msgid "Price type"
 msgstr ""
 
@@ -666,16 +654,13 @@ msgstr ""
 msgid "Currency"
 msgstr ""
 
+msgid "Currency is required"
+msgstr ""
+
 msgid "Registration required"
 msgstr ""
 
 msgid "Registration URL"
-msgstr ""
-
-msgid "Capacity"
-msgstr ""
-
-msgid "Additional Information"
 msgstr ""
 
 msgid "Age restriction"
@@ -690,22 +675,16 @@ msgstr ""
 msgid "Wheelchair accessible, Sign language interpretation available, etc."
 msgstr ""
 
+msgid "Capacity"
+msgstr ""
+
 msgid "No venue (custom location)"
 msgstr ""
 
 msgid "Event type"
 msgstr ""
 
-msgid "Event title"
-msgstr ""
-
-msgid "Ukrainian Festival 2025"
-msgstr ""
-
-msgid "↑ The slug serves as a unique identifier for your event and must be URL-friendly. Once created, it cannot be changed."
-msgstr ""
-
-msgid "Add location, date & time, descriptions, images, and other information below."
+msgid "Add your event details below. To publish, you'll need to provide at least **location, price, and date & time**."
 msgstr ""
 
 msgid "Date & Time"
@@ -723,13 +702,13 @@ msgstr ""
 msgid "Recurrence pattern"
 msgstr ""
 
+msgid "Organizer name"
+msgstr ""
+
 msgid "Organizer email"
 msgstr ""
 
 msgid "Organizer phone number"
-msgstr ""
-
-msgid "Email or phone number for event inquiries"
 msgstr ""
 
 msgid "Event updated successfully"
@@ -763,6 +742,9 @@ msgid "Edit your event details below.<br/>You can update all fields except the s
 msgstr ""
 
 msgid "Start adding your event by entering its title and type.<br/>The slug is auto-generated from the title and can only be edited during the first creation."
+msgstr ""
+
+msgid "Upcoming events"
 msgstr ""
 
 msgid "View all"
@@ -856,6 +838,9 @@ msgid "About event"
 msgstr ""
 
 msgid "Event Details"
+msgstr ""
+
+msgid "Additional Information"
 msgstr ""
 
 msgid "Organizer"
@@ -1146,9 +1131,6 @@ msgstr ""
 msgid "Sign in with email"
 msgstr ""
 
-msgid "or"
-msgstr ""
-
 msgid "Sign in with Google"
 msgstr ""
 
@@ -1180,6 +1162,9 @@ msgid "A message from {name}<{email}>"
 msgstr ""
 
 msgid "Slug is already taken"
+msgstr ""
+
+msgid "Price amount is required for paid events"
 msgstr ""
 
 msgid "Hi, friends!"

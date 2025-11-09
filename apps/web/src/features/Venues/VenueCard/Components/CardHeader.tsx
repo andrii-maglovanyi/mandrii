@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { BadgeCheck, Calendar, Crown, PenTool, Share2 } from "lucide-react";
+import { BadgeCheck, Crown, PenTool, Share2 } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -7,7 +7,6 @@ import { ActionButton, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
-import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
@@ -31,8 +30,6 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
   const router = useRouter();
   const { showSuccess } = useNotifications();
   const { iconName, label } = constants.categories[venue.category as keyof typeof constants.categories];
-
-  const hasEvents = Boolean(venue.events_aggregate?.aggregate?.count);
 
   const handleOwnerClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -144,24 +141,6 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
       `}>
         {getIcon(iconName, { size: 18 })}
         <span className="block min-w-0 flex-1 truncate">{label[locale]}</span>
-
-        {hasEvents && (
-          <Link
-            className={`
-              flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5
-              text-xs font-medium text-primary transition-colors
-              hover:bg-primary/20
-            `}
-            href={`/venues/${venue.slug}#Events`}
-            onClick={(e) => {
-              e.stopPropagation();
-              sendToMixpanel("Clicked Venue Events Badge", { slug: venue.slug });
-            }}
-          >
-            <Calendar size={12} />
-            <span>{i18n("Events")}</span>
-          </Link>
-        )}
       </div>
 
       {renderVenueControls()}

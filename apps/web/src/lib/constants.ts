@@ -51,12 +51,14 @@ const categories: Record<
   CHURCH: { iconName: "Church", label: { en: "Church", uk: "Церква" } },
   CLUB: { iconName: "Music", label: { en: "Club", uk: "Клуб" } },
   CULTURAL_CENTRE: { iconName: "GalleryHorizontal", label: { en: "Cultural centre", uk: "Культурний центр" } },
+  DELIVERY: { iconName: "Package", label: { en: "Delivery", uk: "Доставка" } },
   DENTAL_CLINIC: { iconName: "Hospital", label: { en: "Dental clinic", uk: "Стоматологія" } },
   GROCERY_STORE: { iconName: "ShoppingCart", label: { en: "Grocery store", uk: "Продуктовий магазин" } },
   LIBRARY: { iconName: "Book", label: { en: "Library", uk: "Бібліотека" } },
   ORGANIZATION: { iconName: "Building", label: { en: "Organization", uk: "Організація" } },
   RESTAURANT: { iconName: "Utensils", label: { en: "Restaurant", uk: "Ресторан" } },
   SCHOOL: { iconName: "GraduationCap", label: { en: "School", uk: "Школа" } },
+  SHOP: { iconName: "ShoppingBag", label: { en: "Shop", uk: "Крамниця" } },
 };
 
 const eventTypes: Record<

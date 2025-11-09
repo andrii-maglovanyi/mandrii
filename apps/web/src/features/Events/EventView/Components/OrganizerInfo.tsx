@@ -36,12 +36,10 @@ export const OrganizerInfo = ({ event: evt, expanded = true }: OrganizerInfoProp
 
   return (
     <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
-      {/* Organizer name */}
       <Section>
         <InfoLine icon={<User className="min-h-4 min-w-4" size={16} />} info={evt.organizer_name} />
       </Section>
 
-      {/* Email */}
       {evt.organizer_email && (
         <Section>
           <InfoLine
@@ -53,7 +51,6 @@ export const OrganizerInfo = ({ event: evt, expanded = true }: OrganizerInfoProp
         </Section>
       )}
 
-      {/* Phone */}
       {evt.organizer_phone_number && (
         <Section>
           <InfoLine info={evt.organizer_phone_number} isPhoneNumber tooltipText={i18n("Copy organizer phone")} />

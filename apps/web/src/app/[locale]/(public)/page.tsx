@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { MixpanelTracker, PostCard } from "~/components/layout";
-import { EventsBanner } from "~/features/Events";
+import { EventsPoster } from "~/features/Events/EventsPoster";
 import { VenuesBanner } from "~/features/Venues/VenuesBanner";
 import { useI18n } from "~/i18n/useI18n";
 import { ContentData, contentManager } from "~/lib/mdx/reader";
@@ -97,7 +97,7 @@ const HomePageLayout = ({ locale, posts }: HomePageLayoutProps) => {
         </h1>
       </header>
 
-      <EventsBanner />
+      <EventsPoster locale={locale} />
 
       {hasContent ? (
         <main className={`

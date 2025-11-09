@@ -51,7 +51,6 @@ export function Select<K extends React.ReactNode, T>({
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<MenuHandle>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleFocusOut = (e: FocusEvent) => {
@@ -114,7 +113,7 @@ export function Select<K extends React.ReactNode, T>({
           onBlur={onBlur}
           onClick={() => setFocused((f) => !f)}
           onKeyDown={onSelectKeyDown}
-          ref={mergeRefs(ref, buttonRef)}
+          ref={ref}
           type="button"
         >
           <span className="max-w-max min-w-full flex-1 truncate">{selectedLabel}</span>
@@ -141,23 +140,10 @@ export function Select<K extends React.ReactNode, T>({
             }}
             options={options}
             ref={menuRef}
-            triggerRef={buttonRef}
           />
         )}
       </div>
       {showErrorMessage && <FieldErrorMessage error={error} />}
     </div>
   );
-}
-
-function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>): React.RefCallback<T> {
-  return (value: T) => {
-    refs.forEach((ref) => {
-      if (typeof ref === "function") {
-        ref(value);
-      } else if (ref != null) {
-        (ref as React.RefObject<null | T>).current = value;
-      }
-    });
-  };
 }

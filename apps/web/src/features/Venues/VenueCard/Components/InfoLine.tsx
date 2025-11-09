@@ -194,7 +194,7 @@ export const InfoLine = ({
             onClick={handleCopy}
           >
             <div className="flex min-w-0 items-center gap-2">
-              {icon}
+              <span className="text-neutral">{icon}</span>
               <span className="min-w-0 truncate">{info}</span>
             </div>
             <Copy className={hideClasses} size={16} />
@@ -207,11 +207,11 @@ export const InfoLine = ({
   // Plain text (not withCopy)
   return (
     <div className={`
-      flex w-full items-center px-4 py-2 text-left
+      flex w-full items-center px-4 py-2 text-left text-neutral
       hover:bg-on-surface/5
     `}>
       {icon && <span className="mr-2">{icon}</span>}
-      <span className="min-w-0 truncate text-neutral">{info}</span>
+      <span className="min-w-0 truncate text-on-surface">{info}</span>
     </div>
   );
 };

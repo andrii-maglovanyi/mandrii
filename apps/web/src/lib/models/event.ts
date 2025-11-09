@@ -22,6 +22,7 @@ const EVENT_FIELDS = `
   custom_location_name
   city
   country
+  area
   geo
   images
   registration_url

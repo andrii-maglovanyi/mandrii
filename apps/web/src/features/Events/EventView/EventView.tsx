@@ -301,7 +301,6 @@ export const EventView = ({ slug }: EventViewProps) => {
 
               {/* Info Cards - Right side (1/3) */}
               <div className="flex flex-col gap-4">
-                {/* Event Details Card */}
                 <section
                   className={`
                     group/card rounded-xl border border-primary/0
@@ -310,7 +309,7 @@ export const EventView = ({ slug }: EventViewProps) => {
                     lg:text-base
                   `}
                 >
-                  <h3 className="mb-4 text-lg font-bold">{i18n("Event Details")}</h3>
+                  <h3 className="mt-2 text-lg font-semibold">{i18n("Details")}</h3>
                   <CardMetadata
                     event={event}
                     expanded
@@ -321,7 +320,6 @@ export const EventView = ({ slug }: EventViewProps) => {
                   />
                 </section>
 
-                {/* Additional Information */}
                 {(event.capacity || event.language || event.age_restriction || event.accessibility_info) && (
                   <section
                     className={`
@@ -331,12 +329,11 @@ export const EventView = ({ slug }: EventViewProps) => {
                       lg:text-base
                     `}
                   >
-                    <h3 className="mb-4 text-lg font-bold">{i18n("Additional Information")}</h3>
+                    <h3 className="mt-2 text-lg font-semibold">{i18n("Additional information")}</h3>
                     <AdditionalInfo event={event} expanded locale={locale} />
                   </section>
                 )}
 
-                {/* Organizer */}
                 {event.organizer_name && (
                   <section
                     className={`
@@ -346,7 +343,7 @@ export const EventView = ({ slug }: EventViewProps) => {
                       lg:text-base
                     `}
                   >
-                    <h3 className="mb-4 text-lg font-bold">{i18n("Organizer")}</h3>
+                    <h3 className="mt-2 text-lg font-semibold">{i18n("Organizer")}</h3>
                     <OrganizerInfo event={event} expanded locale={locale} />
                   </section>
                 )}

@@ -106,7 +106,6 @@ export function Input<K extends string, T extends string>({
 
   const menuRef = useRef<MenuHandle>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleFocusOut = (e: FocusEvent) => {
@@ -218,7 +217,7 @@ export function Input<K extends string, T extends string>({
           }}
           onKeyDown={onInputKeyDown}
           placeholder={placeholder || (isPhoneInput ? "+44 0123 456 789" : undefined)}
-          ref={mergeRefs(ref, inputRef)}
+          ref={ref}
           required={required}
           step={step}
           type={isPhoneInput ? "tel" : type}
@@ -233,7 +232,6 @@ export function Input<K extends string, T extends string>({
             }}
             options={formedSuggestions}
             ref={menuRef}
-            triggerRef={inputRef}
           />
         )}
       </span>
@@ -241,17 +239,4 @@ export function Input<K extends string, T extends string>({
       {showErrorMessage && <FieldErrorMessage error={error} />}
     </div>
   );
-}
-
-// Utility function to merge refs
-function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>): React.RefCallback<T> {
-  return (value: T) => {
-    refs.forEach((ref) => {
-      if (typeof ref === "function") {
-        ref(value);
-      } else if (ref != null) {
-        (ref as React.RefObject<null | T>).current = value;
-      }
-    });
-  };
 }

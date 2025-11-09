@@ -9,6 +9,7 @@ import { useI18n } from "~/i18n/useI18n";
 export const VenuesBanner = () => {
   const router = useRouter();
   const i18n = useI18n();
+
   return (
     <div className={`
       mt-8 rounded-lg bg-linear-to-r from-primary to-secondary p-px
