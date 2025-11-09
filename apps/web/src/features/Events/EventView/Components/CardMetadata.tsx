@@ -1,11 +1,24 @@
 "use client";
 
-import { Calendar, Clock, DollarSign, Euro, Globe, MapPin, PoundSterling, Repeat, Wallet } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  DollarSign,
+  Euro,
+  Gift,
+  Globe,
+  HandHelping,
+  MapPin,
+  PoundSterling,
+  Repeat,
+  Wallet,
+} from "lucide-react";
 import Link from "next/link";
+import { useMemo } from "react";
 
 import { Separator } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
-import { GetPublicEventsQuery, Locale } from "~/types";
+import { GetPublicEventsQuery, Locale, Price_Type_Enum } from "~/types";
 
 import { InfoLine } from "../../../Venues/VenueCard/Components/InfoLine";
 import { formatEventPrice } from "../../utils";
@@ -19,6 +32,24 @@ interface CardMetadataProps {
   locale: Locale;
 }
 
+// Currency icon mapping for better maintainability
+const CURRENCY_ICONS = {
+  EUR: Euro,
+  GBP: PoundSterling,
+  USD: DollarSign,
+} as const;
+
+const ICON_SIZE = 16;
+const ICON_CLASSES = "min-h-4 min-w-4";
+
+// Extracted Section component for reusability
+const Section = ({ children, expanded, title }: { children: React.ReactNode; expanded?: boolean; title?: string }) => (
+  <div>
+    {expanded && title && <Separator align="left" text={title} />}
+    {children}
+  </div>
+);
+
 export const CardMetadata = ({
   event,
   expanded = true,
@@ -29,72 +60,92 @@ export const CardMetadata = ({
 }: CardMetadataProps) => {
   const i18n = useI18n();
 
-  const startDate = event.start_date ? new Date(String(event.start_date)) : null;
-  const endDate = event.end_date ? new Date(String(event.end_date)) : null;
-  const isOnline = event.is_online;
+  const { currencyIcon, dateDisplay, priceInfo, startDate, timeDisplay } = useMemo(() => {
+    const start = event.start_date ? new Date(String(event.start_date)) : null;
+    const end = event.end_date ? new Date(String(event.end_date)) : null;
 
-  const priceInfo = formatEventPrice(event, locale);
+    const date = start ? formatDate(start) : null;
+    const time = start ? `${formatTime(start)}${end ? ` - ${formatTime(end)}` : ""}` : null;
 
-  // Format date/time display
-  const dateDisplay = startDate ? formatDate(startDate) : null;
-  const timeDisplay = startDate ? `${formatTime(startDate)}${endDate ? ` - ${formatTime(endDate)}` : ""}` : null;
+    const price = formatEventPrice(event, locale);
 
-  // Helper to render a section with optional separator
-  const Section = ({ children, title }: { children: React.ReactNode; title?: string }) => (
-    <div>
-      {expanded && title && <Separator align="left" text={title} />}
-      {children}
-    </div>
-  );
+    let icon: React.ReactNode;
+    if (event.price_type === Price_Type_Enum.Free) {
+      icon = <Gift className={ICON_CLASSES} size={ICON_SIZE} />;
+    } else if (event.price_type === Price_Type_Enum.Donation) {
+      icon = <HandHelping className={ICON_CLASSES} size={ICON_SIZE} />;
+    } else {
+      const CurrencyIcon =
+        event.price_currency && event.price_currency in CURRENCY_ICONS
+          ? CURRENCY_ICONS[event.price_currency as keyof typeof CURRENCY_ICONS]
+          : Wallet;
+      icon = <CurrencyIcon className={ICON_CLASSES} size={ICON_SIZE} />;
+    }
 
-  const currencyIcon =
-    event.price_currency === "GBP" ? (
-      <PoundSterling className="min-h-4 min-w-4" size={16} />
-    ) : event.price_currency === "USD" ? (
-      <DollarSign className="min-h-4 min-w-4" size={16} />
-    ) : event.price_currency === "EUR" ? (
-      <Euro className="min-h-4 min-w-4" size={16} />
-    ) : (
-      <Wallet className="min-h-4 min-w-4" size={16} />
-    );
+    return {
+      currencyIcon: icon,
+      dateDisplay: date,
+      endDate: end,
+      priceInfo: price,
+      startDate: start,
+      timeDisplay: time,
+    };
+  }, [event, formatDate, formatTime, locale]);
+
+  const {
+    custom_location_address,
+    custom_location_name,
+    external_url,
+    is_online: isOnline,
+    is_recurring,
+    recurrence_rule,
+    registration_url,
+    venue,
+    venue_id,
+  } = event;
 
   return (
     <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
       {/* Date & Time */}
       {startDate && (
-        <Section title={i18n("Date & Time")}>
+        <Section expanded={expanded} title={i18n("Date & Time")}>
           <InfoLine
-            icon={<Calendar className="min-h-4 min-w-4" size={16} />}
+            icon={<Calendar className={ICON_CLASSES} size={ICON_SIZE} />}
             info={dateDisplay || ""}
             tooltipText={i18n("Copy date")}
             withCopy
           />
           {timeDisplay && (
             <InfoLine
-              icon={<Clock className="min-h-4 min-w-4" size={16} />}
+              icon={<Clock className={ICON_CLASSES} size={ICON_SIZE} />}
               info={timeDisplay}
               tooltipText={i18n("Copy time")}
               withCopy
             />
           )}
         </Section>
-      )}{" "}
-      {event.is_recurring && event.recurrence_rule && (
-        <Section>
+      )}
+
+      {/* Recurrence Info */}
+      {is_recurring && recurrence_rule && (
+        <Section expanded={expanded}>
           <div className="my-2 border-primary/20 bg-primary/10 px-4 py-2">
             <div className="flex items-start gap-2 text-primary">
-              <Repeat className="mt-0.5 min-h-4 min-w-4 shrink-0 text-neutral" size={16} />
-              <p className="text-sm font-medium">{formatRecurrenceRule(event.recurrence_rule)}</p>
+              <Repeat className="mt-0.5 min-h-4 min-w-4 shrink-0 text-neutral" size={ICON_SIZE} />
+              <p className="text-sm font-medium">{formatRecurrenceRule(recurrence_rule)}</p>
             </div>
           </div>
         </Section>
       )}
-      <Section title={i18n("Price")}>
+
+      <Section expanded={expanded} title={i18n("Price")}>
         <InfoLine icon={currencyIcon} info={priceInfo} />
       </Section>
+
+      {/* Location */}
       {!isOnline && (
-        <Section title={i18n("Location")}>
-          {event.venue_id && event.venue ? (
+        <Section expanded={expanded} title={i18n("Location")}>
+          {venue_id && venue ? (
             <div className={`
               group/info flex w-full items-center justify-between text-left
               hover:bg-on-surface/5
@@ -102,50 +153,52 @@ export const CardMetadata = ({
               <div className={`
                 flex min-w-0 flex-1 items-center gap-2 px-4 py-2 text-neutral
               `}>
-                <MapPin className="min-h-4 min-w-4 text-primary" size={16} />
+                <MapPin className="min-h-4 min-w-4 text-primary" size={ICON_SIZE} />
                 <Link
                   className={`
                     min-w-0 truncate font-medium text-primary
                     hover:underline
                   `}
-                  href={`/venues/${event.venue.slug}`}
+                  href={`/venues/${venue.slug}`}
                 >
-                  {event.venue.name}
+                  {venue.name}
                 </Link>
               </div>
             </div>
           ) : (
             <>
-              {event.custom_location_name && (
+              {custom_location_name && (
                 <InfoLine
-                  icon={<MapPin className="min-h-4 min-w-4" size={16} />}
-                  info={event.custom_location_name}
+                  icon={<MapPin className={ICON_CLASSES} size={ICON_SIZE} />}
+                  info={custom_location_name}
                   tooltipText={i18n("Copy location name")}
                   withCopy
                 />
               )}
-              {event.custom_location_address && (
-                <InfoLine info={event.custom_location_address} isAddress tooltipText={i18n("Copy address")} withCopy />
+              {custom_location_address && (
+                <InfoLine info={custom_location_address} isAddress tooltipText={i18n("Copy address")} withCopy />
               )}
             </>
           )}
         </Section>
       )}
-      {isOnline && event.external_url && (
-        <Section title={i18n("Online event")}>
+
+      {isOnline && external_url && (
+        <Section expanded={expanded} title={i18n("Online event")}>
           <InfoLine
-            icon={<Globe className="min-h-4 min-w-4" size={16} />}
-            info={event.external_url}
+            icon={<Globe className={ICON_CLASSES} size={ICON_SIZE} />}
+            info={external_url}
             isLink
             tooltipText={i18n("Copy link")}
           />
         </Section>
       )}
-      {event.registration_url && (
-        <Section title={i18n("Registration")}>
+
+      {registration_url && (
+        <Section expanded={expanded} title={i18n("Registration")}>
           <InfoLine
-            icon={<Globe className="min-h-4 min-w-4" size={16} />}
-            info={event.registration_url}
+            icon={<Globe className={ICON_CLASSES} size={ICON_SIZE} />}
+            info={registration_url}
             isLink
             tooltipText={i18n("Copy registration link")}
           />

@@ -1,21 +1,21 @@
 "use client";
 
 import clsx from "clsx";
-import { BookMarked, Calendar, MapPin } from "lucide-react";
+import { BookMarked, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, TabPane, Tabs } from "~/components/ui";
+import { EventsMasonryCard } from "~/features/Events/EventCard/EventsMasonryCard";
 import { VenueStatus } from "~/features/UserDirectory/Venues/VenueStatus";
 import { useEvents } from "~/hooks/useEvents";
 import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
-import { Locale, Venue_Status_Enum } from "~/types";
+import { Locale, SortDirections, Venue_Status_Enum } from "~/types";
 
-import { EventsListCard } from "../../Events/EventCard/EventsListCard";
 import { CardHeader } from "../VenueCard/Components/CardHeader";
 import { CardMetadata } from "../VenueCard/Components/CardMetadata";
 import { ChainMetadata } from "../VenueCard/Components/ChainMetadata";
@@ -33,51 +33,19 @@ export const VenueView = ({ slug }: VenueViewProps) => {
 
   const { data: venue, loading } = useGetVenue(slug);
 
-  // Memoize current date to prevent recalculation on every render
-  const now = useMemo(() => new Date(), []);
-
-  // Memoize events query params to prevent infinite loop
   const eventsQueryParams = useMemo(
     () => ({
       limit: 100,
-      order_by: [{ start_date: "asc" as const }],
+      order_by: [{ start_date: "asc" as SortDirections }],
       where: {
-        status: { _eq: "ACTIVE" as const },
+        start_date: { _gte: new Date().toISOString() },
         venue_id: { _eq: venue?.id },
       },
     }),
     [venue?.id],
   );
 
-  // Fetch events for this venue
-  const { data: allVenueEvents, loading: eventsLoading } = usePublicEvents(eventsQueryParams);
-
-  // Separate ongoing and upcoming events, filter out past events
-  const { ongoingEvents, upcomingEvents } = useMemo(() => {
-    if (!allVenueEvents) return { ongoingEvents: [], upcomingEvents: [] };
-
-    const ongoing: typeof allVenueEvents = [];
-    const upcoming: typeof allVenueEvents = [];
-
-    for (const event of allVenueEvents) {
-      const startDate = new Date(event.start_date as string);
-      const endDate = event.end_date ? new Date(event.end_date as string) : null;
-
-      // Skip events that have already ended
-      if (endDate && endDate < now) continue;
-      // Also skip events without end_date that have already started and passed
-      if (!endDate && startDate < now) continue;
-
-      // Event is ongoing if it has started but hasn't ended
-      if (startDate <= now && (!endDate || endDate >= now)) {
-        ongoing.push(event);
-      } else if (startDate > now) {
-        upcoming.push(event);
-      }
-    }
-
-    return { ongoingEvents: ongoing, upcomingEvents: upcoming };
-  }, [allVenueEvents, now]);
+  const { data: upcomingEvents } = usePublicEvents(eventsQueryParams);
 
   if (loading) {
     return (
@@ -231,79 +199,6 @@ export const VenueView = ({ slug }: VenueViewProps) => {
         lg:py-4
       `}>
         <Tabs defaultActiveKey="about">
-          <TabPane tab={i18n("Events")}>
-            {eventsLoading ? (
-              <div className="py-20">
-                <AnimatedEllipsis centered size="md" />
-              </div>
-            ) : ongoingEvents.length > 0 || upcomingEvents.length > 0 ? (
-              <div className="space-y-6">
-                {ongoingEvents.length > 0 && (
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-semibold">{i18n("Happening now")}</h3>
-                      <span className={`
-                        rounded-full bg-primary/20 px-3 py-1 text-xs font-medium
-                        text-primary
-                      `}>
-                        {i18n("{count} ongoing", { count: ongoingEvents.length })}
-                      </span>
-                    </div>
-                    <div className={`
-                      grid grid-cols-1 gap-4
-                      sm:grid-cols-2
-                      lg:grid-cols-3
-                    `}>
-                      {ongoingEvents.map((event) => (
-                        <div className="relative" key={event.id as string}>
-                          <div
-                            className={`
-                              absolute -top-2 -right-2 z-10 rounded-full
-                              border-2 border-primary/30 bg-primary/10 px-3 py-1
-                            `}
-                          >
-                            <span className="text-xs font-bold text-primary">{i18n("LIVE")}</span>
-                          </div>
-                          <EventsListCard event={event} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {upcomingEvents.length > 0 && (
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-semibold">{i18n("Upcoming events")}</h3>
-                      <span className={`
-                        rounded-full bg-surface-tint px-3 py-1 text-xs
-                        font-medium text-neutral
-                      `}>
-                        {i18n("{count} upcoming", { count: upcomingEvents.length })}
-                      </span>
-                    </div>
-                    <div className={`
-                      grid grid-cols-1 gap-4
-                      sm:grid-cols-2
-                      lg:grid-cols-3
-                    `}>
-                      {upcomingEvents.map((event) => (
-                        <EventsListCard event={event} key={event.id as string} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <EmptyState
-                body={i18n("Check back later for updates!")}
-                className="mt-20"
-                heading={i18n("No upcoming events at this time")}
-                icon={<Calendar size={50} />}
-              />
-            )}
-          </TabPane>
-
           <TabPane tab={i18n("About venue")}>
             <div className={`
               grid grid-cols-1 gap-4
@@ -339,6 +234,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                     lg:text-base
                   `}
                 >
+                  <h3 className="mt-2 text-lg font-semibold">{i18n("Details")}</h3>
                   <CardMetadata expanded variant="list" venue={venue} />
                 </section>
                 {venue.chain && (
@@ -356,6 +252,34 @@ export const VenueView = ({ slug }: VenueViewProps) => {
               </div>
             </div>
           </TabPane>
+
+          {upcomingEvents.length > 0 && (
+            <TabPane tab={i18n("Events")}>
+              <div className="space-y-6">
+                {upcomingEvents.length > 0 && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-end">
+                      <span className={`
+                        rounded-full bg-surface-tint px-3 py-1 text-xs
+                        font-medium text-neutral
+                      `}>
+                        {i18n("{count} events", { count: upcomingEvents.length })}
+                      </span>
+                    </div>
+
+                    {upcomingEvents.map((event) => (
+                      <EventsMasonryCard
+                        event={event}
+                        hasImage={Boolean(event.images?.length)}
+                        key={event.id as string}
+                        layoutSize="full"
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </TabPane>
+          )}
         </Tabs>
       </div>
     </div>

@@ -29,7 +29,7 @@ interface PrivateConfig {
   };
 }
 
-export function getEnvVar(name: string, required: boolean = process.env.UNSET_CONFIG !== "true"): string {
+export function getEnvVar(name: string, required: boolean = process.env.UNSET_CONFIG !== "true") {
   const value = process.env[name];
 
   if (required && !value) {

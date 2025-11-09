@@ -189,7 +189,8 @@ export const Tooltip = ({ children, className = "", delay = 0, label, position =
     <>
       <div
         className={`
-          group/tooltip pointer-events-auto relative inline-block w-fit
+          group/tooltip pointer-events-auto relative flex w-fit items-center
+          justify-center
           ${className}
         `}
         onClick={toggleTooltip}

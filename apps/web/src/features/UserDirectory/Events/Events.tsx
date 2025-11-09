@@ -61,13 +61,18 @@ const Events = () => {
           locationInfo = (
             <>
               <Headset size={14} /> {i18n("Online")}
+              {venue ? (
+                <Link className="underline" href={`/venues/${venue.slug}`} target="_blank">
+                  {venue.name}
+                </Link>
+              ) : null}
             </>
           );
         } else if (venue) {
           locationInfo = (
             <>
               <LayoutDashboard size={14} />{" "}
-              <Link className="underline" href={`/user-directory/venues/${venue.slug}`} target="_blank">
+              <Link className="underline" href={`/venues/${venue.slug}`} target="_blank">
                 {venue.name}
               </Link>
             </>

@@ -142,7 +142,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
         `}>
           <div className="flex flex-1 flex-col">
             <Input
-              label={"Назва події (🇺🇦 Українською)"}
+              label="Назва події (🇺🇦 Українською)"
               placeholder={`Український фестиваль ${new Date().getFullYear()}`}
               required
               type="text"
@@ -151,7 +151,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
           </div>
           <div className="flex flex-1 flex-col">
             <Input
-              label={"Event title (🇬🇧 English)"}
+              label="Event title (🇬🇧 English)"
               placeholder={`Ukrainian Festival ${new Date().getFullYear()}`}
               required
               type="text"

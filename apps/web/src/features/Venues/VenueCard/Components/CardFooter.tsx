@@ -20,6 +20,7 @@ interface CardFooterProps {
 export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: CardFooterProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
+  const eventsCount = venue.events_aggregate?.aggregate?.count;
 
   const linkContent = (
     <>
@@ -78,6 +79,15 @@ export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: Ca
               />
             </div>
           </Tooltip>
+        ) : null}
+
+        {eventsCount ? (
+          <span className={`
+            flex rounded-md bg-neutral-disabled/25 px-1 py-px text-xs
+            font-medium
+          `}>
+            {i18n("{count} events", { count: eventsCount })}
+          </span>
         ) : null}
       </div>
 
