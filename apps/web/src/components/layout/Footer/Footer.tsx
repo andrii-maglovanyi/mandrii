@@ -48,13 +48,13 @@ export const Footer = () => {
         </div>
         <div>
           <div className={`
-            mt-3 space-x-2
+            mt-3 flex space-x-2
             md:mt-0
           `}>
             {SOCIAL_LINKS.map((props) => (
               <PlatformLink key={props.type} {...props} />
             ))}
-            <div className="ml-6 inline-block space-x-2">
+            <div className="ml-6 flex space-x-2">
               {SUPPORT_LINKS.map((props) => (
                 <PlatformLink key={props.type} {...props} />
               ))}
