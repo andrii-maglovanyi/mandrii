@@ -34,7 +34,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
 
   // Fetch all active venues for the dropdown
   const { data: venues, loading: venuesLoading } = usePublicVenues({
-    limit: 1000,
+    limit: 1000, // TODO: implement pagination when needed
     order_by: [{ name: "asc" }],
     where: {
       status: { _eq: Venue_Status_Enum.Active },
@@ -165,12 +165,12 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
           </div>
           <div className="flex flex-3 flex-col">
             <Input
-              disabled={isBusy || Boolean(initialValues.id)}
               label={i18n("Slug")}
               placeholder={`ukrainian-festival-${new Date().getFullYear()}`}
               required
               type="text"
               {...getFieldProps("slug")}
+              disabled={isBusy || Boolean(initialValues.id)}
             />
             <RichText as="p" className="mt-1.5 text-sm text-neutral">
               {i18n(

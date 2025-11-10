@@ -1,6 +1,6 @@
 import { AuthenticatedSession } from "~/lib/api/context";
-import { BadGateway, BadRequestError, InternalServerError, NotFoundError } from "~/lib/api/errors";
-import { publicConfig } from "~/lib/config/public";
+import { BadRequestError, InternalServerError, NotFoundError } from "~/lib/api/errors";
+import { executeGraphQLQuery } from "~/lib/graphql/client";
 import { Events } from "~/types";
 
 const EVENT_FIELDS = `
@@ -60,33 +60,6 @@ const UPDATE_EVENT_MUTATION = `
   }
 `;
 
-const executeGraphQLQuery = async <T>(
-  query: string,
-  variables: Record<string, unknown>,
-  accessToken: string,
-): Promise<T> => {
-  const response = await fetch(publicConfig.hasura.endpoint, {
-    body: JSON.stringify({ query, variables }),
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-  });
-
-  if (!response.ok) {
-    throw new BadGateway("Failed to save event");
-  }
-
-  const result = await response.json();
-
-  if (result.errors) {
-    throw new Error(result.errors[0].message);
-  }
-
-  return result.data;
-};
-
 export const saveEvent = async (variables: Partial<Events>, session: AuthenticatedSession) => {
   const isUpdate = !!variables.id;
 
@@ -103,13 +76,13 @@ export const saveEvent = async (variables: Partial<Events>, session: Authenticat
       throw new BadRequestError("No fields to update");
     }
 
-    const result = await executeGraphQLQuery<{ update_events_by_pk: { id: string } }>(
+    const result = await executeGraphQLQuery<{ update_events_by_pk: { id: string } | null }>(
       UPDATE_EVENT_MUTATION,
       {
         _set: cleanedFields,
         id,
       },
-      session.accessToken,
+      { Authorization: `Bearer ${session.accessToken}` },
     );
 
     if (!result.update_events_by_pk) {
@@ -118,16 +91,16 @@ export const saveEvent = async (variables: Partial<Events>, session: Authenticat
 
     return result.update_events_by_pk.id;
   } else {
-    const result = await executeGraphQLQuery<{ insert_events_one: { id: string } }>(
+    const result = await executeGraphQLQuery<{ insert_events_one: { id: string } | null }>(
       INSERT_EVENT_MUTATION,
       {
         object: { ...variables, user_id: session.user.id },
       },
-      session.accessToken,
+      { Authorization: `Bearer ${session.accessToken}` },
     );
 
     if (!result.insert_events_one) {
-      throw new InternalServerError("Failed to create event");
+      throw new InternalServerError("Failed to create event - no data returned from database");
     }
 
     return result.insert_events_one.id;

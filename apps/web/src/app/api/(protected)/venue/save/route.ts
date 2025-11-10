@@ -76,7 +76,7 @@ export const POST = (req: Request) =>
       const geo = await geocodeAddress(address.trim(), privateConfig.maps.apiKey);
 
       if (!geo) {
-        throw new BadRequestError("Invalid address");
+        throw new BadRequestError("Address not found");
       }
 
       const { city, coordinates, country, postcode } = geo;
@@ -107,18 +107,25 @@ export const POST = (req: Request) =>
 
     venueData.logo = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? "";
     venueData.images = await processImages(images ?? [], [prefix, "images"].join("/"));
+
     const venueId = await saveVenue(venueData, session, Boolean(is_owner));
 
     if (!venueId) {
-      throw new InternalServerError("Failed to save venue");
+      throw new InternalServerError("Failed to save venue - no ID returned");
     }
 
     if (!venueData.id) {
-      const userModel = new UserModel(session);
-      await userModel.incrementVenueCreation();
+      try {
+        const userModel = new UserModel(session);
+        await userModel.incrementVenueCreation();
+      } catch (error) {
+        console.error("Failed to increment venue creation count:", error);
+      }
     }
 
-    sendSlackNotification(session.user, venueData);
+    sendSlackNotification(session.user, venueData).catch((error) => {
+      console.error("Slack notification failed (non-critical):", error);
+    });
 
     return NextResponse.json({ id: venueId, success: true }, { status: 200 });
   });

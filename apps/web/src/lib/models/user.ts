@@ -1,6 +1,6 @@
 import { AuthenticatedSession } from "~/lib/api/context";
-import { BadGateway, BadRequestError, NotFoundError, UnauthorizedError } from "~/lib/api/errors";
-import { publicConfig } from "~/lib/config/public";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "~/lib/api/errors";
+import { executeGraphQLQuery } from "~/lib/graphql/client";
 import { Users } from "~/types";
 
 import { privateConfig } from "../config/private";
@@ -33,8 +33,6 @@ const UPDATE_USER_MUTATION = `
   }
 `;
 
-type AuthContext = { accessToken: string; type: "user" } | { adminSecret: string; type: "admin" };
-
 export class UserModel {
   private session: AuthenticatedSession | null;
 
@@ -54,10 +52,10 @@ export class UserModel {
   }
 
   async findById(id: string): Promise<null | Users> {
-    const result = await this.executeQuery<{ users_by_pk: null | Users }>(
+    const result = await executeGraphQLQuery<{ users_by_pk: null | Users }>(
       GET_USER_BY_ID_QUERY,
       { id },
-      this.getAuthContext(),
+      this.getAuthHeaders(),
     );
 
     return result.users_by_pk;
@@ -100,13 +98,13 @@ export class UserModel {
       throw new BadRequestError("No fields to update");
     }
 
-    const result = await this.executeQuery<{ update_users_by_pk: null | Users }>(
+    const result = await executeGraphQLQuery<{ update_users_by_pk: null | Users }>(
       UPDATE_USER_MUTATION,
       {
         _set: cleanedFields,
         id,
       },
-      this.getAuthContext(),
+      this.getAuthHeaders(),
     );
 
     if (!result.update_users_by_pk) {
@@ -116,46 +114,16 @@ export class UserModel {
     return result.update_users_by_pk;
   }
 
-  private async executeQuery<T>(query: string, variables: Record<string, unknown>, auth: AuthContext): Promise<T> {
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
-
-    if (auth.type === "user") {
-      headers["Authorization"] = `Bearer ${auth.accessToken}`;
-    } else if (auth.type === "admin") {
-      headers["x-hasura-admin-secret"] = auth.adminSecret;
-    }
-
-    const response = await fetch(publicConfig.hasura.endpoint, {
-      body: JSON.stringify({ query, variables }),
-      headers,
-      method: "POST",
-    });
-
-    if (!response.ok) {
-      throw new BadGateway("Failed to execute GraphQL query");
-    }
-
-    const result = await response.json();
-
-    if (result.errors) {
-      throw new Error(result.errors[0].message);
-    }
-
-    return result.data;
-  }
-
-  private getAuthContext(useAdmin: boolean = false): AuthContext {
+  private getAuthHeaders(useAdmin: boolean = false) {
     if (useAdmin) {
-      return { adminSecret: privateConfig.hasura.adminSecret, type: "admin" };
+      return { "x-hasura-admin-secret": privateConfig.hasura.adminSecret };
     }
 
     if (!this.session?.accessToken) {
       throw new UnauthorizedError("Session is required for user operations");
     }
 
-    return { accessToken: this.session.accessToken, type: "user" };
+    return { Authorization: `Bearer ${this.session.accessToken}` };
   }
 
   private async updateAsAdmin(variables: Partial<Users>): Promise<Users> {
@@ -171,13 +139,13 @@ export class UserModel {
       throw new BadRequestError("No fields to update");
     }
 
-    const result = await this.executeQuery<{ update_users_by_pk: null | Users }>(
+    const result = await executeGraphQLQuery<{ update_users_by_pk: null | Users }>(
       UPDATE_USER_MUTATION,
       {
         _set: cleanedFields,
         id,
       },
-      this.getAuthContext(true),
+      this.getAuthHeaders(true),
     );
 
     if (!result.update_users_by_pk) {

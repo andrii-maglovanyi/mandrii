@@ -45,9 +45,6 @@ export const EditVenue = ({ slug }: VenueProps) => {
   }, [data]);
 
   const handleSuccess = useCallback(async () => {
-    showSuccess(i18n("Venue updated successfully"));
-    router.push(`/user-directory#${i18n("Venues")}`);
-
     await client.refetchQueries({
       include: ["GetUserVenues"],
       updateCache(cache) {
@@ -56,6 +53,14 @@ export const EditVenue = ({ slug }: VenueProps) => {
         cache.gc();
       },
     });
+
+    showSuccess(i18n("Venue updated successfully"));
+    router.push("/user-directory");
+
+    // Wait for navigation and component mount before setting hash
+    setTimeout(() => {
+      window.location.hash = encodeURIComponent(i18n("Venues"));
+    }, 300);
   }, [i18n, router, showSuccess, client]);
 
   const submitVenue = useCallback(

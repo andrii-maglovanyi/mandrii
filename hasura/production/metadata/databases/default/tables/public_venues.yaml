@@ -49,6 +49,7 @@ insert_permissions:
       check: {}
       columns:
         - address
+        - area
         - category
         - chain_id
         - city
@@ -143,6 +144,7 @@ update_permissions:
     permission:
       columns:
         - address
+        - area
         - category
         - city
         - country

@@ -44,9 +44,6 @@ export const EditEvent = ({ slug }: EventProps) => {
   }, [data]);
 
   const handleSuccess = useCallback(async () => {
-    showSuccess(i18n("Event updated successfully"));
-    router.push(`/user-directory#${i18n("Events")}`);
-
     await client.refetchQueries({
       include: ["GetUserEvents"],
       updateCache(cache) {
@@ -55,6 +52,14 @@ export const EditEvent = ({ slug }: EventProps) => {
         cache.gc();
       },
     });
+
+    showSuccess(i18n("Event updated successfully"));
+    router.push("/user-directory");
+
+    // Wait for navigation and component mount before setting hash
+    setTimeout(() => {
+      window.location.hash = encodeURIComponent(i18n("Events"));
+    }, 300);
   }, [i18n, router, showSuccess, client]);
 
   const submitEvent = useCallback(
@@ -90,7 +95,7 @@ export const EditEvent = ({ slug }: EventProps) => {
       return (
         <EmptyState
           body={i18n("Please check the event URL and try again, or return to your [events list]({events_list_url})", {
-            events_list_url: "/user-directory#Events",
+            events_list_url: `/user-directory#${i18n("Events")}`,
           })}
           heading={i18n("Could not find that event")}
           icon={<Search size={50} />}

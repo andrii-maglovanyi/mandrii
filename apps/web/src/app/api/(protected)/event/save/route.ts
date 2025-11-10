@@ -130,15 +130,22 @@ export const POST = (req: Request) =>
     const eventId = await saveEvent(eventData, session);
 
     if (!eventId) {
-      throw new InternalServerError("Failed to save event");
+      throw new InternalServerError("Failed to save event - no ID returned");
     }
 
+    // Non-critical operation - don't fail the request if this errors
     if (!eventData.id) {
-      const userModel = new UserModel(session);
-      await userModel.incrementEventCreation();
+      try {
+        const userModel = new UserModel(session);
+        await userModel.incrementEventCreation();
+      } catch (error) {
+        console.error("Failed to increment event creation count (non-critical):", error);
+      }
     }
 
-    sendSlackNotification(session.user, eventData);
+    sendSlackNotification(session.user, eventData).catch((error) => {
+      console.error("Slack notification failed (non-critical):", error);
+    });
 
     return NextResponse.json({ id: eventId, success: true }, { status: 200 });
   });

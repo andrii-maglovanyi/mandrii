@@ -111,7 +111,8 @@ const getAreaFromOSM = async (
     // Return smallest available area as single-element array
     return areaParts.length ? [areaParts[0]] : locationData.area ? [locationData.area] : null;
   } catch (error) {
-    console.error("Error extracting area from OSM:", error);
+    console.error("Error extracting area from OSM:", error instanceof Error ? error.message : error);
+    // Non-critical fallback - return original area
     return locationData.area ? [locationData.area] : null;
   }
 };
@@ -155,26 +156,45 @@ export const geocodeAddress = async (address: string, apiKey: string) => {
   try {
     const googleResponse = await fetch(googleUrl);
     if (!googleResponse.ok) {
-      throw new Error(`Google API error: ${googleResponse.statusText}`);
+      const errorMessage = `Google API HTTP ${googleResponse.status}: ${googleResponse.statusText}`;
+      console.error("Google Geocoding API request failed:", errorMessage);
+      throw new Error(errorMessage);
     }
 
     const googleData = await googleResponse.json();
     if (googleData.status !== "OK") {
-      console.error(`Geocoding failed: ${googleData.status}`);
-      return null;
+      const errorMessage = `Google Geocoding API error: ${googleData.status} - ${googleData.error_message || "Unknown error"}`;
+      console.error("Google Geocoding API returned error:", errorMessage);
+      throw new Error(errorMessage);
     }
 
     const locationData = extractLocationData(googleData);
-    if (!locationData) return null;
+    if (!locationData) {
+      const errorMessage = "Failed to extract location data from Google response";
+      console.error(errorMessage, { address, googleDataStatus: googleData.status });
+      throw new Error(errorMessage);
+    }
 
-    const { area } = await getCombinedAreaFromOSM(locationData);
+    let area = null;
+    try {
+      const osmResult = await getCombinedAreaFromOSM(locationData);
+      area = osmResult.area;
+    } catch (osmError) {
+      // OSM enrichment is non-critical, log but continue
+      console.warn("OSM enrichment failed (non-critical):", osmError instanceof Error ? osmError.message : osmError);
+    }
 
     return {
       ...locationData,
       area,
     };
   } catch (error) {
-    console.error("Geocoding error:", error);
-    return null;
+    const enhancedError =
+      error instanceof Error
+        ? new Error(`Geocoding failed for address "${address}": ${error.message}`)
+        : new Error(`Geocoding failed for address "${address}": Unknown error`);
+
+    console.error("Geocoding error:", enhancedError);
+    throw enhancedError;
   }
 };

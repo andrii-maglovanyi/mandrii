@@ -13,7 +13,26 @@ export async function withErrorHandling(handler: () => Promise<Response | undefi
       console.error("API Error:", error);
     }
 
-    captureException(error);
+    if (error instanceof ApiError) {
+      captureException(error, {
+        extra: {
+          ...(error instanceof ValidationError && error.errors ? { validationErrors: error.errors } : {}),
+        },
+        level: error.statusCode >= 500 ? "error" : "warning",
+        tags: {
+          error_code: error.code,
+          error_type: error.constructor.name,
+          status_code: error.statusCode.toString(),
+        },
+      });
+    } else {
+      captureException(error, {
+        level: "error",
+        tags: {
+          error_type: "unexpected",
+        },
+      });
+    }
 
     if (error instanceof ApiError) {
       const response: Record<string, unknown> = {
