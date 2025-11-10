@@ -1,15 +1,21 @@
 import { NextRequest } from "next/server";
 
+import { BadRequestError, withErrorHandling } from "~/lib/api";
 import { sendSlackNotification } from "~/lib/slack/ref";
 
-export async function POST(request: NextRequest) {
-  const { topic, url } = await request.json();
+export const POST = (request: NextRequest) =>
+  withErrorHandling(async () => {
+    const body = await request.json();
+    const { topic, url } = body;
 
-  try {
+    if (!topic || typeof topic !== "string") {
+      throw new BadRequestError("Invalid or missing topic");
+    }
+
+    if (!url || typeof url !== "string") {
+      throw new BadRequestError("Invalid or missing URL");
+    }
+
     await sendSlackNotification(topic, url);
     return Response.json({ ok: true }, { status: 200 });
-  } catch (error) {
-    console.error("Slack error:", error);
-    return Response.json({ error: "Failed to send Slack notification" }, { status: 500 });
-  }
-}
+  });

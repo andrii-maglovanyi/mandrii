@@ -41,7 +41,12 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ status: "Event tracked successfully" });
   } catch (error) {
-    captureException(error);
+    captureException(error, {
+      extra: {
+        errorType: error instanceof Error ? error.constructor.name : typeof error,
+      },
+      tags: { api_route: "mixpanel", service: "mixpanel" },
+    });
 
     let errorMessage = "Internal Server Error";
 

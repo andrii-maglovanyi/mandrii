@@ -33,16 +33,14 @@ export async function GET(request: NextRequest) {
       { signal: controller.signal },
     );
 
-    clearTimeout(timeout); // Clear timeout if request succeeds
+    clearTimeout(timeout);
 
-    // Handle API response failure
     if (!locationResponse.ok) {
       return NextResponse.json({ error: "Failed to fetch location data" }, { status: locationResponse.status });
     }
 
     const locationData = await locationResponse.json();
 
-    // Check if IP-API returned an error
     if (locationData.status === "fail") {
       return NextResponse.json({ error: locationData.message ?? "Failed to retrieve location data" }, { status: 400 });
     }
@@ -54,7 +52,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(locationData);
   } catch (error) {
-    captureException(error);
+    captureException(error, {
+      extra: {
+        errorType: error instanceof Error ? error.constructor.name : typeof error,
+        isTimeout: error instanceof DOMException && error.name === "AbortError",
+      },
+      tags: { api_route: "geo-ip" },
+    });
 
     let errorMessage = "Internal Server Error";
 

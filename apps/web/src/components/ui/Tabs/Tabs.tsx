@@ -33,17 +33,29 @@ export const Tabs = ({ children, defaultActiveKey = "", defer = false }: TabsPro
   );
 
   useEffect(() => {
-    const activeKey = decodeURIComponent(window.location.hash?.replace("#", "") || defaultActiveKey);
+    const updateActiveTab = () => {
+      const activeKey = decodeURIComponent(window.location.hash?.replace("#", "") || defaultActiveKey);
 
-    React.Children.map(tabsOnly, (child, index) => {
-      if (
-        React.isValidElement<TabPaneProps>(child) &&
-        activeKey &&
-        child?.props.tab === decodeURIComponent(activeKey)
-      ) {
-        setActiveTab(index);
-      }
-    });
+      React.Children.map(tabsOnly, (child, index) => {
+        if (
+          React.isValidElement<TabPaneProps>(child) &&
+          activeKey &&
+          child?.props.tab === decodeURIComponent(activeKey)
+        ) {
+          setActiveTab(index);
+        }
+      });
+    };
+
+    // Initial tab selection
+    updateActiveTab();
+
+    // Listen for hash changes (e.g., when navigating with window.location.hash)
+    window.addEventListener("hashchange", updateActiveTab);
+
+    return () => {
+      window.removeEventListener("hashchange", updateActiveTab);
+    };
   }, [tabsOnly, defaultActiveKey]);
 
   return (

@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/nextjs";
 import { kv } from "@vercel/kv";
 
 interface Redirect {
@@ -21,13 +22,13 @@ const scanAllKeys = async (): Promise<string[]> => {
 };
 
 export async function DELETE(request: Request) {
-  const { topic } = await request.json();
-
-  if (!topic) {
-    return Response.json({ error: "Topic is required" }, { status: 400 });
-  }
-
   try {
+    const { topic } = await request.json();
+
+    if (!topic) {
+      return Response.json({ error: "Topic is required" }, { status: 400 });
+    }
+
     const key = getKey(topic);
     const redirect = await kv.get(key);
 
@@ -39,7 +40,13 @@ export async function DELETE(request: Request) {
 
     return Response.json({ message: "URL removed successfully" });
   } catch (error) {
-    return Response.json({ error: `Internal Server Error: ${error}` }, { status: 500 });
+    console.error("Error deleting redirect:", error);
+    captureException(error, {
+      tags: { api_route: "ref", operation: "delete" },
+    });
+
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return Response.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -61,18 +68,24 @@ export async function GET() {
 
     return Response.json(allRedirects);
   } catch (error) {
-    return Response.json({ error: `Internal Server Error: ${error}` }, { status: 500 });
+    console.error("Error fetching redirects:", error);
+    captureException(error, {
+      tags: { api_route: "ref", operation: "list" },
+    });
+
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return Response.json({ error: errorMessage }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
-  const { topic, url } = await request.json();
-
-  if (!topic || !url) {
-    return Response.json({ error: "Topic and URL are required" }, { status: 400 });
-  }
-
   try {
+    const { topic, url } = await request.json();
+
+    if (!topic || !url) {
+      return Response.json({ error: "Topic and URL are required" }, { status: 400 });
+    }
+
     const key = getKey(topic);
     const existingRedirect = await kv.get<Redirect>(key);
 
@@ -85,18 +98,24 @@ export async function POST(request: Request) {
 
     return Response.json({ message: "URL added successfully" }, { status: 201 });
   } catch (error) {
-    return Response.json({ error: `Internal Server Error: ${error}` }, { status: 500 });
+    console.error("Error creating redirect:", error);
+    captureException(error, {
+      tags: { api_route: "ref", operation: "create" },
+    });
+
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return Response.json({ error: errorMessage }, { status: 500 });
   }
 }
 
 export async function PUT(request: Request) {
-  const { topic, url } = await request.json();
-
-  if (!topic || !url) {
-    return Response.json({ error: "Topic and new URL are required" }, { status: 400 });
-  }
-
   try {
+    const { topic, url } = await request.json();
+
+    if (!topic || !url) {
+      return Response.json({ error: "Topic and new URL are required" }, { status: 400 });
+    }
+
     const key = getKey(topic);
     const redirect = await kv.get<Redirect>(key);
 
@@ -109,6 +128,12 @@ export async function PUT(request: Request) {
 
     return Response.json({ message: "URL updated successfully" });
   } catch (error) {
-    return Response.json({ error: `Internal Server Error: ${error}` }, { status: 500 });
+    console.error("Error updating redirect:", error);
+    captureException(error, {
+      tags: { api_route: "ref", operation: "update" },
+    });
+
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return Response.json({ error: errorMessage }, { status: 500 });
   }
 }

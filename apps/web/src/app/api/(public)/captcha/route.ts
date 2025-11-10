@@ -1,3 +1,5 @@
+import { captureException } from "@sentry/nextjs";
+
 const verifyCaptcha = async (token: string, action: string) => {
   const secret = process.env.RECAPTCHA_SECRET_KEY;
 
@@ -10,6 +12,10 @@ const verifyCaptcha = async (token: string, action: string) => {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     method: "POST",
   });
+
+  if (!res.ok) {
+    throw new Error(`reCAPTCHA API returned HTTP ${res.status}: ${res.statusText}`);
+  }
 
   const data = await res.json();
   return data.success && data.score > 0.5 && data.action === action;
@@ -36,6 +42,15 @@ export async function POST(request: Request) {
     return Response.json({ success }, { status: 200 });
   } catch (error) {
     console.error("Error in reCAPTCHA route:", error);
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    captureException(error, {
+      extra: {
+        errorType: error instanceof Error ? error.constructor.name : typeof error,
+        hasAction: !!request,
+      },
+      tags: { api_route: "captcha" },
+    });
+
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return Response.json({ error: errorMessage }, { status: 500 });
   }
 }
