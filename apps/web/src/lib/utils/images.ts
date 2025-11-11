@@ -40,7 +40,7 @@ export const processImages = async (images: File[], prefix: string) => {
     await del(blobsToDelete);
   }
 
-  const errors: Array<{ error: Error; file: string; }> = [];
+  const errors: Array<{ error: Error; file: string }> = [];
 
   for (const image of images) {
     if (!image.name || !image.type.startsWith("image/")) {
