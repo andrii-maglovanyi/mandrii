@@ -62,7 +62,6 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
 
   return (
     <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
-      {/* Website */}
       {showWebsite && website && (
         <Section title={i18n("Website")}>
           <InfoLine
@@ -75,7 +74,6 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
         </Section>
       )}
 
-      {/* Social Media */}
       {expanded && (socialLinks.facebook || socialLinks.instagram) && (
         <Section title={i18n("Social media")}>
           {socialLinks.facebook && (
@@ -99,7 +97,6 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
         </Section>
       )}
 
-      {/* Email */}
       {showEmail && emails?.length && emails[0] ? (
         <Section title={i18n("Email")}>
           {emails.map((email) => (
@@ -116,7 +113,6 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
         </Section>
       ) : null}
 
-      {/* Phone Numbers */}
       {showPhone && phoneNumbers?.length && phoneNumbers[0] ? (
         <Section title={i18n("Phone number")}>
           {phoneNumbers.map((number) => (
@@ -132,7 +128,6 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
         </Section>
       ) : null}
 
-      {/* Address */}
       {showAddress && address ? (
         <Section title={i18n("Address")}>
           <InfoLine

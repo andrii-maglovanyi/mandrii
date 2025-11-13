@@ -8,5 +8,6 @@ export * from "./phone-number";
 export * from "./platform";
 export * from "./storage";
 export * from "./string";
+export * from "./url";
 export * from "./website";
 export * from "./zod";
