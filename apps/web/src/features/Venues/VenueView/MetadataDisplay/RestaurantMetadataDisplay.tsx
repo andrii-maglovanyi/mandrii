@@ -15,11 +15,33 @@ export const RestaurantMetadataDisplay = ({ restaurantDetails }: RestaurantMetad
   const i18n = useI18n();
   const locale = useLocale() as Locale;
 
-  const { cuisine_types, features, price_range, seating_capacity } = restaurantDetails ?? {};
+  if (!restaurantDetails) return null;
 
-  const hasCuisine = cuisine_types && cuisine_types.length > 0;
-  const hasBasicInfo = seating_capacity || price_range;
-  const hasFeatures = features && features.length > 0;
+  const { cuisine_types, features, price_range, seating_capacity } = restaurantDetails;
+
+  const cuisineItems = cuisine_types
+    ?.map((cuisine) => {
+      const option = constants.cuisineOptions.find((opt) => opt.value === cuisine);
+      return option?.label[locale];
+    })
+    .filter(Boolean) as string[] | undefined;
+
+  const hasCuisine = cuisineItems && cuisineItems.length > 0;
+
+  const featureItems = features
+    ?.map((feature) => {
+      const option = constants.featureOptions.find((opt) => opt.value === feature);
+      return option?.label[locale];
+    })
+    .filter(Boolean) as string[] | undefined;
+
+  const hasFeatures = featureItems && featureItems.length > 0;
+
+  const priceRangeLabel = price_range
+    ? constants.priceRangeOptions.find((opt) => opt.value === price_range)?.label[locale]
+    : undefined;
+
+  const hasBasicInfo = seating_capacity !== undefined || priceRangeLabel !== undefined;
 
   if (!hasCuisine && !hasBasicInfo && !hasFeatures) return null;
 
@@ -27,12 +49,7 @@ export const RestaurantMetadataDisplay = ({ restaurantDetails }: RestaurantMetad
     <div className="space-y-6">
       {hasCuisine && (
         <MetadataSection icon={UtensilsCrossed} title={i18n("Cuisine")}>
-          <MetadataChips
-            items={(cuisine_types as (typeof constants.cuisineOptions)[number]["value"][]).map(
-              (cuisine) =>
-                constants.cuisineOptions.find((option) => option.value === cuisine)?.label[locale] || cuisine,
-            )}
-          />
+          <MetadataChips items={cuisineItems} />
         </MetadataSection>
       )}
 
@@ -41,28 +58,15 @@ export const RestaurantMetadataDisplay = ({ restaurantDetails }: RestaurantMetad
           {seating_capacity !== undefined && (
             <MetadataRow icon={Users} label={i18n("Capacity")} showDots value={seating_capacity} />
           )}
-          {price_range && (
-            <MetadataRow
-              icon={DollarSign}
-              label={i18n("Price range")}
-              showDots
-              value={
-                constants.priceRangeOptions.find((option) => option.value === price_range)?.label[locale] || price_range
-              }
-            />
+          {priceRangeLabel && (
+            <MetadataRow icon={DollarSign} label={i18n("Price range")} showDots value={priceRangeLabel} />
           )}
         </MetadataSection>
       )}
 
-      {/* Features */}
       {hasFeatures && (
         <MetadataSection icon={Sparkles} title={i18n("Features")}>
-          <MetadataChips
-            items={(features as (typeof constants.featureOptions)[number]["value"][]).map(
-              (feature) =>
-                constants.featureOptions.find((option) => option.value === feature)?.label[locale] || feature,
-            )}
-          />
+          <MetadataChips items={featureItems} />
         </MetadataSection>
       )}
     </div>
