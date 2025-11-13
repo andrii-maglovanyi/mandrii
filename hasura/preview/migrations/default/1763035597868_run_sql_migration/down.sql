@@ -1,0 +1,4 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- ALTER TABLE venue_restaurant_details
+-- ADD COLUMN languages_taught text[];

@@ -156,6 +156,45 @@ const VENUE_FIELDS_FRAGMENT = gql`
     status
     owner_id
     user_id
+    venue_schedules {
+      id
+      open_time
+      close_time
+      day_of_week
+    }
+    venue_accommodation_details {
+      bedrooms
+      bathrooms
+      max_guests
+      check_in_time
+      check_out_time
+      minimum_stay_nights
+      amenities
+    }
+    venue_beauty_salon_details {
+      services
+      appointment_required
+      walk_ins_accepted
+    }
+    venue_restaurant_details {
+      cuisine_types
+      seating_capacity
+      price_range
+      features
+    }
+    venue_school_details {
+      subjects
+      languages_taught
+      age_groups
+      class_size_max
+      online_classes_available
+    }
+    venue_shop_details {
+      product_categories
+      payment_methods
+    }
+    created_at
+    updated_at
     events_aggregate {
       aggregate {
         count

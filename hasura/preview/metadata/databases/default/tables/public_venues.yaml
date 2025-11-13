@@ -29,6 +29,13 @@ object_relationships:
         remote_table:
           name: users
           schema: public
+  - name: venue_accommodation_detail
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_accommodation_details
+          schema: public
   - name: venue_category
     using:
       foreign_key_constraint_on: category
@@ -42,6 +49,48 @@ array_relationships:
         column: venue_id
         table:
           name: events
+          schema: public
+  - name: venue_accommodation_details
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_accommodation_details
+          schema: public
+  - name: venue_beauty_salon_details
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_beauty_salon_details
+          schema: public
+  - name: venue_restaurant_details
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_restaurant_details
+          schema: public
+  - name: venue_schedules
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_schedule
+          schema: public
+  - name: venue_school_details
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_school_details
+          schema: public
+  - name: venue_shop_details
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_shop_details
           schema: public
 insert_permissions:
   - role: user

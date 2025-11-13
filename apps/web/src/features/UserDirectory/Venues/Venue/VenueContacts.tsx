@@ -63,7 +63,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, setValues }: Venu
             {index > 0 && (
               <ActionButton
                 aria-label={fieldName === "emails" ? i18n("Remove email") : i18n("Remove phone number")}
-                className="mt-6"
+                className="mt-1"
                 icon={<Minus />}
                 onClick={() => removeHandler(index)}
                 tooltipPosition="left"

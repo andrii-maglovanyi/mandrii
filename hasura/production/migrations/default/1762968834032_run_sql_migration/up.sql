@@ -1,0 +1,2 @@
+ALTER TABLE venue_accomodation_details
+RENAME TO venue_accommodation_details;

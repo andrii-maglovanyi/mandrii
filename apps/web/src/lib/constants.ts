@@ -34,6 +34,79 @@ const countries = {
   },
 };
 
+const weekdays = [
+  {
+    full: {
+      en: "Monday" as const,
+      uk: "Понеділок",
+    },
+    short: {
+      en: "Mon",
+      uk: "Пн",
+    },
+  },
+  {
+    full: {
+      en: "Tuesday" as const,
+      uk: "Вівторок",
+    },
+    short: {
+      en: "Tue",
+      uk: "Вт",
+    },
+  },
+  {
+    full: {
+      en: "Wednesday" as const,
+      uk: "Середа",
+    },
+    short: {
+      en: "Wed",
+      uk: "Ср",
+    },
+  },
+  {
+    full: {
+      en: "Thursday" as const,
+      uk: "Четвер",
+    },
+    short: {
+      en: "Thu",
+      uk: "Чт",
+    },
+  },
+  {
+    full: {
+      en: "Friday" as const,
+      uk: "П'ятниця",
+    },
+    short: {
+      en: "Fri",
+      uk: "Пт",
+    },
+  },
+  {
+    full: {
+      en: "Saturday" as const,
+      uk: "Субота",
+    },
+    short: {
+      en: "Sat",
+      uk: "Сб",
+    },
+  },
+  {
+    full: {
+      en: "Sunday" as const,
+      uk: "Неділя",
+    },
+    short: {
+      en: "Sun",
+      uk: "Нд",
+    },
+  },
+];
+
 const categories: Record<
   string,
   {
@@ -85,6 +158,130 @@ const eventTypes: Record<
   WORKSHOP: { iconName: "GraduationCap", label: { en: "Workshop", uk: "Майстер-клас" } },
 };
 
+const amenityOptions = [
+  { icon: "Wifi", label: { en: "WiFi", uk: "WiFi" }, value: "wifi" },
+  { icon: "ChefHat", label: { en: "Kitchen", uk: "Кухня" }, value: "kitchen" },
+  { icon: "WashingMachine", label: { en: "Washing machine", uk: "Пральна машина" }, value: "washing_machine" },
+  { icon: "Wind", label: { en: "Dryer", uk: "Сушарка" }, value: "dryer" },
+  { icon: "Snowflake", label: { en: "Air conditioning", uk: "Кондиціонер" }, value: "air_conditioning" },
+  { icon: "Flame", label: { en: "Heating", uk: "Опалення" }, value: "heating" },
+  { icon: "Car", label: { en: "Parking", uk: "Паркування" }, value: "parking" },
+  { icon: "Tv", label: { en: "TV", uk: "Телевізор" }, value: "tv" },
+  { icon: "Laptop", label: { en: "Workspace", uk: "Робоче місце" }, value: "workspace" },
+  { icon: "Waves", label: { en: "Pool", uk: "Басейн" }, value: "pool" },
+  { icon: "Dumbbell", label: { en: "Gym", uk: "Тренажерний зал" }, value: "gym" },
+  { icon: "PawPrint", label: { en: "Pet friendly", uk: "Дружній до тварин" }, value: "pet_friendly" },
+  {
+    icon: "Accessibility",
+    label: { en: "Wheelchair accessible", uk: "Доступно для інвалідів" },
+    value: "wheelchair_accessible",
+  },
+] as const;
+
+const beautyServiceOptions = [
+  { label: { en: "Haircut", uk: "Стрижка" }, value: "haircut" },
+  { label: { en: "Hair coloring", uk: "Фарбування волосся" }, value: "coloring" },
+  { label: { en: "Hair styling", uk: "Стилізація волосся" }, value: "styling" },
+  { label: { en: "Manicure", uk: "Манікюр" }, value: "manicure" },
+  { label: { en: "Pedicure", uk: "Педикюр" }, value: "pedicure" },
+  { label: { en: "Massage", uk: "Масаж" }, value: "massage" },
+  { label: { en: "Facial treatment", uk: "Догляд за обличчям" }, value: "facial" },
+  { label: { en: "Waxing", uk: "Депіляція воском" }, value: "waxing" },
+  { label: { en: "Makeup application", uk: "Макіяж" }, value: "makeup" },
+] as const;
+
+const cuisineOptions = [
+  { label: { en: "Ukrainian", uk: "Українська" }, value: "ukrainian" },
+  { label: { en: "Georgian", uk: "Грузинська" }, value: "georgian" },
+  { label: { en: "European", uk: "Європейська" }, value: "european" },
+  { label: { en: "Asian", uk: "Азіатська" }, value: "asian" },
+  { label: { en: "Italian", uk: "Італійська" }, value: "italian" },
+  { label: { en: "French", uk: "Французька" }, value: "french" },
+  { label: { en: "Mexican", uk: "Мексиканська" }, value: "mexican" },
+  { label: { en: "Japanese", uk: "Японська" }, value: "japanese" },
+  { label: { en: "Indian", uk: "Індійська" }, value: "indian" },
+  { label: { en: "Other", uk: "Інше" }, value: "other" },
+];
+
+const priceRangeOptions = [
+  { label: { en: "Budget", uk: "Бюджетний" }, value: "budget" },
+  { label: { en: "Moderate", uk: "Помірний" }, value: "moderate" },
+  { label: { en: "Upscale", uk: "Висококласний" }, value: "upscale" },
+  { label: { en: "Fine Dining", uk: "Вишукана кухня" }, value: "fine_dining" },
+] as const;
+
+const featureOptions = [
+  { label: { en: "Takeaway", uk: "На винос" }, value: "takeaway" },
+  { label: { en: "Delivery", uk: "Доставка" }, value: "delivery" },
+  { label: { en: "Outdoor seating", uk: "Літній майданчик" }, value: "outdoor_seating" },
+  { label: { en: "Reservations required", uk: "Потрібне бронювання" }, value: "reservations_required" },
+  { label: { en: "Live music", uk: "Жива музика" }, value: "live_music" },
+  { label: { en: "Kids menu", uk: "Дитяче меню" }, value: "kids_menu" },
+  { label: { en: "Vegetarian options", uk: "Вегетаріанські страви" }, value: "vegetarian_options" },
+  { label: { en: "Vegan options", uk: "Веганські страви" }, value: "vegan_options" },
+  { label: { en: "Gluten-free options", uk: "Безглютенові страви" }, value: "gluten_free_options" },
+] as const;
+
+const curriculumOptions = [
+  { label: { en: "Sports", uk: "Спорт" }, value: "sports" },
+  { label: { en: "Arts (Music, Drawing...)", uk: "Мистецтво (музика, малювання...)" }, value: "arts" },
+  {
+    label: {
+      en: "STEM (Coding, Math, Physics...)",
+      uk: "STEM (програмування, математика, фізика...)",
+    },
+    value: "stem",
+  },
+  { label: { en: "Language clubs", uk: "Мовні клуби" }, value: "language_clubs" },
+  { label: { en: "Cultural events", uk: "Культурні заходи" }, value: "cultural_events" },
+] as const;
+
+const ageGroupOptions = [
+  { label: { en: "Preschool (3-5 years)", uk: "Дошкільний вік (3-5 років)" }, value: "preschool" },
+  { label: { en: "Primary school (6-11 years)", uk: "Молодша школа (6-11 років)" }, value: "primary" },
+  { label: { en: "Middle school (12-14 years)", uk: "Середня школа (12-14 років)" }, value: "middle" },
+  { label: { en: "High school (15-18 years)", uk: "Старша школа (15-18 років)" }, value: "high_school" },
+  { label: { en: "Adult rducation", uk: "Освіта для дорослих" }, value: "adult" },
+] as const;
+
+const languageOptions = [
+  { label: { en: "Ukrainian", uk: "Українська" }, value: "ukrainian" },
+  { label: { en: "English", uk: "Англійська" }, value: "english" },
+  { label: { en: "Local language", uk: "Місцева мова" }, value: "local_language" },
+  {
+    label: { en: "Bilingual (Ukrainian + English)", uk: "Двомовна (українська + англійська)" },
+    value: "bilingual_ukr_eng",
+  },
+  {
+    label: { en: "Bilingual (Ukrainian + local)", uk: "Двомовна (українська + місцева)" },
+    value: "bilingual_ukr_local",
+  },
+] as const;
+
+const productCategoryOptions = [
+  { label: { en: "Clothing", uk: "Одяг" }, value: "clothing" },
+  { label: { en: "Books", uk: "Книги" }, value: "books" },
+  { label: { en: "Electronics", uk: "Електроніка" }, value: "electronics" },
+  { label: { en: "Groceries", uk: "Продукти харчування" }, value: "groceries" },
+  { label: { en: "Gifts", uk: "Подарунки" }, value: "gifts" },
+  { label: { en: "Home Goods", uk: "Товари для дому" }, value: "home_goods" },
+  { label: { en: "Beauty Products", uk: "Косметика та краса" }, value: "beauty" },
+  { label: { en: "Toys", uk: "Іграшки" }, value: "toys" },
+  { label: { en: "Sports Equipment", uk: "Спортивне обладнання" }, value: "sports" },
+  { label: { en: "Other", uk: "Інше" }, value: "other" },
+] as const;
+
+const paymentOptions = [
+  { label: { en: "Cash", uk: "Готівка" }, value: "cash" },
+  { label: { en: "Card (chip & PIN)", uk: "Картка (чіп і PIN)" }, value: "card" },
+  {
+    label: { en: "Contactless (card or phone)", uk: "Безконтактна оплата (картка або телефон)" },
+    value: "contactless",
+  },
+  { label: { en: "Bank transfer", uk: "Банківський переказ" }, value: "bank_transfer" },
+  { label: { en: "Online payment", uk: "Онлайн-оплата" }, value: "online_payment" },
+] as const;
+
 const priceTypes: Record<
   "DONATION" | "FREE" | "PAID" | "SUGGESTED_DONATION" | "UNKNOWN",
   {
@@ -102,17 +299,28 @@ const priceTypes: Record<
 };
 
 export const constants = {
+  ageGroupOptions,
+  amenityOptions,
   audienceId: "afdc9356-46c0-42d3-8c73-83e271c96017",
   baseUrl: UrlHelper.getBaseUrl(),
+  beautyServiceOptions,
   categories,
+  cuisineOptions,
+  curriculumOptions,
   eventTypes,
+  featureOptions,
   fromEmail: (locale = "en") =>
     `${locale === "en" ? "Mandrii" : "Мандрій"} <hello@${UrlHelper.getProductionHostname()}>`,
+  languageOptions,
   london_coordinates: {
     lat: 51.509865,
     lng: -0.118092,
   },
+  paymentOptions,
+  priceRangeOptions,
   priceTypes,
+  productCategoryOptions,
   vercelBlobStorageUrl: "https://yiiprxif648vopwe.public.blob.vercel-storage.com",
+  weekdays,
   whitelisted_countries: countries,
 };
