@@ -127,7 +127,6 @@ select_permissions:
         - category
         - city
         - country
-        - created_at
         - description_en
         - description_uk
         - emails
@@ -142,6 +141,7 @@ select_permissions:
         - slug
         - social_links
         - status
+        - updated_at
         - user_id
         - website
       filter:

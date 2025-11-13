@@ -193,7 +193,6 @@ const VENUE_FIELDS_FRAGMENT = gql`
       product_categories
       payment_methods
     }
-    created_at
     updated_at
     events_aggregate {
       aggregate {
