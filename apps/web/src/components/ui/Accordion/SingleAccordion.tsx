@@ -4,11 +4,11 @@ import { AccordionItemProps } from "./AccordionItem";
 import { useAccordion } from "./hook";
 
 interface SingleAccordionProps {
-  children: React.ReactElement<AccordionItemProps>[];
+  children: React.ReactElement<AccordionItemProps> | React.ReactElement<AccordionItemProps>[];
 }
 
 export const SingleAccordion = ({ children }: SingleAccordionProps) => {
-  const { openIndices, setOpenIndices } = useAccordion(children);
+  const { openIndices, setOpenIndices } = useAccordion(Array.isArray(children) ? children : [children]);
 
   const handleToggle = (index: number): void => {
     setOpenIndices((prev) => (prev.includes(index) ? [] : [index]));

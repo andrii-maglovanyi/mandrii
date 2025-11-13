@@ -1,0 +1,70 @@
+table:
+  name: venue_shop_details
+  schema: public
+object_relationships:
+  - name: venue
+    using:
+      foreign_key_constraint_on: venue_id
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - payment_methods
+        - product_categories
+        - venue_id
+    comment: ""
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - payment_methods
+        - product_categories
+        - venue_id
+      filter:
+        _or:
+          - venue:
+              status:
+                _eq: ACTIVE
+          - venue:
+              status:
+                _eq: ARCHIVED
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - payment_methods
+        - product_categories
+        - venue_id
+      filter:
+        _or:
+          - venue:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - venue:
+              status:
+                _eq: ACTIVE
+          - venue:
+              status:
+                _eq: ARCHIVED
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - payment_methods
+        - product_categories
+      filter:
+        venue:
+          user_id:
+            _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        venue:
+          user_id:
+            _eq: X-Hasura-User-Id
+    comment: ""

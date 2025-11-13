@@ -11,8 +11,9 @@ import { ActionButton, AnimatedEllipsis, EmptyState, RichText, Tooltip } from "~
 import { useDialog } from "~/contexts/DialogContext";
 import { useNotifications, useUser, useVenues } from "~/hooks";
 import { useI18n } from "~/i18n/useI18n";
+import { constants } from "~/lib/constants";
 import { toDateLocale } from "~/lib/utils";
-import { Locale, Venue_Status_Enum } from "~/types";
+import { DayOfWeek, Locale, Venue_Status_Enum } from "~/types";
 
 import { VenueStatus } from "../VenueStatus";
 import { VenueForm } from "./VenueForm";
@@ -103,6 +104,18 @@ export const EditVenue = ({ slug }: VenueProps) => {
         />
       );
     }
+
+    const mergedSchedules = constants.weekdays
+      .map((day) => {
+        const daySchedules = (data?.venue_schedules || []).filter((schedule) => schedule.day_of_week === day.full.en);
+
+        if (daySchedules.length > 0) {
+          return daySchedules;
+        }
+
+        return [{ close_time: "", day_of_week: day.full.en, open_time: "" }];
+      })
+      .flat() as { close_time: string; day_of_week: DayOfWeek; open_time: string }[];
 
     return (
       <>
@@ -195,6 +208,41 @@ export const EditVenue = ({ slug }: VenueProps) => {
             name: data?.name || "",
             slug: data?.slug || "",
             ...(data?.social_links ?? {}),
+            venue_accommodation_details: {
+              ...data?.venue_accommodation_details?.[0],
+              amenities: (data?.venue_accommodation_details?.[0]?.amenities ||
+                []) as (typeof constants.amenityOptions)[number]["value"][],
+            },
+            venue_beauty_salon_details: {
+              ...data?.venue_beauty_salon_details?.[0],
+              services: (data?.venue_beauty_salon_details?.[0]?.services ||
+                []) as (typeof constants.beautyServiceOptions)[number]["value"][],
+            },
+            venue_restaurant_details: {
+              ...data?.venue_restaurant_details?.[0],
+              features: (data?.venue_restaurant_details?.[0]?.features ||
+                []) as (typeof constants.featureOptions)[number]["value"][],
+              price_range: (data?.venue_restaurant_details?.[0]?.price_range || null) as
+                | (typeof constants.priceRangeOptions)[number]["value"]
+                | null,
+            },
+            venue_schedules: mergedSchedules,
+            venue_school_details: {
+              ...data?.venue_school_details?.[0],
+              age_groups: (data?.venue_school_details?.[0]?.age_groups ||
+                []) as (typeof constants.ageGroupOptions)[number]["value"][],
+              languages_taught: (data?.venue_school_details?.[0]?.languages_taught ||
+                []) as (typeof constants.languageOptions)[number]["value"][],
+              subjects: (data?.venue_school_details?.[0]?.subjects ||
+                []) as (typeof constants.curriculumOptions)[number]["value"][],
+            },
+            venue_shop_details: {
+              ...data?.venue_shop_details?.[0],
+              payment_methods: (data?.venue_shop_details?.[0]?.payment_methods ||
+                []) as (typeof constants.paymentOptions)[number]["value"][],
+              product_categories: (data?.venue_shop_details?.[0]?.product_categories ||
+                []) as (typeof constants.productCategoryOptions)[number]["value"][],
+            },
           }}
           onSubmit={submitVenue}
           onSuccess={handleSuccess}

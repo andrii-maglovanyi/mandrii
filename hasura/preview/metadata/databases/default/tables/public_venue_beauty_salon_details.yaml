@@ -1,0 +1,74 @@
+table:
+  name: venue_beauty_salon_details
+  schema: public
+object_relationships:
+  - name: venue
+    using:
+      foreign_key_constraint_on: venue_id
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - appointment_required
+        - services
+        - venue_id
+        - walk_ins_accepted
+    comment: ""
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - appointment_required
+        - services
+        - venue_id
+        - walk_ins_accepted
+      filter:
+        _or:
+          - venue:
+              status:
+                _eq: ACTIVE
+          - venue:
+              status:
+                _eq: ARCHIVED
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - appointment_required
+        - services
+        - venue_id
+        - walk_ins_accepted
+      filter:
+        _or:
+          - venue:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - venue:
+              status:
+                _eq: ACTIVE
+          - venue:
+              status:
+                _eq: ARCHIVED
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - appointment_required
+        - services
+        - walk_ins_accepted
+      filter:
+        venue:
+          user_id:
+            _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        venue:
+          user_id:
+            _eq: X-Hasura-User-Id
+    comment: ""

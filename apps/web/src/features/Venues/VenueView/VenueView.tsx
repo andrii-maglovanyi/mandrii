@@ -14,11 +14,19 @@ import { useEvents } from "~/hooks/useEvents";
 import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
-import { Locale, SortDirections, Venue_Status_Enum } from "~/types";
+import { Locale, SortDirections, Venue_Category_Enum, Venue_Status_Enum } from "~/types";
 
 import { CardHeader } from "../VenueCard/Components/CardHeader";
 import { CardMetadata } from "../VenueCard/Components/CardMetadata";
 import { ChainMetadata } from "../VenueCard/Components/ChainMetadata";
+import {
+  AccommodationMetadataDisplay,
+  BeautyMetadataDisplay,
+  OpeningHoursDisplay,
+  RestaurantMetadataDisplay,
+  SchoolMetadataDisplay,
+  ShopMetadataDisplay,
+} from "./MetadataDisplay";
 
 interface VenueViewProps {
   slug: string;
@@ -199,16 +207,19 @@ export const VenueView = ({ slug }: VenueViewProps) => {
         lg:py-4
       `}>
         <Tabs defaultActiveKey="about">
-          <TabPane tab={i18n("About venue")}>
+          <TabPane tab={i18n("About")}>
             <div className={`
-              grid grid-cols-1 gap-4
+              grid grid-cols-1 gap-8
               lg:grid-cols-3
             `}>
               {/* Description. Left side (2/3) */}
-              <div className="lg:col-span-2">
+              <div className={`
+                space-y-8
+                lg:col-span-2
+              `}>
                 {description ? (
                   <RichText className={`
-                    prose max-w-none
+                    prose max-w-none text-base
                     dark:prose-invert
                   `}>{description}</RichText>
                 ) : (
@@ -221,6 +232,22 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                   >
                     <p className="text-neutral/60">{i18n("No description available")}</p>
                   </div>
+                )}
+
+                {venue.category === Venue_Category_Enum.Accommodation && (
+                  <AccommodationMetadataDisplay accommodationDetails={venue.venue_accommodation_details[0]} />
+                )}
+                {venue.category === Venue_Category_Enum.BeautySalon && (
+                  <BeautyMetadataDisplay beautySalonDetails={venue.venue_beauty_salon_details[0]} />
+                )}
+                {venue.category === Venue_Category_Enum.Restaurant && (
+                  <RestaurantMetadataDisplay restaurantDetails={venue.venue_restaurant_details[0]} />
+                )}
+                {venue.category === Venue_Category_Enum.School && (
+                  <SchoolMetadataDisplay schoolDetails={venue.venue_school_details[0]} />
+                )}
+                {venue.category === Venue_Category_Enum.Shop && (
+                  <ShopMetadataDisplay shopDetails={venue.venue_shop_details[0]} />
                 )}
               </div>
 
@@ -237,6 +264,18 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                   <h3 className="mt-2 text-lg font-semibold">{i18n("Details")}</h3>
                   <CardMetadata expanded variant="list" venue={venue} />
                 </section>
+                {venue.venue_schedules && (
+                  <section
+                    className={`
+                      group/card rounded-xl border border-primary/0
+                      bg-surface-tint/50 p-4 transition-all duration-300
+                      hover:border-primary/20 hover:shadow-lg
+                      lg:text-base
+                    `}
+                  >
+                    <OpeningHoursDisplay schedules={venue.venue_schedules} />
+                  </section>
+                )}
                 {venue.chain && (
                   <section
                     className={`

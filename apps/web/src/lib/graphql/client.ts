@@ -1,22 +1,8 @@
 import { BadGateway, BadRequestError, InternalServerError, UnauthorizedError } from "~/lib/api/errors";
 import { publicConfig } from "~/lib/config/public";
 
-type AuthHeaders =
-  | { "x-hasura-admin-secret": string } // Admin secret
-  | { Authorization: string }; // Bearer token
+type AuthHeaders = { "x-hasura-admin-secret": string } | { Authorization: string };
 
-/**
- * Executes a GraphQL query against Hasura with proper error handling.
- *
- * @param query - The GraphQL query or mutation string
- * @param variables - Variables for the GraphQL operation
- * @param auth - Authentication headers (bearer token or admin secret)
- * @returns The data portion of the GraphQL response
- * @throws {BadGateway} For network errors, HTTP errors, or parsing failures
- * @throws {BadRequestError} For constraint violations
- * @throws {UnauthorizedError} For permission denied errors
- * @throws {InternalServerError} For other database errors
- */
 export async function executeGraphQLQuery<T>(
   query: string,
   variables: Record<string, unknown>,

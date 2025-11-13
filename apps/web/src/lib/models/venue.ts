@@ -21,6 +21,11 @@ const VENUE_FIELDS = `
   description_uk
   website
   social_links
+  venue_schedules {
+    day_of_week
+    open_time
+    close_time
+  }
   slug
   status
 `;

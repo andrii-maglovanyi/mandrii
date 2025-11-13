@@ -174,22 +174,103 @@ msgstr ""
 msgid "Map"
 msgstr ""
 
-msgid "Events"
-msgstr ""
-
-msgid "{count} upcoming"
-msgstr ""
-
-msgid "Check back later for updates!"
-msgstr ""
-
-msgid "No upcoming events at this time"
-msgstr ""
-
-msgid "About venue"
+msgid "About"
 msgstr ""
 
 msgid "No description available"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
+msgid "{count} events"
+msgstr ""
+
+msgid "Products"
+msgstr ""
+
+msgid "Payment methods"
+msgstr ""
+
+msgid "Age groups"
+msgstr ""
+
+msgid "Class details"
+msgstr ""
+
+msgid "Subjects"
+msgstr ""
+
+msgid "Maximum class size"
+msgstr ""
+
+msgid "Online classes"
+msgstr ""
+
+msgid "Available"
+msgstr ""
+
+msgid "Languages taught"
+msgstr ""
+
+msgid "Cuisine"
+msgstr ""
+
+msgid "Capacity"
+msgstr ""
+
+msgid "Price range"
+msgstr ""
+
+msgid "Features"
+msgstr ""
+
+msgid "Opening hours"
+msgstr ""
+
+msgid "Closed"
+msgstr ""
+
+msgid "Services"
+msgstr ""
+
+msgid "Booking"
+msgstr ""
+
+msgid "Appointment required"
+msgstr ""
+
+msgid "Walk-ins accepted"
+msgstr ""
+
+msgid "Bedrooms"
+msgstr ""
+
+msgid "Bathrooms"
+msgstr ""
+
+msgid "Max guests"
+msgstr ""
+
+msgid "Rules"
+msgstr ""
+
+msgid "Check-in"
+msgstr ""
+
+msgid "Check-out"
+msgstr ""
+
+msgid "Minimum stay"
+msgstr ""
+
+msgid "{count} nights"
+msgstr ""
+
+msgid "Amenities"
 msgstr ""
 
 msgid "Collapse venue details"
@@ -237,9 +318,6 @@ msgstr ""
 msgid "Copied venue URL"
 msgstr ""
 
-msgid "Check out this venue on {appHost}"
-msgstr ""
-
 msgid "Manage venue"
 msgstr ""
 
@@ -253,9 +331,6 @@ msgid "Verified venue"
 msgstr ""
 
 msgid "Discover"
-msgstr ""
-
-msgid "{count} events"
 msgstr ""
 
 msgid "All categories"
@@ -471,7 +546,7 @@ msgstr ""
 msgid "Legal owners have additional management privileges. This setting cannot be changed."
 msgstr ""
 
-msgid "Optionally, update contacts, a description, photos, a logo, and an address for more details."
+msgid "Optionally, update contacts, a description, photos, details, and an address for more information."
 msgstr ""
 
 msgid "Contacts"
@@ -582,6 +657,39 @@ msgstr ""
 msgid "Start adding your venue by selecting its category and name.<br/>The slug is auto-generated the URL and can only be edited during the first creation."
 msgstr ""
 
+msgid "Categories"
+msgstr ""
+
+msgid ""
+msgstr ""
+
+msgid "Add time slot"
+msgstr ""
+
+msgid "Opens"
+msgstr ""
+
+msgid "Closes"
+msgstr ""
+
+msgid "Remove time slot"
+msgstr ""
+
+msgid "Set your venue's opening hours for each day of the week. You can add multiple time slots per day (e.g., lunch and dinner hours) or leave a day empty if closed."
+msgstr ""
+
+msgid "Capacity & pricing"
+msgstr ""
+
+msgid "Features & services"
+msgstr ""
+
+msgid "Services offered"
+msgstr ""
+
+msgid "Booking information"
+msgstr ""
+
 msgid "Location TBD"
 msgstr ""
 
@@ -673,9 +781,6 @@ msgid "Accessibility Information"
 msgstr ""
 
 msgid "Wheelchair accessible, Sign language interpretation available, etc."
-msgstr ""
-
-msgid "Capacity"
 msgstr ""
 
 msgid "No venue (custom location)"
@@ -834,13 +939,7 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-msgid "About event"
-msgstr ""
-
-msgid "Event Details"
-msgstr ""
-
-msgid "Additional Information"
+msgid "Additional information"
 msgstr ""
 
 msgid "Organizer"
@@ -883,9 +982,6 @@ msgid "Expand event details"
 msgstr ""
 
 msgid "Copied event URL"
-msgstr ""
-
-msgid "Check out this event on {appHost}"
 msgstr ""
 
 msgid "Manage event"

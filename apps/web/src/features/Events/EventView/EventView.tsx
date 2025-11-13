@@ -274,7 +274,7 @@ export const EventView = ({ slug }: EventViewProps) => {
         lg:py-4
       `}>
         <Tabs defaultActiveKey="about">
-          <TabPane tab={i18n("About event")}>
+          <TabPane tab={i18n("About")}>
             <div className={`
               grid grid-cols-1 gap-4
               lg:grid-cols-3

@@ -1,0 +1,4 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- alter table "public"."venue_beauty_salon_details" add column "updated_at" timestamptz
+--  not null default now();

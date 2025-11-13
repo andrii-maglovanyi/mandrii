@@ -105,6 +105,12 @@ export function buildFormData<T extends Record<string, unknown>>(data: T) {
 
   for (const [key, value] of Object.entries(data)) {
     if (Array.isArray(value)) {
+      // For arrays of objects (like venue_schedules), stringify the entire array
+      if (value.length > 0 && typeof value[0] === "object" && !(value[0] instanceof File)) {
+        body.append(key, JSON.stringify(value));
+        continue;
+      }
+      // For arrays of primitives or Files, append individually
       for (const val of value.filter(Boolean)) {
         body.append(key, val);
       }

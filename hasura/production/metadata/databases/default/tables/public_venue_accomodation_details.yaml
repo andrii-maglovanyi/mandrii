@@ -1,0 +1,3 @@
+table:
+  name: venue_accomodation_details
+  schema: public

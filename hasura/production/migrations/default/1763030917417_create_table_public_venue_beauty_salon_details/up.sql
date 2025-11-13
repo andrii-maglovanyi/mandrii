@@ -1,0 +1,1 @@
+CREATE TABLE "public"."venue_beauty_salon_details" ("venue_id" uuid NOT NULL, "appointment_required" boolean NOT NULL, "walk_ins_accepted" boolean NOT NULL, PRIMARY KEY ("venue_id") , FOREIGN KEY ("venue_id") REFERENCES "public"."venues"("id") ON UPDATE cascade ON DELETE cascade);

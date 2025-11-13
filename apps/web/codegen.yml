@@ -17,6 +17,7 @@ generates:
         json: "./json#Json"
         jsonb: "./json#Json"
         numeric: "./numeric#Numeric"
+        time: "./timestamp#Time"
         timestamp: "./timestamp#Timestamp"
         timestamptz: "./timestamp#Timestamp"
         uuid: "./uuid#UUID"

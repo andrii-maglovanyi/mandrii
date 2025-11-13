@@ -20,7 +20,16 @@ export async function validateRequest<T extends ZodRawShape>(
         if (isZodArray(schemaField)) {
           return [field, allValues];
         }
-        return [field, allValues.length > 1 ? allValues[0] : value];
+
+        let processedValue: unknown = value;
+        if (typeof value === "string") {
+          try {
+            processedValue = JSON.parse(value);
+          } catch {
+            // Not JSON, keep original string
+          }
+        }
+        return [field, allValues.length > 1 ? allValues[0] : processedValue];
       }),
     );
   } else if (contentType?.includes("application/x-www-form-urlencoded")) {

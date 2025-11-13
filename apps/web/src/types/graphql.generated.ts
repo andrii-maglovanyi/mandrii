@@ -5,6 +5,7 @@ import { Geography } from "./geography";
 import { Geometry } from "./geometry";
 import { Json } from "./json";
 import { Numeric } from "./numeric";
+import { Time } from "./timestamp";
 import { Timestamp } from "./timestamp";
 import { UUID } from "./uuid";
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -766,6 +767,106 @@ export enum Users_Update_Column {
   VenuesCreated = "venues_created",
 }
 
+/** unique or primary key constraints on table "venue_accommodation_details" */
+export enum Venue_Accommodation_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueAccommodationDetailsPkey = "venue_accommodation_details_pkey",
+}
+
+/** select columns of table "venue_accommodation_details" */
+export enum Venue_Accommodation_Details_Select_Column {
+  /** column name */
+  Amenities = "amenities",
+  /** column name */
+  Bathrooms = "bathrooms",
+  /** column name */
+  Bedrooms = "bedrooms",
+  /** column name */
+  CheckInTime = "check_in_time",
+  /** column name */
+  CheckOutTime = "check_out_time",
+  /** column name */
+  MaxGuests = "max_guests",
+  /** column name */
+  MinimumStayNights = "minimum_stay_nights",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** update columns of table "venue_accommodation_details" */
+export enum Venue_Accommodation_Details_Update_Column {
+  /** column name */
+  Amenities = "amenities",
+  /** column name */
+  Bathrooms = "bathrooms",
+  /** column name */
+  Bedrooms = "bedrooms",
+  /** column name */
+  CheckInTime = "check_in_time",
+  /** column name */
+  CheckOutTime = "check_out_time",
+  /** column name */
+  MaxGuests = "max_guests",
+  /** column name */
+  MinimumStayNights = "minimum_stay_nights",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** unique or primary key constraints on table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueBeautySalonDetailsPkey = "venue_beauty_salon_details_pkey",
+}
+
+/** select columns of table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Select_Column {
+  /** column name */
+  AppointmentRequired = "appointment_required",
+  /** column name */
+  Services = "services",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+  /** column name */
+  WalkInsAccepted = "walk_ins_accepted",
+}
+
+/** select "venue_beauty_salon_details_aggregate_bool_exp_bool_and_arguments_columns" columns of table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Select_Column_Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  AppointmentRequired = "appointment_required",
+  /** column name */
+  WalkInsAccepted = "walk_ins_accepted",
+}
+
+/** select "venue_beauty_salon_details_aggregate_bool_exp_bool_or_arguments_columns" columns of table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Select_Column_Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  AppointmentRequired = "appointment_required",
+  /** column name */
+  WalkInsAccepted = "walk_ins_accepted",
+}
+
+/** update columns of table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Update_Column {
+  /** column name */
+  AppointmentRequired = "appointment_required",
+  /** column name */
+  Services = "services",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+  /** column name */
+  WalkInsAccepted = "walk_ins_accepted",
+}
+
 /** unique or primary key constraints on table "venue_category" */
 export enum Venue_Category_Constraint {
   /** unique or primary key constraint on columns "value" */
@@ -800,6 +901,168 @@ export enum Venue_Category_Select_Column {
 export enum Venue_Category_Update_Column {
   /** column name */
   Value = "value",
+}
+
+/** unique or primary key constraints on table "venue_restaurant_details" */
+export enum Venue_Restaurant_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueRestaurantDetailsPkey = "venue_restaurant_details_pkey",
+}
+
+/** select columns of table "venue_restaurant_details" */
+export enum Venue_Restaurant_Details_Select_Column {
+  /** column name */
+  CuisineTypes = "cuisine_types",
+  /** column name */
+  Features = "features",
+  /** column name */
+  PriceRange = "price_range",
+  /** column name */
+  SeatingCapacity = "seating_capacity",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** update columns of table "venue_restaurant_details" */
+export enum Venue_Restaurant_Details_Update_Column {
+  /** column name */
+  CuisineTypes = "cuisine_types",
+  /** column name */
+  Features = "features",
+  /** column name */
+  PriceRange = "price_range",
+  /** column name */
+  SeatingCapacity = "seating_capacity",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** unique or primary key constraints on table "venue_schedule" */
+export enum Venue_Schedule_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  VenueSchedulePkey = "venue_schedule_pkey",
+  /** unique or primary key constraint on columns "id", "venue_id", "day_of_week" */
+  VenueScheduleVenueIdDayOfWeekKey = "venue_schedule_venue_id_day_of_week_key",
+}
+
+/** select columns of table "venue_schedule" */
+export enum Venue_Schedule_Select_Column {
+  /** column name */
+  CloseTime = "close_time",
+  /** column name */
+  DayOfWeek = "day_of_week",
+  /** column name */
+  Id = "id",
+  /** column name */
+  OpenTime = "open_time",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** update columns of table "venue_schedule" */
+export enum Venue_Schedule_Update_Column {
+  /** column name */
+  CloseTime = "close_time",
+  /** column name */
+  DayOfWeek = "day_of_week",
+  /** column name */
+  Id = "id",
+  /** column name */
+  OpenTime = "open_time",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** unique or primary key constraints on table "venue_school_details" */
+export enum Venue_School_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueSchoolDetailsPkey = "venue_school_details_pkey",
+}
+
+/** select columns of table "venue_school_details" */
+export enum Venue_School_Details_Select_Column {
+  /** column name */
+  AgeGroups = "age_groups",
+  /** column name */
+  ClassSizeMax = "class_size_max",
+  /** column name */
+  LanguagesTaught = "languages_taught",
+  /** column name */
+  OnlineClassesAvailable = "online_classes_available",
+  /** column name */
+  Subjects = "subjects",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** select "venue_school_details_aggregate_bool_exp_bool_and_arguments_columns" columns of table "venue_school_details" */
+export enum Venue_School_Details_Select_Column_Venue_School_Details_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  OnlineClassesAvailable = "online_classes_available",
+}
+
+/** select "venue_school_details_aggregate_bool_exp_bool_or_arguments_columns" columns of table "venue_school_details" */
+export enum Venue_School_Details_Select_Column_Venue_School_Details_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  OnlineClassesAvailable = "online_classes_available",
+}
+
+/** update columns of table "venue_school_details" */
+export enum Venue_School_Details_Update_Column {
+  /** column name */
+  AgeGroups = "age_groups",
+  /** column name */
+  ClassSizeMax = "class_size_max",
+  /** column name */
+  LanguagesTaught = "languages_taught",
+  /** column name */
+  OnlineClassesAvailable = "online_classes_available",
+  /** column name */
+  Subjects = "subjects",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** unique or primary key constraints on table "venue_shop_details" */
+export enum Venue_Shop_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueShopDetailsPkey = "venue_shop_details_pkey",
+}
+
+/** select columns of table "venue_shop_details" */
+export enum Venue_Shop_Details_Select_Column {
+  /** column name */
+  PaymentMethods = "payment_methods",
+  /** column name */
+  ProductCategories = "product_categories",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** update columns of table "venue_shop_details" */
+export enum Venue_Shop_Details_Update_Column {
+  /** column name */
+  PaymentMethods = "payment_methods",
+  /** column name */
+  ProductCategories = "product_categories",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
 }
 
 /** unique or primary key constraints on table "venue_status" */
@@ -3350,7 +3613,51 @@ export type GetAdminVenuesQuery = {
     slug: string;
     social_links: Json;
     status: Venue_Status_Enum;
+    updated_at: Timestamp;
     user_id?: null | UUID;
+    venue_accommodation_details: Array<{
+      __typename?: "venue_accommodation_details";
+      amenities?: Array<string> | null;
+      bathrooms?: null | number;
+      bedrooms?: null | number;
+      check_in_time?: null | Time;
+      check_out_time?: null | Time;
+      max_guests?: null | number;
+      minimum_stay_nights?: null | number;
+    }>;
+    venue_beauty_salon_details: Array<{
+      __typename?: "venue_beauty_salon_details";
+      appointment_required?: boolean | null;
+      services?: Array<string> | null;
+      walk_ins_accepted?: boolean | null;
+    }>;
+    venue_restaurant_details: Array<{
+      __typename?: "venue_restaurant_details";
+      cuisine_types?: Array<string> | null;
+      features?: Array<string> | null;
+      price_range?: null | string;
+      seating_capacity?: null | number;
+    }>;
+    venue_schedules: Array<{
+      __typename?: "venue_schedule";
+      close_time: Time;
+      day_of_week: string;
+      id: UUID;
+      open_time: Time;
+    }>;
+    venue_school_details: Array<{
+      __typename?: "venue_school_details";
+      age_groups?: Array<string> | null;
+      class_size_max?: null | number;
+      languages_taught?: Array<string> | null;
+      online_classes_available?: boolean | null;
+      subjects?: Array<string> | null;
+    }>;
+    venue_shop_details: Array<{
+      __typename?: "venue_shop_details";
+      payment_methods?: Array<string> | null;
+      product_categories?: Array<string> | null;
+    }>;
     website?: null | string;
   }>;
   venues_aggregate: {
@@ -3509,6 +3816,7 @@ export type GetPublicVenuesQuery = {
     } | null;
     city?: null | string;
     country?: null | string;
+    created_at: Timestamp;
     description_en?: null | string;
     description_uk?: null | string;
     emails?: Array<string> | null;
@@ -3526,7 +3834,51 @@ export type GetPublicVenuesQuery = {
     slug: string;
     social_links: Json;
     status: Venue_Status_Enum;
+    updated_at: Timestamp;
     user_id?: null | UUID;
+    venue_accommodation_details: Array<{
+      __typename?: "venue_accommodation_details";
+      amenities?: Array<string> | null;
+      bathrooms?: null | number;
+      bedrooms?: null | number;
+      check_in_time?: null | Time;
+      check_out_time?: null | Time;
+      max_guests?: null | number;
+      minimum_stay_nights?: null | number;
+    }>;
+    venue_beauty_salon_details: Array<{
+      __typename?: "venue_beauty_salon_details";
+      appointment_required?: boolean | null;
+      services?: Array<string> | null;
+      walk_ins_accepted?: boolean | null;
+    }>;
+    venue_restaurant_details: Array<{
+      __typename?: "venue_restaurant_details";
+      cuisine_types?: Array<string> | null;
+      features?: Array<string> | null;
+      price_range?: null | string;
+      seating_capacity?: null | number;
+    }>;
+    venue_schedules: Array<{
+      __typename?: "venue_schedule";
+      close_time: Time;
+      day_of_week: string;
+      id: UUID;
+      open_time: Time;
+    }>;
+    venue_school_details: Array<{
+      __typename?: "venue_school_details";
+      age_groups?: Array<string> | null;
+      class_size_max?: null | number;
+      languages_taught?: Array<string> | null;
+      online_classes_available?: boolean | null;
+      subjects?: Array<string> | null;
+    }>;
+    venue_shop_details: Array<{
+      __typename?: "venue_shop_details";
+      payment_methods?: Array<string> | null;
+      product_categories?: Array<string> | null;
+    }>;
     website?: null | string;
   }>;
   venues_aggregate: {
@@ -3568,7 +3920,7 @@ export type GetUserEventsQuery = {
     organizer_email?: null | string;
     organizer_name?: null | string;
     organizer_phone_number?: null | string;
-    owner?: { __typename?: "users"; id: UUID; image?: null | string; name?: null | string } | null;
+    owner?: { __typename?: "users"; id: UUID; image?: null | string; name?: null | string; } | null;
     owner_id?: null | UUID;
     price_amount?: null | Numeric;
     price_currency?: null | string;
@@ -3722,7 +4074,51 @@ export type GetUserVenuesQuery = {
     slug: string;
     social_links: Json;
     status: Venue_Status_Enum;
+    updated_at: Timestamp;
     user_id?: null | UUID;
+    venue_accommodation_details: Array<{
+      __typename?: "venue_accommodation_details";
+      amenities?: Array<string> | null;
+      bathrooms?: null | number;
+      bedrooms?: null | number;
+      check_in_time?: null | Time;
+      check_out_time?: null | Time;
+      max_guests?: null | number;
+      minimum_stay_nights?: null | number;
+    }>;
+    venue_beauty_salon_details: Array<{
+      __typename?: "venue_beauty_salon_details";
+      appointment_required?: boolean | null;
+      services?: Array<string> | null;
+      walk_ins_accepted?: boolean | null;
+    }>;
+    venue_restaurant_details: Array<{
+      __typename?: "venue_restaurant_details";
+      cuisine_types?: Array<string> | null;
+      features?: Array<string> | null;
+      price_range?: null | string;
+      seating_capacity?: null | number;
+    }>;
+    venue_schedules: Array<{
+      __typename?: "venue_schedule";
+      close_time: Time;
+      day_of_week: string;
+      id: UUID;
+      open_time: Time;
+    }>;
+    venue_school_details: Array<{
+      __typename?: "venue_school_details";
+      age_groups?: Array<string> | null;
+      class_size_max?: null | number;
+      languages_taught?: Array<string> | null;
+      online_classes_available?: boolean | null;
+      subjects?: Array<string> | null;
+    }>;
+    venue_shop_details: Array<{
+      __typename?: "venue_shop_details";
+      payment_methods?: Array<string> | null;
+      product_categories?: Array<string> | null;
+    }>;
     website?: null | string;
   }>;
   venues_aggregate: {
@@ -3847,10 +4243,34 @@ export type Mutation_Root = {
   delete_users?: Maybe<Users_Mutation_Response>;
   /** delete single row from the table: "users" */
   delete_users_by_pk?: Maybe<Users>;
+  /** delete data from the table: "venue_accommodation_details" */
+  delete_venue_accommodation_details?: Maybe<Venue_Accommodation_Details_Mutation_Response>;
+  /** delete single row from the table: "venue_accommodation_details" */
+  delete_venue_accommodation_details_by_pk?: Maybe<Venue_Accommodation_Details>;
+  /** delete data from the table: "venue_beauty_salon_details" */
+  delete_venue_beauty_salon_details?: Maybe<Venue_Beauty_Salon_Details_Mutation_Response>;
+  /** delete single row from the table: "venue_beauty_salon_details" */
+  delete_venue_beauty_salon_details_by_pk?: Maybe<Venue_Beauty_Salon_Details>;
   /** delete data from the table: "venue_category" */
   delete_venue_category?: Maybe<Venue_Category_Mutation_Response>;
   /** delete single row from the table: "venue_category" */
   delete_venue_category_by_pk?: Maybe<Venue_Category>;
+  /** delete data from the table: "venue_restaurant_details" */
+  delete_venue_restaurant_details?: Maybe<Venue_Restaurant_Details_Mutation_Response>;
+  /** delete single row from the table: "venue_restaurant_details" */
+  delete_venue_restaurant_details_by_pk?: Maybe<Venue_Restaurant_Details>;
+  /** delete data from the table: "venue_schedule" */
+  delete_venue_schedule?: Maybe<Venue_Schedule_Mutation_Response>;
+  /** delete single row from the table: "venue_schedule" */
+  delete_venue_schedule_by_pk?: Maybe<Venue_Schedule>;
+  /** delete data from the table: "venue_school_details" */
+  delete_venue_school_details?: Maybe<Venue_School_Details_Mutation_Response>;
+  /** delete single row from the table: "venue_school_details" */
+  delete_venue_school_details_by_pk?: Maybe<Venue_School_Details>;
+  /** delete data from the table: "venue_shop_details" */
+  delete_venue_shop_details?: Maybe<Venue_Shop_Details_Mutation_Response>;
+  /** delete single row from the table: "venue_shop_details" */
+  delete_venue_shop_details_by_pk?: Maybe<Venue_Shop_Details>;
   /** delete data from the table: "venue_status" */
   delete_venue_status?: Maybe<Venue_Status_Mutation_Response>;
   /** delete single row from the table: "venue_status" */
@@ -3915,10 +4335,34 @@ export type Mutation_Root = {
   insert_users?: Maybe<Users_Mutation_Response>;
   /** insert a single row into the table: "users" */
   insert_users_one?: Maybe<Users>;
+  /** insert data into the table: "venue_accommodation_details" */
+  insert_venue_accommodation_details?: Maybe<Venue_Accommodation_Details_Mutation_Response>;
+  /** insert a single row into the table: "venue_accommodation_details" */
+  insert_venue_accommodation_details_one?: Maybe<Venue_Accommodation_Details>;
+  /** insert data into the table: "venue_beauty_salon_details" */
+  insert_venue_beauty_salon_details?: Maybe<Venue_Beauty_Salon_Details_Mutation_Response>;
+  /** insert a single row into the table: "venue_beauty_salon_details" */
+  insert_venue_beauty_salon_details_one?: Maybe<Venue_Beauty_Salon_Details>;
   /** insert data into the table: "venue_category" */
   insert_venue_category?: Maybe<Venue_Category_Mutation_Response>;
   /** insert a single row into the table: "venue_category" */
   insert_venue_category_one?: Maybe<Venue_Category>;
+  /** insert data into the table: "venue_restaurant_details" */
+  insert_venue_restaurant_details?: Maybe<Venue_Restaurant_Details_Mutation_Response>;
+  /** insert a single row into the table: "venue_restaurant_details" */
+  insert_venue_restaurant_details_one?: Maybe<Venue_Restaurant_Details>;
+  /** insert data into the table: "venue_schedule" */
+  insert_venue_schedule?: Maybe<Venue_Schedule_Mutation_Response>;
+  /** insert a single row into the table: "venue_schedule" */
+  insert_venue_schedule_one?: Maybe<Venue_Schedule>;
+  /** insert data into the table: "venue_school_details" */
+  insert_venue_school_details?: Maybe<Venue_School_Details_Mutation_Response>;
+  /** insert a single row into the table: "venue_school_details" */
+  insert_venue_school_details_one?: Maybe<Venue_School_Details>;
+  /** insert data into the table: "venue_shop_details" */
+  insert_venue_shop_details?: Maybe<Venue_Shop_Details_Mutation_Response>;
+  /** insert a single row into the table: "venue_shop_details" */
+  insert_venue_shop_details_one?: Maybe<Venue_Shop_Details>;
   /** insert data into the table: "venue_status" */
   insert_venue_status?: Maybe<Venue_Status_Mutation_Response>;
   /** insert a single row into the table: "venue_status" */
@@ -4009,12 +4453,48 @@ export type Mutation_Root = {
   update_users_by_pk?: Maybe<Users>;
   /** update multiples rows of table: "users" */
   update_users_many?: Maybe<Array<Maybe<Users_Mutation_Response>>>;
+  /** update data of the table: "venue_accommodation_details" */
+  update_venue_accommodation_details?: Maybe<Venue_Accommodation_Details_Mutation_Response>;
+  /** update single row of the table: "venue_accommodation_details" */
+  update_venue_accommodation_details_by_pk?: Maybe<Venue_Accommodation_Details>;
+  /** update multiples rows of table: "venue_accommodation_details" */
+  update_venue_accommodation_details_many?: Maybe<Array<Maybe<Venue_Accommodation_Details_Mutation_Response>>>;
+  /** update data of the table: "venue_beauty_salon_details" */
+  update_venue_beauty_salon_details?: Maybe<Venue_Beauty_Salon_Details_Mutation_Response>;
+  /** update single row of the table: "venue_beauty_salon_details" */
+  update_venue_beauty_salon_details_by_pk?: Maybe<Venue_Beauty_Salon_Details>;
+  /** update multiples rows of table: "venue_beauty_salon_details" */
+  update_venue_beauty_salon_details_many?: Maybe<Array<Maybe<Venue_Beauty_Salon_Details_Mutation_Response>>>;
   /** update data of the table: "venue_category" */
   update_venue_category?: Maybe<Venue_Category_Mutation_Response>;
   /** update single row of the table: "venue_category" */
   update_venue_category_by_pk?: Maybe<Venue_Category>;
   /** update multiples rows of table: "venue_category" */
   update_venue_category_many?: Maybe<Array<Maybe<Venue_Category_Mutation_Response>>>;
+  /** update data of the table: "venue_restaurant_details" */
+  update_venue_restaurant_details?: Maybe<Venue_Restaurant_Details_Mutation_Response>;
+  /** update single row of the table: "venue_restaurant_details" */
+  update_venue_restaurant_details_by_pk?: Maybe<Venue_Restaurant_Details>;
+  /** update multiples rows of table: "venue_restaurant_details" */
+  update_venue_restaurant_details_many?: Maybe<Array<Maybe<Venue_Restaurant_Details_Mutation_Response>>>;
+  /** update data of the table: "venue_schedule" */
+  update_venue_schedule?: Maybe<Venue_Schedule_Mutation_Response>;
+  /** update single row of the table: "venue_schedule" */
+  update_venue_schedule_by_pk?: Maybe<Venue_Schedule>;
+  /** update multiples rows of table: "venue_schedule" */
+  update_venue_schedule_many?: Maybe<Array<Maybe<Venue_Schedule_Mutation_Response>>>;
+  /** update data of the table: "venue_school_details" */
+  update_venue_school_details?: Maybe<Venue_School_Details_Mutation_Response>;
+  /** update single row of the table: "venue_school_details" */
+  update_venue_school_details_by_pk?: Maybe<Venue_School_Details>;
+  /** update multiples rows of table: "venue_school_details" */
+  update_venue_school_details_many?: Maybe<Array<Maybe<Venue_School_Details_Mutation_Response>>>;
+  /** update data of the table: "venue_shop_details" */
+  update_venue_shop_details?: Maybe<Venue_Shop_Details_Mutation_Response>;
+  /** update single row of the table: "venue_shop_details" */
+  update_venue_shop_details_by_pk?: Maybe<Venue_Shop_Details>;
+  /** update multiples rows of table: "venue_shop_details" */
+  update_venue_shop_details_many?: Maybe<Array<Maybe<Venue_Shop_Details_Mutation_Response>>>;
   /** update data of the table: "venue_status" */
   update_venue_status?: Maybe<Venue_Status_Mutation_Response>;
   /** update single row of the table: "venue_status" */
@@ -4167,6 +4647,26 @@ export type Mutation_RootDelete_UsersArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootDelete_Venue_Accommodation_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_Accommodation_DetailsArgs = {
+  where: Venue_Accommodation_Details_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_Beauty_Salon_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_Beauty_Salon_DetailsArgs = {
+  where: Venue_Beauty_Salon_Details_Bool_Exp;
+};
+
+/** mutation root */
 export type Mutation_RootDelete_Venue_Category_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
@@ -4174,6 +4674,46 @@ export type Mutation_RootDelete_Venue_Category_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Venue_CategoryArgs = {
   where: Venue_Category_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_Restaurant_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_Restaurant_DetailsArgs = {
+  where: Venue_Restaurant_Details_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_Schedule_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_ScheduleArgs = {
+  where: Venue_Schedule_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_School_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_School_DetailsArgs = {
+  where: Venue_School_Details_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_Shop_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Venue_Shop_DetailsArgs = {
+  where: Venue_Shop_Details_Bool_Exp;
 };
 
 /** mutation root */
@@ -4363,6 +4903,30 @@ export type Mutation_RootInsert_UsersArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootInsert_Venue_Accommodation_Details_OneArgs = {
+  object: Venue_Accommodation_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Accommodation_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_Accommodation_DetailsArgs = {
+  objects: Array<Venue_Accommodation_Details_Insert_Input>;
+  on_conflict?: InputMaybe<Venue_Accommodation_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_Beauty_Salon_Details_OneArgs = {
+  object: Venue_Beauty_Salon_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Beauty_Salon_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_Beauty_Salon_DetailsArgs = {
+  objects: Array<Venue_Beauty_Salon_Details_Insert_Input>;
+  on_conflict?: InputMaybe<Venue_Beauty_Salon_Details_On_Conflict>;
+};
+
+/** mutation root */
 export type Mutation_RootInsert_Venue_Category_OneArgs = {
   object: Venue_Category_Insert_Input;
   on_conflict?: InputMaybe<Venue_Category_On_Conflict>;
@@ -4372,6 +4936,54 @@ export type Mutation_RootInsert_Venue_Category_OneArgs = {
 export type Mutation_RootInsert_Venue_CategoryArgs = {
   objects: Array<Venue_Category_Insert_Input>;
   on_conflict?: InputMaybe<Venue_Category_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_Restaurant_Details_OneArgs = {
+  object: Venue_Restaurant_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Restaurant_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_Restaurant_DetailsArgs = {
+  objects: Array<Venue_Restaurant_Details_Insert_Input>;
+  on_conflict?: InputMaybe<Venue_Restaurant_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_Schedule_OneArgs = {
+  object: Venue_Schedule_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Schedule_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_ScheduleArgs = {
+  objects: Array<Venue_Schedule_Insert_Input>;
+  on_conflict?: InputMaybe<Venue_Schedule_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_School_Details_OneArgs = {
+  object: Venue_School_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_School_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_School_DetailsArgs = {
+  objects: Array<Venue_School_Details_Insert_Input>;
+  on_conflict?: InputMaybe<Venue_School_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_Shop_Details_OneArgs = {
+  object: Venue_Shop_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Shop_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Venue_Shop_DetailsArgs = {
+  objects: Array<Venue_Shop_Details_Insert_Input>;
+  on_conflict?: InputMaybe<Venue_Shop_Details_On_Conflict>;
 };
 
 /** mutation root */
@@ -4648,6 +5260,42 @@ export type Mutation_RootUpdate_UsersArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootUpdate_Venue_Accommodation_Details_By_PkArgs = {
+  _inc?: InputMaybe<Venue_Accommodation_Details_Inc_Input>;
+  _set?: InputMaybe<Venue_Accommodation_Details_Set_Input>;
+  pk_columns: Venue_Accommodation_Details_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Accommodation_Details_ManyArgs = {
+  updates: Array<Venue_Accommodation_Details_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Accommodation_DetailsArgs = {
+  _inc?: InputMaybe<Venue_Accommodation_Details_Inc_Input>;
+  _set?: InputMaybe<Venue_Accommodation_Details_Set_Input>;
+  where: Venue_Accommodation_Details_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Beauty_Salon_Details_By_PkArgs = {
+  _set?: InputMaybe<Venue_Beauty_Salon_Details_Set_Input>;
+  pk_columns: Venue_Beauty_Salon_Details_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Beauty_Salon_Details_ManyArgs = {
+  updates: Array<Venue_Beauty_Salon_Details_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Beauty_Salon_DetailsArgs = {
+  _set?: InputMaybe<Venue_Beauty_Salon_Details_Set_Input>;
+  where: Venue_Beauty_Salon_Details_Bool_Exp;
+};
+
+/** mutation root */
 export type Mutation_RootUpdate_Venue_Category_By_PkArgs = {
   _set?: InputMaybe<Venue_Category_Set_Input>;
   pk_columns: Venue_Category_Pk_Columns_Input;
@@ -4662,6 +5310,78 @@ export type Mutation_RootUpdate_Venue_Category_ManyArgs = {
 export type Mutation_RootUpdate_Venue_CategoryArgs = {
   _set?: InputMaybe<Venue_Category_Set_Input>;
   where: Venue_Category_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Restaurant_Details_By_PkArgs = {
+  _inc?: InputMaybe<Venue_Restaurant_Details_Inc_Input>;
+  _set?: InputMaybe<Venue_Restaurant_Details_Set_Input>;
+  pk_columns: Venue_Restaurant_Details_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Restaurant_Details_ManyArgs = {
+  updates: Array<Venue_Restaurant_Details_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Restaurant_DetailsArgs = {
+  _inc?: InputMaybe<Venue_Restaurant_Details_Inc_Input>;
+  _set?: InputMaybe<Venue_Restaurant_Details_Set_Input>;
+  where: Venue_Restaurant_Details_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Schedule_By_PkArgs = {
+  _set?: InputMaybe<Venue_Schedule_Set_Input>;
+  pk_columns: Venue_Schedule_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Schedule_ManyArgs = {
+  updates: Array<Venue_Schedule_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_ScheduleArgs = {
+  _set?: InputMaybe<Venue_Schedule_Set_Input>;
+  where: Venue_Schedule_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_School_Details_By_PkArgs = {
+  _inc?: InputMaybe<Venue_School_Details_Inc_Input>;
+  _set?: InputMaybe<Venue_School_Details_Set_Input>;
+  pk_columns: Venue_School_Details_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_School_Details_ManyArgs = {
+  updates: Array<Venue_School_Details_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_School_DetailsArgs = {
+  _inc?: InputMaybe<Venue_School_Details_Inc_Input>;
+  _set?: InputMaybe<Venue_School_Details_Set_Input>;
+  where: Venue_School_Details_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Shop_Details_By_PkArgs = {
+  _set?: InputMaybe<Venue_Shop_Details_Set_Input>;
+  pk_columns: Venue_Shop_Details_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Shop_Details_ManyArgs = {
+  updates: Array<Venue_Shop_Details_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Venue_Shop_DetailsArgs = {
+  _set?: InputMaybe<Venue_Shop_Details_Set_Input>;
+  where: Venue_Shop_Details_Bool_Exp;
 };
 
 /** mutation root */
@@ -5071,12 +5791,48 @@ export type Query_Root = {
   users_aggregate: Users_Aggregate;
   /** fetch data from the table: "users" using primary key columns */
   users_by_pk?: Maybe<Users>;
+  /** An array relationship */
+  venue_accommodation_details: Array<Venue_Accommodation_Details>;
+  /** An aggregate relationship */
+  venue_accommodation_details_aggregate: Venue_Accommodation_Details_Aggregate;
+  /** fetch data from the table: "venue_accommodation_details" using primary key columns */
+  venue_accommodation_details_by_pk?: Maybe<Venue_Accommodation_Details>;
+  /** An array relationship */
+  venue_beauty_salon_details: Array<Venue_Beauty_Salon_Details>;
+  /** An aggregate relationship */
+  venue_beauty_salon_details_aggregate: Venue_Beauty_Salon_Details_Aggregate;
+  /** fetch data from the table: "venue_beauty_salon_details" using primary key columns */
+  venue_beauty_salon_details_by_pk?: Maybe<Venue_Beauty_Salon_Details>;
   /** fetch data from the table: "venue_category" */
   venue_category: Array<Venue_Category>;
   /** fetch aggregated fields from the table: "venue_category" */
   venue_category_aggregate: Venue_Category_Aggregate;
   /** fetch data from the table: "venue_category" using primary key columns */
   venue_category_by_pk?: Maybe<Venue_Category>;
+  /** An array relationship */
+  venue_restaurant_details: Array<Venue_Restaurant_Details>;
+  /** An aggregate relationship */
+  venue_restaurant_details_aggregate: Venue_Restaurant_Details_Aggregate;
+  /** fetch data from the table: "venue_restaurant_details" using primary key columns */
+  venue_restaurant_details_by_pk?: Maybe<Venue_Restaurant_Details>;
+  /** fetch data from the table: "venue_schedule" */
+  venue_schedule: Array<Venue_Schedule>;
+  /** fetch aggregated fields from the table: "venue_schedule" */
+  venue_schedule_aggregate: Venue_Schedule_Aggregate;
+  /** fetch data from the table: "venue_schedule" using primary key columns */
+  venue_schedule_by_pk?: Maybe<Venue_Schedule>;
+  /** An array relationship */
+  venue_school_details: Array<Venue_School_Details>;
+  /** An aggregate relationship */
+  venue_school_details_aggregate: Venue_School_Details_Aggregate;
+  /** fetch data from the table: "venue_school_details" using primary key columns */
+  venue_school_details_by_pk?: Maybe<Venue_School_Details>;
+  /** An array relationship */
+  venue_shop_details: Array<Venue_Shop_Details>;
+  /** An aggregate relationship */
+  venue_shop_details_aggregate: Venue_Shop_Details_Aggregate;
+  /** fetch data from the table: "venue_shop_details" using primary key columns */
+  venue_shop_details_by_pk?: Maybe<Venue_Shop_Details>;
   /** fetch data from the table: "venue_status" */
   venue_status: Array<Venue_Status>;
   /** fetch aggregated fields from the table: "venue_status" */
@@ -5358,6 +6114,46 @@ export type Query_RootUsersArgs = {
   where?: InputMaybe<Users_Bool_Exp>;
 };
 
+export type Query_RootVenue_Accommodation_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+export type Query_RootVenue_Accommodation_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVenue_Accommodation_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+export type Query_RootVenue_Beauty_Salon_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
+export type Query_RootVenue_Beauty_Salon_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVenue_Beauty_Salon_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
 export type Query_RootVenue_Category_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -5376,6 +6172,86 @@ export type Query_RootVenue_CategoryArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
   where?: InputMaybe<Venue_Category_Bool_Exp>;
+};
+
+export type Query_RootVenue_Restaurant_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+export type Query_RootVenue_Restaurant_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVenue_Restaurant_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+export type Query_RootVenue_Schedule_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+export type Query_RootVenue_Schedule_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVenue_ScheduleArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+export type Query_RootVenue_School_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+export type Query_RootVenue_School_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVenue_School_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+export type Query_RootVenue_Shop_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+};
+
+export type Query_RootVenue_Shop_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVenue_Shop_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
 };
 
 export type Query_RootVenue_Status_AggregateArgs = {
@@ -5450,6 +6326,7 @@ export type Scalars = {
   jsonb: { input: Json; output: Json };
   numeric: { input: Numeric; output: Numeric };
   String: { input: string; output: string };
+  time: { input: Time; output: Time };
   timestamp: { input: Timestamp; output: Timestamp };
   timestamptz: { input: Timestamp; output: Timestamp };
   uuid: { input: UUID; output: UUID };
@@ -5795,6 +6672,22 @@ export type Subscription_Root = {
   users_by_pk?: Maybe<Users>;
   /** fetch data from the table in a streaming manner: "users" */
   users_stream: Array<Users>;
+  /** An array relationship */
+  venue_accommodation_details: Array<Venue_Accommodation_Details>;
+  /** An aggregate relationship */
+  venue_accommodation_details_aggregate: Venue_Accommodation_Details_Aggregate;
+  /** fetch data from the table: "venue_accommodation_details" using primary key columns */
+  venue_accommodation_details_by_pk?: Maybe<Venue_Accommodation_Details>;
+  /** fetch data from the table in a streaming manner: "venue_accommodation_details" */
+  venue_accommodation_details_stream: Array<Venue_Accommodation_Details>;
+  /** An array relationship */
+  venue_beauty_salon_details: Array<Venue_Beauty_Salon_Details>;
+  /** An aggregate relationship */
+  venue_beauty_salon_details_aggregate: Venue_Beauty_Salon_Details_Aggregate;
+  /** fetch data from the table: "venue_beauty_salon_details" using primary key columns */
+  venue_beauty_salon_details_by_pk?: Maybe<Venue_Beauty_Salon_Details>;
+  /** fetch data from the table in a streaming manner: "venue_beauty_salon_details" */
+  venue_beauty_salon_details_stream: Array<Venue_Beauty_Salon_Details>;
   /** fetch data from the table: "venue_category" */
   venue_category: Array<Venue_Category>;
   /** fetch aggregated fields from the table: "venue_category" */
@@ -5803,6 +6696,38 @@ export type Subscription_Root = {
   venue_category_by_pk?: Maybe<Venue_Category>;
   /** fetch data from the table in a streaming manner: "venue_category" */
   venue_category_stream: Array<Venue_Category>;
+  /** An array relationship */
+  venue_restaurant_details: Array<Venue_Restaurant_Details>;
+  /** An aggregate relationship */
+  venue_restaurant_details_aggregate: Venue_Restaurant_Details_Aggregate;
+  /** fetch data from the table: "venue_restaurant_details" using primary key columns */
+  venue_restaurant_details_by_pk?: Maybe<Venue_Restaurant_Details>;
+  /** fetch data from the table in a streaming manner: "venue_restaurant_details" */
+  venue_restaurant_details_stream: Array<Venue_Restaurant_Details>;
+  /** fetch data from the table: "venue_schedule" */
+  venue_schedule: Array<Venue_Schedule>;
+  /** fetch aggregated fields from the table: "venue_schedule" */
+  venue_schedule_aggregate: Venue_Schedule_Aggregate;
+  /** fetch data from the table: "venue_schedule" using primary key columns */
+  venue_schedule_by_pk?: Maybe<Venue_Schedule>;
+  /** fetch data from the table in a streaming manner: "venue_schedule" */
+  venue_schedule_stream: Array<Venue_Schedule>;
+  /** An array relationship */
+  venue_school_details: Array<Venue_School_Details>;
+  /** An aggregate relationship */
+  venue_school_details_aggregate: Venue_School_Details_Aggregate;
+  /** fetch data from the table: "venue_school_details" using primary key columns */
+  venue_school_details_by_pk?: Maybe<Venue_School_Details>;
+  /** fetch data from the table in a streaming manner: "venue_school_details" */
+  venue_school_details_stream: Array<Venue_School_Details>;
+  /** An array relationship */
+  venue_shop_details: Array<Venue_Shop_Details>;
+  /** An aggregate relationship */
+  venue_shop_details_aggregate: Venue_Shop_Details_Aggregate;
+  /** fetch data from the table: "venue_shop_details" using primary key columns */
+  venue_shop_details_by_pk?: Maybe<Venue_Shop_Details>;
+  /** fetch data from the table in a streaming manner: "venue_shop_details" */
+  venue_shop_details_stream: Array<Venue_Shop_Details>;
   /** fetch data from the table: "venue_status" */
   venue_status: Array<Venue_Status>;
   /** fetch aggregated fields from the table: "venue_status" */
@@ -6168,6 +7093,58 @@ export type Subscription_RootUsersArgs = {
   where?: InputMaybe<Users_Bool_Exp>;
 };
 
+export type Subscription_RootVenue_Accommodation_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Accommodation_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVenue_Accommodation_Details_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Venue_Accommodation_Details_Stream_Cursor_Input>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Accommodation_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Beauty_Salon_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Beauty_Salon_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVenue_Beauty_Salon_Details_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Venue_Beauty_Salon_Details_Stream_Cursor_Input>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Beauty_Salon_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
 export type Subscription_RootVenue_Category_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6192,6 +7169,110 @@ export type Subscription_RootVenue_CategoryArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
   where?: InputMaybe<Venue_Category_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Restaurant_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Restaurant_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVenue_Restaurant_Details_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Venue_Restaurant_Details_Stream_Cursor_Input>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Restaurant_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Schedule_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Schedule_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVenue_Schedule_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Venue_Schedule_Stream_Cursor_Input>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_ScheduleArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_School_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_School_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVenue_School_Details_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Venue_School_Details_Stream_Cursor_Input>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_School_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Shop_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Shop_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVenue_Shop_Details_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Venue_Shop_Details_Stream_Cursor_Input>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+};
+
+export type Subscription_RootVenue_Shop_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
 };
 
 export type Subscription_RootVenue_Status_AggregateArgs = {
@@ -6270,6 +7351,19 @@ export type Subscription_RootVerification_TokensArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
   where?: InputMaybe<Verification_Tokens_Bool_Exp>;
+};
+
+/** Boolean expression to compare columns of type "time". All fields are combined with logical 'AND'. */
+export type Time_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars["time"]["input"]>;
+  _gt?: InputMaybe<Scalars["time"]["input"]>;
+  _gte?: InputMaybe<Scalars["time"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["time"]["input"]>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["time"]["input"]>;
+  _lte?: InputMaybe<Scalars["time"]["input"]>;
+  _neq?: InputMaybe<Scalars["time"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["time"]["input"]>>;
 };
 
 /** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
@@ -7246,6 +8340,576 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
 };
 
+/** columns and relationships of "venue_accommodation_details" */
+export type Venue_Accommodation_Details = {
+  __typename?: "venue_accommodation_details";
+  amenities?: Maybe<Array<Scalars["String"]["output"]>>;
+  bathrooms?: Maybe<Scalars["Int"]["output"]>;
+  bedrooms?: Maybe<Scalars["Int"]["output"]>;
+  check_in_time?: Maybe<Scalars["time"]["output"]>;
+  check_out_time?: Maybe<Scalars["time"]["output"]>;
+  max_guests?: Maybe<Scalars["Int"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Int"]["output"]>;
+  updated_at: Scalars["timestamptz"]["output"];
+  /** An object relationship */
+  venue: Venues;
+  venue_id: Scalars["uuid"]["output"];
+};
+
+/** aggregated selection of "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Aggregate = {
+  __typename?: "venue_accommodation_details_aggregate";
+  aggregate?: Maybe<Venue_Accommodation_Details_Aggregate_Fields>;
+  nodes: Array<Venue_Accommodation_Details>;
+};
+
+export type Venue_Accommodation_Details_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Venue_Accommodation_Details_Aggregate_Bool_Exp_Count>;
+};
+
+export type Venue_Accommodation_Details_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Aggregate_Fields = {
+  __typename?: "venue_accommodation_details_aggregate_fields";
+  avg?: Maybe<Venue_Accommodation_Details_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Venue_Accommodation_Details_Max_Fields>;
+  min?: Maybe<Venue_Accommodation_Details_Min_Fields>;
+  stddev?: Maybe<Venue_Accommodation_Details_Stddev_Fields>;
+  stddev_pop?: Maybe<Venue_Accommodation_Details_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Venue_Accommodation_Details_Stddev_Samp_Fields>;
+  sum?: Maybe<Venue_Accommodation_Details_Sum_Fields>;
+  var_pop?: Maybe<Venue_Accommodation_Details_Var_Pop_Fields>;
+  var_samp?: Maybe<Venue_Accommodation_Details_Var_Samp_Fields>;
+  variance?: Maybe<Venue_Accommodation_Details_Variance_Fields>;
+};
+
+/** aggregate fields of "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Aggregate_Order_By = {
+  avg?: InputMaybe<Venue_Accommodation_Details_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Venue_Accommodation_Details_Max_Order_By>;
+  min?: InputMaybe<Venue_Accommodation_Details_Min_Order_By>;
+  stddev?: InputMaybe<Venue_Accommodation_Details_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Venue_Accommodation_Details_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Venue_Accommodation_Details_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Venue_Accommodation_Details_Sum_Order_By>;
+  var_pop?: InputMaybe<Venue_Accommodation_Details_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Venue_Accommodation_Details_Var_Samp_Order_By>;
+  variance?: InputMaybe<Venue_Accommodation_Details_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Arr_Rel_Insert_Input = {
+  data: Array<Venue_Accommodation_Details_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Venue_Accommodation_Details_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Venue_Accommodation_Details_Avg_Fields = {
+  __typename?: "venue_accommodation_details_avg_fields";
+  bathrooms?: Maybe<Scalars["Float"]["output"]>;
+  bedrooms?: Maybe<Scalars["Float"]["output"]>;
+  max_guests?: Maybe<Scalars["Float"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Avg_Order_By = {
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "venue_accommodation_details". All fields are combined with a logical 'AND'. */
+export type Venue_Accommodation_Details_Bool_Exp = {
+  _and?: InputMaybe<Array<Venue_Accommodation_Details_Bool_Exp>>;
+  _not?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+  _or?: InputMaybe<Array<Venue_Accommodation_Details_Bool_Exp>>;
+  amenities?: InputMaybe<String_Array_Comparison_Exp>;
+  bathrooms?: InputMaybe<Int_Comparison_Exp>;
+  bedrooms?: InputMaybe<Int_Comparison_Exp>;
+  check_in_time?: InputMaybe<Time_Comparison_Exp>;
+  check_out_time?: InputMaybe<Time_Comparison_Exp>;
+  max_guests?: InputMaybe<Int_Comparison_Exp>;
+  minimum_stay_nights?: InputMaybe<Int_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  venue?: InputMaybe<Venues_Bool_Exp>;
+  venue_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Inc_Input = {
+  bathrooms?: InputMaybe<Scalars["Int"]["input"]>;
+  bedrooms?: InputMaybe<Scalars["Int"]["input"]>;
+  max_guests?: InputMaybe<Scalars["Int"]["input"]>;
+  minimum_stay_nights?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Insert_Input = {
+  amenities?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  bathrooms?: InputMaybe<Scalars["Int"]["input"]>;
+  bedrooms?: InputMaybe<Scalars["Int"]["input"]>;
+  check_in_time?: InputMaybe<Scalars["time"]["input"]>;
+  check_out_time?: InputMaybe<Scalars["time"]["input"]>;
+  max_guests?: InputMaybe<Scalars["Int"]["input"]>;
+  minimum_stay_nights?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue?: InputMaybe<Venues_Obj_Rel_Insert_Input>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Venue_Accommodation_Details_Max_Fields = {
+  __typename?: "venue_accommodation_details_max_fields";
+  amenities?: Maybe<Array<Scalars["String"]["output"]>>;
+  bathrooms?: Maybe<Scalars["Int"]["output"]>;
+  bedrooms?: Maybe<Scalars["Int"]["output"]>;
+  max_guests?: Maybe<Scalars["Int"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Max_Order_By = {
+  amenities?: InputMaybe<Order_By>;
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Venue_Accommodation_Details_Min_Fields = {
+  __typename?: "venue_accommodation_details_min_fields";
+  amenities?: Maybe<Array<Scalars["String"]["output"]>>;
+  bathrooms?: Maybe<Scalars["Int"]["output"]>;
+  bedrooms?: Maybe<Scalars["Int"]["output"]>;
+  max_guests?: Maybe<Scalars["Int"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Min_Order_By = {
+  amenities?: InputMaybe<Order_By>;
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Mutation_Response = {
+  __typename?: "venue_accommodation_details_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Venue_Accommodation_Details>;
+};
+
+/** input type for inserting object relation for remote table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Obj_Rel_Insert_Input = {
+  data: Venue_Accommodation_Details_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Venue_Accommodation_Details_On_Conflict>;
+};
+
+/** on_conflict condition type for table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_On_Conflict = {
+  constraint: Venue_Accommodation_Details_Constraint;
+  update_columns?: Array<Venue_Accommodation_Details_Update_Column>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "venue_accommodation_details". */
+export type Venue_Accommodation_Details_Order_By = {
+  amenities?: InputMaybe<Order_By>;
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  check_in_time?: InputMaybe<Order_By>;
+  check_out_time?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue?: InputMaybe<Venues_Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: venue_accommodation_details */
+export type Venue_Accommodation_Details_Pk_Columns_Input = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** input type for updating data in table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Set_Input = {
+  amenities?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  bathrooms?: InputMaybe<Scalars["Int"]["input"]>;
+  bedrooms?: InputMaybe<Scalars["Int"]["input"]>;
+  check_in_time?: InputMaybe<Scalars["time"]["input"]>;
+  check_out_time?: InputMaybe<Scalars["time"]["input"]>;
+  max_guests?: InputMaybe<Scalars["Int"]["input"]>;
+  minimum_stay_nights?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Venue_Accommodation_Details_Stddev_Fields = {
+  __typename?: "venue_accommodation_details_stddev_fields";
+  bathrooms?: Maybe<Scalars["Float"]["output"]>;
+  bedrooms?: Maybe<Scalars["Float"]["output"]>;
+  max_guests?: Maybe<Scalars["Float"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Stddev_Order_By = {
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Venue_Accommodation_Details_Stddev_Pop_Fields = {
+  __typename?: "venue_accommodation_details_stddev_pop_fields";
+  bathrooms?: Maybe<Scalars["Float"]["output"]>;
+  bedrooms?: Maybe<Scalars["Float"]["output"]>;
+  max_guests?: Maybe<Scalars["Float"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Stddev_Pop_Order_By = {
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Venue_Accommodation_Details_Stddev_Samp_Fields = {
+  __typename?: "venue_accommodation_details_stddev_samp_fields";
+  bathrooms?: Maybe<Scalars["Float"]["output"]>;
+  bedrooms?: Maybe<Scalars["Float"]["output"]>;
+  max_guests?: Maybe<Scalars["Float"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Stddev_Samp_Order_By = {
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Venue_Accommodation_Details_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Venue_Accommodation_Details_Stream_Cursor_Value_Input = {
+  amenities?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  bathrooms?: InputMaybe<Scalars["Int"]["input"]>;
+  bedrooms?: InputMaybe<Scalars["Int"]["input"]>;
+  check_in_time?: InputMaybe<Scalars["time"]["input"]>;
+  check_out_time?: InputMaybe<Scalars["time"]["input"]>;
+  max_guests?: InputMaybe<Scalars["Int"]["input"]>;
+  minimum_stay_nights?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Venue_Accommodation_Details_Sum_Fields = {
+  __typename?: "venue_accommodation_details_sum_fields";
+  bathrooms?: Maybe<Scalars["Int"]["output"]>;
+  bedrooms?: Maybe<Scalars["Int"]["output"]>;
+  max_guests?: Maybe<Scalars["Int"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Sum_Order_By = {
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+};
+
+export type Venue_Accommodation_Details_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Venue_Accommodation_Details_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Venue_Accommodation_Details_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Venue_Accommodation_Details_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Venue_Accommodation_Details_Var_Pop_Fields = {
+  __typename?: "venue_accommodation_details_var_pop_fields";
+  bathrooms?: Maybe<Scalars["Float"]["output"]>;
+  bedrooms?: Maybe<Scalars["Float"]["output"]>;
+  max_guests?: Maybe<Scalars["Float"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Var_Pop_Order_By = {
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Venue_Accommodation_Details_Var_Samp_Fields = {
+  __typename?: "venue_accommodation_details_var_samp_fields";
+  bathrooms?: Maybe<Scalars["Float"]["output"]>;
+  bedrooms?: Maybe<Scalars["Float"]["output"]>;
+  max_guests?: Maybe<Scalars["Float"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Var_Samp_Order_By = {
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Venue_Accommodation_Details_Variance_Fields = {
+  __typename?: "venue_accommodation_details_variance_fields";
+  bathrooms?: Maybe<Scalars["Float"]["output"]>;
+  bedrooms?: Maybe<Scalars["Float"]["output"]>;
+  max_guests?: Maybe<Scalars["Float"]["output"]>;
+  minimum_stay_nights?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "venue_accommodation_details" */
+export type Venue_Accommodation_Details_Variance_Order_By = {
+  bathrooms?: InputMaybe<Order_By>;
+  bedrooms?: InputMaybe<Order_By>;
+  max_guests?: InputMaybe<Order_By>;
+  minimum_stay_nights?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details = {
+  __typename?: "venue_beauty_salon_details";
+  appointment_required?: Maybe<Scalars["Boolean"]["output"]>;
+  services?: Maybe<Array<Scalars["String"]["output"]>>;
+  updated_at: Scalars["timestamptz"]["output"];
+  venue_id: Scalars["uuid"]["output"];
+  walk_ins_accepted?: Maybe<Scalars["Boolean"]["output"]>;
+};
+
+/** aggregated selection of "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Aggregate = {
+  __typename?: "venue_beauty_salon_details_aggregate";
+  aggregate?: Maybe<Venue_Beauty_Salon_Details_Aggregate_Fields>;
+  nodes: Array<Venue_Beauty_Salon_Details>;
+};
+
+export type Venue_Beauty_Salon_Details_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Count>;
+};
+
+export type Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Venue_Beauty_Salon_Details_Select_Column_Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Venue_Beauty_Salon_Details_Select_Column_Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Aggregate_Fields = {
+  __typename?: "venue_beauty_salon_details_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Venue_Beauty_Salon_Details_Max_Fields>;
+  min?: Maybe<Venue_Beauty_Salon_Details_Min_Fields>;
+};
+
+/** aggregate fields of "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Venue_Beauty_Salon_Details_Max_Order_By>;
+  min?: InputMaybe<Venue_Beauty_Salon_Details_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Arr_Rel_Insert_Input = {
+  data: Array<Venue_Beauty_Salon_Details_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Venue_Beauty_Salon_Details_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "venue_beauty_salon_details". All fields are combined with a logical 'AND'. */
+export type Venue_Beauty_Salon_Details_Bool_Exp = {
+  _and?: InputMaybe<Array<Venue_Beauty_Salon_Details_Bool_Exp>>;
+  _not?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+  _or?: InputMaybe<Array<Venue_Beauty_Salon_Details_Bool_Exp>>;
+  appointment_required?: InputMaybe<Boolean_Comparison_Exp>;
+  services?: InputMaybe<String_Array_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  venue_id?: InputMaybe<Uuid_Comparison_Exp>;
+  walk_ins_accepted?: InputMaybe<Boolean_Comparison_Exp>;
+};
+
+/** input type for inserting data into table "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Insert_Input = {
+  appointment_required?: InputMaybe<Scalars["Boolean"]["input"]>;
+  services?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  walk_ins_accepted?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Venue_Beauty_Salon_Details_Max_Fields = {
+  __typename?: "venue_beauty_salon_details_max_fields";
+  services?: Maybe<Array<Scalars["String"]["output"]>>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Max_Order_By = {
+  services?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Venue_Beauty_Salon_Details_Min_Fields = {
+  __typename?: "venue_beauty_salon_details_min_fields";
+  services?: Maybe<Array<Scalars["String"]["output"]>>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Min_Order_By = {
+  services?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Mutation_Response = {
+  __typename?: "venue_beauty_salon_details_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Venue_Beauty_Salon_Details>;
+};
+
+/** on_conflict condition type for table "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_On_Conflict = {
+  constraint: Venue_Beauty_Salon_Details_Constraint;
+  update_columns?: Array<Venue_Beauty_Salon_Details_Update_Column>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "venue_beauty_salon_details". */
+export type Venue_Beauty_Salon_Details_Order_By = {
+  appointment_required?: InputMaybe<Order_By>;
+  services?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+  walk_ins_accepted?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: venue_beauty_salon_details */
+export type Venue_Beauty_Salon_Details_Pk_Columns_Input = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** input type for updating data in table "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Set_Input = {
+  appointment_required?: InputMaybe<Scalars["Boolean"]["input"]>;
+  services?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  walk_ins_accepted?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** Streaming cursor of the table "venue_beauty_salon_details" */
+export type Venue_Beauty_Salon_Details_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Venue_Beauty_Salon_Details_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Venue_Beauty_Salon_Details_Stream_Cursor_Value_Input = {
+  appointment_required?: InputMaybe<Scalars["Boolean"]["input"]>;
+  services?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  walk_ins_accepted?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type Venue_Beauty_Salon_Details_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Venue_Beauty_Salon_Details_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Venue_Beauty_Salon_Details_Bool_Exp;
+};
+
 /** columns and relationships of "venue_category" */
 export type Venue_Category = {
   __typename?: "venue_category";
@@ -7389,6 +9053,979 @@ export type Venue_CategoryVenuesArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Venues_Order_By>>;
   where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+/** columns and relationships of "venue_restaurant_details" */
+export type Venue_Restaurant_Details = {
+  __typename?: "venue_restaurant_details";
+  cuisine_types?: Maybe<Array<Scalars["String"]["output"]>>;
+  features?: Maybe<Array<Scalars["String"]["output"]>>;
+  price_range?: Maybe<Scalars["String"]["output"]>;
+  seating_capacity?: Maybe<Scalars["Int"]["output"]>;
+  updated_at: Scalars["timestamptz"]["output"];
+  venue_id: Scalars["uuid"]["output"];
+};
+
+/** aggregated selection of "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Aggregate = {
+  __typename?: "venue_restaurant_details_aggregate";
+  aggregate?: Maybe<Venue_Restaurant_Details_Aggregate_Fields>;
+  nodes: Array<Venue_Restaurant_Details>;
+};
+
+export type Venue_Restaurant_Details_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Venue_Restaurant_Details_Aggregate_Bool_Exp_Count>;
+};
+
+export type Venue_Restaurant_Details_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Aggregate_Fields = {
+  __typename?: "venue_restaurant_details_aggregate_fields";
+  avg?: Maybe<Venue_Restaurant_Details_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Venue_Restaurant_Details_Max_Fields>;
+  min?: Maybe<Venue_Restaurant_Details_Min_Fields>;
+  stddev?: Maybe<Venue_Restaurant_Details_Stddev_Fields>;
+  stddev_pop?: Maybe<Venue_Restaurant_Details_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Venue_Restaurant_Details_Stddev_Samp_Fields>;
+  sum?: Maybe<Venue_Restaurant_Details_Sum_Fields>;
+  var_pop?: Maybe<Venue_Restaurant_Details_Var_Pop_Fields>;
+  var_samp?: Maybe<Venue_Restaurant_Details_Var_Samp_Fields>;
+  variance?: Maybe<Venue_Restaurant_Details_Variance_Fields>;
+};
+
+/** aggregate fields of "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Aggregate_Order_By = {
+  avg?: InputMaybe<Venue_Restaurant_Details_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Venue_Restaurant_Details_Max_Order_By>;
+  min?: InputMaybe<Venue_Restaurant_Details_Min_Order_By>;
+  stddev?: InputMaybe<Venue_Restaurant_Details_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Venue_Restaurant_Details_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Venue_Restaurant_Details_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Venue_Restaurant_Details_Sum_Order_By>;
+  var_pop?: InputMaybe<Venue_Restaurant_Details_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Venue_Restaurant_Details_Var_Samp_Order_By>;
+  variance?: InputMaybe<Venue_Restaurant_Details_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Arr_Rel_Insert_Input = {
+  data: Array<Venue_Restaurant_Details_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Venue_Restaurant_Details_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Venue_Restaurant_Details_Avg_Fields = {
+  __typename?: "venue_restaurant_details_avg_fields";
+  seating_capacity?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Avg_Order_By = {
+  seating_capacity?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "venue_restaurant_details". All fields are combined with a logical 'AND'. */
+export type Venue_Restaurant_Details_Bool_Exp = {
+  _and?: InputMaybe<Array<Venue_Restaurant_Details_Bool_Exp>>;
+  _not?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+  _or?: InputMaybe<Array<Venue_Restaurant_Details_Bool_Exp>>;
+  cuisine_types?: InputMaybe<String_Array_Comparison_Exp>;
+  features?: InputMaybe<String_Array_Comparison_Exp>;
+  price_range?: InputMaybe<String_Comparison_Exp>;
+  seating_capacity?: InputMaybe<Int_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  venue_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Inc_Input = {
+  seating_capacity?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Insert_Input = {
+  cuisine_types?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  features?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  price_range?: InputMaybe<Scalars["String"]["input"]>;
+  seating_capacity?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Venue_Restaurant_Details_Max_Fields = {
+  __typename?: "venue_restaurant_details_max_fields";
+  cuisine_types?: Maybe<Array<Scalars["String"]["output"]>>;
+  features?: Maybe<Array<Scalars["String"]["output"]>>;
+  price_range?: Maybe<Scalars["String"]["output"]>;
+  seating_capacity?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Max_Order_By = {
+  cuisine_types?: InputMaybe<Order_By>;
+  features?: InputMaybe<Order_By>;
+  price_range?: InputMaybe<Order_By>;
+  seating_capacity?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Venue_Restaurant_Details_Min_Fields = {
+  __typename?: "venue_restaurant_details_min_fields";
+  cuisine_types?: Maybe<Array<Scalars["String"]["output"]>>;
+  features?: Maybe<Array<Scalars["String"]["output"]>>;
+  price_range?: Maybe<Scalars["String"]["output"]>;
+  seating_capacity?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Min_Order_By = {
+  cuisine_types?: InputMaybe<Order_By>;
+  features?: InputMaybe<Order_By>;
+  price_range?: InputMaybe<Order_By>;
+  seating_capacity?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Mutation_Response = {
+  __typename?: "venue_restaurant_details_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Venue_Restaurant_Details>;
+};
+
+/** on_conflict condition type for table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_On_Conflict = {
+  constraint: Venue_Restaurant_Details_Constraint;
+  update_columns?: Array<Venue_Restaurant_Details_Update_Column>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "venue_restaurant_details". */
+export type Venue_Restaurant_Details_Order_By = {
+  cuisine_types?: InputMaybe<Order_By>;
+  features?: InputMaybe<Order_By>;
+  price_range?: InputMaybe<Order_By>;
+  seating_capacity?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: venue_restaurant_details */
+export type Venue_Restaurant_Details_Pk_Columns_Input = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** input type for updating data in table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Set_Input = {
+  cuisine_types?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  features?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  price_range?: InputMaybe<Scalars["String"]["input"]>;
+  seating_capacity?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Venue_Restaurant_Details_Stddev_Fields = {
+  __typename?: "venue_restaurant_details_stddev_fields";
+  seating_capacity?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Stddev_Order_By = {
+  seating_capacity?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Venue_Restaurant_Details_Stddev_Pop_Fields = {
+  __typename?: "venue_restaurant_details_stddev_pop_fields";
+  seating_capacity?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Stddev_Pop_Order_By = {
+  seating_capacity?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Venue_Restaurant_Details_Stddev_Samp_Fields = {
+  __typename?: "venue_restaurant_details_stddev_samp_fields";
+  seating_capacity?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Stddev_Samp_Order_By = {
+  seating_capacity?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Venue_Restaurant_Details_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Venue_Restaurant_Details_Stream_Cursor_Value_Input = {
+  cuisine_types?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  features?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  price_range?: InputMaybe<Scalars["String"]["input"]>;
+  seating_capacity?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Venue_Restaurant_Details_Sum_Fields = {
+  __typename?: "venue_restaurant_details_sum_fields";
+  seating_capacity?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Sum_Order_By = {
+  seating_capacity?: InputMaybe<Order_By>;
+};
+
+export type Venue_Restaurant_Details_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Venue_Restaurant_Details_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Venue_Restaurant_Details_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Venue_Restaurant_Details_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Venue_Restaurant_Details_Var_Pop_Fields = {
+  __typename?: "venue_restaurant_details_var_pop_fields";
+  seating_capacity?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Var_Pop_Order_By = {
+  seating_capacity?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Venue_Restaurant_Details_Var_Samp_Fields = {
+  __typename?: "venue_restaurant_details_var_samp_fields";
+  seating_capacity?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Var_Samp_Order_By = {
+  seating_capacity?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Venue_Restaurant_Details_Variance_Fields = {
+  __typename?: "venue_restaurant_details_variance_fields";
+  seating_capacity?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "venue_restaurant_details" */
+export type Venue_Restaurant_Details_Variance_Order_By = {
+  seating_capacity?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "venue_schedule" */
+export type Venue_Schedule = {
+  __typename?: "venue_schedule";
+  close_time: Scalars["time"]["output"];
+  day_of_week: Scalars["String"]["output"];
+  id: Scalars["uuid"]["output"];
+  open_time: Scalars["time"]["output"];
+  updated_at: Scalars["timestamp"]["output"];
+  /** An object relationship */
+  venue: Venues;
+  venue_id: Scalars["uuid"]["output"];
+};
+
+/** aggregated selection of "venue_schedule" */
+export type Venue_Schedule_Aggregate = {
+  __typename?: "venue_schedule_aggregate";
+  aggregate?: Maybe<Venue_Schedule_Aggregate_Fields>;
+  nodes: Array<Venue_Schedule>;
+};
+
+export type Venue_Schedule_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Venue_Schedule_Aggregate_Bool_Exp_Count>;
+};
+
+export type Venue_Schedule_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_Schedule_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "venue_schedule" */
+export type Venue_Schedule_Aggregate_Fields = {
+  __typename?: "venue_schedule_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Venue_Schedule_Max_Fields>;
+  min?: Maybe<Venue_Schedule_Min_Fields>;
+};
+
+/** aggregate fields of "venue_schedule" */
+export type Venue_Schedule_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "venue_schedule" */
+export type Venue_Schedule_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Venue_Schedule_Max_Order_By>;
+  min?: InputMaybe<Venue_Schedule_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "venue_schedule" */
+export type Venue_Schedule_Arr_Rel_Insert_Input = {
+  data: Array<Venue_Schedule_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Venue_Schedule_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "venue_schedule". All fields are combined with a logical 'AND'. */
+export type Venue_Schedule_Bool_Exp = {
+  _and?: InputMaybe<Array<Venue_Schedule_Bool_Exp>>;
+  _not?: InputMaybe<Venue_Schedule_Bool_Exp>;
+  _or?: InputMaybe<Array<Venue_Schedule_Bool_Exp>>;
+  close_time?: InputMaybe<Time_Comparison_Exp>;
+  day_of_week?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  open_time?: InputMaybe<Time_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  venue?: InputMaybe<Venues_Bool_Exp>;
+  venue_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** input type for inserting data into table "venue_schedule" */
+export type Venue_Schedule_Insert_Input = {
+  close_time?: InputMaybe<Scalars["time"]["input"]>;
+  day_of_week?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  open_time?: InputMaybe<Scalars["time"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  venue?: InputMaybe<Venues_Obj_Rel_Insert_Input>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Venue_Schedule_Max_Fields = {
+  __typename?: "venue_schedule_max_fields";
+  day_of_week?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "venue_schedule" */
+export type Venue_Schedule_Max_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Venue_Schedule_Min_Fields = {
+  __typename?: "venue_schedule_min_fields";
+  day_of_week?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "venue_schedule" */
+export type Venue_Schedule_Min_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "venue_schedule" */
+export type Venue_Schedule_Mutation_Response = {
+  __typename?: "venue_schedule_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Venue_Schedule>;
+};
+
+/** on_conflict condition type for table "venue_schedule" */
+export type Venue_Schedule_On_Conflict = {
+  constraint: Venue_Schedule_Constraint;
+  update_columns?: Array<Venue_Schedule_Update_Column>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "venue_schedule". */
+export type Venue_Schedule_Order_By = {
+  close_time?: InputMaybe<Order_By>;
+  day_of_week?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  open_time?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue?: InputMaybe<Venues_Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: venue_schedule */
+export type Venue_Schedule_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** input type for updating data in table "venue_schedule" */
+export type Venue_Schedule_Set_Input = {
+  close_time?: InputMaybe<Scalars["time"]["input"]>;
+  day_of_week?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  open_time?: InputMaybe<Scalars["time"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** Streaming cursor of the table "venue_schedule" */
+export type Venue_Schedule_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Venue_Schedule_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Venue_Schedule_Stream_Cursor_Value_Input = {
+  close_time?: InputMaybe<Scalars["time"]["input"]>;
+  day_of_week?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  open_time?: InputMaybe<Scalars["time"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+export type Venue_Schedule_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Venue_Schedule_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Venue_Schedule_Bool_Exp;
+};
+
+/** columns and relationships of "venue_school_details" */
+export type Venue_School_Details = {
+  __typename?: "venue_school_details";
+  age_groups?: Maybe<Array<Scalars["String"]["output"]>>;
+  class_size_max?: Maybe<Scalars["Int"]["output"]>;
+  languages_taught?: Maybe<Array<Scalars["String"]["output"]>>;
+  online_classes_available?: Maybe<Scalars["Boolean"]["output"]>;
+  subjects?: Maybe<Array<Scalars["String"]["output"]>>;
+  updated_at: Scalars["timestamptz"]["output"];
+  venue_id: Scalars["uuid"]["output"];
+};
+
+/** aggregated selection of "venue_school_details" */
+export type Venue_School_Details_Aggregate = {
+  __typename?: "venue_school_details_aggregate";
+  aggregate?: Maybe<Venue_School_Details_Aggregate_Fields>;
+  nodes: Array<Venue_School_Details>;
+};
+
+export type Venue_School_Details_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Venue_School_Details_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Venue_School_Details_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Venue_School_Details_Aggregate_Bool_Exp_Count>;
+};
+
+export type Venue_School_Details_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Venue_School_Details_Select_Column_Venue_School_Details_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_School_Details_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Venue_School_Details_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Venue_School_Details_Select_Column_Venue_School_Details_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_School_Details_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Venue_School_Details_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_School_Details_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "venue_school_details" */
+export type Venue_School_Details_Aggregate_Fields = {
+  __typename?: "venue_school_details_aggregate_fields";
+  avg?: Maybe<Venue_School_Details_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Venue_School_Details_Max_Fields>;
+  min?: Maybe<Venue_School_Details_Min_Fields>;
+  stddev?: Maybe<Venue_School_Details_Stddev_Fields>;
+  stddev_pop?: Maybe<Venue_School_Details_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Venue_School_Details_Stddev_Samp_Fields>;
+  sum?: Maybe<Venue_School_Details_Sum_Fields>;
+  var_pop?: Maybe<Venue_School_Details_Var_Pop_Fields>;
+  var_samp?: Maybe<Venue_School_Details_Var_Samp_Fields>;
+  variance?: Maybe<Venue_School_Details_Variance_Fields>;
+};
+
+/** aggregate fields of "venue_school_details" */
+export type Venue_School_Details_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "venue_school_details" */
+export type Venue_School_Details_Aggregate_Order_By = {
+  avg?: InputMaybe<Venue_School_Details_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Venue_School_Details_Max_Order_By>;
+  min?: InputMaybe<Venue_School_Details_Min_Order_By>;
+  stddev?: InputMaybe<Venue_School_Details_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Venue_School_Details_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Venue_School_Details_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Venue_School_Details_Sum_Order_By>;
+  var_pop?: InputMaybe<Venue_School_Details_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Venue_School_Details_Var_Samp_Order_By>;
+  variance?: InputMaybe<Venue_School_Details_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "venue_school_details" */
+export type Venue_School_Details_Arr_Rel_Insert_Input = {
+  data: Array<Venue_School_Details_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Venue_School_Details_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Venue_School_Details_Avg_Fields = {
+  __typename?: "venue_school_details_avg_fields";
+  class_size_max?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "venue_school_details" */
+export type Venue_School_Details_Avg_Order_By = {
+  class_size_max?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "venue_school_details". All fields are combined with a logical 'AND'. */
+export type Venue_School_Details_Bool_Exp = {
+  _and?: InputMaybe<Array<Venue_School_Details_Bool_Exp>>;
+  _not?: InputMaybe<Venue_School_Details_Bool_Exp>;
+  _or?: InputMaybe<Array<Venue_School_Details_Bool_Exp>>;
+  age_groups?: InputMaybe<String_Array_Comparison_Exp>;
+  class_size_max?: InputMaybe<Int_Comparison_Exp>;
+  languages_taught?: InputMaybe<String_Array_Comparison_Exp>;
+  online_classes_available?: InputMaybe<Boolean_Comparison_Exp>;
+  subjects?: InputMaybe<String_Array_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  venue_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "venue_school_details" */
+export type Venue_School_Details_Inc_Input = {
+  class_size_max?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "venue_school_details" */
+export type Venue_School_Details_Insert_Input = {
+  age_groups?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  class_size_max?: InputMaybe<Scalars["Int"]["input"]>;
+  languages_taught?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  online_classes_available?: InputMaybe<Scalars["Boolean"]["input"]>;
+  subjects?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Venue_School_Details_Max_Fields = {
+  __typename?: "venue_school_details_max_fields";
+  age_groups?: Maybe<Array<Scalars["String"]["output"]>>;
+  class_size_max?: Maybe<Scalars["Int"]["output"]>;
+  languages_taught?: Maybe<Array<Scalars["String"]["output"]>>;
+  subjects?: Maybe<Array<Scalars["String"]["output"]>>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "venue_school_details" */
+export type Venue_School_Details_Max_Order_By = {
+  age_groups?: InputMaybe<Order_By>;
+  class_size_max?: InputMaybe<Order_By>;
+  languages_taught?: InputMaybe<Order_By>;
+  subjects?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Venue_School_Details_Min_Fields = {
+  __typename?: "venue_school_details_min_fields";
+  age_groups?: Maybe<Array<Scalars["String"]["output"]>>;
+  class_size_max?: Maybe<Scalars["Int"]["output"]>;
+  languages_taught?: Maybe<Array<Scalars["String"]["output"]>>;
+  subjects?: Maybe<Array<Scalars["String"]["output"]>>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "venue_school_details" */
+export type Venue_School_Details_Min_Order_By = {
+  age_groups?: InputMaybe<Order_By>;
+  class_size_max?: InputMaybe<Order_By>;
+  languages_taught?: InputMaybe<Order_By>;
+  subjects?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "venue_school_details" */
+export type Venue_School_Details_Mutation_Response = {
+  __typename?: "venue_school_details_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Venue_School_Details>;
+};
+
+/** on_conflict condition type for table "venue_school_details" */
+export type Venue_School_Details_On_Conflict = {
+  constraint: Venue_School_Details_Constraint;
+  update_columns?: Array<Venue_School_Details_Update_Column>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "venue_school_details". */
+export type Venue_School_Details_Order_By = {
+  age_groups?: InputMaybe<Order_By>;
+  class_size_max?: InputMaybe<Order_By>;
+  languages_taught?: InputMaybe<Order_By>;
+  online_classes_available?: InputMaybe<Order_By>;
+  subjects?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: venue_school_details */
+export type Venue_School_Details_Pk_Columns_Input = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** input type for updating data in table "venue_school_details" */
+export type Venue_School_Details_Set_Input = {
+  age_groups?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  class_size_max?: InputMaybe<Scalars["Int"]["input"]>;
+  languages_taught?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  online_classes_available?: InputMaybe<Scalars["Boolean"]["input"]>;
+  subjects?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Venue_School_Details_Stddev_Fields = {
+  __typename?: "venue_school_details_stddev_fields";
+  class_size_max?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "venue_school_details" */
+export type Venue_School_Details_Stddev_Order_By = {
+  class_size_max?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Venue_School_Details_Stddev_Pop_Fields = {
+  __typename?: "venue_school_details_stddev_pop_fields";
+  class_size_max?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "venue_school_details" */
+export type Venue_School_Details_Stddev_Pop_Order_By = {
+  class_size_max?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Venue_School_Details_Stddev_Samp_Fields = {
+  __typename?: "venue_school_details_stddev_samp_fields";
+  class_size_max?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "venue_school_details" */
+export type Venue_School_Details_Stddev_Samp_Order_By = {
+  class_size_max?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "venue_school_details" */
+export type Venue_School_Details_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Venue_School_Details_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Venue_School_Details_Stream_Cursor_Value_Input = {
+  age_groups?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  class_size_max?: InputMaybe<Scalars["Int"]["input"]>;
+  languages_taught?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  online_classes_available?: InputMaybe<Scalars["Boolean"]["input"]>;
+  subjects?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Venue_School_Details_Sum_Fields = {
+  __typename?: "venue_school_details_sum_fields";
+  class_size_max?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "venue_school_details" */
+export type Venue_School_Details_Sum_Order_By = {
+  class_size_max?: InputMaybe<Order_By>;
+};
+
+export type Venue_School_Details_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Venue_School_Details_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Venue_School_Details_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Venue_School_Details_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Venue_School_Details_Var_Pop_Fields = {
+  __typename?: "venue_school_details_var_pop_fields";
+  class_size_max?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "venue_school_details" */
+export type Venue_School_Details_Var_Pop_Order_By = {
+  class_size_max?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Venue_School_Details_Var_Samp_Fields = {
+  __typename?: "venue_school_details_var_samp_fields";
+  class_size_max?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "venue_school_details" */
+export type Venue_School_Details_Var_Samp_Order_By = {
+  class_size_max?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Venue_School_Details_Variance_Fields = {
+  __typename?: "venue_school_details_variance_fields";
+  class_size_max?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "venue_school_details" */
+export type Venue_School_Details_Variance_Order_By = {
+  class_size_max?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "venue_shop_details" */
+export type Venue_Shop_Details = {
+  __typename?: "venue_shop_details";
+  payment_methods?: Maybe<Array<Scalars["String"]["output"]>>;
+  product_categories?: Maybe<Array<Scalars["String"]["output"]>>;
+  updated_at: Scalars["timestamptz"]["output"];
+  venue_id: Scalars["uuid"]["output"];
+};
+
+/** aggregated selection of "venue_shop_details" */
+export type Venue_Shop_Details_Aggregate = {
+  __typename?: "venue_shop_details_aggregate";
+  aggregate?: Maybe<Venue_Shop_Details_Aggregate_Fields>;
+  nodes: Array<Venue_Shop_Details>;
+};
+
+export type Venue_Shop_Details_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Venue_Shop_Details_Aggregate_Bool_Exp_Count>;
+};
+
+export type Venue_Shop_Details_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "venue_shop_details" */
+export type Venue_Shop_Details_Aggregate_Fields = {
+  __typename?: "venue_shop_details_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Venue_Shop_Details_Max_Fields>;
+  min?: Maybe<Venue_Shop_Details_Min_Fields>;
+};
+
+/** aggregate fields of "venue_shop_details" */
+export type Venue_Shop_Details_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "venue_shop_details" */
+export type Venue_Shop_Details_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Venue_Shop_Details_Max_Order_By>;
+  min?: InputMaybe<Venue_Shop_Details_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "venue_shop_details" */
+export type Venue_Shop_Details_Arr_Rel_Insert_Input = {
+  data: Array<Venue_Shop_Details_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Venue_Shop_Details_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "venue_shop_details". All fields are combined with a logical 'AND'. */
+export type Venue_Shop_Details_Bool_Exp = {
+  _and?: InputMaybe<Array<Venue_Shop_Details_Bool_Exp>>;
+  _not?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+  _or?: InputMaybe<Array<Venue_Shop_Details_Bool_Exp>>;
+  payment_methods?: InputMaybe<String_Array_Comparison_Exp>;
+  product_categories?: InputMaybe<String_Array_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  venue_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** input type for inserting data into table "venue_shop_details" */
+export type Venue_Shop_Details_Insert_Input = {
+  payment_methods?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  product_categories?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Venue_Shop_Details_Max_Fields = {
+  __typename?: "venue_shop_details_max_fields";
+  payment_methods?: Maybe<Array<Scalars["String"]["output"]>>;
+  product_categories?: Maybe<Array<Scalars["String"]["output"]>>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "venue_shop_details" */
+export type Venue_Shop_Details_Max_Order_By = {
+  payment_methods?: InputMaybe<Order_By>;
+  product_categories?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Venue_Shop_Details_Min_Fields = {
+  __typename?: "venue_shop_details_min_fields";
+  payment_methods?: Maybe<Array<Scalars["String"]["output"]>>;
+  product_categories?: Maybe<Array<Scalars["String"]["output"]>>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "venue_shop_details" */
+export type Venue_Shop_Details_Min_Order_By = {
+  payment_methods?: InputMaybe<Order_By>;
+  product_categories?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "venue_shop_details" */
+export type Venue_Shop_Details_Mutation_Response = {
+  __typename?: "venue_shop_details_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Venue_Shop_Details>;
+};
+
+/** on_conflict condition type for table "venue_shop_details" */
+export type Venue_Shop_Details_On_Conflict = {
+  constraint: Venue_Shop_Details_Constraint;
+  update_columns?: Array<Venue_Shop_Details_Update_Column>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "venue_shop_details". */
+export type Venue_Shop_Details_Order_By = {
+  payment_methods?: InputMaybe<Order_By>;
+  product_categories?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  venue_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: venue_shop_details */
+export type Venue_Shop_Details_Pk_Columns_Input = {
+  venue_id: Scalars["uuid"]["input"];
+};
+
+/** input type for updating data in table "venue_shop_details" */
+export type Venue_Shop_Details_Set_Input = {
+  payment_methods?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  product_categories?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** Streaming cursor of the table "venue_shop_details" */
+export type Venue_Shop_Details_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Venue_Shop_Details_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Venue_Shop_Details_Stream_Cursor_Value_Input = {
+  payment_methods?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  product_categories?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+export type Venue_Shop_Details_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Venue_Shop_Details_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Venue_Shop_Details_Bool_Exp;
 };
 
 /** columns and relationships of "venue_status" */
@@ -7613,6 +10250,7 @@ export type VenueFieldsFragment = {
   } | null;
   city?: null | string;
   country?: null | string;
+  created_at: Timestamp;
   description_en?: null | string;
   description_uk?: null | string;
   emails?: Array<string> | null;
@@ -7630,7 +10268,51 @@ export type VenueFieldsFragment = {
   slug: string;
   social_links: Json;
   status: Venue_Status_Enum;
+  updated_at: Timestamp;
   user_id?: null | UUID;
+  venue_accommodation_details: Array<{
+    __typename?: "venue_accommodation_details";
+    amenities?: Array<string> | null;
+    bathrooms?: null | number;
+    bedrooms?: null | number;
+    check_in_time?: null | Time;
+    check_out_time?: null | Time;
+    max_guests?: null | number;
+    minimum_stay_nights?: null | number;
+  }>;
+  venue_beauty_salon_details: Array<{
+    __typename?: "venue_beauty_salon_details";
+    appointment_required?: boolean | null;
+    services?: Array<string> | null;
+    walk_ins_accepted?: boolean | null;
+  }>;
+  venue_restaurant_details: Array<{
+    __typename?: "venue_restaurant_details";
+    cuisine_types?: Array<string> | null;
+    features?: Array<string> | null;
+    price_range?: null | string;
+    seating_capacity?: null | number;
+  }>;
+  venue_schedules: Array<{
+    __typename?: "venue_schedule";
+    close_time: Time;
+    day_of_week: string;
+    id: UUID;
+    open_time: Time;
+  }>;
+  venue_school_details: Array<{
+    __typename?: "venue_school_details";
+    age_groups?: Array<string> | null;
+    class_size_max?: null | number;
+    languages_taught?: Array<string> | null;
+    online_classes_available?: boolean | null;
+    subjects?: Array<string> | null;
+  }>;
+  venue_shop_details: Array<{
+    __typename?: "venue_shop_details";
+    payment_methods?: Array<string> | null;
+    product_categories?: Array<string> | null;
+  }>;
   website?: null | string;
 };
 
@@ -7671,7 +10353,33 @@ export type Venues = {
   user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
   /** An object relationship */
+  venue_accommodation_detail?: Maybe<Venue_Accommodation_Details>;
+  /** An array relationship */
+  venue_accommodation_details: Array<Venue_Accommodation_Details>;
+  /** An aggregate relationship */
+  venue_accommodation_details_aggregate: Venue_Accommodation_Details_Aggregate;
+  /** An array relationship */
+  venue_beauty_salon_details: Array<Venue_Beauty_Salon_Details>;
+  /** An aggregate relationship */
+  venue_beauty_salon_details_aggregate: Venue_Beauty_Salon_Details_Aggregate;
+  /** An object relationship */
   venue_category: Venue_Category;
+  /** An array relationship */
+  venue_restaurant_details: Array<Venue_Restaurant_Details>;
+  /** An aggregate relationship */
+  venue_restaurant_details_aggregate: Venue_Restaurant_Details_Aggregate;
+  /** An array relationship */
+  venue_schedules: Array<Venue_Schedule>;
+  /** An aggregate relationship */
+  venue_schedules_aggregate: Venue_Schedule_Aggregate;
+  /** An array relationship */
+  venue_school_details: Array<Venue_School_Details>;
+  /** An aggregate relationship */
+  venue_school_details_aggregate: Venue_School_Details_Aggregate;
+  /** An array relationship */
+  venue_shop_details: Array<Venue_Shop_Details>;
+  /** An aggregate relationship */
+  venue_shop_details_aggregate: Venue_Shop_Details_Aggregate;
   /** An object relationship */
   venue_status: Venue_Status;
   website?: Maybe<Scalars["String"]["output"]>;
@@ -7756,7 +10464,20 @@ export type Venues_Bool_Exp = {
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  venue_accommodation_detail?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+  venue_accommodation_details?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+  venue_accommodation_details_aggregate?: InputMaybe<Venue_Accommodation_Details_Aggregate_Bool_Exp>;
+  venue_beauty_salon_details?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+  venue_beauty_salon_details_aggregate?: InputMaybe<Venue_Beauty_Salon_Details_Aggregate_Bool_Exp>;
   venue_category?: InputMaybe<Venue_Category_Bool_Exp>;
+  venue_restaurant_details?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+  venue_restaurant_details_aggregate?: InputMaybe<Venue_Restaurant_Details_Aggregate_Bool_Exp>;
+  venue_schedules?: InputMaybe<Venue_Schedule_Bool_Exp>;
+  venue_schedules_aggregate?: InputMaybe<Venue_Schedule_Aggregate_Bool_Exp>;
+  venue_school_details?: InputMaybe<Venue_School_Details_Bool_Exp>;
+  venue_school_details_aggregate?: InputMaybe<Venue_School_Details_Aggregate_Bool_Exp>;
+  venue_shop_details?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+  venue_shop_details_aggregate?: InputMaybe<Venue_Shop_Details_Aggregate_Bool_Exp>;
   venue_status?: InputMaybe<Venue_Status_Bool_Exp>;
   website?: InputMaybe<String_Comparison_Exp>;
 };
@@ -7790,7 +10511,14 @@ export type Venues_Insert_Input = {
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  venue_accommodation_detail?: InputMaybe<Venue_Accommodation_Details_Obj_Rel_Insert_Input>;
+  venue_accommodation_details?: InputMaybe<Venue_Accommodation_Details_Arr_Rel_Insert_Input>;
+  venue_beauty_salon_details?: InputMaybe<Venue_Beauty_Salon_Details_Arr_Rel_Insert_Input>;
   venue_category?: InputMaybe<Venue_Category_Obj_Rel_Insert_Input>;
+  venue_restaurant_details?: InputMaybe<Venue_Restaurant_Details_Arr_Rel_Insert_Input>;
+  venue_schedules?: InputMaybe<Venue_Schedule_Arr_Rel_Insert_Input>;
+  venue_school_details?: InputMaybe<Venue_School_Details_Arr_Rel_Insert_Input>;
+  venue_shop_details?: InputMaybe<Venue_Shop_Details_Arr_Rel_Insert_Input>;
   venue_status?: InputMaybe<Venue_Status_Obj_Rel_Insert_Input>;
   website?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -7945,7 +10673,14 @@ export type Venues_Order_By = {
   updated_at?: InputMaybe<Order_By>;
   user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
+  venue_accommodation_detail?: InputMaybe<Venue_Accommodation_Details_Order_By>;
+  venue_accommodation_details_aggregate?: InputMaybe<Venue_Accommodation_Details_Aggregate_Order_By>;
+  venue_beauty_salon_details_aggregate?: InputMaybe<Venue_Beauty_Salon_Details_Aggregate_Order_By>;
   venue_category?: InputMaybe<Venue_Category_Order_By>;
+  venue_restaurant_details_aggregate?: InputMaybe<Venue_Restaurant_Details_Aggregate_Order_By>;
+  venue_schedules_aggregate?: InputMaybe<Venue_Schedule_Aggregate_Order_By>;
+  venue_school_details_aggregate?: InputMaybe<Venue_School_Details_Aggregate_Order_By>;
+  venue_shop_details_aggregate?: InputMaybe<Venue_Shop_Details_Aggregate_Order_By>;
   venue_status?: InputMaybe<Venue_Status_Order_By>;
   website?: InputMaybe<Order_By>;
 };
@@ -8047,6 +10782,114 @@ export type VenuesEventsArgs = {
 /** columns and relationships of "venues" */
 export type VenuesSocial_LinksArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Accommodation_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Accommodation_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Beauty_Salon_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Beauty_Salon_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Restaurant_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Restaurant_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Schedules_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_SchedulesArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_School_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_School_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Shop_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Shop_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
 };
 
 /** columns and relationships of "verification_tokens" */
@@ -8303,6 +11146,45 @@ export const VenueFieldsFragmentDoc = gql`
     status
     owner_id
     user_id
+    venue_schedules {
+      id
+      open_time
+      close_time
+      day_of_week
+    }
+    venue_accommodation_details {
+      bedrooms
+      bathrooms
+      max_guests
+      check_in_time
+      check_out_time
+      minimum_stay_nights
+      amenities
+    }
+    venue_beauty_salon_details {
+      services
+      appointment_required
+      walk_ins_accepted
+    }
+    venue_restaurant_details {
+      cuisine_types
+      seating_capacity
+      price_range
+      features
+    }
+    venue_school_details {
+      subjects
+      languages_taught
+      age_groups
+      class_size_max
+      online_classes_available
+    }
+    venue_shop_details {
+      product_categories
+      payment_methods
+    }
+    created_at
+    updated_at
     events_aggregate {
       aggregate {
         count
@@ -8362,7 +11244,7 @@ export function useGetUserProfileLazyQuery(
  * });
  */
 export function useGetUserProfileQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8423,7 +11305,7 @@ export function useGetPublicEventsLazyQuery(
  * });
  */
 export function useGetPublicEventsQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicEventsQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicEventsQueryVariables; }) &
     Apollo.QueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8485,7 +11367,7 @@ export function useGetUserEventsLazyQuery(
  * });
  */
 export function useGetUserEventsQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserEventsQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserEventsQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8593,7 +11475,7 @@ export function useGetPublicVenuesLazyQuery(
  * });
  */
 export function useGetPublicVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8651,7 +11533,7 @@ export function useGetUserVenuesLazyQuery(
  * });
  */
 export function useGetUserVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
@@ -8705,7 +11587,7 @@ export function useGetAdminVenuesLazyQuery(
  * });
  */
 export function useGetAdminVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables }) &
+  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables; }) &
     Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };

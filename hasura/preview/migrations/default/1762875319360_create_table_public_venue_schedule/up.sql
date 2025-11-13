@@ -1,0 +1,1 @@
+CREATE TABLE "public"."venue_schedule" ("id" uuid NOT NULL, "venue_id" uuid NOT NULL, "day" text NOT NULL, "closed" boolean NOT NULL, "open_time" timetz NOT NULL, "close_time" timetz NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("venue_id") REFERENCES "public"."venues"("id") ON UPDATE cascade ON DELETE cascade);

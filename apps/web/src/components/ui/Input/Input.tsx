@@ -101,6 +101,8 @@ export function Input<K extends string, T extends string>({
     commonClass,
     commonInputClass,
     isPhoneInput || type === "search" ? "pl-12" : "",
+    (type === "datetime-local" || type === "date" || type === "time") &&
+      `dark:[color-scheme:dark]`,
     className,
   );
 
