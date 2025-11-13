@@ -9,7 +9,7 @@ import { useI18n } from "~/i18n/useI18n";
 import { copyToClipboard } from "~/lib/clipboard";
 import { getFlagComponent } from "~/lib/icons/flags";
 import { sendToMixpanel } from "~/lib/mixpanel";
-import { processPhoneNumber } from "~/lib/utils";
+import { normalizeUrl, processPhoneNumber } from "~/lib/utils";
 
 interface InfoLineProps {
   hideUntilHover?: boolean;
@@ -147,7 +147,6 @@ export const InfoLine = ({
     );
   }
 
-  // External link with arrow
   if (isLink) {
     return (
       <div className={`
@@ -166,7 +165,7 @@ export const InfoLine = ({
               rel="noopener noreferrer"
               target="_blank"
             >
-              {info}
+              {normalizeUrl(info).display}
             </a>
           </div>
 
