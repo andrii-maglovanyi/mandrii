@@ -66,8 +66,7 @@ export const getEventsFilter = ({
   if (dateFrom) {
     where.start_date = { _gte: dateFrom };
   } else {
-    // By default, only show future events
-    where.end_date = { _gte: now };
+    where.start_date = { _gte: now };
   }
 
   if (dateTo) {
