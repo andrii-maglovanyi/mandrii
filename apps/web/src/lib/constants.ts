@@ -223,25 +223,48 @@ const featureOptions = [
 ] as const;
 
 const curriculumOptions = [
-  { label: { en: "Sports", uk: "Спорт" }, value: "sports" },
-  { label: { en: "Arts (Music, Drawing...)", uk: "Мистецтво (музика, малювання...)" }, value: "arts" },
   {
     label: {
-      en: "STEM (Coding, Math, Physics...)",
-      uk: "STEM (програмування, математика, фізика...)",
+      en: "Ukrainian Language (Speaking & Writing)",
+      uk: "Українська мова (розмовна та писемна)",
+    },
+    value: "ukrainian_language",
+  },
+  {
+    label: {
+      en: "Ukrainian Studies (Culture, Traditions, Geography, History)",
+      uk: "Українознавство (культура, традиції, географія, історія)",
+    },
+    value: "ukrainian_studies",
+  },
+  {
+    label: {
+      en: "Integrated Language & Culture",
+      uk: "Інтегрований курс мови та культури",
+    },
+    value: "integrated",
+  },
+  { label: { en: "Arts (Music, Drawing, etc)", uk: "Мистецтво (музика, малювання, тощо)" }, value: "arts" },
+  {
+    label: {
+      en: "STEM (Coding, Math, Physics, etc)",
+      uk: "STEM (програмування, математика, фізика, тощо)",
     },
     value: "stem",
   },
-  { label: { en: "Language clubs", uk: "Мовні клуби" }, value: "language_clubs" },
-  { label: { en: "Cultural events", uk: "Культурні заходи" }, value: "cultural_events" },
+  { label: { en: "Sports & Physical Activities", uk: "Спорт та фізичні активності" }, value: "sports" },
+  { label: { en: "Cultural Events & Celebrations", uk: "Культурні заходи та свята" }, value: "cultural_events" },
 ] as const;
 
 const ageGroupOptions = [
-  { label: { en: "Preschool (3-5 years)", uk: "Дошкільний вік (3-5 років)" }, value: "preschool" },
-  { label: { en: "Primary school (6-11 years)", uk: "Молодша школа (6-11 років)" }, value: "primary" },
-  { label: { en: "Middle school (12-14 years)", uk: "Середня школа (12-14 років)" }, value: "middle" },
-  { label: { en: "High school (15-18 years)", uk: "Старша школа (15-18 років)" }, value: "high_school" },
-  { label: { en: "Adult rducation", uk: "Освіта для дорослих" }, value: "adult" },
+  { label: { en: "Early childhood (3-4 years)", uk: "Ранній дитячий вік (3-4 роки)" }, value: "early_childhood" },
+  { label: { en: "Preschool (4-6 years)", uk: "Дошкільний вік (4-6 років)" }, value: "preschool" },
+  { label: { en: "Early primary (6-8 years)", uk: "Молодші класи (6-8 років)" }, value: "early_primary" },
+  { label: { en: "Primary school (8-11 years)", uk: "Початкова школа (8-11 років)" }, value: "primary" },
+  { label: { en: "Middle school (11-14 years)", uk: "Середня школа (11-14 років)" }, value: "middle" },
+  { label: { en: "High school (14-16 years)", uk: "Старша школа (14-16 років)" }, value: "high_school" },
+  { label: { en: "Senior high (16-18 years)", uk: "Випускні класи (16-18 років)" }, value: "senior_high" },
+  { label: { en: "Adult education (18+ years)", uk: "Освіта для дорослих (18+ років)" }, value: "adult" },
 ] as const;
 
 const languageOptions = [

@@ -87,7 +87,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
             <Checkbox
               checked={(schoolData.age_groups || []).includes(group.value)}
               key={group.value}
-              label={i18n(group.label[locale])}
+              label={group.label[locale]}
               onChange={() => {
                 toggleAgeGroup(group.value);
               }}
@@ -113,7 +113,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
             <Checkbox
               checked={(schoolData.languages_taught || []).includes(language.value)}
               key={language.value}
-              label={i18n(language.label[locale])}
+              label={language.label[locale]}
               onChange={() => {
                 toggleLanguage(language.value);
               }}
