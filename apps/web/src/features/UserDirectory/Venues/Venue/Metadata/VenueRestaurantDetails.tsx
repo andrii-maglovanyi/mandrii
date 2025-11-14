@@ -76,7 +76,7 @@ export const VenueRestaurantDetails = ({ setValues, values }: VenueRestaurantDet
             <Checkbox
               checked={(restaurantData.cuisine_types || []).includes(cuisine.value)}
               key={cuisine.value}
-              label={i18n(cuisine.label[locale])}
+              label={cuisine.label[locale]}
               onChange={() => {
                 toggleCuisine(cuisine.value);
               }}

@@ -64,7 +64,7 @@ export const VenueBeautySalonDetails = ({ setValues, values }: VenueBeautySalonD
             <Checkbox
               checked={(beautyData.services || []).includes(service.value)}
               key={service.value}
-              label={i18n(service.label[locale])}
+              label={service.label[locale]}
               onChange={() => {
                 toggleService(service.value);
               }}

@@ -166,7 +166,7 @@ export const VenueAccommodationDetails = ({ setValues, values }: VenueAccommodat
             <Checkbox
               checked={(accommodationData.amenities || []).includes(amenity.value)}
               key={amenity.value}
-              label={i18n(amenity.label[locale])}
+              label={amenity.label[locale]}
               onChange={() => {
                 toggleAmenity(amenity.value);
               }}

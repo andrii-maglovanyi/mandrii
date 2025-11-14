@@ -177,7 +177,7 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
   ];
 
   const daysOfWeek: { day: DayOfWeek; label: string }[] = [
-    { day: "MO", label: i18n("Mon") },
+    { day: "MO", label: i18n("Mon") }, // TODO
     { day: "TU", label: i18n("Tue") },
     { day: "WE", label: i18n("Wed") },
     { day: "TH", label: i18n("Thu") },

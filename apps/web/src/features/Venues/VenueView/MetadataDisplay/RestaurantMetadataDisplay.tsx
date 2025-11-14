@@ -55,9 +55,7 @@ export const RestaurantMetadataDisplay = ({ restaurantDetails }: RestaurantMetad
 
       {hasBasicInfo && (
         <MetadataSection icon={Users} title={i18n("Details")}>
-          {seating_capacity !== undefined && (
-            <MetadataRow icon={Users} label={i18n("Capacity")} showDots value={seating_capacity} />
-          )}
+          {seating_capacity && <MetadataRow icon={Users} label={i18n("Capacity")} showDots value={seating_capacity} />}
           {priceRangeLabel && (
             <MetadataRow icon={DollarSign} label={i18n("Price range")} showDots value={priceRangeLabel} />
           )}

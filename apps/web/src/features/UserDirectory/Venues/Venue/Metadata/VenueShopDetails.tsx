@@ -76,7 +76,7 @@ export const VenueShopDetails = ({ setValues, values }: VenueShopDetailsProps) =
             <Checkbox
               checked={(shopData.product_categories || []).includes(category.value)}
               key={category.value}
-              label={i18n(category.label[locale])}
+              label={category.label[locale]}
               onChange={() => {
                 toggleProductCategory(category.value);
               }}
