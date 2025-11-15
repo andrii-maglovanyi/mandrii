@@ -13,6 +13,7 @@ import {
   PRICE_RANGE,
   PRODUCT_CATEGORIES,
 } from "./options";
+import { PRICE_TYPES } from "./PRICE_TYPES";
 import { CATEGORIES } from "./VENUE_CATEGORIES";
 import { WEEKDAYS } from "./WEEKDAYS";
 
@@ -39,6 +40,7 @@ export const constants = {
     PRICE_RANGE,
     PRODUCT_CATEGORIES,
   },
+  priceTypes: PRICE_TYPES,
   vercelBlobStorageUrl: "https://yiiprxif648vopwe.public.blob.vercel-storage.com",
   weekdays: WEEKDAYS,
   whitelisted_countries: COUNTRIES,
