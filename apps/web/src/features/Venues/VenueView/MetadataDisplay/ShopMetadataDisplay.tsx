@@ -28,9 +28,10 @@ export const ShopMetadataDisplay = ({ shopDetails }: ShopMetadataDisplayProps) =
       {hasProducts && (
         <MetadataSection icon={ShoppingBag} title={i18n("Products")}>
           <MetadataChips
-            items={(product_categories as (typeof constants.productCategoryOptions)[number]["value"][]).map(
+            items={(product_categories as (typeof constants.options.PRODUCT_CATEGORIES)[number]["value"][]).map(
               (category) =>
-                constants.productCategoryOptions.find((option) => option.value === category)?.label[locale] || category,
+                constants.options.PRODUCT_CATEGORIES.find((option) => option.value === category)?.label[locale] ||
+                category,
             )}
           />
         </MetadataSection>
@@ -41,9 +42,9 @@ export const ShopMetadataDisplay = ({ shopDetails }: ShopMetadataDisplayProps) =
           {hasPayments && (
             <div className="space-y-2">
               <MetadataChips
-                items={(payment_methods as (typeof constants.paymentOptions)[number]["value"][]).map(
+                items={(payment_methods as (typeof constants.options.PAYMENT)[number]["value"][]).map(
                   (method) =>
-                    constants.paymentOptions.find((option) => option.value === method)?.label[locale] || method,
+                    constants.options.PAYMENT.find((option) => option.value === method)?.label[locale] || method,
                 )}
               />
             </div>

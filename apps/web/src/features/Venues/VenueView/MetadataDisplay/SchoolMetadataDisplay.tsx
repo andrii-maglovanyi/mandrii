@@ -29,9 +29,9 @@ export const SchoolMetadataDisplay = ({ schoolDetails }: SchoolMetadataDisplayPr
       {hasAgeGroups && (
         <MetadataSection icon={Users} title={i18n("Age groups")}>
           <MetadataChips
-            items={(age_groups as (typeof constants.ageGroupOptions)[number]["value"][]).map(
+            items={(age_groups as (typeof constants.options.AGE_GROUPS)[number]["value"][]).map(
               (ageGroup) =>
-                constants.ageGroupOptions.find((option) => option.value === ageGroup)?.label[locale] || ageGroup,
+                constants.options.AGE_GROUPS.find((option) => option.value === ageGroup)?.label[locale] || ageGroup,
             )}
           />
         </MetadataSection>
@@ -44,10 +44,10 @@ export const SchoolMetadataDisplay = ({ schoolDetails }: SchoolMetadataDisplayPr
               icon={GraduationCap}
               label={i18n("Subjects")}
               showDots
-              value={(subjects as (typeof constants.curriculumOptions)[number]["value"][])
+              value={(subjects as (typeof constants.options.CURRICULUM)[number]["value"][])
                 .map(
                   (subject) =>
-                    constants.curriculumOptions.find((option) => option.value === subject)?.label[locale] || subject,
+                    constants.options.CURRICULUM.find((option) => option.value === subject)?.label[locale] || subject,
                 )
                 .join(", ")}
             />
@@ -75,9 +75,9 @@ export const SchoolMetadataDisplay = ({ schoolDetails }: SchoolMetadataDisplayPr
       {hasLanguages && (
         <MetadataSection icon={Languages} title={i18n("Languages taught")}>
           <MetadataChips
-            items={(languages_taught as (typeof constants.languageOptions)[number]["value"][]).map(
+            items={(languages_taught as (typeof constants.options.LANGUAGES)[number]["value"][]).map(
               (language) =>
-                constants.languageOptions.find((option) => option.value === language)?.label[locale] || language,
+                constants.options.LANGUAGES.find((option) => option.value === language)?.label[locale] || language,
             )}
           />
         </MetadataSection>

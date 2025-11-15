@@ -57,9 +57,9 @@ export const AccommodationMetadataDisplay = ({ accommodationDetails }: Accommoda
       {hasAmenities && (
         <MetadataSection icon={Sparkles} title={i18n("Amenities")}>
           <MetadataChips
-            items={(amenities as (typeof constants.amenityOptions)[number]["value"][]).map(
+            items={(amenities as (typeof constants.options.AMENITIES)[number]["value"][]).map(
               (amenity) =>
-                constants.amenityOptions.find((option) => option.value === amenity)?.label[locale] || amenity,
+                constants.options.AMENITIES.find((option) => option.value === amenity)?.label[locale] || amenity,
             )}
           />
         </MetadataSection>
