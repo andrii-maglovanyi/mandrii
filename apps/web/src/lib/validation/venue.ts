@@ -50,7 +50,7 @@ const venueSchedulesSchema = z
 const venueAccommodationDetailsSchema = z
   .object({
     amenities: z
-      .array(z.enum(constants.amenityOptions.map((amenity) => amenity.value)))
+      .array(z.enum(constants.options.AMENITIES.map((amenity) => amenity.value)))
       .optional()
       .nullable(),
     bathrooms: z.number().nonnegative().optional().nullable(),
@@ -66,7 +66,7 @@ const beautyBeautySalonDetailsSchema = z
   .object({
     appointment_required: z.boolean().optional().nullable(),
     services: z
-      .array(z.enum(constants.beautyServiceOptions.map((service) => service.value)))
+      .array(z.enum(constants.options.BEAUTY_SERVICES.map((service) => service.value)))
       .optional()
       .nullable(),
     walk_ins_accepted: z.boolean().optional().nullable(),
@@ -76,15 +76,15 @@ const beautyBeautySalonDetailsSchema = z
 const restaurantDetailsSchema = z
   .object({
     cuisine_types: z
-      .array(z.enum(constants.cuisineOptions.map((cuisine) => cuisine.value)))
+      .array(z.enum(constants.options.CUISINE.map((cuisine) => cuisine.value)))
       .optional()
       .nullable(),
     features: z
-      .array(z.enum(constants.featureOptions.map((feature) => feature.value)))
+      .array(z.enum(constants.options.FEATURES.map((feature) => feature.value)))
       .optional()
       .nullable(),
     price_range: z
-      .enum(constants.priceRangeOptions.map((option) => option.value))
+      .enum(constants.options.PRICE_RANGE.map((option) => option.value))
       .optional()
       .nullable(),
     seating_capacity: z.number().int().positive().optional().nullable(),
@@ -93,27 +93,29 @@ const restaurantDetailsSchema = z
 
 const schoolDetailsSchema = z.object({
   age_groups: z
-    .array(z.enum(constants.ageGroupOptions.map((option) => option.value)))
+    .array(z.enum(constants.options.AGE_GROUPS.map((option) => option.value)))
     .optional()
     .nullable(),
   class_size_max: z.number().int().positive().optional().nullable(),
   languages_taught: z
-    .array(z.enum(constants.languageOptions.map((option) => option.value)))
+    .array(z.enum(constants.options.LANGUAGES.map((option) => option.value)))
     .optional()
     .nullable(),
   online_classes_available: z.boolean().optional().nullable(),
   subjects: z
-    .array(z.enum(constants.curriculumOptions.map((option) => option.value)))
+    .array(z.enum(constants.options.CURRICULUM.map((option) => option.value)))
     .optional()
     .nullable(),
 });
 
 const shopDetailsSchema = z.object({
   payment_methods: z
-    .array(z.enum(constants.paymentOptions.map((option) => option.value)))
+    .array(z.enum(constants.options.PAYMENT.map((option) => option.value)))
     .optional()
     .nullable(),
-  product_categories: z.array(z.enum(constants.productCategoryOptions.map((category) => category.value))).optional(),
+  product_categories: z
+    .array(z.enum(constants.options.PRODUCT_CATEGORIES.map((category) => category.value)))
+    .optional(),
 });
 
 export const venueDescriptionMaxCharsCount = 3000;
