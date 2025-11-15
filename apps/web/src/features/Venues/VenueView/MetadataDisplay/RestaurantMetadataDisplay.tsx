@@ -21,7 +21,7 @@ export const RestaurantMetadataDisplay = ({ restaurantDetails }: RestaurantMetad
 
   const cuisineItems = cuisine_types
     ?.map((cuisine) => {
-      const option = constants.cuisineOptions.find((opt) => opt.value === cuisine);
+      const option = constants.options.CUISINE.find((opt) => opt.value === cuisine);
       return option?.label[locale];
     })
     .filter(Boolean) as string[] | undefined;
@@ -30,7 +30,7 @@ export const RestaurantMetadataDisplay = ({ restaurantDetails }: RestaurantMetad
 
   const featureItems = features
     ?.map((feature) => {
-      const option = constants.featureOptions.find((opt) => opt.value === feature);
+      const option = constants.options.FEATURES.find((opt) => opt.value === feature);
       return option?.label[locale];
     })
     .filter(Boolean) as string[] | undefined;
@@ -38,7 +38,7 @@ export const RestaurantMetadataDisplay = ({ restaurantDetails }: RestaurantMetad
   const hasFeatures = featureItems && featureItems.length > 0;
 
   const priceRangeLabel = price_range
-    ? constants.priceRangeOptions.find((opt) => opt.value === price_range)?.label[locale]
+    ? constants.options.PRICE_RANGE.find((opt) => opt.value === price_range)?.label[locale]
     : undefined;
 
   const hasBasicInfo = seating_capacity !== undefined || priceRangeLabel !== undefined;
@@ -55,9 +55,7 @@ export const RestaurantMetadataDisplay = ({ restaurantDetails }: RestaurantMetad
 
       {hasBasicInfo && (
         <MetadataSection icon={Users} title={i18n("Details")}>
-          {seating_capacity !== undefined && (
-            <MetadataRow icon={Users} label={i18n("Capacity")} showDots value={seating_capacity} />
-          )}
+          {seating_capacity && <MetadataRow icon={Users} label={i18n("Capacity")} showDots value={seating_capacity} />}
           {priceRangeLabel && (
             <MetadataRow icon={DollarSign} label={i18n("Price range")} showDots value={priceRangeLabel} />
           )}

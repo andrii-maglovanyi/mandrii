@@ -36,9 +36,37 @@ object_relationships:
         table:
           name: venue_accommodation_details
           schema: public
+  - name: venue_beauty_salon_detail
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_beauty_salon_details
+          schema: public
   - name: venue_category
     using:
       foreign_key_constraint_on: category
+  - name: venue_restaurant_detail
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_restaurant_details
+          schema: public
+  - name: venue_school_detail
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_school_details
+          schema: public
+  - name: venue_shop_detail
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: venue_shop_details
+          schema: public
   - name: venue_status
     using:
       foreign_key_constraint_on: status

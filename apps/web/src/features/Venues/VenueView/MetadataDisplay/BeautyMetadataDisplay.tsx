@@ -27,9 +27,9 @@ export const BeautyMetadataDisplay = ({ beautySalonDetails }: BeautyMetadataDisp
       {hasServices && (
         <MetadataSection icon={Scissors} title={i18n("Services")}>
           <MetadataChips
-            items={(services as (typeof constants.beautyServiceOptions)[number]["value"][]).map(
+            items={(services as (typeof constants.options.BEAUTY_SERVICES)[number]["value"][]).map(
               (service) =>
-                constants.beautyServiceOptions.find((option) => option.value === service)?.label[locale] || service,
+                constants.options.BEAUTY_SERVICES.find((option) => option.value === service)?.label[locale] || service,
             )}
           />
         </MetadataSection>

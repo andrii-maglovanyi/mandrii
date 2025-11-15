@@ -1,9 +1,12 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Input, Select } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
+import { constants } from "~/lib/constants";
+import { Locale } from "~/types";
 
 type DayOfWeek = "FR" | "MO" | "SA" | "SU" | "TH" | "TU" | "WE";
 type EndType = "COUNT" | "DATE" | "NEVER";
@@ -15,16 +18,9 @@ interface RecurrencePickerProps {
   value?: null | string;
 }
 
-/**
- * RecurrencePicker component provides a visual interface for creating recurring event rules.
- * Generates an iCalendar RRULE string based on user selections.
- *
- * @param {boolean} disabled - Whether the picker is disabled
- * @param {function} onChange - Callback when recurrence rule changes
- * @param {string} value - Current recurrence rule (RRULE format)
- */
 export const RecurrencePicker = ({ disabled = false, onChange, value }: RecurrencePickerProps) => {
   const i18n = useI18n();
+  const locale = useLocale() as Locale;
 
   // Parse initial value
   const parseRRule = useCallback((rrule: null | string | undefined): RecurrenceState => {
@@ -176,14 +172,16 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
     { label: i18n("On date"), value: "DATE" },
   ];
 
+  const { weekdays } = constants;
+
   const daysOfWeek: { day: DayOfWeek; label: string }[] = [
-    { day: "MO", label: i18n("Mon") },
-    { day: "TU", label: i18n("Tue") },
-    { day: "WE", label: i18n("Wed") },
-    { day: "TH", label: i18n("Thu") },
-    { day: "FR", label: i18n("Fri") },
-    { day: "SA", label: i18n("Sat") },
-    { day: "SU", label: i18n("Sun") },
+    { day: "MO", label: weekdays[0].short[locale] },
+    { day: "TU", label: weekdays[1].short[locale] },
+    { day: "WE", label: weekdays[2].short[locale] },
+    { day: "TH", label: weekdays[3].short[locale] },
+    { day: "FR", label: weekdays[4].short[locale] },
+    { day: "SA", label: weekdays[5].short[locale] },
+    { day: "SU", label: weekdays[6].short[locale] },
   ];
 
   // Generate human-readable description

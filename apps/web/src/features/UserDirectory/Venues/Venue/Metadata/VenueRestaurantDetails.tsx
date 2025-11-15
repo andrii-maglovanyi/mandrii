@@ -36,7 +36,7 @@ export const VenueRestaurantDetails = ({ setValues, values }: VenueRestaurantDet
   );
 
   const toggleCuisine = useCallback(
-    (cuisine: (typeof constants.cuisineOptions)[number]["value"]) => {
+    (cuisine: (typeof constants.options.CUISINE)[number]["value"]) => {
       const currentCuisines = restaurantData.cuisine_types || [];
       const newCuisines = currentCuisines.includes(cuisine)
         ? currentCuisines.filter((c) => c !== cuisine)
@@ -48,7 +48,7 @@ export const VenueRestaurantDetails = ({ setValues, values }: VenueRestaurantDet
   );
 
   const toggleFeature = useCallback(
-    (feature: (typeof constants.featureOptions)[number]["value"]) => {
+    (feature: (typeof constants.options.FEATURES)[number]["value"]) => {
       const currentFeatures = restaurantData.features || [];
       const newFeatures = currentFeatures.includes(feature)
         ? currentFeatures.filter((f) => f !== feature)
@@ -72,11 +72,11 @@ export const VenueRestaurantDetails = ({ setValues, values }: VenueRestaurantDet
           md:grid-cols-2
           lg:grid-cols-3
         `}>
-          {constants.cuisineOptions.map((cuisine) => (
+          {constants.options.CUISINE.map((cuisine) => (
             <Checkbox
               checked={(restaurantData.cuisine_types || []).includes(cuisine.value)}
               key={cuisine.value}
-              label={i18n(cuisine.label[locale])}
+              label={cuisine.label[locale]}
               onChange={() => {
                 toggleCuisine(cuisine.value);
               }}
@@ -113,7 +113,7 @@ export const VenueRestaurantDetails = ({ setValues, values }: VenueRestaurantDet
             onChange={(e) => {
               updateRestaurantData({ price_range: e.target.value });
             }}
-            options={constants.priceRangeOptions.map((option) => ({
+            options={constants.options.PRICE_RANGE.map((option) => ({
               label: i18n(option.label[locale]),
               value: option.value,
             }))}
@@ -135,7 +135,7 @@ export const VenueRestaurantDetails = ({ setValues, values }: VenueRestaurantDet
           md:grid-cols-2
           lg:grid-cols-3
         `}>
-          {constants.featureOptions.map((feature) => (
+          {constants.options.FEATURES.map((feature) => (
             <Checkbox
               checked={(restaurantData.features || []).includes(feature.value)}
               key={feature.value}

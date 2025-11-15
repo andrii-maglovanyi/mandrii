@@ -36,7 +36,7 @@ export const VenueBeautySalonDetails = ({ setValues, values }: VenueBeautySalonD
   );
 
   const toggleService = useCallback(
-    (service: (typeof constants.beautyServiceOptions)[number]["value"]) => {
+    (service: (typeof constants.options.BEAUTY_SERVICES)[number]["value"]) => {
       const currentServices = beautyData.services || [];
       const newServices = currentServices.includes(service)
         ? currentServices.filter((s) => s !== service)
@@ -60,11 +60,11 @@ export const VenueBeautySalonDetails = ({ setValues, values }: VenueBeautySalonD
           md:grid-cols-2
           lg:grid-cols-3
         `}>
-          {constants.beautyServiceOptions.map((service) => (
+          {constants.options.BEAUTY_SERVICES.map((service) => (
             <Checkbox
               checked={(beautyData.services || []).includes(service.value)}
               key={service.value}
-              label={i18n(service.label[locale])}
+              label={service.label[locale]}
               onChange={() => {
                 toggleService(service.value);
               }}

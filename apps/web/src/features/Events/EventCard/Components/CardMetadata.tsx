@@ -46,7 +46,6 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
 
   return (
     <div className="-mx-4 mt-4 mb-2 flex flex-col gap-2 text-sm text-on-surface">
-      {/* Date and time */}
       {startDate && (
         <div className="flex items-start gap-2 px-4">
           <Calendar className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
@@ -63,7 +62,6 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
         </div>
       )}
 
-      {/* Location */}
       {showLocation && (
         <>
           {isOnline ? (
@@ -85,7 +83,6 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
         </>
       )}
 
-      {/* Capacity */}
       {showCapacity && capacity && (
         <div className="flex items-start gap-2 px-4">
           <Users className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
