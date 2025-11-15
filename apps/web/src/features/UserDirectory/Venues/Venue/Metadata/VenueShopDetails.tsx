@@ -36,7 +36,7 @@ export const VenueShopDetails = ({ setValues, values }: VenueShopDetailsProps) =
   );
 
   const toggleProductCategory = useCallback(
-    (category: (typeof constants.productCategoryOptions)[number]["value"]) => {
+    (category: (typeof constants.options.PRODUCT_CATEGORIES)[number]["value"]) => {
       const currentCategories = shopData.product_categories || [];
       const newCategories = currentCategories.includes(category)
         ? currentCategories.filter((c) => c !== category)
@@ -48,7 +48,7 @@ export const VenueShopDetails = ({ setValues, values }: VenueShopDetailsProps) =
   );
 
   const togglePaymentMethod = useCallback(
-    (method: (typeof constants.paymentOptions)[number]["value"]) => {
+    (method: (typeof constants.options.PAYMENT)[number]["value"]) => {
       const currentMethods = shopData.payment_methods || [];
       const newMethods = currentMethods.includes(method)
         ? currentMethods.filter((m) => m !== method)
@@ -72,7 +72,7 @@ export const VenueShopDetails = ({ setValues, values }: VenueShopDetailsProps) =
           md:grid-cols-2
           lg:grid-cols-3
         `}>
-          {constants.productCategoryOptions.map((category) => (
+          {constants.options.PRODUCT_CATEGORIES.map((category) => (
             <Checkbox
               checked={(shopData.product_categories || []).includes(category.value)}
               key={category.value}
@@ -97,7 +97,7 @@ export const VenueShopDetails = ({ setValues, values }: VenueShopDetailsProps) =
           grid grid-cols-1 gap-3
           md:grid-cols-2
         `}>
-          {constants.paymentOptions.map((method) => (
+          {constants.options.PAYMENT.map((method) => (
             <Checkbox
               checked={(shopData.payment_methods || []).includes(method.value)}
               key={method.value}

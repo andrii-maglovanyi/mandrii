@@ -18,14 +18,6 @@ interface RecurrencePickerProps {
   value?: null | string;
 }
 
-/**
- * RecurrencePicker component provides a visual interface for creating recurring event rules.
- * Generates an iCalendar RRULE string based on user selections.
- *
- * @param {boolean} disabled - Whether the picker is disabled
- * @param {function} onChange - Callback when recurrence rule changes
- * @param {string} value - Current recurrence rule (RRULE format)
- */
 export const RecurrencePicker = ({ disabled = false, onChange, value }: RecurrencePickerProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;

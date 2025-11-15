@@ -36,7 +36,7 @@ export const VenueAccommodationDetails = ({ setValues, values }: VenueAccommodat
   );
 
   const toggleAmenity = useCallback(
-    (amenity: (typeof constants.amenityOptions)[number]["value"]) => {
+    (amenity: (typeof constants.options.AMENITIES)[number]["value"]) => {
       const currentAmenities = accommodationData.amenities || [];
       const newAmenities = currentAmenities.includes(amenity)
         ? currentAmenities.filter((a) => a !== amenity)
@@ -162,7 +162,7 @@ export const VenueAccommodationDetails = ({ setValues, values }: VenueAccommodat
           md:grid-cols-2
           lg:grid-cols-3
         `}>
-          {constants.amenityOptions.map((amenity) => (
+          {constants.options.AMENITIES.map((amenity) => (
             <Checkbox
               checked={(accommodationData.amenities || []).includes(amenity.value)}
               key={amenity.value}

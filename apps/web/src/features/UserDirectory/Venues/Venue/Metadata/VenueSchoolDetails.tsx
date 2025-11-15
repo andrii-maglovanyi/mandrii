@@ -36,7 +36,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
   );
 
   const toggleAgeGroup = useCallback(
-    (ageGroup: (typeof constants.ageGroupOptions)[number]["value"]) => {
+    (ageGroup: (typeof constants.options.AGE_GROUPS)[number]["value"]) => {
       const currentGroups = schoolData.age_groups || [];
       const newGroups = currentGroups.includes(ageGroup)
         ? currentGroups.filter((g) => g !== ageGroup)
@@ -48,7 +48,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
   );
 
   const toggleLanguage = useCallback(
-    (language: (typeof constants.languageOptions)[number]["value"]) => {
+    (language: (typeof constants.options.LANGUAGES)[number]["value"]) => {
       const currentLanguages = schoolData.languages_taught || [];
       const newLanguages = currentLanguages.includes(language)
         ? currentLanguages.filter((l) => l !== language)
@@ -60,7 +60,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
   );
 
   const toggleSubject = useCallback(
-    (subject: (typeof constants.curriculumOptions)[number]["value"]) => {
+    (subject: (typeof constants.options.CURRICULUM)[number]["value"]) => {
       const currentSubjects = schoolData.subjects || [];
       const newSubjects = currentSubjects.includes(subject)
         ? currentSubjects.filter((s) => s !== subject)
@@ -83,7 +83,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
           grid grid-cols-1 gap-3
           md:grid-cols-2
         `}>
-          {constants.ageGroupOptions.map((group) => (
+          {constants.options.AGE_GROUPS.map((group) => (
             <Checkbox
               checked={(schoolData.age_groups || []).includes(group.value)}
               key={group.value}
@@ -109,7 +109,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
           md:grid-cols-2
           lg:grid-cols-3
         `}>
-          {constants.languageOptions.map((language) => (
+          {constants.options.LANGUAGES.map((language) => (
             <Checkbox
               checked={(schoolData.languages_taught || []).includes(language.value)}
               key={language.value}
@@ -135,7 +135,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
           md:grid-cols-2
           lg:grid-cols-3
         `}>
-          {constants.curriculumOptions.map((subject) => (
+          {constants.options.CURRICULUM.map((subject) => (
             <Checkbox
               checked={(schoolData.subjects || []).includes(subject.value)}
               key={subject.value}
