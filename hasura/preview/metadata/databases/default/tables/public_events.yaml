@@ -108,6 +108,7 @@ select_permissions:
         - title_en
         - title_uk
         - type
+        - updated_at
         - user_id
         - venue_id
       filter:

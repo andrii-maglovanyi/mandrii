@@ -193,7 +193,7 @@ const Events = () => {
       ) : (
         <Table
           columns={COLUMNS}
-          dataSource={(data as never[]) || []}
+          dataSource={data}
           emptyStateBodyMessage={i18n(
             "No events added yet. Click the button above to add the first one and start managing your events!",
           )}

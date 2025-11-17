@@ -113,11 +113,6 @@ const GET_USER_EVENTS = gql`
     events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       ...EventFields
       updated_at
-      owner {
-        id
-        name
-        image
-      }
     }
     events_aggregate(where: $where) {
       aggregate {
