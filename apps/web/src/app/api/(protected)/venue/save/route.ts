@@ -216,10 +216,12 @@ export const POST = (req: Request) =>
       }
     }
 
-    const affectedRows = await upsertVenueSchedules(venueId, venueSchedules, session);
+    if (venueSchedules.length) {
+      const affectedRows = await upsertVenueSchedules(venueId, venueSchedules, session);
 
-    if (!affectedRows) {
-      throw new InternalServerError("Failed to upsert venue schedules");
+      if (!affectedRows) {
+        throw new InternalServerError("Failed to upsert venue schedules");
+      }
     }
 
     if (!venueData.id) {
