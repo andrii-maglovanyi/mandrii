@@ -22,7 +22,7 @@ interface VenueProps {
   slug?: string;
 }
 
-const mergeSchedules = (venueSchedules: Array<{ close_time: string; day_of_week: string; open_time: string; }> = []) => {
+const mergeSchedules = (venueSchedules: Array<{ close_time: string; day_of_week: string; open_time: string }> = []) => {
   return constants.weekdays
     .map((day) => {
       const daySchedules = venueSchedules.filter((schedule) => schedule.day_of_week === day.full.en);
@@ -155,7 +155,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
   );
 
   const initialValues = useMemo(() => {
-    if (!data) return null;
+    if (!data) return {};
 
     return {
       ...data,
@@ -240,6 +240,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
 
   return (
     <div className="flex flex-col">
+      !!!
       {data && (
         <div className={`
           flex cursor-default items-center justify-end space-x-3 text-sm
@@ -270,7 +271,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
               "Start adding your venue by selecting its category and name.<br/>The slug is auto-generated the URL and can only be edited during the first creation.",
             )}
       </RichText>
-      {initialValues && <VenueForm initialValues={initialValues} onSubmit={submitVenue} onSuccess={handleSuccess} />}
+      <VenueForm initialValues={initialValues} onSubmit={submitVenue} onSuccess={handleSuccess} />
     </div>
   );
 };
