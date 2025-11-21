@@ -49,7 +49,7 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
   }, [pathname]);
 
   return (
-    <>
+    <div className="lg:hidden">
       <header className={`
         relative z-50 flex h-16 items-center justify-end px-4 shadow-md
       `}>
@@ -94,6 +94,6 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
       </div>
 
       <Container>{children}</Container>
-    </>
+    </div>
   );
 }

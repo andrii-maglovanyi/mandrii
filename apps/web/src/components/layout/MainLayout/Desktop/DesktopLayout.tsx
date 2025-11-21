@@ -12,7 +12,10 @@ type DesktopLayoutProps = {
 
 export function DesktopLayout({ children, navLinks }: Readonly<DesktopLayoutProps>) {
   return (
-    <>
+    <div className={`
+      hidden
+      lg:block
+    `}>
       <header
         className={`
           relative z-50 flex h-16 items-center justify-between px-4 shadow-md
@@ -36,6 +39,6 @@ export function DesktopLayout({ children, navLinks }: Readonly<DesktopLayoutProp
         </nav>
       </header>
       <Container>{children}</Container>
-    </>
+    </div>
   );
 }
