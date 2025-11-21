@@ -65,7 +65,8 @@ const Venues = () => {
               text-base text-neutral-disabled
               md:text-xs
             `}>
-              {hasAddress ? `${city}, ${country}` : i18n("Virtual venue")}
+              <strong>{hasAddress ? city : i18n("Virtual venue")}</strong>
+              {country ? `, ${country}` : null}
             </span>
           </div>
         );
