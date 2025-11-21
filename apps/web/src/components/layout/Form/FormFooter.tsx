@@ -19,6 +19,10 @@ export const FormFooter = ({ handleCancel, hasChanges, isFormValid, status }: Fo
       mt-2 flex grow flex-col gap-3
       md:mt-16 md:flex-row md:justify-end
     `}>
+      {isFormValid ? "isFormValid" : "All OK"}
+      {hasChanges ? "Has Changes" : "No Changes"}
+      {isBusy ? "Busy" : "Not Busy"}
+      {!isFormValid || !hasChanges ? "DISABLED" : "ENABLED"}
       <div className={`
         flex h-11 grow
         md:-mt-0.5
