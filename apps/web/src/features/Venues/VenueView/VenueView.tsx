@@ -264,7 +264,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                   <h3 className="mt-2 text-lg font-semibold">{i18n("Details")}</h3>
                   <CardMetadata expanded variant="list" venue={venue} />
                 </section>
-                {venue.venue_schedules?.length && (
+                {venue.venue_schedules?.length ? (
                   <section
                     className={`
                       group/card rounded-xl border border-primary/0
@@ -275,7 +275,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
                   >
                     <OpeningHoursDisplay schedules={venue.venue_schedules} />
                   </section>
-                )}
+                ) : null}
                 {venue.chain && (
                   <section
                     className={`
