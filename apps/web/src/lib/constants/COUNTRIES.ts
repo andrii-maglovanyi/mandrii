@@ -1,4 +1,10 @@
 export const COUNTRIES = {
+  de: {
+    label: {
+      en: "Germany",
+      uk: "Німеччина",
+    },
+  },
   es: {
     label: {
       en: "Spain",
