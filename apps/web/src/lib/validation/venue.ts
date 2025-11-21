@@ -40,12 +40,12 @@ const venueScheduleItemSchema = z
 
 const venueSchedulesSchema = z
   .array(venueScheduleItemSchema)
-  .optional()
   .transform((schedules) => {
     if (!schedules) return undefined;
     // Filter out incomplete schedules (ones with empty times)
     return schedules.filter((s) => s.open_time && s.close_time);
-  });
+  })
+  .optional();
 
 const venueAccommodationDetailsSchema = z
   .object({
@@ -91,32 +91,36 @@ const restaurantDetailsSchema = z
   })
   .optional();
 
-const schoolDetailsSchema = z.object({
-  age_groups: z
-    .array(z.enum(constants.options.AGE_GROUPS.map((option) => option.value)))
-    .optional()
-    .nullable(),
-  class_size_max: z.number().int().positive().optional().nullable(),
-  languages_taught: z
-    .array(z.enum(constants.options.LANGUAGES.map((option) => option.value)))
-    .optional()
-    .nullable(),
-  online_classes_available: z.boolean().optional().nullable(),
-  subjects: z
-    .array(z.enum(constants.options.CURRICULUM.map((option) => option.value)))
-    .optional()
-    .nullable(),
-});
+const schoolDetailsSchema = z
+  .object({
+    age_groups: z
+      .array(z.enum(constants.options.AGE_GROUPS.map((option) => option.value)))
+      .optional()
+      .nullable(),
+    class_size_max: z.number().int().positive().optional().nullable(),
+    languages_taught: z
+      .array(z.enum(constants.options.LANGUAGES.map((option) => option.value)))
+      .optional()
+      .nullable(),
+    online_classes_available: z.boolean().optional().nullable(),
+    subjects: z
+      .array(z.enum(constants.options.CURRICULUM.map((option) => option.value)))
+      .optional()
+      .nullable(),
+  })
+  .optional();
 
-const shopDetailsSchema = z.object({
-  payment_methods: z
-    .array(z.enum(constants.options.PAYMENT.map((option) => option.value)))
-    .optional()
-    .nullable(),
-  product_categories: z
-    .array(z.enum(constants.options.PRODUCT_CATEGORIES.map((category) => category.value)))
-    .optional(),
-});
+const shopDetailsSchema = z
+  .object({
+    payment_methods: z
+      .array(z.enum(constants.options.PAYMENT.map((option) => option.value)))
+      .optional()
+      .nullable(),
+    product_categories: z
+      .array(z.enum(constants.options.PRODUCT_CATEGORIES.map((category) => category.value)))
+      .optional(),
+  })
+  .optional();
 
 export const venueDescriptionMaxCharsCount = 3000;
 
