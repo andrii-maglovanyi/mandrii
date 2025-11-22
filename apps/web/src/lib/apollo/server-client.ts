@@ -5,12 +5,6 @@ import { auth } from "~/lib/auth";
 
 import { publicConfig } from "../config/public";
 
-/**
- * Creates a server-side Apollo Client instance.
- * This should only be used in Server Components or Server Actions.
- *
- * @returns A configured Apollo Client instance
- */
 export async function getServerClient() {
   const httpLink = new HttpLink({
     uri: publicConfig.hasura.endpoint,

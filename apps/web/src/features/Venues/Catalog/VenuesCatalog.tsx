@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 import { ActionButton, AnimatedEllipsis, EmptyState, Pagination, RichText } from "~/components/ui";
+import { generateCatalogLayouts } from "~/features/shared/Catalog/layoutConfig";
 import { useListControls } from "~/hooks/useListControls";
 import { getVenuesFilter, useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
@@ -14,105 +15,9 @@ import { VenuesListCard } from "../VenueCard/VenuesListCard";
 import { VenuesMasonryCard } from "../VenueCard/VenuesMasonryCard";
 import { VenuesCatalogFilter } from "./VenuesCatalogFilter";
 
-type LayoutSize = "full" | "half" | "small" | "third";
-
-interface VenueWithLayout {
-  hasImage: boolean;
-  layoutSize: LayoutSize;
-  venue: GetPublicVenuesQuery["venues"][number];
-}
-
 type ViewMode = "grid" | "list";
 
 const ITEMS_LIMIT = 12;
-
-const LAYOUT_PATTERNS: Array<Array<{ count: number; size: LayoutSize }>> = [
-  [{ count: 1, size: "full" }],
-  [{ count: 2, size: "half" }],
-  [{ count: 4, size: "small" }],
-  [
-    { count: 1, size: "half" },
-    { count: 2, size: "small" },
-  ],
-  [
-    { count: 2, size: "small" },
-    { count: 1, size: "half" },
-  ],
-];
-
-const generateVenueLayouts = (venues: GetPublicVenuesQuery["venues"], isNotLastPage: boolean): VenueWithLayout[] => {
-  const layouts: VenueWithLayout[] = [];
-  let itemIndex = 0;
-
-  while (itemIndex < venues.length) {
-    const remainingItems = venues.length - itemIndex;
-
-    const hasImage = (index: number) => Boolean(venues[index].logo ?? venues[index].images?.length);
-
-    if (isNotLastPage && remainingItems < 5) {
-      if (remainingItems === 1) {
-        // 1 venue - make it full width
-        layouts.push({
-          hasImage: hasImage(itemIndex),
-          layoutSize: "full",
-          venue: venues[itemIndex],
-        });
-        itemIndex++;
-      } else if (remainingItems === 2) {
-        // 2 venues - make them half width each (2 + 2 = 4 columns)
-        for (let i = 0; i < 2; i++) {
-          layouts.push({
-            hasImage: hasImage(itemIndex),
-            layoutSize: "half",
-            venue: venues[itemIndex],
-          });
-          itemIndex++;
-        }
-      } else if (remainingItems === 3) {
-        // 3 venues - one half and two small (2 + 1 + 1 = 4 columns)
-        layouts.push({
-          hasImage: hasImage(itemIndex),
-          layoutSize: "half",
-          venue: venues[itemIndex],
-        });
-        itemIndex++;
-        for (let i = 0; i < 2; i++) {
-          layouts.push({
-            hasImage: hasImage(itemIndex),
-            layoutSize: "small",
-            venue: venues[itemIndex],
-          });
-          itemIndex++;
-        }
-      } else if (remainingItems === 4) {
-        // 4 venues - all small (1 + 1 + 1 + 1 = 4 columns)
-        for (let i = 0; i < 4; i++) {
-          layouts.push({
-            hasImage: hasImage(itemIndex),
-            layoutSize: "small",
-            venue: venues[itemIndex],
-          });
-          itemIndex++;
-        }
-      }
-    } else {
-      const pattern = LAYOUT_PATTERNS[Math.floor(Math.random() * LAYOUT_PATTERNS.length)];
-
-      for (const segment of pattern) {
-        for (let i = 0; i < segment.count && itemIndex < venues.length; i++) {
-          layouts.push({
-            hasImage: hasImage(itemIndex),
-            layoutSize: segment.size,
-            venue: venues[itemIndex],
-          });
-          itemIndex++;
-        }
-      }
-    }
-  }
-
-  return layouts;
-};
 
 export const VenuesCatalog = () => {
   const i18n = useI18n();
@@ -159,7 +64,7 @@ export const VenuesCatalog = () => {
     if (!venues || viewMode !== "grid") return [];
 
     const currentPage = Math.floor((listState.offset ?? 0) / ITEMS_LIMIT) + 1;
-    const layouts = generateVenueLayouts(venues, currentPage < countPages);
+    const layouts = generateCatalogLayouts<GetPublicVenuesQuery["venues"][number]>(venues, currentPage < countPages);
 
     return layouts;
   }, [venues, viewMode, listState.offset, countPages]);
@@ -186,7 +91,7 @@ export const VenuesCatalog = () => {
               const start = currentOffset + 1;
               const end = Math.min(currentOffset + venues.length, count);
 
-              return i18n("Showing **{start}**-**{end}** of **{count}** venues", {
+              return i18n("Showing **{start}**-**{end}** of **{count}** items", {
                 count,
                 end,
                 start,
@@ -231,13 +136,13 @@ export const VenuesCatalog = () => {
           sm:grid-cols-2
           lg:grid-cols-4
         `}>
-          {venueLayouts.map((item) => (
+          {venueLayouts.map((layout) => (
             <VenuesMasonryCard
-              hasImage={item.hasImage}
-              key={item.venue.id}
-              layoutSize={item.layoutSize}
+              hasImage={layout.hasImage}
+              key={layout.item.id}
+              layoutSize={layout.layoutSize}
               showFlag={!country}
-              venue={item.venue}
+              venue={layout.item}
             />
           ))}
         </div>
