@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 import { ActionButton, AnimatedEllipsis, EmptyState, Pagination, RichText } from "~/components/ui";
+import { generateCatalogLayouts } from "~/features/shared/Catalog/layoutConfig";
 import { getEventsFilter, useEvents } from "~/hooks/useEvents";
 import { useListControls } from "~/hooks/useListControls";
 import { useI18n } from "~/i18n/useI18n";
@@ -14,105 +15,9 @@ import { EventsListCard } from "../EventCard/EventsListCard";
 import { EventsMasonryCard } from "../EventCard/EventsMasonryCard";
 import { EventsCatalogFilter } from "./EventsCatalogFilter";
 
-interface EventWithLayout {
-  event: GetPublicEventsQuery["events"][number];
-  hasImage: boolean;
-  layoutSize: LayoutSize;
-}
-
-type LayoutSize = "full" | "half" | "small" | "third";
-
 type ViewMode = "grid" | "list";
 
 const ITEMS_LIMIT = 12;
-
-const LAYOUT_PATTERNS: Array<Array<{ count: number; size: LayoutSize }>> = [
-  [{ count: 1, size: "full" }],
-  [{ count: 2, size: "half" }],
-  [{ count: 4, size: "small" }],
-  [
-    { count: 1, size: "half" },
-    { count: 2, size: "small" },
-  ],
-  [
-    { count: 2, size: "small" },
-    { count: 1, size: "half" },
-  ],
-];
-
-const generateEventLayouts = (events: GetPublicEventsQuery["events"], isNotLastPage: boolean): EventWithLayout[] => {
-  const layouts: EventWithLayout[] = [];
-  let itemIndex = 0;
-
-  while (itemIndex < events.length) {
-    const remainingItems = events.length - itemIndex;
-
-    const hasImage = (index: number) => Boolean(events[index].images?.length);
-
-    if (isNotLastPage && remainingItems < 5) {
-      if (remainingItems === 1) {
-        // 1 event - make it full width
-        layouts.push({
-          event: events[itemIndex],
-          hasImage: hasImage(itemIndex),
-          layoutSize: "full",
-        });
-        itemIndex++;
-      } else if (remainingItems === 2) {
-        // 2 events - make them half width each
-        for (let i = 0; i < 2; i++) {
-          layouts.push({
-            event: events[itemIndex],
-            hasImage: hasImage(itemIndex),
-            layoutSize: "half",
-          });
-          itemIndex++;
-        }
-      } else if (remainingItems === 3) {
-        // 3 events - one half and two small
-        layouts.push({
-          event: events[itemIndex],
-          hasImage: hasImage(itemIndex),
-          layoutSize: "half",
-        });
-        itemIndex++;
-        for (let i = 0; i < 2; i++) {
-          layouts.push({
-            event: events[itemIndex],
-            hasImage: hasImage(itemIndex),
-            layoutSize: "small",
-          });
-          itemIndex++;
-        }
-      } else if (remainingItems === 4) {
-        // 4 events - all small
-        for (let i = 0; i < 4; i++) {
-          layouts.push({
-            event: events[itemIndex],
-            hasImage: hasImage(itemIndex),
-            layoutSize: "small",
-          });
-          itemIndex++;
-        }
-      }
-    } else {
-      const pattern = LAYOUT_PATTERNS[Math.floor(Math.random() * LAYOUT_PATTERNS.length)];
-
-      for (const segment of pattern) {
-        for (let i = 0; i < segment.count && itemIndex < events.length; i++) {
-          layouts.push({
-            event: events[itemIndex],
-            hasImage: hasImage(itemIndex),
-            layoutSize: segment.size,
-          });
-          itemIndex++;
-        }
-      }
-    }
-  }
-
-  return layouts;
-};
 
 export const EventsCatalog = () => {
   const i18n = useI18n();
@@ -163,7 +68,7 @@ export const EventsCatalog = () => {
     if (!events || viewMode !== "grid") return [];
 
     const currentPage = Math.floor((listState.offset ?? 0) / ITEMS_LIMIT) + 1;
-    const layouts = generateEventLayouts(events, currentPage < countPages);
+    const layouts = generateCatalogLayouts<GetPublicEventsQuery["events"][number]>(events, currentPage < countPages);
 
     return layouts;
   }, [events, viewMode, countPages, listState.offset]);
@@ -194,7 +99,7 @@ export const EventsCatalog = () => {
               const start = currentOffset + 1;
               const end = Math.min(currentOffset + events.length, count);
 
-              return i18n("Showing **{start}**-**{end}** of **{count}** events", {
+              return i18n("Showing **{start}**-**{end}** of **{count}** items", {
                 count,
                 end,
                 start,
@@ -239,12 +144,12 @@ export const EventsCatalog = () => {
           sm:grid-cols-2
           lg:grid-cols-4
         `}>
-          {eventLayouts.map((item) => (
+          {eventLayouts.map((layout) => (
             <EventsMasonryCard
-              event={item.event}
-              hasImage={item.hasImage}
-              key={item.event.id}
-              layoutSize={item.layoutSize}
+              event={layout.item}
+              hasImage={layout.hasImage}
+              key={layout.item.id}
+              layoutSize={layout.layoutSize}
             />
           ))}
         </div>

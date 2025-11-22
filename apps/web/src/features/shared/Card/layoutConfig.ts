@@ -13,9 +13,6 @@ export interface LayoutConfig {
 
 export type LayoutVariant = "list" | "masonry-full" | "masonry-half" | "masonry-small" | "masonry-third";
 
-/**
- * Base card styles shared across all variants.
- */
 export const baseCardClasses = clsx(
   "relative flex overflow-hidden rounded-xl border border-primary/0",
   "group/card bg-surface-tint/50 transition-all duration-300",
@@ -25,9 +22,6 @@ export const baseCardClasses = clsx(
   `,
 );
 
-/**
- * Masonry variant configurations.
- */
 const masonryVariants = {
   "masonry-full": {
     containerClasses: clsx(
@@ -81,13 +75,6 @@ const masonryVariants = {
   },
 } as const;
 
-/**
- * Get layout configuration based on variant.
- *
- * @param {LayoutVariant} variant - The layout variant to use.
- * @param {boolean} hasImage - Whether the card has an image.
- * @returns {LayoutConfig} The layout configuration.
- */
 export const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): LayoutConfig => {
   if (variant.startsWith("masonry")) {
     const config = masonryVariants[variant as keyof typeof masonryVariants];
