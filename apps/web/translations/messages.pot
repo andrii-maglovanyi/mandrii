@@ -951,7 +951,7 @@ msgstr ""
 msgid "Annual income £50,270-£125,140"
 msgstr ""
 
-msgid "High income reductions require at least 3 years at that level; reduction not applied for now."
+msgid "High income reductions require at least 3 years at that level. Reduction not applied for now."
 msgstr ""
 
 msgid "Public service employment (5+ years at RQF6+)"
@@ -963,13 +963,13 @@ msgstr ""
 msgid "Community volunteering (proposal: minus 3-5 years)"
 msgstr ""
 
-msgid "Volunteering reduction is consultative and subject to how contribution is measured/validated; treat as illustrative."
+msgid "Volunteering reduction is consultative and subject to how contribution is measured/validated. Treat as illustrative."
 msgstr ""
 
 msgid "Skilled Worker/Health & Care role below RQF6 (fixed 15-year baseline)"
 msgstr ""
 
-msgid "The 15-year baseline for roles below RQF6 is a consultation option (not final policy); check for updates."
+msgid "The 15-year baseline for roles below RQF6 is a consultation option (not final policy). Check for updates."
 msgstr ""
 
 msgid "In-country asylum seeker (core protection route)"
@@ -1017,13 +1017,13 @@ msgstr ""
 msgid "Sustained income of £12,570+ for at least 3 years (consultation: 3-5 years)"
 msgstr ""
 
-msgid "Income threshold duration is under consultation (3-5 years); requirement may tighten to 5 years. Adjust accordingly."
+msgid "Income threshold duration is under consultation (3-5 years). Requirement may tighten to 5 years. Adjust accordingly."
 msgstr ""
 
-msgid "Consultation runs to Feb 2026; timelines and requirements may change once final policy is set. Always verify latest rules."
+msgid "Consultation runs to Feb 2026. Timelines and requirements may change once final policy is set. Always verify latest rules."
 msgstr ""
 
-msgid "Ukraine Scheme currently does not lead to ILR; no settlement route available."
+msgid "Ukraine Scheme currently does not lead to ILR. No settlement route available."
 msgstr ""
 
 msgid "Criminal record blocks settlement eligibility"
@@ -1062,7 +1062,7 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
-msgid "Language skills and compliance with UK rules."
+msgid "Language and rule checks."
 msgstr ""
 
 msgid "Integration & compliance"
@@ -1104,55 +1104,7 @@ msgstr ""
 msgid "Duration of benefits (months)"
 msgstr ""
 
-msgid "Tell us about how and when you came to the UK, and your household."
-msgstr ""
-
-msgid "Family situation & basics"
-msgstr ""
-
-msgid "Visa category"
-msgstr ""
-
-msgid "Select your visa category"
-msgstr ""
-
-msgid "Visa start date (valid-from on vignette/BRP)"
-msgstr ""
-
-msgid "Actual arrival in the UK"
-msgstr ""
-
-msgid "Type of refugee status"
-msgstr ""
-
-msgid "Select type"
-msgstr ""
-
-msgid "Ukraine Scheme entry is via approved permission; visitor/irregular entry does not apply."
-msgstr ""
-
-msgid "How did you enter the UK?"
-msgstr ""
-
-msgid "I have a partner/spouse"
-msgstr ""
-
-msgid "My partner is a British citizen"
-msgstr ""
-
-msgid "Partner's work status"
-msgstr ""
-
-msgid "Select status"
-msgstr ""
-
-msgid "I have children"
-msgstr ""
-
-msgid "Number of children"
-msgstr ""
-
-msgid "Your work, salary and contribution to the UK."
+msgid "Your work and income details."
 msgstr ""
 
 msgid "Employment & income"
@@ -1194,22 +1146,70 @@ msgstr ""
 msgid "Select reduction"
 msgstr ""
 
+msgid "Quick basics about you and your family."
+msgstr ""
+
+msgid "Family"
+msgstr ""
+
+msgid "Visa category"
+msgstr ""
+
+msgid "Select your visa category"
+msgstr ""
+
+msgid "Visa start date (valid-from on vignette/BRP)"
+msgstr ""
+
+msgid "Actual arrival in the UK"
+msgstr ""
+
+msgid "Type of refugee status"
+msgstr ""
+
+msgid "Select type"
+msgstr ""
+
+msgid "Ukraine Scheme entry is via approved permission. Visitor/irregular entry does not apply."
+msgstr ""
+
+msgid "How did you enter the UK?"
+msgstr ""
+
+msgid "I have a partner/spouse"
+msgstr ""
+
+msgid "My partner is a British citizen"
+msgstr ""
+
+msgid "Partner's work status"
+msgstr ""
+
+msgid "Select status"
+msgstr ""
+
+msgid "I have children"
+msgstr ""
+
+msgid "Number of children"
+msgstr ""
+
 msgid "UK Earned Settlement (ILR) calculator"
 msgstr ""
 
-msgid "Estimate the earliest date you could apply for ILR under the proposed earned settlement rules (Home Office consultation, Nov 2025). Use it as a directional guide alongside official guidance."
+msgid "See a quick ILR timeline and costs based on the draft earned settlement rules."
 msgstr ""
 
 msgid "Blocking suitability issues detected"
 msgstr ""
 
-msgid "These issues prevent settlement until resolved; the timeline shown is indicative only."
+msgid "These issues prevent settlement until resolved. The timeline shown is indicative only."
 msgstr ""
 
 msgid "Some requirements are not met"
 msgstr ""
 
-msgid "Resolve the unmet suitability/integration items; the estimate remains indicative until all are satisfied."
+msgid "Resolve the unmet suitability/integration items. The estimate remains indicative until all are satisfied."
 msgstr ""
 
 msgid "Estimated earliest ILR date"
@@ -1263,7 +1263,7 @@ msgstr ""
 msgid "18 or over: must have had dependant leave before 18, not be independent, and meet English (B1) and Life in the UK tests; can apply with you or after you are settled."
 msgstr ""
 
-msgid "If both parents are in the UK, children normally wait until both apply/are settled; they can apply with one parent sooner only where that parent has sole responsibility or there are serious/compelling reasons."
+msgid "If both parents are in the UK, children normally wait until both apply/are settled. They can apply with one parent sooner only where that parent has sole responsibility or there are serious/compelling reasons."
 msgstr ""
 
 msgid "How your waiting time was adjusted"
@@ -1311,7 +1311,7 @@ msgstr ""
 msgid "Total estimated cost"
 msgstr ""
 
-msgid "Fees are indicative (as of 2025). Check latest GOV.UK visa/IHS/ILR fee updates; future rises are likely."
+msgid "Fees are indicative (as of 2025). Check latest GOV.UK visa/IHS/ILR fee updates."
 msgstr ""
 
 msgid "This tool is based on the Home Office \"A Fairer Pathway to Settlement\" consultation (earned settlement, baseline 10 years, with reductions/penalties). It is for illustration only and does not guarantee eligibility. Always check the latest official rules and consider getting professional legal advice before applying."
@@ -1320,58 +1320,31 @@ msgstr ""
 msgid "Glossary"
 msgstr ""
 
-msgid "ILR / Earned Settlement"
+msgid "Permission to stay in the UK without time limits. Proposed earned route is 10-30 years."
 msgstr ""
 
-msgid "Permission to stay in the UK without time limits; now proposed as an earned 10-30 year pathway."
+msgid "Employer-sponsored work visa. Draft rules set a 10-year baseline."
 msgstr ""
 
-msgid "Skilled Worker visa"
+msgid "Degree-level jobs. Lower levels in Skilled Worker/Health & Care may have a 15-year baseline."
 msgstr ""
 
-msgid "Work route where employers sponsor eligible roles; baseline 10 years under proposals."
+msgid "Required culture/values test before settlement."
 msgstr ""
 
-msgid "RQF Level 6"
-msgstr ""
-
-msgid "Degree-level roles. Below RQF6 in Skilled Worker/Health & Care may face a 15-year baseline."
-msgstr ""
-
-msgid "Life in the UK Test"
-msgstr ""
-
-msgid "Mandatory exam on UK culture/values; required before settlement."
-msgstr ""
-
-msgid "B2 / C1 English"
-msgstr ""
-
-msgid "B2 is minimum for settlement; C1 can reduce waiting time by 1 year."
-msgstr ""
-
-msgid "Public funds"
+msgid "B2 is the minimum. C1 can cut waiting time by 1 year."
 msgstr ""
 
 msgid "UK benefits (e.g., Universal Credit, housing). Using them can add 5-10 years to settlement time."
 msgstr ""
 
-msgid "BN(O)"
-msgstr ""
-
 msgid "British National (Overseas) route with a 5-year settlement path."
-msgstr ""
-
-msgid "NRPF"
 msgstr ""
 
 msgid "No Recourse to Public Funds condition that restricts access to benefits."
 msgstr ""
 
-msgid "Long Residence route"
-msgstr ""
-
-msgid "Existing 10-year lawful stay pathway proposed for removal under the consultation."
+msgid "Existing 10-year lawful stay route proposed for removal in the draft plans."
 msgstr ""
 
 msgid "Upcoming events"
@@ -1842,16 +1815,25 @@ msgstr ""
 msgid "ILR calculator and more practical helpers."
 msgstr ""
 
-msgid "Tools & calculators"
+msgid "Tools"
 msgstr ""
 
 msgid "Guides, community answers and calculators to help you live abroad with fewer surprises."
 msgstr ""
 
-msgid "Practical helpers for your life abroad"
+msgid "Check ILR timing and fees under the draft rules."
 msgstr ""
 
-msgid "Use these tools to estimate timelines, fees and options. Start with the ILR calculator below or jump straight to a tool."
+msgid "Live"
+msgstr ""
+
+msgid "ILR calculator"
+msgstr ""
+
+msgid "Helpful tools for living abroad"
+msgstr ""
+
+msgid "Check timelines, fees and options quickly. Start with the ILR calculator below."
 msgstr ""
 
 msgid "Go to calculator"
@@ -1869,13 +1851,10 @@ msgstr ""
 msgid "Back to guides"
 msgstr ""
 
-msgid "Live tool"
-msgstr ""
-
-msgid "ILR calculator"
-msgstr ""
-
 msgid "Estimate your earliest ILR application date and indicative fees based on the Home Office consultation proposals."
+msgstr ""
+
+msgid "See your earliest ILR date and estimated fees"
 msgstr ""
 
 msgid "Explore events"
