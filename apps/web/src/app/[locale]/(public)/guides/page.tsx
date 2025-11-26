@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { Briefcase, Coins, FileText, Plane, Users, Wrench } from "lucide-react";
 import Link from "next/link";
 
+import { MixpanelTracker } from "~/components/layout/MixpanelTracker/MixpanelTracker";
 import { Breadcrumbs } from "~/components/ui";
 import { getI18n } from "~/i18n/getI18n";
 import { Locale } from "~/types";
@@ -54,75 +55,78 @@ export default async function GuidesPage({ params }: GuidesPageProps) {
     {
       description: i18n("ILR calculator and more practical helpers."),
       icon: Wrench,
-      slug: "tools-and-calculators",
-      title: i18n("Tools & calculators"),
+      slug: "tools",
+      title: i18n("Tools"),
     },
   ];
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
-      <Breadcrumbs items={[{ title: i18n("Home"), url: "/" }]} />
-      <div className="mt-6 mb-12 space-y-3">
-        <h1 className={`
-          text-3xl font-extrabold text-on-surface
-          md:text-5xl
-        `}>{i18n("Guides")}</h1>
-        <p className={`
-          text-sm text-neutral
-          md:text-base
-        `}>
-          {i18n("Guides, community answers and calculators to help you live abroad with fewer surprises.")}
-        </p>
-      </div>
+    <>
+      <main className="mx-auto max-w-5xl px-4 py-10">
+        <Breadcrumbs items={[{ title: i18n("Home"), url: "/" }]} />
+        <div className="mt-6 mb-12 space-y-3">
+          <h1 className={`
+            text-3xl font-extrabold text-on-surface
+            md:text-5xl
+          `}>{i18n("Guides")}</h1>
+          <p className={`
+            text-sm text-neutral
+            md:text-base
+          `}>
+            {i18n("Guides, community answers and calculators to help you live abroad with fewer surprises.")}
+          </p>
+        </div>
 
-      <section className={`
-        grid gap-4
-        md:grid-cols-2
-      `}>
-        {topics.map((topic) => {
-          const Icon = topic.icon;
-          return (
-            <Link
-              aria-disabled={topic.disabled}
-              className={clsx(
-                `
-                  flex gap-4 rounded-xl border border-primary/0
-                  bg-surface-tint/50 p-4 no-underline transition-all
-                  duration-300
-                  hover:border-primary/20 hover:shadow-lg
-                `,
-                topic.disabled && "pointer-events-none opacity-75",
-              )}
-              href={`/guides/${topic.slug}`}
-              key={topic.slug}
-            >
-              <div
+        <section className={`
+          grid gap-4
+          md:grid-cols-2
+        `}>
+          {topics.map((topic) => {
+            const Icon = topic.icon;
+            return (
+              <Link
+                aria-disabled={topic.disabled}
                 className={clsx(
                   `
-                    flex h-10 w-10 shrink-0 items-center justify-center
-                    rounded-lg
+                    flex gap-4 rounded-xl border border-primary/0
+                    bg-surface-tint/50 p-4 no-underline transition-all
+                    duration-300
+                    hover:border-primary/20 hover:shadow-lg
                   `,
-                  topic.disabled ? "bg-neutral/10" : "bg-primary/10",
+                  topic.disabled && "pointer-events-none opacity-75",
                 )}
+                href={`/guides/${topic.slug}`}
+                key={topic.slug}
               >
-                <Icon className={clsx("h-5 w-5", topic.disabled ? "text-neutral" : `
-                  text-primary
-                `)} />
-              </div>
-              <div>
-                <strong
-                  className={clsx("flex h-10 items-center text-lg", topic.disabled ? `
-                    text-neutral
-                  ` : `text-primary`)}
+                <div
+                  className={clsx(
+                    `
+                      flex h-10 w-10 shrink-0 items-center justify-center
+                      rounded-lg
+                    `,
+                    topic.disabled ? "bg-neutral/10" : "bg-primary/10",
+                  )}
                 >
-                  {topic.title}
-                </strong>
-                <p className="text-sm text-neutral">{topic.description}</p>
-              </div>
-            </Link>
-          );
-        })}
-      </section>
-    </main>
+                  <Icon className={clsx("h-5 w-5", topic.disabled ? `
+                    text-neutral
+                  ` : `text-primary`)} />
+                </div>
+                <div>
+                  <strong
+                    className={clsx("flex h-10 items-center text-lg", topic.disabled ? `
+                      text-neutral
+                    ` : `text-primary`)}
+                  >
+                    {topic.title}
+                  </strong>
+                  <p className="text-sm text-neutral">{topic.description}</p>
+                </div>
+              </Link>
+            );
+          })}
+        </section>
+      </main>
+      <MixpanelTracker event="Viewed New Guides Page" />
+    </>
   );
 }
