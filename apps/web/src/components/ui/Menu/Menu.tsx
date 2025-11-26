@@ -28,9 +28,10 @@ export function Menu<K extends React.ReactNode, T>({ onSelect, options, ref }: R
     <div
       aria-activedescendant={focusedIndex !== null ? `option-${focusedIndex}` : undefined}
       className={`
-        absolute top-[100%] z-50 mt-1.5 h-max max-h-80 w-max min-w-full
+        absolute top-full z-50 mt-1.5 h-max max-h-80 w-max min-w-full
         overflow-y-scroll rounded-lg bg-surface p-1 text-on-surface shadow-xl
       `}
+      data-menu-overlay
       onKeyDown={(e) =>
         handleKeyDown(e, () => {
           if (focusedIndex === null) return;
