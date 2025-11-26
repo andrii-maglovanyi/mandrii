@@ -29,11 +29,7 @@ export default function GuidesILRCalculatorPage() {
           <p className={`
             text-sm text-neutral
             md:text-base
-          `}>
-            {i18n(
-              "Estimate your earliest ILR application date and indicative fees based on the Home Office consultation proposals.",
-            )}
-          </p>
+          `}>{i18n("See your earliest ILR date and estimated fees")}</p>
         </div>
 
         <ILRCalculator />

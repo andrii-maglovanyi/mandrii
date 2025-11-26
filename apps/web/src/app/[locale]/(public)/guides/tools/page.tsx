@@ -13,11 +13,11 @@ export default function ToolsAndCalculatorsPage() {
 
   const tools = [
     {
-      descriptionKey: i18n("Estimate earned settlement timelines and fees under the consultation rules."),
+      descriptionKey: i18n("Check ILR timing and fees under the draft rules."),
       href: "/guides/tools/ilr-calculator",
-      slug: "ilr",
-      statusKey: "Live",
-      titleKey: "ILR calculator",
+      slug: "ilr-calculator",
+      statusKey: i18n("Live"),
+      titleKey: i18n("ILR calculator"),
     },
   ];
 
@@ -37,15 +37,13 @@ export default function ToolsAndCalculatorsPage() {
               text-3xl font-extrabold text-on-surface
               md:text-5xl
             `}>
-              {i18n("Practical helpers for your life abroad")}
+              {i18n("Helpful tools for living abroad")}
             </h1>
             <p className={`
               text-sm text-neutral
               md:text-base
             `}>
-              {i18n(
-                "Use these tools to estimate timelines, fees and options. Start with the ILR calculator below or jump straight to a tool.",
-              )}
+              {i18n("Check timelines, fees and options quickly. Start with the ILR calculator below.")}
             </p>
           </div>
         </div>
@@ -64,15 +62,15 @@ export default function ToolsAndCalculatorsPage() {
               key={tool.slug}
             >
               <div className="flex items-center justify-between">
-                <span className="text-lg font-semibold text-on-surface">{i18n(tool.titleKey)}</span>
+                <span className="text-lg font-semibold text-on-surface">{tool.titleKey}</span>
                 <span className={`
                   rounded-lg bg-green-100 px-3 py-1.5 text-xs font-semibold
                   text-green-700
                 `}>
-                  {i18n(tool.statusKey)}
+                  {tool.statusKey}
                 </span>
               </div>
-              <p className="mt-2 text-sm text-neutral">{i18n(tool.descriptionKey)}</p>
+              <p className="mt-2 text-sm text-neutral">{tool.descriptionKey}</p>
               <div className={`
                 mt-4 flex items-center gap-2 text-sm font-semibold text-primary
               `}>
