@@ -10,17 +10,27 @@ export interface TabsMethods {
 }
 
 export interface TabsProps {
+  activeKey?: string;
   children: React.ReactNode;
   defaultActiveKey?: string;
   defer?: boolean;
+  onChange?: (tab: string) => void;
 }
 
-export const Tabs = ({ children, defaultActiveKey = "", defer = false }: TabsProps) => {
+export const Tabs = ({ activeKey, children, defaultActiveKey = "", defer = false, onChange }: TabsProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
+  const isControlled = activeKey !== undefined;
 
   const handleTabChange = (index: number) => {
     if (index !== activeTab) {
-      setActiveTab(index);
+      if (!isControlled) {
+        setActiveTab(index);
+      }
+
+      const activeChild = tabsOnly[index];
+      if (React.isValidElement<TabPaneProps>(activeChild)) {
+        onChange?.(activeChild.props.tab);
+      }
     }
   };
 
@@ -32,31 +42,42 @@ export const Tabs = ({ children, defaultActiveKey = "", defer = false }: TabsPro
     [children],
   );
 
+  // Sync controlled activeKey
   useEffect(() => {
+    if (!isControlled) return;
+    const targetIndex = tabsOnly.findIndex(
+      (child) => React.isValidElement<TabPaneProps>(child) && child.props.tab === activeKey,
+    );
+    if (targetIndex >= 0 && targetIndex !== activeTab) {
+      setActiveTab(targetIndex);
+    }
+  }, [activeKey, activeTab, isControlled, tabsOnly]);
+
+  // Hash navigation for uncontrolled usage
+  useEffect(() => {
+    if (isControlled) return;
+
     const updateActiveTab = () => {
-      const activeKey = decodeURIComponent(window.location.hash?.replace("#", "") || defaultActiveKey);
+      const activeHashKey = decodeURIComponent(window.location.hash?.replace("#", "") || defaultActiveKey);
 
       React.Children.map(tabsOnly, (child, index) => {
         if (
           React.isValidElement<TabPaneProps>(child) &&
-          activeKey &&
-          child?.props.tab === decodeURIComponent(activeKey)
+          activeHashKey &&
+          child?.props.tab === decodeURIComponent(activeHashKey)
         ) {
           setActiveTab(index);
         }
       });
     };
 
-    // Initial tab selection
     updateActiveTab();
-
-    // Listen for hash changes (e.g., when navigating with window.location.hash)
     window.addEventListener("hashchange", updateActiveTab);
 
     return () => {
       window.removeEventListener("hashchange", updateActiveTab);
     };
-  }, [tabsOnly, defaultActiveKey]);
+  }, [tabsOnly, defaultActiveKey, isControlled]);
 
   return (
     <div className="flex w-full">

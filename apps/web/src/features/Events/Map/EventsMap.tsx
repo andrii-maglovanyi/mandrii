@@ -116,11 +116,7 @@ export const EventsMap = () => {
   // Filter events to only show those with geo data (in-person events)
   // Events can have geo data either directly or through their venue
   const eventsWithGeo = useMemo(() => {
-    return data.filter((event) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const e = event as any;
-      return e.geo || e.venue?.geo;
-    });
+    return data.filter((event) => Boolean(event.geo || event.venue?.geo));
   }, [data]);
 
   const isReady = mapIsLoaded && !loading;

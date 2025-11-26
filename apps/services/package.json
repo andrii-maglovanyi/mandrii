@@ -1,5 +1,7 @@
 {
   "name": "services",
+  "license": "MIT",
+  "private": false,
   "version": "1.0.0",
   "scripts": {
     "dev": "make dev"

@@ -1,7 +1,7 @@
 {
   "name": "web",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
+  "private": false,
   "type": "module",
   "scripts": {
     "build": "next build",

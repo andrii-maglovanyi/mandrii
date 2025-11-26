@@ -42,14 +42,16 @@ export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps
 
   return (
     <div className="relative border-b border-neutral-disabled pt-2">
-      <div className="flex overflow-y-hidden px-1 pt-2">
+      <div className="flex gap-1 overflow-x-auto overflow-y-hidden px-1 pt-2">
         {React.Children.map(children, (child, index) => {
           if (
             React.isValidElement<{
               icon?: React.ReactNode;
+              label?: string;
               tab: string;
             }>(child)
           ) {
+            const tabLabel = child.props.label ?? child.props.tab;
             return (
               <span aria-selected={activeIndex === index}>
                 <Button
@@ -63,7 +65,7 @@ export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps
                   }}
                   variant="ghost"
                 >
-                  {child.props.icon} {child.props.tab}
+                  {child.props.icon} {tabLabel}
                 </Button>
               </span>
             );

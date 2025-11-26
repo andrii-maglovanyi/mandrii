@@ -282,3 +282,5 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
 
 export type EventFormData = z.infer<EventSchema>;
 export type EventSchema = ReturnType<typeof getEventSchema>;
+
+export { Event_Type_Enum, Price_Type_Enum } from "~/types";
