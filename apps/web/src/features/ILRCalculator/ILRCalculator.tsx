@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Alert, Card, Checkbox, Input, Select, Separator, TabPane, Tabs } from "~/components/ui";
 import { useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
+import { sendToMixpanel } from "~/lib/mixpanel";
 import { getILRCalculatorSchema, ilrInitialValues } from "~/lib/validation/ilr";
 
 type Adjustment = { reason: string; type: string; years: number };
@@ -100,8 +101,8 @@ const StepSection = ({ children, description, icon: Icon, title }: StepSectionPr
   <div className="space-y-4">
     <div className="flex items-start gap-3">
       <div className={`
-        flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10
-        text-primary
+        flex min-h-11 min-w-11 items-center justify-center rounded-xl
+        bg-primary/10 text-primary
       `}>
         <Icon className="h-5 w-5" />
       </div>
@@ -251,7 +252,7 @@ export const ILRCalculator = () => {
   const [result, setResult] = useState<ILROutcome | null>(null);
 
   const computeOutcome = useCallback(
-    (currentValues: ILRValues, requireBaseDate = false): ILROutcome | null => {
+    (currentValues: ILRValues) => {
       const visaStartDate = currentValues.visaStartDate ? new Date(currentValues.visaStartDate) : undefined;
       const arrivalDate = currentValues.arrivalDate ? new Date(currentValues.arrivalDate) : undefined;
       const baseDate = visaStartDate ?? arrivalDate;
@@ -263,7 +264,7 @@ export const ILRCalculator = () => {
       const isUkraine = selectedCategory === "ukraine";
       const entryMethod = refugeeRoute || isUkraine ? "legal" : currentValues.entryMethod;
 
-      if (requireBaseDate && !baseDate) return null;
+      if (!baseDate) return null;
 
       const baselineYears = 10;
       const adjustments: Adjustment[] = [];
@@ -509,7 +510,7 @@ export const ILRCalculator = () => {
         }
       }
 
-      return {
+      const computeResult = {
         adjustments,
         allRequirementsMet: requirements.every((r) => r.met),
         blockingRequirements,
@@ -524,6 +525,14 @@ export const ILRCalculator = () => {
         visaStartDate,
         warnings,
       };
+
+      sendToMixpanel("Computed ILR Outcome", {
+        computeResult,
+        currentValues,
+        source: "ilr_calculator",
+      });
+
+      return computeResult;
     },
     [i18n, volunteeringReductionOptions],
   );
@@ -538,7 +547,7 @@ export const ILRCalculator = () => {
       return;
     }
 
-    const outcome = computeOutcome(parsed.data as ILRValues, true);
+    const outcome = computeOutcome(parsed.data);
     if (!outcome) {
       setResult(null);
       setFormError(null);
@@ -898,502 +907,490 @@ export const ILRCalculator = () => {
   };
 
   return (
-    <div className={`
-      mx-auto max-w-5xl rounded-3xl border-2 border-primary shadow-lg
-    `}>
-      <Card className={`
-        h-max overflow-hidden rounded-3xl
-        md:bg-surface md:shadow-xl
+    <Card
+      className={`
+        mx-auto h-max overflow-hidden rounded-3xl
+        md:border-2 md:border-primary md:bg-surface md:shadow-xl
+      `}
+    >
+      <div className={`
+        relative z-10 overflow-hidden rounded-3xl px-6 py-6
+        md:rounded-none md:px-8
       `}>
         <div className={`
-          relative z-10 overflow-hidden rounded-3xl px-6 py-6
-          md:rounded-none md:px-8
+          pointer-events-none absolute inset-0 -z-10 overflow-hidden
         `}>
-          <div className={`
-            pointer-events-none absolute inset-0 -z-10 overflow-hidden
-          `}>
-            <UnionJack
-              className={`
-                absolute top-1/2 left-0 h-[140%] w-[70%] -translate-y-1/2
-                transform opacity-15
-              `}
-              style={{
-                maskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
-                WebkitMaskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
-              }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(90deg, transparent 55%, var(--color-surface) 100%)" }}
-            />
+          <UnionJack
+            className={`
+              absolute top-1/2 left-0 h-[140%] w-[70%] -translate-y-1/2
+              transform opacity-15
+            `}
+            style={{
+              maskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
+              WebkitMaskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(90deg, transparent 55%, var(--color-surface) 100%)" }}
+          />
+        </div>
+        <div className={`
+          z-50 flex items-start gap-3
+          md:py-2
+          lg:py-4
+        `}>
+          <div
+            className={`
+              flex min-h-12 min-w-12 items-center justify-center rounded-2xl
+              bg-primary text-surface shadow-md
+            `}
+          >
+            <Calendar className="h-5 w-5" />
           </div>
-          <div className={`
-            z-50 flex items-start gap-3
-            md:py-2
-            lg:py-4
-          `}>
-            <div
-              className={`
-                flex min-h-12 min-w-12 items-center justify-center rounded-2xl
-                bg-primary text-surface shadow-md
-              `}
-            >
-              <Calendar className="h-5 w-5" />
-            </div>
-            <div className="space-y-2">
-              <h1 className={`
-                text-xl font-bold text-on-surface
-                md:text-2xl
-                lg:text-3xl
-              `}>
-                {i18n("UK Earned Settlement (ILR) calculator")}
-              </h1>
-              <p className={`
-                max-w-4xl text-sm text-neutral
-                md:text-base
-              `}>
-                {i18n(
-                  "Estimate the earliest date you could apply for ILR under the proposed earned settlement rules (Home Office consultation, Nov 2025). Use it as a directional guide alongside official guidance.",
-                )}
-              </p>
-            </div>
+          <div className="space-y-2">
+            <h1 className={`
+              text-xl font-bold text-on-surface
+              md:text-2xl
+              lg:text-3xl
+            `}>
+              {i18n("UK Earned Settlement (ILR) calculator")}
+            </h1>
+            <p className={`
+              max-w-4xl text-sm text-neutral
+              md:text-base
+            `}>
+              {i18n(
+                "Estimate the earliest date you could apply for ILR under the proposed earned settlement rules (Home Office consultation, Nov 2025). Use it as a directional guide alongside official guidance.",
+              )}
+            </p>
           </div>
         </div>
+      </div>
 
-        <div className={`
-          space-y-6 px-4 py-6
-          md:px-6
-        `}>
-          <Tabs activeKey={activeStep} onChange={(tab) => setActiveStep(tab as StepKey)}>
-            {steps.map((s) => {
-              const Icon = s.icon;
-              return (
-                <TabPane icon={<Icon className="mr-2 h-4 w-4" />} key={s.key} label={i18n(s.key)} tab={s.key}>
-                  {renderStep(s.key)}
-                </TabPane>
-              );
-            })}
-          </Tabs>
+      <div className={`
+        space-y-6 px-4 py-6
+        md:mx-0 md:px-6
+      `}>
+        <Tabs activeKey={activeStep} onChange={(tab) => setActiveStep(tab as StepKey)}>
+          {steps.map((s) => {
+            const Icon = s.icon;
+            return (
+              <TabPane icon={<Icon className="mr-2 h-4 w-4" />} key={s.key} label={i18n(s.key)} tab={s.key}>
+                {renderStep(s.key)}
+              </TabPane>
+            );
+          })}
+        </Tabs>
 
-          <Separator align="left" variant="full" />
+        <Separator align="left" variant="full" />
 
-          {formError && (
-            <Alert className="w-full" variant="error">
-              {formError}
-            </Alert>
-          )}
-          {formWarning && (
-            <Alert className="w-full" variant="warning">
-              {formWarning}
-            </Alert>
-          )}
-          {formInfo && (
-            <Alert className="w-full" variant="info">
-              {formInfo}
-            </Alert>
-          )}
+        {formError && (
+          <Alert className="w-full" variant="error">
+            {formError}
+          </Alert>
+        )}
+        {formWarning && (
+          <Alert className="w-full" variant="warning">
+            {formWarning}
+          </Alert>
+        )}
+        {formInfo && (
+          <Alert className="w-full" variant="info">
+            {formInfo}
+          </Alert>
+        )}
 
-          {result && (
-            <div className={`
-              space-y-3
-              md:space-y-4
-            `}>
-              {result.blockingRequirements.length > 0 && (
-                <Alert variant="error">
-                  <div className="flex flex-col gap-1">
-                    <span className="font-semibold text-on-surface">
-                      {i18n("Blocking suitability issues detected")}
-                    </span>
-                    <ul className="list-inside list-disc space-y-1 text-sm">
-                      {result.blockingRequirements.map((b) => (
-                        <li key={b.text}>{b.text}</li>
-                      ))}
-                    </ul>
-                    <span className="text-xs leading-snug text-on-surface/80">
-                      {i18n("These issues prevent settlement until resolved; the timeline shown is indicative only.")}
-                    </span>
-                  </div>
-                </Alert>
-              )}
-
-              {result.blockingRequirements.length === 0 && !result.allRequirementsMet && (
-                <Alert variant="warning">
-                  <div className="flex flex-col gap-1">
-                    <span className="font-semibold text-on-surface">{i18n("Some requirements are not met")}</span>
-                    <span className="text-sm leading-snug text-on-surface/80">
-                      {i18n(
-                        "Resolve the unmet suitability/integration items; the estimate remains indicative until all are satisfied.",
-                      )}
-                    </span>
-                  </div>
-                </Alert>
-              )}
-
-              <Alert className="w-full" variant={result.allRequirementsMet ? "success" : "info"}>
+        {result && (
+          <div className={`
+            space-y-3
+            md:space-y-4
+          `}>
+            {result.blockingRequirements.length > 0 && (
+              <Alert variant="error">
                 <div className="flex flex-col gap-1">
-                  <span className="font-semibold text-on-surface">
-                    {i18n("Estimated earliest ILR date")}: {formatDateSafe(result.ilrDate)}
+                  <span className="font-semibold text-on-surface">{i18n("Blocking suitability issues detected")}</span>
+                  <ul className="list-inside list-disc space-y-1 text-sm">
+                    {result.blockingRequirements.map((b) => (
+                      <li key={b.text}>{b.text}</li>
+                    ))}
+                  </ul>
+                  <span className="text-xs leading-snug text-on-surface/80">
+                    {i18n("These issues prevent settlement until resolved; the timeline shown is indicative only.")}
                   </span>
+                </div>
+              </Alert>
+            )}
+
+            {result.blockingRequirements.length === 0 && !result.allRequirementsMet && (
+              <Alert variant="warning">
+                <div className="flex flex-col gap-1">
+                  <span className="font-semibold text-on-surface">{i18n("Some requirements are not met")}</span>
                   <span className="text-sm leading-snug text-on-surface/80">
                     {i18n(
-                      "Based on the information you entered and the current consultation proposals. Real cases can be more complex.",
+                      "Resolve the unmet suitability/integration items; the estimate remains indicative until all are satisfied.",
                     )}
                   </span>
                 </div>
               </Alert>
+            )}
 
-              <div className={`
-                grid gap-3
-                md:gap-4
-                lg:grid-cols-3
-              `}>
-                <div
-                  className={`
-                    rounded-xl border border-neutral-disabled bg-surface/70 px-4
-                    py-3 shadow-sm
-                    md:px-5 md:py-4
-                  `}
-                >
-                  <p className="text-xs font-semibold text-neutral uppercase">{i18n("Main applicant")}</p>
-                  <p className="mt-1 text-3xl font-semibold text-on-surface">
-                    {i18n("{years} years", { years: result.mainApplicantYears })}
-                  </p>
-                  <p className="mt-1 text-sm text-neutral">
-                    {i18n("Visa start date")}: {formatDateSafe(result.visaStartDate)}
-                  </p>
-                  <p className="text-sm text-neutral">
-                    {i18n("Target ILR date")}: {formatDateSafe(result.ilrDate)}
-                  </p>
-                  <p className="text-sm font-semibold text-on-surface">
-                    {i18n("Earliest application (28-day rule)")}: {formatDateSafe(result.earliestApplicationDate)}
-                  </p>
-                </div>
+            <Alert className="w-full" variant={result.allRequirementsMet ? "success" : "info"}>
+              <div className="flex flex-col gap-1">
+                <span className="font-semibold text-on-surface">
+                  {i18n("Estimated earliest ILR date")}: {formatDateSafe(result.ilrDate)}
+                </span>
+                <span className="text-sm leading-snug text-on-surface/80">
+                  {i18n(
+                    "Based on the information you entered and the current consultation proposals. Real cases can be more complex.",
+                  )}
+                </span>
+              </div>
+            </Alert>
 
-                <div
-                  className={`
-                    rounded-xl border border-neutral-disabled bg-surface/70 px-4
-                    py-3 shadow-sm
-                    md:px-5 md:py-4
-                    lg:col-span-2
-                  `}
-                >
-                  <p className={`
-                    mb-2 text-xs font-semibold text-neutral uppercase
-                  `}>{i18n("Key requirements")}</p>
-                  <ul className="space-y-1.5">
-                    {result.requirements.map((r) => (
-                      <li className="flex items-center gap-2 text-sm" key={r.text}>
-                        {r.met ? (
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                        ) : (
-                          <AlertCircle className="h-4 w-4 text-red-500" />
-                        )}
-                        <span className={r.met ? "text-on-surface" : `
-                          font-semibold text-red-700
-                        `}>{r.text}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+            <div className={`
+              grid gap-3
+              md:gap-4
+              lg:grid-cols-3
+            `}>
+              <div
+                className={`
+                  rounded-xl border border-neutral-disabled bg-surface/70 px-4
+                  py-3 shadow-sm
+                  md:px-5 md:py-4
+                `}
+              >
+                <p className="text-xs font-semibold text-neutral uppercase">{i18n("Main applicant")}</p>
+                <p className="mt-1 text-3xl font-semibold text-on-surface">
+                  {i18n("{years} years", { years: result.mainApplicantYears })}
+                </p>
+                <p className="mt-1 text-sm text-neutral">
+                  {i18n("Visa start date")}: {formatDateSafe(result.visaStartDate)}
+                </p>
+                <p className="text-sm text-neutral">
+                  {i18n("Target ILR date")}: {formatDateSafe(result.ilrDate)}
+                </p>
+                <p className="text-sm font-semibold text-on-surface">
+                  {i18n("Earliest application (28-day rule)")}: {formatDateSafe(result.earliestApplicationDate)}
+                </p>
               </div>
 
-              {result.partnerYears !== null && (
-                <div
-                  className={`
-                    rounded-xl border border-neutral-disabled bg-surface/70 px-4
-                    py-3 shadow-sm
-                    md:px-5 md:py-4
-                  `}
-                >
-                  <p className={`
-                    mb-1 text-xs font-semibold text-neutral uppercase
-                  `}>{i18n("Partner (dependent)")}</p>
-                  <p className="text-lg font-semibold text-on-surface">
-                    {i18n("Approx. {years} years", { years: result.partnerYears })}
-                  </p>
-                  <p className="mb-2 text-sm text-neutral">
-                    {i18n(
-                      "Dependants are assessed separately under the proposals, even if the main applicant qualifies earlier.",
-                    )}
-                  </p>
-                  {(!result.allRequirementsMet || result.blockingRequirements.length > 0) && (
-                    <p className="text-sm font-semibold text-red-700">
-                      {i18n("Dependants can only apply if the main applicant meets all requirements.")}
-                    </p>
-                  )}
-                  {result.partnerAdjustments.length > 0 && (
-                    <ul className="list-inside list-disc text-sm text-neutral">
-                      {result.partnerAdjustments.map((p, idx) => (
-                        <li key={idx}>
-                          {p.reason}{" "}
-                          {typeof p.years === "number"
-                            ? `(${p.type === "reduction" ? "-" : "+"}${p.years} ${i18n("years")})`
-                            : ""}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              )}
-
-              {values.hasChildren && (
-                <div
-                  className={`
-                    rounded-xl border border-neutral-disabled bg-surface/70 px-4
-                    py-3 shadow-sm
-                    md:px-5 md:py-4
-                  `}
-                >
-                  <p className={`
-                    mb-1 text-xs font-semibold text-neutral uppercase
-                  `}>{i18n("Children (dependants)")}</p>
-                  <p className="text-lg font-semibold text-on-surface">
-                    {i18n("{count} child(ren)", { count: values.numberOfChildren ?? 0 })}
-                  </p>
-                  <div className="space-y-1 text-sm text-neutral">
-                    <p>
-                      {i18n(
-                        "Under 18: can usually settle with the main applicant once you qualify, if not married/independent and maintenance/accommodation are met.",
-                      )}
-                    </p>
-                    <p>
-                      {i18n(
-                        "18 or over: must have had dependant leave before 18, not be independent, and meet English (B1) and Life in the UK tests; can apply with you or after you are settled.",
-                      )}
-                    </p>
-                    <p>
-                      {i18n(
-                        "If both parents are in the UK, children normally wait until both apply/are settled; they can apply with one parent sooner only where that parent has sole responsibility or there are serious/compelling reasons.",
-                      )}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {result.adjustments.length > 0 && (
-                <div className={`
-                  rounded-xl bg-neutral-50/10 px-4 py-3 shadow-sm
+              <div
+                className={`
+                  rounded-xl border border-neutral-disabled bg-surface/70 px-4
+                  py-3 shadow-sm
                   md:px-5 md:py-4
-                `}>
-                  <h3 className="mb-1 text-sm font-semibold text-on-surface">
-                    {i18n("How your waiting time was adjusted")}
-                  </h3>
-                  <ul className={`
-                    list-inside list-disc space-y-1 text-sm text-neutral
-                  `}>
-                    {result.adjustments.map((a, idx) => (
+                  lg:col-span-2
+                `}
+              >
+                <p className={`
+                  mb-2 text-xs font-semibold text-neutral uppercase
+                `}>{i18n("Key requirements")}</p>
+                <ul className="space-y-1.5">
+                  {result.requirements.map((r) => (
+                    <li className="flex items-center gap-2 text-sm" key={r.text}>
+                      {r.met ? (
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <AlertCircle className="h-4 w-4 text-red-500" />
+                      )}
+                      <span className={r.met ? "text-on-surface" : `
+                        font-semibold text-red-700
+                      `}>{r.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {result.partnerYears !== null && (
+              <div
+                className={`
+                  rounded-xl border border-neutral-disabled bg-surface/70 px-4
+                  py-3 shadow-sm
+                  md:px-5 md:py-4
+                `}
+              >
+                <p className={`
+                  mb-1 text-xs font-semibold text-neutral uppercase
+                `}>{i18n("Partner (dependent)")}</p>
+                <p className="text-lg font-semibold text-on-surface">
+                  {i18n("Approx. {years} years", { years: result.partnerYears })}
+                </p>
+                <p className="mb-2 text-sm text-neutral">
+                  {i18n(
+                    "Dependants are assessed separately under the proposals, even if the main applicant qualifies earlier.",
+                  )}
+                </p>
+                {(!result.allRequirementsMet || result.blockingRequirements.length > 0) && (
+                  <p className="text-sm font-semibold text-red-700">
+                    {i18n("Dependants can only apply if the main applicant meets all requirements.")}
+                  </p>
+                )}
+                {result.partnerAdjustments.length > 0 && (
+                  <ul className="list-inside list-disc text-sm text-neutral">
+                    {result.partnerAdjustments.map((p, idx) => (
                       <li key={idx}>
-                        <span className="font-semibold">
-                          {a.type === "reduction"
-                            ? i18n("Reduction")
-                            : a.type === "penalty"
-                              ? i18n("Penalty")
-                              : i18n("Baseline change")}
-                          :
-                        </span>{" "}
-                        {a.reason} ({a.years} {i18n("years")})
+                        {p.reason}{" "}
+                        {typeof p.years === "number"
+                          ? `(${p.type === "reduction" ? "-" : "+"}${p.years} ${i18n("years")})`
+                          : ""}
                       </li>
                     ))}
                   </ul>
-                </div>
-              )}
+                )}
+              </div>
+            )}
 
-              {result.warnings.length > 0 && (
-                <Alert variant="warning">
-                  <div className="space-y-1">
-                    <p className="text-sm font-semibold text-on-surface">{i18n("Important warnings")}</p>
-                    <ul className={`
-                      list-inside list-disc space-y-1 text-xs leading-snug
-                      text-on-surface
-                    `}>
-                      {result.warnings.map((w, idx) => (
-                        <li key={idx}>{w}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </Alert>
-              )}
-
-              {(() => {
-                const dependentCount =
-                  (values.hasPartner && !values.isBritishPartner ? 1 : 0) +
-                  (values.hasChildren ? (values.numberOfChildren ?? 0) : 0);
-                const peopleCount = 1 + dependentCount;
-                const estimatedFee = ILR_APPLICATION_FEE * peopleCount;
-                const { ihsPerYear, visaBands } = getFeeBands(values.visaCategory);
-                const baseDate = result.visaStartDate ?? (values.arrivalDate ? new Date(values.arrivalDate) : null);
-                const today = new Date();
-                const yearsElapsed =
-                  baseDate && !Number.isNaN(baseDate.getTime())
-                    ? Math.max(0, (today.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25))
-                    : 0;
-                const remainingYearsMainExact = Math.max(0, result.mainApplicantYears - yearsElapsed);
-                const remainingYearsPartnerExact =
-                  result.partnerYears !== null ? Math.max(0, result.partnerYears - yearsElapsed) : null;
-                const remainingYearsMain = Math.ceil(remainingYearsMainExact);
-                const childrenCount = values.hasChildren ? (values.numberOfChildren ?? 0) : 0;
-
-                const computeVisaCost = (remainingExact: number) => {
-                  if (remainingExact < 1) return 0;
-                  const remaining = Math.ceil(remainingExact);
-                  const band =
-                    visaBands.find(
-                      (b) => typeof (b as FeeBand).maxYears === "number" && remaining <= (b as FeeBand).maxYears!,
-                    ) ?? (visaBands[visaBands.length - 1] as FeeBand);
-                  const appsNeeded = Math.max(
-                    1,
-                    Math.ceil(remaining / Math.max(band.durationYears ?? (remaining || 1), 1)),
-                  );
-                  return band.fee * appsNeeded;
-                };
-
-                const perPersonVisaRemaining = computeVisaCost(remainingYearsMainExact);
-                const perPersonIhsRemaining = remainingYearsMainExact < 1 ? 0 : ihsPerYear * remainingYearsMain;
-
-                const partnerVisaRemaining =
-                  remainingYearsPartnerExact !== null ? computeVisaCost(remainingYearsPartnerExact) : 0;
-                const partnerIhsRemaining =
-                  remainingYearsPartnerExact !== null && remainingYearsPartnerExact >= 1
-                    ? ihsPerYear * Math.ceil(remainingYearsPartnerExact)
-                    : 0;
-
-                const childrenVisaRemaining = computeVisaCost(remainingYearsMainExact) * childrenCount;
-                const childrenIhsRemaining =
-                  remainingYearsMainExact < 1 ? 0 : ihsPerYear * Math.ceil(remainingYearsMainExact) * childrenCount;
-
-                const householdVisaRemaining = perPersonVisaRemaining + partnerVisaRemaining + childrenVisaRemaining;
-                const householdIhsRemaining = perPersonIhsRemaining + partnerIhsRemaining + childrenIhsRemaining;
-                return (
-                  <div className={`
-                    rounded-xl bg-on-surface/5 px-4 py-3
-                    md:px-5 md:py-4
-                  `}>
-                    <p className="text-xs font-semibold text-neutral uppercase">
-                      {i18n("Fees snapshot (current rates)")}
-                    </p>
-                    <p className="mt-1 text-sm text-on-surface">
-                      {i18n("Indicative ILR application fee today (per person): {fee}", {
-                        fee: formatCurrency(ILR_APPLICATION_FEE),
-                      })}
-                    </p>
-                    <p className="text-sm text-on-surface">
-                      {i18n("Estimated total for your household: {fee}", { fee: formatCurrency(estimatedFee) })}{" "}
-                      <span className="text-neutral">
-                        {i18n("(based on {count} applicants, subject to future fee changes)", { count: peopleCount })}
-                      </span>
-                    </p>
-                    {perPersonVisaRemaining === 0 && perPersonIhsRemaining === 0 ? (
-                      <p className="mt-2 text-sm text-neutral">
-                        {i18n(
-                          "You have less than 1 year until ILR, assuming that no further visa/IHS renewals expected before applying.",
-                        )}
-                      </p>
-                    ) : (
-                      <>
-                        <p className={`
-                          mt-2 text-sm font-semibold text-on-surface
-                        `}>
-                          {i18n("Estimated remaining visa fees (per person): {fee}", {
-                            fee: formatCurrency(perPersonVisaRemaining),
-                          })}
-                        </p>
-                        <p className="text-sm text-neutral">
-                          {i18n("Household visa fees remaining: {fee}", {
-                            fee: formatCurrency(householdVisaRemaining),
-                          })}
-                        </p>
-                        <p className={`
-                          mt-2 text-sm font-semibold text-on-surface
-                        `}>
-                          {i18n("Estimated remaining IHS (per person): {fee}", {
-                            fee: formatCurrency(perPersonIhsRemaining),
-                          })}
-                        </p>
-                        <p className="text-sm text-neutral">
-                          {i18n("Household IHS remaining: {fee}", {
-                            fee: formatCurrency(householdIhsRemaining),
-                          })}
-                        </p>
-                      </>
+            {values.hasChildren && (
+              <div
+                className={`
+                  rounded-xl border border-neutral-disabled bg-surface/70 px-4
+                  py-3 shadow-sm
+                  md:px-5 md:py-4
+                `}
+              >
+                <p className={`
+                  mb-1 text-xs font-semibold text-neutral uppercase
+                `}>{i18n("Children (dependants)")}</p>
+                <p className="text-lg font-semibold text-on-surface">
+                  {i18n("{count} child(ren)", { count: values.numberOfChildren ?? 0 })}
+                </p>
+                <div className="space-y-1 text-sm text-neutral">
+                  <p>
+                    {i18n(
+                      "Under 18: can usually settle with the main applicant once you qualify, if not married/independent and maintenance/accommodation are met.",
                     )}
-                    <div className={`
-                      mt-3 flex items-end justify-end border-t
-                      border-neutral-disabled/60 pt-3
-                    `}>
-                      <div className="text-right">
-                        <p className="text-xs text-neutral uppercase">{i18n("Total estimated cost")}</p>
-                        <p className="text-xl font-semibold text-on-surface">
-                          {formatCurrency(estimatedFee + householdVisaRemaining + householdIhsRemaining)}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="mt-3 text-xs text-neutral">
+                  </p>
+                  <p>
+                    {i18n(
+                      "18 or over: must have had dependant leave before 18, not be independent, and meet English (B1) and Life in the UK tests; can apply with you or after you are settled.",
+                    )}
+                  </p>
+                  <p>
+                    {i18n(
+                      "If both parents are in the UK, children normally wait until both apply/are settled; they can apply with one parent sooner only where that parent has sole responsibility or there are serious/compelling reasons.",
+                    )}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {result.adjustments.length > 0 && (
+              <div className={`
+                rounded-xl bg-neutral-50/10 px-4 py-3 shadow-sm
+                md:px-5 md:py-4
+              `}>
+                <h3 className="mb-1 text-sm font-semibold text-on-surface">
+                  {i18n("How your waiting time was adjusted")}
+                </h3>
+                <ul className={`
+                  list-inside list-disc space-y-1 text-sm text-neutral
+                `}>
+                  {result.adjustments.map((a, idx) => (
+                    <li key={idx}>
+                      <span className="font-semibold">
+                        {a.type === "reduction"
+                          ? i18n("Reduction")
+                          : a.type === "penalty"
+                            ? i18n("Penalty")
+                            : i18n("Baseline change")}
+                        :
+                      </span>{" "}
+                      {a.reason} ({a.years} {i18n("years")})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {result.warnings.length > 0 && (
+              <Alert variant="warning">
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold text-on-surface">{i18n("Important warnings")}</p>
+                  <ul className={`
+                    list-inside list-disc space-y-1 text-xs leading-snug
+                    text-on-surface
+                  `}>
+                    {result.warnings.map((w, idx) => (
+                      <li key={idx}>{w}</li>
+                    ))}
+                  </ul>
+                </div>
+              </Alert>
+            )}
+
+            {(() => {
+              const dependentCount =
+                (values.hasPartner && !values.isBritishPartner ? 1 : 0) +
+                (values.hasChildren ? (values.numberOfChildren ?? 0) : 0);
+              const peopleCount = 1 + dependentCount;
+              const estimatedFee = ILR_APPLICATION_FEE * peopleCount;
+              const { ihsPerYear, visaBands } = getFeeBands(values.visaCategory);
+              const baseDate = result.visaStartDate ?? (values.arrivalDate ? new Date(values.arrivalDate) : null);
+              const today = new Date();
+              const yearsElapsed =
+                baseDate && !Number.isNaN(baseDate.getTime())
+                  ? Math.max(0, (today.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+                  : 0;
+              const remainingYearsMainExact = Math.max(0, result.mainApplicantYears - yearsElapsed);
+              const remainingYearsPartnerExact =
+                result.partnerYears !== null ? Math.max(0, result.partnerYears - yearsElapsed) : null;
+              const remainingYearsMain = Math.ceil(remainingYearsMainExact);
+              const childrenCount = values.hasChildren ? (values.numberOfChildren ?? 0) : 0;
+
+              const computeVisaCost = (remainingExact: number) => {
+                if (remainingExact < 1) return 0;
+                const remaining = Math.ceil(remainingExact);
+                const band =
+                  visaBands.find(
+                    (b) => typeof (b as FeeBand).maxYears === "number" && remaining <= (b as FeeBand).maxYears!,
+                  ) ?? (visaBands[visaBands.length - 1] as FeeBand);
+                const appsNeeded = Math.max(
+                  1,
+                  Math.ceil(remaining / Math.max(band.durationYears ?? (remaining || 1), 1)),
+                );
+                return band.fee * appsNeeded;
+              };
+
+              const perPersonVisaRemaining = computeVisaCost(remainingYearsMainExact);
+              const perPersonIhsRemaining = remainingYearsMainExact < 1 ? 0 : ihsPerYear * remainingYearsMain;
+
+              const partnerVisaRemaining =
+                remainingYearsPartnerExact !== null ? computeVisaCost(remainingYearsPartnerExact) : 0;
+              const partnerIhsRemaining =
+                remainingYearsPartnerExact !== null && remainingYearsPartnerExact >= 1
+                  ? ihsPerYear * Math.ceil(remainingYearsPartnerExact)
+                  : 0;
+
+              const childrenVisaRemaining = computeVisaCost(remainingYearsMainExact) * childrenCount;
+              const childrenIhsRemaining =
+                remainingYearsMainExact < 1 ? 0 : ihsPerYear * Math.ceil(remainingYearsMainExact) * childrenCount;
+
+              const householdVisaRemaining = perPersonVisaRemaining + partnerVisaRemaining + childrenVisaRemaining;
+              const householdIhsRemaining = perPersonIhsRemaining + partnerIhsRemaining + childrenIhsRemaining;
+              return (
+                <div className={`
+                  rounded-xl bg-on-surface/5 px-4 py-3
+                  md:px-5 md:py-4
+                `}>
+                  <p className="text-xs font-semibold text-neutral uppercase">
+                    {i18n("Fees snapshot (current rates)")}
+                  </p>
+                  <p className="mt-1 text-sm text-on-surface">
+                    {i18n("Indicative ILR application fee today (per person): {fee}", {
+                      fee: formatCurrency(ILR_APPLICATION_FEE),
+                    })}
+                  </p>
+                  <p className="text-sm text-on-surface">
+                    {i18n("Estimated total for your household: {fee}", { fee: formatCurrency(estimatedFee) })}{" "}
+                    <span className="text-neutral">
+                      {i18n("(based on {count} applicants, subject to future fee changes)", { count: peopleCount })}
+                    </span>
+                  </p>
+                  {perPersonVisaRemaining === 0 && perPersonIhsRemaining === 0 ? (
+                    <p className="mt-2 text-sm text-neutral">
                       {i18n(
-                        "Fees are indicative (as of 2025). Check latest GOV.UK visa/IHS/ILR fee updates; future rises are likely.",
+                        "You have less than 1 year until ILR, assuming that no further visa/IHS renewals expected before applying.",
                       )}
                     </p>
+                  ) : (
+                    <>
+                      <p className={`mt-2 text-sm font-semibold text-on-surface`}>
+                        {i18n("Estimated remaining visa fees (per person): {fee}", {
+                          fee: formatCurrency(perPersonVisaRemaining),
+                        })}
+                      </p>
+                      <p className="text-sm text-neutral">
+                        {i18n("Household visa fees remaining: {fee}", {
+                          fee: formatCurrency(householdVisaRemaining),
+                        })}
+                      </p>
+                      <p className={`mt-2 text-sm font-semibold text-on-surface`}>
+                        {i18n("Estimated remaining IHS (per person): {fee}", {
+                          fee: formatCurrency(perPersonIhsRemaining),
+                        })}
+                      </p>
+                      <p className="text-sm text-neutral">
+                        {i18n("Household IHS remaining: {fee}", {
+                          fee: formatCurrency(householdIhsRemaining),
+                        })}
+                      </p>
+                    </>
+                  )}
+                  <div className={`
+                    mt-3 flex items-end justify-end border-t
+                    border-neutral-disabled/60 pt-3
+                  `}>
+                    <div className="text-right">
+                      <p className="text-xs text-neutral uppercase">{i18n("Total estimated cost")}</p>
+                      <p className="text-xl font-semibold text-on-surface">
+                        {formatCurrency(estimatedFee + householdVisaRemaining + householdIhsRemaining)}
+                      </p>
+                    </div>
                   </div>
-                );
-              })()}
+                  <p className="mt-3 text-xs text-neutral">
+                    {i18n(
+                      "Fees are indicative (as of 2025). Check latest GOV.UK visa/IHS/ILR fee updates; future rises are likely.",
+                    )}
+                  </p>
+                </div>
+              );
+            })()}
 
-              <p className="text-xs text-neutral">
-                {i18n(
-                  'This tool is based on the Home Office "A Fairer Pathway to Settlement" consultation (earned settlement, baseline 10 years, with reductions/penalties). It is for illustration only and does not guarantee eligibility. Always check the latest official rules and consider getting professional legal advice before applying.',
-                )}
-              </p>
-            </div>
-          )}
-
-          <div className="py-5">
-            <p className="mb-2 text-xs font-semibold text-neutral uppercase">{i18n("Glossary")}</p>
-            <ul className={`
-              list-inside list-disc space-y-4 text-sm text-neutral
-              md:space-y-2
-            `}>
-              <li>
-                <span className="font-semibold text-on-surface">{i18n("ILR / Earned Settlement")}:</span>{" "}
-                {i18n(
-                  "Permission to stay in the UK without time limits; now proposed as an earned 10-30 year pathway.",
-                )}
-              </li>
-              <li>
-                <span className="font-semibold text-on-surface">{i18n("Skilled Worker visa")}:</span>{" "}
-                {i18n("Work route where employers sponsor eligible roles; baseline 10 years under proposals.")}
-              </li>
-              <li>
-                <span className="font-semibold text-on-surface">{i18n("RQF Level 6")}:</span>{" "}
-                {i18n("Degree-level roles. Below RQF6 in Skilled Worker/Health & Care may face a 15-year baseline.")}
-              </li>
-              <li>
-                <span className="font-semibold text-on-surface">{i18n("Life in the UK Test")}:</span>{" "}
-                {i18n("Mandatory exam on UK culture/values; required before settlement.")}{" "}
-              </li>
-              <li>
-                <span className="font-semibold text-on-surface">{i18n("B2 / C1 English")}:</span>{" "}
-                {i18n("B2 is minimum for settlement; C1 can reduce waiting time by 1 year.")}{" "}
-              </li>
-              <li>
-                <span className="font-semibold text-on-surface">{i18n("Public funds")}:</span>{" "}
-                {i18n(
-                  "UK benefits (e.g., Universal Credit, housing). Using them can add 5-10 years to settlement time.",
-                )}
-              </li>
-              <li>
-                <span className="font-semibold text-on-surface">{i18n("BN(O)")}</span>{" "}
-                {i18n("British National (Overseas) route with a 5-year settlement path.")}
-              </li>
-              <li>
-                <span className="font-semibold text-on-surface">{i18n("NRPF")}</span>{" "}
-                {i18n("No Recourse to Public Funds condition that restricts access to benefits.")}
-              </li>
-              <li>
-                <span className="font-semibold text-on-surface">{i18n("Long Residence route")}:</span>{" "}
-                {i18n("Existing 10-year lawful stay pathway proposed for removal under the consultation.")}
-              </li>
-            </ul>
+            <p className="text-xs text-neutral">
+              {i18n(
+                'This tool is based on the Home Office "A Fairer Pathway to Settlement" consultation (earned settlement, baseline 10 years, with reductions/penalties). It is for illustration only and does not guarantee eligibility. Always check the latest official rules and consider getting professional legal advice before applying.',
+              )}
+            </p>
           </div>
+        )}
+
+        <div className="py-5">
+          <p className="mb-2 text-xs font-semibold text-neutral uppercase">{i18n("Glossary")}</p>
+          <ul className={`
+            list-inside list-disc space-y-4 text-sm text-neutral
+            md:space-y-2
+          `}>
+            <li>
+              <span className="font-semibold text-on-surface">{i18n("ILR / Earned Settlement")}:</span>{" "}
+              {i18n("Permission to stay in the UK without time limits; now proposed as an earned 10-30 year pathway.")}
+            </li>
+            <li>
+              <span className="font-semibold text-on-surface">{i18n("Skilled Worker visa")}:</span>{" "}
+              {i18n("Work route where employers sponsor eligible roles; baseline 10 years under proposals.")}
+            </li>
+            <li>
+              <span className="font-semibold text-on-surface">{i18n("RQF Level 6")}:</span>{" "}
+              {i18n("Degree-level roles. Below RQF6 in Skilled Worker/Health & Care may face a 15-year baseline.")}
+            </li>
+            <li>
+              <span className="font-semibold text-on-surface">{i18n("Life in the UK Test")}:</span>{" "}
+              {i18n("Mandatory exam on UK culture/values; required before settlement.")}{" "}
+            </li>
+            <li>
+              <span className="font-semibold text-on-surface">{i18n("B2 / C1 English")}:</span>{" "}
+              {i18n("B2 is minimum for settlement; C1 can reduce waiting time by 1 year.")}{" "}
+            </li>
+            <li>
+              <span className="font-semibold text-on-surface">{i18n("Public funds")}:</span>{" "}
+              {i18n("UK benefits (e.g., Universal Credit, housing). Using them can add 5-10 years to settlement time.")}
+            </li>
+            <li>
+              <span className="font-semibold text-on-surface">{i18n("BN(O)")}</span>{" "}
+              {i18n("British National (Overseas) route with a 5-year settlement path.")}
+            </li>
+            <li>
+              <span className="font-semibold text-on-surface">{i18n("NRPF")}</span>{" "}
+              {i18n("No Recourse to Public Funds condition that restricts access to benefits.")}
+            </li>
+            <li>
+              <span className="font-semibold text-on-surface">{i18n("Long Residence route")}:</span>{" "}
+              {i18n("Existing 10-year lawful stay pathway proposed for removal under the consultation.")}
+            </li>
+          </ul>
         </div>
-      </Card>
-    </div>
+      </div>
+    </Card>
   );
 };
