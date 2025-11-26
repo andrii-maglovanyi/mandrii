@@ -938,7 +938,7 @@ export const ILRCalculator = () => {
         <div className={`
           z-50 flex items-start gap-3
           md:py-2
-          lg:py-4
+          lg:py-6
         `}>
           <div
             className={`
@@ -1328,9 +1328,7 @@ export const ILRCalculator = () => {
                     </div>
                   </div>
                   <p className="mt-3 text-xs text-neutral">
-                    {i18n(
-                      "Fees are indicative (as of 2025). Check latest GOV.UK visa/IHS/ILR fee updates. Future rises are likely.",
-                    )}
+                    {i18n("Fees are indicative (as of 2025). Check latest GOV.UK visa/IHS/ILR fee updates.")}
                   </p>
                 </div>
               );
@@ -1351,39 +1349,39 @@ export const ILRCalculator = () => {
             md:space-y-2
           `}>
             <li>
-              <span className="font-semibold text-on-surface">{i18n("ILR / Earned Settlement")}:</span>{" "}
+              <span className="font-semibold text-on-surface">ILR / Earned Settlement:</span>{" "}
               {i18n("Permission to stay in the UK without time limits. Proposed earned route is 10-30 years.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">{i18n("Skilled Worker visa")}:</span>{" "}
+              <span className="font-semibold text-on-surface">Skilled Worker visa:</span>{" "}
               {i18n("Employer-sponsored work visa. Draft rules set a 10-year baseline.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">{i18n("RQF Level 6")}:</span>{" "}
+              <span className="font-semibold text-on-surface">RQF Level 6:</span>{" "}
               {i18n("Degree-level jobs. Lower levels in Skilled Worker/Health & Care may have a 15-year baseline.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">{i18n("Life in the UK Test")}:</span>{" "}
+              <span className="font-semibold text-on-surface">Life in the UK Test:</span>{" "}
               {i18n("Required culture/values test before settlement.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">{i18n("B2 / C1 English")}:</span>{" "}
+              <span className="font-semibold text-on-surface">B2 / C1 English:</span>{" "}
               {i18n("B2 is the minimum. C1 can cut waiting time by 1 year.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">{i18n("Public funds")}:</span>{" "}
+              <span className="font-semibold text-on-surface">Public funds:</span>{" "}
               {i18n("UK benefits (e.g., Universal Credit, housing). Using them can add 5-10 years to settlement time.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">{i18n("BN(O)")}</span>{" "}
+              <span className="font-semibold text-on-surface">BN(O):</span>{" "}
               {i18n("British National (Overseas) route with a 5-year settlement path.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">{i18n("NRPF")}</span>{" "}
+              <span className="font-semibold text-on-surface">NRPF:</span>{" "}
               {i18n("No Recourse to Public Funds condition that restricts access to benefits.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">{i18n("Long Residence route")}:</span>{" "}
+              <span className="font-semibold text-on-surface">Long Residence route:</span>{" "}
               {i18n("Existing 10-year lawful stay route proposed for removal in the draft plans.")}
             </li>
           </ul>
