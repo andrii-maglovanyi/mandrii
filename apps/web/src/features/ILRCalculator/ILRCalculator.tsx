@@ -82,7 +82,7 @@ const feeConfig = {
 const ilrSchema = getILRCalculatorSchema();
 
 const steps = [
-  { icon: Users, key: "Family" },
+  { icon: Users, key: "Visa" },
   { icon: Briefcase, key: "Income" },
   { icon: Shield, key: "Compliance" },
 ] as const;
@@ -250,280 +250,283 @@ export const ILRCalculator = () => {
 
   const [result, setResult] = useState<ILROutcome | null>(null);
 
-  const computeOutcome = useCallback((currentValues: ILRValues, requireBaseDate = false): ILROutcome | null => {
-    const visaStartDate = currentValues.visaStartDate ? new Date(currentValues.visaStartDate) : undefined;
-    const arrivalDate = currentValues.arrivalDate ? new Date(currentValues.arrivalDate) : undefined;
-    const baseDate = visaStartDate ?? arrivalDate;
-    const selectedCategory = currentValues.visaCategory;
-    const isBNO = selectedCategory === "bno";
-    const isGlobalTalent = selectedCategory === "global-talent";
-    const isInnovatorFounder = selectedCategory === "innovator";
-    const refugeeRoute = selectedCategory === "refugee";
-    const isUkraine = selectedCategory === "ukraine";
-    const entryMethod = refugeeRoute || isUkraine ? "legal" : currentValues.entryMethod;
+  const computeOutcome = useCallback(
+    (currentValues: ILRValues, requireBaseDate = false): ILROutcome | null => {
+      const visaStartDate = currentValues.visaStartDate ? new Date(currentValues.visaStartDate) : undefined;
+      const arrivalDate = currentValues.arrivalDate ? new Date(currentValues.arrivalDate) : undefined;
+      const baseDate = visaStartDate ?? arrivalDate;
+      const selectedCategory = currentValues.visaCategory;
+      const isBNO = selectedCategory === "bno";
+      const isGlobalTalent = selectedCategory === "global-talent";
+      const isInnovatorFounder = selectedCategory === "innovator";
+      const refugeeRoute = selectedCategory === "refugee";
+      const isUkraine = selectedCategory === "ukraine";
+      const entryMethod = refugeeRoute || isUkraine ? "legal" : currentValues.entryMethod;
 
-    if (requireBaseDate && !baseDate) return null;
+      if (requireBaseDate && !baseDate) return null;
 
-    const baselineYears = 10;
-    const adjustments: Adjustment[] = [];
-    const warnings: string[] = [];
+      const baselineYears = 10;
+      const adjustments: Adjustment[] = [];
+      const warnings: string[] = [];
 
-    const income = parseFloat(currentValues.currentIncome || "0") || 0;
-    const incomeYears = Math.max(0, currentValues.incomeYears ?? 0);
-    const reductionCandidates: Adjustment[] = [];
-    const addReductionCandidate = (years: number, reason: string) =>
-      reductionCandidates.push({ reason, type: "reduction", years });
+      const income = parseFloat(currentValues.currentIncome || "0") || 0;
+      const incomeYears = Math.max(0, currentValues.incomeYears ?? 0);
+      const reductionCandidates: Adjustment[] = [];
+      const addReductionCandidate = (years: number, reason: string) =>
+        reductionCandidates.push({ reason, type: "reduction", years });
 
-    if (isBNO) {
-      addReductionCandidate(5, i18n("British National (Overseas) status"));
-    }
-
-    if (isGlobalTalent || isInnovatorFounder) {
-      addReductionCandidate(7, i18n("Global Talent/Innovator Founder route"));
-    }
-
-    if (currentValues.isBritishPartner) {
-      addReductionCandidate(5, i18n("Partner of British citizen"));
-    }
-
-    if (income >= 125_140 && incomeYears >= 3) {
-      addReductionCandidate(7, i18n("Annual income £125,140+"));
-    } else if (income >= 50_270 && incomeYears >= 3) {
-      addReductionCandidate(5, i18n("Annual income £50,270-£125,140"));
-    } else if ((income >= 50_270 || income >= 125_140) && incomeYears < 3) {
-      warnings.push(
-        i18n("High income reductions require at least 3 years at that level; reduction not applied for now."),
-      );
-    }
-
-    if (
-      currentValues.isPublicService &&
-      Math.max(0, currentValues.publicServiceYears ?? 0) >= 5 &&
-      currentValues.occupationLevel === "RQF6+"
-    ) {
-      addReductionCandidate(5, i18n("Public service employment (5+ years at RQF6+)"));
-    }
-
-    if (currentValues.englishLevel === "C1" || currentValues.englishLevel === "C2") {
-      addReductionCandidate(1, i18n("Advanced English (C1/C2 level)"));
-    }
-
-    if (currentValues.hasVolunteering) {
-      const volunteeringReduction = Math.min(
-        5,
-        Math.max(3, Number(currentValues.volunteeringReductionYears ?? volunteeringReductionOptions[0].value)),
-      );
-      addReductionCandidate(volunteeringReduction, i18n("Community volunteering (proposal: minus 3-5 years)"));
-      warnings.push(
-        i18n(
-          "Volunteering reduction is consultative and subject to how contribution is measured/validated; treat as illustrative.",
-        ),
-      );
-    }
-
-    const bestReduction = reductionCandidates.sort((a, b) => b.years - a.years)[0] ?? null;
-
-    let baseYears = baselineYears;
-    let baseFloor = baselineYears;
-    let hasFloorOverride = false;
-    const baselineIncreaseAdjustments: Adjustment[] = [];
-
-    const registerBaselineFloor = (minYears: number, reason: string) => {
-      if (minYears > baseFloor) {
-        baseFloor = minYears;
-        hasFloorOverride = true;
-        baselineIncreaseAdjustments.push({ reason, type: "baseline", years: minYears });
+      if (isBNO) {
+        addReductionCandidate(5, i18n("British National (Overseas) status"));
       }
-    };
 
-    if (
-      (currentValues.visaCategory === "skilled-worker" || currentValues.visaCategory === "skilled-worker-care") &&
-      currentValues.occupationLevel === "RQF3-5"
-    ) {
-      registerBaselineFloor(15, i18n("Skilled Worker/Health & Care role below RQF6 (fixed 15-year baseline)"));
-      warnings.push(
-        i18n(
-          "The 15-year baseline for roles below RQF6 is a consultation option (not final policy); check for updates.",
-        ),
-      );
-    }
+      if (isGlobalTalent || isInnovatorFounder) {
+        addReductionCandidate(7, i18n("Global Talent/Innovator Founder route"));
+      }
 
-    if (refugeeRoute) {
-      if (currentValues.refugeeType === "in-country") {
-        registerBaselineFloor(20, i18n("In-country asylum seeker (core protection route)"));
-      } else if (currentValues.refugeeType === "resettled" || currentValues.refugeeType === "") {
-        registerBaselineFloor(10, i18n("Resettled refugee route"));
+      if (currentValues.isBritishPartner) {
+        addReductionCandidate(5, i18n("Partner of British citizen"));
+      }
+
+      if (income >= 125_140 && incomeYears >= 3) {
+        addReductionCandidate(7, i18n("Annual income £125,140+"));
+      } else if (income >= 50_270 && incomeYears >= 3) {
+        addReductionCandidate(5, i18n("Annual income £50,270-£125,140"));
+      } else if ((income >= 50_270 || income >= 125_140) && incomeYears < 3) {
+        warnings.push(
+          i18n("High income reductions require at least 3 years at that level; reduction not applied for now."),
+        );
+      }
+
+      if (
+        currentValues.isPublicService &&
+        Math.max(0, currentValues.publicServiceYears ?? 0) >= 5 &&
+        currentValues.occupationLevel === "RQF6+"
+      ) {
+        addReductionCandidate(5, i18n("Public service employment (5+ years at RQF6+)"));
+      }
+
+      if (currentValues.englishLevel === "C1" || currentValues.englishLevel === "C2") {
+        addReductionCandidate(1, i18n("Advanced English (C1/C2 level)"));
+      }
+
+      if (currentValues.hasVolunteering) {
+        const volunteeringReduction = Math.min(
+          5,
+          Math.max(3, Number(currentValues.volunteeringReductionYears ?? volunteeringReductionOptions[0].value)),
+        );
+        addReductionCandidate(volunteeringReduction, i18n("Community volunteering (proposal: minus 3-5 years)"));
+        warnings.push(
+          i18n(
+            "Volunteering reduction is consultative and subject to how contribution is measured/validated; treat as illustrative.",
+          ),
+        );
+      }
+
+      const bestReduction = reductionCandidates.sort((a, b) => b.years - a.years)[0] ?? null;
+
+      let baseYears = baselineYears;
+      let baseFloor = baselineYears;
+      let hasFloorOverride = false;
+      const baselineIncreaseAdjustments: Adjustment[] = [];
+
+      const registerBaselineFloor = (minYears: number, reason: string) => {
+        if (minYears > baseFloor) {
+          baseFloor = minYears;
+          hasFloorOverride = true;
+          baselineIncreaseAdjustments.push({ reason, type: "baseline", years: minYears });
+        }
+      };
+
+      if (
+        (currentValues.visaCategory === "skilled-worker" || currentValues.visaCategory === "skilled-worker-care") &&
+        currentValues.occupationLevel === "RQF3-5"
+      ) {
+        registerBaselineFloor(15, i18n("Skilled Worker/Health & Care role below RQF6 (fixed 15-year baseline)"));
+        warnings.push(
+          i18n(
+            "The 15-year baseline for roles below RQF6 is a consultation option (not final policy); check for updates.",
+          ),
+        );
+      }
+
+      if (refugeeRoute) {
+        if (currentValues.refugeeType === "in-country") {
+          registerBaselineFloor(20, i18n("In-country asylum seeker (core protection route)"));
+        } else if (currentValues.refugeeType === "resettled" || currentValues.refugeeType === "") {
+          registerBaselineFloor(10, i18n("Resettled refugee route"));
+        } else {
+          registerBaselineFloor(10, i18n("Refugee route (baseline)"));
+        }
+      }
+
+      const penaltyAdjustments: Adjustment[] = [];
+
+      if (entryMethod === "illegal") {
+        const years = Math.min(20, Math.max(0, Number(currentValues.illegalPenaltyYears ?? 20)));
+        penaltyAdjustments.push({
+          reason: i18n("Illegal entry to UK (up to 20 years)"),
+          type: "penalty",
+          years,
+        });
+      }
+
+      if (entryMethod === "visitor") {
+        const years = Math.min(20, Math.max(0, Number(currentValues.visitorPenaltyYears ?? 20)));
+        penaltyAdjustments.push({
+          reason: i18n("Original entry on visitor visa (up to 20 years)"),
+          type: "penalty",
+          years,
+        });
+      }
+
+      if (currentValues.hasOverstayed && (currentValues.overstayMonths ?? 0) >= 6) {
+        const years = Math.min(20, Math.max(0, Number(currentValues.overstayPenaltyYears ?? 20)));
+        penaltyAdjustments.push({
+          reason: i18n("Overstayed visa by 6+ months (up to 20 years)"),
+          type: "penalty",
+          years,
+        });
+      }
+
+      if (currentValues.claimedBenefits) {
+        const penalty = (currentValues.benefitsMonths ?? 0) >= 12 ? 10 : 5;
+        penaltyAdjustments.push({
+          reason:
+            penalty === 10 ? i18n("Claimed public funds for 12+ months") : i18n("Claimed public funds for <12 months"),
+          type: "penalty",
+          years: penalty,
+        });
+      }
+
+      const bestPenalty = penaltyAdjustments.sort((a, b) => b.years - a.years)[0] ?? null;
+      const baseStart = Math.max(baseFloor, baselineYears);
+      const penaltyYears = bestPenalty?.years ?? 0;
+      const reductionYears = bestReduction?.years ?? 0;
+
+      const combinedYears = baseStart + penaltyYears - reductionYears;
+      if (hasFloorOverride) {
+        baseYears = Math.max(baseFloor, Math.max(3, combinedYears));
       } else {
-        registerBaselineFloor(10, i18n("Refugee route (baseline)"));
+        baseYears = Math.max(3, combinedYears);
       }
-    }
+      adjustments.push(...baselineIncreaseAdjustments);
+      if (bestPenalty) adjustments.push(bestPenalty);
+      if (bestReduction) adjustments.push(bestReduction);
 
-    const penaltyAdjustments: Adjustment[] = [];
+      if (refugeeRoute && baseYears < 10) {
+        warnings.push(
+          i18n("Refugee reductions cannot make the route shorter than the standard 10-year work route baseline."),
+        );
+        baseYears = 10;
+      }
 
-    if (entryMethod === "illegal") {
-      const years = Math.min(20, Math.max(0, Number(currentValues.illegalPenaltyYears ?? 20)));
-      penaltyAdjustments.push({
-        reason: i18n("Illegal entry to UK (up to 20 years)"),
-        type: "penalty",
-        years,
-      });
-    }
+      const incomeRequirementMet = refugeeRoute ? true : income >= 12_570 && incomeYears >= 3;
 
-    if (entryMethod === "visitor") {
-      const years = Math.min(20, Math.max(0, Number(currentValues.visitorPenaltyYears ?? 20)));
-      penaltyAdjustments.push({
-        reason: i18n("Original entry on visitor visa (up to 20 years)"),
-        type: "penalty",
-        years,
-      });
-    }
+      const requirements: Requirement[] = [
+        { met: !currentValues.hasCriminalRecord, text: i18n("No criminal record") },
+        {
+          met: currentValues.englishLevel !== "" && currentValues.englishLevel !== "below-B2",
+          text: i18n("English language at least B2"),
+        },
+        { met: !!currentValues.passedLifeInUK, text: i18n("Passed Life in the UK test") },
+        { met: !currentValues.hasDebts, text: i18n("No outstanding debts to UK government (NHS, tax, etc.)") },
+        refugeeRoute
+          ? {
+              met: true,
+              text: i18n("Income requirement waived for refugee routes"),
+            }
+          : {
+              met: incomeRequirementMet,
+              text: i18n("Sustained income of £12,570+ for at least 3 years (consultation: 3-5 years)"),
+            },
+      ];
 
-    if (currentValues.hasOverstayed && (currentValues.overstayMonths ?? 0) >= 6) {
-      const years = Math.min(20, Math.max(0, Number(currentValues.overstayPenaltyYears ?? 20)));
-      penaltyAdjustments.push({
-        reason: i18n("Overstayed visa by 6+ months (up to 20 years)"),
-        type: "penalty",
-        years,
-      });
-    }
-
-    if (currentValues.claimedBenefits) {
-      const penalty = (currentValues.benefitsMonths ?? 0) >= 12 ? 10 : 5;
-      penaltyAdjustments.push({
-        reason:
-          penalty === 10 ? i18n("Claimed public funds for 12+ months") : i18n("Claimed public funds for <12 months"),
-        type: "penalty",
-        years: penalty,
-      });
-    }
-
-    const bestPenalty = penaltyAdjustments.sort((a, b) => b.years - a.years)[0] ?? null;
-    const baseStart = Math.max(baseFloor, baselineYears);
-    const penaltyYears = bestPenalty?.years ?? 0;
-    const reductionYears = bestReduction?.years ?? 0;
-
-    const combinedYears = baseStart + penaltyYears - reductionYears;
-    if (hasFloorOverride) {
-      baseYears = Math.max(baseFloor, Math.max(3, combinedYears));
-    } else {
-      baseYears = Math.max(3, combinedYears);
-    }
-    adjustments.push(...baselineIncreaseAdjustments);
-    if (bestPenalty) adjustments.push(bestPenalty);
-    if (bestReduction) adjustments.push(bestReduction);
-
-    if (refugeeRoute && baseYears < 10) {
-      warnings.push(
-        i18n("Refugee reductions cannot make the route shorter than the standard 10-year work route baseline."),
-      );
-      baseYears = 10;
-    }
-
-    const incomeRequirementMet = refugeeRoute ? true : income >= 12_570 && incomeYears >= 3;
-
-    const requirements: Requirement[] = [
-      { met: !currentValues.hasCriminalRecord, text: i18n("No criminal record") },
-      {
-        met: currentValues.englishLevel !== "" && currentValues.englishLevel !== "below-B2",
-        text: i18n("English language at least B2"),
-      },
-      { met: !!currentValues.passedLifeInUK, text: i18n("Passed Life in the UK test") },
-      { met: !currentValues.hasDebts, text: i18n("No outstanding debts to UK government (NHS, tax, etc.)") },
-      refugeeRoute
-        ? {
-            met: true,
-            text: i18n("Income requirement waived for refugee routes"),
-          }
-        : {
-            met: incomeRequirementMet,
-            text: i18n("Sustained income of £12,570+ for at least 3 years (consultation: 3-5 years)"),
-          },
-    ];
-
-    if (!refugeeRoute && income >= 12_570 && incomeYears >= 3 && incomeYears < 5) {
+      if (!refugeeRoute && income >= 12_570 && incomeYears >= 3 && incomeYears < 5) {
+        warnings.push(
+          i18n(
+            "Income threshold duration is under consultation (3-5 years); requirement may tighten to 5 years. Adjust accordingly.",
+          ),
+        );
+      }
       warnings.push(
         i18n(
-          "Income threshold duration is under consultation (3-5 years); requirement may tighten to 5 years. Adjust accordingly.",
+          "Consultation runs to Feb 2026; timelines and requirements may change once final policy is set. Always verify latest rules.",
         ),
       );
-    }
-    warnings.push(
-      i18n(
-        "Consultation runs to Feb 2026; timelines and requirements may change once final policy is set. Always verify latest rules.",
-      ),
-    );
 
-    const blockingRequirements: Requirement[] = [];
-    const hasUkraineBlock = currentValues.visaCategory === "ukraine";
-    const hasCriminalBlock = !!currentValues.hasCriminalRecord;
-    if (hasUkraineBlock) {
-      blockingRequirements.push({
-        met: false,
-        text: i18n("Ukraine Scheme currently does not lead to ILR; no settlement route available."),
-      });
-    }
-    if (currentValues.hasCriminalRecord) {
-      blockingRequirements.push({ met: false, text: i18n("Criminal record blocks settlement eligibility") });
-    }
-    if (currentValues.hasDebts) {
-      blockingRequirements.push({
-        met: false,
-        text: i18n("Outstanding government debts block settlement eligibility"),
-      });
-    }
-    if (!refugeeRoute && (income < 12_570 || (currentValues.incomeYears ?? 0) < 3)) {
-      blockingRequirements.push({
-        met: false,
-        text: i18n("Income below £12,570 or under 3 years at that level fails the contribution requirement"),
-      });
-    }
-
-    let ilrDate: Date | undefined;
-    let earliestApplicationDate: Date | undefined;
-    if (baseDate) {
-      ilrDate = new Date(baseDate);
-      ilrDate.setFullYear(ilrDate.getFullYear() + baseYears);
-      earliestApplicationDate = new Date(ilrDate);
-      earliestApplicationDate.setDate(earliestApplicationDate.getDate() - EARLY_APPLICATION_DAYS);
-    }
-
-    let partnerYears: null | number = null;
-    const partnerAdjustments: PartnerAdjustment[] = [];
-
-    if (currentValues.hasPartner && !currentValues.isBritishPartner) {
-      partnerYears = 10;
-
-      if (currentValues.partnerWorkStatus === "working-high") {
-        partnerYears -= 5;
-        partnerAdjustments.push({
-          reason: i18n("Partner earns £50,270+ (own contribution)"),
-          type: "reduction",
-          years: 5,
-        });
-      } else if (currentValues.partnerWorkStatus === "not-working") {
-        partnerAdjustments.push({
-          reason: i18n("Partner not working - may need 10-year route or own contribution (work/volunteering)."),
-          type: "info",
+      const blockingRequirements: Requirement[] = [];
+      const hasUkraineBlock = currentValues.visaCategory === "ukraine";
+      const hasCriminalBlock = !!currentValues.hasCriminalRecord;
+      if (hasUkraineBlock) {
+        blockingRequirements.push({
+          met: false,
+          text: i18n("Ukraine Scheme currently does not lead to ILR; no settlement route available."),
         });
       }
-    }
+      if (currentValues.hasCriminalRecord) {
+        blockingRequirements.push({ met: false, text: i18n("Criminal record blocks settlement eligibility") });
+      }
+      if (currentValues.hasDebts) {
+        blockingRequirements.push({
+          met: false,
+          text: i18n("Outstanding government debts block settlement eligibility"),
+        });
+      }
+      if (!refugeeRoute && (income < 12_570 || (currentValues.incomeYears ?? 0) < 3)) {
+        blockingRequirements.push({
+          met: false,
+          text: i18n("Income below £12,570 or under 3 years at that level fails the contribution requirement"),
+        });
+      }
 
-    return {
-      adjustments,
-      allRequirementsMet: requirements.every((r) => r.met),
-      blockingRequirements,
-      earliestApplicationDate,
-      hasCriminalBlock,
-      hasUkraineBlock,
-      ilrDate,
-      mainApplicantYears: baseYears,
-      partnerAdjustments,
-      partnerYears,
-      requirements,
-      visaStartDate,
-      warnings,
-    };
-  }, [i18n, volunteeringReductionOptions]);
+      let ilrDate: Date | undefined;
+      let earliestApplicationDate: Date | undefined;
+      if (baseDate) {
+        ilrDate = new Date(baseDate);
+        ilrDate.setFullYear(ilrDate.getFullYear() + baseYears);
+        earliestApplicationDate = new Date(ilrDate);
+        earliestApplicationDate.setDate(earliestApplicationDate.getDate() - EARLY_APPLICATION_DAYS);
+      }
+
+      let partnerYears: null | number = null;
+      const partnerAdjustments: PartnerAdjustment[] = [];
+
+      if (currentValues.hasPartner && !currentValues.isBritishPartner) {
+        partnerYears = 10;
+
+        if (currentValues.partnerWorkStatus === "working-high") {
+          partnerYears -= 5;
+          partnerAdjustments.push({
+            reason: i18n("Partner earns £50,270+ (own contribution)"),
+            type: "reduction",
+            years: 5,
+          });
+        } else if (currentValues.partnerWorkStatus === "not-working") {
+          partnerAdjustments.push({
+            reason: i18n("Partner not working - may need 10-year route or own contribution (work/volunteering)."),
+            type: "info",
+          });
+        }
+      }
+
+      return {
+        adjustments,
+        allRequirementsMet: requirements.every((r) => r.met),
+        blockingRequirements,
+        earliestApplicationDate,
+        hasCriminalBlock,
+        hasUkraineBlock,
+        ilrDate,
+        mainApplicantYears: baseYears,
+        partnerAdjustments,
+        partnerYears,
+        requirements,
+        visaStartDate,
+        warnings,
+      };
+    },
+    [i18n, volunteeringReductionOptions],
+  );
 
   useEffect(() => {
     const parsed = ilrSchema.safeParse(values);
@@ -692,7 +695,93 @@ export const ILRCalculator = () => {
           </StepSection>
         );
 
-      case "Family":
+      case "Income":
+        return (
+          <StepSection
+            description={i18n("Your work, salary and contribution to the UK.")}
+            icon={Briefcase}
+            title={i18n("Employment & income")}
+          >
+            <div className={`
+              my-8 grid gap-4
+              md:grid-cols-2
+            `}>
+              <Input
+                {...getFieldProps("currentIncome")}
+                label={i18n("Current annual income (before tax)")}
+                placeholder={i18n("e.g., 35000")}
+                type="number"
+              />
+              <Input
+                {...numberFieldProps("incomeYears")}
+                label={i18n("Years at/above this income (min 3 years)")}
+                max={20}
+                min={0}
+                type="number"
+              />
+              <Select
+                {...getFieldProps("occupationLevel")}
+                label={i18n("Occupation level")}
+                options={occupationLevelOptions}
+                placeholder={i18n("Select level")}
+              />
+            </div>
+            <p className="text-sm text-neutral">
+              {i18n(
+                "Use taxable income (after pension deductions) averaged over the last 3 years. RQF6+ includes professional roles that normally require a degree.",
+              )}
+            </p>
+
+            <div className={clsx(values.isPublicService ? `
+              -m-4 mb-8 rounded-lg bg-neutral/10 p-4 pb-0
+            ` : "")}>
+              <Checkbox
+                {...getFieldProps("isPublicService")}
+                label={i18n("I work in public services (NHS, teaching, etc.)")}
+              />
+              {values.isPublicService && (
+                <div className="mt-3 max-w-xs">
+                  <Input
+                    className="max-w-28"
+                    {...numberFieldProps("publicServiceYears")}
+                    label={i18n("Years in public service")}
+                    max={40}
+                    min={0}
+                    type="number"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className={clsx(values.hasVolunteering ? `
+              -m-4 mb-4 rounded-lg bg-neutral/10 p-4 pb-0
+            ` : "")}>
+              <Checkbox {...getFieldProps("hasVolunteering")} label={i18n("I do community volunteering")} />
+              {values.hasVolunteering && (
+                <div className={`
+                  mt-3 grid gap-3
+                  md:grid-cols-2
+                `}>
+                  <Input
+                    className="max-w-28"
+                    {...numberFieldProps("volunteeringHours")}
+                    label={i18n("Approximate total volunteering hours")}
+                    placeholder={i18n("e.g., 500")}
+                    type="number"
+                  />
+                  <Select
+                    {...selectNumberFieldProps("volunteeringReductionYears")}
+                    label={i18n("Apply volunteering reduction (3-5 years)")}
+                    options={volunteeringReductionOptions}
+                    placeholder={i18n("Select reduction")}
+                  />
+                </div>
+              )}
+            </div>
+          </StepSection>
+        );
+
+      case "Visa":
         return (
           <StepSection
             description={i18n("Tell us about how and when you came to the UK, and your household.")}
@@ -803,99 +892,15 @@ export const ILRCalculator = () => {
           </StepSection>
         );
 
-      case "Income":
-        return (
-          <StepSection
-            description={i18n("Your work, salary and contribution to the UK.")}
-            icon={Briefcase}
-            title={i18n("Employment & income")}
-          >
-            <div className={`
-              my-8 grid gap-4
-              md:grid-cols-2
-            `}>
-              <Input
-                {...getFieldProps("currentIncome")}
-                label={i18n("Current annual income (before tax)")}
-                placeholder={i18n("e.g., 35000")}
-                type="number"
-              />
-              <Input
-                {...numberFieldProps("incomeYears")}
-                label={i18n("Years at/above this income (min 3 years)")}
-                max={20}
-                min={0}
-                type="number"
-              />
-              <Select
-                {...getFieldProps("occupationLevel")}
-                label={i18n("Occupation level")}
-                options={occupationLevelOptions}
-                placeholder={i18n("Select level")}
-              />
-            </div>
-            <p className="text-sm text-neutral">
-              {i18n(
-                "Use taxable income (after pension deductions) averaged over the last 3 years. RQF6+ includes professional roles that normally require a degree.",
-              )}
-            </p>
-
-            <div className={clsx(values.isPublicService ? `
-              -m-4 mb-8 rounded-lg bg-neutral/10 p-4 pb-0
-            ` : "")}>
-              <Checkbox
-                {...getFieldProps("isPublicService")}
-                label={i18n("I work in public services (NHS, teaching, etc.)")}
-              />
-              {values.isPublicService && (
-                <div className="mt-3 max-w-xs">
-                  <Input
-                    className="max-w-28"
-                    {...numberFieldProps("publicServiceYears")}
-                    label={i18n("Years in public service")}
-                    max={40}
-                    min={0}
-                    type="number"
-                  />
-                </div>
-              )}
-            </div>
-
-            <div className={clsx(values.hasVolunteering ? `
-              -m-4 mb-4 rounded-lg bg-neutral/10 p-4 pb-0
-            ` : "")}>
-              <Checkbox {...getFieldProps("hasVolunteering")} label={i18n("I do community volunteering")} />
-              {values.hasVolunteering && (
-                <div className={`
-                  mt-3 grid gap-3
-                  md:grid-cols-2
-                `}>
-                  <Input
-                    className="max-w-28"
-                    {...numberFieldProps("volunteeringHours")}
-                    label={i18n("Approximate total volunteering hours")}
-                    placeholder={i18n("e.g., 500")}
-                    type="number"
-                  />
-                  <Select
-                    {...selectNumberFieldProps("volunteeringReductionYears")}
-                    label={i18n("Apply volunteering reduction (3-5 years)")}
-                    options={volunteeringReductionOptions}
-                    placeholder={i18n("Select reduction")}
-                  />
-                </div>
-              )}
-            </div>
-          </StepSection>
-        );
-
       default:
         return null;
     }
   };
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className={`
+      mx-auto max-w-5xl rounded-3xl border-2 border-primary shadow-lg
+    `}>
       <Card className={`
         h-max overflow-hidden rounded-3xl
         md:bg-surface md:shadow-xl
@@ -919,7 +924,7 @@ export const ILRCalculator = () => {
             />
             <div
               className="absolute inset-0"
-              style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 55%, rgba(255,255,255,1) 100%)" }}
+              style={{ background: "linear-gradient(90deg, transparent 55%, var(--color-surface) 100%)" }}
             />
           </div>
           <div className={`

@@ -1,24 +1,24 @@
 "use client";
 
-import { Calculator, Rocket } from "lucide-react";
+import { Calculator, Clock } from "lucide-react";
 import Link from "next/link";
 
 import { Breadcrumbs } from "~/components/ui";
 import { ILRCalculator } from "~/features";
 import { useI18n } from "~/i18n/useI18n";
 
-const tools = [
-  {
-    descriptionKey: "Estimate earned settlement timelines and fees under the consultation rules.",
-    href: "/guides/tools-and-calculators/ilr",
-    slug: "ilr",
-    statusKey: "Live",
-    titleKey: "ILR calculator",
-  },
-];
-
 export default function ToolsAndCalculatorsPage() {
   const i18n = useI18n();
+
+  const tools = [
+    {
+      descriptionKey: i18n("Estimate earned settlement timelines and fees under the consultation rules."),
+      href: "/guides/tools-and-calculators/ilr",
+      slug: "ilr",
+      statusKey: "Live",
+      titleKey: "ILR calculator",
+    },
+  ];
 
   return (
     <main className={`
@@ -64,7 +64,7 @@ export default function ToolsAndCalculatorsPage() {
             <div className="flex items-center justify-between">
               <span className="text-lg font-semibold text-on-surface">{i18n(tool.titleKey)}</span>
               <span className={`
-                rounded-full bg-green-100 px-3 py-1 text-xs font-semibold
+                rounded-lg bg-green-100 px-3 py-1.5 text-xs font-semibold
                 text-green-700
               `}>
                 {i18n(tool.statusKey)}
@@ -90,18 +90,18 @@ export default function ToolsAndCalculatorsPage() {
         <div
           className={`
             flex flex-col justify-between rounded-xl border border-dashed
-            border-neutral-200 bg-surface/60 p-5
+            border-neutral bg-surface/60 p-5
             lg:col-span-2
           `}
         >
           <div className="space-y-2">
             <div
               className={`
-                inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3
-                py-1 text-xs font-semibold text-neutral
+                inline-flex items-center gap-2 rounded-lg bg-neutral/20 px-3
+                py-1.5 text-xs font-semibold text-neutral
               `}
             >
-              <Rocket className="h-4 w-4" />
+              <Clock className="h-4 w-4" />
               {i18n("Coming soon")}
             </div>
             <p className="text-lg font-semibold text-on-surface">{i18n("More helpers on the way")}</p>
@@ -120,13 +120,12 @@ export default function ToolsAndCalculatorsPage() {
 
       <section className="space-y-4" id="ilr-calculator">
         <div>
-          <p className="text-xs font-semibold text-primary uppercase">{i18n("Live tool")}</p>
           <h2 className={`
             text-2xl font-bold text-on-surface
             md:text-3xl
           `}>{i18n("ILR calculator")}</h2>
           <p className={`
-            mt-1 max-w-3xl text-sm text-neutral
+            mt-1 text-sm text-neutral
             md:text-base
           `}>
             {i18n(
@@ -134,11 +133,7 @@ export default function ToolsAndCalculatorsPage() {
             )}
           </p>
         </div>
-        <div className={`
-          rounded-3xl border border-neutral-200 bg-white shadow-lg
-        `}>
-          <ILRCalculator />
-        </div>
+        <ILRCalculator />
       </section>
     </main>
   );
