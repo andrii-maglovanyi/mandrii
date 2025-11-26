@@ -96,14 +96,27 @@ export default async function GuidesPage({ params }: GuidesPageProps) {
               href={`/guides/${topic.slug}`}
               key={topic.slug}
             >
-              <div className={`
-                flex h-10 w-10 shrink-0 items-center justify-center rounded-lg
-                bg-primary/10
-              `}>
-                <Icon className="h-5 w-5 text-primary" />
+              <div
+                className={clsx(
+                  `
+                    flex h-10 w-10 shrink-0 items-center justify-center
+                    rounded-lg
+                  `,
+                  topic.disabled ? "bg-neutral/10" : "bg-primary/10",
+                )}
+              >
+                <Icon className={clsx("h-5 w-5", topic.disabled ? "text-neutral" : `
+                  text-primary
+                `)} />
               </div>
               <div>
-                <strong className="flex h-10 items-center text-lg">{topic.title}</strong>
+                <strong
+                  className={clsx("flex h-10 items-center text-lg", topic.disabled ? `
+                    text-neutral
+                  ` : `text-primary`)}
+                >
+                  {topic.title}
+                </strong>
                 <p className="text-sm text-neutral">{topic.description}</p>
               </div>
             </Link>

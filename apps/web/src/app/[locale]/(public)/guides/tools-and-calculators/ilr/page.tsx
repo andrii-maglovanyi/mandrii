@@ -20,7 +20,6 @@ export default function GuidesILRCalculatorPage() {
         ]}
       />
       <div className="mt-6 mb-10 space-y-3">
-        <p className="text-xs font-semibold text-primary uppercase">{i18n("Live tool")}</p>
         <h1 className={`
           text-3xl font-extrabold text-on-surface
           md:text-5xl
@@ -35,9 +34,7 @@ export default function GuidesILRCalculatorPage() {
         </p>
       </div>
 
-      <div className="rounded-3xl border border-neutral-200 bg-white shadow-lg">
-        <ILRCalculator />
-      </div>
+      <ILRCalculator />
     </main>
   );
 }

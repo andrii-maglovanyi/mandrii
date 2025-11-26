@@ -876,9 +876,6 @@ msgstr ""
 msgid "British National (Overseas)"
 msgstr ""
 
-msgid "Other"
-msgstr ""
-
 msgid "Legal entry with valid visa/permission"
 msgstr ""
 
@@ -1065,6 +1062,48 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
+msgid "Language skills and compliance with UK rules."
+msgstr ""
+
+msgid "Integration & compliance"
+msgstr ""
+
+msgid "English language level"
+msgstr ""
+
+msgid "Select level"
+msgstr ""
+
+msgid "I have passed the Life in the UK test"
+msgstr ""
+
+msgid "Compliance questions"
+msgstr ""
+
+msgid "I have a criminal record in the UK"
+msgstr ""
+
+msgid "I have outstanding debts to the UK government (NHS, tax, etc.)"
+msgstr ""
+
+msgid "I have overstayed my visa"
+msgstr ""
+
+msgid "Overstay duration (months)"
+msgstr ""
+
+msgid "Penalty to apply (consultation cap: up to 20 years)"
+msgstr ""
+
+msgid "Select penalty"
+msgstr ""
+
+msgid "I have claimed public funds (benefits)"
+msgstr ""
+
+msgid "Duration of benefits (months)"
+msgstr ""
+
 msgid "Tell us about how and when you came to the UK, and your household."
 msgstr ""
 
@@ -1093,12 +1132,6 @@ msgid "Ukraine Scheme entry is via approved permission; visitor/irregular entry 
 msgstr ""
 
 msgid "How did you enter the UK?"
-msgstr ""
-
-msgid "Penalty to apply (consultation cap: up to 20 years)"
-msgstr ""
-
-msgid "Select penalty"
 msgstr ""
 
 msgid "I have a partner/spouse"
@@ -1137,9 +1170,6 @@ msgstr ""
 msgid "Occupation level"
 msgstr ""
 
-msgid "Select level"
-msgstr ""
-
 msgid "Use taxable income (after pension deductions) averaged over the last 3 years. RQF6+ includes professional roles that normally require a degree."
 msgstr ""
 
@@ -1162,39 +1192,6 @@ msgid "Apply volunteering reduction (3-5 years)"
 msgstr ""
 
 msgid "Select reduction"
-msgstr ""
-
-msgid "Language skills and compliance with UK rules."
-msgstr ""
-
-msgid "Integration & compliance"
-msgstr ""
-
-msgid "English language level"
-msgstr ""
-
-msgid "I have passed the Life in the UK test"
-msgstr ""
-
-msgid "Compliance questions"
-msgstr ""
-
-msgid "I have a criminal record in the UK"
-msgstr ""
-
-msgid "I have outstanding debts to the UK government (NHS, tax, etc.)"
-msgstr ""
-
-msgid "I have overstayed my visa"
-msgstr ""
-
-msgid "Overstay duration (months)"
-msgstr ""
-
-msgid "I have claimed public funds (benefits)"
-msgstr ""
-
-msgid "Duration of benefits (months)"
 msgstr ""
 
 msgid "UK Earned Settlement (ILR) calculator"
@@ -1812,40 +1809,40 @@ msgstr ""
 msgid "Thank you for being part of this adventure."
 msgstr ""
 
-msgid "Visas & immigration"
-msgstr ""
-
 msgid "Requirements, routes, timelines and practical steps."
 msgstr ""
 
-msgid "Jobs & work"
+msgid "Visas & immigration"
 msgstr ""
 
 msgid "How to find a job, employment rights, CVs and interviews."
 msgstr ""
 
-msgid "Money & taxes"
+msgid "Jobs & work"
 msgstr ""
 
 msgid "Bank accounts, taxes, NI, pensions, benefits rules."
 msgstr ""
 
-msgid "Family & kids"
+msgid "Money & taxes"
 msgstr ""
 
 msgid "Birth, schools, family visas and everyday parenting issues."
 msgstr ""
 
-msgid "Registration & documents"
+msgid "Family & kids"
 msgstr ""
 
 msgid "Register a car, GP, address, ID and paperwork."
 msgstr ""
 
-msgid "Tools & calculators"
+msgid "Registration & documents"
 msgstr ""
 
 msgid "ILR calculator and more practical helpers."
+msgstr ""
+
+msgid "Tools & calculators"
 msgstr ""
 
 msgid "Guides, community answers and calculators to help you live abroad with fewer surprises."
