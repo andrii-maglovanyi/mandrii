@@ -3,11 +3,14 @@
 import clsx from "clsx";
 import { AlertCircle, Briefcase, Calendar, CheckCircle, Shield, Users } from "lucide-react";
 import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import { z } from "zod";
 
-import { Alert, Card, Checkbox, Input, Select, Separator, TabPane, Tabs } from "~/components/ui";
+import { Alert, Card, Checkbox, Input, RichText, Select, Separator, TabPane, Tabs } from "~/components/ui";
 import { useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
+import { getFlagComponent } from "~/lib/icons/flags";
+import { getIcon, IconName } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { getILRCalculatorSchema, ilrInitialValues } from "~/lib/validation/ilr";
 
@@ -18,6 +21,7 @@ type ILROutcome = {
   blockingRequirements: Requirement[];
   earliestApplicationDate?: Date;
   hasCriminalBlock: boolean;
+  hasStudentBlock: boolean;
   hasUkraineBlock: boolean;
   ilrDate?: Date;
   mainApplicantYears: number;
@@ -27,6 +31,9 @@ type ILROutcome = {
   visaStartDate?: Date;
   warnings: string[];
 };
+
+const ilrSchema = getILRCalculatorSchema();
+
 type ILRValues = z.infer<typeof ilrSchema>;
 type PartnerAdjustment = { reason: string; type: string; years?: number };
 type Requirement = { met: boolean; text: string };
@@ -80,15 +87,6 @@ const feeConfig = {
   defaultIhsPerYear: 1035,
   defaultVisaBands: [{ durationYears: 3, fee: 625 }],
 } as const;
-const ilrSchema = getILRCalculatorSchema();
-
-const steps = [
-  { icon: Users, key: "Visa" },
-  { icon: Briefcase, key: "Income" },
-  { icon: Shield, key: "Compliance" },
-] as const;
-
-type StepKey = (typeof steps)[number]["key"];
 
 type StepSectionProps = {
   children: React.ReactNode;
@@ -108,7 +106,7 @@ const StepSection = ({ children, description, icon: Icon, title }: StepSectionPr
       </div>
       <div>
         <h2 className="text-lg font-semibold text-on-surface">{title}</h2>
-        <p className="text-sm text-neutral">{description}</p>
+        <p className="text-neutral">{description}</p>
       </div>
     </div>
     <div className="space-y-6">{children}</div>
@@ -142,46 +140,69 @@ const UnionJack = ({ className, style }: UnionJackProps) => {
 };
 
 export const ILRCalculator = () => {
-  const [activeStep, setActiveStep] = useState<StepKey>(steps[0].key);
+  const i18n = useI18n();
+
+  const steps = [
+    { icon: Users, key: "visa", value: i18n("Visa") },
+    { icon: Briefcase, key: "income", value: i18n("Income") },
+    { icon: Shield, key: "compliance", value: i18n("Compliance") },
+  ] as const;
+
+  const [activeStep, setActiveStep] = useState<string>(steps[0].key);
   const [formError, setFormError] = useState<null | string>(null);
   const [formWarning, setFormWarning] = useState<null | string>(null);
   const [formInfo, setFormInfo] = useState<null | string>(null);
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
-  const i18n = useI18n();
+  const CountryFlag = getFlagComponent("UA");
+
   const visaOptions = useMemo(
-    () => [
-      { label: i18n("Skilled Worker"), value: "skilled-worker" },
-      { label: i18n("Health and Care Worker"), value: "skilled-worker-care" },
-      { label: i18n("Student / Graduate"), value: "student" },
-      { label: i18n("Family (Partner/Parent)"), value: "family" },
-      { label: i18n("Refugee / Asylum"), value: "refugee" },
-      { label: i18n("Ukraine Scheme"), value: "ukraine" },
-      { label: i18n("Global Talent"), value: "global-talent" },
-      { label: i18n("Innovator Founder"), value: "innovator" },
-      { label: i18n("British National (Overseas)"), value: "bno" },
-    ],
-    [i18n],
+    () =>
+      [
+        { label: i18n("Ukraine Schemes"), value: "ukraine" },
+        { iconName: "GraduationCap", label: i18n("Student / Graduate"), value: "student" },
+        { iconName: "Briefcase", label: i18n("Skilled Worker"), value: "skilled-worker" },
+        { iconName: "Users", label: i18n("Family (Partner / Parent)"), value: "family" },
+        { iconName: "Heart", label: i18n("Health & Care Worker"), value: "skilled-worker-care" },
+        { iconName: "LifeBuoy", label: i18n("Refugee / Asylum"), value: "refugee" },
+        { iconName: "Globe", label: i18n("Global Talent"), value: "global-talent" },
+        { iconName: "Lightbulb", label: i18n("Innovator Founder"), value: "innovator" },
+        { iconName: "Crown", label: i18n("British National (Overseas)"), value: "bno" },
+      ].map((option) => ({
+        ...option,
+        label: (
+          <div className="flex items-center gap-3">
+            {option.value === "ukraine" && CountryFlag ? (
+              <CountryFlag className="h-3 w-4 rounded-xs" />
+            ) : (
+              getIcon(option.iconName as IconName)
+            )}{" "}
+            {option.label}
+          </div>
+        ),
+      })),
+    [i18n, CountryFlag],
   );
   const entryOptions = useMemo(
     () => [
-      { label: i18n("Legal entry with valid visa/permission"), value: "legal" },
+      { label: i18n("Legal entry with valid visa"), value: "legal" },
       { label: i18n("Initially on visitor visa"), value: "visitor" },
-      { label: i18n("Irregular entry (small boat, etc.)"), value: "illegal" },
+      { label: i18n("Irregular entry (small boat, etc)"), value: "illegal" },
     ],
     [i18n],
   );
   const occupationLevelOptions = useMemo(
     () => [
-      { label: i18n("RQF Level 6+ (degree level or higher)"), value: "RQF6+" },
-      { label: i18n("RQF Level 3-5 (below degree level)"), value: "RQF3-5" },
+      { label: i18n("RQF Level 6+"), value: "RQF6+" },
+      { label: i18n("RQF Level 3-5"), value: "RQF3-5" },
     ],
     [i18n],
   );
   const englishLevelOptions = useMemo(
     () => [
-      { label: i18n("Below B2 (not yet eligible)"), value: "below-B2" },
-      { label: i18n("B2 - Upper Intermediate (required minimum)"), value: "B2" },
-      { label: i18n("C1 - Advanced (reduces wait)"), value: "C1" },
+      { label: i18n("Below B2 (not eligible)"), value: "below-B2" },
+      { label: i18n("B2 - Upper Intermediate"), value: "B2" },
+      { label: i18n("C1 - Advanced"), value: "C1" },
       { label: i18n("C2 - Proficient"), value: "C2" },
     ],
     [i18n],
@@ -196,24 +217,24 @@ export const ILRCalculator = () => {
   );
   const refugeeTypeOptions = useMemo(
     () => [
-      { label: i18n("In-country asylum claim (claimed after arrival in UK)"), value: "in-country" },
+      { label: i18n("In-country asylum claim (after UK arrival)"), value: "in-country" },
       { label: i18n("Resettled refugee / humanitarian scheme"), value: "resettled" },
     ],
     [i18n],
   );
   const penaltyYearsOptions = useMemo(
     () => [
-      { label: i18n("5 years (consultation option)"), value: "5" },
-      { label: i18n("10 years (consultation option)"), value: "10" },
-      { label: i18n("15 years (consultation option)"), value: "15" },
-      { label: i18n("20 years (up to maximum)"), value: "20" },
+      { label: i18n("5 years (min)"), value: "5" },
+      { label: i18n("10 years"), value: "10" },
+      { label: i18n("15 years"), value: "15" },
+      { label: i18n("20 years (max)"), value: "20" },
     ],
     [i18n],
   );
   const volunteeringReductionOptions = useMemo(
     () => [
-      { label: i18n("3 years (proposal minimum)"), value: "3" },
-      { label: i18n("5 years (proposal maximum)"), value: "5" },
+      { label: i18n("3 years (min)"), value: "3" },
+      { label: i18n("5 years (max)"), value: "5" },
     ],
     [i18n],
   );
@@ -288,14 +309,16 @@ export const ILRCalculator = () => {
         addReductionCandidate(5, i18n("Partner of British citizen"));
       }
 
-      if (income >= 125_140 && incomeYears >= 3) {
+      if (income >= 125_140 && incomeYears < 3) {
+        warnings.push(
+          i18n("Income £125,140+ reductions require at least 3 years at that level. Reduction not applied."),
+        );
+      } else if (income >= 125_140 && incomeYears >= 3) {
         addReductionCandidate(7, i18n("Annual income £125,140+"));
+      } else if (income >= 50_270 && incomeYears < 3) {
+        warnings.push(i18n("High income reductions require at least 3 years at that level. Reduction not applied."));
       } else if (income >= 50_270 && incomeYears >= 3) {
         addReductionCandidate(5, i18n("Annual income £50,270-£125,140"));
-      } else if ((income >= 50_270 || income >= 125_140) && incomeYears < 3) {
-        warnings.push(
-          i18n("High income reductions require at least 3 years at that level. Reduction not applied for now."),
-        );
       }
 
       if (
@@ -315,12 +338,8 @@ export const ILRCalculator = () => {
           5,
           Math.max(3, Number(currentValues.volunteeringReductionYears ?? volunteeringReductionOptions[0].value)),
         );
-        addReductionCandidate(volunteeringReduction, i18n("Community volunteering (proposal: minus 3-5 years)"));
-        warnings.push(
-          i18n(
-            "Volunteering reduction is consultative and subject to how contribution is measured/validated. Treat as illustrative.",
-          ),
-        );
+        addReductionCandidate(volunteeringReduction, i18n("Community volunteering (minus 3-5 years)"));
+        warnings.push(i18n("Volunteering reduction is consultative and subject to how contribution is measured"));
       }
 
       const bestReduction = reductionCandidates.sort((a, b) => b.years - a.years)[0] ?? null;
@@ -405,6 +424,7 @@ export const ILRCalculator = () => {
       const reductionYears = bestReduction?.years ?? 0;
 
       const combinedYears = baseStart + penaltyYears - reductionYears;
+
       if (hasFloorOverride) {
         baseYears = Math.max(baseFloor, Math.max(3, combinedYears));
       } else {
@@ -414,11 +434,16 @@ export const ILRCalculator = () => {
       if (bestPenalty) adjustments.push(bestPenalty);
       if (bestReduction) adjustments.push(bestReduction);
 
-      if (refugeeRoute && baseYears < 10) {
-        warnings.push(
-          i18n("Refugee reductions cannot make the route shorter than the standard 10-year work route baseline."),
-        );
-        baseYears = 10;
+      if (refugeeRoute) {
+        const refugeeFloor = currentValues.refugeeType === "in-country" ? 20 : 10;
+        if (baseYears < refugeeFloor) {
+          warnings.push(
+            i18n("Refugee routes have a minimum baseline of {years} years regardless of reductions.", {
+              years: refugeeFloor,
+            }),
+          );
+          baseYears = refugeeFloor;
+        }
       }
 
       const incomeRequirementMet = refugeeRoute ? true : income >= 12_570 && incomeYears >= 3;
@@ -426,11 +451,11 @@ export const ILRCalculator = () => {
       const requirements: Requirement[] = [
         { met: !currentValues.hasCriminalRecord, text: i18n("No criminal record") },
         {
-          met: currentValues.englishLevel !== "" && currentValues.englishLevel !== "below-B2",
+          met: ["B2", "C1", "C2"].includes(currentValues.englishLevel),
           text: i18n("English language at least B2"),
         },
         { met: !!currentValues.passedLifeInUK, text: i18n("Passed Life in the UK test") },
-        { met: !currentValues.hasDebts, text: i18n("No outstanding debts to UK government (NHS, tax, etc.)") },
+        { met: !currentValues.hasDebts, text: i18n("No outstanding debts") },
         refugeeRoute
           ? {
               met: true,
@@ -438,32 +463,26 @@ export const ILRCalculator = () => {
             }
           : {
               met: incomeRequirementMet,
-              text: i18n("Sustained income of £12,570+ for at least 3 years (consultation: 3-5 years)"),
+              text: i18n("Income of £12,570+ for at least 3 years"),
             },
       ];
 
       if (!refugeeRoute && income >= 12_570 && incomeYears >= 3 && incomeYears < 5) {
         warnings.push(
-          i18n(
-            "Income threshold duration is under consultation (3-5 years). Requirement may tighten to 5 years. Adjust accordingly.",
-          ),
+          i18n("Income threshold duration is under consultation (3-5 years). Requirement may tighten to 5 years."),
         );
       }
       warnings.push(
         i18n(
-          "Consultation runs to Feb 2026. Timelines and requirements may change once final policy is set. Always verify latest rules.",
+          "Consultation runs till 12 February 2026. Timelines and requirements may change once final policy is set, I'll update this tool accordingly.",
         ),
       );
 
       const blockingRequirements: Requirement[] = [];
       const hasUkraineBlock = currentValues.visaCategory === "ukraine";
+      const hasStudentBlock = selectedCategory === "student";
       const hasCriminalBlock = !!currentValues.hasCriminalRecord;
-      if (hasUkraineBlock) {
-        blockingRequirements.push({
-          met: false,
-          text: i18n("Ukraine Scheme currently does not lead to ILR. No settlement route available."),
-        });
-      }
+
       if (currentValues.hasCriminalRecord) {
         blockingRequirements.push({ met: false, text: i18n("Criminal record blocks settlement eligibility") });
       }
@@ -504,7 +523,7 @@ export const ILRCalculator = () => {
           });
         } else if (currentValues.partnerWorkStatus === "not-working") {
           partnerAdjustments.push({
-            reason: i18n("Partner not working - may need 10-year route or own contribution (work/volunteering)."),
+            reason: i18n("Partner not working - may need 10-year route or own contribution (work or volunteering)."),
             type: "info",
           });
         }
@@ -516,6 +535,7 @@ export const ILRCalculator = () => {
         blockingRequirements,
         earliestApplicationDate,
         hasCriminalBlock,
+        hasStudentBlock,
         hasUkraineBlock,
         ilrDate,
         mainApplicantYears: baseYears,
@@ -552,7 +572,7 @@ export const ILRCalculator = () => {
       setResult(null);
       setFormError(null);
       setFormWarning(null);
-      setFormInfo(i18n("Add your visa type, start date or arrival date to generate an estimate."));
+      setFormInfo(i18n("Add your visa type and start date to get an estimate."));
       return;
     }
 
@@ -560,7 +580,19 @@ export const ILRCalculator = () => {
       setResult(null);
       setFormWarning(null);
       setFormInfo(null);
-      setFormError(i18n("Ukraine Scheme currently has no route to ILR under the proposed rules."));
+      setFormError(i18n("Ukraine Scheme currently does not lead to ILR. No settlement route available."));
+      return;
+    }
+
+    if (outcome.hasStudentBlock) {
+      setResult(null);
+      setFormWarning(null);
+      setFormInfo(null);
+      setFormError(
+        i18n(
+          "Student visas do not lead to ILR under the new earned settlement system. You must switch to an eligible visa (such as Skilled Worker or Family visa) first. Only time spent on settlement-eligible routes counts toward the 10-year qualifying period. The old 10-year long residence route has been abolished.",
+        ),
+      );
       return;
     }
 
@@ -618,12 +650,12 @@ export const ILRCalculator = () => {
     };
   };
 
-  const renderStep = (step: StepKey) => {
+  const renderStep = (step: string) => {
     switch (step) {
-      case "Compliance":
+      case "compliance":
         return (
           <StepSection
-            description={i18n("Language and rule checks.")}
+            description={i18n("Language, and compliance with UK laws and regulations.")}
             icon={Shield}
             title={i18n("Integration & compliance")}
           >
@@ -670,7 +702,7 @@ export const ILRCalculator = () => {
                     />
                     <Select
                       {...selectNumberFieldProps("overstayPenaltyYears")}
-                      label={i18n("Penalty to apply (consultation cap: up to 20 years)")}
+                      label={i18n("Penalty (in consultation - up to 20 years)")}
                       options={penaltyYearsOptions}
                       placeholder={i18n("Select penalty")}
                     />
@@ -704,10 +736,10 @@ export const ILRCalculator = () => {
           </StepSection>
         );
 
-      case "Income":
+      case "income":
         return (
           <StepSection
-            description={i18n("Your work and income details.")}
+            description={i18n("Your occupation, income and volunteering details.")}
             icon={Briefcase}
             title={i18n("Employment & income")}
           >
@@ -723,11 +755,13 @@ export const ILRCalculator = () => {
               />
               <Input
                 {...numberFieldProps("incomeYears")}
+                className="max-w-28"
                 label={i18n("Years at/above this income (min 3 years)")}
                 max={20}
                 min={0}
                 type="number"
               />
+
               <Select
                 {...getFieldProps("occupationLevel")}
                 label={i18n("Occupation level")}
@@ -735,11 +769,6 @@ export const ILRCalculator = () => {
                 placeholder={i18n("Select level")}
               />
             </div>
-            <p className="text-sm text-neutral">
-              {i18n(
-                "Use taxable income (after pension deductions) averaged over the last 3 years. RQF6+ includes professional roles that normally require a degree.",
-              )}
-            </p>
 
             <div className={clsx(values.isPublicService ? `
               -m-4 mb-8 rounded-lg bg-neutral/10 p-4 pb-0
@@ -790,12 +819,12 @@ export const ILRCalculator = () => {
           </StepSection>
         );
 
-      case "Visa":
+      case "visa":
         return (
           <StepSection
-            description={i18n("Quick basics about you and your family.")}
+            description={i18n("Choose your visa category, start date and optionally your family details")}
             icon={Users}
-            title={i18n("Family")}
+            title={i18n("Visa & family")}
           >
             <div className={`
               mt-8 grid gap-4
@@ -807,11 +836,7 @@ export const ILRCalculator = () => {
                 options={visaOptions}
                 placeholder={i18n("Select your visa category")}
               />
-              <Input
-                label={i18n("Visa start date (valid-from on vignette/BRP)")}
-                {...getFieldProps("visaStartDate")}
-                type="date"
-              />
+              <Input label={i18n("Visa start date")} {...getFieldProps("visaStartDate")} type="date" />
             </div>
 
             <div className={`
@@ -826,13 +851,7 @@ export const ILRCalculator = () => {
                   options={refugeeTypeOptions}
                   placeholder={i18n("Select type")}
                 />
-              ) : values.visaCategory === "ukraine" ? (
-                <div className={`
-                  rounded-lg bg-neutral/10 p-3 text-sm text-neutral
-                `}>
-                  {i18n("Ukraine Scheme entry is via approved permission. Visitor/irregular entry does not apply.")}
-                </div>
-              ) : (
+              ) : values.visaCategory === "ukraine" ? null : (
                 <Select
                   {...getFieldProps("entryMethod")}
                   label={i18n("How did you enter the UK?")}
@@ -914,8 +933,9 @@ export const ILRCalculator = () => {
       `}
     >
       <div className={`
-        relative z-10 overflow-hidden rounded-3xl px-6 py-6
-        md:rounded-none md:px-8
+        relative z-10 overflow-hidden rounded-3xl px-2 py-6
+        sm:py-9
+        md:rounded-none md:px-8 md:py-12
       `}>
         <div className={`
           pointer-events-none absolute inset-0 -z-10 overflow-hidden
@@ -954,34 +974,36 @@ export const ILRCalculator = () => {
               md:text-2xl
               lg:text-3xl
             `}>
-              {i18n("UK Earned Settlement (ILR) calculator")}
+              {i18n("UK Earned Settlement (ILR)")}
             </h1>
-            <p className={`
-              max-w-4xl text-sm text-neutral
-              md:text-base
-            `}>
-              {i18n("See a quick ILR timeline and costs based on the draft earned settlement rules.")}
+            <p className={`max-w-4xl text-neutral`}>
+              {i18n("Check your ILR timeline and costs based on the Earned Settlement rules.")}
             </p>
           </div>
         </div>
       </div>
 
       <div className={`
-        space-y-6 px-4 py-6
-        md:mx-0 md:px-6
+        space-y-6 px-4 pt-4
+        md:px-12 md:py-8
       `}>
-        <Tabs activeKey={activeStep} onChange={(tab) => setActiveStep(tab as StepKey)}>
+        <Tabs activeKey={activeStep} onChange={(tab) => setActiveStep(tab)}>
           {steps.map((s) => {
             const Icon = s.icon;
             return (
-              <TabPane icon={<Icon className="mr-2 h-4 w-4" />} key={s.key} label={i18n(s.key)} tab={s.key}>
+              <TabPane
+                icon={isMobile ? null : <Icon className="mr-2 h-4 w-4" />}
+                key={s.key}
+                label={s.value}
+                tab={s.key}
+              >
                 {renderStep(s.key)}
               </TabPane>
             );
           })}
         </Tabs>
 
-        <Separator align="left" variant="full" />
+        <Separator align="center" text={i18n("Results ↓")} variant="full" />
 
         {formError && (
           <Alert className="w-full" variant="error">
@@ -1008,12 +1030,12 @@ export const ILRCalculator = () => {
               <Alert variant="error">
                 <div className="flex flex-col gap-1">
                   <span className="font-semibold text-on-surface">{i18n("Blocking suitability issues detected")}</span>
-                  <ul className="list-inside list-disc space-y-1 text-sm">
+                  <ul className="list-inside list-disc space-y-1">
                     {result.blockingRequirements.map((b) => (
                       <li key={b.text}>{b.text}</li>
                     ))}
                   </ul>
-                  <span className="text-xs leading-snug text-on-surface/80">
+                  <span className="leading-snug text-on-surface/80">
                     {i18n("These issues prevent settlement until resolved. The timeline shown is indicative only.")}
                   </span>
                 </div>
@@ -1023,11 +1045,8 @@ export const ILRCalculator = () => {
             {result.blockingRequirements.length === 0 && !result.allRequirementsMet && (
               <Alert variant="warning">
                 <div className="flex flex-col gap-1">
-                  <span className="font-semibold text-on-surface">{i18n("Some requirements are not met")}</span>
-                  <span className="text-sm leading-snug text-on-surface/80">
-                    {i18n(
-                      "Resolve the unmet suitability/integration items. The estimate remains indicative until all are satisfied.",
-                    )}
+                  <span className="font-semibold text-on-surface">
+                    {i18n("Some non-blocking requirements are not met")}
                   </span>
                 </div>
               </Alert>
@@ -1038,10 +1057,8 @@ export const ILRCalculator = () => {
                 <span className="font-semibold text-on-surface">
                   {i18n("Estimated earliest ILR date")}: {formatDateSafe(result.ilrDate)}
                 </span>
-                <span className="text-sm leading-snug text-on-surface/80">
-                  {i18n(
-                    "Based on the information you entered and the current consultation proposals. Real cases can be more complex.",
-                  )}
+                <span className="leading-snug text-on-surface/80">
+                  {i18n("Based on the information you entered and the current consultation proposals")}
                 </span>
               </div>
             </Alert>
@@ -1058,17 +1075,17 @@ export const ILRCalculator = () => {
                   md:px-5 md:py-4
                 `}
               >
-                <p className="text-xs font-semibold text-neutral uppercase">{i18n("Main applicant")}</p>
+                <p className="font-semibold text-neutral uppercase">{i18n("Main applicant")}</p>
                 <p className="mt-1 text-3xl font-semibold text-on-surface">
                   {i18n("{years} years", { years: result.mainApplicantYears })}
                 </p>
-                <p className="mt-1 text-sm text-neutral">
+                <p className="mt-1 text-neutral">
                   {i18n("Visa start date")}: {formatDateSafe(result.visaStartDate)}
                 </p>
-                <p className="text-sm text-neutral">
+                <p className="text-neutral">
                   {i18n("Target ILR date")}: {formatDateSafe(result.ilrDate)}
                 </p>
-                <p className="text-sm font-semibold text-on-surface">
+                <p className="font-semibold text-on-surface">
                   {i18n("Earliest application (28-day rule)")}: {formatDateSafe(result.earliestApplicationDate)}
                 </p>
               </div>
@@ -1081,16 +1098,18 @@ export const ILRCalculator = () => {
                   lg:col-span-2
                 `}
               >
-                <p className={`
-                  mb-2 text-xs font-semibold text-neutral uppercase
-                `}>{i18n("Key requirements")}</p>
+                <p className={`mb-2 font-semibold text-neutral uppercase`}>{i18n("Key requirements")}</p>
                 <ul className="space-y-1.5">
                   {result.requirements.map((r) => (
-                    <li className="flex items-center gap-2 text-sm" key={r.text}>
+                    <li className="flex items-center gap-2" key={r.text}>
                       {r.met ? (
-                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <CheckCircle className={`
+                          max-h-4 min-h-4 max-w-4 min-w-4 text-green-600
+                        `} />
                       ) : (
-                        <AlertCircle className="h-4 w-4 text-red-500" />
+                        <AlertCircle className={`
+                          max-h-4 min-h-4 max-w-4 min-w-4 text-red-500
+                        `} />
                       )}
                       <span className={r.met ? "text-on-surface" : `
                         font-semibold text-red-700
@@ -1109,24 +1128,22 @@ export const ILRCalculator = () => {
                   md:px-5 md:py-4
                 `}
               >
-                <p className={`
-                  mb-1 text-xs font-semibold text-neutral uppercase
-                `}>{i18n("Partner (dependent)")}</p>
+                <p className={`mb-1 font-semibold text-neutral uppercase`}>{i18n("Partner (dependant)")}</p>
                 <p className="text-lg font-semibold text-on-surface">
                   {i18n("Approx. {years} years", { years: result.partnerYears })}
                 </p>
-                <p className="mb-2 text-sm text-neutral">
+                <p className="mb-2 text-neutral">
                   {i18n(
                     "Dependants are assessed separately under the proposals, even if the main applicant qualifies earlier.",
                   )}
                 </p>
                 {(!result.allRequirementsMet || result.blockingRequirements.length > 0) && (
-                  <p className="text-sm font-semibold text-red-700">
+                  <p className="font-semibold text-red-700">
                     {i18n("Dependants can only apply if the main applicant meets all requirements.")}
                   </p>
                 )}
                 {result.partnerAdjustments.length > 0 && (
-                  <ul className="list-inside list-disc text-sm text-neutral">
+                  <ul className="list-inside list-disc text-neutral">
                     {result.partnerAdjustments.map((p, idx) => (
                       <li key={idx}>
                         {p.reason}{" "}
@@ -1148,26 +1165,22 @@ export const ILRCalculator = () => {
                   md:px-5 md:py-4
                 `}
               >
-                <p className={`
-                  mb-1 text-xs font-semibold text-neutral uppercase
-                `}>{i18n("Children (dependants)")}</p>
+                <p className={`mb-1 font-semibold text-neutral uppercase`}>{i18n("Children (dependants)")}</p>
                 <p className="text-lg font-semibold text-on-surface">
-                  {i18n("{count} child(ren)", { count: values.numberOfChildren ?? 0 })}
+                  {i18n("{count} children", { count: values.numberOfChildren ?? 0 })}
                 </p>
-                <div className="space-y-1 text-sm text-neutral">
-                  <p>
+                <div className="mt-4 space-y-1 text-neutral">
+                  <RichText as="p">
+                    {i18n("**Under 18**: can usually get settlement at the same time as the main applicant.")}
+                  </RichText>
+                  <RichText as="p">
                     {i18n(
-                      "Under 18: can usually settle with the main applicant once you qualify, if not married/independent and maintenance/accommodation are met.",
+                      "**18 or over**: must have been a dependant before turning 18, not be living independently, and meet the English (B1) and Life in the UK requirements. They can apply with you or after you're settled.",
                     )}
-                  </p>
-                  <p>
+                  </RichText>
+                  <p className="mt-4 text-sm">
                     {i18n(
-                      "18 or over: must have had dependant leave before 18, not be independent, and meet English (B1) and Life in the UK tests; can apply with you or after you are settled.",
-                    )}
-                  </p>
-                  <p>
-                    {i18n(
-                      "If both parents are in the UK, children normally wait until both apply/are settled. They can apply with one parent sooner only where that parent has sole responsibility or there are serious/compelling reasons.",
+                      "If both parents are in the UK, children normally wait until both apply or are settled. They can apply with just one parent only if that parent has sole responsibility or there are serious or compelling reasons.",
                     )}
                   </p>
                 </div>
@@ -1176,12 +1189,10 @@ export const ILRCalculator = () => {
 
             {result.adjustments.length > 0 && (
               <div className={`
-                rounded-xl bg-neutral-50/10 px-4 py-3 shadow-sm
+                rounded-xl bg-neutral/10 px-4 py-3
                 md:px-5 md:py-4
               `}>
-                <h3 className="mb-1 text-sm font-semibold text-on-surface">
-                  {i18n("How your waiting time was adjusted")}
-                </h3>
+                <h3 className="mb-1 font-semibold text-on-surface">{i18n("How your waiting time was adjusted")}</h3>
                 <ul className={`
                   list-inside list-disc space-y-1 text-sm text-neutral
                 `}>
@@ -1205,10 +1216,9 @@ export const ILRCalculator = () => {
             {result.warnings.length > 0 && (
               <Alert variant="warning">
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-on-surface">{i18n("Important warnings")}</p>
+                  <p className="font-semibold text-on-surface">{i18n("Warning")}</p>
                   <ul className={`
-                    list-inside list-disc space-y-1 text-xs leading-snug
-                    text-on-surface
+                    list-inside list-disc space-y-1 leading-snug text-on-surface
                   `}>
                     {result.warnings.map((w, idx) => (
                       <li key={idx}>{w}</li>
@@ -1272,48 +1282,46 @@ export const ILRCalculator = () => {
                   rounded-xl bg-on-surface/5 px-4 py-3
                   md:px-5 md:py-4
                 `}>
-                  <p className="text-xs font-semibold text-neutral uppercase">
-                    {i18n("Fees snapshot (current rates)")}
-                  </p>
-                  <p className="mt-1 text-sm text-on-surface">
-                    {i18n("Indicative ILR application fee today (per person): {fee}", {
+                  <p className="font-semibold text-neutral uppercase">{i18n("Fees snapshot (2025 rates)")}</p>
+                  <RichText className="mt-1 text-on-surface">
+                    {i18n("&bull; Indicative ILR application fee (per person): **{fee}**", {
                       fee: formatCurrency(ILR_APPLICATION_FEE),
                     })}
-                  </p>
-                  <p className="text-sm text-on-surface">
-                    {i18n("Estimated total for your household: {fee}", { fee: formatCurrency(estimatedFee) })}{" "}
-                    <span className="text-neutral">
-                      {i18n("(based on {count} applicants, subject to future fee changes)", { count: peopleCount })}
-                    </span>
-                  </p>
+                  </RichText>
+                  <RichText className="text-on-surface">
+                    {i18n("&bull; Estimated total for your household: **{fee}** (based on {count} applicants)", {
+                      count: peopleCount,
+                      fee: formatCurrency(estimatedFee),
+                    })}
+                  </RichText>
                   {perPersonVisaRemaining === 0 && perPersonIhsRemaining === 0 ? (
-                    <p className="mt-2 text-sm text-neutral">
+                    <p className="mt-2 text-sm text-primary">
                       {i18n(
                         "You have less than 1 year until ILR, assuming that no further visa/IHS renewals expected before applying.",
                       )}
                     </p>
                   ) : (
                     <>
-                      <p className={`mt-2 text-sm font-semibold text-on-surface`}>
+                      <p className={`mt-8 text-sm font-semibold text-on-surface`}>
                         {i18n("Estimated remaining visa fees (per person): {fee}", {
                           fee: formatCurrency(perPersonVisaRemaining),
                         })}
                       </p>
-                      <p className="text-sm text-neutral">
-                        {i18n("Household visa fees remaining: {fee}", {
+                      <RichText className="text-neutral">
+                        {i18n("Household visa fees remaining: **{fee}**", {
                           fee: formatCurrency(householdVisaRemaining),
                         })}
-                      </p>
-                      <p className={`mt-2 text-sm font-semibold text-on-surface`}>
+                      </RichText>
+                      <p className={`mt-8 text-sm font-semibold text-on-surface`}>
                         {i18n("Estimated remaining IHS (per person): {fee}", {
                           fee: formatCurrency(perPersonIhsRemaining),
                         })}
                       </p>
-                      <p className="text-sm text-neutral">
-                        {i18n("Household IHS remaining: {fee}", {
+                      <RichText className="text-neutral">
+                        {i18n("Household IHS remaining: **{fee}**", {
                           fee: formatCurrency(householdIhsRemaining),
                         })}
-                      </p>
+                      </RichText>
                     </>
                   )}
                   <div className={`
@@ -1321,68 +1329,97 @@ export const ILRCalculator = () => {
                     border-neutral-disabled/60 pt-3
                   `}>
                     <div className="text-right">
-                      <p className="text-xs text-neutral uppercase">{i18n("Total estimated cost")}</p>
+                      <p className="text-neutral uppercase">{i18n("Total estimated cost")}</p>
                       <p className="text-xl font-semibold text-on-surface">
                         {formatCurrency(estimatedFee + householdVisaRemaining + householdIhsRemaining)}
                       </p>
                     </div>
                   </div>
-                  <p className="mt-3 text-xs text-neutral">
-                    {i18n("Fees are indicative (as of 2025). Check latest GOV.UK visa/IHS/ILR fee updates.")}
-                  </p>
+                  <RichText className="mt-3 text-neutral">
+                    {i18n(
+                      "Fees are indicative (as of 2025). Check latest [GOV.UK visa/IHS/ILR fee updates]({GOV_UK_FEE_UPDATES_URL}).",
+
+                      {
+                        GOV_UK_FEE_UPDATES_URL:
+                          "https://www.gov.uk/government/publications/visa-regulations-revised-table/home-office-immigration-and-nationality-fees-9-april-2025",
+                      },
+                    )}
+                  </RichText>
                 </div>
               );
             })()}
 
-            <p className="text-xs text-neutral">
+            <RichText className="mt-4 text-neutral">
               {i18n(
-                'This tool is based on the Home Office "A Fairer Pathway to Settlement" consultation (earned settlement, baseline 10 years, with reductions/penalties). It is for illustration only and does not guarantee eligibility. Always check the latest official rules and consider getting professional legal advice before applying.',
+                "This calculator is based on the Home Office [A Fairer Pathway to Settlement]({FAIRER_PATHWAY_URL}) consultation (earned settlement, baseline 10 years, with reductions/penalties).<br/>**It is for illustration only** and does not guarantee eligibility.<br/><br/>Always check the latest official rules and consider getting professional legal advice before applying.",
+                {
+                  FAIRER_PATHWAY_URL:
+                    "https://assets.publishing.service.gov.uk/media/691edda450b16caf978153d8/Command_Paper_final_-_reviewed7.pdf",
+                },
               )}
-            </p>
+            </RichText>
           </div>
         )}
 
         <div className="py-5">
-          <p className="mb-2 text-xs font-semibold text-neutral uppercase">{i18n("Glossary")}</p>
+          <p className="mb-2 font-semibold text-neutral uppercase">{i18n("Glossary")}</p>
           <ul className={`
-            list-inside list-disc space-y-4 text-sm text-neutral
+            list-inside list-disc space-y-4 text-neutral
             md:space-y-2
           `}>
             <li>
-              <span className="font-semibold text-on-surface">ILR / Earned Settlement:</span>{" "}
-              {i18n("Permission to stay in the UK without time limits. Proposed earned route is 10-30 years.")}
+              <span className="font-semibold text-on-surface">ILR / Earned Settlement</span> -{" "}
+              {i18n(
+                "permission to remain in the UK without time limits. The earned route can take between 3 and 30 years.",
+              )}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">Skilled Worker visa:</span>{" "}
-              {i18n("Employer-sponsored work visa. Draft rules set a 10-year baseline.")}
+              <span className="font-semibold text-on-surface">Skilled Worker visa</span> -{" "}
+              {i18n(
+                "employer-sponsored work visa. The draft sets a baseline of 10 years, reducible to 5 or 3 years depending on salary.",
+              )}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">RQF Level 6:</span>{" "}
-              {i18n("Degree-level jobs. Lower levels in Skilled Worker/Health & Care may have a 15-year baseline.")}
+              <span className="font-semibold text-on-surface">RQF Level 6+</span> -{" "}
+              {i18n(
+                "jobs that require a university-level qualification, such as a Bachelor's degree (Level 6), Master's degree (Level 7), or PhD (Level 8).",
+              )}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">Life in the UK Test:</span>{" "}
-              {i18n("Required culture/values test before settlement.")}
+              <span className="font-semibold text-on-surface">RQF Level 3-5</span> -{" "}
+              {i18n(
+                "A-levels are Level 3, and things like Foundation degrees, HNCs and HNDs are Levels 4-5. Lower-skill roles usually follow the longer 15-year ILR route.",
+              )}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">B2 / C1 English:</span>{" "}
-              {i18n("B2 is the minimum. C1 can cut waiting time by 1 year.")}
+              <span className="font-semibold text-on-surface">Life in the UK Test</span> -{" "}
+              {i18n(
+                "required culture/values test before settlement. It's short multiple-choice quiz about British history, culture and everyday life.",
+              )}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">Public funds:</span>{" "}
-              {i18n("UK benefits (e.g., Universal Credit, housing). Using them can add 5-10 years to settlement time.")}
+              <span className="font-semibold text-on-surface">B2 / C1 English</span> -{" "}
+              {i18n("you need at least B2, but C1 can speed things up by a year.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">BN(O):</span>{" "}
-              {i18n("British National (Overseas) route with a 5-year settlement path.")}
+              <span className="font-semibold text-on-surface">Public funds</span> -{" "}
+              {i18n(
+                "UK benefits (like Universal Credit or housing support). Using them can add 5-10 years to your settlement timeline.",
+              )}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">NRPF:</span>{" "}
-              {i18n("No Recourse to Public Funds condition that restricts access to benefits.")}
+              <span className="font-semibold text-on-surface">BN(O)</span> -{" "}
+              {i18n("a special British National (Overseas) visa with a 5-year path to settlement.")}
             </li>
             <li>
-              <span className="font-semibold text-on-surface">Long Residence route:</span>{" "}
-              {i18n("Existing 10-year lawful stay route proposed for removal in the draft plans.")}
+              <span className="font-semibold text-on-surface">NRPF</span> -{" "}
+              {i18n("No Recourse to Public Funds, meaning you can't claim most UK benefits.")}
+            </li>
+            <li>
+              <span className="font-semibold text-on-surface">Community volunteering</span> -{" "}
+              {i18n(
+                "helping your local area in a genuine, unpaid way - like working in a charity shop (Oxfam, Cancer Research UK, British Heart Foundation), helping at a food bank, joining park clean-ups, or supporting a community centre.",
+              )}
             </li>
           </ul>
         </div>

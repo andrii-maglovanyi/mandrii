@@ -8,26 +8,26 @@ export const Breadcrumbs = ({ items }: { items: Array<{ title: string; url?: str
     .reduce(
       (acc, { title, url }, index) => {
         if (index > 0) {
-          acc.push(<ArrowRight className="mx-2" />);
+          acc.push(<ArrowRight className="mx-2 min-w-6" />);
         }
 
         acc.push(
           url ? (
             <Link className={`
-              text-lg font-medium opacity-80
+              opacity-80
               hover:underline hover:opacity-100
             `} href={url}>
               {title}
             </Link>
           ) : (
-            <span className="cursor-default text-lg font-medium">{title}</span>
+            <span className="cursor-default">{title}</span>
           ),
         );
 
         return acc;
       },
       [
-        <span className="m-2 cursor-default text-xl font-bold opacity-80" key="root">
+        <span className="m-2 cursor-default font-bold opacity-80" key="root">
           /
         </span>,
       ],
@@ -35,11 +35,17 @@ export const Breadcrumbs = ({ items }: { items: Array<{ title: string; url?: str
     .map((item) => () => item);
 
   return (
-    <div className="flex items-center text-neutral-disabled">
+    <div
+      className={`
+        flex items-center overflow-clip text-left text-nowrap
+        text-neutral-disabled
+        md:scale-100 md:text-xl
+      `}
+    >
       {list.map((Item, index) => (
         <Item key={index} />
       ))}
-      <CornerRightDown className="mx-2 mt-4" />
+      <CornerRightDown className="mx-2 mt-4 min-w-6" />
     </div>
   );
 };

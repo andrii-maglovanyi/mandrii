@@ -10,9 +10,14 @@ import { VenuesMap } from "../Venues/Map/VenuesMap";
 
 type ViewMode = "events" | "venues";
 
+const VIEWS = ["events", "venues"] as const;
+
 export const MapView = () => {
   const i18n = useI18n();
-  const [viewMode, setViewMode] = useState<ViewMode>("venues");
+  const hashView = decodeURIComponent(window.location.hash?.replace("#", ""));
+  const view = VIEWS.includes(hashView as (typeof VIEWS)[number]) ? (hashView as (typeof VIEWS)[number]) : "venues";
+
+  const [viewMode, setViewMode] = useState<ViewMode>(view);
 
   return (
     <div className={`
@@ -37,7 +42,10 @@ export const MapView = () => {
                 `
             }
             `}
-            onClick={() => setViewMode("venues")}
+            onClick={() => {
+              setViewMode("venues");
+              window.location.hash = "venues";
+            }}
             type="button"
           >
             <MapPin size={20} />
@@ -63,7 +71,10 @@ export const MapView = () => {
                 `
             }
             `}
-            onClick={() => setViewMode("events")}
+            onClick={() => {
+              setViewMode("events");
+              window.location.hash = "events";
+            }}
             type="button"
           >
             <CalendarDays size={20} />

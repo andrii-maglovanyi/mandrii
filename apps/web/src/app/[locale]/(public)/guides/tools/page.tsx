@@ -1,15 +1,20 @@
-"use client";
-
 import { Calculator, Clock } from "lucide-react";
 import Link from "next/link";
 
 import { MixpanelTracker } from "~/components/layout/MixpanelTracker/MixpanelTracker";
 import { Breadcrumbs } from "~/components/ui";
 import { ILRCalculator } from "~/features";
-import { useI18n } from "~/i18n/useI18n";
+import { getI18n } from "~/i18n/getI18n";
+import { Locale } from "~/types";
 
-export default function ToolsAndCalculatorsPage() {
-  const i18n = useI18n();
+interface ToolsPageProps {
+  params: Promise<{ locale: Locale }>;
+}
+
+export default async function ToolsPage({ params }: ToolsPageProps) {
+  const { locale } = await params;
+
+  const i18n = await getI18n({ locale });
 
   const tools = [
     {
