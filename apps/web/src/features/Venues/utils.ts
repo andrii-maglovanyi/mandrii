@@ -1,9 +1,3 @@
-/**
- * Generates lat/lng coordinates approximating a circle.
- * @param center The center of the circle (lat/lng).
- * @param radiusInMeters The radius in meters.
- * @param points How many segments to approximate the circle (default 60).
- */
 function createDashedCirclePath(
   center: google.maps.LatLngLiteral,
   radiusInMeters: number,

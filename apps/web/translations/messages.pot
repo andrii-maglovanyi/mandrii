@@ -849,22 +849,31 @@ msgstr ""
 msgid "Start adding your event by entering its title and type.<br/>The slug is auto-generated from the title and can only be edited during the first creation."
 msgstr ""
 
-msgid "Skilled Worker"
+msgid "Visa"
 msgstr ""
 
-msgid "Health and Care Worker"
+msgid "Income"
+msgstr ""
+
+msgid "Compliance"
+msgstr ""
+
+msgid "Ukraine Schemes"
 msgstr ""
 
 msgid "Student / Graduate"
 msgstr ""
 
-msgid "Family (Partner/Parent)"
+msgid "Skilled Worker"
+msgstr ""
+
+msgid "Family (Partner / Parent)"
+msgstr ""
+
+msgid "Health & Care Worker"
 msgstr ""
 
 msgid "Refugee / Asylum"
-msgstr ""
-
-msgid "Ukraine Scheme"
 msgstr ""
 
 msgid "Global Talent"
@@ -876,28 +885,28 @@ msgstr ""
 msgid "British National (Overseas)"
 msgstr ""
 
-msgid "Legal entry with valid visa/permission"
+msgid "Legal entry with valid visa"
 msgstr ""
 
 msgid "Initially on visitor visa"
 msgstr ""
 
-msgid "Irregular entry (small boat, etc.)"
+msgid "Irregular entry (small boat, etc)"
 msgstr ""
 
-msgid "RQF Level 6+ (degree level or higher)"
+msgid "RQF Level 6+"
 msgstr ""
 
-msgid "RQF Level 3-5 (below degree level)"
+msgid "RQF Level 3-5"
 msgstr ""
 
-msgid "Below B2 (not yet eligible)"
+msgid "Below B2 (not eligible)"
 msgstr ""
 
-msgid "B2 - Upper Intermediate (required minimum)"
+msgid "B2 - Upper Intermediate"
 msgstr ""
 
-msgid "C1 - Advanced (reduces wait)"
+msgid "C1 - Advanced"
 msgstr ""
 
 msgid "C2 - Proficient"
@@ -912,28 +921,28 @@ msgstr ""
 msgid "Not working / Stay-at-home parent"
 msgstr ""
 
-msgid "In-country asylum claim (claimed after arrival in UK)"
+msgid "In-country asylum claim (after UK arrival)"
 msgstr ""
 
 msgid "Resettled refugee / humanitarian scheme"
 msgstr ""
 
-msgid "5 years (consultation option)"
+msgid "5 years (min)"
 msgstr ""
 
-msgid "10 years (consultation option)"
+msgid "10 years"
 msgstr ""
 
-msgid "15 years (consultation option)"
+msgid "15 years"
 msgstr ""
 
-msgid "20 years (up to maximum)"
+msgid "20 years (max)"
 msgstr ""
 
-msgid "3 years (proposal minimum)"
+msgid "3 years (min)"
 msgstr ""
 
-msgid "5 years (proposal maximum)"
+msgid "5 years (max)"
 msgstr ""
 
 msgid "British National (Overseas) status"
@@ -945,13 +954,16 @@ msgstr ""
 msgid "Partner of British citizen"
 msgstr ""
 
+msgid "Income £125,140+ reductions require at least 3 years at that level. Reduction not applied."
+msgstr ""
+
 msgid "Annual income £125,140+"
 msgstr ""
 
-msgid "Annual income £50,270-£125,140"
+msgid "High income reductions require at least 3 years at that level. Reduction not applied."
 msgstr ""
 
-msgid "High income reductions require at least 3 years at that level. Reduction not applied for now."
+msgid "Annual income £50,270-£125,140"
 msgstr ""
 
 msgid "Public service employment (5+ years at RQF6+)"
@@ -960,10 +972,10 @@ msgstr ""
 msgid "Advanced English (C1/C2 level)"
 msgstr ""
 
-msgid "Community volunteering (proposal: minus 3-5 years)"
+msgid "Community volunteering (minus 3-5 years)"
 msgstr ""
 
-msgid "Volunteering reduction is consultative and subject to how contribution is measured/validated. Treat as illustrative."
+msgid "Volunteering reduction is consultative and subject to how contribution is measured"
 msgstr ""
 
 msgid "Skilled Worker/Health & Care role below RQF6 (fixed 15-year baseline)"
@@ -996,7 +1008,7 @@ msgstr ""
 msgid "Claimed public funds for <12 months"
 msgstr ""
 
-msgid "Refugee reductions cannot make the route shorter than the standard 10-year work route baseline."
+msgid "Refugee routes have a minimum baseline of {years} years regardless of reductions."
 msgstr ""
 
 msgid "No criminal record"
@@ -1008,22 +1020,19 @@ msgstr ""
 msgid "Passed Life in the UK test"
 msgstr ""
 
-msgid "No outstanding debts to UK government (NHS, tax, etc.)"
+msgid "No outstanding debts"
 msgstr ""
 
 msgid "Income requirement waived for refugee routes"
 msgstr ""
 
-msgid "Sustained income of £12,570+ for at least 3 years (consultation: 3-5 years)"
+msgid "Income of £12,570+ for at least 3 years"
 msgstr ""
 
-msgid "Income threshold duration is under consultation (3-5 years). Requirement may tighten to 5 years. Adjust accordingly."
+msgid "Income threshold duration is under consultation (3-5 years). Requirement may tighten to 5 years."
 msgstr ""
 
-msgid "Consultation runs to Feb 2026. Timelines and requirements may change once final policy is set. Always verify latest rules."
-msgstr ""
-
-msgid "Ukraine Scheme currently does not lead to ILR. No settlement route available."
+msgid "Consultation runs till 12 February 2026. Timelines and requirements may change once final policy is set, I'll update this tool accordingly."
 msgstr ""
 
 msgid "Criminal record blocks settlement eligibility"
@@ -1038,16 +1047,19 @@ msgstr ""
 msgid "Partner earns £50,270+ (own contribution)"
 msgstr ""
 
-msgid "Partner not working - may need 10-year route or own contribution (work/volunteering)."
+msgid "Partner not working - may need 10-year route or own contribution (work or volunteering)."
 msgstr ""
 
 msgid "Complete required fields to see your estimate."
 msgstr ""
 
-msgid "Add your visa type, start date or arrival date to generate an estimate."
+msgid "Add your visa type and start date to get an estimate."
 msgstr ""
 
-msgid "Ukraine Scheme currently has no route to ILR under the proposed rules."
+msgid "Ukraine Scheme currently does not lead to ILR. No settlement route available."
+msgstr ""
+
+msgid "Student visas do not lead to ILR under the new earned settlement system. You must switch to an eligible visa (such as Skilled Worker or Family visa) first. Only time spent on settlement-eligible routes counts toward the 10-year qualifying period. The old 10-year long residence route has been abolished."
 msgstr ""
 
 msgid "Criminal record blocks settlement under proposed rules. The Home Office plans a full review of criminality thresholds."
@@ -1062,7 +1074,7 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
-msgid "Language and rule checks."
+msgid "Language, and compliance with UK laws and regulations."
 msgstr ""
 
 msgid "Integration & compliance"
@@ -1092,7 +1104,7 @@ msgstr ""
 msgid "Overstay duration (months)"
 msgstr ""
 
-msgid "Penalty to apply (consultation cap: up to 20 years)"
+msgid "Penalty (in consultation - up to 20 years)"
 msgstr ""
 
 msgid "Select penalty"
@@ -1104,7 +1116,7 @@ msgstr ""
 msgid "Duration of benefits (months)"
 msgstr ""
 
-msgid "Your work and income details."
+msgid "Your occupation, income and volunteering details."
 msgstr ""
 
 msgid "Employment & income"
@@ -1120,9 +1132,6 @@ msgid "Years at/above this income (min 3 years)"
 msgstr ""
 
 msgid "Occupation level"
-msgstr ""
-
-msgid "Use taxable income (after pension deductions) averaged over the last 3 years. RQF6+ includes professional roles that normally require a degree."
 msgstr ""
 
 msgid "I work in public services (NHS, teaching, etc.)"
@@ -1146,10 +1155,10 @@ msgstr ""
 msgid "Select reduction"
 msgstr ""
 
-msgid "Quick basics about you and your family."
+msgid "Choose your visa category, start date and optionally your family details"
 msgstr ""
 
-msgid "Family"
+msgid "Visa & family"
 msgstr ""
 
 msgid "Visa category"
@@ -1158,7 +1167,7 @@ msgstr ""
 msgid "Select your visa category"
 msgstr ""
 
-msgid "Visa start date (valid-from on vignette/BRP)"
+msgid "Visa start date"
 msgstr ""
 
 msgid "Actual arrival in the UK"
@@ -1170,10 +1179,10 @@ msgstr ""
 msgid "Select type"
 msgstr ""
 
-msgid "Ukraine Scheme entry is via approved permission. Visitor/irregular entry does not apply."
+msgid "How did you enter the UK?"
 msgstr ""
 
-msgid "How did you enter the UK?"
+msgid "Penalty to apply (consultation cap: up to 20 years)"
 msgstr ""
 
 msgid "I have a partner/spouse"
@@ -1194,10 +1203,13 @@ msgstr ""
 msgid "Number of children"
 msgstr ""
 
-msgid "UK Earned Settlement (ILR) calculator"
+msgid "UK Earned Settlement (ILR)"
 msgstr ""
 
-msgid "See a quick ILR timeline and costs based on the draft earned settlement rules."
+msgid "Check your ILR timeline and costs based on the Earned Settlement rules."
+msgstr ""
+
+msgid "Results ↓"
 msgstr ""
 
 msgid "Blocking suitability issues detected"
@@ -1206,25 +1218,19 @@ msgstr ""
 msgid "These issues prevent settlement until resolved. The timeline shown is indicative only."
 msgstr ""
 
-msgid "Some requirements are not met"
-msgstr ""
-
-msgid "Resolve the unmet suitability/integration items. The estimate remains indicative until all are satisfied."
+msgid "Some non-blocking requirements are not met"
 msgstr ""
 
 msgid "Estimated earliest ILR date"
 msgstr ""
 
-msgid "Based on the information you entered and the current consultation proposals. Real cases can be more complex."
+msgid "Based on the information you entered and the current consultation proposals"
 msgstr ""
 
 msgid "Main applicant"
 msgstr ""
 
 msgid "{years} years"
-msgstr ""
-
-msgid "Visa start date"
 msgstr ""
 
 msgid "Target ILR date"
@@ -1236,7 +1242,7 @@ msgstr ""
 msgid "Key requirements"
 msgstr ""
 
-msgid "Partner (dependent)"
+msgid "Partner (dependant)"
 msgstr ""
 
 msgid "Approx. {years} years"
@@ -1254,16 +1260,16 @@ msgstr ""
 msgid "Children (dependants)"
 msgstr ""
 
-msgid "{count} child(ren)"
+msgid "{count} children"
 msgstr ""
 
-msgid "Under 18: can usually settle with the main applicant once you qualify, if not married/independent and maintenance/accommodation are met."
+msgid "**Under 18**: can usually get settlement at the same time as the main applicant."
 msgstr ""
 
-msgid "18 or over: must have had dependant leave before 18, not be independent, and meet English (B1) and Life in the UK tests; can apply with you or after you are settled."
+msgid "**18 or over**: must have been a dependant before turning 18, not be living independently, and meet the English (B1) and Life in the UK requirements. They can apply with you or after you're settled."
 msgstr ""
 
-msgid "If both parents are in the UK, children normally wait until both apply/are settled. They can apply with one parent sooner only where that parent has sole responsibility or there are serious/compelling reasons."
+msgid "If both parents are in the UK, children normally wait until both apply or are settled. They can apply with just one parent only if that parent has sole responsibility or there are serious or compelling reasons."
 msgstr ""
 
 msgid "How your waiting time was adjusted"
@@ -1278,19 +1284,16 @@ msgstr ""
 msgid "Baseline change"
 msgstr ""
 
-msgid "Important warnings"
+msgid "Warning"
 msgstr ""
 
-msgid "Fees snapshot (current rates)"
+msgid "Fees snapshot (2025 rates)"
 msgstr ""
 
-msgid "Indicative ILR application fee today (per person): {fee}"
+msgid "&bull; Indicative ILR application fee (per person): **{fee}**"
 msgstr ""
 
-msgid "Estimated total for your household: {fee}"
-msgstr ""
-
-msgid "(based on {count} applicants, subject to future fee changes)"
+msgid "&bull; Estimated total for your household: **{fee}** (based on {count} applicants)"
 msgstr ""
 
 msgid "You have less than 1 year until ILR, assuming that no further visa/IHS renewals expected before applying."
@@ -1299,52 +1302,55 @@ msgstr ""
 msgid "Estimated remaining visa fees (per person): {fee}"
 msgstr ""
 
-msgid "Household visa fees remaining: {fee}"
+msgid "Household visa fees remaining: **{fee}**"
 msgstr ""
 
 msgid "Estimated remaining IHS (per person): {fee}"
 msgstr ""
 
-msgid "Household IHS remaining: {fee}"
+msgid "Household IHS remaining: **{fee}**"
 msgstr ""
 
 msgid "Total estimated cost"
 msgstr ""
 
-msgid "Fees are indicative (as of 2025). Check latest GOV.UK visa/IHS/ILR fee updates."
+msgid "Fees are indicative (as of 2025). Check latest [GOV.UK visa/IHS/ILR fee updates]({GOV_UK_FEE_UPDATES_URL})."
 msgstr ""
 
-msgid "This tool is based on the Home Office \"A Fairer Pathway to Settlement\" consultation (earned settlement, baseline 10 years, with reductions/penalties). It is for illustration only and does not guarantee eligibility. Always check the latest official rules and consider getting professional legal advice before applying."
+msgid "This calculator is based on the Home Office [A Fairer Pathway to Settlement]({FAIRER_PATHWAY_URL}) consultation (earned settlement, baseline 10 years, with reductions/penalties).<br/>**It is for illustration only** and does not guarantee eligibility.<br/><br/>Always check the latest official rules and consider getting professional legal advice before applying."
 msgstr ""
 
 msgid "Glossary"
 msgstr ""
 
-msgid "Permission to stay in the UK without time limits. Proposed earned route is 10-30 years."
+msgid "permission to remain in the UK without time limits. The earned route can take between 3 and 30 years."
 msgstr ""
 
-msgid "Employer-sponsored work visa. Draft rules set a 10-year baseline."
+msgid "employer-sponsored work visa. The draft sets a baseline of 10 years, reducible to 5 or 3 years depending on salary."
 msgstr ""
 
-msgid "Degree-level jobs. Lower levels in Skilled Worker/Health & Care may have a 15-year baseline."
+msgid "jobs that require a university-level qualification, such as a Bachelor's degree (Level 6), Master's degree (Level 7), or PhD (Level 8)."
 msgstr ""
 
-msgid "Required culture/values test before settlement."
+msgid "A-levels are Level 3, and things like Foundation degrees, HNCs and HNDs are Levels 4-5. Lower-skill roles usually follow the longer 15-year ILR route."
 msgstr ""
 
-msgid "B2 is the minimum. C1 can cut waiting time by 1 year."
+msgid "required culture/values test before settlement. It's short multiple-choice quiz about British history, culture and everyday life."
 msgstr ""
 
-msgid "UK benefits (e.g., Universal Credit, housing). Using them can add 5-10 years to settlement time."
+msgid "you need at least B2, but C1 can speed things up by a year."
 msgstr ""
 
-msgid "British National (Overseas) route with a 5-year settlement path."
+msgid "UK benefits (like Universal Credit or housing support). Using them can add 5-10 years to your settlement timeline."
 msgstr ""
 
-msgid "No Recourse to Public Funds condition that restricts access to benefits."
+msgid "a special British National (Overseas) visa with a 5-year path to settlement."
 msgstr ""
 
-msgid "Existing 10-year lawful stay route proposed for removal in the draft plans."
+msgid "No Recourse to Public Funds, meaning you can't claim most UK benefits."
+msgstr ""
+
+msgid "helping your local area in a genuine, unpaid way - like working in a charity shop (Oxfam, Cancer Research UK, British Heart Foundation), helping at a food bank, joining park clean-ups, or supporting a community centre."
 msgstr ""
 
 msgid "Upcoming events"

@@ -451,12 +451,13 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
                   setSelectedVenueId(id);
 
                   if (!isMobile) {
+                    const ref = document.getElementById(id);
                     setTimeout(() => {
-                      document.getElementById(String(id))?.scrollIntoView({
+                      ref?.scrollIntoView({
                         behavior: "smooth",
                         block: "start",
                       });
-                    }, 200);
+                    }, 500);
                   }
                 }}
                 ref={mapRef}

@@ -1,19 +1,20 @@
-"use client";
-
 import { MixpanelTracker } from "~/components/layout/MixpanelTracker/MixpanelTracker";
 import { Breadcrumbs } from "~/components/ui";
 import { ILRCalculator } from "~/features";
-import { useI18n } from "~/i18n/useI18n";
+import { getI18n } from "~/i18n/getI18n";
+import { Locale } from "~/types";
 
-export default function GuidesILRCalculatorPage() {
-  const i18n = useI18n();
+interface GuidesILRCalculatorPageProps {
+  params: Promise<{ locale: Locale }>;
+}
+
+export default async function ToolsPage({ params }: GuidesILRCalculatorPageProps) {
+  const { locale } = await params;
+  const i18n = await getI18n({ locale });
 
   return (
     <>
-      <main className={`
-        mx-auto max-w-6xl px-4 py-10
-        md:py-12
-      `}>
+      <main>
         <Breadcrumbs
           items={[
             { title: i18n("Guides"), url: `/guides` },
@@ -34,7 +35,7 @@ export default function GuidesILRCalculatorPage() {
 
         <ILRCalculator />
       </main>
-      <MixpanelTracker event="Viewed New ILR Calculator Page" />
+      <MixpanelTracker event="Viewed ILR Calculator Page" />
     </>
   );
 }

@@ -298,7 +298,7 @@ export const EventsMap = () => {
             id: event.id,
             name: event.title_en ?? event.title_uk,
           });
-          setSelectedEventId(event.id as UUID);
+          setSelectedEventId(event.id);
         }}
         selectedId={selectedEventId}
       />
@@ -413,9 +413,7 @@ export const EventsMap = () => {
                 <div className={`
                   -mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
                   pt-0.5
-                `}>
-                  {eventCards}
-                </div>
+                `}>{eventCards}</div>
               )}
             </div>
 
@@ -429,12 +427,13 @@ export const EventsMap = () => {
                   setSelectedEventId(id);
 
                   if (!isMobile) {
+                    const ref = document.getElementById(id);
                     setTimeout(() => {
-                      document.getElementById(String(id))?.scrollIntoView({
+                      ref?.scrollIntoView({
                         behavior: "smooth",
                         block: "start",
                       });
-                    }, 200);
+                    }, 500);
                   }
                 }}
                 onLoaded={() => {

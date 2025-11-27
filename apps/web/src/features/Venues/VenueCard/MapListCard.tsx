@@ -24,7 +24,7 @@ export const MapListCard = ({ onClick, selectedId, venue }: MapListCardProps) =>
   const description = (locale === "uk" ? venue.description_uk : venue.description_en) || "";
 
   return (
-    <div className="flex flex-col pt-0.5 pb-2" id={String(venue.id)} key={venue.id.toString()}>
+    <div className="flex flex-col pt-0.5 pb-2" id={String(venue.id)} key={String(venue.id)}>
       <section
         aria-label={`Venue: ${venue.name}`}
         className={clsx(
