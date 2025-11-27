@@ -2,7 +2,7 @@ import { Calculator, Clock } from "lucide-react";
 import Link from "next/link";
 
 import { MixpanelTracker } from "~/components/layout/MixpanelTracker/MixpanelTracker";
-import { Breadcrumbs } from "~/components/ui";
+import { Breadcrumbs, Card } from "~/components/ui";
 import { ILRCalculator } from "~/features";
 import { getI18n } from "~/i18n/getI18n";
 import { Locale } from "~/types";
@@ -18,11 +18,9 @@ export default async function ToolsPage({ params }: ToolsPageProps) {
 
   const tools = [
     {
-      descriptionKey: i18n("Check ILR timing and fees under the draft rules."),
+      description: i18n("Check ILR timing and fees under the draft rules."),
       href: "/guides/tools/ilr-calculator",
-      slug: "ilr-calculator",
-      statusKey: i18n("Live"),
-      titleKey: i18n("ILR calculator"),
+      title: i18n("ILR calculator"),
     },
   ];
 
@@ -57,39 +55,42 @@ export default async function ToolsPage({ params }: ToolsPageProps) {
           mb-12 grid gap-4
           lg:grid-cols-3
         `}>
-          {tools.map((tool) => (
-            <div
+          {tools.map(({ description, href, title }) => (
+            <Card
               className={`
-                group flex flex-col rounded-xl border border-primary/10
-                bg-surface/80 p-5 transition
-                hover:border-primary/30 hover:shadow-lg
+                group/card rounded-xl border border-primary/0 bg-surface-tint/50
+                transition-all duration-300
+                hover:border-primary/20 hover:shadow-lg
               `}
-              key={tool.slug}
+              href={href}
+              key={title}
             >
-              <div className="flex items-center justify-between">
-                <span className="text-lg font-semibold text-on-surface">{tool.titleKey}</span>
-                <span className={`
-                  rounded-lg bg-green-100 px-3 py-1.5 text-xs font-semibold
-                  text-green-700
-                `}>
-                  {tool.statusKey}
-                </span>
-              </div>
-              <p className="mt-2 text-sm text-neutral">{tool.descriptionKey}</p>
-              <div className={`
-                mt-4 flex items-center gap-2 text-sm font-semibold text-primary
-              `}>
-                <span className={`
-                  flex h-8 w-8 items-center justify-center rounded-full
+              <article className="flex gap-4 px-6 py-4">
+                <div className={`
+                  flex h-10 w-10 shrink-0 items-center justify-center rounded-lg
                   bg-primary/10
                 `}>
-                  <Calculator className="h-4 w-4" />
-                </span>
-                <Link className="hover:underline" href={tool.href ?? "#ilr-calculator"}>
-                  {i18n("Go to calculator")}
-                </Link>
-              </div>
-            </div>
+                  <Calculator className="h-5 w-5 text-primary" />
+                </div>
+                <div className="w-full">
+                  <strong className="flex h-10 items-center text-lg">{title}</strong>
+                  <p className="text-sm text-neutral">{description}</p>
+
+                  <div
+                    className={`
+                      pointer-events-none mt-8 flex items-center justify-end
+                      gap-1 text-xs font-medium text-primary no-underline
+                    `}
+                  >
+                    {i18n("Discover")}
+                    <span className={`
+                      transition-transform
+                      group-hover/card:translate-x-1
+                    `}>→</span>
+                  </div>
+                </div>
+              </article>
+            </Card>
           ))}
 
           <div
