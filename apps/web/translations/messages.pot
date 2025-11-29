@@ -849,102 +849,6 @@ msgstr ""
 msgid "Start adding your event by entering its title and type.<br/>The slug is auto-generated from the title and can only be edited during the first creation."
 msgstr ""
 
-msgid "Visa"
-msgstr ""
-
-msgid "Income"
-msgstr ""
-
-msgid "Compliance"
-msgstr ""
-
-msgid "Ukraine Schemes"
-msgstr ""
-
-msgid "Student / Graduate"
-msgstr ""
-
-msgid "Skilled Worker"
-msgstr ""
-
-msgid "Family (Partner / Parent)"
-msgstr ""
-
-msgid "Health & Care Worker"
-msgstr ""
-
-msgid "Refugee / Asylum"
-msgstr ""
-
-msgid "Global Talent"
-msgstr ""
-
-msgid "Innovator Founder"
-msgstr ""
-
-msgid "British National (Overseas)"
-msgstr ""
-
-msgid "Legal entry with valid visa"
-msgstr ""
-
-msgid "Initially on visitor visa"
-msgstr ""
-
-msgid "Irregular entry (small boat, etc)"
-msgstr ""
-
-msgid "RQF Level 6+"
-msgstr ""
-
-msgid "RQF Level 3-5"
-msgstr ""
-
-msgid "Below B2 (not eligible)"
-msgstr ""
-
-msgid "B2 - Upper Intermediate"
-msgstr ""
-
-msgid "C1 - Advanced"
-msgstr ""
-
-msgid "C2 - Proficient"
-msgstr ""
-
-msgid "Working (£50k+ annual income)"
-msgstr ""
-
-msgid "Working (under £50k)"
-msgstr ""
-
-msgid "Not working / Stay-at-home parent"
-msgstr ""
-
-msgid "In-country asylum claim (after UK arrival)"
-msgstr ""
-
-msgid "Resettled refugee / humanitarian scheme"
-msgstr ""
-
-msgid "5 years (min)"
-msgstr ""
-
-msgid "10 years"
-msgstr ""
-
-msgid "15 years"
-msgstr ""
-
-msgid "20 years (max)"
-msgstr ""
-
-msgid "3 years (min)"
-msgstr ""
-
-msgid "5 years (max)"
-msgstr ""
-
 msgid "British National (Overseas) status"
 msgstr ""
 
@@ -1048,6 +952,105 @@ msgid "Partner earns £50,270+ (own contribution)"
 msgstr ""
 
 msgid "Partner not working - may need 10-year route or own contribution (work or volunteering)."
+msgstr ""
+
+msgid "Partner route cannot be shorter than main applicant timeline."
+msgstr ""
+
+msgid "Visa"
+msgstr ""
+
+msgid "Income"
+msgstr ""
+
+msgid "Compliance"
+msgstr ""
+
+msgid "Ukraine Schemes"
+msgstr ""
+
+msgid "Student / Graduate"
+msgstr ""
+
+msgid "Skilled Worker"
+msgstr ""
+
+msgid "Family (Partner / Parent)"
+msgstr ""
+
+msgid "Health & Care Worker"
+msgstr ""
+
+msgid "Refugee / Asylum"
+msgstr ""
+
+msgid "Global Talent"
+msgstr ""
+
+msgid "Innovator Founder"
+msgstr ""
+
+msgid "British National (Overseas)"
+msgstr ""
+
+msgid "Legal entry with valid visa"
+msgstr ""
+
+msgid "Initially on visitor visa"
+msgstr ""
+
+msgid "Irregular entry (small boat, etc)"
+msgstr ""
+
+msgid "RQF Level 6+"
+msgstr ""
+
+msgid "RQF Level 3-5"
+msgstr ""
+
+msgid "Below B2 (not eligible)"
+msgstr ""
+
+msgid "B2 - Upper Intermediate"
+msgstr ""
+
+msgid "C1 - Advanced"
+msgstr ""
+
+msgid "C2 - Proficient"
+msgstr ""
+
+msgid "Working (£50k+ annual income)"
+msgstr ""
+
+msgid "Working (under £50k)"
+msgstr ""
+
+msgid "Not working / Stay-at-home parent"
+msgstr ""
+
+msgid "In-country asylum claim (after UK arrival)"
+msgstr ""
+
+msgid "Resettled refugee / humanitarian scheme"
+msgstr ""
+
+msgid "5 years (min)"
+msgstr ""
+
+msgid "10 years"
+msgstr ""
+
+msgid "15 years"
+msgstr ""
+
+msgid "20 years (max)"
+msgstr ""
+
+msgid "3 years (min)"
+msgstr ""
+
+msgid "5 years (max)"
 msgstr ""
 
 msgid "Complete required fields to see your estimate."
@@ -1245,16 +1248,13 @@ msgstr ""
 msgid "Partner (dependant)"
 msgstr ""
 
-msgid "Approx. {years} years"
-msgstr ""
-
 msgid "Dependants are assessed separately under the proposals, even if the main applicant qualifies earlier."
 msgstr ""
 
 msgid "Dependants can only apply if the main applicant meets all requirements."
 msgstr ""
 
-msgid "years"
+msgid "{sign}{years} years"
 msgstr ""
 
 msgid "Children (dependants)"
@@ -1282,6 +1282,9 @@ msgid "Penalty"
 msgstr ""
 
 msgid "Baseline change"
+msgstr ""
+
+msgid "years"
 msgstr ""
 
 msgid "Warning"
@@ -1830,9 +1833,6 @@ msgstr ""
 msgid "Check ILR timing and fees under the draft rules."
 msgstr ""
 
-msgid "Live"
-msgstr ""
-
 msgid "ILR calculator"
 msgstr ""
 
@@ -1840,9 +1840,6 @@ msgid "Helpful tools for living abroad"
 msgstr ""
 
 msgid "Check timelines, fees and options quickly. Start with the ILR calculator below."
-msgstr ""
-
-msgid "Go to calculator"
 msgstr ""
 
 msgid "Coming soon"
