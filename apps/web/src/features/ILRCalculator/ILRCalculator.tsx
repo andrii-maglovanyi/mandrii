@@ -394,11 +394,14 @@ type StepSectionProps = {
 const StepSection = ({ children, description, icon: Icon, title }: StepSectionProps) => (
   <div className="space-y-4">
     <div className="flex items-start gap-3">
-      <div className={`bg-primary/10 text-primary flex min-h-11 min-w-11 items-center justify-center rounded-xl`}>
+      <div className={`
+        flex min-h-11 min-w-11 items-center justify-center rounded-xl
+        bg-primary/10 text-primary
+      `}>
         <Icon className="h-5 w-5" />
       </div>
       <div>
-        <h2 className="text-on-surface text-lg font-semibold">{title}</h2>
+        <h2 className="text-lg font-semibold text-on-surface">{title}</h2>
         <p className="text-neutral">{description}</p>
       </div>
     </div>
@@ -679,29 +682,40 @@ export const ILRCalculator = () => {
             icon={Shield}
             title={i18n("Integration & compliance")}
           >
-            <div className={`my-8 grid md:grid-cols-2 md:gap-4`}>
+            <div className={`
+              my-8 grid
+              md:grid-cols-2 md:gap-4
+            `}>
               <Select
                 {...getFieldProps("englishLevel")}
                 label={i18n("English language level")}
                 options={englishLevelOptions}
                 placeholder={i18n("Select level")}
               />
-              <div className={`mt-0 md:mt-7`}>
+              <div className={`
+                mt-0
+                md:mt-7
+              `}>
                 <Checkbox {...getFieldProps("passedLifeInUK")} label={i18n("I have passed the Life in the UK test")} />
               </div>
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-on-surface font-semibold">{i18n("Compliance questions")}</h3>
+              <h3 className="font-semibold text-on-surface">{i18n("Compliance questions")}</h3>
               <Checkbox {...getFieldProps("hasCriminalRecord")} label={i18n("I have a criminal record in the UK")} />
               <Checkbox
                 {...getFieldProps("hasDebts")}
                 label={i18n("I have outstanding debts to the UK government (NHS, tax, etc.)")}
               />
-              <div className={clsx(values.hasOverstayed ? `bg-neutral/10 -m-4 mb-8 rounded-lg p-4 pb-0` : "")}>
+              <div className={clsx(values.hasOverstayed ? `
+                -m-4 mb-8 rounded-lg bg-neutral/10 p-4 pb-0
+              ` : "")}>
                 <Checkbox {...getFieldProps("hasOverstayed")} label={i18n("I have overstayed my visa")} />
                 {values.hasOverstayed && (
-                  <div className={`mt-3 grid gap-3 md:grid-cols-2`}>
+                  <div className={`
+                    mt-3 grid gap-3
+                    md:grid-cols-2
+                  `}>
                     <Input
                       className="max-w-28"
                       {...numberFieldProps("overstayMonths")}
@@ -722,7 +736,9 @@ export const ILRCalculator = () => {
               <div
                 className={clsx(
                   "space-y-3",
-                  values.claimedBenefits ? `bg-neutral/10 -m-4 mb-8 rounded-lg p-4 pb-0` : "",
+                  values.claimedBenefits ? `
+                    -m-4 mb-8 rounded-lg bg-neutral/10 p-4 pb-0
+                  ` : "",
                 )}
               >
                 <Checkbox
@@ -750,7 +766,10 @@ export const ILRCalculator = () => {
             icon={Briefcase}
             title={i18n("Employment & income")}
           >
-            <div className={`my-8 grid gap-4 md:grid-cols-2`}>
+            <div className={`
+              my-8 grid gap-4
+              md:grid-cols-2
+            `}>
               <Input
                 {...getFieldProps("currentIncome")}
                 label={i18n("Current annual income (before tax)")}
@@ -774,7 +793,9 @@ export const ILRCalculator = () => {
               />
             </div>
 
-            <div className={clsx(values.isPublicService ? `bg-neutral/10 -m-4 mb-8 rounded-lg p-4 pb-0` : "")}>
+            <div className={clsx(values.isPublicService ? `
+              -m-4 mb-8 rounded-lg bg-neutral/10 p-4 pb-0
+            ` : "")}>
               <Checkbox
                 {...getFieldProps("isPublicService")}
                 label={i18n("I work in public services (NHS, teaching, etc.)")}
@@ -793,10 +814,15 @@ export const ILRCalculator = () => {
               )}
             </div>
 
-            <div className={clsx(values.hasVolunteering ? `bg-neutral/10 -m-4 mb-4 rounded-lg p-4 pb-0` : "")}>
+            <div className={clsx(values.hasVolunteering ? `
+              -m-4 mb-4 rounded-lg bg-neutral/10 p-4 pb-0
+            ` : "")}>
               <Checkbox {...getFieldProps("hasVolunteering")} label={i18n("I do community volunteering")} />
               {values.hasVolunteering && (
-                <div className={`mt-3 grid gap-3 md:grid-cols-2`}>
+                <div className={`
+                  mt-3 grid gap-3
+                  md:grid-cols-2
+                `}>
                   <Input
                     className="max-w-28"
                     {...numberFieldProps("volunteeringHours")}
@@ -823,7 +849,10 @@ export const ILRCalculator = () => {
             icon={Users}
             title={i18n("Visa & family")}
           >
-            <div className={`mt-8 grid gap-4 md:grid-cols-2`}>
+            <div className={`
+              mt-8 grid gap-4
+              md:grid-cols-2
+            `}>
               <Select
                 {...getFieldProps("visaCategory")}
                 label={i18n("Visa category")}
@@ -833,7 +862,10 @@ export const ILRCalculator = () => {
               <Input label={i18n("Visa start date")} {...getFieldProps("visaStartDate")} type="date" />
             </div>
 
-            <div className={`grid gap-4 md:grid-cols-2`}>
+            <div className={`
+              grid gap-4
+              md:grid-cols-2
+            `}>
               <Input label={i18n("Actual arrival in the UK")} {...getFieldProps("arrivalDate")} type="date" />
               {values.visaCategory === "refugee" ? (
                 <Select
@@ -873,7 +905,9 @@ export const ILRCalculator = () => {
               </div>
             )}
 
-            <div className={clsx(values.hasPartner ? `bg-neutral/10 -m-4 mb-8 rounded-lg p-4 pb-0` : "")}>
+            <div className={clsx(values.hasPartner ? `
+              -m-4 mb-8 rounded-lg bg-neutral/10 p-4 pb-0
+            ` : "")}>
               <Checkbox {...getFieldProps("hasPartner")} label={i18n("I have a partner/spouse")} />
               {values.hasPartner && (
                 <div className="space-y-3">
@@ -890,7 +924,9 @@ export const ILRCalculator = () => {
               )}
             </div>
 
-            <div className={clsx(values.hasChildren ? `bg-neutral/10 -m-4 mb-4 rounded-lg p-4 pb-0` : "")}>
+            <div className={clsx(values.hasChildren ? `
+              -m-4 mb-4 rounded-lg bg-neutral/10 p-4 pb-0
+            ` : "")}>
               <Checkbox {...getFieldProps("hasChildren")} label={i18n("I have children")} />
               {values.hasChildren && (
                 <div className="mt-3 max-w-xs">
@@ -914,12 +950,24 @@ export const ILRCalculator = () => {
 
   return (
     <Card
-      className={`md:border-primary md:bg-surface mx-auto h-max overflow-hidden rounded-3xl md:border-2 md:shadow-xl`}
+      className={`
+        mx-auto h-max overflow-hidden rounded-3xl
+        md:border-2 md:border-primary md:bg-surface md:shadow-xl
+      `}
     >
-      <div className={`relative z-10 overflow-hidden rounded-3xl px-2 py-6 sm:py-9 md:rounded-none md:px-8 md:py-12`}>
-        <div className={`pointer-events-none absolute inset-0 -z-10 overflow-hidden`}>
+      <div className={`
+        relative z-10 overflow-hidden rounded-3xl px-2 py-6
+        sm:py-9
+        md:rounded-none md:px-8 md:py-12
+      `}>
+        <div className={`
+          pointer-events-none absolute inset-0 -z-10 overflow-hidden
+        `}>
           <UnionJack
-            className={`absolute top-1/2 left-0 h-[140%] w-[70%] -translate-y-1/2 transform opacity-15`}
+            className={`
+              absolute top-1/2 left-0 h-[140%] w-[70%] -translate-y-1/2
+              transform opacity-15
+            `}
             style={{
               maskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
               WebkitMaskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
@@ -930,24 +978,38 @@ export const ILRCalculator = () => {
             style={{ background: "linear-gradient(90deg, transparent 55%, var(--color-surface) 100%)" }}
           />
         </div>
-        <div className={`z-50 flex items-start gap-3 md:py-2 lg:py-6`}>
+        <div className={`
+          z-50 flex items-start gap-3
+          md:py-2
+          lg:py-6
+        `}>
           <div
-            className={`bg-primary text-surface flex min-h-12 min-w-12 items-center justify-center rounded-2xl shadow-md`}
+            className={`
+              flex min-h-12 min-w-12 items-center justify-center rounded-2xl
+              bg-primary text-surface shadow-md
+            `}
           >
             <Calendar className="h-5 w-5" />
           </div>
           <div className="space-y-2">
-            <h1 className={`text-on-surface text-xl font-bold md:text-2xl lg:text-3xl`}>
+            <h1 className={`
+              text-xl font-bold text-on-surface
+              md:text-2xl
+              lg:text-3xl
+            `}>
               {i18n("UK Earned Settlement (ILR)")}
             </h1>
-            <p className={`text-neutral max-w-4xl`}>
+            <p className={`max-w-4xl text-neutral`}>
               {i18n("Check your ILR timeline and costs based on the Earned Settlement rules.")}
             </p>
           </div>
         </div>
       </div>
 
-      <div className={`space-y-6 px-4 pt-4 md:px-12 md:py-8`}>
+      <div className={`
+        space-y-6 px-4 pt-4
+        md:px-12 md:py-8
+      `}>
         <Tabs activeKey={activeStep} onChange={(tab) => setActiveStep(tab)}>
           {steps.map((s) => {
             const Icon = s.icon;
@@ -985,17 +1047,20 @@ export const ILRCalculator = () => {
         )}
 
         {result && (
-          <div className={`space-y-3 md:space-y-4`}>
+          <div className={`
+            space-y-3
+            md:space-y-4
+          `}>
             {result.blockingRequirements.length > 0 && (
               <Alert variant="error">
                 <div className="flex flex-col gap-1">
-                  <span className="text-on-surface font-semibold">{i18n("Blocking suitability issues detected")}</span>
+                  <span className="font-semibold text-on-surface">{i18n("Blocking suitability issues detected")}</span>
                   <ul className="list-inside list-disc space-y-1">
                     {result.blockingRequirements.map((b) => (
                       <li key={b.text}>{b.text}</li>
                     ))}
                   </ul>
-                  <span className="text-on-surface/80 leading-snug">
+                  <span className="leading-snug text-on-surface/80">
                     {i18n("These issues prevent settlement until resolved. The timeline shown is indicative only.")}
                   </span>
                 </div>
@@ -1005,7 +1070,7 @@ export const ILRCalculator = () => {
             {result.blockingRequirements.length === 0 && !result.allRequirementsMet && (
               <Alert variant="warning">
                 <div className="flex flex-col gap-1">
-                  <span className="text-on-surface font-semibold">
+                  <span className="font-semibold text-on-surface">
                     {i18n("Some non-blocking requirements are not met")}
                   </span>
                 </div>
@@ -1014,47 +1079,66 @@ export const ILRCalculator = () => {
 
             <Alert className="w-full" variant={result.allRequirementsMet ? "success" : "info"}>
               <div className="flex flex-col gap-1">
-                <span className="text-on-surface font-semibold">
+                <span className="font-semibold text-on-surface">
                   {i18n("Estimated earliest ILR date")}: {formatDateSafe(result.ilrDate)}
                 </span>
-                <span className="text-on-surface/80 leading-snug">
+                <span className="leading-snug text-on-surface/80">
                   {i18n("Based on the information you entered and the current consultation proposals")}
                 </span>
               </div>
             </Alert>
 
-            <div className={`grid gap-3 md:gap-4 lg:grid-cols-3`}>
+            <div className={`
+              grid gap-3
+              md:gap-4
+              lg:grid-cols-3
+            `}>
               <div
-                className={`border-neutral-disabled bg-surface/70 rounded-xl border px-4 py-3 shadow-sm md:px-5 md:py-4`}
+                className={`
+                  rounded-xl border border-neutral-disabled bg-surface/70 px-4
+                  py-3 shadow-sm
+                  md:px-5 md:py-4
+                `}
               >
-                <p className="text-neutral font-semibold uppercase">{i18n("Main applicant")}</p>
-                <p className="text-on-surface mt-1 text-3xl font-semibold">
+                <p className="font-semibold text-neutral uppercase">{i18n("Main applicant")}</p>
+                <p className="mt-1 text-3xl font-semibold text-on-surface">
                   {i18n("{years} years", { years: result.mainApplicantYears })}
                 </p>
-                <p className="text-neutral mt-1">
+                <p className="mt-1 text-neutral">
                   {i18n("Visa start date")}: {formatDateSafe(result.visaStartDate)}
                 </p>
                 <p className="text-neutral">
                   {i18n("Target ILR date")}: {formatDateSafe(result.ilrDate)}
                 </p>
-                <p className="text-on-surface font-semibold">
+                <p className="font-semibold text-on-surface">
                   {i18n("Earliest application (28-day rule)")}: {formatDateSafe(result.earliestApplicationDate)}
                 </p>
               </div>
 
               <div
-                className={`border-neutral-disabled bg-surface/70 rounded-xl border px-4 py-3 shadow-sm md:px-5 md:py-4 lg:col-span-2`}
+                className={`
+                  rounded-xl border border-neutral-disabled bg-surface/70 px-4
+                  py-3 shadow-sm
+                  md:px-5 md:py-4
+                  lg:col-span-2
+                `}
               >
-                <p className={`text-neutral mb-2 font-semibold uppercase`}>{i18n("Key requirements")}</p>
+                <p className={`mb-2 font-semibold text-neutral uppercase`}>{i18n("Key requirements")}</p>
                 <ul className="space-y-1.5">
                   {result.requirements.map((r) => (
                     <li className="flex items-center gap-2" key={r.text}>
                       {r.met ? (
-                        <CheckCircle className={`max-h-4 min-h-4 max-w-4 min-w-4 text-green-600`} />
+                        <CheckCircle className={`
+                          max-h-4 min-h-4 max-w-4 min-w-4 text-green-600
+                        `} />
                       ) : (
-                        <AlertCircle className={`max-h-4 min-h-4 max-w-4 min-w-4 text-red-500`} />
+                        <AlertCircle className={`
+                          max-h-4 min-h-4 max-w-4 min-w-4 text-red-500
+                        `} />
                       )}
-                      <span className={r.met ? "text-on-surface" : `font-semibold text-red-700`}>{r.text}</span>
+                      <span className={r.met ? "text-on-surface" : `
+                        font-semibold text-red-700
+                      `}>{r.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -1063,13 +1147,17 @@ export const ILRCalculator = () => {
 
             {result.partnerYears !== null && (
               <div
-                className={`border-neutral-disabled bg-surface/70 rounded-xl border px-4 py-3 shadow-sm md:px-5 md:py-4`}
+                className={`
+                  rounded-xl border border-neutral-disabled bg-surface/70 px-4
+                  py-3 shadow-sm
+                  md:px-5 md:py-4
+                `}
               >
-                <p className={`text-neutral mb-1 font-semibold uppercase`}>{i18n("Partner (dependant)")}</p>
-                <p className="text-on-surface text-xl font-semibold">
+                <p className={`mb-1 font-semibold text-neutral uppercase`}>{i18n("Partner (dependant)")}</p>
+                <p className="text-xl font-semibold text-on-surface">
                   {i18n("{years} years", { years: result.partnerYears })}
                 </p>
-                <p className="text-neutral mb-2">
+                <p className="mb-2 text-neutral">
                   {i18n(
                     "Dependants are assessed separately under the proposals, even if the main applicant qualifies earlier.",
                   )}
@@ -1080,7 +1168,7 @@ export const ILRCalculator = () => {
                   </p>
                 )}
                 {result.partnerAdjustments.length > 0 && (
-                  <ul className="text-neutral list-inside list-disc">
+                  <ul className="list-inside list-disc text-neutral">
                     {result.partnerAdjustments.map(({ reason, type, years }, index) => (
                       <li key={index}>
                         {reason}{" "}
@@ -1099,13 +1187,17 @@ export const ILRCalculator = () => {
 
             {values.hasChildren && (
               <div
-                className={`border-neutral-disabled bg-surface/70 rounded-xl border px-4 py-3 shadow-sm md:px-5 md:py-4`}
+                className={`
+                  rounded-xl border border-neutral-disabled bg-surface/70 px-4
+                  py-3 shadow-sm
+                  md:px-5 md:py-4
+                `}
               >
-                <p className={`text-neutral mb-1 font-semibold uppercase`}>{i18n("Children (dependants)")}</p>
-                <p className="text-on-surface text-lg font-semibold">
+                <p className={`mb-1 font-semibold text-neutral uppercase`}>{i18n("Children (dependants)")}</p>
+                <p className="text-lg font-semibold text-on-surface">
                   {i18n("{count} children", { count: values.numberOfChildren ?? 0 })}
                 </p>
-                <div className="text-neutral mt-4 space-y-1">
+                <div className="mt-4 space-y-1 text-neutral">
                   <RichText as="p">
                     {i18n("**Under 18**: can usually get settlement at the same time as the main applicant.")}
                   </RichText>
@@ -1124,9 +1216,14 @@ export const ILRCalculator = () => {
             )}
 
             {result.adjustments.length > 0 && (
-              <div className={`bg-neutral/10 rounded-xl px-4 py-3 md:px-5 md:py-4`}>
-                <h3 className="text-on-surface mb-1 font-semibold">{i18n("How your waiting time was adjusted")}</h3>
-                <ul className={`text-neutral list-inside list-disc space-y-1 text-sm`}>
+              <div className={`
+                rounded-xl bg-neutral/10 px-4 py-3
+                md:px-5 md:py-4
+              `}>
+                <h3 className="mb-1 font-semibold text-on-surface">{i18n("How your waiting time was adjusted")}</h3>
+                <ul className={`
+                  list-inside list-disc space-y-1 text-sm text-neutral
+                `}>
                   {result.adjustments.map((a, idx) => (
                     <li key={idx}>
                       <span className="font-semibold">
@@ -1147,8 +1244,10 @@ export const ILRCalculator = () => {
             {result.warnings.length > 0 && (
               <Alert variant="warning">
                 <div className="space-y-1">
-                  <p className="text-on-surface font-semibold">{i18n("Warning")}</p>
-                  <ul className={`text-on-surface list-inside list-disc space-y-1 leading-snug`}>
+                  <p className="font-semibold text-on-surface">{i18n("Warning")}</p>
+                  <ul className={`
+                    list-inside list-disc space-y-1 leading-snug text-on-surface
+                  `}>
                     {result.warnings.map((w, idx) => (
                       <li key={idx}>{w}</li>
                     ))}
@@ -1207,9 +1306,12 @@ export const ILRCalculator = () => {
               const householdVisaRemaining = perPersonVisaRemaining + partnerVisaRemaining + childrenVisaRemaining;
               const householdIhsRemaining = perPersonIhsRemaining + partnerIhsRemaining + childrenIhsRemaining;
               return (
-                <div className={`bg-on-surface/5 rounded-xl px-4 py-3 md:px-5 md:py-4`}>
-                  <p className="text-neutral font-semibold uppercase">{i18n("Fees snapshot (2025 rates)")}</p>
-                  <RichText className="text-on-surface mt-1">
+                <div className={`
+                  rounded-xl bg-on-surface/5 px-4 py-3
+                  md:px-5 md:py-4
+                `}>
+                  <p className="font-semibold text-neutral uppercase">{i18n("Fees snapshot (2025 rates)")}</p>
+                  <RichText className="mt-1 text-on-surface">
                     {i18n("&bull; Indicative ILR application fee (per person): **{fee}**", {
                       fee: formatCurrency(ILR_APPLICATION_FEE),
                     })}
@@ -1221,14 +1323,14 @@ export const ILRCalculator = () => {
                     })}
                   </RichText>
                   {perPersonVisaRemaining === 0 && perPersonIhsRemaining === 0 ? (
-                    <p className="text-primary mt-2 text-sm">
+                    <p className="mt-2 text-sm text-primary">
                       {i18n(
                         "You have less than 1 year until ILR, assuming that no further visa/IHS renewals expected before applying.",
                       )}
                     </p>
                   ) : (
                     <>
-                      <p className={`text-on-surface mt-8 text-sm font-semibold`}>
+                      <p className={`mt-8 text-sm font-semibold text-on-surface`}>
                         {i18n("Estimated remaining visa fees (per person): {fee}", {
                           fee: formatCurrency(perPersonVisaRemaining),
                         })}
@@ -1238,7 +1340,7 @@ export const ILRCalculator = () => {
                           fee: formatCurrency(householdVisaRemaining),
                         })}
                       </RichText>
-                      <p className={`text-on-surface mt-8 text-sm font-semibold`}>
+                      <p className={`mt-8 text-sm font-semibold text-on-surface`}>
                         {i18n("Estimated remaining IHS (per person): {fee}", {
                           fee: formatCurrency(perPersonIhsRemaining),
                         })}
@@ -1250,15 +1352,18 @@ export const ILRCalculator = () => {
                       </RichText>
                     </>
                   )}
-                  <div className={`border-neutral-disabled/60 mt-3 flex items-end justify-end border-t pt-3`}>
+                  <div className={`
+                    mt-3 flex items-end justify-end border-t
+                    border-neutral-disabled/60 pt-3
+                  `}>
                     <div className="text-right">
                       <p className="text-neutral uppercase">{i18n("Total estimated cost")}</p>
-                      <p className="text-on-surface text-xl font-semibold">
+                      <p className="text-xl font-semibold text-on-surface">
                         {formatCurrency(estimatedFee + householdVisaRemaining + householdIhsRemaining)}
                       </p>
                     </div>
                   </div>
-                  <RichText className="text-neutral mt-3">
+                  <RichText className="mt-3 text-neutral">
                     {i18n(
                       "Fees are indicative (as of 2025). Check latest [GOV.UK visa/IHS/ILR fee updates]({GOV_UK_FEE_UPDATES_URL}).",
 
@@ -1272,7 +1377,7 @@ export const ILRCalculator = () => {
               );
             })()}
 
-            <RichText className="text-neutral mt-4">
+            <RichText className="mt-4 text-neutral">
               {i18n(
                 "This calculator is based on the Home Office [A Fairer Pathway to Settlement]({FAIRER_PATHWAY_URL}) consultation (earned settlement, baseline 10 years, with reductions/penalties).<br/>**It is for illustration only** and does not guarantee eligibility.<br/><br/>Always check the latest official rules and consider getting professional legal advice before applying.",
                 {
@@ -1285,58 +1390,61 @@ export const ILRCalculator = () => {
         )}
 
         <div className="py-5">
-          <p className="text-neutral mb-2 font-semibold uppercase">{i18n("Glossary")}</p>
-          <ul className={`text-neutral list-inside list-disc space-y-4 md:space-y-2`}>
+          <p className="mb-2 font-semibold text-neutral uppercase">{i18n("Glossary")}</p>
+          <ul className={`
+            list-inside list-disc space-y-4 text-neutral
+            md:space-y-2
+          `}>
             <li>
-              <span className="text-on-surface font-semibold">ILR / Earned Settlement</span> -{" "}
+              <span className="font-semibold text-on-surface">ILR / Earned Settlement</span> -{" "}
               {i18n(
                 "permission to remain in the UK without time limits. The earned route can take between 3 and 30 years.",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">Skilled Worker visa</span> -{" "}
+              <span className="font-semibold text-on-surface">Skilled Worker visa</span> -{" "}
               {i18n(
                 "employer-sponsored work visa. The draft sets a baseline of 10 years, reducible to 5 or 3 years depending on salary.",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">RQF Level 6+</span> -{" "}
+              <span className="font-semibold text-on-surface">RQF Level 6+</span> -{" "}
               {i18n(
                 "jobs that require a university-level qualification, such as a Bachelor's degree (Level 6), Master's degree (Level 7), or PhD (Level 8).",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">RQF Level 3-5</span> -{" "}
+              <span className="font-semibold text-on-surface">RQF Level 3-5</span> -{" "}
               {i18n(
                 "A-levels are Level 3, and things like Foundation degrees, HNCs and HNDs are Levels 4-5. Lower-skill roles usually follow the longer 15-year ILR route.",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">Life in the UK Test</span> -{" "}
+              <span className="font-semibold text-on-surface">Life in the UK Test</span> -{" "}
               {i18n(
                 "required culture/values test before settlement. It's short multiple-choice quiz about British history, culture and everyday life.",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">B2 / C1 English</span> -{" "}
+              <span className="font-semibold text-on-surface">B2 / C1 English</span> -{" "}
               {i18n("you need at least B2, but C1 can speed things up by a year.")}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">Public funds</span> -{" "}
+              <span className="font-semibold text-on-surface">Public funds</span> -{" "}
               {i18n(
                 "UK benefits (like Universal Credit or housing support). Using them can add 5-10 years to your settlement timeline.",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">BN(O)</span> -{" "}
+              <span className="font-semibold text-on-surface">BN(O)</span> -{" "}
               {i18n("a special British National (Overseas) visa with a 5-year path to settlement.")}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">NRPF</span> -{" "}
+              <span className="font-semibold text-on-surface">NRPF</span> -{" "}
               {i18n("No Recourse to Public Funds, meaning you can't claim most UK benefits.")}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">Community volunteering</span> -{" "}
+              <span className="font-semibold text-on-surface">Community volunteering</span> -{" "}
               {i18n(
                 "helping your local area in a genuine, unpaid way - like working in a charity shop (Oxfam, Cancer Research UK, British Heart Foundation), helping at a food bank, joining park clean-ups, or supporting a community centre.",
               )}
