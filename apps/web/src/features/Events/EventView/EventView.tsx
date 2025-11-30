@@ -1,6 +1,8 @@
 "use client";
 
 import clsx from "clsx";
+import { format, parse } from "date-fns";
+import { enGB } from "date-fns/locale";
 import { ArrowUpRight, Calendar, Globe, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 
@@ -8,6 +10,7 @@ import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, TabPane,
 import { useEvents } from "~/hooks/useEvents";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
+import { toDateLocale } from "~/lib/utils/locale";
 import { Locale } from "~/types";
 
 import { CardHeader } from "../EventCard/Components/CardHeader";
@@ -57,13 +60,17 @@ export const EventView = ({ slug }: EventViewProps) => {
 
   const startDate = new Date(event.start_date);
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString(locale, {
-      day: "numeric",
-      month: "long",
-      weekday: "long",
-      year: "numeric",
-    });
+  // const formatDate = (date: Date) => {
+  //   return date.toLocaleDateString(locale, {
+  //     day: "numeric",
+  //     month: "long",
+  //     weekday: "long",
+  //     year: "numeric",
+  //   });
+  // };
+
+  const formatDate = (date: Date, locale = enGB) => {
+    return format(date, "EEEE, d MMMM yyyy", { locale });
   };
 
   const formatTime = (date: Date) => {
@@ -124,12 +131,11 @@ export const EventView = ({ slug }: EventViewProps) => {
       text = interval === 1 ? i18n("Every year") : i18n("Every {count} years", { count: interval });
     }
 
-    // End condition
     if (count) {
       text += `, ${i18n("{n} times", { n: parseInt(count) })}`;
     } else if (until) {
-      const untilDate = new Date(until);
-      text += `, ${i18n("until")} ${formatDate(untilDate)}`;
+      const untilDate = parse(until, "yyyyMMdd", new Date());
+      text += `, ${i18n("until")}: ${formatDate(untilDate, toDateLocale(locale))}`;
     }
 
     return text;
