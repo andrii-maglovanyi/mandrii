@@ -60,15 +60,6 @@ export const EventView = ({ slug }: EventViewProps) => {
 
   const startDate = new Date(event.start_date);
 
-  // const formatDate = (date: Date) => {
-  //   return date.toLocaleDateString(locale, {
-  //     day: "numeric",
-  //     month: "long",
-  //     weekday: "long",
-  //     year: "numeric",
-  //   });
-  // };
-
   const formatDate = (date: Date, locale = enGB) => {
     return format(date, "EEEE, d MMMM yyyy", { locale });
   };

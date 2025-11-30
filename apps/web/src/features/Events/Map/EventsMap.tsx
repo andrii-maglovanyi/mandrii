@@ -413,7 +413,9 @@ export const EventsMap = () => {
                 <div className={`
                   -mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
                   pt-0.5
-                `}>{eventCards}</div>
+                `}>
+                  {eventCards}
+                </div>
               )}
             </div>
 

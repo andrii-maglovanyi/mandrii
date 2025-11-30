@@ -99,9 +99,9 @@ describe("computeILROutcome", () => {
     expect(outcome).not.toBeNull();
     expect(outcome?.mainApplicantYears).toBe(10);
     expect(outcome?.partnerYears).toBe(10); // capped to main applicant timeline
-    expect(
-      outcome?.partnerAdjustments.some((a) => a.type === "info" && a.reason.includes("cannot be shorter")),
-    ).toBe(true);
+    expect(outcome?.partnerAdjustments.some((a) => a.type === "info" && a.reason.includes("cannot be shorter"))).toBe(
+      true,
+    );
   });
 
   it("adds illegal entry penalties on top of the baseline", () => {
