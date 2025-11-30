@@ -14,7 +14,7 @@ import { useEvents } from "~/hooks/useEvents";
 import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
-import { Locale, SortDirections, Venue_Category_Enum, Venue_Status_Enum } from "~/types";
+import { FilterParams, Locale, SortDirections, Venue_Category_Enum, Venue_Status_Enum } from "~/types";
 
 import { CardHeader } from "../VenueCard/Components/CardHeader";
 import { CardMetadata } from "../VenueCard/Components/CardMetadata";
@@ -46,9 +46,9 @@ export const VenueView = ({ slug }: VenueViewProps) => {
       limit: 100,
       order_by: [{ start_date: "asc" as SortDirections }],
       where: {
-        start_date: { _gte: new Date().toISOString() },
+        _or: [{ end_date: { _gte: new Date().toISOString() } }, { start_date: { _gte: new Date().toISOString() } }],
         venue_id: { _eq: venue?.id },
-      },
+      } as FilterParams,
     }),
     [venue?.id],
   );

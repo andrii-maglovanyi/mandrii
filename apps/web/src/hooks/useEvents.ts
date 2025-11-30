@@ -64,9 +64,9 @@ export const getEventsFilter = ({
   // Date range filter - only show upcoming/ongoing events
   const now = new Date().toISOString();
   if (dateFrom) {
-    where.start_date = { _gte: dateFrom };
+    where._or = [{ end_date: { _gte: dateFrom } }, { start_date: { _gte: dateFrom } }];
   } else {
-    where.start_date = { _gte: now };
+    where._or = [{ end_date: { _gte: now } }, { start_date: { _gte: now } }];
   }
 
   if (dateTo) {
