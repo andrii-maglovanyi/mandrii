@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 
 import { UrlHelper } from "./url-helper";
-import { getPlatform, storage } from "./utils";
+import { getPlatform, localStore, sessionStore } from "./utils";
 
 interface EventProperties {
   [key: string]: unknown;
@@ -17,11 +17,11 @@ interface LocationData {
 let debounceTimer: NodeJS.Timeout | null = null;
 
 function getUserID(): string {
-  let userID = storage.get("uid");
+  let userID = localStore.get("uid");
 
   if (!userID) {
     userID = nanoid();
-    storage.set("uid", userID);
+    localStore.set("uid", userID);
   }
 
   return userID;
@@ -29,6 +29,10 @@ function getUserID(): string {
 
 export const sendToMixpanel = (eventName: string, eventProperties?: EventProperties): void => {
   if (!window.location.hostname.endsWith(UrlHelper.getProductionHostname())) {
+    return;
+  }
+
+  if (sessionStore.get("mixpanelOptOut") === "true") {
     return;
   }
 

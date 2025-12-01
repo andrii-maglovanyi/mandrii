@@ -16,7 +16,7 @@ export const CardFooter = ({ event, hideUntilHover, isInsideLink }: CardFooterPr
 
   const linkContent = (
     <>
-      {i18n("View details")}
+      {i18n("More")}
       <span className={`
         transition-transform
         group-hover/card:translate-x-1

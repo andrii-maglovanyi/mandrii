@@ -11,6 +11,12 @@ export const COUNTRIES = {
       uk: "Іспанія",
     },
   },
+  gb: {
+    label: {
+      en: "United Kingdom",
+      uk: "Велика Британія",
+    },
+  },
   ge: {
     label: {
       en: "Georgia",
@@ -27,12 +33,6 @@ export const COUNTRIES = {
     label: {
       en: "Poland",
       uk: "Польща",
-    },
-  },
-  uk: {
-    label: {
-      en: "United Kingdom",
-      uk: "Велика Британія",
     },
   },
 };

@@ -444,6 +444,10 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
                 colorScheme={isDark ? "DARK" : "LIGHT"}
                 distance={Number(distance)}
                 drawRadius
+                onClick={() => {
+                  if (venueSlug) return;
+                  setSelectedVenueId(null);
+                }}
                 onLoaded={() => {
                   setMapIsLoaded(true);
                 }}

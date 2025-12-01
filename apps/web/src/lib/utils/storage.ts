@@ -1,31 +1,69 @@
 const PREFIX = "mndr.";
 
-export const storage = {
-  clearAllWithPrefix() {
-    for (const key of Object.keys(localStorage)) {
-      if (key.startsWith(PREFIX)) {
-        localStorage.removeItem(key);
-      }
-    }
-  },
+type StorageLike = {
+  clearAllWithPrefix(): void;
+  get<T = string>(key: string): null | T;
+  remove(key: string): void;
+  set<T>(key: string, value: T): void;
+};
 
-  get<T = string>(key: string): null | T {
-    const item = localStorage.getItem(PREFIX + key);
-    if (item === null) return null;
+type StorageType = "local" | "session";
+
+function createStorage(type: StorageType = "local"): StorageLike {
+  const getBackend = (): null | Storage => {
+    if (typeof window === "undefined") return null; // SSR / Node
 
     try {
-      return JSON.parse(item);
+      return type === "local" ? window.localStorage : window.sessionStorage;
     } catch {
-      return item as T;
+      // In case of browser privacy modes / errors
+      return null;
     }
-  },
+  };
 
-  remove(key: string) {
-    localStorage.removeItem(PREFIX + key);
-  },
+  return {
+    clearAllWithPrefix() {
+      const backend = getBackend();
+      if (!backend) return;
 
-  set<T>(key: string, value: T) {
-    const data = typeof value === "string" ? value : JSON.stringify(value);
-    localStorage.setItem(PREFIX + key, data);
-  },
-};
+      for (let i = backend.length - 1; i >= 0; i--) {
+        const key = backend.key(i);
+        if (key && key.startsWith(PREFIX)) {
+          backend.removeItem(key);
+        }
+      }
+    },
+
+    get<T = string>(key: string): null | T {
+      const backend = getBackend();
+      if (!backend) return null;
+
+      const item = backend.getItem(PREFIX + key);
+      if (item === null) return null;
+
+      try {
+        return JSON.parse(item);
+      } catch {
+        return item as T;
+      }
+    },
+
+    remove(key: string) {
+      const backend = getBackend();
+      if (!backend) return;
+
+      backend.removeItem(PREFIX + key);
+    },
+
+    set<T>(key: string, value: T) {
+      const backend = getBackend();
+      if (!backend) return;
+
+      const data = typeof value === "string" ? value : JSON.stringify(value);
+      backend.setItem(PREFIX + key, data);
+    },
+  };
+}
+
+export const localStore = createStorage("local");
+export const sessionStore = createStorage("session");

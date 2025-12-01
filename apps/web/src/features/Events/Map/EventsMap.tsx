@@ -425,6 +425,9 @@ export const EventsMap = () => {
                 distance={Number(distance)}
                 drawRadius
                 events={eventsWithGeo}
+                onClick={() => {
+                  setSelectedEventId(null);
+                }}
                 onEventSelected={(id: UUID) => {
                   setSelectedEventId(id);
 

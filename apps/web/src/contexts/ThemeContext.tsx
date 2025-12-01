@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { sendToMixpanel } from "~/lib/mixpanel";
-import { storage } from "~/lib/utils";
+import { localStore } from "~/lib/utils";
 
 type ThemeContextType = {
   isDark: boolean;
@@ -16,7 +16,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDark, setIsDark] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const saved = storage.get<string>("theme");
+    const saved = localStore.get<string>("theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const resolved = saved ? saved === "dark" : prefersDark;
     setIsDark(resolved);
@@ -25,7 +25,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (isDark === null) return;
     document.documentElement.classList.toggle("dark", isDark);
-    storage.set("theme", isDark ? "dark" : "light");
+    localStore.set("theme", isDark ? "dark" : "light");
   }, [isDark]);
 
   const toggleTheme = useCallback(() => {

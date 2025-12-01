@@ -23,6 +23,7 @@ interface PinMapProps {
   distance: number;
   drawRadius?: boolean;
   events?: GetPublicEventsQuery["events"];
+  onClick?: () => void;
   onEventSelected?: (id: UUID) => void;
   onLoaded?: () => void;
   ref?: Ref<GoogleMapRef>;
@@ -43,6 +44,7 @@ export const PinMap = ({
   distance,
   drawRadius,
   events,
+  onClick,
   onEventSelected,
   onLoaded,
   ref,
@@ -160,6 +162,7 @@ export const PinMap = ({
       center={userLocation}
       key={colorScheme}
       mapContainerStyle={MAP_STYLES}
+      onClick={onClick}
       onLoad={onLoad}
       options={MAP_CONFIGS}
       zoom={zoom}
