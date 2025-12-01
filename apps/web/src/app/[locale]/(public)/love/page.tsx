@@ -35,13 +35,13 @@ export default function LovePage() {
           flex cursor-default flex-col items-center justify-center gap-4
           md:flex-row md:gap-6
         `}>
-          <div className="space-x-2">
+          <div className="flex space-x-2">
             {SOCIAL_LINKS.map((props) => (
               <PlatformLink key={props.type} size="large" {...props} />
             ))}
           </div>
           <div>&nbsp;</div>
-          <div className="space-x-2">
+          <div className="flex space-x-2">
             {SUPPORT_LINKS.map((props) => (
               <PlatformLink key={props.type} size="large" {...props} />
             ))}

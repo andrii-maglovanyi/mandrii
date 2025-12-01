@@ -14,6 +14,9 @@ interface PublicConfig {
     apiKey: string;
     mapId: string;
   };
+  mixpanel: {
+    ignoredEmails: string[];
+  };
   recaptcha: {
     siteKey: string;
   };
@@ -34,6 +37,11 @@ export const publicConfig: PublicConfig = {
   maps: {
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "__UNSET__",
     mapId: process.env.NEXT_PUBLIC_GOOGLE_MAP_ID || "__UNSET__",
+  },
+  mixpanel: {
+    ignoredEmails: (process.env.NEXT_PUBLIC_MIXPANEL_IGNORED_EMAILS || "")
+      .split(",")
+      .map((email) => email.trim().toLowerCase()),
   },
   recaptcha: {
     siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "__UNSET__",

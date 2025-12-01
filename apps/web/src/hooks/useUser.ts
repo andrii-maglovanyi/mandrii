@@ -3,8 +3,10 @@ import { useSession } from "next-auth/react";
 
 import { useAuth } from "~/contexts/AuthContext";
 import { useI18n } from "~/i18n/useI18n";
+import { publicConfig } from "~/lib/config/public";
 import { constants } from "~/lib/constants";
 import { UrlHelper } from "~/lib/url-helper";
+import { sessionStore } from "~/lib/utils";
 import { UserRole } from "~/types/next-auth";
 import { UserSession } from "~/types/user";
 import { UUID } from "~/types/uuid";
@@ -46,6 +48,11 @@ export const useUser = (): UserContext => {
         role: (profile?.role ?? session.user?.role ?? "user") as UserRole,
       }
     : null;
+
+  // Do not track certain users in Mixpanel
+  if (publicConfig.mixpanel.ignoredEmails.includes(data?.email.toLowerCase() ?? "")) {
+    sessionStore.set("mixpanelOptOut", "true");
+  }
 
   return {
     data,

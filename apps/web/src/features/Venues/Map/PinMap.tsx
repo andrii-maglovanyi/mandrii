@@ -20,6 +20,7 @@ interface PinMapProps {
   colorScheme: "DARK" | "LIGHT";
   distance: number;
   drawRadius?: boolean;
+  onClick?: () => void;
   onLoaded?: () => void;
   onVenueSelected?: (id: UUID) => void;
   ref?: Ref<GoogleMapRef>;
@@ -40,6 +41,7 @@ export const PinMap = ({
   colorScheme,
   distance,
   drawRadius,
+  onClick,
   onLoaded,
   onVenueSelected,
   ref,
@@ -156,6 +158,7 @@ export const PinMap = ({
       center={userLocation}
       key={colorScheme}
       mapContainerStyle={MAP_STYLES}
+      onClick={onClick}
       onLoad={onLoad}
       options={MAP_CONFIGS}
       zoom={zoom}
