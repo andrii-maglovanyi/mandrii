@@ -1503,7 +1503,7 @@ msgstr ""
 msgid "Verified event"
 msgstr ""
 
-msgid "View details"
+msgid "More"
 msgstr ""
 
 msgid "All price types"
@@ -1633,9 +1633,6 @@ msgid "Saving"
 msgstr ""
 
 msgid "Save"
-msgstr ""
-
-msgid "More"
 msgstr ""
 
 msgid "The idea"

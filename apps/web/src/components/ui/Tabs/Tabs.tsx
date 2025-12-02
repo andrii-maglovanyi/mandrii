@@ -42,18 +42,22 @@ export const Tabs = ({ activeKey, children, defaultActiveKey = "", defer = false
     [children],
   );
 
-  // Sync controlled activeKey
   useEffect(() => {
+    if (activeTab >= tabsOnly.length) {
+      setActiveTab(0);
+    }
+
     if (!isControlled) return;
+
     const targetIndex = tabsOnly.findIndex(
       (child) => React.isValidElement<TabPaneProps>(child) && child.props.tab === activeKey,
     );
+
     if (targetIndex >= 0 && targetIndex !== activeTab) {
       setActiveTab(targetIndex);
     }
   }, [activeKey, activeTab, isControlled, tabsOnly]);
 
-  // Hash navigation for uncontrolled usage
   useEffect(() => {
     if (isControlled) return;
 

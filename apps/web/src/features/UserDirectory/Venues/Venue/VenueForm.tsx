@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import slugify from "slugify";
 
 import { FormFooter } from "~/components/layout";
@@ -10,6 +10,7 @@ import { InitialValuesType, OnFormSubmitHandler, useForm } from "~/hooks/form/us
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
+import { hasOperatingHours } from "~/lib/utils";
 import { getVenueSchema, VenueSchema } from "~/lib/validation/venue";
 import { Locale, Status, Venue_Category_Enum } from "~/types";
 
@@ -34,6 +35,7 @@ interface VenueFormProps {
 export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueFormProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
+  const { Accommodation, BeautySalon, Cafe, GroceryStore, Restaurant, School, Shop } = Venue_Category_Enum;
 
   const {
     errors,
@@ -51,22 +53,27 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
     schema: getVenueSchema(i18n),
   });
 
+  const { area, category, name } = values;
+
   const { handleSubmit, status } = useFormSubmit({
     onSubmit,
     onSuccess,
   });
 
+  const isEditMode = Boolean(initialValues.id);
+  const isBusy = status === "processing";
+
   useEffect(() => {
-    if (initialValues.id || !values.name) return;
+    if (isEditMode || !name) return;
 
-    let slugConstructor = values.name;
+    let slugConstructor = name;
 
-    if (values.area) {
-      slugConstructor = `${slugConstructor} ${values.area?.split(",")[0].trim()}`;
+    if (area) {
+      slugConstructor = `${slugConstructor} ${area.split(",")[0].trim()}`;
     }
 
-    if (values.category) {
-      slugConstructor = `${values.category} ${slugConstructor}`;
+    if (category) {
+      slugConstructor = `${category} ${slugConstructor}`;
     }
 
     setValues((prev) => ({
@@ -76,43 +83,68 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
         strict: true,
       }),
     }));
-  }, [initialValues.id, setValues, values.name, values.area, values.category]);
+  }, [isEditMode, name, area, category, setValues]);
 
-  const categoryOptions = Object.values(Venue_Category_Enum).map((value) => {
-    const { iconName, label } = constants.categories[value as keyof typeof constants.categories];
+  const categoryOptions = useMemo(
+    () =>
+      Object.values(Venue_Category_Enum).map((value) => {
+        const { iconName, label } = constants.categories[value as keyof typeof constants.categories];
 
-    return {
-      label: (
-        <div className="flex items-center gap-3">
-          {getIcon(iconName)} {label[locale]}
-        </div>
-      ),
-      value,
-    };
-  });
+        return {
+          label: (
+            <div className="flex items-center gap-3">
+              {getIcon(iconName)} {label[locale]}
+            </div>
+          ),
+          value,
+        };
+      }),
+    [locale],
+  );
 
-  const isBusy = status === "processing";
+  const renderDetailsTab = () => {
+    switch (category) {
+      case Accommodation:
+        return (
+          <TabPane tab={i18n("Details")}>
+            <VenueAccommodationDetails setValues={setValues} values={values} />
+          </TabPane>
+        );
 
-  const hasOperatingHours =
-    values.category &&
-    [
-      Venue_Category_Enum.BeautySalon,
-      Venue_Category_Enum.Cafe,
-      Venue_Category_Enum.CulturalCentre,
-      Venue_Category_Enum.GroceryStore,
-      Venue_Category_Enum.Library,
-      Venue_Category_Enum.Medical,
-      Venue_Category_Enum.Restaurant,
-      Venue_Category_Enum.School,
-      Venue_Category_Enum.Shop,
-    ].includes(values.category);
+      case BeautySalon:
+        return (
+          <TabPane tab={i18n("Details")}>
+            <VenueBeautySalonDetails setValues={setValues} values={values} />
+          </TabPane>
+        );
+      case Cafe:
 
-  const isAccommodation = values.category === Venue_Category_Enum.Accommodation;
-  const isRestaurantOrCafe =
-    values.category === Venue_Category_Enum.Restaurant || values.category === Venue_Category_Enum.Cafe;
-  const isShop = values.category === Venue_Category_Enum.Shop || values.category === Venue_Category_Enum.GroceryStore;
-  const isSchool = values.category === Venue_Category_Enum.School;
-  const isBeautySalon = values.category === Venue_Category_Enum.BeautySalon;
+      case Restaurant:
+        return (
+          <TabPane tab={i18n("Details")}>
+            <VenueRestaurantDetails setValues={setValues} values={values} />
+          </TabPane>
+        );
+      case GroceryStore:
+
+      case Shop:
+        return (
+          <TabPane tab={i18n("Details")}>
+            <VenueShopDetails setValues={setValues} values={values} />
+          </TabPane>
+        );
+
+      case School:
+        return (
+          <TabPane tab={i18n("Details")}>
+            <VenueSchoolDetails setValues={setValues} values={values} />
+          </TabPane>
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
@@ -130,7 +162,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
               options={categoryOptions}
               required
               {...getFieldProps("category")}
-              disabled={isBusy || Boolean(initialValues.id)}
+              disabled={isBusy || isEditMode}
             />
           </div>
           <div className="flex flex-4 flex-col">
@@ -144,7 +176,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
             required
             type="text"
             {...getFieldProps("slug")}
-            disabled={isBusy || Boolean(initialValues.id)}
+            disabled={isBusy || isEditMode}
           />
           <RichText as="p" className="mt-1.5 text-sm text-neutral">
             {i18n(
@@ -155,11 +187,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
       </div>
 
       <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-5">
-        <Checkbox
-          label={i18n("I own this venue")}
-          {...getFieldProps("is_owner")}
-          disabled={isBusy || Boolean(initialValues.id)}
-        />
+        <Checkbox label={i18n("I own this venue")} {...getFieldProps("is_owner")} disabled={isBusy || isEditMode} />
         <p className="text-sm text-neutral">
           ↑ {i18n("Legal owners have additional management privileges. This setting cannot be changed.")}
         </p>
@@ -189,36 +217,13 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
           />
         </TabPane>
 
-        {hasOperatingHours && (
+        {hasOperatingHours(category) && (
           <TabPane tab={i18n("Opening hours")}>
             <VenueSchedule getFieldProps={getFieldProps} setValues={setValues} values={values} />
           </TabPane>
         )}
-        {isAccommodation && (
-          <TabPane tab={i18n("Details")}>
-            <VenueAccommodationDetails setValues={setValues} values={values} />
-          </TabPane>
-        )}
-        {isRestaurantOrCafe && (
-          <TabPane tab={i18n("Details")}>
-            <VenueRestaurantDetails setValues={setValues} values={values} />
-          </TabPane>
-        )}
-        {isShop && (
-          <TabPane tab={i18n("Details")}>
-            <VenueShopDetails setValues={setValues} values={values} />
-          </TabPane>
-        )}
-        {isSchool && (
-          <TabPane tab={i18n("Details")}>
-            <VenueSchoolDetails setValues={setValues} values={values} />
-          </TabPane>
-        )}
-        {isBeautySalon && (
-          <TabPane tab={i18n("Details")}>
-            <VenueBeautySalonDetails setValues={setValues} values={values} />
-          </TabPane>
-        )}
+
+        {renderDetailsTab()}
       </Tabs>
 
       <FormFooter handleCancel={resetForm} hasChanges={hasChanges} isFormValid={isFormValid} status={status} />
