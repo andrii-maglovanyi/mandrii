@@ -104,7 +104,7 @@ export const VenueView = ({ slug }: VenueViewProps) => {
             relative aspect-video w-full
             md:aspect-21/9
           `}>
-            <ImageCarousel images={images} showDots />
+            <ImageCarousel autoPlay images={images} showDots />
             {/* Gradient overlay */}
             <div
               className={`
