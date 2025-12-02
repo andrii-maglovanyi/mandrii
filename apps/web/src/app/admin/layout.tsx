@@ -25,8 +25,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
-          <ApolloWrapper>
+        <ApolloWrapper>
+          <AuthProvider>
             <ThemeProvider>
               <DialogProvider>
                 <NotificationsProvider>
@@ -35,8 +35,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 </NotificationsProvider>
               </DialogProvider>
             </ThemeProvider>
-          </ApolloWrapper>
-        </AuthProvider>
+          </AuthProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );

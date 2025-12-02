@@ -19,6 +19,7 @@ export const CATEGORIES: Record<
   CULTURAL_CENTRE: { iconName: "GalleryHorizontal", label: { en: "Cultural centre", uk: "Культурний центр" } },
   DELIVERY: { iconName: "Package", label: { en: "Delivery", uk: "Доставка" } },
   GROCERY_STORE: { iconName: "ShoppingCart", label: { en: "Grocery store", uk: "Продуктовий магазин" } },
+  LEGAL_SERVICE: { iconName: "Scale", label: { en: "Legal service", uk: "Юридична допомога" } },
   LIBRARY: { iconName: "Book", label: { en: "Library", uk: "Бібліотека" } },
   MEDICAL: { iconName: "Hospital", label: { en: "Medical & Healthcare", uk: "Медицина та охорона здоров'я" } },
   ORGANIZATION: { iconName: "Building", label: { en: "Organization", uk: "Організація" } },
