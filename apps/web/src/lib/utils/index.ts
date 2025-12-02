@@ -9,5 +9,6 @@ export * from "./platform";
 export * from "./storage";
 export * from "./string";
 export * from "./url";
+export * from "./venues";
 export * from "./website";
 export * from "./zod";
