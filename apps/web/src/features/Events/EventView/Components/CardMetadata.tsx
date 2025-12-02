@@ -1,5 +1,6 @@
 "use client";
 
+import { format } from "date-fns";
 import {
   Calendar,
   Clock,
@@ -18,6 +19,7 @@ import { useMemo } from "react";
 
 import { Separator } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
+import { toDateLocale } from "~/lib/utils";
 import { GetPublicEventsQuery, Locale, Price_Type_Enum } from "~/types";
 
 import { InfoLine } from "../../../Venues/VenueCard/Components/InfoLine";
@@ -111,7 +113,9 @@ export const CardMetadata = ({
         <Section expanded={expanded} title={i18n("Date & Time")}>
           <InfoLine
             icon={<Calendar className={ICON_CLASSES} size={ICON_SIZE} />}
-            info={dateDisplay || ""}
+            info={
+              dateDisplay ? format(new Date(dateDisplay), "EEEE, dd MMMM yyyy", { locale: toDateLocale(locale) }) : ""
+            }
             tooltipText={i18n("Copy date")}
             withCopy
           />

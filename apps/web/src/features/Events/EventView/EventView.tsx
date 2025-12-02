@@ -200,7 +200,9 @@ export const EventView = ({ slug }: EventViewProps) => {
                     <span className={`
                       text-base font-medium
                       md:text-lg
-                    `}>{formatDate(startDate)}</span>
+                    `}>
+                      {format(new Date(startDate), "EEEE, dd MMMM yyyy", { locale: toDateLocale(locale) })}
+                    </span>
                   </div>
 
                   {!event.is_online && event.city && (
