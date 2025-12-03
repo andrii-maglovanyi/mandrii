@@ -1,0 +1,48 @@
+table:
+  name: order_items
+  schema: public
+object_relationships:
+  - name: order
+    using:
+      foreign_key_constraint_on: order_id
+  - name: product
+    using:
+      foreign_key_constraint_on: product_id
+  - name: variant
+    using:
+      foreign_key_constraint_on: variant_id
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        order:
+          user_id:
+            _eq: X-Hasura-User-Id
+      columns:
+        - order_id
+        - product_id
+        - variant_id
+        - quantity
+        - unit_price_minor
+        - currency
+        - name_snapshot
+        - metadata
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - order_id
+        - product_id
+        - variant_id
+        - quantity
+        - unit_price_minor
+        - currency
+        - name_snapshot
+        - metadata
+        - created_at
+      filter:
+        order:
+          user_id:
+            _eq: X-Hasura-User-Id
+      allow_aggregations: true

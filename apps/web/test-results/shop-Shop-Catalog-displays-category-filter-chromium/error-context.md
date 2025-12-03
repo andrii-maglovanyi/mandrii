@@ -1,0 +1,175 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - banner [ref=e4]:
+        - link "Mandrii" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "Mandrii" [ref=e7] [cursor=pointer]
+        - navigation [ref=e8]:
+          - link "Map" [ref=e9] [cursor=pointer]:
+            - /url: /en/map
+          - link "Venues" [ref=e10] [cursor=pointer]:
+            - /url: /en/venues
+          - link "Shop" [ref=e11] [cursor=pointer]:
+            - /url: /en/shop
+          - link "Events" [ref=e12] [cursor=pointer]:
+            - /url: /en/events
+          - link "Posts" [ref=e13] [cursor=pointer]:
+            - /url: /en/posts
+          - link "Guides" [ref=e14] [cursor=pointer]:
+            - /url: /en/guides
+          - generic [ref=e15]:
+            - button "Join & Support" [ref=e17] [cursor=pointer]:
+              - img [ref=e18] [cursor=pointer]
+            - button "Dark mode" [ref=e21] [cursor=pointer]:
+              - img [ref=e22] [cursor=pointer]
+            - button "Переключити на українську" [ref=e25] [cursor=pointer]:
+              - generic [ref=e26] [cursor=pointer]: uk
+            - button "Sign in" [ref=e28] [cursor=pointer]:
+              - img [ref=e29] [cursor=pointer]
+      - main [ref=e32]:
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]: /
+            - link "Home" [ref=e37] [cursor=pointer]:
+              - /url: /en
+            - img [ref=e38]
+          - heading "Shop" [level=1] [ref=e42]
+          - generic [ref=e45]:
+            - generic [ref=e48]:
+              - generic:
+                - img
+              - searchbox "Search products by name..." [ref=e49]
+            - button "All categories" [ref=e53]:
+              - generic [ref=e54]: All categories
+              - img [ref=e55]
+          - paragraph [ref=e59]:
+            - text: Showing
+            - strong [ref=e60]: "1"
+            - text: "-"
+            - strong [ref=e61]: "5"
+            - text: of
+            - strong [ref=e62]: "5"
+            - text: items
+          - generic [ref=e63]:
+            - generic [ref=e64]:
+              - link [ref=e65] [cursor=pointer]:
+                - /url: /shop/mandrii-trident-tshirt
+              - generic:
+                - generic:
+                  - generic:
+                    - img "Mandrii Trident T-Shirt"
+                    - img "Mandrii Trident T-Shirt - alternate view"
+                  - generic:
+                    - heading "Mandrii Trident T-Shirt" [level=3]
+                    - paragraph: £25.00
+            - generic [ref=e66]:
+              - link [ref=e67] [cursor=pointer]:
+                - /url: /shop/sunflower-sweatshirt
+              - generic:
+                - generic:
+                  - generic:
+                    - img "Sunflower Embroidered Sweatshirt"
+                    - img "Sunflower Embroidered Sweatshirt - alternate view"
+                  - generic:
+                    - heading "Sunflower Embroidered Sweatshirt" [level=3]
+                    - paragraph: £40.00
+            - generic [ref=e68]:
+              - link [ref=e69] [cursor=pointer]:
+                - /url: /shop/stand-with-ukraine-tshirt
+              - generic:
+                - generic:
+                  - generic:
+                    - img "Stand with Ukraine T-Shirt"
+                  - generic:
+                    - heading "Stand with Ukraine T-Shirt" [level=3]
+                    - paragraph: £22.00
+            - generic [ref=e70]:
+              - link [ref=e71] [cursor=pointer]:
+                - /url: /shop/carpathian-jumper
+              - generic:
+                - generic:
+                  - generic:
+                    - img "Carpathian Mountains Jumper"
+                    - img "Carpathian Mountains Jumper - alternate view"
+                  - generic:
+                    - heading "Carpathian Mountains Jumper" [level=3]
+                    - paragraph: £55.00
+            - generic [ref=e72]:
+              - link [ref=e73] [cursor=pointer]:
+                - /url: /shop/ukrainian-heart-hoodie
+              - generic:
+                - generic:
+                  - generic:
+                    - img "Ukrainian Heart Hoodie"
+                    - img "Ukrainian Heart Hoodie - alternate view"
+                  - generic:
+                    - heading "Ukrainian Heart Hoodie" [level=3]
+                    - paragraph: £45.00
+    - generic [ref=e74]:
+      - generic [ref=e75]:
+        - img [ref=e76]
+        - generic [ref=e78]: I use cookies to make your visit smoother
+      - generic [ref=e79]:
+        - link "What does it mean?" [ref=e80] [cursor=pointer]:
+          - /url: /about-cookies
+        - button "Accept" [ref=e81] [cursor=pointer]
+    - contentinfo [ref=e82]:
+      - generic [ref=e83]:
+        - generic [ref=e84]:
+          - heading "More" [level=3] [ref=e85]
+          - link "The idea" [ref=e87] [cursor=pointer]:
+            - /url: /the-idea
+          - link "About cookies" [ref=e89] [cursor=pointer]:
+            - /url: /about-cookies
+          - link "Contact me" [ref=e91] [cursor=pointer]:
+            - /url: /contact
+        - generic [ref=e93]:
+          - heading "Newsletter" [level=3] [ref=e94]
+          - paragraph [ref=e95]: Subscribe, and I'll send you real letters
+          - generic [ref=e96]:
+            - textbox "Your email" [ref=e100]
+            - button "Subscribe" [disabled] [ref=e102]
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - text: "2025"
+          - strong [ref=e105]: Мандрій
+          - generic [ref=e106]: мандруй • мрій • дій
+        - generic [ref=e108]:
+          - link "YouTube" [ref=e110] [cursor=pointer]:
+            - /url: https://www.youtube.com/@m.andrii
+            - img [ref=e111] [cursor=pointer]
+            - generic [ref=e113] [cursor=pointer]: YouTube
+          - link "Telegram" [ref=e115] [cursor=pointer]:
+            - /url: https://t.me/m_andrii_ua
+            - img [ref=e116] [cursor=pointer]
+            - generic [ref=e118] [cursor=pointer]: Telegram
+          - link "Instagram" [ref=e120] [cursor=pointer]:
+            - /url: https://www.instagram.com/m.andrii.ua
+            - img [ref=e121] [cursor=pointer]
+            - generic [ref=e123] [cursor=pointer]: Instagram
+          - generic [ref=e124]:
+            - link "Patreon" [ref=e126] [cursor=pointer]:
+              - /url: https://patreon.com/Mandrii
+              - img [ref=e127] [cursor=pointer]
+              - generic [ref=e129] [cursor=pointer]: Patreon
+            - link "Buy Me a Coffee" [ref=e131] [cursor=pointer]:
+              - /url: https://buymeacoffee.com/mandrii
+              - img [ref=e132] [cursor=pointer]
+              - generic [ref=e134] [cursor=pointer]: Buy Me a Coffee
+      - paragraph [ref=e135]:
+        - paragraph [ref=e136]:
+          - text: This site is protected by reCAPTCHA and the Google
+          - link "Privacy Policy" [ref=e137] [cursor=pointer]:
+            - /url: https://policies.google.com/privacy
+          - text: and
+          - link "Terms of Service" [ref=e138] [cursor=pointer]:
+            - /url: https://policies.google.com/terms
+          - text: apply.
+  - button "Open Next.js Dev Tools" [ref=e144] [cursor=pointer]:
+    - img [ref=e145] [cursor=pointer]
+  - alert [ref=e148]
+```

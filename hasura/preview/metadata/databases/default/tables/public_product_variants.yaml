@@ -1,0 +1,63 @@
+table:
+  name: product_variants
+  schema: public
+object_relationships:
+  - name: clothing_age_group
+    using:
+      foreign_key_constraint_on: age_group
+  - name: clothing_gender
+    using:
+      foreign_key_constraint_on: gender
+  - name: clothing_size
+    using:
+      foreign_key_constraint_on: size
+  - name: product
+    using:
+      foreign_key_constraint_on: product_id
+array_relationships:
+  - name: order_items
+    using:
+      foreign_key_constraint_on:
+        column: variant_id
+        table:
+          name: order_items
+          schema: public
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - id
+        - product_id
+        - gender
+        - age_group
+        - size
+        - color
+        - stock
+        - sku
+        - price_override_minor
+        - created_at
+        - updated_at
+      filter:
+        product:
+          status:
+            _eq: ACTIVE
+      allow_aggregations: true
+  - role: user
+    permission:
+      columns:
+        - id
+        - product_id
+        - gender
+        - age_group
+        - size
+        - color
+        - stock
+        - sku
+        - price_override_minor
+        - created_at
+        - updated_at
+      filter:
+        product:
+          status:
+            _eq: ACTIVE
+      allow_aggregations: true

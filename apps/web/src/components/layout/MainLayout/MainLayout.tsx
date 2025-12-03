@@ -18,6 +18,7 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
     <>
       <Link href="/map">{i18n("Map")}</Link>
       <Link href="/venues">{i18n("Venues")}</Link>
+      <Link href="/shop">{i18n("Shop")}</Link>
       <Link href="/events">{i18n("Events")}</Link>
       <Link href="/posts">{i18n("Posts")}</Link>
       <Link href="/guides">{i18n("Guides")}</Link>

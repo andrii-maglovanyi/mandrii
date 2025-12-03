@@ -1,0 +1,101 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - banner [ref=e4]:
+        - link "Mandrii" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "Mandrii" [ref=e7] [cursor=pointer]
+        - navigation [ref=e8]:
+          - link "Map" [ref=e9] [cursor=pointer]:
+            - /url: /en/map
+          - link "Venues" [ref=e10] [cursor=pointer]:
+            - /url: /en/venues
+          - link "Shop" [ref=e11] [cursor=pointer]:
+            - /url: /en/shop
+          - link "Events" [ref=e12] [cursor=pointer]:
+            - /url: /en/events
+          - link "Posts" [ref=e13] [cursor=pointer]:
+            - /url: /en/posts
+          - link "Guides" [ref=e14] [cursor=pointer]:
+            - /url: /en/guides
+          - generic [ref=e15]:
+            - button "Join & Support" [ref=e17] [cursor=pointer]:
+              - img [ref=e18] [cursor=pointer]
+            - button "Dark mode" [ref=e21] [cursor=pointer]:
+              - img [ref=e22] [cursor=pointer]
+            - button "Переключити на українську" [ref=e25] [cursor=pointer]:
+              - generic [ref=e26] [cursor=pointer]: uk
+            - button "Sign in" [ref=e28] [cursor=pointer]:
+              - img [ref=e29] [cursor=pointer]
+      - main [ref=e32]:
+        - generic [ref=e35]:
+          - img [ref=e37]
+          - generic [ref=e43]: Product not found
+          - paragraph [ref=e45]: The product you're looking for isn't available yet
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - img [ref=e48]
+        - generic [ref=e50]: I use cookies to make your visit smoother
+      - generic [ref=e51]:
+        - link "What does it mean?" [ref=e52] [cursor=pointer]:
+          - /url: /about-cookies
+        - button "Accept" [ref=e53] [cursor=pointer]
+    - contentinfo [ref=e54]:
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - heading "More" [level=3] [ref=e57]
+          - link "The idea" [ref=e59] [cursor=pointer]:
+            - /url: /the-idea
+          - link "About cookies" [ref=e61] [cursor=pointer]:
+            - /url: /about-cookies
+          - link "Contact me" [ref=e63] [cursor=pointer]:
+            - /url: /contact
+        - generic [ref=e65]:
+          - heading "Newsletter" [level=3] [ref=e66]
+          - paragraph [ref=e67]: Subscribe, and I'll send you real letters
+          - generic [ref=e68]:
+            - textbox "Your email" [ref=e72]
+            - button "Subscribe" [disabled] [ref=e74]
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - text: "2025"
+          - strong [ref=e77]: Мандрій
+          - generic [ref=e78]: мандруй • мрій • дій
+        - generic [ref=e80]:
+          - link "YouTube" [ref=e82] [cursor=pointer]:
+            - /url: https://www.youtube.com/@m.andrii
+            - img [ref=e83] [cursor=pointer]
+            - generic [ref=e85] [cursor=pointer]: YouTube
+          - link "Telegram" [ref=e87] [cursor=pointer]:
+            - /url: https://t.me/m_andrii_ua
+            - img [ref=e88] [cursor=pointer]
+            - generic [ref=e90] [cursor=pointer]: Telegram
+          - link "Instagram" [ref=e92] [cursor=pointer]:
+            - /url: https://www.instagram.com/m.andrii.ua
+            - img [ref=e93] [cursor=pointer]
+            - generic [ref=e95] [cursor=pointer]: Instagram
+          - generic [ref=e96]:
+            - link "Patreon" [ref=e98] [cursor=pointer]:
+              - /url: https://patreon.com/Mandrii
+              - img [ref=e99] [cursor=pointer]
+              - generic [ref=e101] [cursor=pointer]: Patreon
+            - link "Buy Me a Coffee" [ref=e103] [cursor=pointer]:
+              - /url: https://buymeacoffee.com/mandrii
+              - img [ref=e104] [cursor=pointer]
+              - generic [ref=e106] [cursor=pointer]: Buy Me a Coffee
+      - paragraph [ref=e107]:
+        - paragraph [ref=e108]:
+          - text: This site is protected by reCAPTCHA and the Google
+          - link "Privacy Policy" [ref=e109] [cursor=pointer]:
+            - /url: https://policies.google.com/privacy
+          - text: and
+          - link "Terms of Service" [ref=e110] [cursor=pointer]:
+            - /url: https://policies.google.com/terms
+          - text: apply.
+  - button "Open Next.js Dev Tools" [ref=e116] [cursor=pointer]:
+    - img [ref=e117] [cursor=pointer]
+  - alert [ref=e120]
+```

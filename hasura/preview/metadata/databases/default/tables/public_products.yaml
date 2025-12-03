@@ -1,0 +1,70 @@
+table:
+  name: products
+  schema: public
+object_relationships:
+  - name: clothing_type_enum
+    using:
+      foreign_key_constraint_on: clothing_type
+  - name: product_status
+    using:
+      foreign_key_constraint_on: status
+array_relationships:
+  - name: order_items
+    using:
+      foreign_key_constraint_on:
+        column: product_id
+        table:
+          name: order_items
+          schema: public
+  - name: product_variants
+    using:
+      foreign_key_constraint_on:
+        column: product_id
+        table:
+          name: product_variants
+          schema: public
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - id
+        - name
+        - slug
+        - description_en
+        - description_uk
+        - category
+        - clothing_type
+        - price_minor
+        - currency
+        - images
+        - badge
+        - status
+        - stock
+        - created_at
+        - updated_at
+      filter:
+        status:
+          _eq: ACTIVE
+      allow_aggregations: true
+  - role: user
+    permission:
+      columns:
+        - id
+        - name
+        - slug
+        - description_en
+        - description_uk
+        - category
+        - clothing_type
+        - price_minor
+        - currency
+        - images
+        - badge
+        - status
+        - stock
+        - created_at
+        - updated_at
+      filter:
+        status:
+          _eq: ACTIVE
+      allow_aggregations: true

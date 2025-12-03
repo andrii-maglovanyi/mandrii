@@ -1,0 +1,3 @@
+table:
+  name: clothing_size
+  schema: public

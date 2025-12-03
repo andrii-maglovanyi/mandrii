@@ -3,6 +3,7 @@
 import { Grid3X3, List, MapPinOff } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import { useDebouncedCallback } from "use-debounce";
 
 import { ActionButton, AnimatedEllipsis, EmptyState, Pagination, RichText } from "~/components/ui";
 import { generateCatalogLayouts } from "~/features/shared/Catalog/layoutConfig";
@@ -18,6 +19,7 @@ import { EventsCatalogFilter } from "./EventsCatalogFilter";
 type ViewMode = "grid" | "list";
 
 const ITEMS_LIMIT = 12;
+const SEARCH_DEBOUNCE_MS = 300;
 
 export const EventsCatalog = () => {
   const i18n = useI18n();
@@ -27,6 +29,7 @@ export const EventsCatalog = () => {
   const [type, setType] = useState<Event_Type_Enum | undefined>();
   const [priceType, setPriceType] = useState<Price_Type_Enum | undefined>();
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [dateFrom, setDateFrom] = useState<string | undefined>();
   const [dateTo, setDateTo] = useState<string | undefined>();
 
@@ -42,17 +45,27 @@ export const EventsCatalog = () => {
     return Math.ceil(count / ITEMS_LIMIT);
   }, [count, events]);
 
+  // Debounce search to avoid hammering the API
+  const debouncedSetSearch = useDebouncedCallback((value: string) => {
+    setDebouncedSearch(value);
+  }, SEARCH_DEBOUNCE_MS);
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    debouncedSetSearch(query);
+  };
+
   useEffect(() => {
     const { variables } = getEventsFilter({
       dateFrom,
       dateTo,
-      name: searchQuery,
+      name: debouncedSearch,
       priceType,
       type,
     });
 
     handleFilter(variables.where);
-  }, [type, priceType, searchQuery, dateFrom, dateTo, handleFilter]);
+  }, [type, priceType, debouncedSearch, dateFrom, dateTo, handleFilter]);
 
   const handlePageChange = (pageIndex: number) => {
     const actualOffset = (pageIndex - 1) * ITEMS_LIMIT;
@@ -81,7 +94,7 @@ export const EventsCatalog = () => {
         onDateFromChange={setDateFrom}
         onDateToChange={setDateTo}
         onPriceTypeChange={setPriceType}
-        onSearchChange={setSearchQuery}
+        onSearchChange={handleSearchChange}
         onTypeChange={setType}
         priceType={priceType}
         searchQuery={searchQuery}
@@ -90,10 +103,7 @@ export const EventsCatalog = () => {
 
       <div className="flex flex-wrap items-center justify-between">
         {count ? (
-          <RichText as="div" className={`
-            text-sm
-            sm:text-base
-          `}>
+          <RichText as="div" className={`text-sm sm:text-base`}>
             {(() => {
               const currentOffset = listState.offset ?? 0;
               const start = currentOffset + 1;
@@ -110,10 +120,7 @@ export const EventsCatalog = () => {
           <div />
         )}
 
-        <div className={`
-          hidden gap-1 rounded-lg bg-surface-tint p-1
-          lg:flex
-        `}>
+        <div className={`bg-surface-tint hidden gap-1 rounded-lg p-1 lg:flex`}>
           <ActionButton
             aria-label={i18n("Grid view")}
             color="primary"
@@ -139,11 +146,7 @@ export const EventsCatalog = () => {
           icon={<MapPinOff size={50} />}
         />
       ) : viewMode === "grid" && !isMobile ? (
-        <div className={`
-          grid auto-rows-auto grid-cols-1 gap-4
-          sm:grid-cols-2
-          lg:grid-cols-4
-        `}>
+        <div className={`grid auto-rows-auto grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4`}>
           {eventLayouts.map((layout) => (
             <EventsMasonryCard
               event={layout.item}

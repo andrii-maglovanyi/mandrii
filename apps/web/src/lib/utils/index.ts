@@ -2,6 +2,7 @@ export * from "./address";
 export * from "./compare";
 export * from "./date";
 export * from "./email";
+export * from "./formatPrice";
 export * from "./geo";
 export * from "./locale";
 export * from "./phone-number";

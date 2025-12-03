@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { MainLayout } from "~/components/layout";
 import { NotificationsTicker } from "~/components/layout/NotificationsTicker/NotificationsTicker";
 import AuthProvider from "~/contexts/AuthContext";
+import { CartProvider } from "~/contexts/CartContext";
 import { DialogProvider } from "~/contexts/DialogContext";
 import { NotificationsProvider } from "~/contexts/NotificationsContext";
 import { ThemeProvider } from "~/contexts/ThemeContext";
@@ -107,8 +108,10 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
               <NextIntlClientProvider>
                 <DialogProvider>
                   <NotificationsProvider>
-                    <MainLayout>{children}</MainLayout>
-                    <NotificationsTicker />
+                    <CartProvider>
+                      <MainLayout>{children}</MainLayout>
+                      <NotificationsTicker />
+                    </CartProvider>
                   </NotificationsProvider>
                 </DialogProvider>
               </NextIntlClientProvider>

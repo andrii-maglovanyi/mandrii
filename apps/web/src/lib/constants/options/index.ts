@@ -1,6 +1,7 @@
 export { AGE_GROUPS } from "./AGE_GROUPS";
 export { AMENITIES } from "./AMENITIES";
 export { BEAUTY_SERVICES } from "./BEAUTY_SERVICES";
+export { CLOTHING_AGE_GROUP, CLOTHING_GENDER, CLOTHING_SIZE_ADULT, CLOTHING_SIZE_KIDS } from "./CLOTHING";
 export { CUISINE } from "./CUISINE";
 export { CURRICULUM } from "./CURRICULUM";
 export { FEATURES } from "./FEATURES";
