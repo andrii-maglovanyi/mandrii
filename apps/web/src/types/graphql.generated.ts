@@ -997,9 +997,6 @@ export type Chains_Updates = {
 /** columns and relationships of "clothing_age_group" */
 export type Clothing_Age_Group = {
   __typename?: 'clothing_age_group';
-  label_en: Scalars['String']['output'];
-  label_uk: Scalars['String']['output'];
-  sort_order: Scalars['Int']['output'];
   value: Scalars['String']['output'];
 };
 
@@ -1013,17 +1010,9 @@ export type Clothing_Age_Group_Aggregate = {
 /** aggregate fields of "clothing_age_group" */
 export type Clothing_Age_Group_Aggregate_Fields = {
   __typename?: 'clothing_age_group_aggregate_fields';
-  avg?: Maybe<Clothing_Age_Group_Avg_Fields>;
   count: Scalars['Int']['output'];
   max?: Maybe<Clothing_Age_Group_Max_Fields>;
   min?: Maybe<Clothing_Age_Group_Min_Fields>;
-  stddev?: Maybe<Clothing_Age_Group_Stddev_Fields>;
-  stddev_pop?: Maybe<Clothing_Age_Group_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Clothing_Age_Group_Stddev_Samp_Fields>;
-  sum?: Maybe<Clothing_Age_Group_Sum_Fields>;
-  var_pop?: Maybe<Clothing_Age_Group_Var_Pop_Fields>;
-  var_samp?: Maybe<Clothing_Age_Group_Var_Samp_Fields>;
-  variance?: Maybe<Clothing_Age_Group_Variance_Fields>;
 };
 
 
@@ -1033,20 +1022,11 @@ export type Clothing_Age_Group_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** aggregate avg on columns */
-export type Clothing_Age_Group_Avg_Fields = {
-  __typename?: 'clothing_age_group_avg_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
 /** Boolean expression to filter rows from the table "clothing_age_group". All fields are combined with a logical 'AND'. */
 export type Clothing_Age_Group_Bool_Exp = {
   _and?: InputMaybe<Array<Clothing_Age_Group_Bool_Exp>>;
   _not?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
   _or?: InputMaybe<Array<Clothing_Age_Group_Bool_Exp>>;
-  label_en?: InputMaybe<String_Comparison_Exp>;
-  label_uk?: InputMaybe<String_Comparison_Exp>;
-  sort_order?: InputMaybe<Int_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -1056,34 +1036,34 @@ export enum Clothing_Age_Group_Constraint {
   ClothingAgeGroupPkey = 'clothing_age_group_pkey'
 }
 
-/** input type for incrementing numeric columns in table "clothing_age_group" */
-export type Clothing_Age_Group_Inc_Input = {
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
+export enum Clothing_Age_Group_Enum {
+  Adult = 'adult',
+  Kids = 'kids'
+}
+
+/** Boolean expression to compare columns of type "clothing_age_group_enum". All fields are combined with logical 'AND'. */
+export type Clothing_Age_Group_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Clothing_Age_Group_Enum>;
+  _in?: InputMaybe<Array<Clothing_Age_Group_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Clothing_Age_Group_Enum>;
+  _nin?: InputMaybe<Array<Clothing_Age_Group_Enum>>;
 };
 
 /** input type for inserting data into table "clothing_age_group" */
 export type Clothing_Age_Group_Insert_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
 export type Clothing_Age_Group_Max_Fields = {
   __typename?: 'clothing_age_group_max_fields';
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
 export type Clothing_Age_Group_Min_Fields = {
   __typename?: 'clothing_age_group_min_fields';
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
@@ -1112,9 +1092,6 @@ export type Clothing_Age_Group_On_Conflict = {
 
 /** Ordering options when selecting data from "clothing_age_group". */
 export type Clothing_Age_Group_Order_By = {
-  label_en?: InputMaybe<Order_By>;
-  label_uk?: InputMaybe<Order_By>;
-  sort_order?: InputMaybe<Order_By>;
   value?: InputMaybe<Order_By>;
 };
 
@@ -1126,39 +1103,12 @@ export type Clothing_Age_Group_Pk_Columns_Input = {
 /** select columns of table "clothing_age_group" */
 export enum Clothing_Age_Group_Select_Column {
   /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 /** input type for updating data in table "clothing_age_group" */
 export type Clothing_Age_Group_Set_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate stddev on columns */
-export type Clothing_Age_Group_Stddev_Fields = {
-  __typename?: 'clothing_age_group_stddev_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Clothing_Age_Group_Stddev_Pop_Fields = {
-  __typename?: 'clothing_age_group_stddev_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Clothing_Age_Group_Stddev_Samp_Fields = {
-  __typename?: 'clothing_age_group_stddev_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Streaming cursor of the table "clothing_age_group" */
@@ -1171,63 +1121,25 @@ export type Clothing_Age_Group_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Clothing_Age_Group_Stream_Cursor_Value_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate sum on columns */
-export type Clothing_Age_Group_Sum_Fields = {
-  __typename?: 'clothing_age_group_sum_fields';
-  sort_order?: Maybe<Scalars['Int']['output']>;
 };
 
 /** update columns of table "clothing_age_group" */
 export enum Clothing_Age_Group_Update_Column {
   /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 export type Clothing_Age_Group_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Clothing_Age_Group_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Clothing_Age_Group_Set_Input>;
   /** filter the rows which have to be updated */
   where: Clothing_Age_Group_Bool_Exp;
 };
 
-/** aggregate var_pop on columns */
-export type Clothing_Age_Group_Var_Pop_Fields = {
-  __typename?: 'clothing_age_group_var_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate var_samp on columns */
-export type Clothing_Age_Group_Var_Samp_Fields = {
-  __typename?: 'clothing_age_group_var_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate variance on columns */
-export type Clothing_Age_Group_Variance_Fields = {
-  __typename?: 'clothing_age_group_variance_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
 /** columns and relationships of "clothing_gender" */
 export type Clothing_Gender = {
   __typename?: 'clothing_gender';
-  label_en: Scalars['String']['output'];
-  label_uk: Scalars['String']['output'];
-  sort_order: Scalars['Int']['output'];
   value: Scalars['String']['output'];
 };
 
@@ -1241,17 +1153,9 @@ export type Clothing_Gender_Aggregate = {
 /** aggregate fields of "clothing_gender" */
 export type Clothing_Gender_Aggregate_Fields = {
   __typename?: 'clothing_gender_aggregate_fields';
-  avg?: Maybe<Clothing_Gender_Avg_Fields>;
   count: Scalars['Int']['output'];
   max?: Maybe<Clothing_Gender_Max_Fields>;
   min?: Maybe<Clothing_Gender_Min_Fields>;
-  stddev?: Maybe<Clothing_Gender_Stddev_Fields>;
-  stddev_pop?: Maybe<Clothing_Gender_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Clothing_Gender_Stddev_Samp_Fields>;
-  sum?: Maybe<Clothing_Gender_Sum_Fields>;
-  var_pop?: Maybe<Clothing_Gender_Var_Pop_Fields>;
-  var_samp?: Maybe<Clothing_Gender_Var_Samp_Fields>;
-  variance?: Maybe<Clothing_Gender_Variance_Fields>;
 };
 
 
@@ -1261,20 +1165,11 @@ export type Clothing_Gender_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** aggregate avg on columns */
-export type Clothing_Gender_Avg_Fields = {
-  __typename?: 'clothing_gender_avg_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
 /** Boolean expression to filter rows from the table "clothing_gender". All fields are combined with a logical 'AND'. */
 export type Clothing_Gender_Bool_Exp = {
   _and?: InputMaybe<Array<Clothing_Gender_Bool_Exp>>;
   _not?: InputMaybe<Clothing_Gender_Bool_Exp>;
   _or?: InputMaybe<Array<Clothing_Gender_Bool_Exp>>;
-  label_en?: InputMaybe<String_Comparison_Exp>;
-  label_uk?: InputMaybe<String_Comparison_Exp>;
-  sort_order?: InputMaybe<Int_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -1284,34 +1179,37 @@ export enum Clothing_Gender_Constraint {
   ClothingGenderPkey = 'clothing_gender_pkey'
 }
 
-/** input type for incrementing numeric columns in table "clothing_gender" */
-export type Clothing_Gender_Inc_Input = {
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
+export enum Clothing_Gender_Enum {
+  Boys = 'boys',
+  Girls = 'girls',
+  Men = 'men',
+  Unisex = 'unisex',
+  Women = 'women'
+}
+
+/** Boolean expression to compare columns of type "clothing_gender_enum". All fields are combined with logical 'AND'. */
+export type Clothing_Gender_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Clothing_Gender_Enum>;
+  _in?: InputMaybe<Array<Clothing_Gender_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Clothing_Gender_Enum>;
+  _nin?: InputMaybe<Array<Clothing_Gender_Enum>>;
 };
 
 /** input type for inserting data into table "clothing_gender" */
 export type Clothing_Gender_Insert_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
 export type Clothing_Gender_Max_Fields = {
   __typename?: 'clothing_gender_max_fields';
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
 export type Clothing_Gender_Min_Fields = {
   __typename?: 'clothing_gender_min_fields';
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
@@ -1340,9 +1238,6 @@ export type Clothing_Gender_On_Conflict = {
 
 /** Ordering options when selecting data from "clothing_gender". */
 export type Clothing_Gender_Order_By = {
-  label_en?: InputMaybe<Order_By>;
-  label_uk?: InputMaybe<Order_By>;
-  sort_order?: InputMaybe<Order_By>;
   value?: InputMaybe<Order_By>;
 };
 
@@ -1354,39 +1249,12 @@ export type Clothing_Gender_Pk_Columns_Input = {
 /** select columns of table "clothing_gender" */
 export enum Clothing_Gender_Select_Column {
   /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 /** input type for updating data in table "clothing_gender" */
 export type Clothing_Gender_Set_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate stddev on columns */
-export type Clothing_Gender_Stddev_Fields = {
-  __typename?: 'clothing_gender_stddev_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Clothing_Gender_Stddev_Pop_Fields = {
-  __typename?: 'clothing_gender_stddev_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Clothing_Gender_Stddev_Samp_Fields = {
-  __typename?: 'clothing_gender_stddev_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Streaming cursor of the table "clothing_gender" */
@@ -1399,64 +1267,209 @@ export type Clothing_Gender_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Clothing_Gender_Stream_Cursor_Value_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate sum on columns */
-export type Clothing_Gender_Sum_Fields = {
-  __typename?: 'clothing_gender_sum_fields';
-  sort_order?: Maybe<Scalars['Int']['output']>;
 };
 
 /** update columns of table "clothing_gender" */
 export enum Clothing_Gender_Update_Column {
   /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 export type Clothing_Gender_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Clothing_Gender_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Clothing_Gender_Set_Input>;
   /** filter the rows which have to be updated */
   where: Clothing_Gender_Bool_Exp;
 };
 
-/** aggregate var_pop on columns */
-export type Clothing_Gender_Var_Pop_Fields = {
-  __typename?: 'clothing_gender_var_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
+/** Category-specific details for clothing products */
+export type Clothing_Product_Details = {
+  __typename?: 'clothing_product_details';
+  /** Type of clothing (tshirt, hoodie, etc.) */
+  clothing_type: Clothing_Type_Enum;
+  /** An object relationship */
+  clothing_type_enum: Clothing_Type;
+  created_at: Scalars['timestamptz']['output'];
+  /** An object relationship */
+  product: Products;
+  /** One-to-one relationship with products table */
+  product_id: Scalars['uuid']['output'];
+  updated_at: Scalars['timestamptz']['output'];
 };
 
-/** aggregate var_samp on columns */
-export type Clothing_Gender_Var_Samp_Fields = {
-  __typename?: 'clothing_gender_var_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
+/** aggregated selection of "clothing_product_details" */
+export type Clothing_Product_Details_Aggregate = {
+  __typename?: 'clothing_product_details_aggregate';
+  aggregate?: Maybe<Clothing_Product_Details_Aggregate_Fields>;
+  nodes: Array<Clothing_Product_Details>;
 };
 
-/** aggregate variance on columns */
-export type Clothing_Gender_Variance_Fields = {
-  __typename?: 'clothing_gender_variance_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
+/** aggregate fields of "clothing_product_details" */
+export type Clothing_Product_Details_Aggregate_Fields = {
+  __typename?: 'clothing_product_details_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Clothing_Product_Details_Max_Fields>;
+  min?: Maybe<Clothing_Product_Details_Min_Fields>;
+};
+
+
+/** aggregate fields of "clothing_product_details" */
+export type Clothing_Product_Details_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "clothing_product_details". All fields are combined with a logical 'AND'. */
+export type Clothing_Product_Details_Bool_Exp = {
+  _and?: InputMaybe<Array<Clothing_Product_Details_Bool_Exp>>;
+  _not?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+  _or?: InputMaybe<Array<Clothing_Product_Details_Bool_Exp>>;
+  clothing_type?: InputMaybe<Clothing_Type_Enum_Comparison_Exp>;
+  clothing_type_enum?: InputMaybe<Clothing_Type_Bool_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  product?: InputMaybe<Products_Bool_Exp>;
+  product_id?: InputMaybe<Uuid_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "clothing_product_details" */
+export enum Clothing_Product_Details_Constraint {
+  /** unique or primary key constraint on columns "product_id" */
+  ClothingProductDetailsPkey = 'clothing_product_details_pkey'
+}
+
+/** input type for inserting data into table "clothing_product_details" */
+export type Clothing_Product_Details_Insert_Input = {
+  /** Type of clothing (tshirt, hoodie, etc.) */
+  clothing_type?: InputMaybe<Clothing_Type_Enum>;
+  clothing_type_enum?: InputMaybe<Clothing_Type_Obj_Rel_Insert_Input>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  product?: InputMaybe<Products_Obj_Rel_Insert_Input>;
+  /** One-to-one relationship with products table */
+  product_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** aggregate max on columns */
+export type Clothing_Product_Details_Max_Fields = {
+  __typename?: 'clothing_product_details_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  /** One-to-one relationship with products table */
+  product_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** aggregate min on columns */
+export type Clothing_Product_Details_Min_Fields = {
+  __typename?: 'clothing_product_details_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  /** One-to-one relationship with products table */
+  product_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** response of any mutation on the table "clothing_product_details" */
+export type Clothing_Product_Details_Mutation_Response = {
+  __typename?: 'clothing_product_details_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Clothing_Product_Details>;
+};
+
+/** input type for inserting object relation for remote table "clothing_product_details" */
+export type Clothing_Product_Details_Obj_Rel_Insert_Input = {
+  data: Clothing_Product_Details_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Clothing_Product_Details_On_Conflict>;
+};
+
+/** on_conflict condition type for table "clothing_product_details" */
+export type Clothing_Product_Details_On_Conflict = {
+  constraint: Clothing_Product_Details_Constraint;
+  update_columns?: Array<Clothing_Product_Details_Update_Column>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "clothing_product_details". */
+export type Clothing_Product_Details_Order_By = {
+  clothing_type?: InputMaybe<Order_By>;
+  clothing_type_enum?: InputMaybe<Clothing_Type_Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  product?: InputMaybe<Products_Order_By>;
+  product_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: clothing_product_details */
+export type Clothing_Product_Details_Pk_Columns_Input = {
+  /** One-to-one relationship with products table */
+  product_id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "clothing_product_details" */
+export enum Clothing_Product_Details_Select_Column {
+  /** column name */
+  ClothingType = 'clothing_type',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  ProductId = 'product_id',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "clothing_product_details" */
+export type Clothing_Product_Details_Set_Input = {
+  /** Type of clothing (tshirt, hoodie, etc.) */
+  clothing_type?: InputMaybe<Clothing_Type_Enum>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  /** One-to-one relationship with products table */
+  product_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** Streaming cursor of the table "clothing_product_details" */
+export type Clothing_Product_Details_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Clothing_Product_Details_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Clothing_Product_Details_Stream_Cursor_Value_Input = {
+  /** Type of clothing (tshirt, hoodie, etc.) */
+  clothing_type?: InputMaybe<Clothing_Type_Enum>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  /** One-to-one relationship with products table */
+  product_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** update columns of table "clothing_product_details" */
+export enum Clothing_Product_Details_Update_Column {
+  /** column name */
+  ClothingType = 'clothing_type',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  ProductId = 'product_id',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+export type Clothing_Product_Details_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Clothing_Product_Details_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Clothing_Product_Details_Bool_Exp;
 };
 
 /** columns and relationships of "clothing_size" */
 export type Clothing_Size = {
   __typename?: 'clothing_size';
-  age_group: Scalars['String']['output'];
-  label_en: Scalars['String']['output'];
-  label_uk: Scalars['String']['output'];
-  sort_order: Scalars['Int']['output'];
   value: Scalars['String']['output'];
 };
 
@@ -1470,17 +1483,9 @@ export type Clothing_Size_Aggregate = {
 /** aggregate fields of "clothing_size" */
 export type Clothing_Size_Aggregate_Fields = {
   __typename?: 'clothing_size_aggregate_fields';
-  avg?: Maybe<Clothing_Size_Avg_Fields>;
   count: Scalars['Int']['output'];
   max?: Maybe<Clothing_Size_Max_Fields>;
   min?: Maybe<Clothing_Size_Min_Fields>;
-  stddev?: Maybe<Clothing_Size_Stddev_Fields>;
-  stddev_pop?: Maybe<Clothing_Size_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Clothing_Size_Stddev_Samp_Fields>;
-  sum?: Maybe<Clothing_Size_Sum_Fields>;
-  var_pop?: Maybe<Clothing_Size_Var_Pop_Fields>;
-  var_samp?: Maybe<Clothing_Size_Var_Samp_Fields>;
-  variance?: Maybe<Clothing_Size_Variance_Fields>;
 };
 
 
@@ -1490,21 +1495,11 @@ export type Clothing_Size_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** aggregate avg on columns */
-export type Clothing_Size_Avg_Fields = {
-  __typename?: 'clothing_size_avg_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
 /** Boolean expression to filter rows from the table "clothing_size". All fields are combined with a logical 'AND'. */
 export type Clothing_Size_Bool_Exp = {
   _and?: InputMaybe<Array<Clothing_Size_Bool_Exp>>;
   _not?: InputMaybe<Clothing_Size_Bool_Exp>;
   _or?: InputMaybe<Array<Clothing_Size_Bool_Exp>>;
-  age_group?: InputMaybe<String_Comparison_Exp>;
-  label_en?: InputMaybe<String_Comparison_Exp>;
-  label_uk?: InputMaybe<String_Comparison_Exp>;
-  sort_order?: InputMaybe<Int_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -1514,37 +1509,45 @@ export enum Clothing_Size_Constraint {
   ClothingSizePkey = 'clothing_size_pkey'
 }
 
-/** input type for incrementing numeric columns in table "clothing_size" */
-export type Clothing_Size_Inc_Input = {
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
+export enum Clothing_Size_Enum {
+  L = 'l',
+  M = 'm',
+  S = 's',
+  Xl = 'xl',
+  Xs = 'xs',
+  Xxl = 'xxl',
+  Xxxl = 'xxxl',
+  Y3_4 = 'y3_4',
+  Y5_6 = 'y5_6',
+  Y7_8 = 'y7_8',
+  Y9_10 = 'y9_10',
+  Y11_12 = 'y11_12',
+  Y13_14 = 'y13_14'
+}
+
+/** Boolean expression to compare columns of type "clothing_size_enum". All fields are combined with logical 'AND'. */
+export type Clothing_Size_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Clothing_Size_Enum>;
+  _in?: InputMaybe<Array<Clothing_Size_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Clothing_Size_Enum>;
+  _nin?: InputMaybe<Array<Clothing_Size_Enum>>;
 };
 
 /** input type for inserting data into table "clothing_size" */
 export type Clothing_Size_Insert_Input = {
-  age_group?: InputMaybe<Scalars['String']['input']>;
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
 export type Clothing_Size_Max_Fields = {
   __typename?: 'clothing_size_max_fields';
-  age_group?: Maybe<Scalars['String']['output']>;
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
 export type Clothing_Size_Min_Fields = {
   __typename?: 'clothing_size_min_fields';
-  age_group?: Maybe<Scalars['String']['output']>;
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
@@ -1573,10 +1576,6 @@ export type Clothing_Size_On_Conflict = {
 
 /** Ordering options when selecting data from "clothing_size". */
 export type Clothing_Size_Order_By = {
-  age_group?: InputMaybe<Order_By>;
-  label_en?: InputMaybe<Order_By>;
-  label_uk?: InputMaybe<Order_By>;
-  sort_order?: InputMaybe<Order_By>;
   value?: InputMaybe<Order_By>;
 };
 
@@ -1588,42 +1587,12 @@ export type Clothing_Size_Pk_Columns_Input = {
 /** select columns of table "clothing_size" */
 export enum Clothing_Size_Select_Column {
   /** column name */
-  AgeGroup = 'age_group',
-  /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 /** input type for updating data in table "clothing_size" */
 export type Clothing_Size_Set_Input = {
-  age_group?: InputMaybe<Scalars['String']['input']>;
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate stddev on columns */
-export type Clothing_Size_Stddev_Fields = {
-  __typename?: 'clothing_size_stddev_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Clothing_Size_Stddev_Pop_Fields = {
-  __typename?: 'clothing_size_stddev_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Clothing_Size_Stddev_Samp_Fields = {
-  __typename?: 'clothing_size_stddev_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Streaming cursor of the table "clothing_size" */
@@ -1636,66 +1605,25 @@ export type Clothing_Size_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Clothing_Size_Stream_Cursor_Value_Input = {
-  age_group?: InputMaybe<Scalars['String']['input']>;
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate sum on columns */
-export type Clothing_Size_Sum_Fields = {
-  __typename?: 'clothing_size_sum_fields';
-  sort_order?: Maybe<Scalars['Int']['output']>;
 };
 
 /** update columns of table "clothing_size" */
 export enum Clothing_Size_Update_Column {
   /** column name */
-  AgeGroup = 'age_group',
-  /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 export type Clothing_Size_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Clothing_Size_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Clothing_Size_Set_Input>;
   /** filter the rows which have to be updated */
   where: Clothing_Size_Bool_Exp;
 };
 
-/** aggregate var_pop on columns */
-export type Clothing_Size_Var_Pop_Fields = {
-  __typename?: 'clothing_size_var_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate var_samp on columns */
-export type Clothing_Size_Var_Samp_Fields = {
-  __typename?: 'clothing_size_var_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate variance on columns */
-export type Clothing_Size_Variance_Fields = {
-  __typename?: 'clothing_size_variance_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
 /** columns and relationships of "clothing_type" */
 export type Clothing_Type = {
   __typename?: 'clothing_type';
-  label_en: Scalars['String']['output'];
-  label_uk: Scalars['String']['output'];
-  sort_order: Scalars['Int']['output'];
   value: Scalars['String']['output'];
 };
 
@@ -1709,17 +1637,9 @@ export type Clothing_Type_Aggregate = {
 /** aggregate fields of "clothing_type" */
 export type Clothing_Type_Aggregate_Fields = {
   __typename?: 'clothing_type_aggregate_fields';
-  avg?: Maybe<Clothing_Type_Avg_Fields>;
   count: Scalars['Int']['output'];
   max?: Maybe<Clothing_Type_Max_Fields>;
   min?: Maybe<Clothing_Type_Min_Fields>;
-  stddev?: Maybe<Clothing_Type_Stddev_Fields>;
-  stddev_pop?: Maybe<Clothing_Type_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Clothing_Type_Stddev_Samp_Fields>;
-  sum?: Maybe<Clothing_Type_Sum_Fields>;
-  var_pop?: Maybe<Clothing_Type_Var_Pop_Fields>;
-  var_samp?: Maybe<Clothing_Type_Var_Samp_Fields>;
-  variance?: Maybe<Clothing_Type_Variance_Fields>;
 };
 
 
@@ -1729,20 +1649,11 @@ export type Clothing_Type_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** aggregate avg on columns */
-export type Clothing_Type_Avg_Fields = {
-  __typename?: 'clothing_type_avg_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
 /** Boolean expression to filter rows from the table "clothing_type". All fields are combined with a logical 'AND'. */
 export type Clothing_Type_Bool_Exp = {
   _and?: InputMaybe<Array<Clothing_Type_Bool_Exp>>;
   _not?: InputMaybe<Clothing_Type_Bool_Exp>;
   _or?: InputMaybe<Array<Clothing_Type_Bool_Exp>>;
-  label_en?: InputMaybe<String_Comparison_Exp>;
-  label_uk?: InputMaybe<String_Comparison_Exp>;
-  sort_order?: InputMaybe<Int_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -1752,34 +1663,36 @@ export enum Clothing_Type_Constraint {
   ClothingTypePkey = 'clothing_type_pkey'
 }
 
-/** input type for incrementing numeric columns in table "clothing_type" */
-export type Clothing_Type_Inc_Input = {
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
+export enum Clothing_Type_Enum {
+  Hoodie = 'hoodie',
+  Jumper = 'jumper',
+  Sweatshirt = 'sweatshirt',
+  Tshirt = 'tshirt'
+}
+
+/** Boolean expression to compare columns of type "clothing_type_enum". All fields are combined with logical 'AND'. */
+export type Clothing_Type_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Clothing_Type_Enum>;
+  _in?: InputMaybe<Array<Clothing_Type_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Clothing_Type_Enum>;
+  _nin?: InputMaybe<Array<Clothing_Type_Enum>>;
 };
 
 /** input type for inserting data into table "clothing_type" */
 export type Clothing_Type_Insert_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
 export type Clothing_Type_Max_Fields = {
   __typename?: 'clothing_type_max_fields';
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
 export type Clothing_Type_Min_Fields = {
   __typename?: 'clothing_type_min_fields';
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
@@ -1808,9 +1721,6 @@ export type Clothing_Type_On_Conflict = {
 
 /** Ordering options when selecting data from "clothing_type". */
 export type Clothing_Type_Order_By = {
-  label_en?: InputMaybe<Order_By>;
-  label_uk?: InputMaybe<Order_By>;
-  sort_order?: InputMaybe<Order_By>;
   value?: InputMaybe<Order_By>;
 };
 
@@ -1822,39 +1732,12 @@ export type Clothing_Type_Pk_Columns_Input = {
 /** select columns of table "clothing_type" */
 export enum Clothing_Type_Select_Column {
   /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 /** input type for updating data in table "clothing_type" */
 export type Clothing_Type_Set_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate stddev on columns */
-export type Clothing_Type_Stddev_Fields = {
-  __typename?: 'clothing_type_stddev_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Clothing_Type_Stddev_Pop_Fields = {
-  __typename?: 'clothing_type_stddev_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Clothing_Type_Stddev_Samp_Fields = {
-  __typename?: 'clothing_type_stddev_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Streaming cursor of the table "clothing_type" */
@@ -1867,55 +1750,20 @@ export type Clothing_Type_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Clothing_Type_Stream_Cursor_Value_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate sum on columns */
-export type Clothing_Type_Sum_Fields = {
-  __typename?: 'clothing_type_sum_fields';
-  sort_order?: Maybe<Scalars['Int']['output']>;
 };
 
 /** update columns of table "clothing_type" */
 export enum Clothing_Type_Update_Column {
   /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 export type Clothing_Type_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Clothing_Type_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Clothing_Type_Set_Input>;
   /** filter the rows which have to be updated */
   where: Clothing_Type_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Clothing_Type_Var_Pop_Fields = {
-  __typename?: 'clothing_type_var_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate var_samp on columns */
-export type Clothing_Type_Var_Samp_Fields = {
-  __typename?: 'clothing_type_var_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate variance on columns */
-export type Clothing_Type_Variance_Fields = {
-  __typename?: 'clothing_type_variance_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
 };
 
 /** ordering argument of a cursor */
@@ -3754,6 +3602,10 @@ export type Mutation_Root = {
   delete_clothing_gender?: Maybe<Clothing_Gender_Mutation_Response>;
   /** delete single row from the table: "clothing_gender" */
   delete_clothing_gender_by_pk?: Maybe<Clothing_Gender>;
+  /** delete data from the table: "clothing_product_details" */
+  delete_clothing_product_details?: Maybe<Clothing_Product_Details_Mutation_Response>;
+  /** delete single row from the table: "clothing_product_details" */
+  delete_clothing_product_details_by_pk?: Maybe<Clothing_Product_Details>;
   /** delete data from the table: "clothing_size" */
   delete_clothing_size?: Maybe<Clothing_Size_Mutation_Response>;
   /** delete single row from the table: "clothing_size" */
@@ -3798,6 +3650,10 @@ export type Mutation_Root = {
   delete_price_type?: Maybe<Price_Type_Mutation_Response>;
   /** delete single row from the table: "price_type" */
   delete_price_type_by_pk?: Maybe<Price_Type>;
+  /** delete data from the table: "product_category" */
+  delete_product_category?: Maybe<Product_Category_Mutation_Response>;
+  /** delete single row from the table: "product_category" */
+  delete_product_category_by_pk?: Maybe<Product_Category>;
   /** delete data from the table: "product_status" */
   delete_product_status?: Maybe<Product_Status_Mutation_Response>;
   /** delete single row from the table: "product_status" */
@@ -3886,6 +3742,10 @@ export type Mutation_Root = {
   insert_clothing_gender?: Maybe<Clothing_Gender_Mutation_Response>;
   /** insert a single row into the table: "clothing_gender" */
   insert_clothing_gender_one?: Maybe<Clothing_Gender>;
+  /** insert data into the table: "clothing_product_details" */
+  insert_clothing_product_details?: Maybe<Clothing_Product_Details_Mutation_Response>;
+  /** insert a single row into the table: "clothing_product_details" */
+  insert_clothing_product_details_one?: Maybe<Clothing_Product_Details>;
   /** insert data into the table: "clothing_size" */
   insert_clothing_size?: Maybe<Clothing_Size_Mutation_Response>;
   /** insert a single row into the table: "clothing_size" */
@@ -3930,6 +3790,10 @@ export type Mutation_Root = {
   insert_price_type?: Maybe<Price_Type_Mutation_Response>;
   /** insert a single row into the table: "price_type" */
   insert_price_type_one?: Maybe<Price_Type>;
+  /** insert data into the table: "product_category" */
+  insert_product_category?: Maybe<Product_Category_Mutation_Response>;
+  /** insert a single row into the table: "product_category" */
+  insert_product_category_one?: Maybe<Product_Category>;
   /** insert data into the table: "product_status" */
   insert_product_status?: Maybe<Product_Status_Mutation_Response>;
   /** insert a single row into the table: "product_status" */
@@ -4026,6 +3890,12 @@ export type Mutation_Root = {
   update_clothing_gender_by_pk?: Maybe<Clothing_Gender>;
   /** update multiples rows of table: "clothing_gender" */
   update_clothing_gender_many?: Maybe<Array<Maybe<Clothing_Gender_Mutation_Response>>>;
+  /** update data of the table: "clothing_product_details" */
+  update_clothing_product_details?: Maybe<Clothing_Product_Details_Mutation_Response>;
+  /** update single row of the table: "clothing_product_details" */
+  update_clothing_product_details_by_pk?: Maybe<Clothing_Product_Details>;
+  /** update multiples rows of table: "clothing_product_details" */
+  update_clothing_product_details_many?: Maybe<Array<Maybe<Clothing_Product_Details_Mutation_Response>>>;
   /** update data of the table: "clothing_size" */
   update_clothing_size?: Maybe<Clothing_Size_Mutation_Response>;
   /** update single row of the table: "clothing_size" */
@@ -4092,6 +3962,12 @@ export type Mutation_Root = {
   update_price_type_by_pk?: Maybe<Price_Type>;
   /** update multiples rows of table: "price_type" */
   update_price_type_many?: Maybe<Array<Maybe<Price_Type_Mutation_Response>>>;
+  /** update data of the table: "product_category" */
+  update_product_category?: Maybe<Product_Category_Mutation_Response>;
+  /** update single row of the table: "product_category" */
+  update_product_category_by_pk?: Maybe<Product_Category>;
+  /** update multiples rows of table: "product_category" */
+  update_product_category_many?: Maybe<Array<Maybe<Product_Category_Mutation_Response>>>;
   /** update data of the table: "product_status" */
   update_product_status?: Maybe<Product_Status_Mutation_Response>;
   /** update single row of the table: "product_status" */
@@ -4252,6 +4128,18 @@ export type Mutation_RootDelete_Clothing_Gender_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Clothing_Product_DetailsArgs = {
+  where: Clothing_Product_Details_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_Product_Details_By_PkArgs = {
+  product_id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_Clothing_SizeArgs = {
   where: Clothing_Size_Bool_Exp;
 };
@@ -4380,6 +4268,18 @@ export type Mutation_RootDelete_Price_TypeArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Price_Type_By_PkArgs = {
+  value: Scalars['String']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Product_CategoryArgs = {
+  where: Product_Category_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Product_Category_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
@@ -4657,6 +4557,20 @@ export type Mutation_RootInsert_Clothing_Gender_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_Clothing_Product_DetailsArgs = {
+  objects: Array<Clothing_Product_Details_Insert_Input>;
+  on_conflict?: InputMaybe<Clothing_Product_Details_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_Product_Details_OneArgs = {
+  object: Clothing_Product_Details_Insert_Input;
+  on_conflict?: InputMaybe<Clothing_Product_Details_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_Clothing_SizeArgs = {
   objects: Array<Clothing_Size_Insert_Input>;
   on_conflict?: InputMaybe<Clothing_Size_On_Conflict>;
@@ -4807,6 +4721,20 @@ export type Mutation_RootInsert_Price_TypeArgs = {
 export type Mutation_RootInsert_Price_Type_OneArgs = {
   object: Price_Type_Insert_Input;
   on_conflict?: InputMaybe<Price_Type_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Product_CategoryArgs = {
+  objects: Array<Product_Category_Insert_Input>;
+  on_conflict?: InputMaybe<Product_Category_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Product_Category_OneArgs = {
+  object: Product_Category_Insert_Input;
+  on_conflict?: InputMaybe<Product_Category_On_Conflict>;
 };
 
 
@@ -5106,7 +5034,6 @@ export type Mutation_RootUpdate_Chains_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Clothing_Age_GroupArgs = {
-  _inc?: InputMaybe<Clothing_Age_Group_Inc_Input>;
   _set?: InputMaybe<Clothing_Age_Group_Set_Input>;
   where: Clothing_Age_Group_Bool_Exp;
 };
@@ -5114,7 +5041,6 @@ export type Mutation_RootUpdate_Clothing_Age_GroupArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Clothing_Age_Group_By_PkArgs = {
-  _inc?: InputMaybe<Clothing_Age_Group_Inc_Input>;
   _set?: InputMaybe<Clothing_Age_Group_Set_Input>;
   pk_columns: Clothing_Age_Group_Pk_Columns_Input;
 };
@@ -5128,7 +5054,6 @@ export type Mutation_RootUpdate_Clothing_Age_Group_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Clothing_GenderArgs = {
-  _inc?: InputMaybe<Clothing_Gender_Inc_Input>;
   _set?: InputMaybe<Clothing_Gender_Set_Input>;
   where: Clothing_Gender_Bool_Exp;
 };
@@ -5136,7 +5061,6 @@ export type Mutation_RootUpdate_Clothing_GenderArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Clothing_Gender_By_PkArgs = {
-  _inc?: InputMaybe<Clothing_Gender_Inc_Input>;
   _set?: InputMaybe<Clothing_Gender_Set_Input>;
   pk_columns: Clothing_Gender_Pk_Columns_Input;
 };
@@ -5149,8 +5073,27 @@ export type Mutation_RootUpdate_Clothing_Gender_ManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Clothing_Product_DetailsArgs = {
+  _set?: InputMaybe<Clothing_Product_Details_Set_Input>;
+  where: Clothing_Product_Details_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Product_Details_By_PkArgs = {
+  _set?: InputMaybe<Clothing_Product_Details_Set_Input>;
+  pk_columns: Clothing_Product_Details_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Product_Details_ManyArgs = {
+  updates: Array<Clothing_Product_Details_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Clothing_SizeArgs = {
-  _inc?: InputMaybe<Clothing_Size_Inc_Input>;
   _set?: InputMaybe<Clothing_Size_Set_Input>;
   where: Clothing_Size_Bool_Exp;
 };
@@ -5158,7 +5101,6 @@ export type Mutation_RootUpdate_Clothing_SizeArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Clothing_Size_By_PkArgs = {
-  _inc?: InputMaybe<Clothing_Size_Inc_Input>;
   _set?: InputMaybe<Clothing_Size_Set_Input>;
   pk_columns: Clothing_Size_Pk_Columns_Input;
 };
@@ -5172,7 +5114,6 @@ export type Mutation_RootUpdate_Clothing_Size_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Clothing_TypeArgs = {
-  _inc?: InputMaybe<Clothing_Type_Inc_Input>;
   _set?: InputMaybe<Clothing_Type_Set_Input>;
   where: Clothing_Type_Bool_Exp;
 };
@@ -5180,7 +5121,6 @@ export type Mutation_RootUpdate_Clothing_TypeArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Clothing_Type_By_PkArgs = {
-  _inc?: InputMaybe<Clothing_Type_Inc_Input>;
   _set?: InputMaybe<Clothing_Type_Set_Input>;
   pk_columns: Clothing_Type_Pk_Columns_Input;
 };
@@ -5338,7 +5278,6 @@ export type Mutation_RootUpdate_Order_Items_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Order_StatusArgs = {
-  _inc?: InputMaybe<Order_Status_Inc_Input>;
   _set?: InputMaybe<Order_Status_Set_Input>;
   where: Order_Status_Bool_Exp;
 };
@@ -5346,7 +5285,6 @@ export type Mutation_RootUpdate_Order_StatusArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Order_Status_By_PkArgs = {
-  _inc?: InputMaybe<Order_Status_Inc_Input>;
   _set?: InputMaybe<Order_Status_Set_Input>;
   pk_columns: Order_Status_Pk_Columns_Input;
 };
@@ -5397,6 +5335,26 @@ export type Mutation_RootUpdate_Price_Type_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Price_Type_ManyArgs = {
   updates: Array<Price_Type_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_CategoryArgs = {
+  _set?: InputMaybe<Product_Category_Set_Input>;
+  where: Product_Category_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_Category_By_PkArgs = {
+  _set?: InputMaybe<Product_Category_Set_Input>;
+  pk_columns: Product_Category_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_Category_ManyArgs = {
+  updates: Array<Product_Category_Updates>;
 };
 
 
@@ -6266,9 +6224,6 @@ export type Order_Items_Variance_Order_By = {
 /** columns and relationships of "order_status" */
 export type Order_Status = {
   __typename?: 'order_status';
-  label_en: Scalars['String']['output'];
-  label_uk: Scalars['String']['output'];
-  sort_order: Scalars['Int']['output'];
   value: Scalars['String']['output'];
 };
 
@@ -6282,17 +6237,9 @@ export type Order_Status_Aggregate = {
 /** aggregate fields of "order_status" */
 export type Order_Status_Aggregate_Fields = {
   __typename?: 'order_status_aggregate_fields';
-  avg?: Maybe<Order_Status_Avg_Fields>;
   count: Scalars['Int']['output'];
   max?: Maybe<Order_Status_Max_Fields>;
   min?: Maybe<Order_Status_Min_Fields>;
-  stddev?: Maybe<Order_Status_Stddev_Fields>;
-  stddev_pop?: Maybe<Order_Status_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Order_Status_Stddev_Samp_Fields>;
-  sum?: Maybe<Order_Status_Sum_Fields>;
-  var_pop?: Maybe<Order_Status_Var_Pop_Fields>;
-  var_samp?: Maybe<Order_Status_Var_Samp_Fields>;
-  variance?: Maybe<Order_Status_Variance_Fields>;
 };
 
 
@@ -6302,20 +6249,11 @@ export type Order_Status_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** aggregate avg on columns */
-export type Order_Status_Avg_Fields = {
-  __typename?: 'order_status_avg_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
 /** Boolean expression to filter rows from the table "order_status". All fields are combined with a logical 'AND'. */
 export type Order_Status_Bool_Exp = {
   _and?: InputMaybe<Array<Order_Status_Bool_Exp>>;
   _not?: InputMaybe<Order_Status_Bool_Exp>;
   _or?: InputMaybe<Array<Order_Status_Bool_Exp>>;
-  label_en?: InputMaybe<String_Comparison_Exp>;
-  label_uk?: InputMaybe<String_Comparison_Exp>;
-  sort_order?: InputMaybe<Int_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -6325,34 +6263,39 @@ export enum Order_Status_Constraint {
   OrderStatusPkey = 'order_status_pkey'
 }
 
-/** input type for incrementing numeric columns in table "order_status" */
-export type Order_Status_Inc_Input = {
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
+export enum Order_Status_Enum {
+  Cancelled = 'cancelled',
+  Delivered = 'delivered',
+  Paid = 'paid',
+  Pending = 'pending',
+  Processing = 'processing',
+  Refunded = 'refunded',
+  Shipped = 'shipped'
+}
+
+/** Boolean expression to compare columns of type "order_status_enum". All fields are combined with logical 'AND'. */
+export type Order_Status_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Order_Status_Enum>;
+  _in?: InputMaybe<Array<Order_Status_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Order_Status_Enum>;
+  _nin?: InputMaybe<Array<Order_Status_Enum>>;
 };
 
 /** input type for inserting data into table "order_status" */
 export type Order_Status_Insert_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
 export type Order_Status_Max_Fields = {
   __typename?: 'order_status_max_fields';
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
 export type Order_Status_Min_Fields = {
   __typename?: 'order_status_min_fields';
-  label_en?: Maybe<Scalars['String']['output']>;
-  label_uk?: Maybe<Scalars['String']['output']>;
-  sort_order?: Maybe<Scalars['Int']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
@@ -6381,9 +6324,6 @@ export type Order_Status_On_Conflict = {
 
 /** Ordering options when selecting data from "order_status". */
 export type Order_Status_Order_By = {
-  label_en?: InputMaybe<Order_By>;
-  label_uk?: InputMaybe<Order_By>;
-  sort_order?: InputMaybe<Order_By>;
   value?: InputMaybe<Order_By>;
 };
 
@@ -6395,39 +6335,12 @@ export type Order_Status_Pk_Columns_Input = {
 /** select columns of table "order_status" */
 export enum Order_Status_Select_Column {
   /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 /** input type for updating data in table "order_status" */
 export type Order_Status_Set_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate stddev on columns */
-export type Order_Status_Stddev_Fields = {
-  __typename?: 'order_status_stddev_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Order_Status_Stddev_Pop_Fields = {
-  __typename?: 'order_status_stddev_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Order_Status_Stddev_Samp_Fields = {
-  __typename?: 'order_status_stddev_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Streaming cursor of the table "order_status" */
@@ -6440,55 +6353,20 @@ export type Order_Status_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Order_Status_Stream_Cursor_Value_Input = {
-  label_en?: InputMaybe<Scalars['String']['input']>;
-  label_uk?: InputMaybe<Scalars['String']['input']>;
-  sort_order?: InputMaybe<Scalars['Int']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregate sum on columns */
-export type Order_Status_Sum_Fields = {
-  __typename?: 'order_status_sum_fields';
-  sort_order?: Maybe<Scalars['Int']['output']>;
 };
 
 /** update columns of table "order_status" */
 export enum Order_Status_Update_Column {
   /** column name */
-  LabelEn = 'label_en',
-  /** column name */
-  LabelUk = 'label_uk',
-  /** column name */
-  SortOrder = 'sort_order',
-  /** column name */
   Value = 'value'
 }
 
 export type Order_Status_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Order_Status_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Order_Status_Set_Input>;
   /** filter the rows which have to be updated */
   where: Order_Status_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Order_Status_Var_Pop_Fields = {
-  __typename?: 'order_status_var_pop_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate var_samp on columns */
-export type Order_Status_Var_Samp_Fields = {
-  __typename?: 'order_status_var_samp_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
-};
-
-/** aggregate variance on columns */
-export type Order_Status_Variance_Fields = {
-  __typename?: 'order_status_variance_fields';
-  sort_order?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Customer orders with payment status */
@@ -6498,6 +6376,8 @@ export type Orders = {
   currency: Scalars['String']['output'];
   email: Scalars['String']['output'];
   id: Scalars['uuid']['output'];
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   order_items: Array<Order_Items>;
   /** An aggregate relationship */
@@ -6505,7 +6385,7 @@ export type Orders = {
   /** An object relationship */
   order_status: Order_Status;
   payment_intent_id?: Maybe<Scalars['String']['output']>;
-  status: Scalars['String']['output'];
+  status: Order_Status_Enum;
   subtotal_minor: Scalars['Int']['output'];
   total_minor: Scalars['Int']['output'];
   updated_at: Scalars['timestamptz']['output'];
@@ -6580,11 +6460,12 @@ export type Orders_Bool_Exp = {
   currency?: InputMaybe<String_Comparison_Exp>;
   email?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  idempotency_key?: InputMaybe<String_Comparison_Exp>;
   order_items?: InputMaybe<Order_Items_Bool_Exp>;
   order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Bool_Exp>;
   order_status?: InputMaybe<Order_Status_Bool_Exp>;
   payment_intent_id?: InputMaybe<String_Comparison_Exp>;
-  status?: InputMaybe<String_Comparison_Exp>;
+  status?: InputMaybe<Order_Status_Enum_Comparison_Exp>;
   subtotal_minor?: InputMaybe<Int_Comparison_Exp>;
   total_minor?: InputMaybe<Int_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -6594,6 +6475,8 @@ export type Orders_Bool_Exp = {
 
 /** unique or primary key constraints on table "orders" */
 export enum Orders_Constraint {
+  /** unique or primary key constraint on columns "idempotency_key" */
+  OrdersIdempotencyKeyKey = 'orders_idempotency_key_key',
   /** unique or primary key constraint on columns "id" */
   OrdersPkey = 'orders_pkey'
 }
@@ -6610,10 +6493,12 @@ export type Orders_Insert_Input = {
   currency?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: InputMaybe<Scalars['String']['input']>;
   order_items?: InputMaybe<Order_Items_Arr_Rel_Insert_Input>;
   order_status?: InputMaybe<Order_Status_Obj_Rel_Insert_Input>;
   payment_intent_id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Order_Status_Enum>;
   subtotal_minor?: InputMaybe<Scalars['Int']['input']>;
   total_minor?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -6628,8 +6513,9 @@ export type Orders_Max_Fields = {
   currency?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: Maybe<Scalars['String']['output']>;
   payment_intent_id?: Maybe<Scalars['String']['output']>;
-  status?: Maybe<Scalars['String']['output']>;
   subtotal_minor?: Maybe<Scalars['Int']['output']>;
   total_minor?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -6643,8 +6529,9 @@ export type Orders_Min_Fields = {
   currency?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: Maybe<Scalars['String']['output']>;
   payment_intent_id?: Maybe<Scalars['String']['output']>;
-  status?: Maybe<Scalars['String']['output']>;
   subtotal_minor?: Maybe<Scalars['Int']['output']>;
   total_minor?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -6680,6 +6567,7 @@ export type Orders_Order_By = {
   currency?: InputMaybe<Order_By>;
   email?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  idempotency_key?: InputMaybe<Order_By>;
   order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Order_By>;
   order_status?: InputMaybe<Order_Status_Order_By>;
   payment_intent_id?: InputMaybe<Order_By>;
@@ -6707,6 +6595,8 @@ export enum Orders_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  IdempotencyKey = 'idempotency_key',
+  /** column name */
   PaymentIntentId = 'payment_intent_id',
   /** column name */
   Status = 'status',
@@ -6726,8 +6616,10 @@ export type Orders_Set_Input = {
   currency?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: InputMaybe<Scalars['String']['input']>;
   payment_intent_id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Order_Status_Enum>;
   subtotal_minor?: InputMaybe<Scalars['Int']['input']>;
   total_minor?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -6769,8 +6661,10 @@ export type Orders_Stream_Cursor_Value_Input = {
   currency?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: InputMaybe<Scalars['String']['input']>;
   payment_intent_id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Order_Status_Enum>;
   subtotal_minor?: InputMaybe<Scalars['Int']['input']>;
   total_minor?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -6794,6 +6688,8 @@ export enum Orders_Update_Column {
   Email = 'email',
   /** column name */
   Id = 'id',
+  /** column name */
+  IdempotencyKey = 'idempotency_key',
   /** column name */
   PaymentIntentId = 'payment_intent_id',
   /** column name */
@@ -6999,6 +6895,178 @@ export type Price_Type_Updates = {
   where: Price_Type_Bool_Exp;
 };
 
+/** Enum table for product categories */
+export type Product_Category = {
+  __typename?: 'product_category';
+  /** An array relationship */
+  products: Array<Products>;
+  /** An aggregate relationship */
+  products_aggregate: Products_Aggregate;
+  value: Scalars['String']['output'];
+};
+
+
+/** Enum table for product categories */
+export type Product_CategoryProductsArgs = {
+  distinct_on?: InputMaybe<Array<Products_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Products_Order_By>>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+
+/** Enum table for product categories */
+export type Product_CategoryProducts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Products_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Products_Order_By>>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+/** aggregated selection of "product_category" */
+export type Product_Category_Aggregate = {
+  __typename?: 'product_category_aggregate';
+  aggregate?: Maybe<Product_Category_Aggregate_Fields>;
+  nodes: Array<Product_Category>;
+};
+
+/** aggregate fields of "product_category" */
+export type Product_Category_Aggregate_Fields = {
+  __typename?: 'product_category_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Product_Category_Max_Fields>;
+  min?: Maybe<Product_Category_Min_Fields>;
+};
+
+
+/** aggregate fields of "product_category" */
+export type Product_Category_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Product_Category_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "product_category". All fields are combined with a logical 'AND'. */
+export type Product_Category_Bool_Exp = {
+  _and?: InputMaybe<Array<Product_Category_Bool_Exp>>;
+  _not?: InputMaybe<Product_Category_Bool_Exp>;
+  _or?: InputMaybe<Array<Product_Category_Bool_Exp>>;
+  products?: InputMaybe<Products_Bool_Exp>;
+  products_aggregate?: InputMaybe<Products_Aggregate_Bool_Exp>;
+  value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "product_category" */
+export enum Product_Category_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ProductCategoryPkey = 'product_category_pkey'
+}
+
+export enum Product_Category_Enum {
+  Accessories = 'accessories',
+  Clothing = 'clothing',
+  Gifts = 'gifts'
+}
+
+/** Boolean expression to compare columns of type "product_category_enum". All fields are combined with logical 'AND'. */
+export type Product_Category_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Product_Category_Enum>;
+  _in?: InputMaybe<Array<Product_Category_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Product_Category_Enum>;
+  _nin?: InputMaybe<Array<Product_Category_Enum>>;
+};
+
+/** input type for inserting data into table "product_category" */
+export type Product_Category_Insert_Input = {
+  products?: InputMaybe<Products_Arr_Rel_Insert_Input>;
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Product_Category_Max_Fields = {
+  __typename?: 'product_category_max_fields';
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Product_Category_Min_Fields = {
+  __typename?: 'product_category_min_fields';
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "product_category" */
+export type Product_Category_Mutation_Response = {
+  __typename?: 'product_category_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Product_Category>;
+};
+
+/** input type for inserting object relation for remote table "product_category" */
+export type Product_Category_Obj_Rel_Insert_Input = {
+  data: Product_Category_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Product_Category_On_Conflict>;
+};
+
+/** on_conflict condition type for table "product_category" */
+export type Product_Category_On_Conflict = {
+  constraint: Product_Category_Constraint;
+  update_columns?: Array<Product_Category_Update_Column>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "product_category". */
+export type Product_Category_Order_By = {
+  products_aggregate?: InputMaybe<Products_Aggregate_Order_By>;
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: product_category */
+export type Product_Category_Pk_Columns_Input = {
+  value: Scalars['String']['input'];
+};
+
+/** select columns of table "product_category" */
+export enum Product_Category_Select_Column {
+  /** column name */
+  Value = 'value'
+}
+
+/** input type for updating data in table "product_category" */
+export type Product_Category_Set_Input = {
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "product_category" */
+export type Product_Category_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Product_Category_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Product_Category_Stream_Cursor_Value_Input = {
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "product_category" */
+export enum Product_Category_Update_Column {
+  /** column name */
+  Value = 'value'
+}
+
+export type Product_Category_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Product_Category_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Product_Category_Bool_Exp;
+};
+
 /** columns and relationships of "product_status" */
 export type Product_Status = {
   __typename?: 'product_status';
@@ -7042,6 +7110,26 @@ export enum Product_Status_Constraint {
   /** unique or primary key constraint on columns "value" */
   ProductStatusPkey = 'product_status_pkey'
 }
+
+export enum Product_Status_Enum {
+  /** Product is visible and available for purchase */
+  Active = 'ACTIVE',
+  /** Product is no longer available */
+  Archived = 'ARCHIVED',
+  /** Product is being prepared, not visible to customers */
+  Draft = 'DRAFT',
+  /** Product is visible but cannot be purchased */
+  OutOfStock = 'OUT_OF_STOCK'
+}
+
+/** Boolean expression to compare columns of type "product_status_enum". All fields are combined with logical 'AND'. */
+export type Product_Status_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Product_Status_Enum>;
+  _in?: InputMaybe<Array<Product_Status_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Product_Status_Enum>;
+  _nin?: InputMaybe<Array<Product_Status_Enum>>;
+};
 
 /** input type for inserting data into table "product_status" */
 export type Product_Status_Insert_Input = {
@@ -7140,20 +7228,24 @@ export type Product_Status_Updates = {
   where: Product_Status_Bool_Exp;
 };
 
-/** Size/gender/age variants with stock levels */
+/**
+ * Product variants for inventory management.
+ * For clothing: gender, age_group, size, and optionally color define the variant.
+ * For non-clothing: these fields can be NULL, using a single default variant per product.
+ */
 export type Product_Variants = {
   __typename?: 'product_variants';
-  age_group: Scalars['String']['output'];
+  age_group?: Maybe<Clothing_Age_Group_Enum>;
   /** An object relationship */
-  clothing_age_group: Clothing_Age_Group;
+  clothing_age_group?: Maybe<Clothing_Age_Group>;
   /** An object relationship */
-  clothing_gender: Clothing_Gender;
+  clothing_gender?: Maybe<Clothing_Gender>;
   /** An object relationship */
-  clothing_size: Clothing_Size;
+  clothing_size?: Maybe<Clothing_Size>;
   /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
   color?: Maybe<Scalars['String']['output']>;
   created_at: Scalars['timestamptz']['output'];
-  gender: Scalars['String']['output'];
+  gender?: Maybe<Clothing_Gender_Enum>;
   id: Scalars['uuid']['output'];
   /** An array relationship */
   order_items: Array<Order_Items>;
@@ -7164,14 +7256,18 @@ export type Product_Variants = {
   /** An object relationship */
   product: Products;
   product_id: Scalars['uuid']['output'];
-  size: Scalars['String']['output'];
+  size?: Maybe<Clothing_Size_Enum>;
   sku?: Maybe<Scalars['String']['output']>;
   stock: Scalars['Int']['output'];
   updated_at: Scalars['timestamptz']['output'];
 };
 
 
-/** Size/gender/age variants with stock levels */
+/**
+ * Product variants for inventory management.
+ * For clothing: gender, age_group, size, and optionally color define the variant.
+ * For non-clothing: these fields can be NULL, using a single default variant per product.
+ */
 export type Product_VariantsOrder_ItemsArgs = {
   distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -7181,7 +7277,11 @@ export type Product_VariantsOrder_ItemsArgs = {
 };
 
 
-/** Size/gender/age variants with stock levels */
+/**
+ * Product variants for inventory management.
+ * For clothing: gender, age_group, size, and optionally color define the variant.
+ * For non-clothing: these fields can be NULL, using a single default variant per product.
+ */
 export type Product_VariantsOrder_Items_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -7273,20 +7373,20 @@ export type Product_Variants_Bool_Exp = {
   _and?: InputMaybe<Array<Product_Variants_Bool_Exp>>;
   _not?: InputMaybe<Product_Variants_Bool_Exp>;
   _or?: InputMaybe<Array<Product_Variants_Bool_Exp>>;
-  age_group?: InputMaybe<String_Comparison_Exp>;
+  age_group?: InputMaybe<Clothing_Age_Group_Enum_Comparison_Exp>;
   clothing_age_group?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
   clothing_gender?: InputMaybe<Clothing_Gender_Bool_Exp>;
   clothing_size?: InputMaybe<Clothing_Size_Bool_Exp>;
   color?: InputMaybe<String_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  gender?: InputMaybe<String_Comparison_Exp>;
+  gender?: InputMaybe<Clothing_Gender_Enum_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   order_items?: InputMaybe<Order_Items_Bool_Exp>;
   order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Bool_Exp>;
   price_override_minor?: InputMaybe<Int_Comparison_Exp>;
   product?: InputMaybe<Products_Bool_Exp>;
   product_id?: InputMaybe<Uuid_Comparison_Exp>;
-  size?: InputMaybe<String_Comparison_Exp>;
+  size?: InputMaybe<Clothing_Size_Enum_Comparison_Exp>;
   sku?: InputMaybe<String_Comparison_Exp>;
   stock?: InputMaybe<Int_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -7294,10 +7394,14 @@ export type Product_Variants_Bool_Exp = {
 
 /** unique or primary key constraints on table "product_variants" */
 export enum Product_Variants_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  ProductVariantsPkey = 'product_variants_pkey',
+  /** unique or primary key constraint on columns "product_id" */
+  IdxProductVariantsNonClothing = 'idx_product_variants_non_clothing',
   /** unique or primary key constraint on columns "size", "product_id", "color", "age_group", "gender" */
-  ProductVariantsProductIdGenderAgeGroupSizeColorKey = 'product_variants_product_id_gender_age_group_size_color_key'
+  IdxProductVariantsWithColor = 'idx_product_variants_with_color',
+  /** unique or primary key constraint on columns "size", "product_id", "age_group", "gender" */
+  IdxProductVariantsWithoutColor = 'idx_product_variants_without_color',
+  /** unique or primary key constraint on columns "id" */
+  ProductVariantsPkey = 'product_variants_pkey'
 }
 
 /** input type for incrementing numeric columns in table "product_variants" */
@@ -7309,21 +7413,21 @@ export type Product_Variants_Inc_Input = {
 
 /** input type for inserting data into table "product_variants" */
 export type Product_Variants_Insert_Input = {
-  age_group?: InputMaybe<Scalars['String']['input']>;
+  age_group?: InputMaybe<Clothing_Age_Group_Enum>;
   clothing_age_group?: InputMaybe<Clothing_Age_Group_Obj_Rel_Insert_Input>;
   clothing_gender?: InputMaybe<Clothing_Gender_Obj_Rel_Insert_Input>;
   clothing_size?: InputMaybe<Clothing_Size_Obj_Rel_Insert_Input>;
   /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
   color?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  gender?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Clothing_Gender_Enum>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   order_items?: InputMaybe<Order_Items_Arr_Rel_Insert_Input>;
   /** Optional variant-specific price override */
   price_override_minor?: InputMaybe<Scalars['Int']['input']>;
   product?: InputMaybe<Products_Obj_Rel_Insert_Input>;
   product_id?: InputMaybe<Scalars['uuid']['input']>;
-  size?: InputMaybe<Scalars['String']['input']>;
+  size?: InputMaybe<Clothing_Size_Enum>;
   sku?: InputMaybe<Scalars['String']['input']>;
   stock?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7332,16 +7436,13 @@ export type Product_Variants_Insert_Input = {
 /** aggregate max on columns */
 export type Product_Variants_Max_Fields = {
   __typename?: 'product_variants_max_fields';
-  age_group?: Maybe<Scalars['String']['output']>;
   /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
   color?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
-  gender?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   /** Optional variant-specific price override */
   price_override_minor?: Maybe<Scalars['Int']['output']>;
   product_id?: Maybe<Scalars['uuid']['output']>;
-  size?: Maybe<Scalars['String']['output']>;
   sku?: Maybe<Scalars['String']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -7349,16 +7450,13 @@ export type Product_Variants_Max_Fields = {
 
 /** order by max() on columns of table "product_variants" */
 export type Product_Variants_Max_Order_By = {
-  age_group?: InputMaybe<Order_By>;
   /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
   color?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
-  gender?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   /** Optional variant-specific price override */
   price_override_minor?: InputMaybe<Order_By>;
   product_id?: InputMaybe<Order_By>;
-  size?: InputMaybe<Order_By>;
   sku?: InputMaybe<Order_By>;
   stock?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
@@ -7367,16 +7465,13 @@ export type Product_Variants_Max_Order_By = {
 /** aggregate min on columns */
 export type Product_Variants_Min_Fields = {
   __typename?: 'product_variants_min_fields';
-  age_group?: Maybe<Scalars['String']['output']>;
   /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
   color?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
-  gender?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   /** Optional variant-specific price override */
   price_override_minor?: Maybe<Scalars['Int']['output']>;
   product_id?: Maybe<Scalars['uuid']['output']>;
-  size?: Maybe<Scalars['String']['output']>;
   sku?: Maybe<Scalars['String']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -7384,16 +7479,13 @@ export type Product_Variants_Min_Fields = {
 
 /** order by min() on columns of table "product_variants" */
 export type Product_Variants_Min_Order_By = {
-  age_group?: InputMaybe<Order_By>;
   /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
   color?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
-  gender?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   /** Optional variant-specific price override */
   price_override_minor?: InputMaybe<Order_By>;
   product_id?: InputMaybe<Order_By>;
-  size?: InputMaybe<Order_By>;
   sku?: InputMaybe<Order_By>;
   stock?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
@@ -7475,16 +7567,16 @@ export enum Product_Variants_Select_Column {
 
 /** input type for updating data in table "product_variants" */
 export type Product_Variants_Set_Input = {
-  age_group?: InputMaybe<Scalars['String']['input']>;
+  age_group?: InputMaybe<Clothing_Age_Group_Enum>;
   /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
   color?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  gender?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Clothing_Gender_Enum>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   /** Optional variant-specific price override */
   price_override_minor?: InputMaybe<Scalars['Int']['input']>;
   product_id?: InputMaybe<Scalars['uuid']['input']>;
-  size?: InputMaybe<Scalars['String']['input']>;
+  size?: InputMaybe<Clothing_Size_Enum>;
   sku?: InputMaybe<Scalars['String']['input']>;
   stock?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7545,16 +7637,16 @@ export type Product_Variants_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Product_Variants_Stream_Cursor_Value_Input = {
-  age_group?: InputMaybe<Scalars['String']['input']>;
+  age_group?: InputMaybe<Clothing_Age_Group_Enum>;
   /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
   color?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  gender?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Clothing_Gender_Enum>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   /** Optional variant-specific price override */
   price_override_minor?: InputMaybe<Scalars['Int']['input']>;
   product_id?: InputMaybe<Scalars['uuid']['input']>;
-  size?: InputMaybe<Scalars['String']['input']>;
+  size?: InputMaybe<Clothing_Size_Enum>;
   sku?: InputMaybe<Scalars['String']['input']>;
   stock?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7659,10 +7751,9 @@ export type Product_Variants_Variance_Order_By = {
 export type Products = {
   __typename?: 'products';
   badge?: Maybe<Scalars['String']['output']>;
-  category: Scalars['String']['output'];
-  clothing_type?: Maybe<Scalars['String']['output']>;
+  category: Product_Category_Enum;
   /** An object relationship */
-  clothing_type_enum?: Maybe<Clothing_Type>;
+  clothing_product_details?: Maybe<Clothing_Product_Details>;
   created_at: Scalars['timestamptz']['output'];
   currency: Scalars['String']['output'];
   description_en?: Maybe<Scalars['String']['output']>;
@@ -7677,13 +7768,15 @@ export type Products = {
   /** Price in minor currency units (e.g., pence for GBP) */
   price_minor: Scalars['Int']['output'];
   /** An object relationship */
+  product_category_enum: Product_Category;
+  /** An object relationship */
   product_status: Product_Status;
   /** An array relationship */
   product_variants: Array<Product_Variants>;
   /** An aggregate relationship */
   product_variants_aggregate: Product_Variants_Aggregate;
   slug: Scalars['String']['output'];
-  status: Scalars['String']['output'];
+  status: Product_Status_Enum;
   /** Stock count for products without variants. NULL means stock is managed at variant level. */
   stock?: Maybe<Scalars['Int']['output']>;
   updated_at: Scalars['timestamptz']['output'];
@@ -7736,6 +7829,17 @@ export type Products_Aggregate = {
   nodes: Array<Products>;
 };
 
+export type Products_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Products_Aggregate_Bool_Exp_Count>;
+};
+
+export type Products_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Products_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Products_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "products" */
 export type Products_Aggregate_Fields = {
   __typename?: 'products_aggregate_fields';
@@ -7759,6 +7863,28 @@ export type Products_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "products" */
+export type Products_Aggregate_Order_By = {
+  avg?: InputMaybe<Products_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Products_Max_Order_By>;
+  min?: InputMaybe<Products_Min_Order_By>;
+  stddev?: InputMaybe<Products_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Products_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Products_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Products_Sum_Order_By>;
+  var_pop?: InputMaybe<Products_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Products_Var_Samp_Order_By>;
+  variance?: InputMaybe<Products_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "products" */
+export type Products_Arr_Rel_Insert_Input = {
+  data: Array<Products_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Products_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Products_Avg_Fields = {
   __typename?: 'products_avg_fields';
@@ -7768,15 +7894,22 @@ export type Products_Avg_Fields = {
   stock?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by avg() on columns of table "products" */
+export type Products_Avg_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
 /** Boolean expression to filter rows from the table "products". All fields are combined with a logical 'AND'. */
 export type Products_Bool_Exp = {
   _and?: InputMaybe<Array<Products_Bool_Exp>>;
   _not?: InputMaybe<Products_Bool_Exp>;
   _or?: InputMaybe<Array<Products_Bool_Exp>>;
   badge?: InputMaybe<String_Comparison_Exp>;
-  category?: InputMaybe<String_Comparison_Exp>;
-  clothing_type?: InputMaybe<String_Comparison_Exp>;
-  clothing_type_enum?: InputMaybe<Clothing_Type_Bool_Exp>;
+  category?: InputMaybe<Product_Category_Enum_Comparison_Exp>;
+  clothing_product_details?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   currency?: InputMaybe<String_Comparison_Exp>;
   description_en?: InputMaybe<String_Comparison_Exp>;
@@ -7787,11 +7920,12 @@ export type Products_Bool_Exp = {
   order_items?: InputMaybe<Order_Items_Bool_Exp>;
   order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Bool_Exp>;
   price_minor?: InputMaybe<Int_Comparison_Exp>;
+  product_category_enum?: InputMaybe<Product_Category_Bool_Exp>;
   product_status?: InputMaybe<Product_Status_Bool_Exp>;
   product_variants?: InputMaybe<Product_Variants_Bool_Exp>;
   product_variants_aggregate?: InputMaybe<Product_Variants_Aggregate_Bool_Exp>;
   slug?: InputMaybe<String_Comparison_Exp>;
-  status?: InputMaybe<String_Comparison_Exp>;
+  status?: InputMaybe<Product_Status_Enum_Comparison_Exp>;
   stock?: InputMaybe<Int_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
@@ -7815,9 +7949,8 @@ export type Products_Inc_Input = {
 /** input type for inserting data into table "products" */
 export type Products_Insert_Input = {
   badge?: InputMaybe<Scalars['String']['input']>;
-  category?: InputMaybe<Scalars['String']['input']>;
-  clothing_type?: InputMaybe<Scalars['String']['input']>;
-  clothing_type_enum?: InputMaybe<Clothing_Type_Obj_Rel_Insert_Input>;
+  category?: InputMaybe<Product_Category_Enum>;
+  clothing_product_details?: InputMaybe<Clothing_Product_Details_Obj_Rel_Insert_Input>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   currency?: InputMaybe<Scalars['String']['input']>;
   description_en?: InputMaybe<Scalars['String']['input']>;
@@ -7828,10 +7961,11 @@ export type Products_Insert_Input = {
   order_items?: InputMaybe<Order_Items_Arr_Rel_Insert_Input>;
   /** Price in minor currency units (e.g., pence for GBP) */
   price_minor?: InputMaybe<Scalars['Int']['input']>;
+  product_category_enum?: InputMaybe<Product_Category_Obj_Rel_Insert_Input>;
   product_status?: InputMaybe<Product_Status_Obj_Rel_Insert_Input>;
   product_variants?: InputMaybe<Product_Variants_Arr_Rel_Insert_Input>;
   slug?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Product_Status_Enum>;
   /** Stock count for products without variants. NULL means stock is managed at variant level. */
   stock?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7841,8 +7975,6 @@ export type Products_Insert_Input = {
 export type Products_Max_Fields = {
   __typename?: 'products_max_fields';
   badge?: Maybe<Scalars['String']['output']>;
-  category?: Maybe<Scalars['String']['output']>;
-  clothing_type?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   currency?: Maybe<Scalars['String']['output']>;
   description_en?: Maybe<Scalars['String']['output']>;
@@ -7853,18 +7985,33 @@ export type Products_Max_Fields = {
   /** Price in minor currency units (e.g., pence for GBP) */
   price_minor?: Maybe<Scalars['Int']['output']>;
   slug?: Maybe<Scalars['String']['output']>;
-  status?: Maybe<Scalars['String']['output']>;
   /** Stock count for products without variants. NULL means stock is managed at variant level. */
   stock?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** order by max() on columns of table "products" */
+export type Products_Max_Order_By = {
+  badge?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  currency?: InputMaybe<Order_By>;
+  description_en?: InputMaybe<Order_By>;
+  description_uk?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  images?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
 export type Products_Min_Fields = {
   __typename?: 'products_min_fields';
   badge?: Maybe<Scalars['String']['output']>;
-  category?: Maybe<Scalars['String']['output']>;
-  clothing_type?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   currency?: Maybe<Scalars['String']['output']>;
   description_en?: Maybe<Scalars['String']['output']>;
@@ -7875,10 +8022,27 @@ export type Products_Min_Fields = {
   /** Price in minor currency units (e.g., pence for GBP) */
   price_minor?: Maybe<Scalars['Int']['output']>;
   slug?: Maybe<Scalars['String']['output']>;
-  status?: Maybe<Scalars['String']['output']>;
   /** Stock count for products without variants. NULL means stock is managed at variant level. */
   stock?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** order by min() on columns of table "products" */
+export type Products_Min_Order_By = {
+  badge?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  currency?: InputMaybe<Order_By>;
+  description_en?: InputMaybe<Order_By>;
+  description_uk?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  images?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "products" */
@@ -7908,8 +8072,7 @@ export type Products_On_Conflict = {
 export type Products_Order_By = {
   badge?: InputMaybe<Order_By>;
   category?: InputMaybe<Order_By>;
-  clothing_type?: InputMaybe<Order_By>;
-  clothing_type_enum?: InputMaybe<Clothing_Type_Order_By>;
+  clothing_product_details?: InputMaybe<Clothing_Product_Details_Order_By>;
   created_at?: InputMaybe<Order_By>;
   currency?: InputMaybe<Order_By>;
   description_en?: InputMaybe<Order_By>;
@@ -7919,6 +8082,7 @@ export type Products_Order_By = {
   name?: InputMaybe<Order_By>;
   order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Order_By>;
   price_minor?: InputMaybe<Order_By>;
+  product_category_enum?: InputMaybe<Product_Category_Order_By>;
   product_status?: InputMaybe<Product_Status_Order_By>;
   product_variants_aggregate?: InputMaybe<Product_Variants_Aggregate_Order_By>;
   slug?: InputMaybe<Order_By>;
@@ -7938,8 +8102,6 @@ export enum Products_Select_Column {
   Badge = 'badge',
   /** column name */
   Category = 'category',
-  /** column name */
-  ClothingType = 'clothing_type',
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
@@ -7969,8 +8131,7 @@ export enum Products_Select_Column {
 /** input type for updating data in table "products" */
 export type Products_Set_Input = {
   badge?: InputMaybe<Scalars['String']['input']>;
-  category?: InputMaybe<Scalars['String']['input']>;
-  clothing_type?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Product_Category_Enum>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   currency?: InputMaybe<Scalars['String']['input']>;
   description_en?: InputMaybe<Scalars['String']['input']>;
@@ -7981,7 +8142,7 @@ export type Products_Set_Input = {
   /** Price in minor currency units (e.g., pence for GBP) */
   price_minor?: InputMaybe<Scalars['Int']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Product_Status_Enum>;
   /** Stock count for products without variants. NULL means stock is managed at variant level. */
   stock?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7996,6 +8157,14 @@ export type Products_Stddev_Fields = {
   stock?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by stddev() on columns of table "products" */
+export type Products_Stddev_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Products_Stddev_Pop_Fields = {
   __typename?: 'products_stddev_pop_fields';
@@ -8005,6 +8174,14 @@ export type Products_Stddev_Pop_Fields = {
   stock?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by stddev_pop() on columns of table "products" */
+export type Products_Stddev_Pop_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Products_Stddev_Samp_Fields = {
   __typename?: 'products_stddev_samp_fields';
@@ -8012,6 +8189,14 @@ export type Products_Stddev_Samp_Fields = {
   price_minor?: Maybe<Scalars['Float']['output']>;
   /** Stock count for products without variants. NULL means stock is managed at variant level. */
   stock?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev_samp() on columns of table "products" */
+export type Products_Stddev_Samp_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "products" */
@@ -8025,8 +8210,7 @@ export type Products_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Products_Stream_Cursor_Value_Input = {
   badge?: InputMaybe<Scalars['String']['input']>;
-  category?: InputMaybe<Scalars['String']['input']>;
-  clothing_type?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Product_Category_Enum>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   currency?: InputMaybe<Scalars['String']['input']>;
   description_en?: InputMaybe<Scalars['String']['input']>;
@@ -8037,7 +8221,7 @@ export type Products_Stream_Cursor_Value_Input = {
   /** Price in minor currency units (e.g., pence for GBP) */
   price_minor?: InputMaybe<Scalars['Int']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Product_Status_Enum>;
   /** Stock count for products without variants. NULL means stock is managed at variant level. */
   stock?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -8052,14 +8236,20 @@ export type Products_Sum_Fields = {
   stock?: Maybe<Scalars['Int']['output']>;
 };
 
+/** order by sum() on columns of table "products" */
+export type Products_Sum_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
 /** update columns of table "products" */
 export enum Products_Update_Column {
   /** column name */
   Badge = 'badge',
   /** column name */
   Category = 'category',
-  /** column name */
-  ClothingType = 'clothing_type',
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
@@ -8104,6 +8294,14 @@ export type Products_Var_Pop_Fields = {
   stock?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by var_pop() on columns of table "products" */
+export type Products_Var_Pop_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Products_Var_Samp_Fields = {
   __typename?: 'products_var_samp_fields';
@@ -8113,6 +8311,14 @@ export type Products_Var_Samp_Fields = {
   stock?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by var_samp() on columns of table "products" */
+export type Products_Var_Samp_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Products_Variance_Fields = {
   __typename?: 'products_variance_fields';
@@ -8120,6 +8326,14 @@ export type Products_Variance_Fields = {
   price_minor?: Maybe<Scalars['Float']['output']>;
   /** Stock count for products without variants. NULL means stock is managed at variant level. */
   stock?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "products" */
+export type Products_Variance_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "provider_type" */
@@ -8305,6 +8519,12 @@ export type Query_Root = {
   clothing_gender_aggregate: Clothing_Gender_Aggregate;
   /** fetch data from the table: "clothing_gender" using primary key columns */
   clothing_gender_by_pk?: Maybe<Clothing_Gender>;
+  /** fetch data from the table: "clothing_product_details" */
+  clothing_product_details: Array<Clothing_Product_Details>;
+  /** fetch aggregated fields from the table: "clothing_product_details" */
+  clothing_product_details_aggregate: Clothing_Product_Details_Aggregate;
+  /** fetch data from the table: "clothing_product_details" using primary key columns */
+  clothing_product_details_by_pk?: Maybe<Clothing_Product_Details>;
   /** fetch data from the table: "clothing_size" */
   clothing_size: Array<Clothing_Size>;
   /** fetch aggregated fields from the table: "clothing_size" */
@@ -8371,6 +8591,12 @@ export type Query_Root = {
   price_type_aggregate: Price_Type_Aggregate;
   /** fetch data from the table: "price_type" using primary key columns */
   price_type_by_pk?: Maybe<Price_Type>;
+  /** fetch data from the table: "product_category" */
+  product_category: Array<Product_Category>;
+  /** fetch aggregated fields from the table: "product_category" */
+  product_category_aggregate: Product_Category_Aggregate;
+  /** fetch data from the table: "product_category" using primary key columns */
+  product_category_by_pk?: Maybe<Product_Category>;
   /** fetch data from the table: "product_status" */
   product_status: Array<Product_Status>;
   /** fetch aggregated fields from the table: "product_status" */
@@ -8383,9 +8609,9 @@ export type Query_Root = {
   product_variants_aggregate: Product_Variants_Aggregate;
   /** fetch data from the table: "product_variants" using primary key columns */
   product_variants_by_pk?: Maybe<Product_Variants>;
-  /** fetch data from the table: "products" */
+  /** An array relationship */
   products: Array<Products>;
-  /** fetch aggregated fields from the table: "products" */
+  /** An aggregate relationship */
   products_aggregate: Products_Aggregate;
   /** fetch data from the table: "products" using primary key columns */
   products_by_pk?: Maybe<Products>;
@@ -8571,6 +8797,29 @@ export type Query_RootClothing_Gender_AggregateArgs = {
 
 export type Query_RootClothing_Gender_By_PkArgs = {
   value: Scalars['String']['input'];
+};
+
+
+export type Query_RootClothing_Product_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Clothing_Product_Details_Order_By>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+
+export type Query_RootClothing_Product_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Clothing_Product_Details_Order_By>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+
+export type Query_RootClothing_Product_Details_By_PkArgs = {
+  product_id: Scalars['uuid']['input'];
 };
 
 
@@ -8824,6 +9073,29 @@ export type Query_RootPrice_Type_AggregateArgs = {
 
 
 export type Query_RootPrice_Type_By_PkArgs = {
+  value: Scalars['String']['input'];
+};
+
+
+export type Query_RootProduct_CategoryArgs = {
+  distinct_on?: InputMaybe<Array<Product_Category_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Product_Category_Order_By>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+
+export type Query_RootProduct_Category_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Product_Category_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Product_Category_Order_By>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+
+export type Query_RootProduct_Category_By_PkArgs = {
   value: Scalars['String']['input'];
 };
 
@@ -9490,6 +9762,14 @@ export type Subscription_Root = {
   clothing_gender_by_pk?: Maybe<Clothing_Gender>;
   /** fetch data from the table in a streaming manner: "clothing_gender" */
   clothing_gender_stream: Array<Clothing_Gender>;
+  /** fetch data from the table: "clothing_product_details" */
+  clothing_product_details: Array<Clothing_Product_Details>;
+  /** fetch aggregated fields from the table: "clothing_product_details" */
+  clothing_product_details_aggregate: Clothing_Product_Details_Aggregate;
+  /** fetch data from the table: "clothing_product_details" using primary key columns */
+  clothing_product_details_by_pk?: Maybe<Clothing_Product_Details>;
+  /** fetch data from the table in a streaming manner: "clothing_product_details" */
+  clothing_product_details_stream: Array<Clothing_Product_Details>;
   /** fetch data from the table: "clothing_size" */
   clothing_size: Array<Clothing_Size>;
   /** fetch aggregated fields from the table: "clothing_size" */
@@ -9578,6 +9858,14 @@ export type Subscription_Root = {
   price_type_by_pk?: Maybe<Price_Type>;
   /** fetch data from the table in a streaming manner: "price_type" */
   price_type_stream: Array<Price_Type>;
+  /** fetch data from the table: "product_category" */
+  product_category: Array<Product_Category>;
+  /** fetch aggregated fields from the table: "product_category" */
+  product_category_aggregate: Product_Category_Aggregate;
+  /** fetch data from the table: "product_category" using primary key columns */
+  product_category_by_pk?: Maybe<Product_Category>;
+  /** fetch data from the table in a streaming manner: "product_category" */
+  product_category_stream: Array<Product_Category>;
   /** fetch data from the table: "product_status" */
   product_status: Array<Product_Status>;
   /** fetch aggregated fields from the table: "product_status" */
@@ -9594,9 +9882,9 @@ export type Subscription_Root = {
   product_variants_by_pk?: Maybe<Product_Variants>;
   /** fetch data from the table in a streaming manner: "product_variants" */
   product_variants_stream: Array<Product_Variants>;
-  /** fetch data from the table: "products" */
+  /** An array relationship */
   products: Array<Products>;
-  /** fetch aggregated fields from the table: "products" */
+  /** An aggregate relationship */
   products_aggregate: Products_Aggregate;
   /** fetch data from the table: "products" using primary key columns */
   products_by_pk?: Maybe<Products>;
@@ -9842,6 +10130,36 @@ export type Subscription_RootClothing_Gender_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Clothing_Gender_Stream_Cursor_Input>>;
   where?: InputMaybe<Clothing_Gender_Bool_Exp>;
+};
+
+
+export type Subscription_RootClothing_Product_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Clothing_Product_Details_Order_By>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+
+export type Subscription_RootClothing_Product_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Clothing_Product_Details_Order_By>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+
+export type Subscription_RootClothing_Product_Details_By_PkArgs = {
+  product_id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootClothing_Product_Details_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Clothing_Product_Details_Stream_Cursor_Input>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
 };
 
 
@@ -10173,6 +10491,36 @@ export type Subscription_RootPrice_Type_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Price_Type_Stream_Cursor_Input>>;
   where?: InputMaybe<Price_Type_Bool_Exp>;
+};
+
+
+export type Subscription_RootProduct_CategoryArgs = {
+  distinct_on?: InputMaybe<Array<Product_Category_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Product_Category_Order_By>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+
+export type Subscription_RootProduct_Category_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Product_Category_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Product_Category_Order_By>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+
+export type Subscription_RootProduct_Category_By_PkArgs = {
+  value: Scalars['String']['input'];
+};
+
+
+export type Subscription_RootProduct_Category_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Product_Category_Stream_Cursor_Input>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
 };
 
 
@@ -14952,6 +15300,20 @@ export type Verification_Tokens_Updates = {
   where: Verification_Tokens_Bool_Exp;
 };
 
+export type GetOrderWithItemsQueryVariables = Exact<{
+  paymentIntentId: Scalars['String']['input'];
+}>;
+
+
+export type GetOrderWithItemsQuery = { __typename?: 'query_root', orders: Array<{ __typename?: 'orders', email: string, id: UUID, status: Order_Status_Enum, total_minor: number, order_items: Array<{ __typename?: 'order_items', metadata?: Json | null, name_snapshot: string, product_id?: UUID | null, quantity: number, unit_price_minor: number, variant_id?: UUID | null }> }> };
+
+export type GetOrderByIdSimpleQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type GetOrderByIdSimpleQuery = { __typename?: 'query_root', orders_by_pk?: { __typename?: 'orders', id: UUID, status: Order_Status_Enum } | null };
+
 export type GetUserProfileQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
@@ -14971,9 +15333,93 @@ export type GetPublicEventsQueryVariables = Exact<{
 
 export type GetPublicEventsQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', id: UUID, title_en: string, title_uk: string, slug: string, description_en?: string | null, description_uk?: string | null, type: Event_Type_Enum, price_type: Price_Type_Enum, price_amount?: Numeric | null, price_currency?: string | null, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, external_url?: string | null, custom_location_address?: string | null, custom_location_name?: string | null, area?: string | null, city?: string | null, country?: string | null, geo?: Geography | null, images?: Array<string> | null, registration_url?: string | null, registration_required: boolean, capacity?: number | null, age_restriction?: string | null, language?: Array<string> | null, accessibility_info?: string | null, social_links?: Json | null, status: Event_Status_Enum, created_at: Timestamp, is_recurring: boolean, recurrence_rule?: string | null, organizer_name?: string | null, organizer_phone_number?: string | null, organizer_email?: string | null, owner_id?: UUID | null, venue_id?: UUID | null, user_id: UUID, venue?: { __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null, logo?: string | null, category: Venue_Category_Enum, geo?: Geography | null } | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, total: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null } };
 
-export type ProductVariantFieldsFragment = { __typename?: 'product_variants', id: UUID, gender: string, age_group: string, size: string, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null };
+export type CreateOrderMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+  subtotal_minor: Scalars['Int']['input'];
+  total_minor: Scalars['Int']['input'];
+  currency: Scalars['String']['input'];
+  status: Order_Status_Enum;
+  payment_intent_id?: InputMaybe<Scalars['String']['input']>;
+  idempotency_key: Scalars['String']['input'];
+  items: Array<Order_Items_Insert_Input> | Order_Items_Insert_Input;
+}>;
 
-export type ProductFieldsFragment = { __typename?: 'products', id: UUID, name: string, slug: string, description_en?: string | null, description_uk?: string | null, category: string, clothing_type?: string | null, price_minor: number, currency: string, images?: Array<string> | null, badge?: string | null, status: string, stock?: number | null, created_at: Timestamp, updated_at: Timestamp, product_variants: Array<{ __typename?: 'product_variants', id: UUID, gender: string, age_group: string, size: string, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null }> };
+
+export type CreateOrderMutation = { __typename?: 'mutation_root', insert_orders_one?: { __typename?: 'orders', id: UUID, email: string, status: Order_Status_Enum, total_minor: number, currency: string, created_at: Timestamp, order_items: Array<{ __typename?: 'order_items', id: UUID, name_snapshot: string, quantity: number, unit_price_minor: number }> } | null };
+
+export type UpdateOrderStatusMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  status: Order_Status_Enum;
+}>;
+
+
+export type UpdateOrderStatusMutation = { __typename?: 'mutation_root', update_orders_by_pk?: { __typename?: 'orders', id: UUID, status: Order_Status_Enum, updated_at: Timestamp } | null };
+
+export type GetOrderByIdQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type GetOrderByIdQuery = { __typename?: 'query_root', orders_by_pk?: { __typename?: 'orders', id: UUID, email: string, status: Order_Status_Enum, subtotal_minor: number, total_minor: number, currency: string, payment_intent_id?: string | null, created_at: Timestamp, order_items: Array<{ __typename?: 'order_items', id: UUID, name_snapshot: string, quantity: number, unit_price_minor: number, currency: string, metadata?: Json | null, product?: { __typename?: 'products', id: UUID, name: string, slug: string, images?: Array<string> | null } | null }> } | null };
+
+export type DecrementVariantStockMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  amount: Scalars['Int']['input'];
+}>;
+
+
+export type DecrementVariantStockMutation = { __typename?: 'mutation_root', update_product_variants_by_pk?: { __typename?: 'product_variants', id: UUID, stock: number } | null };
+
+export type DecrementProductStockMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  amount: Scalars['Int']['input'];
+}>;
+
+
+export type DecrementProductStockMutation = { __typename?: 'mutation_root', update_products_by_pk?: { __typename?: 'products', id: UUID, stock?: number | null } | null };
+
+export type IncrementVariantStockMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  amount: Scalars['Int']['input'];
+}>;
+
+
+export type IncrementVariantStockMutation = { __typename?: 'mutation_root', update_product_variants_by_pk?: { __typename?: 'product_variants', id: UUID, stock: number } | null };
+
+export type IncrementProductStockMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  amount: Scalars['Int']['input'];
+}>;
+
+
+export type IncrementProductStockMutation = { __typename?: 'mutation_root', update_products_by_pk?: { __typename?: 'products', id: UUID, stock?: number | null } | null };
+
+export type DeleteOrderMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type DeleteOrderMutation = { __typename?: 'mutation_root', delete_orders_by_pk?: { __typename?: 'orders', id: UUID } | null };
+
+export type GetOrderByIdempotencyKeyQueryVariables = Exact<{
+  idempotencyKey: Scalars['String']['input'];
+}>;
+
+
+export type GetOrderByIdempotencyKeyQuery = { __typename?: 'query_root', orders: Array<{ __typename?: 'orders', id: UUID, payment_intent_id?: string | null, status: Order_Status_Enum }> };
+
+export type UpdateOrderPaymentIntentMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  payment_intent_id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateOrderPaymentIntentMutation = { __typename?: 'mutation_root', update_orders_by_pk?: { __typename?: 'orders', id: UUID, payment_intent_id?: string | null } | null };
+
+export type ProductVariantFieldsFragment = { __typename?: 'product_variants', id: UUID, gender?: Clothing_Gender_Enum | null, age_group?: Clothing_Age_Group_Enum | null, size?: Clothing_Size_Enum | null, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null };
+
+export type ProductFieldsFragment = { __typename?: 'products', id: UUID, name: string, slug: string, description_en?: string | null, description_uk?: string | null, category: Product_Category_Enum, price_minor: number, currency: string, images?: Array<string> | null, badge?: string | null, status: Product_Status_Enum, stock?: number | null, created_at: Timestamp, updated_at: Timestamp, clothing_product_details?: { __typename?: 'clothing_product_details', clothing_type: Clothing_Type_Enum } | null, product_variants: Array<{ __typename?: 'product_variants', id: UUID, gender?: Clothing_Gender_Enum | null, age_group?: Clothing_Age_Group_Enum | null, size?: Clothing_Size_Enum | null, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null }> };
 
 export type GetPublicProductsQueryVariables = Exact<{
   where: Products_Bool_Exp;
@@ -14983,14 +15429,28 @@ export type GetPublicProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetPublicProductsQuery = { __typename?: 'query_root', products: Array<{ __typename?: 'products', id: UUID, name: string, slug: string, description_en?: string | null, description_uk?: string | null, category: string, clothing_type?: string | null, price_minor: number, currency: string, images?: Array<string> | null, badge?: string | null, status: string, stock?: number | null, created_at: Timestamp, updated_at: Timestamp, product_variants: Array<{ __typename?: 'product_variants', id: UUID, gender: string, age_group: string, size: string, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null }> }>, products_aggregate: { __typename?: 'products_aggregate', aggregate?: { __typename?: 'products_aggregate_fields', count: number } | null } };
+export type GetPublicProductsQuery = { __typename?: 'query_root', products: Array<{ __typename?: 'products', id: UUID, name: string, slug: string, description_en?: string | null, description_uk?: string | null, category: Product_Category_Enum, price_minor: number, currency: string, images?: Array<string> | null, badge?: string | null, status: Product_Status_Enum, stock?: number | null, created_at: Timestamp, updated_at: Timestamp, clothing_product_details?: { __typename?: 'clothing_product_details', clothing_type: Clothing_Type_Enum } | null, product_variants: Array<{ __typename?: 'product_variants', id: UUID, gender?: Clothing_Gender_Enum | null, age_group?: Clothing_Age_Group_Enum | null, size?: Clothing_Size_Enum | null, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null }> }>, products_aggregate: { __typename?: 'products_aggregate', aggregate?: { __typename?: 'products_aggregate_fields', count: number } | null } };
 
 export type GetProductBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type GetProductBySlugQuery = { __typename?: 'query_root', products: Array<{ __typename?: 'products', id: UUID, name: string, slug: string, description_en?: string | null, description_uk?: string | null, category: string, clothing_type?: string | null, price_minor: number, currency: string, images?: Array<string> | null, badge?: string | null, status: string, stock?: number | null, created_at: Timestamp, updated_at: Timestamp, product_variants: Array<{ __typename?: 'product_variants', id: UUID, gender: string, age_group: string, size: string, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null }> }> };
+export type GetProductBySlugQuery = { __typename?: 'query_root', products: Array<{ __typename?: 'products', id: UUID, name: string, slug: string, description_en?: string | null, description_uk?: string | null, category: Product_Category_Enum, price_minor: number, currency: string, images?: Array<string> | null, badge?: string | null, status: Product_Status_Enum, stock?: number | null, created_at: Timestamp, updated_at: Timestamp, clothing_product_details?: { __typename?: 'clothing_product_details', clothing_type: Clothing_Type_Enum } | null, product_variants: Array<{ __typename?: 'product_variants', id: UUID, gender?: Clothing_Gender_Enum | null, age_group?: Clothing_Age_Group_Enum | null, size?: Clothing_Size_Enum | null, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null }> }> };
+
+export type GetProductsByIdsQueryVariables = Exact<{
+  ids: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
+}>;
+
+
+export type GetProductsByIdsQuery = { __typename?: 'query_root', products: Array<{ __typename?: 'products', id: UUID, name: string, slug: string, description_en?: string | null, description_uk?: string | null, category: Product_Category_Enum, price_minor: number, currency: string, images?: Array<string> | null, badge?: string | null, status: Product_Status_Enum, stock?: number | null, created_at: Timestamp, updated_at: Timestamp, clothing_product_details?: { __typename?: 'clothing_product_details', clothing_type: Clothing_Type_Enum } | null, product_variants: Array<{ __typename?: 'product_variants', id: UUID, gender?: Clothing_Gender_Enum | null, age_group?: Clothing_Age_Group_Enum | null, size?: Clothing_Size_Enum | null, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null }> }> };
+
+export type GetVariantsByIdsQueryVariables = Exact<{
+  ids: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
+}>;
+
+
+export type GetVariantsByIdsQuery = { __typename?: 'query_root', product_variants: Array<{ __typename?: 'product_variants', id: UUID, gender?: Clothing_Gender_Enum | null, age_group?: Clothing_Age_Group_Enum | null, size?: Clothing_Size_Enum | null, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null, product: { __typename?: 'products', id: UUID, name: string, slug: string, price_minor: number, currency: string, status: Product_Status_Enum } }> };
 
 export type GetUserEventsQueryVariables = Exact<{
   where: Events_Bool_Exp;
@@ -15125,7 +15585,9 @@ export const ProductFieldsFragmentDoc = gql`
   description_en
   description_uk
   category
-  clothing_type
+  clothing_product_details {
+    clothing_type
+  }
   price_minor
   currency
   images
@@ -15272,6 +15734,98 @@ export const VenueFieldsFragmentDoc = gql`
 }
     ${ChainWithVenuesFragmentDoc}
 ${ChainWithChainsFragmentDoc}`;
+export const GetOrderWithItemsDocument = gql`
+    query GetOrderWithItems($paymentIntentId: String!) {
+  orders(where: {payment_intent_id: {_eq: $paymentIntentId}}) {
+    email
+    id
+    status
+    total_minor
+    order_items {
+      metadata
+      name_snapshot
+      product_id
+      quantity
+      unit_price_minor
+      variant_id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetOrderWithItemsQuery__
+ *
+ * To run a query within a React component, call `useGetOrderWithItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderWithItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderWithItemsQuery({
+ *   variables: {
+ *      paymentIntentId: // value for 'paymentIntentId'
+ *   },
+ * });
+ */
+export function useGetOrderWithItemsQuery(baseOptions: Apollo.QueryHookOptions<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables> & ({ variables: GetOrderWithItemsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>(GetOrderWithItemsDocument, options);
+      }
+export function useGetOrderWithItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>(GetOrderWithItemsDocument, options);
+        }
+export function useGetOrderWithItemsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>(GetOrderWithItemsDocument, options);
+        }
+export type GetOrderWithItemsQueryHookResult = ReturnType<typeof useGetOrderWithItemsQuery>;
+export type GetOrderWithItemsLazyQueryHookResult = ReturnType<typeof useGetOrderWithItemsLazyQuery>;
+export type GetOrderWithItemsSuspenseQueryHookResult = ReturnType<typeof useGetOrderWithItemsSuspenseQuery>;
+export type GetOrderWithItemsQueryResult = Apollo.QueryResult<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>;
+export const GetOrderByIdSimpleDocument = gql`
+    query GetOrderByIdSimple($id: uuid!) {
+  orders_by_pk(id: $id) {
+    id
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetOrderByIdSimpleQuery__
+ *
+ * To run a query within a React component, call `useGetOrderByIdSimpleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderByIdSimpleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderByIdSimpleQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrderByIdSimpleQuery(baseOptions: Apollo.QueryHookOptions<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables> & ({ variables: GetOrderByIdSimpleQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>(GetOrderByIdSimpleDocument, options);
+      }
+export function useGetOrderByIdSimpleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>(GetOrderByIdSimpleDocument, options);
+        }
+export function useGetOrderByIdSimpleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>(GetOrderByIdSimpleDocument, options);
+        }
+export type GetOrderByIdSimpleQueryHookResult = ReturnType<typeof useGetOrderByIdSimpleQuery>;
+export type GetOrderByIdSimpleLazyQueryHookResult = ReturnType<typeof useGetOrderByIdSimpleLazyQuery>;
+export type GetOrderByIdSimpleSuspenseQueryHookResult = ReturnType<typeof useGetOrderByIdSimpleSuspenseQuery>;
+export type GetOrderByIdSimpleQueryResult = Apollo.QueryResult<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>;
 export const GetUserProfileDocument = gql`
     query GetUserProfile($id: uuid!) {
   users_by_pk(id: $id) {
@@ -15374,6 +15928,410 @@ export type GetPublicEventsQueryHookResult = ReturnType<typeof useGetPublicEvent
 export type GetPublicEventsLazyQueryHookResult = ReturnType<typeof useGetPublicEventsLazyQuery>;
 export type GetPublicEventsSuspenseQueryHookResult = ReturnType<typeof useGetPublicEventsSuspenseQuery>;
 export type GetPublicEventsQueryResult = Apollo.QueryResult<GetPublicEventsQuery, GetPublicEventsQueryVariables>;
+export const CreateOrderDocument = gql`
+    mutation CreateOrder($email: String!, $user_id: uuid, $subtotal_minor: Int!, $total_minor: Int!, $currency: String!, $status: order_status_enum!, $payment_intent_id: String, $idempotency_key: String!, $items: [order_items_insert_input!]!) {
+  insert_orders_one(
+    object: {email: $email, user_id: $user_id, subtotal_minor: $subtotal_minor, total_minor: $total_minor, currency: $currency, status: $status, payment_intent_id: $payment_intent_id, idempotency_key: $idempotency_key, order_items: {data: $items}}
+  ) {
+    id
+    email
+    status
+    total_minor
+    currency
+    created_at
+    order_items {
+      id
+      name_snapshot
+      quantity
+      unit_price_minor
+    }
+  }
+}
+    `;
+export type CreateOrderMutationFn = Apollo.MutationFunction<CreateOrderMutation, CreateOrderMutationVariables>;
+
+/**
+ * __useCreateOrderMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderMutation, { data, loading, error }] = useCreateOrderMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      user_id: // value for 'user_id'
+ *      subtotal_minor: // value for 'subtotal_minor'
+ *      total_minor: // value for 'total_minor'
+ *      currency: // value for 'currency'
+ *      status: // value for 'status'
+ *      payment_intent_id: // value for 'payment_intent_id'
+ *      idempotency_key: // value for 'idempotency_key'
+ *      items: // value for 'items'
+ *   },
+ * });
+ */
+export function useCreateOrderMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrderMutation, CreateOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument, options);
+      }
+export type CreateOrderMutationHookResult = ReturnType<typeof useCreateOrderMutation>;
+export type CreateOrderMutationResult = Apollo.MutationResult<CreateOrderMutation>;
+export type CreateOrderMutationOptions = Apollo.BaseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables>;
+export const UpdateOrderStatusDocument = gql`
+    mutation UpdateOrderStatus($id: uuid!, $status: order_status_enum!) {
+  update_orders_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
+    id
+    status
+    updated_at
+  }
+}
+    `;
+export type UpdateOrderStatusMutationFn = Apollo.MutationFunction<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>;
+
+/**
+ * __useUpdateOrderStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrderStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrderStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrderStatusMutation, { data, loading, error }] = useUpdateOrderStatusMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateOrderStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>(UpdateOrderStatusDocument, options);
+      }
+export type UpdateOrderStatusMutationHookResult = ReturnType<typeof useUpdateOrderStatusMutation>;
+export type UpdateOrderStatusMutationResult = Apollo.MutationResult<UpdateOrderStatusMutation>;
+export type UpdateOrderStatusMutationOptions = Apollo.BaseMutationOptions<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>;
+export const GetOrderByIdDocument = gql`
+    query GetOrderById($id: uuid!) {
+  orders_by_pk(id: $id) {
+    id
+    email
+    status
+    subtotal_minor
+    total_minor
+    currency
+    payment_intent_id
+    created_at
+    order_items {
+      id
+      name_snapshot
+      quantity
+      unit_price_minor
+      currency
+      metadata
+      product {
+        id
+        name
+        slug
+        images
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetOrderByIdQuery__
+ *
+ * To run a query within a React component, call `useGetOrderByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrderByIdQuery(baseOptions: Apollo.QueryHookOptions<GetOrderByIdQuery, GetOrderByIdQueryVariables> & ({ variables: GetOrderByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrderByIdQuery, GetOrderByIdQueryVariables>(GetOrderByIdDocument, options);
+      }
+export function useGetOrderByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrderByIdQuery, GetOrderByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrderByIdQuery, GetOrderByIdQueryVariables>(GetOrderByIdDocument, options);
+        }
+export function useGetOrderByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOrderByIdQuery, GetOrderByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetOrderByIdQuery, GetOrderByIdQueryVariables>(GetOrderByIdDocument, options);
+        }
+export type GetOrderByIdQueryHookResult = ReturnType<typeof useGetOrderByIdQuery>;
+export type GetOrderByIdLazyQueryHookResult = ReturnType<typeof useGetOrderByIdLazyQuery>;
+export type GetOrderByIdSuspenseQueryHookResult = ReturnType<typeof useGetOrderByIdSuspenseQuery>;
+export type GetOrderByIdQueryResult = Apollo.QueryResult<GetOrderByIdQuery, GetOrderByIdQueryVariables>;
+export const DecrementVariantStockDocument = gql`
+    mutation DecrementVariantStock($id: uuid!, $amount: Int!) {
+  update_product_variants_by_pk(pk_columns: {id: $id}, _inc: {stock: $amount}) {
+    id
+    stock
+  }
+}
+    `;
+export type DecrementVariantStockMutationFn = Apollo.MutationFunction<DecrementVariantStockMutation, DecrementVariantStockMutationVariables>;
+
+/**
+ * __useDecrementVariantStockMutation__
+ *
+ * To run a mutation, you first call `useDecrementVariantStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDecrementVariantStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [decrementVariantStockMutation, { data, loading, error }] = useDecrementVariantStockMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useDecrementVariantStockMutation(baseOptions?: Apollo.MutationHookOptions<DecrementVariantStockMutation, DecrementVariantStockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DecrementVariantStockMutation, DecrementVariantStockMutationVariables>(DecrementVariantStockDocument, options);
+      }
+export type DecrementVariantStockMutationHookResult = ReturnType<typeof useDecrementVariantStockMutation>;
+export type DecrementVariantStockMutationResult = Apollo.MutationResult<DecrementVariantStockMutation>;
+export type DecrementVariantStockMutationOptions = Apollo.BaseMutationOptions<DecrementVariantStockMutation, DecrementVariantStockMutationVariables>;
+export const DecrementProductStockDocument = gql`
+    mutation DecrementProductStock($id: uuid!, $amount: Int!) {
+  update_products_by_pk(pk_columns: {id: $id}, _inc: {stock: $amount}) {
+    id
+    stock
+  }
+}
+    `;
+export type DecrementProductStockMutationFn = Apollo.MutationFunction<DecrementProductStockMutation, DecrementProductStockMutationVariables>;
+
+/**
+ * __useDecrementProductStockMutation__
+ *
+ * To run a mutation, you first call `useDecrementProductStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDecrementProductStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [decrementProductStockMutation, { data, loading, error }] = useDecrementProductStockMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useDecrementProductStockMutation(baseOptions?: Apollo.MutationHookOptions<DecrementProductStockMutation, DecrementProductStockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DecrementProductStockMutation, DecrementProductStockMutationVariables>(DecrementProductStockDocument, options);
+      }
+export type DecrementProductStockMutationHookResult = ReturnType<typeof useDecrementProductStockMutation>;
+export type DecrementProductStockMutationResult = Apollo.MutationResult<DecrementProductStockMutation>;
+export type DecrementProductStockMutationOptions = Apollo.BaseMutationOptions<DecrementProductStockMutation, DecrementProductStockMutationVariables>;
+export const IncrementVariantStockDocument = gql`
+    mutation IncrementVariantStock($id: uuid!, $amount: Int!) {
+  update_product_variants_by_pk(pk_columns: {id: $id}, _inc: {stock: $amount}) {
+    id
+    stock
+  }
+}
+    `;
+export type IncrementVariantStockMutationFn = Apollo.MutationFunction<IncrementVariantStockMutation, IncrementVariantStockMutationVariables>;
+
+/**
+ * __useIncrementVariantStockMutation__
+ *
+ * To run a mutation, you first call `useIncrementVariantStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useIncrementVariantStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [incrementVariantStockMutation, { data, loading, error }] = useIncrementVariantStockMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useIncrementVariantStockMutation(baseOptions?: Apollo.MutationHookOptions<IncrementVariantStockMutation, IncrementVariantStockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<IncrementVariantStockMutation, IncrementVariantStockMutationVariables>(IncrementVariantStockDocument, options);
+      }
+export type IncrementVariantStockMutationHookResult = ReturnType<typeof useIncrementVariantStockMutation>;
+export type IncrementVariantStockMutationResult = Apollo.MutationResult<IncrementVariantStockMutation>;
+export type IncrementVariantStockMutationOptions = Apollo.BaseMutationOptions<IncrementVariantStockMutation, IncrementVariantStockMutationVariables>;
+export const IncrementProductStockDocument = gql`
+    mutation IncrementProductStock($id: uuid!, $amount: Int!) {
+  update_products_by_pk(pk_columns: {id: $id}, _inc: {stock: $amount}) {
+    id
+    stock
+  }
+}
+    `;
+export type IncrementProductStockMutationFn = Apollo.MutationFunction<IncrementProductStockMutation, IncrementProductStockMutationVariables>;
+
+/**
+ * __useIncrementProductStockMutation__
+ *
+ * To run a mutation, you first call `useIncrementProductStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useIncrementProductStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [incrementProductStockMutation, { data, loading, error }] = useIncrementProductStockMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useIncrementProductStockMutation(baseOptions?: Apollo.MutationHookOptions<IncrementProductStockMutation, IncrementProductStockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<IncrementProductStockMutation, IncrementProductStockMutationVariables>(IncrementProductStockDocument, options);
+      }
+export type IncrementProductStockMutationHookResult = ReturnType<typeof useIncrementProductStockMutation>;
+export type IncrementProductStockMutationResult = Apollo.MutationResult<IncrementProductStockMutation>;
+export type IncrementProductStockMutationOptions = Apollo.BaseMutationOptions<IncrementProductStockMutation, IncrementProductStockMutationVariables>;
+export const DeleteOrderDocument = gql`
+    mutation DeleteOrder($id: uuid!) {
+  delete_orders_by_pk(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteOrderMutationFn = Apollo.MutationFunction<DeleteOrderMutation, DeleteOrderMutationVariables>;
+
+/**
+ * __useDeleteOrderMutation__
+ *
+ * To run a mutation, you first call `useDeleteOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteOrderMutation, { data, loading, error }] = useDeleteOrderMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteOrderMutation(baseOptions?: Apollo.MutationHookOptions<DeleteOrderMutation, DeleteOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteOrderMutation, DeleteOrderMutationVariables>(DeleteOrderDocument, options);
+      }
+export type DeleteOrderMutationHookResult = ReturnType<typeof useDeleteOrderMutation>;
+export type DeleteOrderMutationResult = Apollo.MutationResult<DeleteOrderMutation>;
+export type DeleteOrderMutationOptions = Apollo.BaseMutationOptions<DeleteOrderMutation, DeleteOrderMutationVariables>;
+export const GetOrderByIdempotencyKeyDocument = gql`
+    query GetOrderByIdempotencyKey($idempotencyKey: String!) {
+  orders(where: {idempotency_key: {_eq: $idempotencyKey}}, limit: 1) {
+    id
+    payment_intent_id
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetOrderByIdempotencyKeyQuery__
+ *
+ * To run a query within a React component, call `useGetOrderByIdempotencyKeyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderByIdempotencyKeyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderByIdempotencyKeyQuery({
+ *   variables: {
+ *      idempotencyKey: // value for 'idempotencyKey'
+ *   },
+ * });
+ */
+export function useGetOrderByIdempotencyKeyQuery(baseOptions: Apollo.QueryHookOptions<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables> & ({ variables: GetOrderByIdempotencyKeyQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>(GetOrderByIdempotencyKeyDocument, options);
+      }
+export function useGetOrderByIdempotencyKeyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>(GetOrderByIdempotencyKeyDocument, options);
+        }
+export function useGetOrderByIdempotencyKeySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>(GetOrderByIdempotencyKeyDocument, options);
+        }
+export type GetOrderByIdempotencyKeyQueryHookResult = ReturnType<typeof useGetOrderByIdempotencyKeyQuery>;
+export type GetOrderByIdempotencyKeyLazyQueryHookResult = ReturnType<typeof useGetOrderByIdempotencyKeyLazyQuery>;
+export type GetOrderByIdempotencyKeySuspenseQueryHookResult = ReturnType<typeof useGetOrderByIdempotencyKeySuspenseQuery>;
+export type GetOrderByIdempotencyKeyQueryResult = Apollo.QueryResult<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>;
+export const UpdateOrderPaymentIntentDocument = gql`
+    mutation UpdateOrderPaymentIntent($id: uuid!, $payment_intent_id: String!) {
+  update_orders_by_pk(
+    pk_columns: {id: $id}
+    _set: {payment_intent_id: $payment_intent_id}
+  ) {
+    id
+    payment_intent_id
+  }
+}
+    `;
+export type UpdateOrderPaymentIntentMutationFn = Apollo.MutationFunction<UpdateOrderPaymentIntentMutation, UpdateOrderPaymentIntentMutationVariables>;
+
+/**
+ * __useUpdateOrderPaymentIntentMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrderPaymentIntentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrderPaymentIntentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrderPaymentIntentMutation, { data, loading, error }] = useUpdateOrderPaymentIntentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      payment_intent_id: // value for 'payment_intent_id'
+ *   },
+ * });
+ */
+export function useUpdateOrderPaymentIntentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOrderPaymentIntentMutation, UpdateOrderPaymentIntentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateOrderPaymentIntentMutation, UpdateOrderPaymentIntentMutationVariables>(UpdateOrderPaymentIntentDocument, options);
+      }
+export type UpdateOrderPaymentIntentMutationHookResult = ReturnType<typeof useUpdateOrderPaymentIntentMutation>;
+export type UpdateOrderPaymentIntentMutationResult = Apollo.MutationResult<UpdateOrderPaymentIntentMutation>;
+export type UpdateOrderPaymentIntentMutationOptions = Apollo.BaseMutationOptions<UpdateOrderPaymentIntentMutation, UpdateOrderPaymentIntentMutationVariables>;
 export const GetPublicProductsDocument = gql`
     query GetPublicProducts($where: products_bool_exp!, $limit: Int, $offset: Int, $order_by: [products_order_by!]) {
   products(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -15424,7 +16382,7 @@ export type GetPublicProductsSuspenseQueryHookResult = ReturnType<typeof useGetP
 export type GetPublicProductsQueryResult = Apollo.QueryResult<GetPublicProductsQuery, GetPublicProductsQueryVariables>;
 export const GetProductBySlugDocument = gql`
     query GetProductBySlug($slug: String!) {
-  products(where: {slug: {_eq: $slug}, status: {_eq: "ACTIVE"}}, limit: 1) {
+  products(where: {slug: {_eq: $slug}, status: {_eq: ACTIVE}}, limit: 1) {
     ...ProductFields
   }
 }
@@ -15462,6 +16420,94 @@ export type GetProductBySlugQueryHookResult = ReturnType<typeof useGetProductByS
 export type GetProductBySlugLazyQueryHookResult = ReturnType<typeof useGetProductBySlugLazyQuery>;
 export type GetProductBySlugSuspenseQueryHookResult = ReturnType<typeof useGetProductBySlugSuspenseQuery>;
 export type GetProductBySlugQueryResult = Apollo.QueryResult<GetProductBySlugQuery, GetProductBySlugQueryVariables>;
+export const GetProductsByIdsDocument = gql`
+    query GetProductsByIds($ids: [uuid!]!) {
+  products(where: {id: {_in: $ids}, status: {_eq: ACTIVE}}) {
+    ...ProductFields
+  }
+}
+    ${ProductFieldsFragmentDoc}`;
+
+/**
+ * __useGetProductsByIdsQuery__
+ *
+ * To run a query within a React component, call `useGetProductsByIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductsByIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductsByIdsQuery({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useGetProductsByIdsQuery(baseOptions: Apollo.QueryHookOptions<GetProductsByIdsQuery, GetProductsByIdsQueryVariables> & ({ variables: GetProductsByIdsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>(GetProductsByIdsDocument, options);
+      }
+export function useGetProductsByIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>(GetProductsByIdsDocument, options);
+        }
+export function useGetProductsByIdsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>(GetProductsByIdsDocument, options);
+        }
+export type GetProductsByIdsQueryHookResult = ReturnType<typeof useGetProductsByIdsQuery>;
+export type GetProductsByIdsLazyQueryHookResult = ReturnType<typeof useGetProductsByIdsLazyQuery>;
+export type GetProductsByIdsSuspenseQueryHookResult = ReturnType<typeof useGetProductsByIdsSuspenseQuery>;
+export type GetProductsByIdsQueryResult = Apollo.QueryResult<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>;
+export const GetVariantsByIdsDocument = gql`
+    query GetVariantsByIds($ids: [uuid!]!) {
+  product_variants(where: {id: {_in: $ids}}) {
+    ...ProductVariantFields
+    product {
+      id
+      name
+      slug
+      price_minor
+      currency
+      status
+    }
+  }
+}
+    ${ProductVariantFieldsFragmentDoc}`;
+
+/**
+ * __useGetVariantsByIdsQuery__
+ *
+ * To run a query within a React component, call `useGetVariantsByIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVariantsByIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVariantsByIdsQuery({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useGetVariantsByIdsQuery(baseOptions: Apollo.QueryHookOptions<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables> & ({ variables: GetVariantsByIdsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>(GetVariantsByIdsDocument, options);
+      }
+export function useGetVariantsByIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>(GetVariantsByIdsDocument, options);
+        }
+export function useGetVariantsByIdsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>(GetVariantsByIdsDocument, options);
+        }
+export type GetVariantsByIdsQueryHookResult = ReturnType<typeof useGetVariantsByIdsQuery>;
+export type GetVariantsByIdsLazyQueryHookResult = ReturnType<typeof useGetVariantsByIdsLazyQuery>;
+export type GetVariantsByIdsSuspenseQueryHookResult = ReturnType<typeof useGetVariantsByIdsSuspenseQuery>;
+export type GetVariantsByIdsQueryResult = Apollo.QueryResult<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>;
 export const GetUserEventsDocument = gql`
     query GetUserEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
   events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {

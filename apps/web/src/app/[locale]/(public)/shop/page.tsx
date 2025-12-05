@@ -1,4 +1,4 @@
-import { ShopCatalog } from "~/features/Shop";
+import { ShopCatalogServer } from "~/features/Shop";
 
 interface ShopPageProps {
   params: Promise<{
@@ -7,11 +7,11 @@ interface ShopPageProps {
 }
 
 export default async function ShopPage({ params }: Readonly<ShopPageProps>) {
-  await params;
+  const { locale } = await params;
 
   return (
     <div className="flex flex-col gap-8">
-      <ShopCatalog />
+      <ShopCatalogServer locale={locale} />
     </div>
   );
 }

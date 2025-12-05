@@ -6,7 +6,12 @@
  */
 
 import { Product, ProductVariant } from "~/hooks/useProducts";
-import { ClothingAgeGroup, ClothingGender, ClothingSize } from "~/lib/constants/options/CLOTHING";
+import { Clothing_Age_Group_Enum, Clothing_Gender_Enum, Clothing_Size_Enum } from "~/types/graphql.generated";
+
+// Shorthand aliases for enum values (they match the string values)
+const G = Clothing_Gender_Enum;
+const A = Clothing_Age_Group_Enum;
+const S = Clothing_Size_Enum;
 
 /**
  * Mock product variants - supports optional color and price override
@@ -14,9 +19,9 @@ import { ClothingAgeGroup, ClothingGender, ClothingSize } from "~/lib/constants/
 const createVariants = (
   productId: string,
   options: Array<{
-    gender: ClothingGender;
-    ageGroup: ClothingAgeGroup;
-    size: ClothingSize;
+    gender: Clothing_Gender_Enum;
+    ageGroup: Clothing_Age_Group_Enum;
+    size: Clothing_Size_Enum;
     stock: number;
     color?: string;
     priceOverrideMinor?: number;
@@ -52,15 +57,15 @@ export const mockProducts: Product[] = [
     badge: "New",
     status: "ACTIVE",
     variants: createVariants("prod-1", [
-      { gender: "men", ageGroup: "adult", size: "s", stock: 15 },
-      { gender: "men", ageGroup: "adult", size: "m", stock: 20 },
-      { gender: "men", ageGroup: "adult", size: "l", stock: 18 },
-      { gender: "men", ageGroup: "adult", size: "xl", stock: 12 },
-      { gender: "women", ageGroup: "adult", size: "s", stock: 14 },
-      { gender: "women", ageGroup: "adult", size: "m", stock: 16 },
-      { gender: "women", ageGroup: "adult", size: "l", stock: 12 },
-      { gender: "unisex", ageGroup: "kids", size: "7-8y", stock: 10 },
-      { gender: "unisex", ageGroup: "kids", size: "9-10y", stock: 12 },
+      { gender: G.Men, ageGroup: A.Adult, size: S.S, stock: 15 },
+      { gender: G.Men, ageGroup: A.Adult, size: S.M, stock: 20 },
+      { gender: G.Men, ageGroup: A.Adult, size: S.L, stock: 18 },
+      { gender: G.Men, ageGroup: A.Adult, size: S.Xl, stock: 12 },
+      { gender: G.Women, ageGroup: A.Adult, size: S.S, stock: 14 },
+      { gender: G.Women, ageGroup: A.Adult, size: S.M, stock: 16 },
+      { gender: G.Women, ageGroup: A.Adult, size: S.L, stock: 12 },
+      { gender: G.Unisex, ageGroup: A.Kids, size: S.Y7_8, stock: 10 },
+      { gender: G.Unisex, ageGroup: A.Kids, size: S.Y9_10, stock: 12 },
     ]),
   },
   {
@@ -78,15 +83,15 @@ export const mockProducts: Product[] = [
     status: "ACTIVE",
     variants: createVariants("prod-2", [
       // Black color variants
-      { gender: "unisex", ageGroup: "adult", size: "s", stock: 6, color: "black" },
-      { gender: "unisex", ageGroup: "adult", size: "m", stock: 9, color: "black" },
-      { gender: "unisex", ageGroup: "adult", size: "l", stock: 10, color: "black" },
-      { gender: "unisex", ageGroup: "adult", size: "xl", stock: 8, color: "black" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.S, stock: 6, color: "black" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.M, stock: 9, color: "black" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.L, stock: 10, color: "black" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.Xl, stock: 8, color: "black" },
       // Navy color variants
-      { gender: "unisex", ageGroup: "adult", size: "s", stock: 6, color: "navy" },
-      { gender: "unisex", ageGroup: "adult", size: "m", stock: 9, color: "navy" },
-      { gender: "unisex", ageGroup: "adult", size: "l", stock: 10, color: "navy" },
-      { gender: "unisex", ageGroup: "adult", size: "xl", stock: 7, color: "navy" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.S, stock: 6, color: "navy" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.M, stock: 9, color: "navy" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.L, stock: 10, color: "navy" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.Xl, stock: 7, color: "navy" },
     ]),
   },
   {
@@ -102,10 +107,10 @@ export const mockProducts: Product[] = [
     images: ["shop/tshirt-stand-front.webp"],
     status: "ACTIVE",
     variants: createVariants("prod-3", [
-      { gender: "unisex", ageGroup: "adult", size: "xs", stock: 8 },
-      { gender: "unisex", ageGroup: "adult", size: "s", stock: 15 },
-      { gender: "unisex", ageGroup: "adult", size: "m", stock: 22 },
-      { gender: "unisex", ageGroup: "adult", size: "l", stock: 18 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.Xs, stock: 8 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.S, stock: 15 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.M, stock: 22 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.L, stock: 18 },
     ]),
   },
   {
@@ -122,12 +127,12 @@ export const mockProducts: Product[] = [
     badge: "Limited",
     status: "ACTIVE",
     variants: createVariants("prod-4", [
-      { gender: "men", ageGroup: "adult", size: "m", stock: 8 },
-      { gender: "men", ageGroup: "adult", size: "l", stock: 10 },
-      { gender: "men", ageGroup: "adult", size: "xl", stock: 7 },
-      { gender: "women", ageGroup: "adult", size: "s", stock: 6 },
-      { gender: "women", ageGroup: "adult", size: "m", stock: 9 },
-      { gender: "women", ageGroup: "adult", size: "l", stock: 8 },
+      { gender: G.Men, ageGroup: A.Adult, size: S.M, stock: 8 },
+      { gender: G.Men, ageGroup: A.Adult, size: S.L, stock: 10 },
+      { gender: G.Men, ageGroup: A.Adult, size: S.Xl, stock: 7 },
+      { gender: G.Women, ageGroup: A.Adult, size: S.S, stock: 6 },
+      { gender: G.Women, ageGroup: A.Adult, size: S.M, stock: 9 },
+      { gender: G.Women, ageGroup: A.Adult, size: S.L, stock: 8 },
     ]),
   },
   {
@@ -144,18 +149,18 @@ export const mockProducts: Product[] = [
     status: "ACTIVE",
     variants: createVariants("prod-5", [
       // Grey color variants
-      { gender: "unisex", ageGroup: "adult", size: "s", stock: 7, color: "grey" },
-      { gender: "unisex", ageGroup: "adult", size: "m", stock: 10, color: "grey" },
-      { gender: "unisex", ageGroup: "adult", size: "l", stock: 9, color: "grey" },
-      { gender: "unisex", ageGroup: "adult", size: "xl", stock: 6, color: "grey" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.S, stock: 7, color: "grey" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.M, stock: 10, color: "grey" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.L, stock: 9, color: "grey" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.Xl, stock: 6, color: "grey" },
       // Black color variants
-      { gender: "unisex", ageGroup: "adult", size: "s", stock: 7, color: "black" },
-      { gender: "unisex", ageGroup: "adult", size: "m", stock: 10, color: "black" },
-      { gender: "unisex", ageGroup: "adult", size: "l", stock: 9, color: "black" },
-      { gender: "unisex", ageGroup: "adult", size: "xl", stock: 6, color: "black" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.S, stock: 7, color: "black" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.M, stock: 10, color: "black" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.L, stock: 9, color: "black" },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.Xl, stock: 6, color: "black" },
       // Kids sizes (grey only)
-      { gender: "unisex", ageGroup: "kids", size: "9-10y", stock: 8, color: "grey" },
-      { gender: "unisex", ageGroup: "kids", size: "11-12y", stock: 7, color: "grey" },
+      { gender: G.Unisex, ageGroup: A.Kids, size: S.Y9_10, stock: 8, color: "grey" },
+      { gender: G.Unisex, ageGroup: A.Kids, size: S.Y11_12, stock: 7, color: "grey" },
     ]),
   },
   {
@@ -172,8 +177,8 @@ export const mockProducts: Product[] = [
     status: "ACTIVE",
     stock: 0,
     variants: createVariants("prod-6", [
-      { gender: "unisex", ageGroup: "adult", size: "m", stock: 0 },
-      { gender: "unisex", ageGroup: "adult", size: "l", stock: 0 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.M, stock: 0 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.L, stock: 0 },
     ]),
   },
   {
@@ -217,13 +222,13 @@ export const mockProducts: Product[] = [
     images: ["shop/vyshyvanka-front.webp"],
     status: "ACTIVE",
     variants: createVariants("prod-9", [
-      { gender: "unisex", ageGroup: "adult", size: "s", stock: 8 },
-      { gender: "unisex", ageGroup: "adult", size: "m", stock: 12 },
-      { gender: "unisex", ageGroup: "adult", size: "l", stock: 10 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.S, stock: 8 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.M, stock: 12 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.L, stock: 10 },
       // XL has price override (+£5)
-      { gender: "unisex", ageGroup: "adult", size: "xl", stock: 6, priceOverrideMinor: 4000 },
-      // 2XL has higher price override (+£8)
-      { gender: "unisex", ageGroup: "adult", size: "2xl", stock: 4, priceOverrideMinor: 4300 },
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.Xl, stock: 6, priceOverrideMinor: 4000 },
+      // XXL has higher price override (+£8)
+      { gender: G.Unisex, ageGroup: A.Adult, size: S.Xxl, stock: 4, priceOverrideMinor: 4300 },
     ]),
   },
   {
@@ -329,7 +334,7 @@ const toGraphQLProduct = (product: Product) => ({
   description_en: product.description_en,
   description_uk: product.description_uk,
   category: product.category,
-  clothing_type: product.clothingType,
+  clothing_product_details: product.clothingType ? { clothing_type: product.clothingType } : null,
   price_minor: product.priceMinor,
   currency: product.currency,
   images: product.images,

@@ -13,6 +13,7 @@ export default defineConfig({
     coverage: {
       exclude: ["**/.storybook/**", "**/*.stories.*", "**/storybook-static/**"],
       include: [
+        "src/app/**/*.ts?(x)",
         "src/components/**/*.ts?(x)",
         "src/contexts/**/*.ts?(x)",
         "src/features/**/*.ts?(x)",
@@ -24,6 +25,7 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     include: [
+      "src/app/**/*.test.ts?(x)",
       "src/components/**/*.test.ts?(x)",
       "src/contexts/**/*.test.ts?(x)",
       "src/features/**/*.test.ts?(x)",

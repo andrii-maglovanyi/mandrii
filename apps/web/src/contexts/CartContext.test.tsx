@@ -1,6 +1,8 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { Clothing_Age_Group_Enum, Clothing_Gender_Enum, Clothing_Size_Enum } from "~/types/graphql.generated";
+
 import { CartProvider, getCartItemId, useCart } from "./CartContext";
 
 // Mock localStorage
@@ -52,26 +54,37 @@ describe("CartContext", () => {
     });
 
     it("includes variant details in ID", () => {
-      const variant = { ageGroup: "adult" as const, gender: "unisex" as const, size: "m" as const };
+      const variant = {
+        ageGroup: Clothing_Age_Group_Enum.Adult,
+        gender: Clothing_Gender_Enum.Unisex,
+        size: Clothing_Size_Enum.M,
+      };
       const id = getCartItemId("prod-1", variant);
       expect(id).toBe("prod-1::unisex::adult::m");
     });
 
     it("includes color in ID when present", () => {
-      const variant = { ageGroup: "adult" as const, color: "navy", gender: "unisex" as const, size: "m" as const };
+      const variant = {
+        ageGroup: Clothing_Age_Group_Enum.Adult,
+        color: "navy",
+        gender: Clothing_Gender_Enum.Unisex,
+        size: Clothing_Size_Enum.M,
+      };
       const id = getCartItemId("prod-1", variant);
       expect(id).toBe("prod-1::unisex::adult::m::navy");
     });
   });
 
   describe("addItem", () => {
-    it("adds new item to empty cart", () => {
+    it("adds new item to empty cart and returns success", () => {
       const { result } = renderHook(() => useCart(), { wrapper });
 
+      let addResult: ReturnType<typeof result.current.addItem>;
       act(() => {
-        result.current.addItem(createCartItem());
+        addResult = result.current.addItem(createCartItem());
       });
 
+      expect(addResult!.success).toBe(true);
       expect(result.current.items).toHaveLength(1);
       expect(result.current.items[0].name).toBe("Test Product");
     });
@@ -130,6 +143,50 @@ describe("CartContext", () => {
       });
 
       expect(result.current.items[0].quantity).toBe(100);
+    });
+
+    it("rejects item with different currency and returns currency_mismatch", () => {
+      const { result } = renderHook(() => useCart(), { wrapper });
+
+      // Add first item with GBP
+      act(() => {
+        result.current.addItem(createCartItem({ currency: "GBP", id: "prod-1" }));
+      });
+
+      expect(result.current.items).toHaveLength(1);
+      expect(result.current.currency).toBe("GBP");
+
+      // Try to add item with different currency
+      let addResult: ReturnType<typeof result.current.addItem>;
+      act(() => {
+        addResult = result.current.addItem(createCartItem({ currency: "EUR", id: "prod-2" }));
+      });
+
+      expect(addResult!.success).toBe(false);
+      if (!addResult!.success) {
+        expect(addResult!.reason).toBe("currency_mismatch");
+      }
+      // Cart should still have only the original item
+      expect(result.current.items).toHaveLength(1);
+      expect(result.current.items[0].id).toBe("prod-1");
+    });
+
+    it("allows adding item with same currency", () => {
+      const { result } = renderHook(() => useCart(), { wrapper });
+
+      // Add first item with GBP
+      act(() => {
+        result.current.addItem(createCartItem({ currency: "GBP", id: "prod-1" }));
+      });
+
+      // Add second item with same currency
+      let addResult: ReturnType<typeof result.current.addItem>;
+      act(() => {
+        addResult = result.current.addItem(createCartItem({ currency: "GBP", id: "prod-2" }));
+      });
+
+      expect(addResult!.success).toBe(true);
+      expect(result.current.items).toHaveLength(2);
     });
   });
 

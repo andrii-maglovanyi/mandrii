@@ -1,0 +1,27 @@
+table:
+  name: clothing_product_details
+  schema: public
+object_relationships:
+  - name: product
+    using:
+      foreign_key_constraint_on: product_id
+  - name: clothing_type_enum
+    using:
+      foreign_key_constraint_on: clothing_type
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - product_id
+        - clothing_type
+        - created_at
+        - updated_at
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - product_id
+        - clothing_type
+        - created_at
+        - updated_at
+      filter: {}

@@ -179,7 +179,7 @@ export const ShopCatalog = () => {
                 value={searchQuery}
               />
             </div>
-            <div className="w-full md:w-48 md:shrink-0">
+            <div className={`w-full md:w-48 md:shrink-0`}>
               <Select
                 onChange={(e) => setCategory(e.target.value || undefined)}
                 options={[{ label: i18n("All categories"), value: "" }, ...categoryOptions]}

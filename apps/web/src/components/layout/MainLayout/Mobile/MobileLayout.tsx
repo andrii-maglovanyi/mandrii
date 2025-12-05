@@ -9,6 +9,7 @@ import { ActionButton, Separator } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 
 import { MobileAuth } from "../../Auth/MobileAuth";
+import { CartButton } from "../../CartButton/CartButton";
 import { LanguageToggle } from "../../LanguageToggle/LanguageToggle";
 import { LoveButton } from "../../LoveButton/LoveButton";
 import { ThemeToggle } from "../../ThemeToggle/ThemeToggle";
@@ -16,9 +17,7 @@ import { Container } from "../Container";
 import { Logo } from "../Logo";
 
 const AnimatedIconSwap = ({ isOpen }: { isOpen: boolean }) => (
-  <span className={`
-    relative inline-block h-6 w-6 transition-transform duration-300
-  `}>
+  <span className={`relative inline-block h-6 w-6 transition-transform duration-300`}>
     <Menu
       className={clsx(
         "absolute inset-0 transition-transform duration-300",
@@ -50,9 +49,9 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
 
   return (
     <div className="lg:hidden">
-      <header className={`
-        relative z-50 flex h-16 items-center justify-end px-4 shadow-md
-      `}>
+      <header className={`relative z-50 flex h-16 items-center justify-between px-4 shadow-md`}>
+        <CartButton />
+
         <span className="absolute left-1/2 -translate-x-1/2 transform">
           <Logo />
         </span>
@@ -71,10 +70,7 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
       <div
         aria-hidden={!isOpen}
         className={clsx(
-          `
-            fixed top-0 left-0 z-40 h-full w-full transform overflow-hidden py-4
-            transition-transform duration-300
-          `,
+          `fixed top-0 left-0 z-40 h-full w-full transform overflow-hidden py-4 transition-transform duration-300`,
           "bg-surface",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
@@ -86,6 +82,7 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
           <Separator variant="margin" />
 
           <div className="mt-4 flex justify-end space-x-2">
+            <CartButton onClick={() => setIsOpen(false)} />
             <LoveButton onClick={() => setIsOpen((prev) => !prev)} />
             <ThemeToggle data-testid="theme-toggle-mobile" />
             <LanguageToggle data-testid="language-toggle-mobile" />

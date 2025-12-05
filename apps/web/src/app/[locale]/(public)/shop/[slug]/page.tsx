@@ -1,4 +1,4 @@
-import { ProductView } from "~/features/Shop";
+import { ProductViewServer } from "~/features/Shop";
 
 interface ProductPageProps {
   params: Promise<{
@@ -8,11 +8,11 @@ interface ProductPageProps {
 }
 
 export default async function ProductPage({ params }: Readonly<ProductPageProps>) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
 
   return (
     <div className="flex h-full grow flex-col">
-      <ProductView slug={slug} />
+      <ProductViewServer locale={locale} slug={slug} />
     </div>
   );
 }

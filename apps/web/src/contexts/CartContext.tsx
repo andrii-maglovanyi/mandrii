@@ -2,13 +2,14 @@
 
 import { createContext, type ReactNode, useContext, useEffect, useMemo, useReducer, useState } from "react";
 
-import { ClothingAgeGroup, ClothingGender, ClothingSize } from "~/lib/constants/options/CLOTHING";
+import { ClothingSize } from "~/lib/constants/options/CLOTHING";
+import { Clothing_Age_Group_Enum, Clothing_Gender_Enum } from "~/types/graphql.generated";
 
 /** Variant selection for clothing items */
 export interface CartItemVariant {
-  ageGroup: ClothingAgeGroup;
+  ageGroup: Clothing_Age_Group_Enum;
   color?: string;
-  gender: ClothingGender;
+  gender: Clothing_Gender_Enum;
   size: ClothingSize;
 }
 
@@ -17,23 +18,50 @@ type CartAction =
   | { payload: { id: string }; type: "REMOVE_ITEM" }
   | { payload: CartItem; type: "ADD_ITEM" }
   | { payload: CartState; type: "HYDRATE" }
-  | { type: "CLEAR" };
+  | { type: "CLEAR" }
+  | { type: "CLEAR_CURRENCY_WARNING" };
 
-interface CartItem {
+/** Result of attempting to add an item to cart */
+export type AddItemResult =
+  | { success: true }
+  | { currentCurrency: string; itemCurrency: string; reason: "currency_mismatch"; success: false };
+
+/**
+ * Cart item stored in client state.
+ *
+ * ⚠️ PRODUCTION SECURITY: priceMinor and stock are NOT authoritative.
+ * These values MUST be re-validated on the server before checkout to prevent
+ * client-side manipulation (e.g., localStorage tampering).
+ */
+export interface CartItem {
   currency: string;
   id: string;
   image?: string;
   name: string;
+  /** Price in minor currency units (e.g., cents). NOT authoritative - must be server-validated. */
   priceMinor: number;
   quantity: number;
   slug: string;
-  /** Available stock for this item/variant - used to cap quantities */
+  /** Available stock for this item/variant - used to cap quantities. NOT authoritative - must be server-validated. */
   stock?: number;
   variant?: CartItemVariant;
 }
 
-interface CartState {
+export interface CartState {
   items: CartItem[];
+}
+
+interface CartProviderProps {
+  children: ReactNode;
+  /**
+   * Initial cart, typically provided from the server during SSR/edge rendering.
+   * If provided, localStorage is treated as a guest fallback and will not overwrite this state.
+   */
+  initialCart?: CartState;
+  /**
+   * Persist to localStorage for guests/offline scenarios. Disable if the cart is fully server-backed.
+   */
+  persistLocally?: boolean;
 }
 
 const STORAGE_KEY = "mndr.cart";
@@ -89,8 +117,32 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
   }
 };
 
+/**
+ * Keep only items that match the first currency encountered to prevent mixed-currency carts.
+ * Returns the sanitized cart and whether a mismatch was detected.
+ */
+const sanitizeCurrency = (cart: CartState) => {
+  if (!cart.items.length) {
+    return { cart, warning: false };
+  }
+
+  const primaryCurrency = cart.items[0]?.currency;
+  if (!primaryCurrency) {
+    return { cart, warning: false };
+  }
+
+  const validItems = cart.items.filter((item) => item.currency === primaryCurrency);
+  const warning = validItems.length < cart.items.length;
+  return { cart: { items: validItems }, warning };
+};
+
 const CartContext = createContext<{
-  addItem: (item: CartItem) => void;
+  /**
+   * Add an item to the cart.
+   * Returns success: false with reason if the item's currency doesn't match existing cart items.
+   * Call clear() first if you want to switch currencies.
+   */
+  addItem: (item: CartItem) => AddItemResult;
   clear: () => void;
   /** Dismiss the currency mismatch warning */
   clearCurrencyWarning: () => void;
@@ -104,64 +156,80 @@ const CartContext = createContext<{
   totalMinor: number;
 } | null>(null);
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(cartReducer, { items: [] });
-  const [currencyMismatchWarning, setCurrencyMismatchWarning] = useState(false);
+export const CartProvider = ({ children, initialCart, persistLocally = true }: Readonly<CartProviderProps>) => {
+  const { cart: sanitizedInitialCart, warning: initialWarning } = sanitizeCurrency(initialCart ?? { items: [] });
+  const [state, dispatch] = useReducer(cartReducer, sanitizedInitialCart);
+  const [currencyMismatchWarning, setCurrencyMismatchWarning] = useState(initialWarning);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  const shouldHydrateFromLocalStorage = persistLocally && (!initialCart || initialCart.items.length === 0);
 
   // Hydrate from localStorage once on mount, cleansing mixed currencies.
   useEffect(() => {
+    if (!shouldHydrateFromLocalStorage) {
+      setIsHydrated(true);
+      return;
+    }
+
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as CartState;
-        // Cleanse: keep only items matching the first item's currency
-        const primaryCurrency = parsed.items[0]?.currency;
-        if (primaryCurrency) {
-          const validItems = parsed.items.filter((item) => item.currency === primaryCurrency);
-          const hadMismatch = validItems.length < parsed.items.length;
-          if (hadMismatch) {
-            setCurrencyMismatchWarning(true);
-          }
-          dispatch({ payload: { items: validItems }, type: "HYDRATE" });
-        } else {
-          dispatch({ payload: parsed, type: "HYDRATE" });
-        }
+        const { cart: sanitizedCart, warning } = sanitizeCurrency(parsed);
+        dispatch({ payload: sanitizedCart, type: "HYDRATE" });
+        if (warning) setCurrencyMismatchWarning(true);
       }
     } catch {
       // ignore invalid storage
     }
-  }, []);
+    setIsHydrated(true);
+  }, [shouldHydrateFromLocalStorage]);
 
-  // Persist whenever items change.
+  // Persist whenever items change, but only after hydration is complete.
   useEffect(() => {
+    if (!persistLocally || !isHydrated) return;
+
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       // storage might be unavailable, fail silently
     }
-  }, [state]);
+  }, [state, persistLocally, isHydrated]);
 
-  const totals = useMemo(() => {
-    // Currency is undefined if cart is empty, otherwise from first item
+  const value = useMemo(() => {
+    // Calculate totals directly - currency from first item, total from sum
     const currency = state.items[0]?.currency;
     const totalMinor = state.items.reduce((sum, item) => sum + item.priceMinor * item.quantity, 0);
-    return { currency, totalMinor };
-  }, [state.items]);
 
-  const value = useMemo(
-    () => ({
-      addItem: (item: CartItem) => dispatch({ payload: item, type: "ADD_ITEM" }),
+    return {
+      addItem: (item: CartItem): AddItemResult => {
+        // STRICT CURRENCY ENFORCEMENT: Reject items with mismatched currency
+        // Cart must be single-currency. To switch currencies, clear the cart first.
+        if (currency && item.currency !== currency) {
+          console.warn(
+            `[Cart] Rejected item "${item.name}" with currency ${item.currency}. ` +
+              `Cart currency is ${currency}. Clear cart to switch currencies.`,
+          );
+          return {
+            currentCurrency: currency,
+            itemCurrency: item.currency,
+            reason: "currency_mismatch",
+            success: false,
+          };
+        }
+        dispatch({ payload: item, type: "ADD_ITEM" });
+        return { success: true };
+      },
       clear: () => dispatch({ type: "CLEAR" }),
       clearCurrencyWarning: () => setCurrencyMismatchWarning(false),
-      currency: totals.currency,
+      currency,
       currencyMismatchWarning,
       items: state.items,
       removeItem: (id: string) => dispatch({ payload: { id }, type: "REMOVE_ITEM" }),
       setQuantity: (id: string, quantity: number) => dispatch({ payload: { id, quantity }, type: "SET_QUANTITY" }),
-      totalMinor: totals.totalMinor,
-    }),
-    [state.items, totals.currency, totals.totalMinor, currencyMismatchWarning],
-  );
+      totalMinor,
+    };
+  }, [state.items, currencyMismatchWarning]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };

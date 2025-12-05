@@ -29,7 +29,9 @@ export const PRODUCT_FIELDS_FRAGMENT = gql`
     description_en
     description_uk
     category
-    clothing_type
+    clothing_product_details {
+      clothing_type
+    }
     price_minor
     currency
     images
@@ -68,8 +70,42 @@ export const GET_PUBLIC_PRODUCTS = gql`
 export const GET_PRODUCT_BY_SLUG = gql`
   ${PRODUCT_FIELDS_FRAGMENT}
   query GetProductBySlug($slug: String!) {
-    products(where: { slug: { _eq: $slug }, status: { _eq: "ACTIVE" } }, limit: 1) {
+    products(where: { slug: { _eq: $slug }, status: { _eq: ACTIVE } }, limit: 1) {
       ...ProductFields
+    }
+  }
+`;
+
+/**
+ * Get products by IDs for cart validation.
+ * Used server-side to validate prices and stock before checkout.
+ */
+export const GET_PRODUCTS_BY_IDS = gql`
+  ${PRODUCT_FIELDS_FRAGMENT}
+  query GetProductsByIds($ids: [uuid!]!) {
+    products(where: { id: { _in: $ids }, status: { _eq: ACTIVE } }) {
+      ...ProductFields
+    }
+  }
+`;
+
+/**
+ * Get specific product variants by IDs.
+ * Used server-side to validate variant prices and stock.
+ */
+export const GET_VARIANTS_BY_IDS = gql`
+  ${PRODUCT_VARIANT_FIELDS_FRAGMENT}
+  query GetVariantsByIds($ids: [uuid!]!) {
+    product_variants(where: { id: { _in: $ids } }) {
+      ...ProductVariantFields
+      product {
+        id
+        name
+        slug
+        price_minor
+        currency
+        status
+      }
     }
   }
 `;

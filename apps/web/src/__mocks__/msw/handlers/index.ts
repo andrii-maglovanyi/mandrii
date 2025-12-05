@@ -7,4 +7,7 @@
 
 import { shopHandlers } from "./shop";
 
+export { createCheckoutHandlers, createCheckoutTestState } from "./checkout";
+export type { CheckoutHandlerOptions, CheckoutTestState } from "./checkout";
+
 export const handlers = [...shopHandlers];

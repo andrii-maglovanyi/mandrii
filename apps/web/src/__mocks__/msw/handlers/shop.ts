@@ -2,9 +2,10 @@
  * Shop MSW Handlers
  *
  * GraphQL handlers for shop-related queries and mutations.
+ * Includes checkout flow handlers for order management and Stripe integration.
  */
 
-import { graphql, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 
 import {
   applyWhereClause,
@@ -95,4 +96,119 @@ export const shopErrorHandlers = {
       data: getMockProductBySlugResponse(null),
     });
   }),
+};
+
+/**
+ * Checkout flow handlers for testing order and payment scenarios
+ */
+export const checkoutHandlers = {
+  /**
+   * Creates mock handlers for checkout flow testing.
+   * Tracks created/updated/deleted orders and payment intents.
+   */
+  createMockHandlers: (
+    options: {
+      orderCreationFails?: boolean;
+      orderUpdateFails?: boolean;
+      orderDeletionFails?: boolean;
+      paymentIntentFails?: boolean;
+      existingOrder?: { id: string; payment_intent_id: string; status: string } | null;
+    } = {},
+  ) => {
+    const {
+      orderCreationFails = false,
+      orderUpdateFails = false,
+      orderDeletionFails = false,
+      paymentIntentFails = false,
+      existingOrder = null,
+    } = options;
+
+    const state = {
+      createdOrders: [] as { id: string; idempotencyKey?: string }[],
+      updatedOrders: [] as { id: string; paymentIntentId: string }[],
+      deletedOrders: [] as string[],
+      createdPaymentIntents: [] as { amount: number; orderId?: string }[],
+      cancelledPaymentIntents: [] as string[],
+    };
+
+    const handlers = [
+      // GetOrderByIdempotencyKey
+      graphqlEndpoint.query("GetOrderByIdempotencyKey", () => {
+        return HttpResponse.json({
+          data: { orders: existingOrder ? [existingOrder] : [] },
+        });
+      }),
+
+      // CreateOrder
+      graphqlEndpoint.mutation("CreateOrder", ({ variables }) => {
+        if (orderCreationFails) {
+          return HttpResponse.json({ errors: [{ message: "Database error" }] });
+        }
+        const orderId = `order-${Date.now()}`;
+        state.createdOrders.push({
+          id: orderId,
+          idempotencyKey: variables.object?.idempotency_key,
+        });
+        return HttpResponse.json({
+          data: { insert_orders_one: { id: orderId } },
+        });
+      }),
+
+      // UpdateOrderPaymentIntent
+      graphqlEndpoint.mutation("UpdateOrderPaymentIntent", ({ variables }) => {
+        if (orderUpdateFails) {
+          return HttpResponse.json({ errors: [{ message: "Update failed" }] });
+        }
+        state.updatedOrders.push({
+          id: variables.id,
+          paymentIntentId: variables.payment_intent_id,
+        });
+        return HttpResponse.json({
+          data: {
+            update_orders_by_pk: {
+              id: variables.id,
+              payment_intent_id: variables.payment_intent_id,
+            },
+          },
+        });
+      }),
+
+      // DeleteOrder
+      graphqlEndpoint.mutation("DeleteOrder", ({ variables }) => {
+        if (orderDeletionFails) {
+          return HttpResponse.json({ errors: [{ message: "Delete failed" }] });
+        }
+        state.deletedOrders.push(variables.id);
+        return HttpResponse.json({
+          data: { delete_orders_by_pk: { id: variables.id } },
+        });
+      }),
+
+      // Stripe PaymentIntent creation
+      http.post("https://api.stripe.com/v1/payment_intents", async ({ request }) => {
+        if (paymentIntentFails) {
+          return HttpResponse.json({ error: { message: "Card declined", type: "card_error" } }, { status: 402 });
+        }
+        const body = await request.text();
+        const params = new URLSearchParams(body);
+        state.createdPaymentIntents.push({
+          amount: parseInt(params.get("amount") || "0"),
+          orderId: params.get("metadata[orderId]") || undefined,
+        });
+        return HttpResponse.json({
+          id: "pi_test_" + Date.now(),
+          client_secret: "pi_test_secret",
+          status: "requires_payment_method",
+        });
+      }),
+
+      // Stripe PaymentIntent cancellation
+      http.post("https://api.stripe.com/v1/payment_intents/:id/cancel", ({ params }) => {
+        state.cancelledPaymentIntents.push(params.id as string);
+        return HttpResponse.json({ id: params.id, status: "canceled" });
+      }),
+    ];
+
+    return { handlers, state };
+  },
 };

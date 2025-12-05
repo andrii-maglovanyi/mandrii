@@ -1,10 +1,14 @@
 import { useMemo } from "react";
 
 import { constants } from "~/lib/constants";
-import { ClothingAgeGroup, ClothingGender, ClothingSize } from "~/lib/constants/options/CLOTHING";
+import { ClothingSize } from "~/lib/constants/options/CLOTHING";
 import {
+  Clothing_Age_Group_Enum,
+  Clothing_Gender_Enum,
+  GetProductBySlugQuery,
   GetPublicProductsQuery,
   Order_By,
+  Product_Status_Enum,
   Products_Bool_Exp,
   Products_Order_By,
   useGetProductBySlugQuery,
@@ -14,7 +18,7 @@ import {
 export interface Product extends Record<string, unknown> {
   badge?: null | string;
   category?: string;
-  clothingType?: null | string;
+  clothingType?: null | string; // Now comes from clothing_product_details relationship
   currency: string;
   description_en?: null | string;
   description_uk?: null | string;
@@ -30,9 +34,9 @@ export interface Product extends Record<string, unknown> {
 
 /** Stock information per variant (gender + age + size + color combination) */
 export interface ProductVariant {
-  ageGroup: ClothingAgeGroup;
+  ageGroup: Clothing_Age_Group_Enum;
   color?: null | string;
-  gender: ClothingGender;
+  gender: Clothing_Gender_Enum;
   id: string;
   priceOverrideMinor?: null | number;
   size: ClothingSize;
@@ -50,12 +54,12 @@ interface UsePublicProductsParams {
 /** Default sort order for deterministic pagination */
 const DEFAULT_ORDER_BY: Products_Order_By[] = [{ created_at: Order_By.Desc }];
 
-const normalizeImage = (path?: null | string) => {
+export const normalizeImage = (path?: null | string) => {
   if (!path) return undefined;
   return path.startsWith("http") ? path : `${constants.vercelBlobStorageUrl}/${path}`;
 };
 
-type GraphQLProduct = GetPublicProductsQuery["products"][number];
+type GraphQLProduct = GetPublicProductsQuery["products"][number] | GetProductBySlugQuery["products"][number];
 
 /**
  * Map a GraphQL product response to our Product interface.
@@ -63,10 +67,10 @@ type GraphQLProduct = GetPublicProductsQuery["products"][number];
  * @param product - Raw product data from GraphQL.
  * @returns Normalized Product object.
  */
-const mapProduct = (product: GraphQLProduct): Product => ({
+export const mapProduct = (product: GraphQLProduct): Product => ({
   badge: product.badge,
   category: product.category,
-  clothingType: product.clothing_type,
+  clothingType: product.clothing_product_details?.clothing_type ?? null,
   currency: product.currency,
   description_en: product.description_en,
   description_uk: product.description_uk,
@@ -78,9 +82,9 @@ const mapProduct = (product: GraphQLProduct): Product => ({
   status: product.status,
   stock: product.stock ?? undefined,
   variants: product.product_variants.map((v) => ({
-    ageGroup: v.age_group as ClothingAgeGroup,
+    ageGroup: v.age_group as Clothing_Age_Group_Enum,
     color: v.color ?? undefined,
-    gender: v.gender as ClothingGender,
+    gender: v.gender as Clothing_Gender_Enum,
     id: v.id,
     priceOverrideMinor: v.price_override_minor,
     size: v.size as ClothingSize,
@@ -90,7 +94,7 @@ const mapProduct = (product: GraphQLProduct): Product => ({
 });
 
 /** Default filter for active products only */
-const ACTIVE_FILTER: Products_Bool_Exp = { status: { _eq: "ACTIVE" } };
+const ACTIVE_FILTER: Products_Bool_Exp = { status: { _eq: Product_Status_Enum.Active } };
 
 /**
  * Hook for accessing product data from GraphQL.

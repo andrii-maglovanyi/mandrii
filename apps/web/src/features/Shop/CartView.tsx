@@ -1,13 +1,14 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Trash2 } from "lucide-react";
 import { useLocale } from "next-intl";
-import Image from "next/image";
-import { useMemo } from "react";
+import Link from "next/link";
+import { useEffect, useMemo } from "react";
 
-import { Button, EmptyState, RichText } from "~/components/ui";
+import { ActionButton, Breadcrumbs, Button, EmptyState, FallbackImage } from "~/components/ui";
 import { useCart } from "~/contexts/CartContext";
 import { useI18n } from "~/i18n/useI18n";
+import { sendToMixpanel } from "~/lib/mixpanel";
 import {
   CLOTHING_AGE_GROUP,
   CLOTHING_GENDER,
@@ -23,12 +24,12 @@ const getVariantLabel = (
 ): null | string => {
   if (!variant) return null;
 
-  const genderLabel = CLOTHING_GENDER.find((g) => g.value === variant.gender)?.label[locale] ?? variant.gender;
   const ageLabel = CLOTHING_AGE_GROUP.find((a) => a.value === variant.ageGroup)?.label[locale] ?? variant.ageGroup;
+  const genderLabel = CLOTHING_GENDER.find((g) => g.value === variant.gender)?.label[locale] ?? variant.gender;
   const sizeOptions = variant.ageGroup === "kids" ? CLOTHING_SIZE_KIDS : CLOTHING_SIZE_ADULT;
   const sizeLabel = sizeOptions.find((s) => s.value === variant.size)?.label[locale] ?? variant.size.toUpperCase();
 
-  return `${genderLabel} · ${ageLabel} · ${sizeLabel}`;
+  return `${ageLabel} · ${genderLabel} · ${sizeLabel}`;
 };
 
 export const CartView = () => {
@@ -42,112 +43,193 @@ export const CartView = () => {
 
   const lineItems = useMemo(() => items, [items]);
 
+  // Track cart view
+  useEffect(() => {
+    if (items.length > 0) {
+      sendToMixpanel("Viewed Cart", {
+        itemCount: items.length,
+        totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
+        totalMinor,
+        currency,
+      });
+    }
+  }, []); // Track once on mount
+
   if (!items.length) {
     return (
-      <EmptyState
-        body={i18n("Add something from the shop to start checkout")}
-        heading={i18n("Your cart is empty")}
-        icon={<ShoppingCart size={50} />}
-      />
+      <div className="flex flex-col gap-8">
+        <Breadcrumbs
+          items={[
+            { title: i18n("Home"), url: "/" },
+            { title: i18n("Shop"), url: "/shop" },
+          ]}
+        />
+        <EmptyState
+          body={i18n("Add something from the shop to start checkout")}
+          heading={i18n("Your cart is empty")}
+          icon={<ShoppingCart size={50} />}
+        />
+      </div>
     );
   }
 
   return (
-    <div className={`grid gap-6 lg:grid-cols-3`}>
-      {/* Currency mismatch warning */}
-      {currencyMismatchWarning && (
-        <div
-          className={`bg-warning/10 border-warning/30 text-warning-dark flex items-center justify-between gap-4 rounded-xl border px-4 py-3 lg:col-span-3`}
-        >
-          <p className="text-sm">
-            {i18n(
-              "Some items were removed from your cart because they had a different currency. Only items in the same currency can be checked out together.",
-            )}
-          </p>
-          <Button color="neutral" onClick={clearCurrencyWarning} size="sm" variant="ghost">
-            {i18n("Dismiss")}
-          </Button>
-        </div>
-      )}
-      <div className={`space-y-4 lg:col-span-2`}>
-        {lineItems.map((item) => (
-          <div
-            className={`border-primary/10 bg-surface flex flex-col gap-4 rounded-2xl border p-4 shadow-sm md:flex-row`}
-            key={item.id}
-          >
-            <div className={`bg-surface-tint relative h-32 w-full overflow-hidden rounded-xl md:h-28 md:w-28`}>
-              {item.image ? (
-                <Image alt={item.name} className="object-cover" fill sizes="160px" src={item.image} />
-              ) : (
-                <div className={`text-neutral/50 flex h-full items-center justify-center`}>{i18n("No image")}</div>
-              )}
-            </div>
-            <div className="flex flex-1 flex-col gap-2">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h3 className="text-lg leading-snug font-semibold">{item.name}</h3>
-                  {item.variant && (
-                    <p className="text-primary/80 text-sm font-medium">{getVariantLabel(item.variant, locale)}</p>
-                  )}
-                  <p className="text-neutral/70 text-sm">/shop/{item.slug}</p>
-                </div>
-                <Button color="neutral" onClick={() => removeItem(item.id)} size="sm" variant="ghost">
-                  {i18n("Remove")}
-                </Button>
-              </div>
-              <div className="flex flex-wrap items-center gap-3">
-                <div className={`border-neutral/20 flex items-center rounded-lg border`}>
-                  <Button
-                    color="neutral"
-                    onClick={() => setQuantity(item.id, Math.max(0, item.quantity - 1))}
-                    size="sm"
-                    variant="ghost"
-                  >
-                    −
-                  </Button>
-                  <span className={`min-w-12 text-center text-sm font-semibold`}>{item.quantity}</span>
-                  <Button
-                    color="neutral"
-                    disabled={item.stock !== undefined && item.quantity >= item.stock}
-                    onClick={() => setQuantity(item.id, item.quantity + 1)}
-                    size="sm"
-                    variant="ghost"
-                  >
-                    +
-                  </Button>
-                </div>
-                <span className="text-neutral/80 text-sm">
-                  {i18n("Price per item")} {formatPrice(item.priceMinor, item.currency, locale)}
-                </span>
-                {item.stock !== undefined && item.quantity >= item.stock && (
-                  <span className="text-xs text-orange-600 dark:text-orange-400">{i18n("Max stock reached")}</span>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center justify-end text-lg font-bold">
-              {formatPrice(item.priceMinor * item.quantity, item.currency, locale)}
-            </div>
-          </div>
-        ))}
+    <div className="flex flex-col gap-8">
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        items={[{ title: i18n("Home"), url: "/" }, { title: i18n("Shop"), url: "/shop" }, { title: i18n("Cart") }]}
+      />
+
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold md:text-3xl">{i18n("Your Cart")}</h1>
+        <span className="text-neutral/60 text-sm">
+          {items.length} {items.length === 1 ? i18n("item") : i18n("items")}
+        </span>
       </div>
 
-      <div className={`border-primary/10 bg-surface flex flex-col gap-4 rounded-2xl border p-4 shadow-md`}>
-        <h3 className="text-xl font-semibold">{i18n("Order summary")}</h3>
-        <div className={`text-neutral/80 flex items-center justify-between text-sm`}>
-          <span>{i18n("Subtotal")}</span>
-          <span>{totalLabel}</span>
+      <div className={`grid gap-8 lg:grid-cols-3 lg:gap-12`}>
+        {/* Currency mismatch warning */}
+        {currencyMismatchWarning && (
+          <div
+            className={`bg-warning/10 border-warning/30 text-warning-dark flex items-center justify-between gap-4 rounded-lg border px-4 py-3 lg:col-span-3`}
+          >
+            <p className="text-sm">
+              {i18n(
+                "Some items were removed from your cart because they had a different currency. Only items in the same currency can be checked out together.",
+              )}
+            </p>
+            <Button color="neutral" onClick={clearCurrencyWarning} size="sm" variant="ghost">
+              {i18n("Dismiss")}
+            </Button>
+          </div>
+        )}
+
+        {/* Cart Items */}
+        <div className={`space-y-6 lg:col-span-2`}>
+          {lineItems.map((item) => (
+            <div className={`border-neutral/10 flex flex-col gap-5 rounded-lg border p-5 md:flex-row`} key={item.id}>
+              <Link
+                className={`bg-surface-tint relative h-32 w-full shrink-0 overflow-hidden rounded-lg md:h-28 md:w-28`}
+                href={`/${locale}/shop/${item.slug}`}
+              >
+                <FallbackImage alt={item.name} className="object-cover" fill sizes="160px" src={item.image || ""} />
+              </Link>
+              <div className="flex flex-1 flex-col justify-between gap-3">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <Link className="hover:text-primary transition-colors" href={`/${locale}/shop/${item.slug}`}>
+                      <h3 className="text-lg leading-snug font-semibold">{item.name}</h3>
+                    </Link>
+                    {item.variant && <p className="text-neutral/70 text-sm">{getVariantLabel(item.variant, locale)}</p>}
+                  </div>
+                  <span className="text-lg font-semibold">
+                    {formatPrice(item.priceMinor * item.quantity, item.currency, locale)}
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-4">
+                    <div className={`border-neutral/20 flex items-center rounded-lg border p-px`}>
+                      <Button
+                        color="neutral"
+                        onClick={() => setQuantity(item.id, Math.max(0, item.quantity - 1))}
+                        size="sm"
+                        variant="ghost"
+                      >
+                        −
+                      </Button>
+                      <span className={`min-w-10 text-center text-sm font-medium`}>{item.quantity}</span>
+                      <Button
+                        color="neutral"
+                        disabled={item.stock !== undefined && item.quantity >= item.stock}
+                        onClick={() => setQuantity(item.id, item.quantity + 1)}
+                        size="sm"
+                        variant="ghost"
+                      >
+                        +
+                      </Button>
+                    </div>
+                    <span className="text-neutral/60 text-sm">
+                      {formatPrice(item.priceMinor, item.currency, locale)} {i18n("each")}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {item.stock !== undefined && item.quantity >= item.stock && (
+                      <span className={`text-xs text-orange-600 dark:text-orange-400`}>{i18n("Max stock")}</span>
+                    )}
+                    <ActionButton
+                      color="neutral"
+                      icon={<Trash2 className="stroke-red-600" />}
+                      onClick={() => {
+                        sendToMixpanel("Removed from Cart", {
+                          itemId: item.id,
+                          itemName: item.name,
+                          quantity: item.quantity,
+                          priceMinor: item.priceMinor,
+                          currency: item.currency,
+                        });
+                        removeItem(item.id);
+                      }}
+                      aria-label={i18n("Remove")}
+                      variant="ghost"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-        <RichText className="text-neutral/70 text-sm">
-          {i18n(
-            "Checkout and payment are stubbed until the products API is ready. We'll connect this button to Stripe/Hasura next.",
-          )}
-        </RichText>
-        <Button color="primary" disabled={!items.length} size="md" variant="filled">
-          {i18n("Proceed to checkout")}
-        </Button>
-        <Button color="neutral" onClick={clear} size="sm" variant="ghost">
-          {i18n("Clear cart")}
-        </Button>
+
+        {/* Order Summary */}
+        <div className={`h-fit space-y-2 lg:sticky lg:top-24`}>
+          <div className="mb-4 space-y-4">
+            <h3 className="text-lg font-semibold">{i18n("Order summary")}</h3>
+            <div className={`border-neutral/10 space-y-3 border-b pb-4`}>
+              <div className={`text-neutral/70 flex items-center justify-between text-sm`}>
+                <span>{i18n("Subtotal")}</span>
+                <span>{totalLabel}</span>
+              </div>
+              <div className={`text-neutral/70 flex items-center justify-between text-sm`}>
+                <span>{i18n("Shipping")}</span>
+                <span>{i18n("Calculated at checkout")}</span>
+              </div>
+            </div>
+            <div className={`flex items-center justify-between font-semibold`}>
+              <span>{i18n("Total")}</span>
+              <span className="text-lg">{totalLabel}</span>
+            </div>
+          </div>
+
+          <Link className="block" href={`/${locale}/shop/checkout`}>
+            <Button
+              className="w-full"
+              color="primary"
+              disabled={!items.length}
+              onClick={() => {
+                sendToMixpanel("Clicked Proceed to Checkout", {
+                  itemCount: items.length,
+                  totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
+                  totalMinor,
+                  currency,
+                });
+              }}
+              size="lg"
+              variant="filled"
+            >
+              {i18n("Proceed to checkout")}
+            </Button>
+          </Link>
+
+          <Link className="block" href={`/${locale}/shop`}>
+            <Button className="w-full" color="neutral" size="lg" variant="outlined">
+              {i18n("Continue shopping")}
+            </Button>
+          </Link>
+
+          <Button className="w-full" size="lg" color="neutral" onClick={clear} variant="ghost">
+            {i18n("Clear cart")}
+          </Button>
+        </div>
       </div>
     </div>
   );

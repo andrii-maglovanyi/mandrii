@@ -27,6 +27,10 @@ interface PrivateConfig {
     botToken: string;
     signingSecret: string;
   };
+  stripe: {
+    secretKey: string;
+    webhookSecret: string;
+  };
 }
 
 export function getEnvVar(name: string, required: boolean = process.env.UNSET_CONFIG !== "true") {
@@ -67,5 +71,9 @@ export const privateConfig: PrivateConfig = {
   slack: {
     botToken: getEnvVar("NEXT_PRIVATE_SLACK_BOT_TOKEN"),
     signingSecret: getEnvVar("NEXT_PRIVATE_SLACK_SIGNING_SECRET"),
+  },
+  stripe: {
+    secretKey: getEnvVar("NEXT_PRIVATE_STRIPE_SECRET_KEY"),
+    webhookSecret: getEnvVar("NEXT_PRIVATE_STRIPE_WEBHOOK_SECRET", false),
   },
 };

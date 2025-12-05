@@ -1,6 +1,27 @@
 import { expect, test } from "@playwright/test";
 
+/**
+ * Product View E2E Tests
+ *
+ * Tests product detail page functionality.
+ *
+ * Environment Requirements:
+ * - Seeded product data: Tests expect "ukrainian-heart-hoodie" product to exist
+ *
+ * In CI without HAS_SEEDED_DATA=true, tests will be skipped.
+ */
+
+/**
+ * Check if we have seeded product data available
+ */
+const hasSeededData = (): boolean => {
+  return !process.env.CI || process.env.HAS_SEEDED_DATA === "true";
+};
+
 test.describe("Product View", () => {
+  // Skip in CI without seeded data
+  test.skip(!hasSeededData(), "Skipping: Requires seeded product data");
+
   // Use a known product slug from seed data
   const productSlug = "ukrainian-heart-hoodie";
 
@@ -164,6 +185,9 @@ test.describe("Product View", () => {
 test.describe("Product View - Mobile", () => {
   test.use({ viewport: { width: 375, height: 667 } });
 
+  // Skip in CI without seeded data
+  test.skip(!hasSeededData(), "Skipping: Requires seeded product data");
+
   const productSlug = "ukrainian-heart-hoodie";
 
   test("displays properly on mobile", async ({ page }) => {
@@ -221,6 +245,9 @@ test.describe("Product View - Not Found", () => {
 });
 
 test.describe("Product View - Ukrainian locale", () => {
+  // Skip in CI without seeded data
+  test.skip(!hasSeededData(), "Skipping: Requires seeded product data");
+
   const productSlug = "ukrainian-heart-hoodie";
 
   test("displays product in Ukrainian", async ({ page }) => {
