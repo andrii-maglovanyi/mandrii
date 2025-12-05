@@ -290,6 +290,7 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
           componentRestrictions: { country: Object.keys(constants.whitelisted_countries) },
           input: searchTerm,
           sessionToken: sessionTokenRef.current ?? undefined,
+          types: ["geocode"],
         };
 
         mapServiceRef.current.getPlacePredictions(request, (result, status) => {
@@ -354,7 +355,7 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
                     }}
                     onFocus={handleFocus}
                     onSelectSuggestion={handleSelectSuggestion}
-                    placeholder={i18n("Location")}
+                    placeholder={i18n("Search street, city, or region...")}
                     suggestions={suggestions.map(({ description, place_id }) => ({
                       label: description,
                       value: place_id,
@@ -461,7 +462,7 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
                         behavior: "smooth",
                         block: "start",
                       });
-                    }, 500);
+                    }, 100);
                   }
                 }}
                 ref={mapRef}

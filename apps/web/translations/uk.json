@@ -641,5 +641,6 @@
   "Fees are indicative (as of 2025)_ Check latest [GOV_UK visa/IHS/ILR fee updates]({GOV_UK_FEE_UPDATES_URL})_": "Тарифи орієнтовні (станом на 2025 рік). Перевіряй [актуальні оновлення на GOV.UK]({GOV_UK_FEE_UPDATES_URL}).",
   "This calculator is based on the Home Office [A Fairer Pathway to Settlement]({FAIRER_PATHWAY_URL}) consultation (earned settlement, baseline 10 years, with reductions/penalties)_<br/>**It is for illustration only** and does not guarantee eligibility_<br/><br/>Always check the latest official rules and consider getting professional legal advice before applying_": "Цей калькулятор базується на консультації Home Office - [A Fairer Pathway to Settlement]({FAIRER_PATHWAY_URL})\n (зароблений маршрут до ILR, базовий термін 10 років із можливими зменшеннями та штрафами).<br/>**Це лише орієнтовний розрахунок** і не гарантує права на ILR.<br/><br/>Завжди перевіряй актуальні офіційні правила та за потреби звертайся по фахову юридичну консультацію",
   "Partner route cannot be shorter than main applicant timeline_": "Маршрут партнера не може бути коротшим, ніж час очікування основного заявника.",
-  "{sign}{years} years": "{sign}{years, plural,\n  one {# рік}\n  few {# роки}\n  many {# років}\n  other {# років}\n}"
+  "{sign}{years} years": "{sign}{years, plural,\n  one {# рік}\n  few {# роки}\n  many {# років}\n  other {# років}\n}",
+  "Search street, city, or region___": "Пошук вулиці, міста або регіону…"
 }

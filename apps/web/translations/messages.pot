@@ -360,7 +360,7 @@ msgstr ""
 msgid "Oops, try again"
 msgstr ""
 
-msgid "Location"
+msgid "Search street, city, or region..."
 msgstr ""
 
 msgid "Select category..."
@@ -790,6 +790,9 @@ msgid "Event type"
 msgstr ""
 
 msgid "Add your event details below. To publish, you'll need to provide at least **location, price, and date & time**."
+msgstr ""
+
+msgid "Location"
 msgstr ""
 
 msgid "Date & Time"
