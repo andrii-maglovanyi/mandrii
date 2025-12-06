@@ -18,7 +18,7 @@ const cartItemSchema = z.object({
   /** Unique cart item ID (includes variant info) */
   id: z.string(),
   /** Product ID (UUID) - used to fetch authoritative price */
-  productId: z.string().uuid(),
+  productId: z.uuid(),
   /** Quantity to purchase */
   quantity: z.number().int().positive(),
   /** Variant selection (for clothing items) */
@@ -32,7 +32,7 @@ export const checkoutSchema = z.object({
   /** reCAPTCHA v3 token for bot protection */
   captchaToken: z.string().min(1, "Captcha token required"),
   /** Customer email for order confirmation */
-  email: z.string().email(),
+  email: z.email(),
   /** Shipping country (ISO alpha-2 / zone) used for rate calculation */
   shippingCountry: z.enum(["GB", "EU", "ROW"]).default("GB"),
   /** Honeypot field - should be empty (bots fill this) */
@@ -49,7 +49,7 @@ export type CheckoutRequest = z.infer<typeof checkoutSchema>;
  */
 export const confirmPaymentSchema = z.object({
   /** Order ID returned from checkout */
-  orderId: z.string().uuid(),
+  orderId: z.uuid(),
   /** Stripe payment intent ID */
   paymentIntentId: z.string(),
 });
