@@ -2,6 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import { useCallback, useMemo } from "react";
 
+import { getEventsFilter } from "~/features/Events/utils/getEventsFilter";
 import {
   APIParams,
   FilterParams,
@@ -14,7 +15,6 @@ import {
 import { UUID } from "~/types/uuid";
 
 import { useGraphApi } from "./useGraphApi";
-import { getEventsFilter } from "~/features/Events/utils/getEventsFilter";
 
 interface VenuesParams {
   category?: Venue_Category_Enum;

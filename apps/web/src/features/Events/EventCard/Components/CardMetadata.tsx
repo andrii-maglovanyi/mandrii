@@ -5,10 +5,10 @@ import { Building, Calendar, MapPin, PoundSterling, Users } from "lucide-react";
 import { useLocale } from "next-intl";
 
 import { useI18n } from "~/i18n/useI18n";
+import { toDateLocale } from "~/lib/utils";
 import { GetPublicEventsQuery, Locale } from "~/types";
 
 import { formatEventPrice } from "../../utils";
-import { toDateLocale } from "~/lib/utils";
 
 interface CardMetadataProps {
   event: GetPublicEventsQuery["events"][number];
@@ -46,7 +46,7 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
   const showPrice = variant === "list" || variant === "map";
 
   return (
-    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col gap-2 text-sm">
+    <div className="-mx-4 mt-4 mb-2 flex flex-col gap-2 text-sm text-on-surface">
       {startDate && (
         <div className="flex items-start gap-2 px-4">
           <Calendar className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
@@ -59,7 +59,7 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
                   format(endDate, "EE, d MMMM yyyy", { locale: toDateLocale(locale) })}
               </span>
             </div>
-            <div className="text-neutral text-xs">
+            <div className="text-xs text-neutral">
               {format(startDate, "HH:mm")}
               {endDate && <span> - {format(endDate, "HH:mm")}</span>}
             </div>
@@ -100,7 +100,7 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
       {showPrice && (
         <div className="flex items-start gap-2 px-4">
           <PoundSterling className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
-          <span className="text-primary font-medium">{priceInfo}</span>
+          <span className="font-medium text-primary">{priceInfo}</span>
         </div>
       )}
     </div>

@@ -94,7 +94,10 @@ export const EventsCatalogFilter = ({
           value={searchQuery}
         />
 
-        <div className={`grid grid-cols-2 gap-2 lg:grid-cols-4`}>
+        <div className={`
+          grid grid-cols-2 gap-2
+          lg:grid-cols-4
+        `}>
           <Select
             onChange={(e) => onTypeChange(e.target.value)}
             options={eventTypeOptions}

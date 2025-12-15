@@ -31,7 +31,9 @@ const ProductCard = ({ locale, product }: { locale: Locale; product: Product }) 
 
   return (
     <Card className="group/card relative flex flex-col" href={`/shop/${product.slug}`}>
-      <div className={`bg-surface-tint relative aspect-4/5 w-full overflow-hidden rounded-lg`}>
+      <div className={`
+        relative aspect-4/5 w-full overflow-hidden rounded-lg bg-surface-tint
+      `}>
         {mainImage ? (
           <>
             <Image
@@ -47,7 +49,11 @@ const ProductCard = ({ locale, product }: { locale: Locale; product: Product }) 
             {secondImage && (
               <Image
                 alt={`${product.name} - alternate view`}
-                className={`absolute inset-0 object-cover opacity-0 transition-opacity duration-500 group-hover/card:opacity-100`}
+                className={`
+                  absolute inset-0 object-cover opacity-0 transition-opacity
+                  duration-500
+                  group-hover/card:opacity-100
+                `}
                 fill
                 sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
                 src={secondImage}
@@ -56,13 +62,19 @@ const ProductCard = ({ locale, product }: { locale: Locale; product: Product }) 
           </>
         ) : (
           <div className="flex h-full items-center justify-center">
-            <ShoppingBag className="text-neutral/20 h-10 w-10" />
+            <ShoppingBag className="h-10 w-10 text-neutral/20" />
           </div>
         )}
 
         {isOutOfStock && (
-          <div className={`bg-surface/70 absolute inset-0 flex items-center justify-center backdrop-blur-sm`}>
-            <span className={`bg-surface text-neutral/70 rounded-full px-3 py-1.5 text-sm font-medium`}>
+          <div className={`
+            absolute inset-0 flex items-center justify-center bg-surface/70
+            backdrop-blur-sm
+          `}>
+            <span className={`
+              rounded-full bg-surface px-3 py-1.5 text-sm font-medium
+              text-neutral/70
+            `}>
               {i18n("Sold out")}
             </span>
           </div>
@@ -70,10 +82,13 @@ const ProductCard = ({ locale, product }: { locale: Locale; product: Product }) 
       </div>
 
       <div className="flex flex-col gap-1 pt-4">
-        <h3 className={`text-on-surface group-hover/card:text-primary text-sm leading-snug font-medium`}>
+        <h3 className={`
+          text-sm leading-snug font-medium text-on-surface
+          group-hover/card:text-primary
+        `}>
           {product.name}
         </h3>
-        <p className="text-neutral/70 text-sm">{formatPrice(product.priceMinor, product.currency, locale)}</p>
+        <p className="text-sm text-neutral/70">{formatPrice(product.priceMinor, product.currency, locale)}</p>
       </div>
     </Card>
   );
@@ -140,8 +155,14 @@ export const ShopCatalog = () => {
     <div className="flex flex-col gap-6">
       <div className="mx-auto w-full max-w-(--breakpoint-xl)">
         <div className="shrink-0 space-y-4">
-          <div className={`flex flex-col gap-4 md:flex-row md:gap-x-2`}>
-            <div className={`w-full md:flex-1`}>
+          <div className={`
+            flex flex-col gap-4
+            md:flex-row md:gap-x-2
+          `}>
+            <div className={`
+              w-full
+              md:flex-1
+            `}>
               <Input
                 onChange={handleSearchChange}
                 placeholder={i18n("Search products by name...")}
@@ -149,7 +170,10 @@ export const ShopCatalog = () => {
                 value={searchQuery}
               />
             </div>
-            <div className={`w-full md:w-48 md:shrink-0`}>
+            <div className={`
+              w-full
+              md:w-48 md:shrink-0
+            `}>
               <Select
                 onChange={(e) => setCategory(e.target.value || undefined)}
                 options={[{ label: i18n("All categories"), value: "" }, ...categoryOptions]}
@@ -163,7 +187,10 @@ export const ShopCatalog = () => {
       {/* Results info */}
       <div className="flex flex-wrap items-center justify-between">
         {count > 0 ? (
-          <RichText as="div" className={`text-sm sm:text-base`}>
+          <RichText as="div" className={`
+            text-sm
+            sm:text-base
+          `}>
             {(() => {
               const currentOffset = listState.offset ?? 0;
               const start = currentOffset + 1;
@@ -183,12 +210,18 @@ export const ShopCatalog = () => {
 
       {error ? (
         <div className="flex flex-col items-center justify-center gap-4 py-16">
-          <div className={`flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30`}>
-            <AlertCircle className={`h-8 w-8 text-red-600 dark:text-red-400`} />
+          <div className={`
+            flex h-16 w-16 items-center justify-center rounded-full bg-red-100
+            dark:bg-red-900/30
+          `}>
+            <AlertCircle className={`
+              h-8 w-8 text-red-600
+              dark:text-red-400
+            `} />
           </div>
           <div className="text-center">
             <h3 className="font-semibold">{i18n("Failed to load products")}</h3>
-            <p className="text-neutral/60 mt-1 text-sm">{i18n("There was a problem fetching the catalog.")}</p>
+            <p className="mt-1 text-sm text-neutral/60">{i18n("There was a problem fetching the catalog.")}</p>
           </div>
           <Button color="primary" onClick={() => refetch()} size="sm" variant="outlined">
             <RefreshCw className="mr-2 h-4 w-4" />
@@ -204,7 +237,12 @@ export const ShopCatalog = () => {
       ) : (
         <>
           {/* Product Grid - single column on mobile, 2 on sm, 3 on md, 4 on lg */}
-          <div className={`grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4`}>
+          <div className={`
+            grid grid-cols-1 gap-x-4 gap-y-8
+            sm:grid-cols-2
+            md:grid-cols-3
+            lg:grid-cols-4
+          `}>
             {products.map((product) => (
               <ProductCard key={product.id} locale={locale} product={product} />
             ))}

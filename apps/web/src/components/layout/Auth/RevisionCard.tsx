@@ -26,10 +26,15 @@ export const RevisionCard = ({ isAdmin }: RevisionCardProps) => {
   };
 
   return (
-    <div className={`mt-2 flex cursor-default justify-between gap-2 text-xs text-neutral-500`}>
+    <div className={`
+      mt-2 flex cursor-default justify-between gap-2 text-xs text-neutral-500
+    `}>
       <Tooltip label={commitSha} position={isMobile ? "right" : "left"}>
         <button
-          className={`cursor-pointer rounded-md border-0 bg-neutral-500 px-1 py-0.5 text-neutral-50 no-underline`}
+          className={`
+            cursor-pointer rounded-md border-0 bg-neutral-500 px-1 py-0.5
+            text-neutral-50 no-underline
+          `}
           onClick={navigateToCommit}
         >
           {revision}

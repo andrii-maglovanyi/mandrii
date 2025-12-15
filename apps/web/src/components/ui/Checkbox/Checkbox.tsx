@@ -68,12 +68,16 @@ export function Checkbox({
 
   const labelClass = clsx(
     "text-base text-on-surface select-none",
-    disabled ? "pointer-events-none cursor-not-allowed text-neutral-disabled" : `cursor-pointer`,
+    disabled ? "pointer-events-none cursor-not-allowed text-neutral-disabled" : `
+      cursor-pointer
+    `,
   );
 
   return (
     <div className="flex flex-col gap-1">
-      <div className={clsx("flex items-center gap-3", disabled && `cursor-not-allowed`)}>
+      <div className={clsx("flex items-center gap-3", disabled && `
+        cursor-not-allowed
+      `)}>
         <div className="relative">
           <input
             aria-required={required}
@@ -91,7 +95,9 @@ export function Checkbox({
           />
           <label className={checkboxClass} htmlFor={checkboxId}>
             {isChecked && (
-              <Check className={clsx("text-white", disabled && `stroke-neutral-disabled`)} size={18} strokeWidth={3} />
+              <Check className={clsx("text-white", disabled && `
+                stroke-neutral-disabled
+              `)} size={18} strokeWidth={3} />
             )}
           </label>
         </div>

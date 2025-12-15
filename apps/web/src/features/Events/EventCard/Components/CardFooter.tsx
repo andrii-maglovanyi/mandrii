@@ -17,7 +17,10 @@ export const CardFooter = ({ event, hideUntilHover, isInsideLink }: CardFooterPr
   const linkContent = (
     <>
       {i18n("More")}
-      <span className={`transition-transform group-hover/card:translate-x-1`}>→</span>
+      <span className={`
+        transition-transform
+        group-hover/card:translate-x-1
+      `}>→</span>
     </>
   );
 
@@ -31,8 +34,10 @@ export const CardFooter = ({ event, hideUntilHover, isInsideLink }: CardFooterPr
   const city = event.city as null | string;
 
   return (
-    <div className={`border-primary/5 flex items-center justify-between border-t pt-3`}>
-      <div className="text-neutral flex items-center gap-2 text-xs">
+    <div className={`
+      flex items-center justify-between border-t border-primary/5 pt-3
+    `}>
+      <div className="flex items-center gap-2 text-xs text-neutral">
         {isOnline ? (
           <>
             <Calendar size={14} />
@@ -52,7 +57,10 @@ export const CardFooter = ({ event, hideUntilHover, isInsideLink }: CardFooterPr
       </div>
 
       {isInsideLink ? (
-        <span className={` ${linkClassName} pointer-events-none`}>{linkContent}</span>
+        <span className={`
+          ${linkClassName}
+          pointer-events-none
+        `}>{linkContent}</span>
       ) : (
         <Link className={linkClassName} href={`/events/${String(event.slug)}`}>
           {linkContent}

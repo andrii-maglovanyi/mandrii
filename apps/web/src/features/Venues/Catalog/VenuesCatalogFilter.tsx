@@ -75,8 +75,14 @@ export const VenuesCatalogFilter = ({
   return (
     <div className="mx-auto mt-4 w-full max-w-(--breakpoint-xl)">
       <div className="shrink-0 space-y-4">
-        <div className={`flex flex-col gap-x-2 md:flex-row`}>
-          <div className={`mb-4 flex-2 md:mb-0`}>
+        <div className={`
+          flex flex-col gap-x-2
+          md:flex-row
+        `}>
+          <div className={`
+            mb-4 flex-2
+            md:mb-0
+          `}>
             <Input
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={i18n("Search venues by title or location...")}

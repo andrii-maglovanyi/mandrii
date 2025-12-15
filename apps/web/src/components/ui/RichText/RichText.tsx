@@ -10,7 +10,11 @@ interface RichTextProps {
 export const RichText = ({ as: Tag = "div", children, className }: RichTextProps) => {
   return (
     <Tag
-      className={`prose prose-sm dark:prose-invert max-w-none ${className || ""} `}
+      className={`
+        prose prose-sm max-w-none
+        dark:prose-invert
+        ${className || ""}
+      `}
       dangerouslySetInnerHTML={{
         __html: marked.parse(children, { breaks: true, gfm: true }),
       }}

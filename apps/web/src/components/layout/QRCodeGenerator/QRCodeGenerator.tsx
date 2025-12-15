@@ -112,7 +112,10 @@ const QRCodeGenerator = () => {
   };
 
   return (
-    <div className={`m-auto flex max-w-4xl flex-col p-8 lg:p-24`}>
+    <div className={`
+      m-auto flex max-w-4xl flex-col p-8
+      lg:p-24
+    `}>
       <div className="flex">
         <input
           className="mr-4 w-full rounded-sm border border-gray-300 p-2"
@@ -121,7 +124,11 @@ const QRCodeGenerator = () => {
           type="text"
         />
         <button
-          className={`rounded-sm bg-[#273D6C] px-4 py-2 font-bold text-white hover:bg-[#12284A] disabled:cursor-not-allowed disabled:opacity-50`}
+          className={`
+            rounded-sm bg-[#273D6C] px-4 py-2 font-bold text-white
+            hover:bg-[#12284A]
+            disabled:cursor-not-allowed disabled:opacity-50
+          `}
           disabled={isDisabled}
           onClick={handleDownload}
         >

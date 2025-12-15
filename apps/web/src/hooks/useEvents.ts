@@ -56,10 +56,10 @@ export const useEvents = () => {
     const mergedParams = useMemo(
       () => ({
         ...params,
+        order_by: params.order_by ?? [{ start_date: "asc" }],
         whereTotal: {
           _or: [{ start_date: { _gte: now } }, { end_date: { _gte: now } }],
         },
-        order_by: params.order_by ?? [{ start_date: "asc" }],
       }),
       [params],
     );

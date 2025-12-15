@@ -1,7 +1,5 @@
 import { gql } from "@apollo/client";
 
-const now = new Date().toISOString();
-
 export const EVENT_FIELDS_FRAGMENT = gql`
   fragment EventFields on events {
     id

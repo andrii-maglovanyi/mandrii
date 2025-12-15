@@ -39,13 +39,13 @@ export const BeautyMetadataDisplay = ({ beautySalonDetails }: BeautyMetadataDisp
         <MetadataSection icon={Calendar} title={i18n("Booking")}>
           <div className="space-y-2 text-sm">
             {appointment_required && (
-              <div className="text-on-surface flex items-center gap-2">
+              <div className="flex items-center gap-2 text-on-surface">
                 <span className="text-primary">✓</span>
                 <span>{i18n("Appointment required")}</span>
               </div>
             )}
             {walk_ins_accepted && (
-              <div className="text-on-surface flex items-center gap-2">
+              <div className="flex items-center gap-2 text-on-surface">
                 <span className="text-primary">✓</span>
                 <span>{i18n("Walk-ins accepted")}</span>
               </div>

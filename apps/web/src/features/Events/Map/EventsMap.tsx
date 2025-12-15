@@ -24,8 +24,8 @@ import { UUID } from "~/types/uuid";
 
 import { MapListCard } from "../EventCard/MapListCard";
 import { MapMobileCard } from "../EventCard/MapMobileCard";
-import { GoogleMapRef, PinMap } from "./PinMap";
 import { getEventsFilter } from "../utils/getEventsFilter";
+import { GoogleMapRef, PinMap } from "./PinMap";
 
 type AutocompleteService = google.maps.places.AutocompleteService | null;
 type AutocompleteToken = google.maps.places.AutocompleteSessionToken | null;
@@ -314,13 +314,19 @@ export const EventsMap = () => {
   }
 
   return (
-    <div className="bg-surface z-10 flex h-full grow flex-col">
+    <div className="z-10 flex h-full grow flex-col bg-surface">
       <div className="flex grow flex-row">
         <div className="flex grow flex-col">
           <div className="mx-auto mt-4 w-full max-w-(--breakpoint-xl) p-4">
             <div className="shrink-0 space-y-4">
-              <div className={`flex flex-col gap-x-2 md:flex-row`}>
-                <div className={`mb-4 flex-2 md:mb-0`}>
+              <div className={`
+                flex flex-col gap-x-2
+                md:flex-row
+              `}>
+                <div className={`
+                  mb-4 flex-2
+                  md:mb-0
+                `}>
                   <Input
                     disabled={!isReady}
                     onChange={(e) => {
@@ -373,19 +379,30 @@ export const EventsMap = () => {
                     <LocateFixed className="mr-2" size={18} /> {i18n("Find me")}
                   </Button>
                 </div>
-                <RichText as="div" className={clsx(`text-sm sm:text-base`, isReady ? `visible` : `hidden`)}>
+                <RichText as="div" className={clsx(`
+                  text-sm
+                  sm:text-base
+                `, isReady ? `visible` : `hidden`)}>
                   {i18n("Showing **{count}** of **{total}**", { count, total })}
                 </RichText>
               </div>
             </div>
           </div>
 
-          <div className={clsx("mx-auto h-full w-1/2 flex-col justify-center", showMap ? `hidden` : `flex`)}>
+          <div className={clsx("mx-auto h-full w-1/2 flex-col justify-center", showMap ? `
+            hidden
+          ` : `flex`)}>
             <ProgressBar isLoading={!isReady} onLoaded={() => setShowMap(true)} />
           </div>
 
-          <div className={clsx(`h-full grid-cols-1 gap-2 md:grid-cols-2`, showMap ? `grid` : `hidden`)}>
-            <div className={`hidden md:block`}>
+          <div className={clsx(`
+            h-full grid-cols-1 gap-2
+            md:grid-cols-2
+          `, showMap ? `grid` : `hidden`)}>
+            <div className={`
+              hidden
+              md:block
+            `}>
               {!(eventCards?.length || loading) ? (
                 <div className="flex h-full w-full items-center justify-center">
                   <EmptyState
@@ -395,7 +412,10 @@ export const EventsMap = () => {
                   />
                 </div>
               ) : (
-                <div className={`-mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3 pt-0.5`}>
+                <div className={`
+                  -mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
+                  pt-0.5
+                `}>
                   {eventCards}
                 </div>
               )}
@@ -433,7 +453,9 @@ export const EventsMap = () => {
               />
 
               <div className="absolute top-0 left-0 mt-3 ml-3">
-                <p className={`bg-on-surface/70 text-surface rounded-md px-3 py-1 text-sm`}>
+                <p className={`
+                  rounded-md bg-on-surface/70 px-3 py-1 text-sm text-surface
+                `}>
                   {eventCards.length
                     ? `${i18n("Showing {number} results", { number: eventCards.length })}`
                     : i18n("Nothing found")}

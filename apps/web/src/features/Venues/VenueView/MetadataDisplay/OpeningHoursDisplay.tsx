@@ -30,10 +30,17 @@ export const OpeningHoursDisplay = ({ schedules }: OpeningHoursDisplayProps) => 
 
         return (
           <div
-            className={`hover:bg-on-surface/5 -mx-4 flex items-start justify-between px-4 py-2 text-sm ${isToday ? `bg-primary/10 font-semibold` : ""} `}
+            className={`
+              -mx-4 flex items-start justify-between px-4 py-2 text-sm
+              hover:bg-on-surface/5
+              ${isToday ? `bg-primary/10 font-semibold` : ""}
+            `}
             key={day.full.en}
           >
-            <span className={`font-medium ${isToday ? "text-primary" : `text-neutral`} `}>{day.full[locale]}</span>
+            <span className={`
+              font-medium
+              ${isToday ? "text-primary" : `text-neutral`}
+            `}>{day.full[locale]}</span>
             <div className="flex flex-col items-end gap-0.5">
               {daySchedules.length ? (
                 daySchedules.map(({ close_time, open_time }, idx) => (

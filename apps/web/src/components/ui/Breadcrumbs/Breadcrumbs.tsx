@@ -13,7 +13,10 @@ export const Breadcrumbs = ({ items }: { items: Array<{ title: string; url?: str
 
         acc.push(
           url ? (
-            <Link className={`opacity-80 hover:underline hover:opacity-100`} href={url}>
+            <Link className={`
+              opacity-80
+              hover:underline hover:opacity-100
+            `} href={url}>
               {title}
             </Link>
           ) : (
@@ -33,7 +36,11 @@ export const Breadcrumbs = ({ items }: { items: Array<{ title: string; url?: str
 
   return (
     <div
-      className={`text-neutral-disabled flex items-center overflow-clip text-left text-nowrap md:scale-100 md:text-xl`}
+      className={`
+        flex items-center overflow-clip text-left text-nowrap
+        text-neutral-disabled
+        md:scale-100 md:text-xl
+      `}
     >
       {list.map((Item, index) => (
         <Item key={index} />

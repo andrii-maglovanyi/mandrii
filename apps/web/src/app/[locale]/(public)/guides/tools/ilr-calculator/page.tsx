@@ -23,8 +23,14 @@ export default async function ToolsPage({ params }: GuidesILRCalculatorPageProps
           ]}
         />
         <div className="mt-6 mb-10 space-y-3">
-          <h1 className={`text-on-surface text-3xl font-extrabold md:text-5xl`}>{i18n("ILR calculator")}</h1>
-          <p className={`text-neutral text-sm md:text-base`}>{i18n("See your earliest ILR date and estimated fees")}</p>
+          <h1 className={`
+            text-3xl font-extrabold text-on-surface
+            md:text-5xl
+          `}>{i18n("ILR calculator")}</h1>
+          <p className={`
+            text-sm text-neutral
+            md:text-base
+          `}>{i18n("See your earliest ILR date and estimated fees")}</p>
         </div>
 
         <ILRCalculator />

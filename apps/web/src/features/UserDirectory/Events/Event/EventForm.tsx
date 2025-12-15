@@ -111,8 +111,14 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className={`flex grow flex-col justify-evenly lg:space-x-4`}>
-        <div className={`flex flex-col justify-evenly md:flex-row md:space-x-4`}>
+      <div className={`
+        flex grow flex-col justify-evenly
+        lg:space-x-4
+      `}>
+        <div className={`
+          flex flex-col justify-evenly
+          md:flex-row md:space-x-4
+        `}>
           <div className="flex flex-1 flex-col">
             <Input
               label="Назва події (🇺🇦 Українською)"
@@ -132,7 +138,10 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
             />
           </div>
         </div>
-        <div className={`mt-1 flex flex-col justify-evenly md:flex-row md:space-x-4`}>
+        <div className={`
+          mt-1 flex flex-col justify-evenly
+          md:flex-row md:space-x-4
+        `}>
           <div className="flex flex-2 flex-col">
             <Select label={i18n("Event type")} options={eventTypeOptions} required {...getFieldProps("type")} />
           </div>
@@ -145,7 +154,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
               {...getFieldProps("slug")}
               disabled={isBusy || Boolean(initialValues.id)}
             />
-            <RichText as="p" className="text-neutral mt-1.5 text-sm">
+            <RichText as="p" className="mt-1.5 text-sm text-neutral">
               {i18n(
                 "↑ This is the unique identifier which must be URL-friendly and **at least 10 characters long**. Once created, it cannot be changed.",
               )}

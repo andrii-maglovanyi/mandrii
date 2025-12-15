@@ -12,6 +12,6 @@ export const EmailActionBackup = ({ i18n = (value: string) => value, url }: Emai
         {i18n("If the button doesn't work, copy and paste this link into your browser:")}
       </Text>
 
-      <Text className="text-primary text-sm break-all underline">{url}</Text>
+      <Text className="text-sm break-all text-primary underline">{url}</Text>
     </Section>
   ) : null;

@@ -94,17 +94,27 @@ const Events = () => {
         return (
           <div className="flex flex-col">
             <Link
-              className={`group text-2xl font-bold md:text-base md:font-semibold`}
+              className={`
+                group text-2xl font-bold
+                md:text-base md:font-semibold
+              `}
               href={`/events/${slug}`}
               target="_blank"
             >
               {locale === "uk" ? title_uk : title_en}
               <ArrowUpRight
-                className={`text-neutral mb-1.5 ml-0.5 inline-block align-bottom opacity-0 group-hover:opacity-100 md:mb-1`}
+                className={`
+                  mb-1.5 ml-0.5 inline-block align-bottom text-neutral opacity-0
+                  group-hover:opacity-100
+                  md:mb-1
+                `}
                 size={16}
               />
             </Link>
-            <span className={`text-neutral-disabled flex items-center text-base md:text-xs`}>
+            <span className={`
+              flex items-center text-base text-neutral-disabled
+              md:text-xs
+            `}>
               <Calendar className="mr-1" size={14} />
               {format(new Date(start_date), "PPP", { locale: dateLocale })}
               <span className="mx-2">•</span>
@@ -126,10 +136,16 @@ const Events = () => {
 
         return (
           <>
-            <div className={`hidden grow justify-center align-middle md:flex`}>
+            <div className={`
+              hidden grow justify-center align-middle
+              md:flex
+            `}>
               <Tooltip label={label[locale]}>{getIcon(iconName)}</Tooltip>
             </div>
-            <div className={`flex items-center md:hidden`}>
+            <div className={`
+              flex items-center
+              md:hidden
+            `}>
               {getIcon(iconName)}
               <span className="ml-2">{label[locale]}</span>
             </div>

@@ -28,7 +28,9 @@ export const Wrapper = ({ children }: Readonly<WrapperProps>) => {
         }}
       >
         <Body className="py-10 font-sans">
-          <Container className={`mx-auto max-w-xl rounded-lg px-8 py-10 shadow-md`}>
+          <Container className={`
+            mx-auto max-w-xl rounded-lg px-8 py-10 shadow-md
+          `}>
             <Logo />
             {children}
           </Container>

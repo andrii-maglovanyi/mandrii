@@ -37,8 +37,11 @@ export const CartButton = ({ onClick }: CartButtonProps) => {
       {itemCount > 0 && (
         <span
           className={clsx(
-            `absolute -top-px -right-px flex h-5 min-w-5 items-center justify-center`,
-            "bg-primary text-surface rounded-full px-0.5 text-xs font-semibold",
+            `
+              absolute -top-px -right-px flex h-5 min-w-5 items-center
+              justify-center
+            `,
+            "rounded-full bg-primary px-0.5 text-xs font-semibold text-surface",
           )}
           data-testid="cart-count"
         >

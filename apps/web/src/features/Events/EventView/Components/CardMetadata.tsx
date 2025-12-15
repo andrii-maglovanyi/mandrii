@@ -107,7 +107,7 @@ export const CardMetadata = ({
   } = event;
 
   return (
-    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col text-sm">
+    <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
       {/* Date & Time */}
       {startDate && (
         <Section expanded={expanded} title={i18n("Date & Time")}>
@@ -133,9 +133,9 @@ export const CardMetadata = ({
       {/* Recurrence Info */}
       {is_recurring && recurrence_rule && (
         <Section expanded={expanded}>
-          <div className="border-primary/20 bg-primary/10 my-2 px-4 py-2">
-            <div className="text-primary flex items-start gap-2">
-              <Repeat className="text-neutral mt-0.5 min-h-4 min-w-4 shrink-0" size={ICON_SIZE} />
+          <div className="my-2 border-primary/20 bg-primary/10 px-4 py-2">
+            <div className="flex items-start gap-2 text-primary">
+              <Repeat className="mt-0.5 min-h-4 min-w-4 shrink-0 text-neutral" size={ICON_SIZE} />
               <p className="text-sm font-medium">{formatRecurrenceRule(recurrence_rule)}</p>
             </div>
           </div>
@@ -150,11 +150,19 @@ export const CardMetadata = ({
       {!isOnline && (
         <Section expanded={expanded} title={i18n("Location")}>
           {venue_id && venue ? (
-            <div className={`group/info hover:bg-on-surface/5 flex w-full items-center justify-between text-left`}>
-              <div className={`text-neutral flex min-w-0 flex-1 items-center gap-2 px-4 py-2`}>
-                <MapPin className="text-primary min-h-4 min-w-4" size={ICON_SIZE} />
+            <div className={`
+              group/info flex w-full items-center justify-between text-left
+              hover:bg-on-surface/5
+            `}>
+              <div className={`
+                flex min-w-0 flex-1 items-center gap-2 px-4 py-2 text-neutral
+              `}>
+                <MapPin className="min-h-4 min-w-4 text-primary" size={ICON_SIZE} />
                 <Link
-                  className={`text-primary min-w-0 truncate font-medium hover:underline`}
+                  className={`
+                    min-w-0 truncate font-medium text-primary
+                    hover:underline
+                  `}
                   href={`/venues/${venue.slug}`}
                 >
                   {venue.name}
