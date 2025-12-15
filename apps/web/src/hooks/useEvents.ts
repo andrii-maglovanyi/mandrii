@@ -8,8 +8,6 @@ import { UUID } from "~/types/uuid";
 
 import { useGraphApi } from "./useGraphApi";
 
-const now = new Date().toISOString();
-
 const GET_USER_EVENTS = gql`
   ${EVENT_FIELDS_FRAGMENT}
   query GetUserEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
@@ -57,9 +55,6 @@ export const useEvents = () => {
       () => ({
         ...params,
         order_by: params.order_by ?? [{ start_date: "asc" }],
-        whereTotal: {
-          _or: [{ start_date: { _gte: now } }, { end_date: { _gte: now } }],
-        },
       }),
       [params],
     );

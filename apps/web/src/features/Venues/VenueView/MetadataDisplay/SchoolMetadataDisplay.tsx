@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, Languages, Monitor, Users } from "lucide-react";
+import { BookOpen, Check, GraduationCap, Languages, Monitor, Users } from "lucide-react";
 import { useLocale } from "next-intl";
 
 import { useI18n } from "~/i18n/useI18n";
@@ -55,7 +55,7 @@ export const SchoolMetadataDisplay = ({ schoolDetails }: SchoolMetadataDisplayPr
           {class_size_max && (
             <MetadataRow icon={Users} label={i18n("Maximum class size")} showDots value={class_size_max} />
           )}
-          {online_classes_available !== undefined && (
+          {online_classes_available && (
             <MetadataRow
               icon={Monitor}
               label={i18n("Online classes")}
@@ -65,7 +65,7 @@ export const SchoolMetadataDisplay = ({ schoolDetails }: SchoolMetadataDisplayPr
                   inline-flex items-center gap-1 text-green-600
                   dark:text-green-400
                 `}>
-                  ✓ {i18n("Available")}
+                  <Check /> {i18n("Available")}
                 </span>
               }
             />

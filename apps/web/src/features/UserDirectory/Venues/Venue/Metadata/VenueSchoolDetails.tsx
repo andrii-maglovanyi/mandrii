@@ -164,7 +164,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
 
           <div className="flex items-center pt-6">
             <Checkbox
-              checked={schoolData.online_classes_available || false}
+              checked={schoolData.online_classes_available ?? false}
               label={i18n("Online classes")}
               onChange={(e) => {
                 updateSchoolData({ online_classes_available: e.target.checked });

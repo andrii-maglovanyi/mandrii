@@ -1,5 +1,11 @@
 import { Event_Type_Enum, FilterParams, Price_Type_Enum } from "~/types";
 
+type EventsFilterResult = {
+  variables: {
+    where: FilterParams;
+  };
+};
+
 interface EventsParams {
   dateFrom?: string;
   dateTo?: string;
@@ -25,8 +31,9 @@ export const getEventsFilter = ({
   priceType,
   slug,
   type,
-}: EventsParams) => {
+}: EventsParams): EventsFilterResult => {
   const where: FilterParams = {};
+  const now = new Date().toISOString();
 
   if (slug) {
     where.slug = { _eq: slug };
@@ -46,7 +53,6 @@ export const getEventsFilter = ({
   }
 
   // Date range filter - only show upcoming/ongoing events
-  const now = new Date().toISOString();
   if (dateFrom) {
     where._or = [{ end_date: { _gte: dateFrom } }, { start_date: { _gte: dateFrom } }];
   } else {
@@ -99,9 +105,6 @@ export const getEventsFilter = ({
   return {
     variables: {
       where,
-      whereTotal: {
-        _or: [{ start_date: { _gte: now } }, { end_date: { _gte: now } }],
-      },
     },
   };
 };

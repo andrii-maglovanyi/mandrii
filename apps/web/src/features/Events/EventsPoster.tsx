@@ -28,9 +28,6 @@ export const EventsPoster = async ({ locale }: EventsPosterProps) => {
         ...variables,
         limit: 4,
         order_by: [{ created_at: Order_By.Desc }],
-        whereTotal: {
-          _or: [{ start_date: { _gte: now } }, { end_date: { _gte: now } }],
-        },
       },
     });
 

@@ -238,7 +238,13 @@ const GET_PUBLIC_VENUES = gql`
 
 const GET_USER_VENUES = gql`
   ${VENUE_FIELDS_FRAGMENT}
-  query GetUserVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+  query GetUserVenues(
+    $where: venues_bool_exp!
+    $whereEvents: events_bool_exp
+    $limit: Int
+    $offset: Int
+    $order_by: [venues_order_by!]
+  ) {
     venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       ...VenueFields
       postcode
@@ -254,7 +260,7 @@ const GET_USER_VENUES = gql`
 
 const GET_ADMIN_VENUES = gql`
   ${VENUE_FIELDS_FRAGMENT}
-  query GetAdminVenues($where: venues_bool_exp!) {
+  query GetAdminVenues($where: venues_bool_exp!, $whereEvents: events_bool_exp) {
     venues(where: $where, order_by: { updated_at: desc }) {
       ...VenueFields
       created_at
