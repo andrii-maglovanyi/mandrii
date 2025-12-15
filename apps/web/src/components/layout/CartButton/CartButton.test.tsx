@@ -16,11 +16,6 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-// Mock i18n hook
-vi.mock("~/i18n/useI18n", () => ({
-  useI18n: () => (key: string) => key,
-}));
-
 // Mock cart context
 const mockUseCart = vi.fn();
 vi.mock("~/contexts/CartContext", () => ({

@@ -19,7 +19,7 @@ export const VariantSelector = ({ disabled, label, onChange, options, value }: V
 
   return (
     <div className="space-y-3">
-      <label className="text-on-surface text-sm font-medium">{label}</label>
+      <label className="text-sm font-medium text-on-surface">{label}</label>
       <div className="mt-1 flex flex-wrap gap-2">
         {options.map((option) => {
           const isSelected = value === option.value;
@@ -29,10 +29,17 @@ export const VariantSelector = ({ disabled, label, onChange, options, value }: V
           return (
             <button
               className={clsx(
-                `rounded-xl border px-3.5 py-2 text-sm font-medium transition-all`,
+                `
+                  rounded-xl border px-3.5 py-2 text-sm font-medium
+                  transition-all
+                `,
                 isSelected
                   ? "border-primary bg-primary text-surface"
-                  : `border-neutral/20 hover:border-neutral/40 active:bg-neutral/10 bg-transparent`,
+                  : `
+                    border-neutral/20 bg-transparent
+                    hover:border-neutral/40
+                    active:bg-neutral/10
+                  `,
                 isDisabled && "cursor-not-allowed opacity-40",
                 isOutOfStock && "line-through",
               )}
@@ -53,7 +60,10 @@ export const VariantSelector = ({ disabled, label, onChange, options, value }: V
           const stock = options.find((o) => o.value === value)?.stock ?? 0;
           if (stock > 0 && stock <= 5) {
             return (
-              <p className={`text-xs text-orange-600 dark:text-orange-400`}>
+              <p className={`
+                text-xs text-orange-600
+                dark:text-orange-400
+              `}>
                 {i18n("Only {count} left", { count: stock })}
               </p>
             );

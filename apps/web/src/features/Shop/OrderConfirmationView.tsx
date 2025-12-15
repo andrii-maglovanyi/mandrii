@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Button } from "~/components/ui";
+import { AnimatedEllipsis, Button } from "~/components/ui";
 import { useCart } from "~/contexts/CartContext";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
@@ -20,6 +20,7 @@ interface Order {
   id: string;
   order_items: OrderItem[];
   payment_intent_id: string;
+  shipping_minor: number;
   status: string;
   subtotal_minor: number;
   total_minor: number;
@@ -46,10 +47,6 @@ interface OrderItem {
 
 type PaymentStatus = "failed" | "loading" | "processing" | "requires_action" | "succeeded";
 
-/**
- * Order confirmation page component.
- * Fetches order details and displays confirmation based on payment status.
- */
 export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
@@ -76,33 +73,33 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
   useEffect(() => {
     if (order && status !== "loading") {
       sendToMixpanel("Order Confirmation Viewed", {
-        orderId: order.id,
-        status,
-        totalMinor: order.total_minor,
-        subtotalMinor: order.subtotal_minor,
         currency: order.currency,
         itemCount: order.order_items.length,
+        orderId: order.id,
+        status,
+        subtotalMinor: order.subtotal_minor,
+        totalMinor: order.total_minor,
       });
 
       // Track completed purchase separately for funnel analysis
       if (status === "succeeded") {
         sendToMixpanel("Purchase Completed", {
-          orderId: order.id,
-          totalMinor: order.total_minor,
-          subtotalMinor: order.subtotal_minor,
           currency: order.currency,
           itemCount: order.order_items.length,
+          orderId: order.id,
+          subtotalMinor: order.subtotal_minor,
+          totalMinor: order.total_minor,
         });
       }
     }
-  }, [order?.id, status]); // Track when order loads or status changes
+  }, [order, status]); // Track when order loads or status changes
 
   // Fetch order and check payment status
   useEffect(() => {
     let isCancelled = false;
     let pollTimeout: ReturnType<typeof setTimeout> | undefined;
 
-    const mapStatus = (orderStatus: string | undefined, redirectStatus: string | null): PaymentStatus => {
+    const mapStatus = (orderStatus: string | undefined, redirectStatus: null | string): PaymentStatus => {
       if (!orderStatus || orderStatus === "pending") {
         if (redirectStatus === "failed") return "failed";
         if (redirectStatus === "requires_action") return "requires_action";
@@ -139,7 +136,7 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
           setPollCount((prev) => prev + 1);
           pollTimeout = setTimeout(fetchOrder, 3000);
         }
-      } catch (_err) {
+      } catch {
         if (!isCancelled) {
           setError(i18n("Failed to load order details"));
         }
@@ -157,9 +154,9 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
   if (error) {
     return (
       <div className="mx-auto max-w-lg text-center">
-        <XCircle className="text-danger mx-auto mb-4 h-16 w-16" />
+        <XCircle className="mx-auto mb-4 h-16 w-16 text-danger" />
         <h1 className="mb-2 text-2xl font-bold">{i18n("Something went wrong")}</h1>
-        <p className="text-neutral/70 mb-6">{error}</p>
+        <p className="mb-6 text-neutral/70">{error}</p>
         <Link href={`/${locale}/shop`}>
           <Button color="primary" variant="filled">
             {i18n("Continue shopping")}
@@ -172,7 +169,7 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
   if (status === "loading" || !order) {
     return (
       <div className="mx-auto max-w-lg text-center">
-        <Loader2 className="text-primary mx-auto mb-4 h-16 w-16 animate-spin" />
+        <AnimatedEllipsis size="md" />
         <h1 className="mb-2 text-2xl font-bold">{i18n("Loading order...")}</h1>
       </div>
     );
@@ -221,16 +218,19 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
   return (
     <div className="mx-auto max-w-lg">
       <div className="mb-8 text-center">
-        <StatusIcon className={`mx-auto mb-4 h-16 w-16 ${config.color} `} />
+        <StatusIcon className={`
+          mx-auto mb-4 h-16 w-16
+          ${config.color}
+        `} />
         <h1 className="mb-2 text-2xl font-bold">{config.title}</h1>
         <p className="text-neutral/70">{config.description}</p>
       </div>
 
       {/* Order details */}
-      <div className="border-primary/10 bg-surface mb-6 rounded-xl border p-4">
+      <div className="mb-6 rounded-xl border border-primary/10 bg-surface p-4">
         <h3 className="mb-3 font-semibold">{i18n("Order details")}</h3>
 
-        <div className="text-neutral/70 mb-4 space-y-1 text-sm">
+        <div className="mb-4 space-y-1 text-sm text-neutral/70">
           <p>
             <span className="font-medium">{i18n("Order ID")}:</span> {order.id.slice(0, 8)}...
           </p>
@@ -249,7 +249,7 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
 
         <ul className="mb-4 space-y-2">
           {order.order_items.map((item) => (
-            <li className="text-neutral/80 flex justify-between text-sm" key={item.id}>
+            <li className="flex justify-between text-sm text-neutral/80" key={item.id}>
               <span>
                 {item.name_snapshot} × {item.quantity}
               </span>
@@ -258,11 +258,17 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
           ))}
         </ul>
 
-        <div className="border-primary/10 border-t pt-3">
-          <div className="text-neutral/70 flex justify-between text-sm">
+        <div className="border-t border-primary/10 pt-3">
+          <div className="flex justify-between text-sm text-neutral/70">
             <span>{i18n("Subtotal")}</span>
             <span>{formatPrice(order.subtotal_minor, order.currency, locale)}</span>
           </div>
+
+          <div className="flex justify-between text-sm text-neutral/70">
+            <span>{i18n("Shipping")}</span>
+            <span>{formatPrice(order.shipping_minor, order.currency, locale)}</span>
+          </div>
+
           <div className="mt-1 flex justify-between font-semibold">
             <span>{i18n("Total")}</span>
             <span>{formatPrice(order.total_minor, order.currency, locale)}</span>

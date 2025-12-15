@@ -183,7 +183,7 @@ test.describe("Product View", () => {
 });
 
 test.describe("Product View - Mobile", () => {
-  test.use({ viewport: { width: 375, height: 667 } });
+  test.use({ viewport: { height: 667, width: 375 } });
 
   // Skip in CI without seeded data
   test.skip(!hasSeededData(), "Skipping: Requires seeded product data");

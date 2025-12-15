@@ -36,19 +36,6 @@ const hasStripeConfig = (): boolean => {
 };
 
 /**
- * Check if we have seeded product data
- * This is determined by trying to find the expected product
- */
-async function hasSeededProducts(page: Page): Promise<boolean> {
-  try {
-    const productLink = page.getByRole("main").locator('a[href*="/shop/mandrii-trident-tshirt"]').first();
-    return await productLink.isVisible({ timeout: 5000 }).catch(() => false);
-  } catch {
-    return false;
-  }
-}
-
-/**
  * Helper to add the first available product to cart and navigate to checkout
  */
 async function addFirstProductAndGoToCheckout(page: Page) {
@@ -163,6 +150,19 @@ async function dismissCookieConsent(page: Page) {
     await expect(acceptButton)
       .not.toBeVisible({ timeout: 2000 })
       .catch(() => {});
+  }
+}
+
+/**
+ * Check if we have seeded product data
+ * This is determined by trying to find the expected product
+ */
+async function hasSeededProducts(page: Page): Promise<boolean> {
+  try {
+    const productLink = page.getByRole("main").locator('a[href*="/shop/mandrii-trident-tshirt"]').first();
+    return await productLink.isVisible({ timeout: 5000 }).catch(() => false);
+  } catch {
+    return false;
   }
 }
 

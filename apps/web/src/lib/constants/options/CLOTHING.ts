@@ -40,12 +40,12 @@ export type ClothingSizeAdult =
   | Clothing_Size_Enum.Xxxl;
 /** Kids sizes subset */
 export type ClothingSizeKids =
+  | Clothing_Size_Enum.Y11_12
+  | Clothing_Size_Enum.Y13_14
   | Clothing_Size_Enum.Y3_4
   | Clothing_Size_Enum.Y5_6
   | Clothing_Size_Enum.Y7_8
-  | Clothing_Size_Enum.Y9_10
-  | Clothing_Size_Enum.Y11_12
-  | Clothing_Size_Enum.Y13_14;
+  | Clothing_Size_Enum.Y9_10;
 
 // =============================================================================
 // UI Metadata Records
@@ -92,6 +92,22 @@ export const CLOTHING_AGE_GROUPS: Record<Clothing_Age_Group_Enum, LabeledOption>
  * Keys are the enum values from Clothing_Size_Enum.
  */
 export const CLOTHING_SIZES: Record<Clothing_Size_Enum, { ageGroup: Clothing_Age_Group_Enum } & LabeledOption> = {
+  [Clothing_Size_Enum.L]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "L", uk: "L" } },
+  [Clothing_Size_Enum.M]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "M", uk: "M" } },
+  [Clothing_Size_Enum.S]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "S", uk: "S" } },
+  [Clothing_Size_Enum.Xl]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "XL", uk: "XL" } },
+  // Adult sizes
+  [Clothing_Size_Enum.Xs]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "XS", uk: "XS" } },
+  [Clothing_Size_Enum.Xxl]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "2XL", uk: "2XL" } },
+  [Clothing_Size_Enum.Xxxl]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "3XL", uk: "3XL" } },
+  [Clothing_Size_Enum.Y11_12]: {
+    ageGroup: Clothing_Age_Group_Enum.Kids,
+    label: { en: "11-12 years", uk: "11-12 років" },
+  },
+  [Clothing_Size_Enum.Y13_14]: {
+    ageGroup: Clothing_Age_Group_Enum.Kids,
+    label: { en: "13-14 years", uk: "13-14 років" },
+  },
   // Kids sizes (sorted by age)
   [Clothing_Size_Enum.Y3_4]: {
     ageGroup: Clothing_Age_Group_Enum.Kids,
@@ -109,22 +125,6 @@ export const CLOTHING_SIZES: Record<Clothing_Size_Enum, { ageGroup: Clothing_Age
     ageGroup: Clothing_Age_Group_Enum.Kids,
     label: { en: "9-10 years", uk: "9-10 років" },
   },
-  [Clothing_Size_Enum.Y11_12]: {
-    ageGroup: Clothing_Age_Group_Enum.Kids,
-    label: { en: "11-12 years", uk: "11-12 років" },
-  },
-  [Clothing_Size_Enum.Y13_14]: {
-    ageGroup: Clothing_Age_Group_Enum.Kids,
-    label: { en: "13-14 years", uk: "13-14 років" },
-  },
-  // Adult sizes
-  [Clothing_Size_Enum.Xs]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "XS", uk: "XS" } },
-  [Clothing_Size_Enum.S]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "S", uk: "S" } },
-  [Clothing_Size_Enum.M]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "M", uk: "M" } },
-  [Clothing_Size_Enum.L]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "L", uk: "L" } },
-  [Clothing_Size_Enum.Xl]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "XL", uk: "XL" } },
-  [Clothing_Size_Enum.Xxl]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "2XL", uk: "2XL" } },
-  [Clothing_Size_Enum.Xxxl]: { ageGroup: Clothing_Age_Group_Enum.Adult, label: { en: "3XL", uk: "3XL" } },
 };
 
 // =============================================================================

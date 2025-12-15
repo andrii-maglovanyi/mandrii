@@ -7,7 +7,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { StripeExpressCheckoutElementConfirmEvent } from "@stripe/stripe-js";
+import { StripeAddressElementChangeEvent } from "@stripe/stripe-js";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useLocale } from "next-intl";
 import { FormEvent, useState } from "react";
@@ -19,9 +19,12 @@ import { formatPrice } from "~/lib/utils";
 import { Locale } from "~/types";
 
 interface CheckoutFormProps {
+  addressKey: number;
   currency: string;
   email: string;
+  onCountryChange: (country: string) => void;
   orderId: string;
+  shippingDestination: string;
   totalMinor: number;
 }
 
@@ -29,7 +32,15 @@ interface CheckoutFormProps {
  * Stripe checkout form component with address and payment elements.
  * Handles shipping address collection and payment confirmation.
  */
-export function CheckoutForm({ currency, email, orderId, totalMinor }: CheckoutFormProps) {
+export function CheckoutForm({
+  addressKey,
+  currency,
+  email,
+  onCountryChange,
+  orderId,
+  shippingDestination,
+  totalMinor,
+}: CheckoutFormProps) {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const stripe = useStripe();
@@ -40,9 +51,19 @@ export function CheckoutForm({ currency, email, orderId, totalMinor }: CheckoutF
   const [showExpressCheckout, setShowExpressCheckout] = useState(false);
 
   /**
+   * Handle address changes from Stripe AddressElement.
+   * When user selects a different country, notify parent to update shipping destination.
+   */
+  const handleAddressChange = (event: StripeAddressElementChangeEvent) => {
+    if (event.value?.address?.country) {
+      onCountryChange(event.value.address.country);
+    }
+  };
+
+  /**
    * Handle Express Checkout (Google Pay, Apple Pay, Link, etc.)
    */
-  const handleExpressCheckoutConfirm = async (_event: StripeExpressCheckoutElementConfirmEvent) => {
+  const handleExpressCheckoutConfirm = async () => {
     if (!stripe || !elements) {
       return;
     }
@@ -51,10 +72,10 @@ export function CheckoutForm({ currency, email, orderId, totalMinor }: CheckoutF
     setError(null);
 
     sendToMixpanel("Payment Attempted", {
-      orderId,
-      totalMinor,
       currency,
+      orderId,
       paymentMethod: "express",
+      totalMinor,
     });
 
     try {
@@ -88,10 +109,10 @@ export function CheckoutForm({ currency, email, orderId, totalMinor }: CheckoutF
     setError(null);
 
     sendToMixpanel("Payment Attempted", {
-      orderId,
-      totalMinor,
       currency,
+      orderId,
       paymentMethod: "card",
+      totalMinor,
     });
 
     try {
@@ -142,9 +163,9 @@ export function CheckoutForm({ currency, email, orderId, totalMinor }: CheckoutF
         />
         {showExpressCheckout && (
           <div className="flex items-center gap-4">
-            <div className="bg-neutral/20 h-px flex-1" />
-            <span className="text-neutral/60 text-sm">{i18n("Or pay another way")}</span>
-            <div className="bg-neutral/20 h-px flex-1" />
+            <div className="h-px flex-1 bg-neutral/20" />
+            <span className="text-sm text-neutral/60">{i18n("Or pay another way")}</span>
+            <div className="h-px flex-1 bg-neutral/20" />
           </div>
         )}
       </div>
@@ -153,16 +174,19 @@ export function CheckoutForm({ currency, email, orderId, totalMinor }: CheckoutF
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">{i18n("Shipping address")}</h3>
         <AddressElement
+          key={addressKey}
+          onChange={handleAddressChange}
           options={{
-            mode: "shipping",
             defaultValues: {
               address: {
-                country: "GB",
+                country:
+                  shippingDestination === "ROW" ? "UA" : shippingDestination === "EU" ? "DE" : shippingDestination,
               },
             },
             fields: {
               phone: "always",
             },
+            mode: "shipping",
             validation: {
               phone: {
                 required: "auto",
@@ -177,19 +201,21 @@ export function CheckoutForm({ currency, email, orderId, totalMinor }: CheckoutF
         <h3 className="text-lg font-semibold">{i18n("Payment")}</h3>
         <PaymentElement
           options={{
-            layout: "tabs",
             defaultValues: {
               billingDetails: {
                 email,
               },
             },
+            layout: "tabs",
           }}
         />
       </div>
 
       {/* Error message */}
       {error && (
-        <div className="bg-danger/10 text-danger flex items-center gap-3 rounded-lg p-4">
+        <div className={`
+          flex items-center gap-3 rounded-lg bg-danger/10 p-4 text-danger
+        `}>
           <AlertCircle size={18} />
           <span>{error}</span>
         </div>
@@ -214,7 +240,7 @@ export function CheckoutForm({ currency, email, orderId, totalMinor }: CheckoutF
         )}
       </Button>
 
-      <p className="text-neutral/60 text-center text-xs">{i18n("Your payment is securely processed by Stripe.")}</p>
+      <p className="text-center text-xs text-neutral/60">{i18n("Your payment is securely processed by Stripe.")}</p>
     </form>
   );
 }

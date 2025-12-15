@@ -75,23 +75,24 @@ export const mockNextImage = () => ({
 });
 
 /**
- * Creates a mock for next/navigation with configurable search params.
+ * Mock for auth context with configurable profile.
  */
-export function createNextNavigationMock(searchParams = new URLSearchParams()) {
-  return () => ({
-    permanentRedirect: vi.fn(),
-    redirect: vi.fn(),
-    usePathname: () => "/en/shop/order/test-123",
-    useRouter: () => ({
-      back: vi.fn(),
-      forward: vi.fn(),
-      prefetch: vi.fn(),
-      push: vi.fn(),
-      refresh: vi.fn(),
-      replace: vi.fn(),
+export function createAuthContextMock() {
+  let profile: null | Record<string, unknown> = null;
+
+  return {
+    mockFactory: () => ({
+      useAuth: () => ({
+        profile,
+      }),
     }),
-    useSearchParams: () => searchParams,
-  });
+    reset: () => {
+      profile = null;
+    },
+    setProfile: (p: null | Record<string, unknown>) => {
+      profile = p;
+    },
+  };
 }
 
 // ============================================================================
@@ -162,24 +163,23 @@ export function createCartContextMock() {
 // ============================================================================
 
 /**
- * Mock for auth context with configurable profile.
+ * Creates a mock for next/navigation with configurable search params.
  */
-export function createAuthContextMock() {
-  let profile: Record<string, unknown> | null = null;
-
-  return {
-    mockFactory: () => ({
-      useAuth: () => ({
-        profile,
-      }),
+export function createNextNavigationMock(searchParams = new URLSearchParams()) {
+  return () => ({
+    permanentRedirect: vi.fn(),
+    redirect: vi.fn(),
+    usePathname: () => "/en/shop/order/test-123",
+    useRouter: () => ({
+      back: vi.fn(),
+      forward: vi.fn(),
+      prefetch: vi.fn(),
+      push: vi.fn(),
+      refresh: vi.fn(),
+      replace: vi.fn(),
     }),
-    reset: () => {
-      profile = null;
-    },
-    setProfile: (p: Record<string, unknown> | null) => {
-      profile = p;
-    },
-  };
+    useSearchParams: () => searchParams,
+  });
 }
 
 // ============================================================================

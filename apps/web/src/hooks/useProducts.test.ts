@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { applyWhereClause, mockProducts } from "~/__mocks__/msw/data/shop";
+
 import { Product } from "./useProducts";
 
 describe("useProducts", () => {
@@ -85,11 +86,11 @@ describe("useProducts", () => {
     it("out of stock product without variants has stock = 0", () => {
       // Create a test product without variants and stock = 0
       const outOfStockProduct: Product = {
+        currency: "GBP",
         id: "test-oos",
         name: "Out of Stock",
-        slug: "out-of-stock",
         priceMinor: 1000,
-        currency: "GBP",
+        slug: "out-of-stock",
         status: "ACTIVE",
         stock: 0,
         variants: [],
@@ -105,11 +106,11 @@ describe("useProducts", () => {
 
     it("product with stock but no variants should show as in stock", () => {
       const productWithStock: Product = {
+        currency: "GBP",
         id: "test-in-stock",
         name: "In Stock",
-        slug: "in-stock",
         priceMinor: 1000,
-        currency: "GBP",
+        slug: "in-stock",
         status: "ACTIVE",
         stock: 10,
         variants: [],

@@ -20,12 +20,12 @@ import {
   CLOTHING_SIZE_KIDS,
   ClothingSize,
 } from "~/lib/constants/options/CLOTHING";
-import { Clothing_Age_Group_Enum, Clothing_Gender_Enum, GetProductBySlugQuery } from "~/types/graphql.generated";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { formatPrice } from "~/lib/utils";
 import { Locale } from "~/types";
+import { Clothing_Age_Group_Enum, Clothing_Gender_Enum, GetProductBySlugQuery } from "~/types/graphql.generated";
 
-import { ColorSelector, ReturnPolicy, ShippingInfo, VariantSelector } from "./components";
+import { ColorSelector, ShippingInfo, VariantSelector } from "./components";
 
 type GraphQLProduct = GetProductBySlugQuery["products"][number];
 
@@ -75,7 +75,7 @@ export function ProductViewClient({ initialProduct, returnPolicy, slug }: Produc
         productSlug: product.slug,
       });
     }
-  }, [product?.id]); // Only track once per product
+  }, [product]); // Only track once per product
 
   // Variant selection state
   const [selectedGender, setSelectedGender] = useState<Clothing_Gender_Enum | undefined>();
@@ -397,9 +397,15 @@ export function ProductViewClient({ initialProduct, returnPolicy, slug }: Produc
       />
 
       {/* Main Product Section */}
-      <section className={`grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-12`}>
+      <section className={`
+        grid grid-cols-1 gap-6
+        lg:grid-cols-2 lg:gap-12
+      `}>
         {/* Image Gallery */}
-        <div className={`relative aspect-square w-full overflow-hidden rounded-lg sm:aspect-4/5`}>
+        <div className={`
+          relative aspect-square w-full overflow-hidden rounded-lg
+          sm:aspect-4/5
+        `}>
           <ImageCarousel autoPlay={false} images={images.length ? images : ["/static/no-image.webp"]} showDots />
         </div>
 
@@ -407,11 +413,16 @@ export function ProductViewClient({ initialProduct, returnPolicy, slug }: Produc
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-2">
             {product.category && (
-              <span className={`text-neutral/60 text-sm font-medium tracking-wide uppercase`}>{product.category}</span>
+              <span className={`
+                text-sm font-medium tracking-wide text-neutral/60 uppercase
+              `}>{product.category}</span>
             )}
 
             {product.badge && (
-              <span className={`bg-secondary/50 inline-flex w-fit rounded-lg px-3 py-1 text-xs font-medium`}>
+              <span className={`
+                inline-flex w-fit rounded-lg bg-secondary/50 px-3 py-1 text-xs
+                font-medium
+              `}>
                 {product.badge}
               </span>
             )}
@@ -419,23 +430,29 @@ export function ProductViewClient({ initialProduct, returnPolicy, slug }: Produc
 
           {/* Title & Price */}
           <div className="space-y-3">
-            <h1 className={`text-2xl leading-tight font-semibold md:text-3xl`}>{product.name}</h1>
+            <h1 className={`
+              text-2xl leading-tight font-semibold
+              md:text-3xl
+            `}>{product.name}</h1>
             <div className="space-y-1">
-              <p className="text-on-surface text-2xl font-semibold">{priceLabel}</p>
-              <p className="text-neutral/60 text-sm">{i18n("Price includes all applicable taxes")}</p>
+              <p className="text-2xl font-semibold text-on-surface">{priceLabel}</p>
+              <p className="text-sm text-neutral/60">{i18n("Price includes all applicable taxes")}</p>
             </div>
           </div>
 
           {/* Product Description */}
           {description && (
-            <div className={`prose prose-sm text-neutral/80 dark:prose-invert max-w-none`}>
+            <div className={`
+              prose prose-sm max-w-none text-neutral/80
+              dark:prose-invert
+            `}>
               <RichText>{description}</RichText>
             </div>
           )}
 
           {/* Variant Selectors - only for clothing products with variant options */}
           {hasVariants && !isSimpleProduct && (
-            <div className="border-neutral/10 space-y-5 border-y py-6">
+            <div className="space-y-5 border-y border-neutral/10 py-6">
               <VariantSelector
                 label={i18n("Age group")}
                 onChange={handleAgeGroupChange}
@@ -470,14 +487,16 @@ export function ProductViewClient({ initialProduct, returnPolicy, slug }: Produc
               )}
 
               {effectiveSelectedVariant && effectiveSelectedVariant.stock === 0 && (
-                <p className="text-danger text-sm font-medium">{i18n("Out of stock for selected options")}</p>
+                <p className="text-sm font-medium text-danger">{i18n("Out of stock for selected options")}</p>
               )}
             </div>
           )}
 
           {/* Stock indicator (for simple products and products without variants) */}
           {(!hasVariants || isSimpleProduct) && (
-            <p className={clsx("text-sm", currentStock > 0 ? `text-neutral/70` : `text-danger font-medium`)}>
+            <p className={clsx("text-sm", currentStock > 0 ? `text-neutral/70` : `
+              font-medium text-danger
+            `)}>
               {currentStock > 0 ? i18n("In stock") : i18n("Out of stock")}
             </p>
           )}
@@ -507,23 +526,25 @@ export function ProductViewClient({ initialProduct, returnPolicy, slug }: Produc
       </section>
 
       <Tabs defaultActiveKey="shipping">
-        <TabPane tab={i18n("Shipping info")} key="shipping">
+        <TabPane key="shipping" tab={i18n("Shipping info")}>
           <div className="space-y-6 py-4">
             <ShippingInfo />
-            <div className="border-neutral/10 space-y-3 border-t pt-4">
-              <p className="text-neutral/70 text-sm">
+            <div className="space-y-3 border-t border-neutral/10 pt-4">
+              <p className="text-sm text-neutral/70">
                 {i18n("You'll receive an email confirmation once your order is paid and ready to ship.")}
               </p>
-              <p className="text-neutral/70 text-sm">
+              <p className="text-sm text-neutral/70">
                 {i18n("Need a custom option? Drop me a note via the contact form and mention the product slug:")}{" "}
-                <code className={`bg-surface-tint rounded px-2 py-0.5 font-mono text-xs`}>{product.slug}</code>
+                <code className={`
+                  rounded bg-surface-tint px-2 py-0.5 font-mono text-xs
+                `}>{product.slug}</code>
               </p>
             </div>
           </div>
         </TabPane>
         <TabPane tab={i18n("Returns policy")}>
           <div className="py-4">
-            {returnPolicy?.content && <ReturnPolicy content={returnPolicy.content} title={returnPolicy.title} />}
+            {returnPolicy?.content && <RichText className="text-sm">{returnPolicy.content}</RichText>}
           </div>
         </TabPane>
       </Tabs>

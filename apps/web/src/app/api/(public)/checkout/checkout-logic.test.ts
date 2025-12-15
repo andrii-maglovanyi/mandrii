@@ -73,8 +73,16 @@ describe("Checkout Server Logic", () => {
     });
 
     it("generates different idempotency key for different quantities", async () => {
-      const key1 = generateIdempotencyKey("test@example.com", [{ id: "item-1", productId: "prod-1", quantity: 1 }], "GB");
-      const key2 = generateIdempotencyKey("test@example.com", [{ id: "item-1", productId: "prod-1", quantity: 2 }], "GB");
+      const key1 = generateIdempotencyKey(
+        "test@example.com",
+        [{ id: "item-1", productId: "prod-1", quantity: 1 }],
+        "GB",
+      );
+      const key2 = generateIdempotencyKey(
+        "test@example.com",
+        [{ id: "item-1", productId: "prod-1", quantity: 2 }],
+        "GB",
+      );
 
       expect(key1).not.toBe(key2);
     });

@@ -5,26 +5,10 @@ import { createContext, type ReactNode, useContext, useEffect, useMemo, useReduc
 import { ClothingSize } from "~/lib/constants/options/CLOTHING";
 import { Clothing_Age_Group_Enum, Clothing_Gender_Enum } from "~/types/graphql.generated";
 
-/** Variant selection for clothing items */
-export interface CartItemVariant {
-  ageGroup: Clothing_Age_Group_Enum;
-  color?: string;
-  gender: Clothing_Gender_Enum;
-  size: ClothingSize;
-}
-
-type CartAction =
-  | { payload: { id: string; quantity: number }; type: "SET_QUANTITY" }
-  | { payload: { id: string }; type: "REMOVE_ITEM" }
-  | { payload: CartItem; type: "ADD_ITEM" }
-  | { payload: CartState; type: "HYDRATE" }
-  | { type: "CLEAR" }
-  | { type: "CLEAR_CURRENCY_WARNING" };
-
 /** Result of attempting to add an item to cart */
 export type AddItemResult =
-  | { success: true }
-  | { currentCurrency: string; itemCurrency: string; reason: "currency_mismatch"; success: false };
+  | { currentCurrency: string; itemCurrency: string; reason: "currency_mismatch"; success: false }
+  | { success: true };
 
 /**
  * Cart item stored in client state.
@@ -47,9 +31,25 @@ export interface CartItem {
   variant?: CartItemVariant;
 }
 
+/** Variant selection for clothing items */
+export interface CartItemVariant {
+  ageGroup: Clothing_Age_Group_Enum;
+  color?: string;
+  gender: Clothing_Gender_Enum;
+  size: ClothingSize;
+}
+
 export interface CartState {
   items: CartItem[];
 }
+
+type CartAction =
+  | { payload: { id: string; quantity: number }; type: "SET_QUANTITY" }
+  | { payload: { id: string }; type: "REMOVE_ITEM" }
+  | { payload: CartItem; type: "ADD_ITEM" }
+  | { payload: CartState; type: "HYDRATE" }
+  | { type: "CLEAR_CURRENCY_WARNING" }
+  | { type: "CLEAR" };
 
 interface CartProviderProps {
   children: ReactNode;

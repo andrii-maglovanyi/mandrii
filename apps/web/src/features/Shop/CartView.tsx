@@ -8,13 +8,13 @@ import { useEffect, useMemo } from "react";
 import { ActionButton, Breadcrumbs, Button, EmptyState, FallbackImage } from "~/components/ui";
 import { useCart } from "~/contexts/CartContext";
 import { useI18n } from "~/i18n/useI18n";
-import { sendToMixpanel } from "~/lib/mixpanel";
 import {
   CLOTHING_AGE_GROUP,
   CLOTHING_GENDER,
   CLOTHING_SIZE_ADULT,
   CLOTHING_SIZE_KIDS,
 } from "~/lib/constants/options/CLOTHING";
+import { sendToMixpanel } from "~/lib/mixpanel";
 import { formatPrice } from "~/lib/utils";
 import { Locale } from "~/types";
 
@@ -47,13 +47,13 @@ export const CartView = () => {
   useEffect(() => {
     if (items.length > 0) {
       sendToMixpanel("Viewed Cart", {
-        itemCount: items.length,
-        totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
-        totalMinor,
         currency,
+        itemCount: items.length,
+        totalMinor,
+        totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
       });
     }
-  }, []); // Track once on mount
+  }, [currency, items, totalMinor]);
 
   if (!items.length) {
     return (
@@ -82,17 +82,27 @@ export const CartView = () => {
 
       {/* Page Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold md:text-3xl">{i18n("Your Cart")}</h1>
-        <span className="text-neutral/60 text-sm">
+        <h1 className={`
+          text-2xl font-semibold
+          md:text-3xl
+        `}>{i18n("Your Cart")}</h1>
+        <span className="text-sm text-neutral/60">
           {items.length} {items.length === 1 ? i18n("item") : i18n("items")}
         </span>
       </div>
 
-      <div className={`grid gap-8 lg:grid-cols-3 lg:gap-12`}>
+      <div className={`
+        grid gap-8
+        lg:grid-cols-3 lg:gap-12
+      `}>
         {/* Currency mismatch warning */}
         {currencyMismatchWarning && (
           <div
-            className={`bg-warning/10 border-warning/30 text-warning-dark flex items-center justify-between gap-4 rounded-lg border px-4 py-3 lg:col-span-3`}
+            className={`
+              flex items-center justify-between gap-4 rounded-lg border
+              border-red-500 bg-red-500/10 px-4 py-3 text-red-700
+              lg:col-span-3
+            `}
           >
             <p className="text-sm">
               {i18n(
@@ -106,11 +116,21 @@ export const CartView = () => {
         )}
 
         {/* Cart Items */}
-        <div className={`space-y-6 lg:col-span-2`}>
+        <div className={`
+          space-y-6
+          lg:col-span-2
+        `}>
           {lineItems.map((item) => (
-            <div className={`border-neutral/10 flex flex-col gap-5 rounded-lg border p-5 md:flex-row`} key={item.id}>
+            <div className={`
+              flex flex-col gap-5 rounded-lg border border-neutral/10 p-5
+              md:flex-row
+            `} key={item.id}>
               <Link
-                className={`bg-surface-tint relative h-32 w-full shrink-0 overflow-hidden rounded-lg md:h-28 md:w-28`}
+                className={`
+                  relative h-32 w-full shrink-0 overflow-hidden rounded-lg
+                  bg-surface-tint
+                  md:h-28 md:w-28
+                `}
                 href={`/${locale}/shop/${item.slug}`}
               >
                 <FallbackImage alt={item.name} className="object-cover" fill sizes="160px" src={item.image || ""} />
@@ -118,18 +138,25 @@ export const CartView = () => {
               <div className="flex flex-1 flex-col justify-between gap-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
-                    <Link className="hover:text-primary transition-colors" href={`/${locale}/shop/${item.slug}`}>
+                    <Link className={`
+                      transition-colors
+                      hover:text-primary
+                    `} href={`/${locale}/shop/${item.slug}`}>
                       <h3 className="text-lg leading-snug font-semibold">{item.name}</h3>
                     </Link>
-                    {item.variant && <p className="text-neutral/70 text-sm">{getVariantLabel(item.variant, locale)}</p>}
+                    {item.variant && <p className="text-sm text-neutral/70">{getVariantLabel(item.variant, locale)}</p>}
                   </div>
                   <span className="text-lg font-semibold">
                     {formatPrice(item.priceMinor * item.quantity, item.currency, locale)}
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className={`
+                  flex flex-wrap items-center justify-between gap-3
+                `}>
                   <div className="flex items-center gap-4">
-                    <div className={`border-neutral/20 flex items-center rounded-lg border p-px`}>
+                    <div className={`
+                      flex items-center rounded-lg border border-neutral/20 p-px
+                    `}>
                       <Button
                         color="neutral"
                         onClick={() => setQuantity(item.id, Math.max(0, item.quantity - 1))}
@@ -138,7 +165,9 @@ export const CartView = () => {
                       >
                         −
                       </Button>
-                      <span className={`min-w-10 text-center text-sm font-medium`}>{item.quantity}</span>
+                      <span className={`
+                        min-w-10 text-center text-sm font-medium
+                      `}>{item.quantity}</span>
                       <Button
                         color="neutral"
                         disabled={item.stock !== undefined && item.quantity >= item.stock}
@@ -149,28 +178,31 @@ export const CartView = () => {
                         +
                       </Button>
                     </div>
-                    <span className="text-neutral/60 text-sm">
+                    <span className="text-sm text-neutral/60">
                       {formatPrice(item.priceMinor, item.currency, locale)} {i18n("each")}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     {item.stock !== undefined && item.quantity >= item.stock && (
-                      <span className={`text-xs text-orange-600 dark:text-orange-400`}>{i18n("Max stock")}</span>
+                      <span className={`
+                        text-xs text-orange-600
+                        dark:text-orange-400
+                      `}>{i18n("Max stock")}</span>
                     )}
                     <ActionButton
+                      aria-label={i18n("Remove")}
                       color="neutral"
                       icon={<Trash2 className="stroke-red-600" />}
                       onClick={() => {
                         sendToMixpanel("Removed from Cart", {
+                          currency: item.currency,
                           itemId: item.id,
                           itemName: item.name,
-                          quantity: item.quantity,
                           priceMinor: item.priceMinor,
-                          currency: item.currency,
+                          quantity: item.quantity,
                         });
                         removeItem(item.id);
                       }}
-                      aria-label={i18n("Remove")}
                       variant="ghost"
                     />
                   </div>
@@ -181,15 +213,22 @@ export const CartView = () => {
         </div>
 
         {/* Order Summary */}
-        <div className={`h-fit space-y-2 lg:sticky lg:top-24`}>
+        <div className={`
+          h-fit space-y-2
+          lg:sticky lg:top-24
+        `}>
           <div className="mb-4 space-y-4">
             <h3 className="text-lg font-semibold">{i18n("Order summary")}</h3>
-            <div className={`border-neutral/10 space-y-3 border-b pb-4`}>
-              <div className={`text-neutral/70 flex items-center justify-between text-sm`}>
+            <div className={`space-y-3 border-b border-neutral/10 pb-4`}>
+              <div className={`
+                flex items-center justify-between text-sm text-neutral/70
+              `}>
                 <span>{i18n("Subtotal")}</span>
                 <span>{totalLabel}</span>
               </div>
-              <div className={`text-neutral/70 flex items-center justify-between text-sm`}>
+              <div className={`
+                flex items-center justify-between text-sm text-neutral/70
+              `}>
                 <span>{i18n("Shipping")}</span>
                 <span>{i18n("Calculated at checkout")}</span>
               </div>
@@ -207,10 +246,10 @@ export const CartView = () => {
               disabled={!items.length}
               onClick={() => {
                 sendToMixpanel("Clicked Proceed to Checkout", {
-                  itemCount: items.length,
-                  totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
-                  totalMinor,
                   currency,
+                  itemCount: items.length,
+                  totalMinor,
+                  totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
                 });
               }}
               size="lg"
@@ -226,7 +265,7 @@ export const CartView = () => {
             </Button>
           </Link>
 
-          <Button className="w-full" size="lg" color="neutral" onClick={clear} variant="ghost">
+          <Button className="w-full" color="neutral" onClick={clear} size="lg" variant="ghost">
             {i18n("Clear cart")}
           </Button>
         </div>

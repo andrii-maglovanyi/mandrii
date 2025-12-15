@@ -1,8 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import Image from "next/image";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockProductBySlug, mockProducts, server, shopErrorHandlers } from "~/__mocks__/msw";
+import { mockProductBySlug } from "~/__mocks__/msw";
 import { GetProductBySlugQuery } from "~/types/graphql.generated";
 
 import { ProductViewClient } from "./ProductViewClient";
@@ -35,7 +36,7 @@ vi.mock("~/i18n/navigation", () => ({
 
 // Mock next/image
 vi.mock("next/image", () => ({
-  default: ({ alt, src }: { alt: string; src: string }) => <img alt={alt} src={src} />,
+  default: ({ alt, src }: { alt: string; src: string }) => <Image alt={alt} src={src} />,
 }));
 
 // Mock UI components
@@ -54,7 +55,7 @@ vi.mock("~/components/ui", async () => {
     ImageCarousel: ({ images }: { autoPlay?: boolean; images: string[]; showDots?: boolean }) => (
       <div data-testid="image-carousel">
         {images.map((img, i) => (
-          <img alt={`Product ${i + 1}`} key={i} src={img} />
+          <Image alt={`Product ${i + 1}`} key={i} src={img} />
         ))}
       </div>
     ),
@@ -260,7 +261,7 @@ describe("ProductViewClient", () => {
       const carousel = screen.getByTestId("image-carousel");
       expect(carousel).toBeInTheDocument();
 
-      const images = carousel.querySelectorAll("img");
+      const images = within(carousel).getAllByRole("img");
       expect(images.length).toBe(testProduct!.images?.length || 0);
     });
 

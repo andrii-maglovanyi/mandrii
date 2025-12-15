@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import Image from "next/image";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockProducts, server, shopErrorHandlers } from "~/__mocks__/msw";
@@ -35,7 +36,7 @@ vi.mock("~/i18n/navigation", () => ({
 
 // Mock next/image
 vi.mock("next/image", () => ({
-  default: ({ alt, src }: { alt: string; src: string }) => <img alt={alt} src={src} />,
+  default: ({ alt, src }: { alt: string; src: string }) => <Image alt={alt} src={src} />,
 }));
 
 // Mock UI components that have complex dependencies

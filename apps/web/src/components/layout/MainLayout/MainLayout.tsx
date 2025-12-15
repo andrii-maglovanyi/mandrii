@@ -5,6 +5,7 @@ import { useMediaQuery } from "react-responsive";
 
 import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
+import { envName } from "~/lib/config/env";
 
 import CookieConsentBanner from "../CookieConsentBanner/CookieConsentBanner";
 import { Footer } from "../Footer/Footer";
@@ -25,7 +26,7 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
       <Link href="/events">{i18n("Events")}</Link>
       <Link href="/posts">{i18n("Posts")}</Link>
       <Link href="/guides">{i18n("Guides")}</Link>
-      <Link href="/shop">{i18n("Shop")}</Link>
+      {envName !== "production" && <Link href="/shop">{i18n("Shop")}</Link>}
     </>
   );
 

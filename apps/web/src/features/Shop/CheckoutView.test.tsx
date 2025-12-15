@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
+import Image from "next/image";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { server } from "~/__mocks__/msw/server";
@@ -66,7 +67,7 @@ vi.mock("~/components/ui", async () => {
         <p>{body}</p>
       </div>
     ),
-    FallbackImage: ({ alt, src }: { alt: string; src: string }) => <img alt={alt} src={src} />,
+    FallbackImage: ({ alt, src }: { alt: string; src: string }) => <Image alt={alt} src={src} />,
     Input: ({
       disabled,
       onChange,
@@ -435,8 +436,9 @@ describe("CheckoutView", () => {
 
       await waitFor(() => {
         expect(screen.getByText("Cart issues detected")).toBeInTheDocument();
-        expect(screen.getByText("Product not found")).toBeInTheDocument();
       });
+
+      expect(screen.getByText("Product not found")).toBeInTheDocument();
     });
 
     it("shows rate limit error", async () => {

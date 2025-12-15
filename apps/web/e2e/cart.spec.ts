@@ -27,16 +27,16 @@ const hasSeededData = (): boolean => {
 
 // Product slugs from database seed data
 const PRODUCTS = {
-  // Clothing products with variants
-  tridentTshirt: "mandrii-trident-tshirt", // £25, Men/Women/Kids, various sizes, no colors
-  sunflowerSweatshirt: "sunflower-sweatshirt", // £40, Unisex, has color variants (black/navy)
-  standWithUkraine: "stand-with-ukraine-tshirt", // £22, Unisex, no colors
   carpathianJumper: "carpathian-jumper", // £55, Men/Women, no colors
-  ukrainianHoodie: "ukrainian-heart-hoodie", // £45, Unisex, has color variants (grey/black)
+  copperCezve: "copper-cezve-coffee-pot", // £42, stock=8, no variants (can test low stock)
   // Gift products (non-variant) - these show "Add to cart" directly
   iznikBowl: "iznik-ceramics-bowl", // £35, stock=12, no variants
   nazarPendant: "nazar-boncugu-pendant", // £28, stock=25, no variants
-  copperCezve: "copper-cezve-coffee-pot", // £42, stock=8, no variants (can test low stock)
+  standWithUkraine: "stand-with-ukraine-tshirt", // £22, Unisex, no colors
+  sunflowerSweatshirt: "sunflower-sweatshirt", // £40, Unisex, has color variants (black/navy)
+  // Clothing products with variants
+  tridentTshirt: "mandrii-trident-tshirt", // £25, Men/Women/Kids, various sizes, no colors
+  ukrainianHoodie: "ukrainian-heart-hoodie", // £45, Unisex, has color variants (grey/black)
 };
 
 /**

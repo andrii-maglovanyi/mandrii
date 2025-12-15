@@ -11,6 +11,67 @@ import React from "react";
 // ============================================================================
 
 /**
+ * Mock for CheckoutForm component.
+ */
+export function createCheckoutFormMock() {
+  return () => ({
+    CheckoutForm: () => React.createElement("div", { "data-testid": "checkout-form" }, "Checkout Form"),
+  });
+}
+
+/**
+ * Creates minimal UI component mocks (Button only).
+ * Use when you only need basic button functionality.
+ */
+export function createMinimalUIComponentMocks() {
+  return async () => {
+    const actual = await import("~/components/ui");
+    return {
+      ...actual,
+      Button: ({
+        children,
+        disabled,
+        onClick,
+        type,
+      }: {
+        children: React.ReactNode;
+        disabled?: boolean;
+        onClick?: () => void;
+        type?: "button" | "submit";
+      }) => React.createElement("button", { disabled, onClick, type: type ?? "button" }, children),
+    };
+  };
+}
+
+// ============================================================================
+// Shop Component Mocks
+// ============================================================================
+
+/**
+ * Mock for ShippingInfo and related exports.
+ */
+export function createShippingInfoMock() {
+  return () => ({
+    EU_SHIPPING_COST_MINOR: 899,
+    FREE_SHIPPING_THRESHOLD_MINOR: 7000,
+    ROW_SHIPPING_COST_MINOR: 1499,
+    ShippingInfo: ({ compact }: { compact?: boolean }) =>
+      React.createElement("div", { "data-testid": "shipping-info" }, compact ? "Compact shipping" : "Full shipping"),
+    UK_SHIPPING_COST_MINOR: 399,
+  });
+}
+
+/**
+ * Mock for Stripe Elements wrapper.
+ */
+export function createStripeElementsMock() {
+  return () => ({
+    Elements: ({ children }: { children: React.ReactNode }) =>
+      React.createElement("div", { "data-testid": "stripe-elements" }, children),
+  });
+}
+
+/**
  * Creates mock implementations for common UI components.
  * Use with vi.mock("~/components/ui", mockUIComponents);
  */
@@ -89,65 +150,4 @@ export function createUIComponentMocks() {
         React.createElement("div", { "data-testid": "tabs" }, children),
     };
   };
-}
-
-/**
- * Creates minimal UI component mocks (Button only).
- * Use when you only need basic button functionality.
- */
-export function createMinimalUIComponentMocks() {
-  return async () => {
-    const actual = await import("~/components/ui");
-    return {
-      ...actual,
-      Button: ({
-        children,
-        disabled,
-        onClick,
-        type,
-      }: {
-        children: React.ReactNode;
-        disabled?: boolean;
-        onClick?: () => void;
-        type?: "button" | "submit";
-      }) => React.createElement("button", { disabled, onClick, type: type ?? "button" }, children),
-    };
-  };
-}
-
-// ============================================================================
-// Shop Component Mocks
-// ============================================================================
-
-/**
- * Mock for ShippingInfo and related exports.
- */
-export function createShippingInfoMock() {
-  return () => ({
-    EU_SHIPPING_COST_MINOR: 899,
-    FREE_SHIPPING_THRESHOLD_MINOR: 7000,
-    ROW_SHIPPING_COST_MINOR: 1499,
-    ShippingInfo: ({ compact }: { compact?: boolean }) =>
-      React.createElement("div", { "data-testid": "shipping-info" }, compact ? "Compact shipping" : "Full shipping"),
-    UK_SHIPPING_COST_MINOR: 399,
-  });
-}
-
-/**
- * Mock for CheckoutForm component.
- */
-export function createCheckoutFormMock() {
-  return () => ({
-    CheckoutForm: () => React.createElement("div", { "data-testid": "checkout-form" }, "Checkout Form"),
-  });
-}
-
-/**
- * Mock for Stripe Elements wrapper.
- */
-export function createStripeElementsMock() {
-  return () => ({
-    Elements: ({ children }: { children: React.ReactNode }) =>
-      React.createElement("div", { "data-testid": "stripe-elements" }, children),
-  });
 }

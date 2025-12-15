@@ -47,7 +47,7 @@ test.describe("Shop - Network Error Handling", () => {
     await clearCart(page);
   });
 
-  test("shows error state when product fetch fails", async ({ page, context }) => {
+  test("shows error state when product fetch fails", async ({ context, page }) => {
     // Block GraphQL requests to simulate network failure
     await context.route("**/graphql", (route) => route.abort("failed"));
 
@@ -60,7 +60,7 @@ test.describe("Shop - Network Error Handling", () => {
     await expect(errorMessage).toBeVisible({ timeout: 10000 });
   });
 
-  test("shows retry button on network error", async ({ page, context }) => {
+  test("shows retry button on network error", async ({ context, page }) => {
     // First load successfully
     await page.goto("/en/shop");
     await page.waitForLoadState("networkidle");
@@ -259,7 +259,6 @@ test.describe("Checkout - Edge Cases", () => {
 
     // Should show empty state or redirect to cart
     const emptyMessage = page.getByText(/cart is empty|no items/i);
-    const isOnCart = page.url().includes("/cart");
 
     await expect(emptyMessage.or(page.locator(`[href*="/cart"]`))).toBeVisible({ timeout: 5000 });
   });
@@ -336,7 +335,7 @@ test.describe("Checkout - Edge Cases", () => {
     }
   });
 
-  test("handles concurrent tab sessions", async ({ page, context }) => {
+  test("handles concurrent tab sessions", async ({ context, page }) => {
     await dismissCookieConsent(page);
 
     // Add product in first tab

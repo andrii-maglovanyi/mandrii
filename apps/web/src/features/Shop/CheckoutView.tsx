@@ -2,29 +2,25 @@
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
-import { AlertCircle, Loader2, ShoppingBag } from "lucide-react";
+import { AlertCircle, ShoppingBag } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
-import { Breadcrumbs, Button, EmptyState, FallbackImage, Input, Select } from "~/components/ui";
-import { Link } from "~/i18n/navigation";
+import { AnimatedEllipsis, Breadcrumbs, Button, EmptyState, FallbackImage, Input, Select } from "~/components/ui";
 import { useAuth } from "~/contexts/AuthContext";
-import { CartItem, useCart } from "~/contexts/CartContext";
+import { useCart } from "~/contexts/CartContext";
+import { useTheme } from "~/contexts/ThemeContext";
+import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
-import { sendToMixpanel } from "~/lib/mixpanel";
 import { publicConfig } from "~/lib/config/public";
+import { constants } from "~/lib/constants";
+import { sendToMixpanel } from "~/lib/mixpanel";
 import { formatPrice, isEmail } from "~/lib/utils";
-import { Locale } from "~/types";
+import { Locale, ShippingCountry, ValidatedItem } from "~/types";
 
 import { CheckoutForm } from "./CheckoutForm";
-import {
-  EU_SHIPPING_COST_MINOR,
-  FREE_SHIPPING_THRESHOLD_MINOR,
-  ROW_SHIPPING_COST_MINOR,
-  ShippingInfo,
-  UK_SHIPPING_COST_MINOR,
-} from "./components";
+import { calculateTotals } from "./utils";
 
 interface CheckoutErrorResponse {
   code: string;
@@ -43,32 +39,14 @@ interface CheckoutResponse {
   totalMinor: number;
 }
 
-interface ValidatedItem {
-  currency: string;
-  name: string;
-  priceMinor: number;
-  productId: string;
-  quantity: number;
-  variantId?: string;
-}
-
 interface ValidationError {
   itemId: string;
   message: string;
   type: "currency_mismatch" | "not_found" | "out_of_stock" | "price_changed";
 }
 
-type ShippingCountry = "GB" | "EU" | "ROW";
-
 // Store stripe promise at module level to prevent recreation
 let stripePromise: null | Promise<null | Stripe> = null;
-
-const calculateShippingMinor = (subtotalMinor: number, shippingCountry: ShippingCountry) => {
-  if (shippingCountry === "GB" && subtotalMinor >= FREE_SHIPPING_THRESHOLD_MINOR) return 0;
-  if (shippingCountry === "GB") return UK_SHIPPING_COST_MINOR;
-  if (shippingCountry === "EU") return EU_SHIPPING_COST_MINOR;
-  return ROW_SHIPPING_COST_MINOR;
-};
 
 /**
  * Main checkout view component.
@@ -91,9 +69,13 @@ function CheckoutViewInner() {
   const locale = useLocale() as Locale;
   const { items: cartItems } = useCart();
   const { profile } = useAuth();
+  const { isDark } = useTheme();
+  const { isEUCountry, shippingCost } = constants;
 
   const [email, setEmail] = useState(profile?.email ?? "");
-  const [shippingCountry, setShippingCountry] = useState<ShippingCountry>("GB");
+  const [shippingDestination, setShippingDestination] = useState<ShippingCountry>("GB");
+  // Key to force AddressElement remount only when dropdown selection changes
+  const [addressKey, setAddressKey] = useState(0);
   const [website, setWebsite] = useState(""); // Honeypot field
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
@@ -105,10 +87,10 @@ function CheckoutViewInner() {
 
   // Calculate totals from cart
   const currency = cartItems[0]?.currency ?? "GBP";
-  const subtotalMinor = cartItems.reduce((sum, item) => sum + item.priceMinor * item.quantity, 0);
   const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const shippingMinor = checkoutData?.shippingMinor ?? calculateShippingMinor(subtotalMinor, shippingCountry);
-  const estimatedTotalMinor = subtotalMinor + shippingMinor;
+  // Always use local calculation for shipping based on current destination
+  // This ensures UI updates immediately when user changes country
+  const { shippingMinor, subtotalMinor, totalMinor } = calculateTotals(cartItems, shippingDestination);
 
   // Prefill email when user profile loads
   useEffect(() => {
@@ -123,7 +105,29 @@ function CheckoutViewInner() {
     setError(null);
     setValidationErrors([]);
     hasInitiatedRef.current = false;
-  }, [cartItems, shippingCountry]);
+  }, [cartItems]);
+
+  /**
+   * Handle country change from CheckoutForm's AddressElement.
+   * Updates shipping destination based on country code which triggers
+   * shipping cost recalculation in the UI. Does NOT reset checkout data
+   * to keep the form open.
+   */
+  const handleCountryChange = (country: string) => {
+    let newDestination: ShippingCountry;
+    if (country === "GB") {
+      newDestination = "GB";
+    } else if (isEUCountry(country)) {
+      newDestination = "EU";
+    } else {
+      newDestination = "ROW";
+    }
+
+    // Only update if destination actually changed
+    if (newDestination !== shippingDestination) {
+      setShippingDestination(newDestination);
+    }
+  };
 
   const handleInitiateCheckout = async () => {
     if (!isEmail(email.trim())) {
@@ -160,7 +164,7 @@ function CheckoutViewInner() {
             quantity: item.quantity,
             variant: item.variant,
           })),
-          shippingCountry,
+          shippingCountry: shippingDestination,
           website,
         }),
         headers: {
@@ -193,12 +197,12 @@ function CheckoutViewInner() {
       setCheckoutData(data);
 
       sendToMixpanel("Checkout Initiated", {
-        orderId: data.orderId,
-        itemCount: cartItems.length,
-        subtotalMinor: data.subtotalMinor,
-        shippingMinor: data.shippingMinor,
-        totalMinor: data.totalMinor,
         currency: data.currency,
+        itemCount: cartItems.length,
+        orderId: data.orderId,
+        shippingMinor: data.shippingMinor,
+        subtotalMinor: data.subtotalMinor,
+        totalMinor: data.totalMinor,
       });
     } catch (err) {
       // Handle network errors with retry guidance
@@ -245,7 +249,10 @@ function CheckoutViewInner() {
         ]}
       />
 
-      <h1 className="text-2xl font-semibold md:text-3xl">{i18n("Checkout")}</h1>
+      <h1 className={`
+        text-2xl font-semibold
+        md:text-3xl
+      `}>{i18n("Checkout")}</h1>
 
       {/* Honeypot field - hidden from humans, bots fill it out */}
       <input
@@ -259,14 +266,26 @@ function CheckoutViewInner() {
         value={website}
       />
 
-      <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className={`
+        grid gap-10
+        lg:grid-cols-2 lg:gap-16
+      `}>
         {/* Left column: Order summary */}
-        <div className="order-2 lg:order-1">
-          <div className="space-y-5 lg:sticky lg:top-24">
+        <div className={`
+          order-2
+          lg:order-1
+        `}>
+          <div className={`
+            space-y-5
+            lg:sticky lg:top-24
+          `}>
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-semibold">{i18n("Order summary:")}</h3>
-              <Link className="text-primary hover:text-primary/80 mt-2 inline-block" href="/shop/cart">
-                <Button variant="filled" color="neutral" size="sm">
+              <Link className={`
+                mt-2 inline-block text-primary
+                hover:text-primary/80
+              `} href="/shop/cart">
+                <Button color="neutral" size="sm" variant="filled">
                   ← {i18n("Edit bag")}
                 </Button>
               </Link>
@@ -278,8 +297,14 @@ function CheckoutViewInner() {
                 const itemError = validationErrors.find((e) => e.itemId === item.id);
 
                 return (
-                  <div className={`flex items-start gap-4 ${itemError ? "text-danger" : ""}`} key={item.id}>
-                    <div className="bg-surface-tint relative h-14 w-14 shrink-0 overflow-hidden rounded-lg">
+                  <div className={`
+                    flex items-start gap-4
+                    ${itemError ? `text-danger` : ""}
+                  `} key={item.id}>
+                    <div className={`
+                      relative h-14 w-14 shrink-0 overflow-hidden rounded-lg
+                      bg-surface-tint
+                    `}>
                       <FallbackImage
                         alt={item.name}
                         className="object-cover"
@@ -297,10 +322,10 @@ function CheckoutViewInner() {
                           </span>
                         </div>
                       </div>
-                      <p className="text-neutral/60 mt-1 text-sm">
+                      <p className="mt-1 text-sm text-neutral/60">
                         {i18n("Qty")}: {item.quantity}
                       </p>
-                      {itemError && <p className="text-danger mt-1 text-xs">{itemError.message}</p>}
+                      {itemError && <p className="mt-1 text-xs text-danger">{itemError.message}</p>}
                     </div>
                   </div>
                 );
@@ -308,11 +333,12 @@ function CheckoutViewInner() {
             </div>
 
             {/* Shipping selection */}
-            <div className="border-neutral/10 space-y-2 border-t pt-5">
+            <div className="space-y-2 border-t border-neutral/10 pt-5">
               <Select
                 label={i18n("Shipping destination")}
                 onChange={(e) => {
-                  setShippingCountry(e.target.value as ShippingCountry);
+                  setShippingDestination(e.target.value as ShippingCountry);
+                  setAddressKey((prev) => prev + 1); // Force AddressElement remount
                   hasInitiatedRef.current = false;
                 }}
                 options={[
@@ -320,33 +346,36 @@ function CheckoutViewInner() {
                   { label: i18n("European Union"), value: "EU" },
                   { label: i18n("Rest of World"), value: "ROW" },
                 ]}
-                value={shippingCountry}
+                value={shippingDestination}
               />
             </div>
 
             {/* Totals */}
-            <div className="border-neutral/10 space-y-3 border-t pt-5">
-              <div className="text-neutral/70 flex justify-between">
+            <div className="space-y-3 border-t border-neutral/10 pt-5">
+              <div className="flex justify-between text-neutral/70">
                 <span>
                   {i18n("Subtotal")} ({totalQuantity} {totalQuantity === 1 ? i18n("item") : i18n("items")})
                 </span>
                 <span>{formatPrice(subtotalMinor, currency, locale)}</span>
               </div>
-              <div className="text-neutral/70 flex justify-between">
+              <div className="flex justify-between text-neutral/70">
                 <span>{i18n("Shipping")}</span>
                 <span>{shippingMinor === 0 ? i18n("Free") : formatPrice(shippingMinor, currency, locale)}</span>
               </div>
             </div>
 
-            <div className="border-neutral/10 flex justify-between border-t pt-5 text-lg font-semibold">
+            <div className={`
+              flex justify-between border-t border-neutral/10 pt-5 text-lg
+              font-semibold
+            `}>
               <span>{i18n("Total")}</span>
-              <span>{formatPrice(checkoutData?.totalMinor ?? estimatedTotalMinor, currency, locale)}</span>
+              <span>{formatPrice(totalMinor, currency, locale)}</span>
             </div>
 
-            {shippingCountry === "GB" && subtotalMinor < FREE_SHIPPING_THRESHOLD_MINOR && (
-              <p className="text-primary text-sm">
+            {shippingDestination === "GB" && subtotalMinor < shippingCost.freeThreshold && (
+              <p className="text-sm text-primary">
                 {i18n("Add {amount} more for free UK shipping", {
-                  amount: formatPrice(FREE_SHIPPING_THRESHOLD_MINOR - subtotalMinor, currency, locale),
+                  amount: formatPrice(shippingCost.freeThreshold - subtotalMinor, currency, locale),
                 })}
               </p>
             )}
@@ -354,8 +383,10 @@ function CheckoutViewInner() {
         </div>
 
         {/* Right column: Checkout form */}
-        <div className="order-1 space-y-8 lg:order-2">
-          {/* Email input */}
+        <div className={`
+          order-1 space-y-8
+          lg:order-2
+        `}>
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">{i18n("Contact information")}</h3>
             <div>
@@ -369,7 +400,7 @@ function CheckoutViewInner() {
                 type="email"
                 value={email}
               />
-              <p className="text-neutral/60 mt-2 text-xs">
+              <p className="mt-2 text-xs text-neutral/60">
                 {i18n("I'll send your order confirmation to this address.")}
               </p>
             </div>
@@ -377,7 +408,7 @@ function CheckoutViewInner() {
 
           {/* Validation errors */}
           {validationErrors.length > 0 && (
-            <div className="bg-danger/10 text-danger rounded-lg p-4">
+            <div className="rounded-lg bg-danger/10 p-4 text-danger">
               <div className="mb-2 flex items-center gap-2 font-medium">
                 <AlertCircle size={16} />
                 <span>{i18n("Cart issues detected")}</span>
@@ -392,68 +423,64 @@ function CheckoutViewInner() {
 
           {/* General error */}
           {error && !validationErrors.length && (
-            <div className="bg-danger/10 text-danger flex items-center gap-3 rounded-lg p-4">
+            <div className={`
+              flex items-center gap-3 rounded-lg bg-danger/10 p-4 text-danger
+            `}>
               <AlertCircle size={18} />
               <span>{error}</span>
             </div>
           )}
 
-          {/* Payment section */}
           <div className="space-y-4">
-            {/* Loading state while validating cart */}
-            {isLoading && (
-              <>
-                <h3 className="text-lg font-semibold">{i18n("Shipping & Payment")}</h3>
-                <div className="bg-surface-tint flex items-center gap-3 rounded-lg p-8">
-                  <Loader2 className="text-primary h-5 w-5 animate-spin" />
-                  <span className="text-neutral/70">{i18n("Validating your order...")}</span>
-                </div>
-              </>
-            )}
-
-            {/* Continue to payment button */}
             {!isLoading && !checkoutData && (
-              <>
-                <h3 className="text-lg font-semibold">{i18n("Shipping & Payment")}</h3>
-                <Button
-                  className="w-full py-4"
-                  color="primary"
-                  disabled={!isEmail(email.trim()) || !executeRecaptcha}
-                  onClick={handleInitiateCheckout}
-                  size="lg"
-                  variant="filled"
-                >
-                  {!executeRecaptcha ? i18n("Loading...") : i18n("Continue")}
-                </Button>
-              </>
+              <Button
+                className="w-full py-4"
+                color="primary"
+                disabled={!isEmail(email.trim()) || !executeRecaptcha}
+                onClick={handleInitiateCheckout}
+                size="lg"
+                variant="filled"
+              >
+                {!executeRecaptcha ? i18n("Loading...") : i18n("Continue")}
+              </Button>
             )}
 
-            {/* Stripe checkout form with address and payment */}
+            {isLoading && (
+              <div className="flex items-center justify-center py-8">
+                <AnimatedEllipsis size="md" />
+              </div>
+            )}
+
             {checkoutData &&
               (publicConfig.stripe.publishableKey ? (
                 <Elements
                   options={{
                     appearance: {
-                      theme: "stripe",
+                      theme: isDark ? "night" : "stripe",
                       variables: {
                         borderRadius: "8px",
                       },
                     },
                     clientSecret: checkoutData.clientSecret,
-                    // Use auto-detection for all locales - Stripe will show appropriate language
-                    locale: "auto",
+                    locale: locale === "uk" ? "auto" : locale,
                   }}
                   stripe={getStripePromise()}
                 >
                   <CheckoutForm
+                    addressKey={addressKey}
                     currency={checkoutData.currency}
                     email={email}
+                    onCountryChange={handleCountryChange}
                     orderId={checkoutData.orderId}
-                    totalMinor={checkoutData.totalMinor}
+                    shippingDestination={shippingDestination}
+                    totalMinor={totalMinor}
                   />
                 </Elements>
               ) : (
-                <div className="bg-danger/10 text-danger flex items-center gap-3 rounded-lg p-4">
+                <div className={`
+                  flex items-center gap-3 rounded-lg bg-danger/10 p-4
+                  text-danger
+                `}>
                   <AlertCircle size={18} />
                   <span>{i18n("Payment system is not configured. Please contact support.")}</span>
                 </div>

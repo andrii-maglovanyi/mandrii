@@ -54,7 +54,7 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
         >
           <UserProfileCard profile={profileData} />
 
-          <UserMenu />
+          <UserMenu onNavigate={() => setOpen(false)} />
         </menu>
       )}
     </div>

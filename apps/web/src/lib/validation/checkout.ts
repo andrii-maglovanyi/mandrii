@@ -33,12 +33,12 @@ export const checkoutSchema = z.object({
   captchaToken: z.string().min(1, "Captcha token required"),
   /** Customer email for order confirmation */
   email: z.email(),
+  /** Cart items to purchase */
+  items: z.array(cartItemSchema).min(1, "Cart cannot be empty"),
   /** Shipping country (ISO alpha-2 / zone) used for rate calculation */
   shippingCountry: z.enum(["GB", "EU", "ROW"]).default("GB"),
   /** Honeypot field - should be empty (bots fill this) */
   website: z.string().max(0, "Invalid submission").optional(),
-  /** Cart items to purchase */
-  items: z.array(cartItemSchema).min(1, "Cart cannot be empty"),
 });
 
 export type CartItemRequest = z.infer<typeof cartItemSchema>;

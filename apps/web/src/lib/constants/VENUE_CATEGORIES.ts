@@ -21,6 +21,7 @@ export const CATEGORIES: Record<
   GROCERY_STORE: { iconName: "ShoppingCart", label: { en: "Grocery store", uk: "Продуктовий магазин" } },
   LEGAL_SERVICE: { iconName: "Scale", label: { en: "Legal service", uk: "Юридична допомога" } },
   LIBRARY: { iconName: "Book", label: { en: "Library", uk: "Бібліотека" } },
+  MEDIA: { iconName: "Megaphone", label: { en: "Media", uk: "Медіа" } },
   MEDICAL: { iconName: "Hospital", label: { en: "Medical & Healthcare", uk: "Медицина та охорона здоров'я" } },
   ORGANIZATION: { iconName: "Building", label: { en: "Organization", uk: "Організація" } },
   RESTAURANT: { iconName: "Utensils", label: { en: "Restaurant", uk: "Ресторан" } },

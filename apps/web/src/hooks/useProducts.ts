@@ -59,7 +59,7 @@ export const normalizeImage = (path?: null | string) => {
   return path.startsWith("http") ? path : `${constants.vercelBlobStorageUrl}/${path}`;
 };
 
-type GraphQLProduct = GetPublicProductsQuery["products"][number] | GetProductBySlugQuery["products"][number];
+type GraphQLProduct = GetProductBySlugQuery["products"][number] | GetPublicProductsQuery["products"][number];
 
 /**
  * Map a GraphQL product response to our Product interface.

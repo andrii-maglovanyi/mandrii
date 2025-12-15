@@ -8,17 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useDebouncedCallback } from "use-debounce";
 
-import {
-  AnimatedEllipsis,
-  Breadcrumbs,
-  Button,
-  Card,
-  EmptyState,
-  Input,
-  Pagination,
-  RichText,
-  Select,
-} from "~/components/ui";
+import { AnimatedEllipsis, Button, Card, EmptyState, Input, Pagination, RichText, Select } from "~/components/ui";
 import { useListControls } from "~/hooks/useListControls";
 import { Product, useProducts } from "~/hooks/useProducts";
 import { useI18n } from "~/i18n/useI18n";
@@ -41,11 +31,11 @@ const ProductCard = ({ locale, product }: { locale: Locale; product: Product }) 
 
   return (
     <Card className="group/card relative flex flex-col" href={`/shop/${product.slug}`}>
-      {/* Image Container with hover swap */}
-      <div className={`bg-surface-tint relative aspect-4/5 w-full overflow-hidden rounded-lg`}>
+      <div className={`
+        relative aspect-4/5 w-full overflow-hidden rounded-lg bg-surface-tint
+      `}>
         {mainImage ? (
           <>
-            {/* Primary image */}
             <Image
               alt={product.name}
               className={clsx(
@@ -56,11 +46,14 @@ const ProductCard = ({ locale, product }: { locale: Locale; product: Product }) 
               sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
               src={mainImage}
             />
-            {/* Secondary image (shown on hover) */}
             {secondImage && (
               <Image
                 alt={`${product.name} - alternate view`}
-                className={`absolute inset-0 object-cover opacity-0 transition-opacity duration-500 group-hover/card:opacity-100`}
+                className={`
+                  absolute inset-0 object-cover opacity-0 transition-opacity
+                  duration-500
+                  group-hover/card:opacity-100
+                `}
                 fill
                 sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
                 src={secondImage}
@@ -69,26 +62,33 @@ const ProductCard = ({ locale, product }: { locale: Locale; product: Product }) 
           </>
         ) : (
           <div className="flex h-full items-center justify-center">
-            <ShoppingBag className="text-neutral/20 h-10 w-10" />
+            <ShoppingBag className="h-10 w-10 text-neutral/20" />
           </div>
         )}
 
-        {/* Out of stock overlay */}
         {isOutOfStock && (
-          <div className={`bg-surface/70 absolute inset-0 flex items-center justify-center backdrop-blur-sm`}>
-            <span className={`bg-surface text-neutral/70 rounded-full px-3 py-1.5 text-sm font-medium`}>
+          <div className={`
+            absolute inset-0 flex items-center justify-center bg-surface/70
+            backdrop-blur-sm
+          `}>
+            <span className={`
+              rounded-full bg-surface px-3 py-1.5 text-sm font-medium
+              text-neutral/70
+            `}>
               {i18n("Sold out")}
             </span>
           </div>
         )}
       </div>
 
-      {/* Content - minimal like Broydy */}
       <div className="flex flex-col gap-1 pt-4">
-        <h3 className={`text-on-surface group-hover/card:text-primary text-sm leading-snug font-medium`}>
+        <h3 className={`
+          text-sm leading-snug font-medium text-on-surface
+          group-hover/card:text-primary
+        `}>
           {product.name}
         </h3>
-        <p className="text-neutral/70 text-sm">{formatPrice(product.priceMinor, product.currency, locale)}</p>
+        <p className="text-sm text-neutral/70">{formatPrice(product.priceMinor, product.currency, locale)}</p>
       </div>
     </Card>
   );
@@ -110,7 +110,6 @@ export const ShopCatalog = () => {
 
   const countPages = useMemo(() => Math.max(1, Math.ceil(count / ITEMS_LIMIT)), [count]);
 
-  // Debounce search to avoid hammering the API
   const debouncedSetSearch = useDebouncedCallback((value: string) => {
     setDebouncedSearch(value);
   }, SEARCH_DEBOUNCE_MS);
@@ -142,7 +141,6 @@ export const ShopCatalog = () => {
     const actualOffset = (pageIndex - 1) * ITEMS_LIMIT;
     handlePaginate({ offset: actualOffset });
 
-    // Only scroll to top on desktop (numbered pagination)
     if (!isMobile) {
       window.scrollTo({ behavior: "smooth", top: 0 });
     }
@@ -155,23 +153,16 @@ export const ShopCatalog = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Breadcrumbs */}
-      <Breadcrumbs items={[{ title: i18n("Home"), url: "/" }]} />
-
-      {/* Page header */}
-      <div className={`mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center`}>
-        <h1
-          className={`from-primary to-secondary bg-linear-to-r bg-clip-text text-3xl font-extrabold text-transparent md:text-5xl`}
-        >
-          {i18n("Shop")}
-        </h1>
-      </div>
-
-      {/* Filters - aligned with VenuesCatalogFilter */}
       <div className="mx-auto w-full max-w-(--breakpoint-xl)">
         <div className="shrink-0 space-y-4">
-          <div className={`flex flex-col gap-4 md:flex-row md:gap-x-2`}>
-            <div className={`w-full md:flex-1`}>
+          <div className={`
+            flex flex-col gap-4
+            md:flex-row md:gap-x-2
+          `}>
+            <div className={`
+              w-full
+              md:flex-1
+            `}>
               <Input
                 onChange={handleSearchChange}
                 placeholder={i18n("Search products by name...")}
@@ -179,7 +170,10 @@ export const ShopCatalog = () => {
                 value={searchQuery}
               />
             </div>
-            <div className={`w-full md:w-48 md:shrink-0`}>
+            <div className={`
+              w-full
+              md:w-48 md:shrink-0
+            `}>
               <Select
                 onChange={(e) => setCategory(e.target.value || undefined)}
                 options={[{ label: i18n("All categories"), value: "" }, ...categoryOptions]}
@@ -193,7 +187,10 @@ export const ShopCatalog = () => {
       {/* Results info */}
       <div className="flex flex-wrap items-center justify-between">
         {count > 0 ? (
-          <RichText as="div" className={`text-sm sm:text-base`}>
+          <RichText as="div" className={`
+            text-sm
+            sm:text-base
+          `}>
             {(() => {
               const currentOffset = listState.offset ?? 0;
               const start = currentOffset + 1;
@@ -213,12 +210,18 @@ export const ShopCatalog = () => {
 
       {error ? (
         <div className="flex flex-col items-center justify-center gap-4 py-16">
-          <div className={`flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30`}>
-            <AlertCircle className={`h-8 w-8 text-red-600 dark:text-red-400`} />
+          <div className={`
+            flex h-16 w-16 items-center justify-center rounded-full bg-red-100
+            dark:bg-red-900/30
+          `}>
+            <AlertCircle className={`
+              h-8 w-8 text-red-600
+              dark:text-red-400
+            `} />
           </div>
           <div className="text-center">
             <h3 className="font-semibold">{i18n("Failed to load products")}</h3>
-            <p className="text-neutral/60 mt-1 text-sm">{i18n("There was a problem fetching the catalog.")}</p>
+            <p className="mt-1 text-sm text-neutral/60">{i18n("There was a problem fetching the catalog.")}</p>
           </div>
           <Button color="primary" onClick={() => refetch()} size="sm" variant="outlined">
             <RefreshCw className="mr-2 h-4 w-4" />
@@ -234,7 +237,12 @@ export const ShopCatalog = () => {
       ) : (
         <>
           {/* Product Grid - single column on mobile, 2 on sm, 3 on md, 4 on lg */}
-          <div className={`grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4`}>
+          <div className={`
+            grid grid-cols-1 gap-x-4 gap-y-8
+            sm:grid-cols-2
+            md:grid-cols-3
+            lg:grid-cols-4
+          `}>
             {products.map((product) => (
               <ProductCard key={product.id} locale={locale} product={product} />
             ))}

@@ -59,10 +59,12 @@ export const shopHandlers = [
  */
 export const shopErrorHandlers = {
   /**
-   * Simulates a network error for GetPublicProducts
+   * Simulates empty results
    */
-  networkError: graphqlEndpoint.query("GetPublicProducts", () => {
-    return HttpResponse.error();
+  emptyResults: graphqlEndpoint.query("GetPublicProducts", () => {
+    return HttpResponse.json({
+      data: getMockProductsResponse([], 0),
+    });
   }),
 
   /**
@@ -72,20 +74,18 @@ export const shopErrorHandlers = {
     return HttpResponse.json({
       errors: [
         {
-          message: "Failed to fetch products",
           extensions: { code: "INTERNAL_SERVER_ERROR" },
+          message: "Failed to fetch products",
         },
       ],
     });
   }),
 
   /**
-   * Simulates empty results
+   * Simulates a network error for GetPublicProducts
    */
-  emptyResults: graphqlEndpoint.query("GetPublicProducts", () => {
-    return HttpResponse.json({
-      data: getMockProductsResponse([], 0),
-    });
+  networkError: graphqlEndpoint.query("GetPublicProducts", () => {
+    return HttpResponse.error();
   }),
 
   /**
@@ -108,27 +108,27 @@ export const checkoutHandlers = {
    */
   createMockHandlers: (
     options: {
-      orderCreationFails?: boolean;
-      orderUpdateFails?: boolean;
-      orderDeletionFails?: boolean;
-      paymentIntentFails?: boolean;
       existingOrder?: { id: string; payment_intent_id: string; status: string } | null;
+      orderCreationFails?: boolean;
+      orderDeletionFails?: boolean;
+      orderUpdateFails?: boolean;
+      paymentIntentFails?: boolean;
     } = {},
   ) => {
     const {
-      orderCreationFails = false,
-      orderUpdateFails = false,
-      orderDeletionFails = false,
-      paymentIntentFails = false,
       existingOrder = null,
+      orderCreationFails = false,
+      orderDeletionFails = false,
+      orderUpdateFails = false,
+      paymentIntentFails = false,
     } = options;
 
     const state = {
-      createdOrders: [] as { id: string; idempotencyKey?: string }[],
-      updatedOrders: [] as { id: string; paymentIntentId: string }[],
-      deletedOrders: [] as string[],
-      createdPaymentIntents: [] as { amount: number; orderId?: string }[],
       cancelledPaymentIntents: [] as string[],
+      createdOrders: [] as { id: string; idempotencyKey?: string }[],
+      createdPaymentIntents: [] as { amount: number; orderId?: string }[],
+      deletedOrders: [] as string[],
+      updatedOrders: [] as { id: string; paymentIntentId: string }[],
     };
 
     const handlers = [
@@ -196,8 +196,8 @@ export const checkoutHandlers = {
           orderId: params.get("metadata[orderId]") || undefined,
         });
         return HttpResponse.json({
-          id: "pi_test_" + Date.now(),
           client_secret: "pi_test_secret",
+          id: "pi_test_" + Date.now(),
           status: "requires_payment_method",
         });
       }),

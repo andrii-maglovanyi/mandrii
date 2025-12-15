@@ -2,7 +2,7 @@ import { Clock, Minus, Plus } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useCallback, useMemo, useState } from "react";
 
-import { AccordionItem, ActionButton, Input, RichText } from "~/components/ui";
+import { AccordionItem, ActionButton, Button, Input, RichText } from "~/components/ui";
 import { FormProps } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -114,14 +114,9 @@ export const VenueSchedule = ({ setValues, values }: VenueScheduleProps) => {
         return (
           <div className="w-fit">
             <div className="mt-2 flex justify-end">
-              <ActionButton
-                aria-label={i18n("Add time slot")}
-                icon={<Plus />}
-                onClick={() => addTimeSlot(day)}
-                tooltipPosition="left"
-                type="button"
-                variant="filled"
-              />
+              <Button onClick={() => addTimeSlot(day)} type="button" variant="filled">
+                {i18n("Add time slot")}
+              </Button>
             </div>
           </div>
         );

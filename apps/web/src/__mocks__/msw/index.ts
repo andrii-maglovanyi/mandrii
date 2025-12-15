@@ -13,7 +13,7 @@
  * ```
  */
 
-export { server } from "./server";
+export * from "./data";
 export { handlers } from "./handlers";
 export * from "./handlers/shop";
-export * from "./data";
+export { server } from "./server";

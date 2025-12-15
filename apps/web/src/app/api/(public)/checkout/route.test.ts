@@ -22,13 +22,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mockProducts } from "~/__mocks__/msw/data/shop";
 import { server } from "~/__mocks__/msw/server";
 import {
+  calculateTotals,
   checkStock,
   findVariantWithResult,
   generateIdempotencyKey,
   resolvePrice,
   validateCartCurrency,
-} from "~/lib/checkout-logic";
-import { calculateTotals, ShippingCountry, ValidatedItem } from "~/lib/checkout";
+} from "~/features/Shop/utils";
+import { ShippingCountry } from "~/types";
 
 const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "http://localhost:8080/v1/graphql";
 
@@ -107,8 +108,6 @@ describe("Checkout Cleanup Logic", () => {
         headers: { "Content-Type": "application/json" },
         method: "POST",
       });
-
-      const data = await response.json();
 
       expect(response.ok).toBe(true);
       expect(updatedOrders).toHaveLength(1);
@@ -293,7 +292,7 @@ describe("Checkout Cleanup Logic", () => {
   });
 
   describe("Shipping Calculation (tax included in prices)", () => {
-    const makeItem = (priceMinor: number, quantity: number): ValidatedItem => ({
+    const makeItem = (priceMinor: number, quantity: number) => ({
       currency: "GBP",
       name: "Test",
       priceMinor,
@@ -456,42 +455,42 @@ describe("Checkout Business Logic", () => {
   describe("Currency Validation Logic", () => {
     it("accepts cart with single currency", () => {
       const products = [
-        { id: "prod-1", currency: "GBP" },
-        { id: "prod-2", currency: "GBP" },
-        { id: "prod-3", currency: "GBP" },
+        { currency: "GBP", id: "prod-1" },
+        { currency: "GBP", id: "prod-2" },
+        { currency: "GBP", id: "prod-3" },
       ];
 
       expect(validateCartCurrency(products)).toEqual({
-        valid: true,
         primaryCurrency: "GBP",
+        valid: true,
       });
     });
 
     it("rejects cart with mixed currencies", () => {
       const products = [
-        { id: "prod-1", currency: "GBP" },
-        { id: "prod-2", currency: "USD" },
-        { id: "prod-3", currency: "GBP" },
+        { currency: "GBP", id: "prod-1" },
+        { currency: "USD", id: "prod-2" },
+        { currency: "GBP", id: "prod-3" },
       ];
 
       expect(validateCartCurrency(products)).toEqual({
-        valid: false,
-        primaryCurrency: "GBP",
         mismatchedProducts: ["prod-2"],
+        primaryCurrency: "GBP",
+        valid: false,
       });
     });
 
     it("identifies all mismatched products", () => {
       const products = [
-        { id: "prod-1", currency: "GBP" },
-        { id: "prod-2", currency: "USD" },
-        { id: "prod-3", currency: "EUR" },
+        { currency: "GBP", id: "prod-1" },
+        { currency: "USD", id: "prod-2" },
+        { currency: "EUR", id: "prod-3" },
       ];
 
       expect(validateCartCurrency(products)).toEqual({
-        valid: false,
-        primaryCurrency: "GBP",
         mismatchedProducts: ["prod-2", "prod-3"],
+        primaryCurrency: "GBP",
+        valid: false,
       });
     });
 
@@ -500,11 +499,11 @@ describe("Checkout Business Logic", () => {
     });
 
     it("handles single item cart", () => {
-      const products = [{ id: "prod-1", currency: "EUR" }];
+      const products = [{ currency: "EUR", id: "prod-1" }];
 
       expect(validateCartCurrency(products)).toEqual({
-        valid: true,
         primaryCurrency: "EUR",
+        valid: true,
       });
     });
   });
@@ -554,7 +553,7 @@ describe("Checkout Business Logic", () => {
       const variants = [
         makeVariant({ id: "v1", size: "m" }),
         makeVariant({ id: "v2", size: "l" }),
-        makeVariant({ id: "v3", gender: "women" }),
+        makeVariant({ gender: "women", id: "v3" }),
       ];
 
       const result = findVariantWithResult(variants, { ageGroup: "adult", gender: "men", size: "l" });
@@ -583,8 +582,8 @@ describe("Checkout Business Logic", () => {
 
     it("requires color match when color is specified in request", () => {
       const variants = [
-        makeVariant({ id: "v1", gender: "unisex", color: "black" }),
-        makeVariant({ id: "v2", gender: "unisex", color: "navy" }),
+        makeVariant({ color: "black", gender: "unisex", id: "v1" }),
+        makeVariant({ color: "navy", gender: "unisex", id: "v2" }),
       ];
 
       const result = findVariantWithResult(variants, {
@@ -609,8 +608,8 @@ describe("Checkout Business Logic", () => {
 
     it("matches variant without color when no color requested", () => {
       const variants = [
-        makeVariant({ id: "v1", color: undefined }), // No color
-        makeVariant({ id: "v2", color: "black" }), // Has color
+        makeVariant({ color: undefined, id: "v1" }), // No color
+        makeVariant({ color: "black", id: "v2" }), // Has color
       ];
 
       const result = findVariantWithResult(variants, { ageGroup: "adult", gender: "men", size: "m" });
@@ -621,8 +620,8 @@ describe("Checkout Business Logic", () => {
 
     it("handles kids age group", () => {
       const variants = [
-        makeVariant({ id: "v1", age_group: "adult", gender: "unisex" }),
-        makeVariant({ id: "v2", age_group: "kids", gender: "unisex", size: "y9_10" }),
+        makeVariant({ age_group: "adult", gender: "unisex", id: "v1" }),
+        makeVariant({ age_group: "kids", gender: "unisex", id: "v2", size: "y9_10" }),
       ];
 
       const result = findVariantWithResult(variants, { ageGroup: "kids", gender: "unisex", size: "y9_10" });
@@ -754,11 +753,11 @@ describe("Checkout Flow Integration", () => {
   describe("Product Stock and Price Queries", () => {
     it("simulates fetching product with null stock (unlimited)", async () => {
       const mockProduct = {
+        currency: "GBP",
         id: "prod-digital",
         name: "Digital Download",
         price_minor: 1500,
         stock: null, // Unlimited
-        currency: "GBP",
       };
 
       server.use(
@@ -795,10 +794,10 @@ describe("Checkout Flow Integration", () => {
 
     it("simulates fetching product variant with price override", async () => {
       const mockProduct = {
+        currency: "GBP",
         id: "prod-tshirt",
         name: "T-Shirt",
         price_minor: 3500,
-        currency: "GBP",
         product_variants: [
           { name: "S", price_override_minor: null, stock: 10 },
           { name: "M", price_override_minor: null, stock: 15 },
@@ -846,8 +845,8 @@ describe("Checkout Flow Integration", () => {
 
     it("simulates currency mismatch detection in cart", async () => {
       const mockProducts = [
-        { id: "prod-1", currency: "GBP", price_minor: 2500 },
-        { id: "prod-2", currency: "USD", price_minor: 3000 }, // Different currency!
+        { currency: "GBP", id: "prod-1", price_minor: 2500 },
+        { currency: "USD", id: "prod-2", price_minor: 3000 }, // Different currency!
       ];
 
       server.use(
@@ -988,8 +987,8 @@ describe("MSW Handlers: Price Overrides and Color-Variant Stock", () => {
       }
 
       interface VariantInfo {
+        priceOverride: null | number;
         size: string;
-        priceOverride: number | null;
       }
 
       const cartItems: CartItem[] = [
@@ -1117,13 +1116,13 @@ describe("MSW Handlers: Price Overrides and Color-Variant Stock", () => {
 
     it("finds correct variant by color + size combination", () => {
       interface Variant {
-        color: string | null;
+        color: null | string;
         id: string;
         size: string;
         stock: number;
       }
 
-      const findVariant = (variants: Variant[], size: string, color?: string): Variant | undefined => {
+      const findVariant = (variants: Variant[], size: string, color?: string): undefined | Variant => {
         return variants.find((v) => {
           const sizeMatch = v.size === size;
           const colorMatch = color ? v.color === color : v.color === null;
@@ -1163,7 +1162,7 @@ describe("MSW Handlers: Price Overrides and Color-Variant Stock", () => {
 
     it("validates stock per color-variant combination", () => {
       interface Variant {
-        color: string | null;
+        color: null | string;
         size: string;
         stock: number;
       }
@@ -1177,7 +1176,7 @@ describe("MSW Handlers: Price Overrides and Color-Variant Stock", () => {
       const checkVariantStock = (
         variants: Variant[],
         size: string,
-        color: string | null,
+        color: null | string,
         quantity: number,
       ): StockCheckResult => {
         const variant = variants.find((v) => v.size === size && v.color === color);

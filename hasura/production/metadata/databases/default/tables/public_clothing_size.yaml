@@ -1,0 +1,15 @@
+table:
+  name: clothing_size
+  schema: public
+is_enum: true
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - value
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - value
+      filter: {}

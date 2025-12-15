@@ -130,7 +130,7 @@ test.describe("Shop Catalog", () => {
 });
 
 test.describe("Shop Catalog - Mobile", () => {
-  test.use({ viewport: { width: 375, height: 667 } });
+  test.use({ viewport: { height: 667, width: 375 } });
 
   test("displays properly on mobile", async ({ page }) => {
     await page.goto("/en/shop");

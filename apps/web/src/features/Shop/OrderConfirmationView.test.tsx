@@ -1,5 +1,4 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -34,17 +33,17 @@ vi.mock("next/link", () => ({
 // Mock next/navigation
 let mockSearchParams = new URLSearchParams();
 vi.mock("next/navigation", () => ({
-  redirect: vi.fn(),
   permanentRedirect: vi.fn(),
+  redirect: vi.fn(),
+  usePathname: () => "/en/shop/order/test-123",
   useRouter: () => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-    prefetch: vi.fn(),
     back: vi.fn(),
     forward: vi.fn(),
+    prefetch: vi.fn(),
+    push: vi.fn(),
     refresh: vi.fn(),
+    replace: vi.fn(),
   }),
-  usePathname: () => "/en/shop/order/test-123",
   useSearchParams: () => mockSearchParams,
 }));
 
@@ -218,8 +217,8 @@ describe("OrderConfirmationView", () => {
 
       render(<OrderConfirmationView orderId="order-123" />);
 
+      const tryAgainLink = await screen.findByRole("link", { name: "Try again" });
       await waitFor(() => {
-        const tryAgainLink = screen.getByRole("link", { name: "Try again" });
         expect(tryAgainLink).toHaveAttribute("href", "/en/shop/cart");
       });
     });
@@ -296,8 +295,8 @@ describe("OrderConfirmationView", () => {
       await waitFor(() => {
         // Order ID is split: <span>Order ID:</span> order-12...
         expect(screen.getByText("Order ID:")).toBeInTheDocument();
-        expect(screen.getByText(/order-12/)).toBeInTheDocument();
       });
+      expect(screen.getByText(/order-12/)).toBeInTheDocument();
     });
 
     it("shows email", async () => {
@@ -306,8 +305,8 @@ describe("OrderConfirmationView", () => {
       await waitFor(() => {
         // Email is split: <span>Email:</span> test@example.com
         expect(screen.getByText("Email:")).toBeInTheDocument();
-        expect(screen.getByText("test@example.com")).toBeInTheDocument();
       });
+      expect(screen.getByText("test@example.com")).toBeInTheDocument();
     });
 
     it("shows formatted date", async () => {
@@ -316,8 +315,8 @@ describe("OrderConfirmationView", () => {
       await waitFor(() => {
         // Date is split: <span>Date:</span> January 15, 2024
         expect(screen.getByText("Date:")).toBeInTheDocument();
-        expect(screen.getByText(/January 15, 2024/)).toBeInTheDocument();
       });
+      expect(screen.getByText(/January 15, 2024/)).toBeInTheDocument();
     });
 
     it("shows order items", async () => {
@@ -331,9 +330,9 @@ describe("OrderConfirmationView", () => {
     it("shows item price", async () => {
       render(<OrderConfirmationView orderId="order-123" />);
 
+      const priceElements = await screen.findAllByText("£50.00");
       await waitFor(() => {
         // £50.00 appears in both item line and subtotal
-        const priceElements = screen.getAllByText("£50.00");
         expect(priceElements.length).toBeGreaterThanOrEqual(1);
       });
     });
@@ -365,8 +364,8 @@ describe("OrderConfirmationView", () => {
 
       render(<OrderConfirmationView orderId="order-123" />);
 
+      const continueLink = await screen.findByRole("link", { name: "Continue shopping" });
       await waitFor(() => {
-        const continueLink = screen.getByRole("link", { name: "Continue shopping" });
         expect(continueLink).toHaveAttribute("href", "/en/shop");
       });
     });
@@ -409,8 +408,8 @@ describe("OrderConfirmationView", () => {
 
       await waitFor(() => {
         expect(screen.getByText(/Product One.*×.*1/)).toBeInTheDocument();
-        expect(screen.getByText(/Product Two.*×.*3/)).toBeInTheDocument();
       });
+      expect(screen.getByText(/Product Two.*×.*3/)).toBeInTheDocument();
     });
   });
 });

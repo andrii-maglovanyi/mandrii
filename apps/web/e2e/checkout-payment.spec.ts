@@ -61,6 +61,45 @@ async function dismissCookieConsent(page: Page) {
 }
 
 /**
+ * Helper to fill Stripe address element
+ */
+async function fillStripeAddressElement(page: Page) {
+  // Wait for address iframe
+  const addressFrame = page.frameLocator('iframe[name*="__privateStripeFrame"]').nth(1);
+
+  // Fill address fields
+  await addressFrame.locator('[name="name"]').fill("Test User");
+  await addressFrame.locator('[name="addressLine1"]').fill("123 Test Street");
+  await addressFrame.locator('[name="locality"]').fill("London");
+  await addressFrame.locator('[name="postalCode"]').fill("SW1A 1AA");
+}
+
+/**
+ * Helper to fill Stripe card element
+ */
+async function fillStripeCardElement(
+  page: Page,
+  cardNumber: string = "4242424242424242",
+  expiry: string = "12/30",
+  cvc: string = "123",
+) {
+  // Wait for Stripe iframe to load
+  const stripeFrame = page.frameLocator('iframe[name*="__privateStripeFrame"]').first();
+
+  // Fill card number
+  const cardInput = stripeFrame.locator('[name="number"]');
+  await cardInput.fill(cardNumber);
+
+  // Fill expiry
+  const expiryInput = stripeFrame.locator('[name="expiry"]');
+  await expiryInput.fill(expiry);
+
+  // Fill CVC
+  const cvcInput = stripeFrame.locator('[name="cvc"]');
+  await cvcInput.fill(cvc);
+}
+
+/**
  * Helper to add a product to cart and navigate to checkout
  */
 async function setupCheckoutWithProduct(page: Page) {
@@ -96,45 +135,6 @@ async function setupCheckoutWithProduct(page: Page) {
   // Navigate to checkout
   await page.getByRole("link", { name: /proceed to checkout/i }).click();
   await page.waitForURL(/\/shop\/checkout/);
-}
-
-/**
- * Helper to fill Stripe card element
- */
-async function fillStripeCardElement(
-  page: Page,
-  cardNumber: string = "4242424242424242",
-  expiry: string = "12/30",
-  cvc: string = "123",
-) {
-  // Wait for Stripe iframe to load
-  const stripeFrame = page.frameLocator('iframe[name*="__privateStripeFrame"]').first();
-
-  // Fill card number
-  const cardInput = stripeFrame.locator('[name="number"]');
-  await cardInput.fill(cardNumber);
-
-  // Fill expiry
-  const expiryInput = stripeFrame.locator('[name="expiry"]');
-  await expiryInput.fill(expiry);
-
-  // Fill CVC
-  const cvcInput = stripeFrame.locator('[name="cvc"]');
-  await cvcInput.fill(cvc);
-}
-
-/**
- * Helper to fill Stripe address element
- */
-async function fillStripeAddressElement(page: Page) {
-  // Wait for address iframe
-  const addressFrame = page.frameLocator('iframe[name*="__privateStripeFrame"]').nth(1);
-
-  // Fill address fields
-  await addressFrame.locator('[name="name"]').fill("Test User");
-  await addressFrame.locator('[name="addressLine1"]').fill("123 Test Street");
-  await addressFrame.locator('[name="locality"]').fill("London");
-  await addressFrame.locator('[name="postalCode"]').fill("SW1A 1AA");
 }
 
 test.describe("Checkout - Stripe Payment Flow", () => {

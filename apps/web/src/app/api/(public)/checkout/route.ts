@@ -1,6 +1,15 @@
 import { captureException } from "@sentry/nextjs";
 import Stripe from "stripe";
 
+import { CartItemVariant } from "~/contexts/CartContext";
+import { I18nFunction } from "~/features/ILRCalculator/ILRCalculator";
+import {
+  buildVariantLabel,
+  calculateTotals,
+  CheckoutTotals,
+  findVariant,
+  generateIdempotencyKey,
+} from "~/features/Shop/utils";
 import {
   CREATE_ORDER,
   DELETE_ORDER,
@@ -17,61 +26,17 @@ import {
   verifyCaptcha,
   withErrorHandling,
 } from "~/lib/api";
-import { auth } from "~/lib/auth";
-import {
-  buildVariantLabel,
-  CartItemVariant,
-  findVariant,
-  generateIdempotencyKey,
-  Product,
-  ProductVariant,
-} from "~/lib/checkout-logic";
-import {
-  calculateTotals,
-  CheckoutTotals,
-  EU_SHIPPING_MINOR,
-  FREE_SHIPPING_THRESHOLD_MINOR,
-  ROW_SHIPPING_MINOR,
-  ShippingCountry,
-  UK_SHIPPING_MINOR,
-} from "~/lib/checkout";
 import { privateConfig } from "~/lib/config/private";
 import { getAdminClient } from "~/lib/graphql/adminClient";
 import { CartItemRequest, checkoutSchema } from "~/lib/validation/checkout";
-
-// ============================================================================
-// Types
-// ============================================================================
+import { Product, ProductVariant, ShippingCountry, ValidatedItem } from "~/types";
 
 const stripe = new Stripe(privateConfig.stripe.secretKey);
-
-export interface ValidatedItem {
-  currency: string;
-  name: string;
-  priceMinor: number;
-  product: Product;
-  productId: string;
-  quantity: number;
-  variant?: ProductVariant;
-  variantLabel?: string;
-}
-
-interface ValidationError {
-  itemId: string;
-  message: string;
-  type: "currency_mismatch" | "not_found" | "out_of_stock" | "price_changed";
-}
 
 interface CartValidationResult {
   errors: ValidationError[];
   primaryCurrency: string | undefined;
   validatedItems: ValidatedItem[];
-}
-
-interface ExistingOrder {
-  id: string;
-  payment_intent_id: string;
-  status: string;
 }
 
 interface CheckoutResponse {
@@ -92,13 +57,18 @@ interface CheckoutResponse {
   totalMinor: number;
 }
 
-// ============================================================================
-// Helper Functions
-// ============================================================================
+interface ExistingOrder {
+  id: string;
+  payment_intent_id: string;
+  status: string;
+}
 
-/**
- * Fetch products by IDs from the database.
- */
+interface ValidationError {
+  itemId: string;
+  message: string;
+  type: "currency_mismatch" | "not_found" | "out_of_stock" | "price_changed";
+}
+
 async function fetchProducts(productIds: string[]): Promise<Map<string, Product>> {
   const client = getAdminClient();
   const { data } = await client.query<{ products: Product[] }>({
@@ -114,7 +84,11 @@ async function fetchProducts(productIds: string[]): Promise<Map<string, Product>
  * Validate all cart items against current product data.
  * Checks: product exists, is active, currency matches, variant exists, stock available.
  */
-function validateCartItems(items: CartItemRequest[], productsMap: Map<string, Product>): CartValidationResult {
+function validateCartItems(
+  items: CartItemRequest[],
+  productsMap: Map<string, Product>,
+  i18n: I18nFunction,
+): CartValidationResult {
   const errors: ValidationError[] = [];
   const validatedItems: ValidatedItem[] = [];
   let primaryCurrency: string | undefined;
@@ -122,33 +96,33 @@ function validateCartItems(items: CartItemRequest[], productsMap: Map<string, Pr
   for (const item of items) {
     const product = productsMap.get(item.productId);
 
-    // Check if product exists and is active
     if (!product || product.status !== "ACTIVE") {
       errors.push({
         itemId: item.id,
-        message: "Product not found or unavailable",
+        message: i18n("Product not found or unavailable"),
         type: "not_found",
       });
       continue;
     }
 
-    // Set primary currency from first item
     if (!primaryCurrency) {
       primaryCurrency = product.currency;
     }
 
-    // Check currency consistency
     if (product.currency !== primaryCurrency) {
       errors.push({
         itemId: item.id,
-        message: `Currency mismatch: expected ${primaryCurrency}, got ${product.currency}`,
+        message: i18n("Currency mismatch: expected {expectedCurrency}, got {actualCurrency}", {
+          actualCurrency: product.currency,
+          expectedCurrency: primaryCurrency,
+        }),
         type: "currency_mismatch",
       });
       continue;
     }
 
     // Determine price and stock based on variant
-    let priceMinor: number | null = product.price_minor;
+    let priceMinor: null | number = product.price_minor;
     let stock: null | number = product.stock ?? null;
     let variant: ProductVariant | undefined;
 
@@ -158,7 +132,7 @@ function validateCartItems(items: CartItemRequest[], productsMap: Map<string, Pr
       if (!variant) {
         errors.push({
           itemId: item.id,
-          message: "Selected variant not available",
+          message: i18n("Selected variant not available"),
           type: "not_found",
         });
         continue;
@@ -177,7 +151,7 @@ function validateCartItems(items: CartItemRequest[], productsMap: Map<string, Pr
     if (priceMinor === null || priceMinor === undefined) {
       errors.push({
         itemId: item.id,
-        message: "Product price not configured",
+        message: i18n("Product price not configured"),
         type: "not_found",
       });
       continue;
@@ -187,7 +161,7 @@ function validateCartItems(items: CartItemRequest[], productsMap: Map<string, Pr
     if (stock !== null && stock < item.quantity) {
       errors.push({
         itemId: item.id,
-        message: stock === 0 ? "Out of stock" : `Only ${stock} available`,
+        message: stock === 0 ? i18n("Out of stock") : i18n("Only {stock} available", { stock }),
         type: "out_of_stock",
       });
       continue;
@@ -210,16 +184,13 @@ function validateCartItems(items: CartItemRequest[], productsMap: Map<string, Pr
   return { errors, primaryCurrency, validatedItems };
 }
 
-/**
- * Build the standard checkout response object.
- */
-function buildCheckoutResponse(
+const buildCheckoutResponse = (
   orderId: string,
   paymentIntent: { client_secret: null | string; id: string },
   currency: string,
   validatedItems: ValidatedItem[],
   totals: CheckoutTotals,
-): CheckoutResponse {
+) => {
   return {
     clientSecret: paymentIntent.client_secret,
     currency,
@@ -237,83 +208,151 @@ function buildCheckoutResponse(
     subtotalMinor: totals.subtotalMinor,
     totalMinor: totals.totalMinor,
   };
+};
+
+/**
+ * POST /api/checkout
+ *
+ * Validates cart items, checks stock/prices server-side, and creates a Stripe payment intent.
+ * Returns client secret for Stripe Elements and validated cart summary.
+ */
+export async function POST(req: Request) {
+  return withErrorHandling(async () => {
+    await rateLimiters.checkout.check();
+
+    const { i18n, locale, session } = await getApiContext(req, { withAuth: true, withI18n: true });
+
+    const { captchaToken, email, items, shippingCountry, website } = await validateRequest(req, checkoutSchema);
+    const destination: ShippingCountry = shippingCountry ?? "GB";
+
+    // Honeypot check: bots fill hidden fields, humans don't
+    if (website) {
+      throw new BadRequestError("Invalid submission");
+    }
+
+    await verifyCaptcha(captchaToken, "checkout");
+
+    const userId = session?.user?.id ?? null;
+
+    const productIds = [...new Set(items.map((item) => item.productId))];
+    const productsMap = await fetchProducts(productIds);
+
+    const { errors, primaryCurrency, validatedItems } = validateCartItems(items, productsMap, i18n);
+
+    if (errors.length > 0) {
+      throw new BadRequestError(i18n("Cart validation failed"), "CART_VALIDATION_FAILED", { errors });
+    }
+
+    if (!primaryCurrency) {
+      throw new BadRequestError(i18n("No valid items in cart"), "EMPTY_CART");
+    }
+
+    const totals = calculateTotals(validatedItems, destination);
+
+    // ========================================================================
+    // 4. Idempotency Check
+    // ========================================================================
+    const idempotencyKey = generateIdempotencyKey(email, items, destination);
+
+    interface ExistingOrderResponse {
+      orders: ExistingOrder[];
+    }
+
+    const client = getAdminClient();
+    const { data: existingOrderData } = await client.query<ExistingOrderResponse>({
+      fetchPolicy: "network-only",
+      query: GET_ORDER_BY_IDEMPOTENCY_KEY,
+      variables: { idempotencyKey },
+    });
+
+    const existingOrder = existingOrderData.orders[0];
+
+    // ========================================================================
+    // 5. Handle Existing Order or Create New
+    // ========================================================================
+    if (existingOrder) {
+      const response = await handleExistingOrder(
+        existingOrder,
+        primaryCurrency,
+        validatedItems,
+        totals,
+        destination,
+        email,
+        locale,
+      );
+      if (response) {
+        return Response.json(response);
+      }
+    }
+
+    // ========================================================================
+    // 6. Create New Order
+    // ========================================================================
+    const response = await createNewOrder(
+      validatedItems,
+      totals,
+      primaryCurrency,
+      email,
+      idempotencyKey,
+      userId,
+      locale,
+      destination,
+    );
+
+    return Response.json(response);
+  });
 }
 
 /**
- * Handle existing order with idempotency key.
- * Returns response if order can be reused, null if new order needed.
+ * Clean up order after PaymentIntent creation failure.
  */
-async function handleExistingOrder(
-  existingOrder: ExistingOrder,
-  currency: string,
-  validatedItems: ValidatedItem[],
-  totals: CheckoutTotals,
-  shippingCountry: ShippingCountry,
-  email: string,
-  locale: string,
-): Promise<CheckoutResponse | null> {
-  // If order has a PaymentIntent, try to reuse it
-  if (existingOrder.payment_intent_id) {
-    try {
-      const existingPaymentIntent = await stripe.paymentIntents.retrieve(existingOrder.payment_intent_id);
-
-      // Handle processing state - payment is in progress, don't create duplicates
-      if (existingPaymentIntent.status === "processing") {
-        console.log(`[Checkout] PaymentIntent ${existingPaymentIntent.id} is processing, returning existing order`);
-        return buildCheckoutResponse(existingOrder.id, existingPaymentIntent, currency, validatedItems, totals);
-      }
-
-      // Reuse PaymentIntent if it's still awaiting customer action
-      if (
-        existingPaymentIntent.status === "requires_payment_method" ||
-        existingPaymentIntent.status === "requires_confirmation" ||
-        existingPaymentIntent.status === "requires_action"
-      ) {
-        console.log(`[Checkout] Returning existing order ${existingOrder.id} for idempotency key`);
-        return buildCheckoutResponse(existingOrder.id, existingPaymentIntent, currency, validatedItems, totals);
-      }
-
-      // PaymentIntent already succeeded
-      if (existingPaymentIntent.status === "succeeded") {
-        console.warn(
-          `[Checkout] Order ${existingOrder.id} already has succeeded PaymentIntent ${existingPaymentIntent.id}`,
-        );
-        return buildCheckoutResponse(existingOrder.id, existingPaymentIntent, currency, validatedItems, totals);
-      }
-    } catch {
-      // PaymentIntent doesn't exist or is invalid, will create new one
-      console.log(`[Checkout] Existing PaymentIntent invalid for order ${existingOrder.id}`);
-    }
-  }
-
-  // Order exists but needs new PaymentIntent
-  console.log(`[Checkout] Creating new PaymentIntent for existing order ${existingOrder.id}`);
-
-  const newPaymentIntent = await stripe.paymentIntents.create(
-    {
-      amount: totals.totalMinor,
-      automatic_payment_methods: { enabled: true },
-      currency: currency.toLowerCase(),
-      metadata: {
-        email,
-        itemCount: validatedItems.length.toString(),
-        locale,
-        orderId: existingOrder.id,
-        shippingCountry,
-        shippingMinor: totals.shippingMinor.toString(),
-      },
-    },
-    { idempotencyKey: `order_${existingOrder.id}_retry_${Date.now()}` },
-  );
-
-  // Update order with new payment_intent_id
-  const client = getAdminClient();
-  await client.mutate({
-    mutation: UPDATE_ORDER_PAYMENT_INTENT,
-    variables: { id: existingOrder.id, payment_intent_id: newPaymentIntent.id },
+async function cleanupFailedOrder(orderId: string, error: unknown): Promise<void> {
+  console.error(`[Checkout] PaymentIntent creation failed, deleting order ${orderId}:`, error);
+  captureException(error, {
+    extra: { orderId },
+    tags: { action: "checkout_pi_creation_failed" },
   });
 
-  return buildCheckoutResponse(existingOrder.id, newPaymentIntent, currency, validatedItems, totals);
+  try {
+    const client = getAdminClient();
+    await client.mutate({
+      mutation: DELETE_ORDER,
+      variables: { id: orderId },
+    });
+    console.log(`[Checkout] Cleaned up order ${orderId} after PI creation failure`);
+  } catch (cleanupError) {
+    console.error(`[Checkout] Failed to clean up order ${orderId}:`, cleanupError);
+    captureException(cleanupError, {
+      extra: { orderId },
+      tags: { action: "checkout_order_cleanup_failed" },
+    });
+  }
+}
+
+/**
+ * Clean up after order update failure - cancel PI and delete order.
+ */
+async function cleanupFailedPaymentIntent(orderId: string, paymentIntentId: string, error: unknown): Promise<void> {
+  console.error(`[Checkout] Failed to update order with PI, canceling PI:`, error);
+  captureException(error, {
+    extra: { orderId, paymentIntentId },
+    tags: { action: "checkout_order_update_failed" },
+  });
+
+  try {
+    await stripe.paymentIntents.cancel(paymentIntentId);
+    const client = getAdminClient();
+    await client.mutate({
+      mutation: DELETE_ORDER,
+      variables: { id: orderId },
+    });
+  } catch (cleanupError) {
+    console.error(`[Checkout] Cleanup failed:`, cleanupError);
+    captureException(cleanupError, {
+      extra: { orderId, paymentIntentId },
+      tags: { action: "checkout_cleanup_failed" },
+    });
+  }
 }
 
 /**
@@ -419,161 +458,83 @@ async function createNewOrder(
   return buildCheckoutResponse(orderId, paymentIntent, currency, validatedItems, totals);
 }
 
-/**
- * Clean up order after PaymentIntent creation failure.
- */
-async function cleanupFailedOrder(orderId: string, error: unknown): Promise<void> {
-  console.error(`[Checkout] PaymentIntent creation failed, deleting order ${orderId}:`, error);
-  captureException(error, {
-    extra: { orderId },
-    tags: { action: "checkout_pi_creation_failed" },
-  });
-
-  try {
-    const client = getAdminClient();
-    await client.mutate({
-      mutation: DELETE_ORDER,
-      variables: { id: orderId },
-    });
-    console.log(`[Checkout] Cleaned up order ${orderId} after PI creation failure`);
-  } catch (cleanupError) {
-    console.error(`[Checkout] Failed to clean up order ${orderId}:`, cleanupError);
-    captureException(cleanupError, {
-      extra: { orderId },
-      tags: { action: "checkout_order_cleanup_failed" },
-    });
-  }
-}
-
-/**
- * Clean up after order update failure - cancel PI and delete order.
- */
-async function cleanupFailedPaymentIntent(orderId: string, paymentIntentId: string, error: unknown): Promise<void> {
-  console.error(`[Checkout] Failed to update order with PI, canceling PI:`, error);
-  captureException(error, {
-    extra: { orderId, paymentIntentId },
-    tags: { action: "checkout_order_update_failed" },
-  });
-
-  try {
-    await stripe.paymentIntents.cancel(paymentIntentId);
-    const client = getAdminClient();
-    await client.mutate({
-      mutation: DELETE_ORDER,
-      variables: { id: orderId },
-    });
-  } catch (cleanupError) {
-    console.error(`[Checkout] Cleanup failed:`, cleanupError);
-    captureException(cleanupError, {
-      extra: { orderId, paymentIntentId },
-      tags: { action: "checkout_cleanup_failed" },
-    });
-  }
-}
-
 // ============================================================================
 // POST Handler
 // ============================================================================
 
 /**
- * POST /api/checkout
- *
- * Validates cart items, checks stock/prices server-side, and creates a Stripe payment intent.
- * Returns client secret for Stripe Elements and validated cart summary.
+ * Handle existing order with idempotency key.
+ * Returns response if order can be reused, null if new order needed.
  */
-export async function POST(req: Request) {
-  return withErrorHandling(async () => {
-    // ========================================================================
-    // 1. Security & Input Validation
-    // ========================================================================
-    await rateLimiters.checkout.check();
+async function handleExistingOrder(
+  existingOrder: ExistingOrder,
+  currency: string,
+  validatedItems: ValidatedItem[],
+  totals: CheckoutTotals,
+  shippingCountry: ShippingCountry,
+  email: string,
+  locale: string,
+): Promise<CheckoutResponse | null> {
+  // If order has a PaymentIntent, try to reuse it
+  if (existingOrder.payment_intent_id) {
+    try {
+      const existingPaymentIntent = await stripe.paymentIntents.retrieve(existingOrder.payment_intent_id);
 
-    const { locale } = await getApiContext(req);
-    const { captchaToken, email, items, shippingCountry, website } = await validateRequest(req, checkoutSchema);
-    const destination: ShippingCountry = shippingCountry ?? "GB";
-
-    // Honeypot check: bots fill hidden fields, humans don't
-    if (website) {
-      throw new BadRequestError("Invalid submission");
-    }
-
-    await verifyCaptcha(captchaToken, "checkout");
-
-    // Get authenticated user if available (optional - checkout works for guests)
-    const session = await auth();
-    const userId = session?.user?.id ?? null;
-
-    // ========================================================================
-    // 2. Data Fetching
-    // ========================================================================
-    const productIds = [...new Set(items.map((item) => item.productId))];
-    const productsMap = await fetchProducts(productIds);
-
-    // ========================================================================
-    // 3. Cart Validation
-    // ========================================================================
-    const { errors, primaryCurrency, validatedItems } = validateCartItems(items, productsMap);
-
-    if (errors.length > 0) {
-      throw new BadRequestError("Cart validation failed", "CART_VALIDATION_FAILED", { errors });
-    }
-
-    if (!primaryCurrency) {
-      throw new BadRequestError("No valid items in cart", "EMPTY_CART");
-    }
-
-    const totals = calculateTotals(validatedItems, destination);
-
-    // ========================================================================
-    // 4. Idempotency Check
-    // ========================================================================
-    const idempotencyKey = generateIdempotencyKey(email, items, destination);
-
-    interface ExistingOrderResponse {
-      orders: ExistingOrder[];
-    }
-
-    const client = getAdminClient();
-    const { data: existingOrderData } = await client.query<ExistingOrderResponse>({
-      fetchPolicy: "network-only",
-      query: GET_ORDER_BY_IDEMPOTENCY_KEY,
-      variables: { idempotencyKey },
-    });
-
-    const existingOrder = existingOrderData.orders[0];
-
-    // ========================================================================
-    // 5. Handle Existing Order or Create New
-    // ========================================================================
-    if (existingOrder) {
-      const response = await handleExistingOrder(
-        existingOrder,
-        primaryCurrency,
-        validatedItems,
-        totals,
-        destination,
-        email,
-        locale,
-      );
-      if (response) {
-        return Response.json(response);
+      // Handle processing state - payment is in progress, don't create duplicates
+      if (existingPaymentIntent.status === "processing") {
+        console.log(`[Checkout] PaymentIntent ${existingPaymentIntent.id} is processing, returning existing order`);
+        return buildCheckoutResponse(existingOrder.id, existingPaymentIntent, currency, validatedItems, totals);
       }
+
+      // Reuse PaymentIntent if it's still awaiting customer action
+      if (
+        existingPaymentIntent.status === "requires_payment_method" ||
+        existingPaymentIntent.status === "requires_confirmation" ||
+        existingPaymentIntent.status === "requires_action"
+      ) {
+        console.log(`[Checkout] Returning existing order ${existingOrder.id} for idempotency key`);
+        return buildCheckoutResponse(existingOrder.id, existingPaymentIntent, currency, validatedItems, totals);
+      }
+
+      // PaymentIntent already succeeded
+      if (existingPaymentIntent.status === "succeeded") {
+        console.warn(
+          `[Checkout] Order ${existingOrder.id} already has succeeded PaymentIntent ${existingPaymentIntent.id}`,
+        );
+        return buildCheckoutResponse(existingOrder.id, existingPaymentIntent, currency, validatedItems, totals);
+      }
+    } catch {
+      // PaymentIntent doesn't exist or is invalid, will create new one
+      console.log(`[Checkout] Existing PaymentIntent invalid for order ${existingOrder.id}`);
     }
+  }
 
-    // ========================================================================
-    // 6. Create New Order
-    // ========================================================================
-    const response = await createNewOrder(
-      validatedItems,
-      totals,
-      primaryCurrency,
-      email,
-      idempotencyKey,
-      userId,
-      locale,
-      destination,
-    );
+  // Order exists but needs new PaymentIntent
+  console.log(`[Checkout] Creating new PaymentIntent for existing order ${existingOrder.id}`);
 
-    return Response.json(response);
+  const newPaymentIntent = await stripe.paymentIntents.create(
+    {
+      amount: totals.totalMinor,
+      automatic_payment_methods: { enabled: true },
+      currency: currency.toLowerCase(),
+      metadata: {
+        email,
+        itemCount: validatedItems.length.toString(),
+        locale,
+        orderId: existingOrder.id,
+        shippingCountry,
+        shippingMinor: totals.shippingMinor.toString(),
+      },
+    },
+    { idempotencyKey: `order_${existingOrder.id}_retry_${Date.now()}` },
+  );
+
+  // Update order with new payment_intent_id
+  const client = getAdminClient();
+  await client.mutate({
+    mutation: UPDATE_ORDER_PAYMENT_INTENT,
+    variables: { id: existingOrder.id, payment_intent_id: newPaymentIntent.id },
   });
+
+  return buildCheckoutResponse(existingOrder.id, newPaymentIntent, currency, validatedItems, totals);
 }

@@ -24,6 +24,17 @@ interface OrderItem {
   variant_id: null | string;
 }
 
+interface PaymentNotificationData {
+  currency: string;
+  customerEmail: string;
+  items: OrderItem[];
+  orderId: string;
+  partial?: boolean;
+  paymentIntentId: string;
+  shipping?: ShippingAddress;
+  totalMinor: number;
+}
+
 interface ShippingAddress {
   city?: string;
   country?: string;
@@ -33,28 +44,6 @@ interface ShippingAddress {
   phone?: string;
   postalCode?: string;
   state?: string;
-}
-
-interface PaymentNotificationData {
-  currency: string;
-  customerEmail: string;
-  items: OrderItem[];
-  orderId: string;
-  paymentIntentId: string;
-  shipping?: ShippingAddress;
-  totalMinor: number;
-  partial?: boolean;
-}
-
-/**
- * Format price from minor units (cents) to display format.
- */
-function formatPrice(amountMinor: number, currency: string): string {
-  const amount = amountMinor / 100;
-  return new Intl.NumberFormat("en-GB", {
-    currency: currency.toUpperCase(),
-    style: "currency",
-  }).format(amount);
 }
 
 /**
@@ -173,8 +162,8 @@ export async function sendPaymentNotification({
 export async function sendRefundNotification({
   currency,
   customerEmail,
-  partial = false,
   orderId,
+  partial = false,
   paymentIntentId,
   totalMinor,
 }: Omit<PaymentNotificationData, "items">): Promise<void> {
@@ -235,4 +224,15 @@ export async function sendRefundNotification({
   } catch (error) {
     console.error(`[Slack] Failed to send refund notification for order ${orderId}:`, error);
   }
+}
+
+/**
+ * Format price from minor units (cents) to display format.
+ */
+function formatPrice(amountMinor: number, currency: string): string {
+  const amount = amountMinor / 100;
+  return new Intl.NumberFormat("en-GB", {
+    currency: currency.toUpperCase(),
+    style: "currency",
+  }).format(amount);
 }

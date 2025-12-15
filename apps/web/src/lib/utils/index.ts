@@ -7,6 +7,7 @@ export * from "./geo";
 export * from "./locale";
 export * from "./phone-number";
 export * from "./platform";
+export * from "./slug";
 export * from "./storage";
 export * from "./string";
 export * from "./url";

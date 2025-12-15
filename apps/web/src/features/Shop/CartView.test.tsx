@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import Image from "next/image";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { CartItem } from "~/contexts/CartContext";
@@ -62,7 +63,7 @@ vi.mock("~/components/ui", async () => {
         <p>{body}</p>
       </div>
     ),
-    FallbackImage: ({ alt, src }: { alt: string; src: string }) => <img alt={alt} src={src} />,
+    FallbackImage: ({ alt, src }: { alt: string; src: string }) => <Image alt={alt} src={src} />,
   };
 });
 
