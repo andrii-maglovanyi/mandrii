@@ -96,5 +96,12 @@ export const getEventsFilter = ({
     ];
   }
 
-  return { variables: { where } };
+  return {
+    variables: {
+      where,
+      whereTotal: {
+        _or: [{ start_date: { _gte: now } }, { end_date: { _gte: now } }],
+      },
+    },
+  };
 };

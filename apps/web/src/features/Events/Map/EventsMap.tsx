@@ -99,8 +99,8 @@ export const EventsMap = () => {
   });
 
   const { handleFilter, listState } = useListControls({
+    ...variables,
     limit: 50,
-    where: variables.where,
   });
   const { usePublicEvents } = useEvents();
 
