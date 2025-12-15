@@ -1,6 +1,3 @@
-import { gql } from "@apollo/client";
-import * as Apollo from "@apollo/client";
-
 import { Geography } from "./geography";
 import { Geometry } from "./geometry";
 import { Json } from "./json";
@@ -8,1236 +5,109 @@ import { Numeric } from "./numeric";
 import { Time } from "./timestamp";
 import { Timestamp } from "./timestamp";
 import { UUID } from "./uuid";
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type Incremental<T> = { [P in keyof T]?: P extends "__typename" | " $fragmentName" ? T[P] : never } | T;
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
+export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type MakeMaybe<T, K extends keyof T> = { [SubKey in K]: Maybe<T[SubKey]> } & Omit<T, K>;
-export type MakeOptional<T, K extends keyof T> = { [SubKey in K]?: Maybe<T[SubKey]> } & Omit<T, K>;
-export type Maybe<T> = null | T;
+export type Incremental<T> = T | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
 const defaultOptions = {} as const;
-/** unique or primary key constraints on table "accounts" */
-export enum Accounts_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  AccountsPkey = "accounts_pkey",
-}
-
-/** select columns of table "accounts" */
-export enum Accounts_Select_Column {
-  /** column name */
-  AccessToken = "access_token",
-  /** column name */
-  ExpiresAt = "expires_at",
-  /** column name */
-  Id = "id",
-  /** column name */
-  IdToken = "id_token",
-  /** column name */
-  Provider = "provider",
-  /** column name */
-  ProviderAccountId = "providerAccountId",
-  /** column name */
-  RefreshToken = "refresh_token",
-  /** column name */
-  Scope = "scope",
-  /** column name */
-  SessionState = "session_state",
-  /** column name */
-  TokenType = "token_type",
-  /** column name */
-  Type = "type",
-  /** column name */
-  UserId = "userId",
-}
-
-/** update columns of table "accounts" */
-export enum Accounts_Update_Column {
-  /** column name */
-  AccessToken = "access_token",
-  /** column name */
-  ExpiresAt = "expires_at",
-  /** column name */
-  Id = "id",
-  /** column name */
-  IdToken = "id_token",
-  /** column name */
-  Provider = "provider",
-  /** column name */
-  ProviderAccountId = "providerAccountId",
-  /** column name */
-  RefreshToken = "refresh_token",
-  /** column name */
-  Scope = "scope",
-  /** column name */
-  SessionState = "session_state",
-  /** column name */
-  TokenType = "token_type",
-  /** column name */
-  Type = "type",
-  /** column name */
-  UserId = "userId",
-}
-
-/** unique or primary key constraints on table "chains" */
-export enum Chains_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  ChainsPkey = "chains_pkey",
-  /** unique or primary key constraint on columns "slug" */
-  ChainsSlugKey = "chains_slug_key",
-}
-
-/** select columns of table "chains" */
-export enum Chains_Select_Column {
-  /** column name */
-  ChainId = "chain_id",
-  /** column name */
-  City = "city",
-  /** column name */
-  Country = "country",
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  DescriptionEn = "description_en",
-  /** column name */
-  DescriptionUk = "description_uk",
-  /** column name */
-  Emails = "emails",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Logo = "logo",
-  /** column name */
-  Name = "name",
-  /** column name */
-  OwnerId = "owner_id",
-  /** column name */
-  PhoneNumbers = "phone_numbers",
-  /** column name */
-  Slug = "slug",
-  /** column name */
-  SocialLinks = "social_links",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  UserId = "user_id",
-  /** column name */
-  Website = "website",
-}
-
-/** update columns of table "chains" */
-export enum Chains_Update_Column {
-  /** column name */
-  ChainId = "chain_id",
-  /** column name */
-  City = "city",
-  /** column name */
-  Country = "country",
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  DescriptionEn = "description_en",
-  /** column name */
-  DescriptionUk = "description_uk",
-  /** column name */
-  Emails = "emails",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Logo = "logo",
-  /** column name */
-  Name = "name",
-  /** column name */
-  OwnerId = "owner_id",
-  /** column name */
-  PhoneNumbers = "phone_numbers",
-  /** column name */
-  Slug = "slug",
-  /** column name */
-  SocialLinks = "social_links",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  UserId = "user_id",
-  /** column name */
-  Website = "website",
-}
-
-/** ordering argument of a cursor */
-export enum Cursor_Ordering {
-  /** ascending ordering of the cursor */
-  Asc = "ASC",
-  /** descending ordering of the cursor */
-  Desc = "DESC",
-}
-
-/** unique or primary key constraints on table "event_status" */
-export enum Event_Status_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  EventStatusPkey = "event_status_pkey",
-}
-
-export enum Event_Status_Enum {
-  /** Published and visible to public */
-  Active = "ACTIVE",
-  /** Event is archived and hidden */
-  Archived = "ARCHIVED",
-  /** Event has been cancelled */
-  Cancelled = "CANCELLED",
-  /** Event has already occurred */
-  Completed = "COMPLETED",
-  /** Draft event not yet submitted */
-  Draft = "DRAFT",
-  /** Awaiting moderation approval */
-  Pending = "PENDING",
-  /** Event has been postponed to new date */
-  Postponed = "POSTPONED",
-}
-
-/** select columns of table "event_status" */
-export enum Event_Status_Select_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** update columns of table "event_status" */
-export enum Event_Status_Update_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** unique or primary key constraints on table "event_tags" */
-export enum Event_Tags_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  EventTagsPkey = "event_tags_pkey",
-  /** unique or primary key constraint on columns "slug" */
-  EventTagsSlugKey = "event_tags_slug_key",
-}
-
-/** select columns of table "event_tags" */
-export enum Event_Tags_Select_Column {
-  /** column name */
-  Category = "category",
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  Id = "id",
-  /** column name */
-  NameEn = "name_en",
-  /** column name */
-  NameUk = "name_uk",
-  /** column name */
-  Slug = "slug",
-  /** column name */
-  UpdatedAt = "updated_at",
-}
-
-/** update columns of table "event_tags" */
-export enum Event_Tags_Update_Column {
-  /** column name */
-  Category = "category",
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  Id = "id",
-  /** column name */
-  NameEn = "name_en",
-  /** column name */
-  NameUk = "name_uk",
-  /** column name */
-  Slug = "slug",
-  /** column name */
-  UpdatedAt = "updated_at",
-}
-
-/** unique or primary key constraints on table "event_type" */
-export enum Event_Type_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  EventTypePkey = "event_type_pkey",
-}
-
-export enum Event_Type_Enum {
-  /** Celebration or party */
-  Celebration = "CELEBRATION",
-  /** Charity or fundraising event */
-  Charity = "CHARITY",
-  /** Music concert or performance */
-  Concert = "CONCERT",
-  /** Conference or seminar */
-  Conference = "CONFERENCE",
-  /** Art or cultural exhibition */
-  Exhibition = "EXHIBITION",
-  /** Festival or large-scale event */
-  Festival = "FESTIVAL",
-  /** Informal gathering or meetup */
-  Gathering = "GATHERING",
-  /** Other type of event */
-  Other = "OTHER",
-  /** Film or video screening */
-  Screening = "SCREENING",
-  /** Sports event or activity */
-  Sports = "SPORTS",
-  /** Theater performance */
-  Theater = "THEATER",
-  /** Educational workshop or class */
-  Workshop = "WORKSHOP",
-}
-
-/** select columns of table "event_type" */
-export enum Event_Type_Select_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** update columns of table "event_type" */
-export enum Event_Type_Update_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** unique or primary key constraints on table "events" */
-export enum Events_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  EventsPkey = "events_pkey",
-  /** unique or primary key constraint on columns "slug" */
-  EventsSlugKey = "events_slug_key",
-}
-
-/** unique or primary key constraints on table "events_event_tags" */
-export enum Events_Event_Tags_Constraint {
-  /** unique or primary key constraint on columns "tag_id", "event_id" */
-  EventsEventTagsPkey = "events_event_tags_pkey",
-}
-
-/** select columns of table "events_event_tags" */
-export enum Events_Event_Tags_Select_Column {
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  EventId = "event_id",
-  /** column name */
-  TagId = "tag_id",
-}
-
-/** update columns of table "events_event_tags" */
-export enum Events_Event_Tags_Update_Column {
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  EventId = "event_id",
-  /** column name */
-  TagId = "tag_id",
-}
-
-/** select columns of table "events" */
-export enum Events_Select_Column {
-  /** column name */
-  AccessibilityInfo = "accessibility_info",
-  /** column name */
-  AgeRestriction = "age_restriction",
-  /** column name */
-  Area = "area",
-  /** column name */
-  Capacity = "capacity",
-  /** column name */
-  City = "city",
-  /** column name */
-  Country = "country",
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  CustomLocationAddress = "custom_location_address",
-  /** column name */
-  CustomLocationName = "custom_location_name",
-  /** column name */
-  DescriptionEn = "description_en",
-  /** column name */
-  DescriptionUk = "description_uk",
-  /** column name */
-  EndDate = "end_date",
-  /** column name */
-  ExternalUrl = "external_url",
-  /** column name */
-  Geo = "geo",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Images = "images",
-  /** column name */
-  IsOnline = "is_online",
-  /** column name */
-  IsRecurring = "is_recurring",
-  /** column name */
-  Language = "language",
-  /** column name */
-  OrganizerEmail = "organizer_email",
-  /** column name */
-  OrganizerName = "organizer_name",
-  /** column name */
-  OrganizerPhoneNumber = "organizer_phone_number",
-  /** column name */
-  OwnerId = "owner_id",
-  /** column name */
-  PriceAmount = "price_amount",
-  /** column name */
-  PriceCurrency = "price_currency",
-  /** column name */
-  PriceType = "price_type",
-  /** column name */
-  RecurrenceRule = "recurrence_rule",
-  /** column name */
-  RegistrationRequired = "registration_required",
-  /** column name */
-  RegistrationUrl = "registration_url",
-  /** column name */
-  Slug = "slug",
-  /** column name */
-  SocialLinks = "social_links",
-  /** column name */
-  StartDate = "start_date",
-  /** column name */
-  Status = "status",
-  /** column name */
-  TitleEn = "title_en",
-  /** column name */
-  TitleUk = "title_uk",
-  /** column name */
-  Type = "type",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  UserId = "user_id",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** select "events_aggregate_bool_exp_bool_and_arguments_columns" columns of table "events" */
-export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  IsOnline = "is_online",
-  /** column name */
-  IsRecurring = "is_recurring",
-  /** column name */
-  RegistrationRequired = "registration_required",
-}
-
-/** select "events_aggregate_bool_exp_bool_or_arguments_columns" columns of table "events" */
-export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  IsOnline = "is_online",
-  /** column name */
-  IsRecurring = "is_recurring",
-  /** column name */
-  RegistrationRequired = "registration_required",
-}
-
-/** update columns of table "events" */
-export enum Events_Update_Column {
-  /** column name */
-  AccessibilityInfo = "accessibility_info",
-  /** column name */
-  AgeRestriction = "age_restriction",
-  /** column name */
-  Area = "area",
-  /** column name */
-  Capacity = "capacity",
-  /** column name */
-  City = "city",
-  /** column name */
-  Country = "country",
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  CustomLocationAddress = "custom_location_address",
-  /** column name */
-  CustomLocationName = "custom_location_name",
-  /** column name */
-  DescriptionEn = "description_en",
-  /** column name */
-  DescriptionUk = "description_uk",
-  /** column name */
-  EndDate = "end_date",
-  /** column name */
-  ExternalUrl = "external_url",
-  /** column name */
-  Geo = "geo",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Images = "images",
-  /** column name */
-  IsOnline = "is_online",
-  /** column name */
-  IsRecurring = "is_recurring",
-  /** column name */
-  Language = "language",
-  /** column name */
-  OrganizerEmail = "organizer_email",
-  /** column name */
-  OrganizerName = "organizer_name",
-  /** column name */
-  OrganizerPhoneNumber = "organizer_phone_number",
-  /** column name */
-  OwnerId = "owner_id",
-  /** column name */
-  PriceAmount = "price_amount",
-  /** column name */
-  PriceCurrency = "price_currency",
-  /** column name */
-  PriceType = "price_type",
-  /** column name */
-  RecurrenceRule = "recurrence_rule",
-  /** column name */
-  RegistrationRequired = "registration_required",
-  /** column name */
-  RegistrationUrl = "registration_url",
-  /** column name */
-  Slug = "slug",
-  /** column name */
-  SocialLinks = "social_links",
-  /** column name */
-  StartDate = "start_date",
-  /** column name */
-  Status = "status",
-  /** column name */
-  TitleEn = "title_en",
-  /** column name */
-  TitleUk = "title_uk",
-  /** column name */
-  Type = "type",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  UserId = "user_id",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** column ordering options */
-export enum Order_By {
-  /** in ascending order, nulls last */
-  Asc = "asc",
-  /** in ascending order, nulls first */
-  AscNullsFirst = "asc_nulls_first",
-  /** in ascending order, nulls last */
-  AscNullsLast = "asc_nulls_last",
-  /** in descending order, nulls first */
-  Desc = "desc",
-  /** in descending order, nulls first */
-  DescNullsFirst = "desc_nulls_first",
-  /** in descending order, nulls last */
-  DescNullsLast = "desc_nulls_last",
-}
-
-/** unique or primary key constraints on table "price_type" */
-export enum Price_Type_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  PriceTypePkey = "price_type_pkey",
-}
-
-export enum Price_Type_Enum {
-  /** Donation-based event */
-  Donation = "DONATION",
-  /** Free event with no cost */
-  Free = "FREE",
-  /** Paid event with fixed ticket price */
-  Paid = "PAID",
-  /** Event with suggested donation amount */
-  SuggestedDonation = "SUGGESTED_DONATION",
-}
-
-/** select columns of table "price_type" */
-export enum Price_Type_Select_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** update columns of table "price_type" */
-export enum Price_Type_Update_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** unique or primary key constraints on table "provider_type" */
-export enum Provider_Type_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  ProviderTypePkey = "provider_type_pkey",
-}
-
-/** select columns of table "provider_type" */
-export enum Provider_Type_Select_Column {
-  /** column name */
-  Value = "value",
-}
-
-/** update columns of table "provider_type" */
-export enum Provider_Type_Update_Column {
-  /** column name */
-  Value = "value",
-}
-
-/** unique or primary key constraints on table "sessions" */
-export enum Sessions_Constraint {
-  /** unique or primary key constraint on columns "sessionToken" */
-  SessionsPkey = "sessions_pkey",
-}
-
-/** select columns of table "sessions" */
-export enum Sessions_Select_Column {
-  /** column name */
-  Expires = "expires",
-  /** column name */
-  Id = "id",
-  /** column name */
-  SessionToken = "sessionToken",
-  /** column name */
-  UserId = "userId",
-}
-
-/** update columns of table "sessions" */
-export enum Sessions_Update_Column {
-  /** column name */
-  Expires = "expires",
-  /** column name */
-  Id = "id",
-  /** column name */
-  SessionToken = "sessionToken",
-  /** column name */
-  UserId = "userId",
-}
-
-/** unique or primary key constraints on table "user_role" */
-export enum User_Role_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  UserRolePkey = "user_role_pkey",
-}
-
-export enum User_Role_Enum {
-  /** Administrator with full access */
-  Admin = "admin",
-  /** Regular user with standard access */
-  User = "user",
-}
-
-/** select columns of table "user_role" */
-export enum User_Role_Select_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** update columns of table "user_role" */
-export enum User_Role_Update_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** unique or primary key constraints on table "user_status" */
-export enum User_Status_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  UserStatusPkey = "user_status_pkey",
-}
-
-export enum User_Status_Enum {
-  /** Currently active and able to log in */
-  Active = "active",
-  /** Inactive but can be reactivated */
-  Inactive = "inactive",
-}
-
-/** select columns of table "user_status" */
-export enum User_Status_Select_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** update columns of table "user_status" */
-export enum User_Status_Update_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** unique or primary key constraints on table "users" */
-export enum Users_Constraint {
-  /** unique or primary key constraint on columns "email" */
-  UsersEmailKey = "users_email_key",
-  /** unique or primary key constraint on columns "id" */
-  UsersPkey = "users_pkey",
-}
-
-/** select columns of table "users" */
-export enum Users_Select_Column {
-  /** column name */
-  City = "city",
-  /** column name */
-  Email = "email",
-  /** column name */
-  EmailVerified = "emailVerified",
-  /** column name */
-  EventsCreated = "events_created",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Image = "image",
-  /** column name */
-  IsVerifiedContributor = "is_verified_contributor",
-  /** column name */
-  LastActivityAt = "last_activity_at",
-  /** column name */
-  Level = "level",
-  /** column name */
-  Name = "name",
-  /** column name */
-  Points = "points",
-  /** column name */
-  ReviewsCreated = "reviews_created",
-  /** column name */
-  Role = "role",
-  /** column name */
-  Status = "status",
-  /** column name */
-  ThankYouCount = "thank_you_count",
-  /** column name */
-  VenuesCreated = "venues_created",
-}
-
-/** select "users_aggregate_bool_exp_bool_and_arguments_columns" columns of table "users" */
-export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  IsVerifiedContributor = "is_verified_contributor",
-}
-
-/** select "users_aggregate_bool_exp_bool_or_arguments_columns" columns of table "users" */
-export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  IsVerifiedContributor = "is_verified_contributor",
-}
-
-/** update columns of table "users" */
-export enum Users_Update_Column {
-  /** column name */
-  City = "city",
-  /** column name */
-  Email = "email",
-  /** column name */
-  EmailVerified = "emailVerified",
-  /** column name */
-  EventsCreated = "events_created",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Image = "image",
-  /** column name */
-  IsVerifiedContributor = "is_verified_contributor",
-  /** column name */
-  LastActivityAt = "last_activity_at",
-  /** column name */
-  Level = "level",
-  /** column name */
-  Name = "name",
-  /** column name */
-  Points = "points",
-  /** column name */
-  ReviewsCreated = "reviews_created",
-  /** column name */
-  Role = "role",
-  /** column name */
-  Status = "status",
-  /** column name */
-  ThankYouCount = "thank_you_count",
-  /** column name */
-  VenuesCreated = "venues_created",
-}
-
-/** unique or primary key constraints on table "venue_accommodation_details" */
-export enum Venue_Accommodation_Details_Constraint {
-  /** unique or primary key constraint on columns "venue_id" */
-  VenueAccommodationDetailsPkey = "venue_accommodation_details_pkey",
-}
-
-/** select columns of table "venue_accommodation_details" */
-export enum Venue_Accommodation_Details_Select_Column {
-  /** column name */
-  Amenities = "amenities",
-  /** column name */
-  Bathrooms = "bathrooms",
-  /** column name */
-  Bedrooms = "bedrooms",
-  /** column name */
-  CheckInTime = "check_in_time",
-  /** column name */
-  CheckOutTime = "check_out_time",
-  /** column name */
-  MaxGuests = "max_guests",
-  /** column name */
-  MinimumStayNights = "minimum_stay_nights",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** update columns of table "venue_accommodation_details" */
-export enum Venue_Accommodation_Details_Update_Column {
-  /** column name */
-  Amenities = "amenities",
-  /** column name */
-  Bathrooms = "bathrooms",
-  /** column name */
-  Bedrooms = "bedrooms",
-  /** column name */
-  CheckInTime = "check_in_time",
-  /** column name */
-  CheckOutTime = "check_out_time",
-  /** column name */
-  MaxGuests = "max_guests",
-  /** column name */
-  MinimumStayNights = "minimum_stay_nights",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** unique or primary key constraints on table "venue_beauty_salon_details" */
-export enum Venue_Beauty_Salon_Details_Constraint {
-  /** unique or primary key constraint on columns "venue_id" */
-  VenueBeautySalonDetailsPkey = "venue_beauty_salon_details_pkey",
-}
-
-/** select columns of table "venue_beauty_salon_details" */
-export enum Venue_Beauty_Salon_Details_Select_Column {
-  /** column name */
-  AppointmentRequired = "appointment_required",
-  /** column name */
-  Services = "services",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-  /** column name */
-  WalkInsAccepted = "walk_ins_accepted",
-}
-
-/** select "venue_beauty_salon_details_aggregate_bool_exp_bool_and_arguments_columns" columns of table "venue_beauty_salon_details" */
-export enum Venue_Beauty_Salon_Details_Select_Column_Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  AppointmentRequired = "appointment_required",
-  /** column name */
-  WalkInsAccepted = "walk_ins_accepted",
-}
-
-/** select "venue_beauty_salon_details_aggregate_bool_exp_bool_or_arguments_columns" columns of table "venue_beauty_salon_details" */
-export enum Venue_Beauty_Salon_Details_Select_Column_Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  AppointmentRequired = "appointment_required",
-  /** column name */
-  WalkInsAccepted = "walk_ins_accepted",
-}
-
-/** update columns of table "venue_beauty_salon_details" */
-export enum Venue_Beauty_Salon_Details_Update_Column {
-  /** column name */
-  AppointmentRequired = "appointment_required",
-  /** column name */
-  Services = "services",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-  /** column name */
-  WalkInsAccepted = "walk_ins_accepted",
-}
-
-/** unique or primary key constraints on table "venue_category" */
-export enum Venue_Category_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  VenueCategoryPkey = "venue_category_pkey",
-}
-
-export enum Venue_Category_Enum {
-  Accommodation = "ACCOMMODATION",
-  BeautySalon = "BEAUTY_SALON",
-  Cafe = "CAFE",
-  Catering = "CATERING",
-  Church = "CHURCH",
-  Club = "CLUB",
-  CulturalCentre = "CULTURAL_CENTRE",
-  Delivery = "DELIVERY",
-  GroceryStore = "GROCERY_STORE",
-  LegalService = "LEGAL_SERVICE",
-  Library = "LIBRARY",
-  Medical = "MEDICAL",
-  Organization = "ORGANIZATION",
-  Restaurant = "RESTAURANT",
-  School = "SCHOOL",
-  Shop = "SHOP",
-}
-
-/** select columns of table "venue_category" */
-export enum Venue_Category_Select_Column {
-  /** column name */
-  Value = "value",
-}
-
-/** update columns of table "venue_category" */
-export enum Venue_Category_Update_Column {
-  /** column name */
-  Value = "value",
-}
-
-/** unique or primary key constraints on table "venue_restaurant_details" */
-export enum Venue_Restaurant_Details_Constraint {
-  /** unique or primary key constraint on columns "venue_id" */
-  VenueRestaurantDetailsPkey = "venue_restaurant_details_pkey",
-}
-
-/** select columns of table "venue_restaurant_details" */
-export enum Venue_Restaurant_Details_Select_Column {
-  /** column name */
-  CuisineTypes = "cuisine_types",
-  /** column name */
-  Features = "features",
-  /** column name */
-  PriceRange = "price_range",
-  /** column name */
-  SeatingCapacity = "seating_capacity",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** update columns of table "venue_restaurant_details" */
-export enum Venue_Restaurant_Details_Update_Column {
-  /** column name */
-  CuisineTypes = "cuisine_types",
-  /** column name */
-  Features = "features",
-  /** column name */
-  PriceRange = "price_range",
-  /** column name */
-  SeatingCapacity = "seating_capacity",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** unique or primary key constraints on table "venue_schedule" */
-export enum Venue_Schedule_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  VenueSchedulePkey = "venue_schedule_pkey",
-  /** unique or primary key constraint on columns "id", "venue_id", "day_of_week" */
-  VenueScheduleVenueIdDayOfWeekKey = "venue_schedule_venue_id_day_of_week_key",
-}
-
-/** select columns of table "venue_schedule" */
-export enum Venue_Schedule_Select_Column {
-  /** column name */
-  CloseTime = "close_time",
-  /** column name */
-  DayOfWeek = "day_of_week",
-  /** column name */
-  Id = "id",
-  /** column name */
-  OpenTime = "open_time",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** update columns of table "venue_schedule" */
-export enum Venue_Schedule_Update_Column {
-  /** column name */
-  CloseTime = "close_time",
-  /** column name */
-  DayOfWeek = "day_of_week",
-  /** column name */
-  Id = "id",
-  /** column name */
-  OpenTime = "open_time",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** unique or primary key constraints on table "venue_school_details" */
-export enum Venue_School_Details_Constraint {
-  /** unique or primary key constraint on columns "venue_id" */
-  VenueSchoolDetailsPkey = "venue_school_details_pkey",
-}
-
-/** select columns of table "venue_school_details" */
-export enum Venue_School_Details_Select_Column {
-  /** column name */
-  AgeGroups = "age_groups",
-  /** column name */
-  ClassSizeMax = "class_size_max",
-  /** column name */
-  LanguagesTaught = "languages_taught",
-  /** column name */
-  OnlineClassesAvailable = "online_classes_available",
-  /** column name */
-  Subjects = "subjects",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** select "venue_school_details_aggregate_bool_exp_bool_and_arguments_columns" columns of table "venue_school_details" */
-export enum Venue_School_Details_Select_Column_Venue_School_Details_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  OnlineClassesAvailable = "online_classes_available",
-}
-
-/** select "venue_school_details_aggregate_bool_exp_bool_or_arguments_columns" columns of table "venue_school_details" */
-export enum Venue_School_Details_Select_Column_Venue_School_Details_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  OnlineClassesAvailable = "online_classes_available",
-}
-
-/** update columns of table "venue_school_details" */
-export enum Venue_School_Details_Update_Column {
-  /** column name */
-  AgeGroups = "age_groups",
-  /** column name */
-  ClassSizeMax = "class_size_max",
-  /** column name */
-  LanguagesTaught = "languages_taught",
-  /** column name */
-  OnlineClassesAvailable = "online_classes_available",
-  /** column name */
-  Subjects = "subjects",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** unique or primary key constraints on table "venue_shop_details" */
-export enum Venue_Shop_Details_Constraint {
-  /** unique or primary key constraint on columns "venue_id" */
-  VenueShopDetailsPkey = "venue_shop_details_pkey",
-}
-
-/** select columns of table "venue_shop_details" */
-export enum Venue_Shop_Details_Select_Column {
-  /** column name */
-  PaymentMethods = "payment_methods",
-  /** column name */
-  ProductCategories = "product_categories",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** update columns of table "venue_shop_details" */
-export enum Venue_Shop_Details_Update_Column {
-  /** column name */
-  PaymentMethods = "payment_methods",
-  /** column name */
-  ProductCategories = "product_categories",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  VenueId = "venue_id",
-}
-
-/** unique or primary key constraints on table "venue_status" */
-export enum Venue_Status_Constraint {
-  /** unique or primary key constraint on columns "value" */
-  VenueStatusPkey = "venue_status_pkey",
-}
-
-export enum Venue_Status_Enum {
-  /** Verified and visible to the public */
-  Active = "ACTIVE",
-  /** No longer active but kept for reference */
-  Archived = "ARCHIVED",
-  /** Temporarily hidden from public view */
-  Hidden = "HIDDEN",
-  /** Submitted but not yet reviewed */
-  Pending = "PENDING",
-  /** Rejected by moderator/admin */
-  Rejected = "REJECTED",
-}
-
-/** select columns of table "venue_status" */
-export enum Venue_Status_Select_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** update columns of table "venue_status" */
-export enum Venue_Status_Update_Column {
-  /** column name */
-  Description = "description",
-  /** column name */
-  Value = "value",
-}
-
-/** unique or primary key constraints on table "venues" */
-export enum Venues_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  VenuePkey = "venue_pkey",
-  /** unique or primary key constraint on columns "slug" */
-  VenueSlugKey = "venue_slug_key",
-}
-
-/** select columns of table "venues" */
-export enum Venues_Select_Column {
-  /** column name */
-  Address = "address",
-  /** column name */
-  Area = "area",
-  /** column name */
-  Category = "category",
-  /** column name */
-  ChainId = "chain_id",
-  /** column name */
-  City = "city",
-  /** column name */
-  Country = "country",
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  DescriptionEn = "description_en",
-  /** column name */
-  DescriptionUk = "description_uk",
-  /** column name */
-  Emails = "emails",
-  /** column name */
-  Geo = "geo",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Images = "images",
-  /** column name */
-  Logo = "logo",
-  /** column name */
-  Name = "name",
-  /** column name */
-  OwnerId = "owner_id",
-  /** column name */
-  PhoneNumbers = "phone_numbers",
-  /** column name */
-  Postcode = "postcode",
-  /** column name */
-  Slug = "slug",
-  /** column name */
-  SocialLinks = "social_links",
-  /** column name */
-  Status = "status",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  UserId = "user_id",
-  /** column name */
-  Website = "website",
-}
-
-/** update columns of table "venues" */
-export enum Venues_Update_Column {
-  /** column name */
-  Address = "address",
-  /** column name */
-  Area = "area",
-  /** column name */
-  Category = "category",
-  /** column name */
-  ChainId = "chain_id",
-  /** column name */
-  City = "city",
-  /** column name */
-  Country = "country",
-  /** column name */
-  CreatedAt = "created_at",
-  /** column name */
-  DescriptionEn = "description_en",
-  /** column name */
-  DescriptionUk = "description_uk",
-  /** column name */
-  Emails = "emails",
-  /** column name */
-  Geo = "geo",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Images = "images",
-  /** column name */
-  Logo = "logo",
-  /** column name */
-  Name = "name",
-  /** column name */
-  OwnerId = "owner_id",
-  /** column name */
-  PhoneNumbers = "phone_numbers",
-  /** column name */
-  Postcode = "postcode",
-  /** column name */
-  Slug = "slug",
-  /** column name */
-  SocialLinks = "social_links",
-  /** column name */
-  Status = "status",
-  /** column name */
-  UpdatedAt = "updated_at",
-  /** column name */
-  UserId = "user_id",
-  /** column name */
-  Website = "website",
-}
-
-/** unique or primary key constraints on table "verification_tokens" */
-export enum Verification_Tokens_Constraint {
-  /** unique or primary key constraint on columns "token" */
-  VerificationTokensPkey = "verification_tokens_pkey",
-}
-
-/** select columns of table "verification_tokens" */
-export enum Verification_Tokens_Select_Column {
-  /** column name */
-  Expires = "expires",
-  /** column name */
-  Identifier = "identifier",
-  /** column name */
-  Token = "token",
-}
-
-/** update columns of table "verification_tokens" */
-export enum Verification_Tokens_Update_Column {
-  /** column name */
-  Expires = "expires",
-  /** column name */
-  Identifier = "identifier",
-  /** column name */
-  Token = "token",
-}
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  geography: { input: Geography; output: Geography };
+  geometry: { input: Geometry; output: Geometry };
+  json: { input: Json; output: Json };
+  jsonb: { input: Json; output: Json };
+  numeric: { input: Numeric; output: Numeric };
+  time: { input: Time; output: Time };
+  timestamp: { input: Timestamp; output: Timestamp };
+  timestamptz: { input: Timestamp; output: Timestamp };
+  uuid: { input: UUID; output: UUID };
+};
+
+/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
+export type Boolean_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _gt?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _gte?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["Boolean"]["input"]>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lte?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _neq?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["Boolean"]["input"]>>;
+};
+
+/** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
+export type Int_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars["Int"]["input"]>;
+  _gt?: InputMaybe<Scalars["Int"]["input"]>;
+  _gte?: InputMaybe<Scalars["Int"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["Int"]["input"]>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["Int"]["input"]>;
+  _lte?: InputMaybe<Scalars["Int"]["input"]>;
+  _neq?: InputMaybe<Scalars["Int"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["Int"]["input"]>>;
+};
+
+/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
+export type String_Array_Comparison_Exp = {
+  /** is the array contained in the given array value */
+  _contained_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  /** does the array contain the given value */
+  _contains?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _eq?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _gt?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _gte?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _in?: InputMaybe<Array<Array<Scalars["String"]["input"]>>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _lte?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _neq?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _nin?: InputMaybe<Array<Array<Scalars["String"]["input"]>>>;
+};
+
+/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
+export type String_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars["String"]["input"]>;
+  _gt?: InputMaybe<Scalars["String"]["input"]>;
+  _gte?: InputMaybe<Scalars["String"]["input"]>;
+  /** does the column match the given case-insensitive pattern */
+  _ilike?: InputMaybe<Scalars["String"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  /** does the column match the given POSIX regular expression, case insensitive */
+  _iregex?: InputMaybe<Scalars["String"]["input"]>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  /** does the column match the given pattern */
+  _like?: InputMaybe<Scalars["String"]["input"]>;
+  _lt?: InputMaybe<Scalars["String"]["input"]>;
+  _lte?: InputMaybe<Scalars["String"]["input"]>;
+  _neq?: InputMaybe<Scalars["String"]["input"]>;
+  /** does the column NOT match the given case-insensitive pattern */
+  _nilike?: InputMaybe<Scalars["String"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  /** does the column NOT match the given POSIX regular expression, case insensitive */
+  _niregex?: InputMaybe<Scalars["String"]["input"]>;
+  /** does the column NOT match the given pattern */
+  _nlike?: InputMaybe<Scalars["String"]["input"]>;
+  /** does the column NOT match the given POSIX regular expression, case sensitive */
+  _nregex?: InputMaybe<Scalars["String"]["input"]>;
+  /** does the column NOT match the given SQL regular expression */
+  _nsimilar?: InputMaybe<Scalars["String"]["input"]>;
+  /** does the column match the given POSIX regular expression, case sensitive */
+  _regex?: InputMaybe<Scalars["String"]["input"]>;
+  /** does the column match the given SQL regular expression */
+  _similar?: InputMaybe<Scalars["String"]["input"]>;
+};
 
 /** columns and relationships of "accounts" */
 export type Accounts = {
@@ -1247,9 +117,9 @@ export type Accounts = {
   id: Scalars["uuid"]["output"];
   id_token?: Maybe<Scalars["String"]["output"]>;
   provider: Scalars["String"]["output"];
+  providerAccountId: Scalars["String"]["output"];
   /** An object relationship */
   provider_type: Provider_Type;
-  providerAccountId: Scalars["String"]["output"];
   refresh_token?: Maybe<Scalars["String"]["output"]>;
   scope?: Maybe<Scalars["String"]["output"]>;
   session_state?: Maybe<Scalars["String"]["output"]>;
@@ -1343,8 +213,8 @@ export type Accounts_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   id_token?: InputMaybe<String_Comparison_Exp>;
   provider?: InputMaybe<String_Comparison_Exp>;
-  provider_type?: InputMaybe<Provider_Type_Bool_Exp>;
   providerAccountId?: InputMaybe<String_Comparison_Exp>;
+  provider_type?: InputMaybe<Provider_Type_Bool_Exp>;
   refresh_token?: InputMaybe<String_Comparison_Exp>;
   scope?: InputMaybe<String_Comparison_Exp>;
   session_state?: InputMaybe<String_Comparison_Exp>;
@@ -1353,6 +223,12 @@ export type Accounts_Bool_Exp = {
   user?: InputMaybe<Users_Bool_Exp>;
   userId?: InputMaybe<Uuid_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "accounts" */
+export enum Accounts_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AccountsPkey = "accounts_pkey",
+}
 
 /** input type for incrementing numeric columns in table "accounts" */
 export type Accounts_Inc_Input = {
@@ -1366,8 +242,8 @@ export type Accounts_Insert_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   id_token?: InputMaybe<Scalars["String"]["input"]>;
   provider?: InputMaybe<Scalars["String"]["input"]>;
-  provider_type?: InputMaybe<Provider_Type_Obj_Rel_Insert_Input>;
   providerAccountId?: InputMaybe<Scalars["String"]["input"]>;
+  provider_type?: InputMaybe<Provider_Type_Obj_Rel_Insert_Input>;
   refresh_token?: InputMaybe<Scalars["String"]["input"]>;
   scope?: InputMaybe<Scalars["String"]["input"]>;
   session_state?: InputMaybe<Scalars["String"]["input"]>;
@@ -1466,8 +342,8 @@ export type Accounts_Order_By = {
   id?: InputMaybe<Order_By>;
   id_token?: InputMaybe<Order_By>;
   provider?: InputMaybe<Order_By>;
-  provider_type?: InputMaybe<Provider_Type_Order_By>;
   providerAccountId?: InputMaybe<Order_By>;
+  provider_type?: InputMaybe<Provider_Type_Order_By>;
   refresh_token?: InputMaybe<Order_By>;
   scope?: InputMaybe<Order_By>;
   session_state?: InputMaybe<Order_By>;
@@ -1481,6 +357,34 @@ export type Accounts_Order_By = {
 export type Accounts_Pk_Columns_Input = {
   id: Scalars["uuid"]["input"];
 };
+
+/** select columns of table "accounts" */
+export enum Accounts_Select_Column {
+  /** column name */
+  AccessToken = "access_token",
+  /** column name */
+  ExpiresAt = "expires_at",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IdToken = "id_token",
+  /** column name */
+  Provider = "provider",
+  /** column name */
+  ProviderAccountId = "providerAccountId",
+  /** column name */
+  RefreshToken = "refresh_token",
+  /** column name */
+  Scope = "scope",
+  /** column name */
+  SessionState = "session_state",
+  /** column name */
+  TokenType = "token_type",
+  /** column name */
+  Type = "type",
+  /** column name */
+  UserId = "userId",
+}
 
 /** input type for updating data in table "accounts" */
 export type Accounts_Set_Input = {
@@ -1566,6 +470,34 @@ export type Accounts_Sum_Order_By = {
   expires_at?: InputMaybe<Order_By>;
 };
 
+/** update columns of table "accounts" */
+export enum Accounts_Update_Column {
+  /** column name */
+  AccessToken = "access_token",
+  /** column name */
+  ExpiresAt = "expires_at",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IdToken = "id_token",
+  /** column name */
+  Provider = "provider",
+  /** column name */
+  ProviderAccountId = "providerAccountId",
+  /** column name */
+  RefreshToken = "refresh_token",
+  /** column name */
+  Scope = "scope",
+  /** column name */
+  SessionState = "session_state",
+  /** column name */
+  TokenType = "token_type",
+  /** column name */
+  Type = "type",
+  /** column name */
+  UserId = "userId",
+}
+
 export type Accounts_Updates = {
   /** increments the numeric columns with given value of the filtered values */
   _inc?: InputMaybe<Accounts_Inc_Input>;
@@ -1608,34 +540,6 @@ export type Accounts_Variance_Order_By = {
   expires_at?: InputMaybe<Order_By>;
 };
 
-/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
-export type Boolean_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _gt?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _gte?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _in?: InputMaybe<Array<Scalars["Boolean"]["input"]>>;
-  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _lt?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _lte?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _neq?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _nin?: InputMaybe<Array<Scalars["Boolean"]["input"]>>;
-};
-
-export type ChainFieldsFragment = {
-  __typename?: "chains";
-  country?: null | string;
-  description_en?: null | string;
-  description_uk?: null | string;
-  emails?: Array<string> | null;
-  id: UUID;
-  logo?: null | string;
-  name: string;
-  phone_numbers?: Array<string> | null;
-  slug: string;
-  social_links: Json;
-  website?: null | string;
-};
-
 /** columns and relationships of "chains" */
 export type Chains = {
   __typename?: "chains";
@@ -1666,6 +570,47 @@ export type Chains = {
   /** An aggregate relationship */
   venues_aggregate: Venues_Aggregate;
   website?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsChainsArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsChains_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsSocial_LinksArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+/** columns and relationships of "chains" */
+export type ChainsVenues_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
 };
 
 /** aggregated selection of "chains" */
@@ -1742,6 +687,14 @@ export type Chains_Bool_Exp = {
   venues_aggregate?: InputMaybe<Venues_Aggregate_Bool_Exp>;
   website?: InputMaybe<String_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "chains" */
+export enum Chains_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ChainsPkey = "chains_pkey",
+  /** unique or primary key constraint on columns "slug" */
+  ChainsSlugKey = "chains_slug_key",
+}
 
 /** input type for inserting data into table "chains" */
 export type Chains_Insert_Input = {
@@ -1901,6 +854,44 @@ export type Chains_Pk_Columns_Input = {
   id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "chains" */
+export enum Chains_Select_Column {
+  /** column name */
+  ChainId = "chain_id",
+  /** column name */
+  City = "city",
+  /** column name */
+  Country = "country",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  Emails = "emails",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Logo = "logo",
+  /** column name */
+  Name = "name",
+  /** column name */
+  OwnerId = "owner_id",
+  /** column name */
+  PhoneNumbers = "phone_numbers",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  SocialLinks = "social_links",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  Website = "website",
+}
+
 /** input type for updating data in table "chains" */
 export type Chains_Set_Input = {
   chain_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -1951,6 +942,44 @@ export type Chains_Stream_Cursor_Value_Input = {
   website?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "chains" */
+export enum Chains_Update_Column {
+  /** column name */
+  ChainId = "chain_id",
+  /** column name */
+  City = "city",
+  /** column name */
+  Country = "country",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  Emails = "emails",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Logo = "logo",
+  /** column name */
+  Name = "name",
+  /** column name */
+  OwnerId = "owner_id",
+  /** column name */
+  PhoneNumbers = "phone_numbers",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  SocialLinks = "social_links",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  Website = "website",
+}
+
 export type Chains_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Chains_Set_Input>;
@@ -1958,111 +987,780 @@ export type Chains_Updates = {
   where: Chains_Bool_Exp;
 };
 
-/** columns and relationships of "chains" */
-export type ChainsChains_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Chains_Order_By>>;
-  where?: InputMaybe<Chains_Bool_Exp>;
+/** columns and relationships of "clothing_age_group" */
+export type Clothing_Age_Group = {
+  __typename?: "clothing_age_group";
+  value: Scalars["String"]["output"];
 };
 
-/** columns and relationships of "chains" */
-export type ChainsChainsArgs = {
-  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Chains_Order_By>>;
-  where?: InputMaybe<Chains_Bool_Exp>;
+/** aggregated selection of "clothing_age_group" */
+export type Clothing_Age_Group_Aggregate = {
+  __typename?: "clothing_age_group_aggregate";
+  aggregate?: Maybe<Clothing_Age_Group_Aggregate_Fields>;
+  nodes: Array<Clothing_Age_Group>;
 };
 
-/** columns and relationships of "chains" */
-export type ChainsSocial_LinksArgs = {
-  path?: InputMaybe<Scalars["String"]["input"]>;
+/** aggregate fields of "clothing_age_group" */
+export type Clothing_Age_Group_Aggregate_Fields = {
+  __typename?: "clothing_age_group_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Clothing_Age_Group_Max_Fields>;
+  min?: Maybe<Clothing_Age_Group_Min_Fields>;
 };
 
-/** columns and relationships of "chains" */
-export type ChainsVenues_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
+/** aggregate fields of "clothing_age_group" */
+export type Clothing_Age_Group_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Clothing_Age_Group_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-/** columns and relationships of "chains" */
-export type ChainsVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
+/** Boolean expression to filter rows from the table "clothing_age_group". All fields are combined with a logical 'AND'. */
+export type Clothing_Age_Group_Bool_Exp = {
+  _and?: InputMaybe<Array<Clothing_Age_Group_Bool_Exp>>;
+  _not?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
+  _or?: InputMaybe<Array<Clothing_Age_Group_Bool_Exp>>;
+  value?: InputMaybe<String_Comparison_Exp>;
 };
 
-export type ChainWithChainsFragment = {
-  __typename?: "chains";
-  chains: Array<{
-    __typename?: "chains";
-    country?: null | string;
-    id: UUID;
-    name: string;
-    slug: string;
-    venues: Array<{
-      __typename?: "venues";
-      city?: null | string;
-      country?: null | string;
-      id: UUID;
-      name: string;
-      slug: string;
-    }>;
-    venues_aggregate: {
-      __typename?: "venues_aggregate";
-      aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-    };
-  }>;
-  chains_aggregate: {
-    __typename?: "chains_aggregate";
-    aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
-  };
-  country?: null | string;
-  description_en?: null | string;
-  description_uk?: null | string;
-  emails?: Array<string> | null;
-  id: UUID;
-  logo?: null | string;
-  name: string;
-  phone_numbers?: Array<string> | null;
-  slug: string;
-  social_links: Json;
-  website?: null | string;
+/** unique or primary key constraints on table "clothing_age_group" */
+export enum Clothing_Age_Group_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ClothingAgeGroupPkey = "clothing_age_group_pkey",
+}
+
+export enum Clothing_Age_Group_Enum {
+  Adult = "adult",
+  Kids = "kids",
+}
+
+/** Boolean expression to compare columns of type "clothing_age_group_enum". All fields are combined with logical 'AND'. */
+export type Clothing_Age_Group_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Clothing_Age_Group_Enum>;
+  _in?: InputMaybe<Array<Clothing_Age_Group_Enum>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _neq?: InputMaybe<Clothing_Age_Group_Enum>;
+  _nin?: InputMaybe<Array<Clothing_Age_Group_Enum>>;
 };
 
-export type ChainWithVenuesFragment = {
-  __typename?: "chains";
-  country?: null | string;
-  description_en?: null | string;
-  description_uk?: null | string;
-  emails?: Array<string> | null;
-  id: UUID;
-  logo?: null | string;
-  name: string;
-  phone_numbers?: Array<string> | null;
-  slug: string;
-  social_links: Json;
-  venues: Array<{
-    __typename?: "venues";
-    city?: null | string;
-    country?: null | string;
-    id: UUID;
-    name: string;
-    slug: string;
-  }>;
-  venues_aggregate: {
-    __typename?: "venues_aggregate";
-    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-  };
-  website?: null | string;
+/** input type for inserting data into table "clothing_age_group" */
+export type Clothing_Age_Group_Insert_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
 };
+
+/** aggregate max on columns */
+export type Clothing_Age_Group_Max_Fields = {
+  __typename?: "clothing_age_group_max_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type Clothing_Age_Group_Min_Fields = {
+  __typename?: "clothing_age_group_min_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** response of any mutation on the table "clothing_age_group" */
+export type Clothing_Age_Group_Mutation_Response = {
+  __typename?: "clothing_age_group_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Clothing_Age_Group>;
+};
+
+/** input type for inserting object relation for remote table "clothing_age_group" */
+export type Clothing_Age_Group_Obj_Rel_Insert_Input = {
+  data: Clothing_Age_Group_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Clothing_Age_Group_On_Conflict>;
+};
+
+/** on_conflict condition type for table "clothing_age_group" */
+export type Clothing_Age_Group_On_Conflict = {
+  constraint: Clothing_Age_Group_Constraint;
+  update_columns?: Array<Clothing_Age_Group_Update_Column>;
+  where?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "clothing_age_group". */
+export type Clothing_Age_Group_Order_By = {
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: clothing_age_group */
+export type Clothing_Age_Group_Pk_Columns_Input = {
+  value: Scalars["String"]["input"];
+};
+
+/** select columns of table "clothing_age_group" */
+export enum Clothing_Age_Group_Select_Column {
+  /** column name */
+  Value = "value",
+}
+
+/** input type for updating data in table "clothing_age_group" */
+export type Clothing_Age_Group_Set_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Streaming cursor of the table "clothing_age_group" */
+export type Clothing_Age_Group_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Clothing_Age_Group_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Clothing_Age_Group_Stream_Cursor_Value_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** update columns of table "clothing_age_group" */
+export enum Clothing_Age_Group_Update_Column {
+  /** column name */
+  Value = "value",
+}
+
+export type Clothing_Age_Group_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Clothing_Age_Group_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Clothing_Age_Group_Bool_Exp;
+};
+
+/** columns and relationships of "clothing_gender" */
+export type Clothing_Gender = {
+  __typename?: "clothing_gender";
+  value: Scalars["String"]["output"];
+};
+
+/** aggregated selection of "clothing_gender" */
+export type Clothing_Gender_Aggregate = {
+  __typename?: "clothing_gender_aggregate";
+  aggregate?: Maybe<Clothing_Gender_Aggregate_Fields>;
+  nodes: Array<Clothing_Gender>;
+};
+
+/** aggregate fields of "clothing_gender" */
+export type Clothing_Gender_Aggregate_Fields = {
+  __typename?: "clothing_gender_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Clothing_Gender_Max_Fields>;
+  min?: Maybe<Clothing_Gender_Min_Fields>;
+};
+
+/** aggregate fields of "clothing_gender" */
+export type Clothing_Gender_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Clothing_Gender_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** Boolean expression to filter rows from the table "clothing_gender". All fields are combined with a logical 'AND'. */
+export type Clothing_Gender_Bool_Exp = {
+  _and?: InputMaybe<Array<Clothing_Gender_Bool_Exp>>;
+  _not?: InputMaybe<Clothing_Gender_Bool_Exp>;
+  _or?: InputMaybe<Array<Clothing_Gender_Bool_Exp>>;
+  value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "clothing_gender" */
+export enum Clothing_Gender_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ClothingGenderPkey = "clothing_gender_pkey",
+}
+
+export enum Clothing_Gender_Enum {
+  Boys = "boys",
+  Girls = "girls",
+  Men = "men",
+  Unisex = "unisex",
+  Women = "women",
+}
+
+/** Boolean expression to compare columns of type "clothing_gender_enum". All fields are combined with logical 'AND'. */
+export type Clothing_Gender_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Clothing_Gender_Enum>;
+  _in?: InputMaybe<Array<Clothing_Gender_Enum>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _neq?: InputMaybe<Clothing_Gender_Enum>;
+  _nin?: InputMaybe<Array<Clothing_Gender_Enum>>;
+};
+
+/** input type for inserting data into table "clothing_gender" */
+export type Clothing_Gender_Insert_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Clothing_Gender_Max_Fields = {
+  __typename?: "clothing_gender_max_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type Clothing_Gender_Min_Fields = {
+  __typename?: "clothing_gender_min_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** response of any mutation on the table "clothing_gender" */
+export type Clothing_Gender_Mutation_Response = {
+  __typename?: "clothing_gender_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Clothing_Gender>;
+};
+
+/** input type for inserting object relation for remote table "clothing_gender" */
+export type Clothing_Gender_Obj_Rel_Insert_Input = {
+  data: Clothing_Gender_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Clothing_Gender_On_Conflict>;
+};
+
+/** on_conflict condition type for table "clothing_gender" */
+export type Clothing_Gender_On_Conflict = {
+  constraint: Clothing_Gender_Constraint;
+  update_columns?: Array<Clothing_Gender_Update_Column>;
+  where?: InputMaybe<Clothing_Gender_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "clothing_gender". */
+export type Clothing_Gender_Order_By = {
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: clothing_gender */
+export type Clothing_Gender_Pk_Columns_Input = {
+  value: Scalars["String"]["input"];
+};
+
+/** select columns of table "clothing_gender" */
+export enum Clothing_Gender_Select_Column {
+  /** column name */
+  Value = "value",
+}
+
+/** input type for updating data in table "clothing_gender" */
+export type Clothing_Gender_Set_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Streaming cursor of the table "clothing_gender" */
+export type Clothing_Gender_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Clothing_Gender_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Clothing_Gender_Stream_Cursor_Value_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** update columns of table "clothing_gender" */
+export enum Clothing_Gender_Update_Column {
+  /** column name */
+  Value = "value",
+}
+
+export type Clothing_Gender_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Clothing_Gender_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Clothing_Gender_Bool_Exp;
+};
+
+/** Category-specific details for clothing products */
+export type Clothing_Product_Details = {
+  __typename?: "clothing_product_details";
+  /** Type of clothing (tshirt, hoodie, etc.) */
+  clothing_type: Clothing_Type_Enum;
+  /** An object relationship */
+  clothing_type_enum: Clothing_Type;
+  created_at: Scalars["timestamptz"]["output"];
+  /** An object relationship */
+  product: Products;
+  /** One-to-one relationship with products table */
+  product_id: Scalars["uuid"]["output"];
+  updated_at: Scalars["timestamptz"]["output"];
+};
+
+/** aggregated selection of "clothing_product_details" */
+export type Clothing_Product_Details_Aggregate = {
+  __typename?: "clothing_product_details_aggregate";
+  aggregate?: Maybe<Clothing_Product_Details_Aggregate_Fields>;
+  nodes: Array<Clothing_Product_Details>;
+};
+
+/** aggregate fields of "clothing_product_details" */
+export type Clothing_Product_Details_Aggregate_Fields = {
+  __typename?: "clothing_product_details_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Clothing_Product_Details_Max_Fields>;
+  min?: Maybe<Clothing_Product_Details_Min_Fields>;
+};
+
+/** aggregate fields of "clothing_product_details" */
+export type Clothing_Product_Details_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** Boolean expression to filter rows from the table "clothing_product_details". All fields are combined with a logical 'AND'. */
+export type Clothing_Product_Details_Bool_Exp = {
+  _and?: InputMaybe<Array<Clothing_Product_Details_Bool_Exp>>;
+  _not?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+  _or?: InputMaybe<Array<Clothing_Product_Details_Bool_Exp>>;
+  clothing_type?: InputMaybe<Clothing_Type_Enum_Comparison_Exp>;
+  clothing_type_enum?: InputMaybe<Clothing_Type_Bool_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  product?: InputMaybe<Products_Bool_Exp>;
+  product_id?: InputMaybe<Uuid_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "clothing_product_details" */
+export enum Clothing_Product_Details_Constraint {
+  /** unique or primary key constraint on columns "product_id" */
+  ClothingProductDetailsPkey = "clothing_product_details_pkey",
+}
+
+/** input type for inserting data into table "clothing_product_details" */
+export type Clothing_Product_Details_Insert_Input = {
+  /** Type of clothing (tshirt, hoodie, etc.) */
+  clothing_type?: InputMaybe<Clothing_Type_Enum>;
+  clothing_type_enum?: InputMaybe<Clothing_Type_Obj_Rel_Insert_Input>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  product?: InputMaybe<Products_Obj_Rel_Insert_Input>;
+  /** One-to-one relationship with products table */
+  product_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Clothing_Product_Details_Max_Fields = {
+  __typename?: "clothing_product_details_max_fields";
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  /** One-to-one relationship with products table */
+  product_id?: Maybe<Scalars["uuid"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type Clothing_Product_Details_Min_Fields = {
+  __typename?: "clothing_product_details_min_fields";
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  /** One-to-one relationship with products table */
+  product_id?: Maybe<Scalars["uuid"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+};
+
+/** response of any mutation on the table "clothing_product_details" */
+export type Clothing_Product_Details_Mutation_Response = {
+  __typename?: "clothing_product_details_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Clothing_Product_Details>;
+};
+
+/** input type for inserting object relation for remote table "clothing_product_details" */
+export type Clothing_Product_Details_Obj_Rel_Insert_Input = {
+  data: Clothing_Product_Details_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Clothing_Product_Details_On_Conflict>;
+};
+
+/** on_conflict condition type for table "clothing_product_details" */
+export type Clothing_Product_Details_On_Conflict = {
+  constraint: Clothing_Product_Details_Constraint;
+  update_columns?: Array<Clothing_Product_Details_Update_Column>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "clothing_product_details". */
+export type Clothing_Product_Details_Order_By = {
+  clothing_type?: InputMaybe<Order_By>;
+  clothing_type_enum?: InputMaybe<Clothing_Type_Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  product?: InputMaybe<Products_Order_By>;
+  product_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: clothing_product_details */
+export type Clothing_Product_Details_Pk_Columns_Input = {
+  /** One-to-one relationship with products table */
+  product_id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "clothing_product_details" */
+export enum Clothing_Product_Details_Select_Column {
+  /** column name */
+  ClothingType = "clothing_type",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  ProductId = "product_id",
+  /** column name */
+  UpdatedAt = "updated_at",
+}
+
+/** input type for updating data in table "clothing_product_details" */
+export type Clothing_Product_Details_Set_Input = {
+  /** Type of clothing (tshirt, hoodie, etc.) */
+  clothing_type?: InputMaybe<Clothing_Type_Enum>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  /** One-to-one relationship with products table */
+  product_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+};
+
+/** Streaming cursor of the table "clothing_product_details" */
+export type Clothing_Product_Details_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Clothing_Product_Details_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Clothing_Product_Details_Stream_Cursor_Value_Input = {
+  /** Type of clothing (tshirt, hoodie, etc.) */
+  clothing_type?: InputMaybe<Clothing_Type_Enum>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  /** One-to-one relationship with products table */
+  product_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+};
+
+/** update columns of table "clothing_product_details" */
+export enum Clothing_Product_Details_Update_Column {
+  /** column name */
+  ClothingType = "clothing_type",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  ProductId = "product_id",
+  /** column name */
+  UpdatedAt = "updated_at",
+}
+
+export type Clothing_Product_Details_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Clothing_Product_Details_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Clothing_Product_Details_Bool_Exp;
+};
+
+/** columns and relationships of "clothing_size" */
+export type Clothing_Size = {
+  __typename?: "clothing_size";
+  value: Scalars["String"]["output"];
+};
+
+/** aggregated selection of "clothing_size" */
+export type Clothing_Size_Aggregate = {
+  __typename?: "clothing_size_aggregate";
+  aggregate?: Maybe<Clothing_Size_Aggregate_Fields>;
+  nodes: Array<Clothing_Size>;
+};
+
+/** aggregate fields of "clothing_size" */
+export type Clothing_Size_Aggregate_Fields = {
+  __typename?: "clothing_size_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Clothing_Size_Max_Fields>;
+  min?: Maybe<Clothing_Size_Min_Fields>;
+};
+
+/** aggregate fields of "clothing_size" */
+export type Clothing_Size_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Clothing_Size_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** Boolean expression to filter rows from the table "clothing_size". All fields are combined with a logical 'AND'. */
+export type Clothing_Size_Bool_Exp = {
+  _and?: InputMaybe<Array<Clothing_Size_Bool_Exp>>;
+  _not?: InputMaybe<Clothing_Size_Bool_Exp>;
+  _or?: InputMaybe<Array<Clothing_Size_Bool_Exp>>;
+  value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "clothing_size" */
+export enum Clothing_Size_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ClothingSizePkey = "clothing_size_pkey",
+}
+
+export enum Clothing_Size_Enum {
+  L = "l",
+  M = "m",
+  S = "s",
+  Xl = "xl",
+  Xs = "xs",
+  Xxl = "xxl",
+  Xxxl = "xxxl",
+  Y3_4 = "y3_4",
+  Y5_6 = "y5_6",
+  Y7_8 = "y7_8",
+  Y9_10 = "y9_10",
+  Y11_12 = "y11_12",
+  Y13_14 = "y13_14",
+}
+
+/** Boolean expression to compare columns of type "clothing_size_enum". All fields are combined with logical 'AND'. */
+export type Clothing_Size_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Clothing_Size_Enum>;
+  _in?: InputMaybe<Array<Clothing_Size_Enum>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _neq?: InputMaybe<Clothing_Size_Enum>;
+  _nin?: InputMaybe<Array<Clothing_Size_Enum>>;
+};
+
+/** input type for inserting data into table "clothing_size" */
+export type Clothing_Size_Insert_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Clothing_Size_Max_Fields = {
+  __typename?: "clothing_size_max_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type Clothing_Size_Min_Fields = {
+  __typename?: "clothing_size_min_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** response of any mutation on the table "clothing_size" */
+export type Clothing_Size_Mutation_Response = {
+  __typename?: "clothing_size_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Clothing_Size>;
+};
+
+/** input type for inserting object relation for remote table "clothing_size" */
+export type Clothing_Size_Obj_Rel_Insert_Input = {
+  data: Clothing_Size_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Clothing_Size_On_Conflict>;
+};
+
+/** on_conflict condition type for table "clothing_size" */
+export type Clothing_Size_On_Conflict = {
+  constraint: Clothing_Size_Constraint;
+  update_columns?: Array<Clothing_Size_Update_Column>;
+  where?: InputMaybe<Clothing_Size_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "clothing_size". */
+export type Clothing_Size_Order_By = {
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: clothing_size */
+export type Clothing_Size_Pk_Columns_Input = {
+  value: Scalars["String"]["input"];
+};
+
+/** select columns of table "clothing_size" */
+export enum Clothing_Size_Select_Column {
+  /** column name */
+  Value = "value",
+}
+
+/** input type for updating data in table "clothing_size" */
+export type Clothing_Size_Set_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Streaming cursor of the table "clothing_size" */
+export type Clothing_Size_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Clothing_Size_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Clothing_Size_Stream_Cursor_Value_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** update columns of table "clothing_size" */
+export enum Clothing_Size_Update_Column {
+  /** column name */
+  Value = "value",
+}
+
+export type Clothing_Size_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Clothing_Size_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Clothing_Size_Bool_Exp;
+};
+
+/** columns and relationships of "clothing_type" */
+export type Clothing_Type = {
+  __typename?: "clothing_type";
+  value: Scalars["String"]["output"];
+};
+
+/** aggregated selection of "clothing_type" */
+export type Clothing_Type_Aggregate = {
+  __typename?: "clothing_type_aggregate";
+  aggregate?: Maybe<Clothing_Type_Aggregate_Fields>;
+  nodes: Array<Clothing_Type>;
+};
+
+/** aggregate fields of "clothing_type" */
+export type Clothing_Type_Aggregate_Fields = {
+  __typename?: "clothing_type_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Clothing_Type_Max_Fields>;
+  min?: Maybe<Clothing_Type_Min_Fields>;
+};
+
+/** aggregate fields of "clothing_type" */
+export type Clothing_Type_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Clothing_Type_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** Boolean expression to filter rows from the table "clothing_type". All fields are combined with a logical 'AND'. */
+export type Clothing_Type_Bool_Exp = {
+  _and?: InputMaybe<Array<Clothing_Type_Bool_Exp>>;
+  _not?: InputMaybe<Clothing_Type_Bool_Exp>;
+  _or?: InputMaybe<Array<Clothing_Type_Bool_Exp>>;
+  value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "clothing_type" */
+export enum Clothing_Type_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ClothingTypePkey = "clothing_type_pkey",
+}
+
+export enum Clothing_Type_Enum {
+  Hoodie = "hoodie",
+  Jumper = "jumper",
+  Sweatshirt = "sweatshirt",
+  Tshirt = "tshirt",
+}
+
+/** Boolean expression to compare columns of type "clothing_type_enum". All fields are combined with logical 'AND'. */
+export type Clothing_Type_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Clothing_Type_Enum>;
+  _in?: InputMaybe<Array<Clothing_Type_Enum>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _neq?: InputMaybe<Clothing_Type_Enum>;
+  _nin?: InputMaybe<Array<Clothing_Type_Enum>>;
+};
+
+/** input type for inserting data into table "clothing_type" */
+export type Clothing_Type_Insert_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Clothing_Type_Max_Fields = {
+  __typename?: "clothing_type_max_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type Clothing_Type_Min_Fields = {
+  __typename?: "clothing_type_min_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** response of any mutation on the table "clothing_type" */
+export type Clothing_Type_Mutation_Response = {
+  __typename?: "clothing_type_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Clothing_Type>;
+};
+
+/** input type for inserting object relation for remote table "clothing_type" */
+export type Clothing_Type_Obj_Rel_Insert_Input = {
+  data: Clothing_Type_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Clothing_Type_On_Conflict>;
+};
+
+/** on_conflict condition type for table "clothing_type" */
+export type Clothing_Type_On_Conflict = {
+  constraint: Clothing_Type_Constraint;
+  update_columns?: Array<Clothing_Type_Update_Column>;
+  where?: InputMaybe<Clothing_Type_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "clothing_type". */
+export type Clothing_Type_Order_By = {
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: clothing_type */
+export type Clothing_Type_Pk_Columns_Input = {
+  value: Scalars["String"]["input"];
+};
+
+/** select columns of table "clothing_type" */
+export enum Clothing_Type_Select_Column {
+  /** column name */
+  Value = "value",
+}
+
+/** input type for updating data in table "clothing_type" */
+export type Clothing_Type_Set_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Streaming cursor of the table "clothing_type" */
+export type Clothing_Type_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Clothing_Type_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Clothing_Type_Stream_Cursor_Value_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** update columns of table "clothing_type" */
+export enum Clothing_Type_Update_Column {
+  /** column name */
+  Value = "value",
+}
+
+export type Clothing_Type_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Clothing_Type_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Clothing_Type_Bool_Exp;
+};
+
+/** ordering argument of a cursor */
+export enum Cursor_Ordering {
+  /** ascending ordering of the cursor */
+  Asc = "ASC",
+  /** descending ordering of the cursor */
+  Desc = "DESC",
+}
 
 /** columns and relationships of "event_status" */
 export type Event_Status = {
@@ -2100,6 +1798,29 @@ export type Event_Status_Bool_Exp = {
   description?: InputMaybe<String_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "event_status" */
+export enum Event_Status_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  EventStatusPkey = "event_status_pkey",
+}
+
+export enum Event_Status_Enum {
+  /** Published and visible to public */
+  Active = "ACTIVE",
+  /** Event is archived and hidden */
+  Archived = "ARCHIVED",
+  /** Event has been cancelled */
+  Cancelled = "CANCELLED",
+  /** Event has already occurred */
+  Completed = "COMPLETED",
+  /** Draft event not yet submitted */
+  Draft = "DRAFT",
+  /** Awaiting moderation approval */
+  Pending = "PENDING",
+  /** Event has been postponed to new date */
+  Postponed = "POSTPONED",
+}
 
 /** Boolean expression to compare columns of type "event_status_enum". All fields are combined with logical 'AND'. */
 export type Event_Status_Enum_Comparison_Exp = {
@@ -2164,6 +1885,14 @@ export type Event_Status_Pk_Columns_Input = {
   value: Scalars["String"]["input"];
 };
 
+/** select columns of table "event_status" */
+export enum Event_Status_Select_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 /** input type for updating data in table "event_status" */
 export type Event_Status_Set_Input = {
   description?: InputMaybe<Scalars["String"]["input"]>;
@@ -2183,6 +1912,14 @@ export type Event_Status_Stream_Cursor_Value_Input = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   value?: InputMaybe<Scalars["String"]["input"]>;
 };
+
+/** update columns of table "event_status" */
+export enum Event_Status_Update_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
 
 export type Event_Status_Updates = {
   /** sets the columns of the filtered rows to the given values */
@@ -2205,6 +1942,24 @@ export type Event_Tags = {
   name_uk: Scalars["String"]["output"];
   slug: Scalars["String"]["output"];
   updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+};
+
+/** Tags for categorizing and filtering events */
+export type Event_TagsEvents_Event_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
+};
+
+/** Tags for categorizing and filtering events */
+export type Event_TagsEvents_Event_Tags_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
 /** aggregated selection of "event_tags" */
@@ -2243,6 +1998,14 @@ export type Event_Tags_Bool_Exp = {
   slug?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "event_tags" */
+export enum Event_Tags_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  EventTagsPkey = "event_tags_pkey",
+  /** unique or primary key constraint on columns "slug" */
+  EventTagsSlugKey = "event_tags_slug_key",
+}
 
 /** input type for inserting data into table "event_tags" */
 export type Event_Tags_Insert_Input = {
@@ -2320,6 +2083,24 @@ export type Event_Tags_Pk_Columns_Input = {
   id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "event_tags" */
+export enum Event_Tags_Select_Column {
+  /** column name */
+  Category = "category",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Id = "id",
+  /** column name */
+  NameEn = "name_en",
+  /** column name */
+  NameUk = "name_uk",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  UpdatedAt = "updated_at",
+}
+
 /** input type for updating data in table "event_tags" */
 export type Event_Tags_Set_Input = {
   category?: InputMaybe<Scalars["String"]["input"]>;
@@ -2350,29 +2131,29 @@ export type Event_Tags_Stream_Cursor_Value_Input = {
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
 };
 
+/** update columns of table "event_tags" */
+export enum Event_Tags_Update_Column {
+  /** column name */
+  Category = "category",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Id = "id",
+  /** column name */
+  NameEn = "name_en",
+  /** column name */
+  NameUk = "name_uk",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  UpdatedAt = "updated_at",
+}
+
 export type Event_Tags_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Event_Tags_Set_Input>;
   /** filter the rows which have to be updated */
   where: Event_Tags_Bool_Exp;
-};
-
-/** Tags for categorizing and filtering events */
-export type Event_TagsEvents_Event_Tags_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
-};
-
-/** Tags for categorizing and filtering events */
-export type Event_TagsEvents_Event_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
 /** columns and relationships of "event_type" */
@@ -2411,6 +2192,39 @@ export type Event_Type_Bool_Exp = {
   description?: InputMaybe<String_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "event_type" */
+export enum Event_Type_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  EventTypePkey = "event_type_pkey",
+}
+
+export enum Event_Type_Enum {
+  /** Celebration or party */
+  Celebration = "CELEBRATION",
+  /** Charity or fundraising event */
+  Charity = "CHARITY",
+  /** Music concert or performance */
+  Concert = "CONCERT",
+  /** Conference or seminar */
+  Conference = "CONFERENCE",
+  /** Art or cultural exhibition */
+  Exhibition = "EXHIBITION",
+  /** Festival or large-scale event */
+  Festival = "FESTIVAL",
+  /** Informal gathering or meetup */
+  Gathering = "GATHERING",
+  /** Other type of event */
+  Other = "OTHER",
+  /** Film or video screening */
+  Screening = "SCREENING",
+  /** Sports event or activity */
+  Sports = "SPORTS",
+  /** Theater performance */
+  Theater = "THEATER",
+  /** Educational workshop or class */
+  Workshop = "WORKSHOP",
+}
 
 /** Boolean expression to compare columns of type "event_type_enum". All fields are combined with logical 'AND'. */
 export type Event_Type_Enum_Comparison_Exp = {
@@ -2475,6 +2289,14 @@ export type Event_Type_Pk_Columns_Input = {
   value: Scalars["String"]["input"];
 };
 
+/** select columns of table "event_type" */
+export enum Event_Type_Select_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 /** input type for updating data in table "event_type" */
 export type Event_Type_Set_Input = {
   description?: InputMaybe<Scalars["String"]["input"]>;
@@ -2495,64 +2317,19 @@ export type Event_Type_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "event_type" */
+export enum Event_Type_Update_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 export type Event_Type_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Event_Type_Set_Input>;
   /** filter the rows which have to be updated */
   where: Event_Type_Bool_Exp;
-};
-
-export type EventFieldsFragment = {
-  __typename?: "events";
-  accessibility_info?: null | string;
-  age_restriction?: null | string;
-  area?: null | string;
-  capacity?: null | number;
-  city?: null | string;
-  country?: null | string;
-  created_at: Timestamp;
-  custom_location_address?: null | string;
-  custom_location_name?: null | string;
-  description_en?: null | string;
-  description_uk?: null | string;
-  end_date?: null | Timestamp;
-  external_url?: null | string;
-  geo?: Geography | null;
-  id: UUID;
-  images?: Array<string> | null;
-  is_online: boolean;
-  is_recurring: boolean;
-  language?: Array<string> | null;
-  organizer_email?: null | string;
-  organizer_name?: null | string;
-  organizer_phone_number?: null | string;
-  owner_id?: null | UUID;
-  price_amount?: null | Numeric;
-  price_currency?: null | string;
-  price_type: Price_Type_Enum;
-  recurrence_rule?: null | string;
-  registration_required: boolean;
-  registration_url?: null | string;
-  slug: string;
-  social_links?: Json | null;
-  start_date: Timestamp;
-  status: Event_Status_Enum;
-  title_en: string;
-  title_uk: string;
-  type: Event_Type_Enum;
-  user_id: UUID;
-  venue?: {
-    __typename?: "venues";
-    category: Venue_Category_Enum;
-    city?: null | string;
-    country?: null | string;
-    geo?: Geography | null;
-    id: UUID;
-    logo?: null | string;
-    name: string;
-    slug: string;
-  } | null;
-  venue_id?: null | UUID;
 };
 
 /** Events at Ukrainian venues or custom locations */
@@ -2614,6 +2391,29 @@ export type Events = {
   /** An object relationship */
   venue?: Maybe<Venues>;
   venue_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** Events at Ukrainian venues or custom locations */
+export type EventsEvents_Event_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
+};
+
+/** Events at Ukrainian venues or custom locations */
+export type EventsEvents_Event_Tags_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
+};
+
+/** Events at Ukrainian venues or custom locations */
+export type EventsSocial_LinksArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** aggregated selection of "events" */
@@ -2766,6 +2566,14 @@ export type Events_Bool_Exp = {
   venue_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "events" */
+export enum Events_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  EventsPkey = "events_pkey",
+  /** unique or primary key constraint on columns "slug" */
+  EventsSlugKey = "events_slug_key",
+}
+
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 export type Events_Delete_At_Path_Input = {
   social_links?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -2851,6 +2659,12 @@ export type Events_Event_Tags_Bool_Exp = {
   tag_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "events_event_tags" */
+export enum Events_Event_Tags_Constraint {
+  /** unique or primary key constraint on columns "tag_id", "event_id" */
+  EventsEventTagsPkey = "events_event_tags_pkey",
+}
+
 /** input type for inserting data into table "events_event_tags" */
 export type Events_Event_Tags_Insert_Input = {
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -2921,6 +2735,16 @@ export type Events_Event_Tags_Pk_Columns_Input = {
   tag_id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "events_event_tags" */
+export enum Events_Event_Tags_Select_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  EventId = "event_id",
+  /** column name */
+  TagId = "tag_id",
+}
+
 /** input type for updating data in table "events_event_tags" */
 export type Events_Event_Tags_Set_Input = {
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -2942,6 +2766,16 @@ export type Events_Event_Tags_Stream_Cursor_Value_Input = {
   event_id?: InputMaybe<Scalars["uuid"]["input"]>;
   tag_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
+
+/** update columns of table "events_event_tags" */
+export enum Events_Event_Tags_Update_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  EventId = "event_id",
+  /** column name */
+  TagId = "tag_id",
+}
 
 export type Events_Event_Tags_Updates = {
   /** sets the columns of the filtered rows to the given values */
@@ -3236,6 +3070,108 @@ export type Events_Prepend_Input = {
   social_links?: InputMaybe<Scalars["jsonb"]["input"]>;
 };
 
+/** select columns of table "events" */
+export enum Events_Select_Column {
+  /** column name */
+  AccessibilityInfo = "accessibility_info",
+  /** column name */
+  AgeRestriction = "age_restriction",
+  /** column name */
+  Area = "area",
+  /** column name */
+  Capacity = "capacity",
+  /** column name */
+  City = "city",
+  /** column name */
+  Country = "country",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  CustomLocationAddress = "custom_location_address",
+  /** column name */
+  CustomLocationName = "custom_location_name",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  EndDate = "end_date",
+  /** column name */
+  ExternalUrl = "external_url",
+  /** column name */
+  Geo = "geo",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Images = "images",
+  /** column name */
+  IsOnline = "is_online",
+  /** column name */
+  IsRecurring = "is_recurring",
+  /** column name */
+  Language = "language",
+  /** column name */
+  OrganizerEmail = "organizer_email",
+  /** column name */
+  OrganizerName = "organizer_name",
+  /** column name */
+  OrganizerPhoneNumber = "organizer_phone_number",
+  /** column name */
+  OwnerId = "owner_id",
+  /** column name */
+  PriceAmount = "price_amount",
+  /** column name */
+  PriceCurrency = "price_currency",
+  /** column name */
+  PriceType = "price_type",
+  /** column name */
+  RecurrenceRule = "recurrence_rule",
+  /** column name */
+  RegistrationRequired = "registration_required",
+  /** column name */
+  RegistrationUrl = "registration_url",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  SocialLinks = "social_links",
+  /** column name */
+  StartDate = "start_date",
+  /** column name */
+  Status = "status",
+  /** column name */
+  TitleEn = "title_en",
+  /** column name */
+  TitleUk = "title_uk",
+  /** column name */
+  Type = "type",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** select "events_aggregate_bool_exp_bool_and_arguments_columns" columns of table "events" */
+export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsOnline = "is_online",
+  /** column name */
+  IsRecurring = "is_recurring",
+  /** column name */
+  RegistrationRequired = "registration_required",
+}
+
+/** select "events_aggregate_bool_exp_bool_or_arguments_columns" columns of table "events" */
+export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsOnline = "is_online",
+  /** column name */
+  IsRecurring = "is_recurring",
+  /** column name */
+  RegistrationRequired = "registration_required",
+}
+
 /** input type for updating data in table "events" */
 export type Events_Set_Input = {
   accessibility_info?: InputMaybe<Scalars["String"]["input"]>;
@@ -3384,6 +3320,88 @@ export type Events_Sum_Order_By = {
   price_amount?: InputMaybe<Order_By>;
 };
 
+/** update columns of table "events" */
+export enum Events_Update_Column {
+  /** column name */
+  AccessibilityInfo = "accessibility_info",
+  /** column name */
+  AgeRestriction = "age_restriction",
+  /** column name */
+  Area = "area",
+  /** column name */
+  Capacity = "capacity",
+  /** column name */
+  City = "city",
+  /** column name */
+  Country = "country",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  CustomLocationAddress = "custom_location_address",
+  /** column name */
+  CustomLocationName = "custom_location_name",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  EndDate = "end_date",
+  /** column name */
+  ExternalUrl = "external_url",
+  /** column name */
+  Geo = "geo",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Images = "images",
+  /** column name */
+  IsOnline = "is_online",
+  /** column name */
+  IsRecurring = "is_recurring",
+  /** column name */
+  Language = "language",
+  /** column name */
+  OrganizerEmail = "organizer_email",
+  /** column name */
+  OrganizerName = "organizer_name",
+  /** column name */
+  OrganizerPhoneNumber = "organizer_phone_number",
+  /** column name */
+  OwnerId = "owner_id",
+  /** column name */
+  PriceAmount = "price_amount",
+  /** column name */
+  PriceCurrency = "price_currency",
+  /** column name */
+  PriceType = "price_type",
+  /** column name */
+  RecurrenceRule = "recurrence_rule",
+  /** column name */
+  RegistrationRequired = "registration_required",
+  /** column name */
+  RegistrationUrl = "registration_url",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  SocialLinks = "social_links",
+  /** column name */
+  StartDate = "start_date",
+  /** column name */
+  Status = "status",
+  /** column name */
+  TitleEn = "title_en",
+  /** column name */
+  TitleUk = "title_uk",
+  /** column name */
+  Type = "type",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  VenueId = "venue_id",
+}
+
 export type Events_Updates = {
   /** append existing jsonb value of filtered columns with new jsonb value */
   _append?: InputMaybe<Events_Append_Input>;
@@ -3440,29 +3458,6 @@ export type Events_Variance_Fields = {
 export type Events_Variance_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
-};
-
-/** Events at Ukrainian venues or custom locations */
-export type EventsEvents_Event_Tags_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
-};
-
-/** Events at Ukrainian venues or custom locations */
-export type EventsEvents_Event_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
-};
-
-/** Events at Ukrainian venues or custom locations */
-export type EventsSocial_LinksArgs = {
-  path?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type Geography_Cast_Exp = {
@@ -3525,627 +3520,6 @@ export type Geometry_Comparison_Exp = {
   _st_within?: InputMaybe<Scalars["geometry"]["input"]>;
 };
 
-export type GetAdminVenuesQuery = {
-  __typename?: "query_root";
-  venues: Array<{
-    __typename?: "venues";
-    address?: null | string;
-    category: Venue_Category_Enum;
-    chain?: {
-      __typename?: "chains";
-      chain?: {
-        __typename?: "chains";
-        chains: Array<{
-          __typename?: "chains";
-          country?: null | string;
-          id: UUID;
-          name: string;
-          slug: string;
-          venues: Array<{
-            __typename?: "venues";
-            city?: null | string;
-            country?: null | string;
-            id: UUID;
-            name: string;
-            slug: string;
-          }>;
-          venues_aggregate: {
-            __typename?: "venues_aggregate";
-            aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-          };
-        }>;
-        chains_aggregate: {
-          __typename?: "chains_aggregate";
-          aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
-        };
-        country?: null | string;
-        description_en?: null | string;
-        description_uk?: null | string;
-        emails?: Array<string> | null;
-        id: UUID;
-        logo?: null | string;
-        name: string;
-        phone_numbers?: Array<string> | null;
-        slug: string;
-        social_links: Json;
-        website?: null | string;
-      } | null;
-      country?: null | string;
-      description_en?: null | string;
-      description_uk?: null | string;
-      emails?: Array<string> | null;
-      id: UUID;
-      logo?: null | string;
-      name: string;
-      phone_numbers?: Array<string> | null;
-      slug: string;
-      social_links: Json;
-      venues: Array<{
-        __typename?: "venues";
-        city?: null | string;
-        country?: null | string;
-        id: UUID;
-        name: string;
-        slug: string;
-      }>;
-      venues_aggregate: {
-        __typename?: "venues_aggregate";
-        aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-      };
-      website?: null | string;
-    } | null;
-    city?: null | string;
-    country?: null | string;
-    created_at: Timestamp;
-    description_en?: null | string;
-    description_uk?: null | string;
-    emails?: Array<string> | null;
-    events_aggregate: {
-      __typename?: "events_aggregate";
-      aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
-    };
-    geo?: Geography | null;
-    id: UUID;
-    images?: Array<string> | null;
-    logo?: null | string;
-    name: string;
-    owner_id?: null | UUID;
-    phone_numbers?: Array<string> | null;
-    slug: string;
-    social_links: Json;
-    status: Venue_Status_Enum;
-    updated_at: Timestamp;
-    user_id?: null | UUID;
-    venue_accommodation_details: Array<{
-      __typename?: "venue_accommodation_details";
-      amenities?: Array<string> | null;
-      bathrooms?: null | number;
-      bedrooms?: null | number;
-      check_in_time?: null | Time;
-      check_out_time?: null | Time;
-      max_guests?: null | number;
-      minimum_stay_nights?: null | number;
-    }>;
-    venue_beauty_salon_details: Array<{
-      __typename?: "venue_beauty_salon_details";
-      appointment_required?: boolean | null;
-      services?: Array<string> | null;
-      walk_ins_accepted?: boolean | null;
-    }>;
-    venue_restaurant_details: Array<{
-      __typename?: "venue_restaurant_details";
-      cuisine_types?: Array<string> | null;
-      features?: Array<string> | null;
-      price_range?: null | string;
-      seating_capacity?: null | number;
-    }>;
-    venue_schedules: Array<{
-      __typename?: "venue_schedule";
-      close_time: Time;
-      day_of_week: string;
-      id: UUID;
-      open_time: Time;
-    }>;
-    venue_school_details: Array<{
-      __typename?: "venue_school_details";
-      age_groups?: Array<string> | null;
-      class_size_max?: null | number;
-      languages_taught?: Array<string> | null;
-      online_classes_available?: boolean | null;
-      subjects?: Array<string> | null;
-    }>;
-    venue_shop_details: Array<{
-      __typename?: "venue_shop_details";
-      payment_methods?: Array<string> | null;
-      product_categories?: Array<string> | null;
-    }>;
-    website?: null | string;
-  }>;
-  venues_aggregate: {
-    __typename?: "venues_aggregate";
-    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-  };
-};
-
-export type GetAdminVenuesQueryVariables = Exact<{
-  where: Venues_Bool_Exp;
-}>;
-
-export type GetPublicEventsQuery = {
-  __typename?: "query_root";
-  events: Array<{
-    __typename?: "events";
-    accessibility_info?: null | string;
-    age_restriction?: null | string;
-    area?: null | string;
-    capacity?: null | number;
-    city?: null | string;
-    country?: null | string;
-    created_at: Timestamp;
-    custom_location_address?: null | string;
-    custom_location_name?: null | string;
-    description_en?: null | string;
-    description_uk?: null | string;
-    end_date?: null | Timestamp;
-    external_url?: null | string;
-    geo?: Geography | null;
-    id: UUID;
-    images?: Array<string> | null;
-    is_online: boolean;
-    is_recurring: boolean;
-    language?: Array<string> | null;
-    organizer_email?: null | string;
-    organizer_name?: null | string;
-    organizer_phone_number?: null | string;
-    owner_id?: null | UUID;
-    price_amount?: null | Numeric;
-    price_currency?: null | string;
-    price_type: Price_Type_Enum;
-    recurrence_rule?: null | string;
-    registration_required: boolean;
-    registration_url?: null | string;
-    slug: string;
-    social_links?: Json | null;
-    start_date: Timestamp;
-    status: Event_Status_Enum;
-    title_en: string;
-    title_uk: string;
-    type: Event_Type_Enum;
-    user_id: UUID;
-    venue?: {
-      __typename?: "venues";
-      category: Venue_Category_Enum;
-      city?: null | string;
-      country?: null | string;
-      geo?: Geography | null;
-      id: UUID;
-      logo?: null | string;
-      name: string;
-      slug: string;
-    } | null;
-    venue_id?: null | UUID;
-  }>;
-  events_aggregate: {
-    __typename?: "events_aggregate";
-    aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
-  };
-  total: {
-    __typename?: "events_aggregate";
-    aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
-  };
-};
-
-export type GetPublicEventsQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By> | Events_Order_By>;
-  where: Events_Bool_Exp;
-}>;
-
-export type GetPublicVenuesQuery = {
-  __typename?: "query_root";
-  total: {
-    __typename?: "venues_aggregate";
-    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-  };
-  venues: Array<{
-    __typename?: "venues";
-    address?: null | string;
-    category: Venue_Category_Enum;
-    chain?: {
-      __typename?: "chains";
-      chain?: {
-        __typename?: "chains";
-        chains: Array<{
-          __typename?: "chains";
-          country?: null | string;
-          id: UUID;
-          name: string;
-          slug: string;
-          venues: Array<{
-            __typename?: "venues";
-            city?: null | string;
-            country?: null | string;
-            id: UUID;
-            name: string;
-            slug: string;
-          }>;
-          venues_aggregate: {
-            __typename?: "venues_aggregate";
-            aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-          };
-        }>;
-        chains_aggregate: {
-          __typename?: "chains_aggregate";
-          aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
-        };
-        country?: null | string;
-        description_en?: null | string;
-        description_uk?: null | string;
-        emails?: Array<string> | null;
-        id: UUID;
-        logo?: null | string;
-        name: string;
-        phone_numbers?: Array<string> | null;
-        slug: string;
-        social_links: Json;
-        website?: null | string;
-      } | null;
-      country?: null | string;
-      description_en?: null | string;
-      description_uk?: null | string;
-      emails?: Array<string> | null;
-      id: UUID;
-      logo?: null | string;
-      name: string;
-      phone_numbers?: Array<string> | null;
-      slug: string;
-      social_links: Json;
-      venues: Array<{
-        __typename?: "venues";
-        city?: null | string;
-        country?: null | string;
-        id: UUID;
-        name: string;
-        slug: string;
-      }>;
-      venues_aggregate: {
-        __typename?: "venues_aggregate";
-        aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-      };
-      website?: null | string;
-    } | null;
-    city?: null | string;
-    country?: null | string;
-    description_en?: null | string;
-    description_uk?: null | string;
-    emails?: Array<string> | null;
-    events_aggregate: {
-      __typename?: "events_aggregate";
-      aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
-    };
-    geo?: Geography | null;
-    id: UUID;
-    images?: Array<string> | null;
-    logo?: null | string;
-    name: string;
-    owner_id?: null | UUID;
-    phone_numbers?: Array<string> | null;
-    slug: string;
-    social_links: Json;
-    status: Venue_Status_Enum;
-    updated_at: Timestamp;
-    user_id?: null | UUID;
-    venue_accommodation_details: Array<{
-      __typename?: "venue_accommodation_details";
-      amenities?: Array<string> | null;
-      bathrooms?: null | number;
-      bedrooms?: null | number;
-      check_in_time?: null | Time;
-      check_out_time?: null | Time;
-      max_guests?: null | number;
-      minimum_stay_nights?: null | number;
-    }>;
-    venue_beauty_salon_details: Array<{
-      __typename?: "venue_beauty_salon_details";
-      appointment_required?: boolean | null;
-      services?: Array<string> | null;
-      walk_ins_accepted?: boolean | null;
-    }>;
-    venue_restaurant_details: Array<{
-      __typename?: "venue_restaurant_details";
-      cuisine_types?: Array<string> | null;
-      features?: Array<string> | null;
-      price_range?: null | string;
-      seating_capacity?: null | number;
-    }>;
-    venue_schedules: Array<{
-      __typename?: "venue_schedule";
-      close_time: Time;
-      day_of_week: string;
-      id: UUID;
-      open_time: Time;
-    }>;
-    venue_school_details: Array<{
-      __typename?: "venue_school_details";
-      age_groups?: Array<string> | null;
-      class_size_max?: null | number;
-      languages_taught?: Array<string> | null;
-      online_classes_available?: boolean | null;
-      subjects?: Array<string> | null;
-    }>;
-    venue_shop_details: Array<{
-      __typename?: "venue_shop_details";
-      payment_methods?: Array<string> | null;
-      product_categories?: Array<string> | null;
-    }>;
-    website?: null | string;
-  }>;
-  venues_aggregate: {
-    __typename?: "venues_aggregate";
-    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-  };
-};
-
-export type GetPublicVenuesQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
-  where: Venues_Bool_Exp;
-}>;
-
-export type GetUserEventsQuery = {
-  __typename?: "query_root";
-  events: Array<{
-    __typename?: "events";
-    accessibility_info?: null | string;
-    age_restriction?: null | string;
-    area?: null | string;
-    capacity?: null | number;
-    city?: null | string;
-    country?: null | string;
-    created_at: Timestamp;
-    custom_location_address?: null | string;
-    custom_location_name?: null | string;
-    description_en?: null | string;
-    description_uk?: null | string;
-    end_date?: null | Timestamp;
-    external_url?: null | string;
-    geo?: Geography | null;
-    id: UUID;
-    images?: Array<string> | null;
-    is_online: boolean;
-    is_recurring: boolean;
-    language?: Array<string> | null;
-    organizer_email?: null | string;
-    organizer_name?: null | string;
-    organizer_phone_number?: null | string;
-    owner_id?: null | UUID;
-    price_amount?: null | Numeric;
-    price_currency?: null | string;
-    price_type: Price_Type_Enum;
-    recurrence_rule?: null | string;
-    registration_required: boolean;
-    registration_url?: null | string;
-    slug: string;
-    social_links?: Json | null;
-    start_date: Timestamp;
-    status: Event_Status_Enum;
-    title_en: string;
-    title_uk: string;
-    type: Event_Type_Enum;
-    updated_at: Timestamp;
-    user_id: UUID;
-    venue?: {
-      __typename?: "venues";
-      category: Venue_Category_Enum;
-      city?: null | string;
-      country?: null | string;
-      geo?: Geography | null;
-      id: UUID;
-      logo?: null | string;
-      name: string;
-      slug: string;
-    } | null;
-    venue_id?: null | UUID;
-  }>;
-  events_aggregate: {
-    __typename?: "events_aggregate";
-    aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
-  };
-};
-
-export type GetUserEventsQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By> | Events_Order_By>;
-  where: Events_Bool_Exp;
-}>;
-
-export type GetUserProfileQuery = {
-  __typename?: "query_root";
-  users_by_pk?: {
-    __typename?: "users";
-    email: string;
-    events_created: number;
-    id: UUID;
-    image?: null | string;
-    level: number;
-    name?: null | string;
-    points: number;
-    role: User_Role_Enum;
-    status: User_Status_Enum;
-    venues_created: number;
-  } | null;
-};
-
-export type GetUserProfileQueryVariables = Exact<{
-  id: Scalars["uuid"]["input"];
-}>;
-
-export type GetUserVenuesQuery = {
-  __typename?: "query_root";
-  venues: Array<{
-    __typename?: "venues";
-    address?: null | string;
-    category: Venue_Category_Enum;
-    chain?: {
-      __typename?: "chains";
-      chain?: {
-        __typename?: "chains";
-        chains: Array<{
-          __typename?: "chains";
-          country?: null | string;
-          id: UUID;
-          name: string;
-          slug: string;
-          venues: Array<{
-            __typename?: "venues";
-            city?: null | string;
-            country?: null | string;
-            id: UUID;
-            name: string;
-            slug: string;
-          }>;
-          venues_aggregate: {
-            __typename?: "venues_aggregate";
-            aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-          };
-        }>;
-        chains_aggregate: {
-          __typename?: "chains_aggregate";
-          aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
-        };
-        country?: null | string;
-        description_en?: null | string;
-        description_uk?: null | string;
-        emails?: Array<string> | null;
-        id: UUID;
-        logo?: null | string;
-        name: string;
-        phone_numbers?: Array<string> | null;
-        slug: string;
-        social_links: Json;
-        website?: null | string;
-      } | null;
-      country?: null | string;
-      description_en?: null | string;
-      description_uk?: null | string;
-      emails?: Array<string> | null;
-      id: UUID;
-      logo?: null | string;
-      name: string;
-      phone_numbers?: Array<string> | null;
-      slug: string;
-      social_links: Json;
-      venues: Array<{
-        __typename?: "venues";
-        city?: null | string;
-        country?: null | string;
-        id: UUID;
-        name: string;
-        slug: string;
-      }>;
-      venues_aggregate: {
-        __typename?: "venues_aggregate";
-        aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-      };
-      website?: null | string;
-    } | null;
-    city?: null | string;
-    country?: null | string;
-    created_at: Timestamp;
-    description_en?: null | string;
-    description_uk?: null | string;
-    emails?: Array<string> | null;
-    events_aggregate: {
-      __typename?: "events_aggregate";
-      aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
-    };
-    geo?: Geography | null;
-    id: UUID;
-    images?: Array<string> | null;
-    logo?: null | string;
-    name: string;
-    owner_id?: null | UUID;
-    phone_numbers?: Array<string> | null;
-    postcode?: null | string;
-    slug: string;
-    social_links: Json;
-    status: Venue_Status_Enum;
-    updated_at: Timestamp;
-    user_id?: null | UUID;
-    venue_accommodation_details: Array<{
-      __typename?: "venue_accommodation_details";
-      amenities?: Array<string> | null;
-      bathrooms?: null | number;
-      bedrooms?: null | number;
-      check_in_time?: null | Time;
-      check_out_time?: null | Time;
-      max_guests?: null | number;
-      minimum_stay_nights?: null | number;
-    }>;
-    venue_beauty_salon_details: Array<{
-      __typename?: "venue_beauty_salon_details";
-      appointment_required?: boolean | null;
-      services?: Array<string> | null;
-      walk_ins_accepted?: boolean | null;
-    }>;
-    venue_restaurant_details: Array<{
-      __typename?: "venue_restaurant_details";
-      cuisine_types?: Array<string> | null;
-      features?: Array<string> | null;
-      price_range?: null | string;
-      seating_capacity?: null | number;
-    }>;
-    venue_schedules: Array<{
-      __typename?: "venue_schedule";
-      close_time: Time;
-      day_of_week: string;
-      id: UUID;
-      open_time: Time;
-    }>;
-    venue_school_details: Array<{
-      __typename?: "venue_school_details";
-      age_groups?: Array<string> | null;
-      class_size_max?: null | number;
-      languages_taught?: Array<string> | null;
-      online_classes_available?: boolean | null;
-      subjects?: Array<string> | null;
-    }>;
-    venue_shop_details: Array<{
-      __typename?: "venue_shop_details";
-      payment_methods?: Array<string> | null;
-      product_categories?: Array<string> | null;
-    }>;
-    website?: null | string;
-  }>;
-  venues_aggregate: {
-    __typename?: "venues_aggregate";
-    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-  };
-};
-
-export type GetUserVenuesQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
-  where: Venues_Bool_Exp;
-}>;
-
-/** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
-export type Int_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars["Int"]["input"]>;
-  _gt?: InputMaybe<Scalars["Int"]["input"]>;
-  _gte?: InputMaybe<Scalars["Int"]["input"]>;
-  _in?: InputMaybe<Array<Scalars["Int"]["input"]>>;
-  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _lt?: InputMaybe<Scalars["Int"]["input"]>;
-  _lte?: InputMaybe<Scalars["Int"]["input"]>;
-  _neq?: InputMaybe<Scalars["Int"]["input"]>;
-  _nin?: InputMaybe<Array<Scalars["Int"]["input"]>>;
-};
-
 /** Boolean expression to compare columns of type "json". All fields are combined with logical 'AND'. */
 export type Json_Comparison_Exp = {
   _eq?: InputMaybe<Scalars["json"]["input"]>;
@@ -4198,6 +3572,26 @@ export type Mutation_Root = {
   delete_chains?: Maybe<Chains_Mutation_Response>;
   /** delete single row from the table: "chains" */
   delete_chains_by_pk?: Maybe<Chains>;
+  /** delete data from the table: "clothing_age_group" */
+  delete_clothing_age_group?: Maybe<Clothing_Age_Group_Mutation_Response>;
+  /** delete single row from the table: "clothing_age_group" */
+  delete_clothing_age_group_by_pk?: Maybe<Clothing_Age_Group>;
+  /** delete data from the table: "clothing_gender" */
+  delete_clothing_gender?: Maybe<Clothing_Gender_Mutation_Response>;
+  /** delete single row from the table: "clothing_gender" */
+  delete_clothing_gender_by_pk?: Maybe<Clothing_Gender>;
+  /** delete data from the table: "clothing_product_details" */
+  delete_clothing_product_details?: Maybe<Clothing_Product_Details_Mutation_Response>;
+  /** delete single row from the table: "clothing_product_details" */
+  delete_clothing_product_details_by_pk?: Maybe<Clothing_Product_Details>;
+  /** delete data from the table: "clothing_size" */
+  delete_clothing_size?: Maybe<Clothing_Size_Mutation_Response>;
+  /** delete single row from the table: "clothing_size" */
+  delete_clothing_size_by_pk?: Maybe<Clothing_Size>;
+  /** delete data from the table: "clothing_type" */
+  delete_clothing_type?: Maybe<Clothing_Type_Mutation_Response>;
+  /** delete single row from the table: "clothing_type" */
+  delete_clothing_type_by_pk?: Maybe<Clothing_Type>;
   /** delete data from the table: "event_status" */
   delete_event_status?: Maybe<Event_Status_Mutation_Response>;
   /** delete single row from the table: "event_status" */
@@ -4218,10 +3612,38 @@ export type Mutation_Root = {
   delete_events_event_tags?: Maybe<Events_Event_Tags_Mutation_Response>;
   /** delete single row from the table: "events_event_tags" */
   delete_events_event_tags_by_pk?: Maybe<Events_Event_Tags>;
+  /** delete data from the table: "order_items" */
+  delete_order_items?: Maybe<Order_Items_Mutation_Response>;
+  /** delete single row from the table: "order_items" */
+  delete_order_items_by_pk?: Maybe<Order_Items>;
+  /** delete data from the table: "order_status" */
+  delete_order_status?: Maybe<Order_Status_Mutation_Response>;
+  /** delete single row from the table: "order_status" */
+  delete_order_status_by_pk?: Maybe<Order_Status>;
+  /** delete data from the table: "orders" */
+  delete_orders?: Maybe<Orders_Mutation_Response>;
+  /** delete single row from the table: "orders" */
+  delete_orders_by_pk?: Maybe<Orders>;
   /** delete data from the table: "price_type" */
   delete_price_type?: Maybe<Price_Type_Mutation_Response>;
   /** delete single row from the table: "price_type" */
   delete_price_type_by_pk?: Maybe<Price_Type>;
+  /** delete data from the table: "product_category" */
+  delete_product_category?: Maybe<Product_Category_Mutation_Response>;
+  /** delete single row from the table: "product_category" */
+  delete_product_category_by_pk?: Maybe<Product_Category>;
+  /** delete data from the table: "product_status" */
+  delete_product_status?: Maybe<Product_Status_Mutation_Response>;
+  /** delete single row from the table: "product_status" */
+  delete_product_status_by_pk?: Maybe<Product_Status>;
+  /** delete data from the table: "product_variants" */
+  delete_product_variants?: Maybe<Product_Variants_Mutation_Response>;
+  /** delete single row from the table: "product_variants" */
+  delete_product_variants_by_pk?: Maybe<Product_Variants>;
+  /** delete data from the table: "products" */
+  delete_products?: Maybe<Products_Mutation_Response>;
+  /** delete single row from the table: "products" */
+  delete_products_by_pk?: Maybe<Products>;
   /** delete data from the table: "provider_type" */
   delete_provider_type?: Maybe<Provider_Type_Mutation_Response>;
   /** delete single row from the table: "provider_type" */
@@ -4290,6 +3712,26 @@ export type Mutation_Root = {
   insert_chains?: Maybe<Chains_Mutation_Response>;
   /** insert a single row into the table: "chains" */
   insert_chains_one?: Maybe<Chains>;
+  /** insert data into the table: "clothing_age_group" */
+  insert_clothing_age_group?: Maybe<Clothing_Age_Group_Mutation_Response>;
+  /** insert a single row into the table: "clothing_age_group" */
+  insert_clothing_age_group_one?: Maybe<Clothing_Age_Group>;
+  /** insert data into the table: "clothing_gender" */
+  insert_clothing_gender?: Maybe<Clothing_Gender_Mutation_Response>;
+  /** insert a single row into the table: "clothing_gender" */
+  insert_clothing_gender_one?: Maybe<Clothing_Gender>;
+  /** insert data into the table: "clothing_product_details" */
+  insert_clothing_product_details?: Maybe<Clothing_Product_Details_Mutation_Response>;
+  /** insert a single row into the table: "clothing_product_details" */
+  insert_clothing_product_details_one?: Maybe<Clothing_Product_Details>;
+  /** insert data into the table: "clothing_size" */
+  insert_clothing_size?: Maybe<Clothing_Size_Mutation_Response>;
+  /** insert a single row into the table: "clothing_size" */
+  insert_clothing_size_one?: Maybe<Clothing_Size>;
+  /** insert data into the table: "clothing_type" */
+  insert_clothing_type?: Maybe<Clothing_Type_Mutation_Response>;
+  /** insert a single row into the table: "clothing_type" */
+  insert_clothing_type_one?: Maybe<Clothing_Type>;
   /** insert data into the table: "event_status" */
   insert_event_status?: Maybe<Event_Status_Mutation_Response>;
   /** insert a single row into the table: "event_status" */
@@ -4310,10 +3752,38 @@ export type Mutation_Root = {
   insert_events_event_tags_one?: Maybe<Events_Event_Tags>;
   /** insert a single row into the table: "events" */
   insert_events_one?: Maybe<Events>;
+  /** insert data into the table: "order_items" */
+  insert_order_items?: Maybe<Order_Items_Mutation_Response>;
+  /** insert a single row into the table: "order_items" */
+  insert_order_items_one?: Maybe<Order_Items>;
+  /** insert data into the table: "order_status" */
+  insert_order_status?: Maybe<Order_Status_Mutation_Response>;
+  /** insert a single row into the table: "order_status" */
+  insert_order_status_one?: Maybe<Order_Status>;
+  /** insert data into the table: "orders" */
+  insert_orders?: Maybe<Orders_Mutation_Response>;
+  /** insert a single row into the table: "orders" */
+  insert_orders_one?: Maybe<Orders>;
   /** insert data into the table: "price_type" */
   insert_price_type?: Maybe<Price_Type_Mutation_Response>;
   /** insert a single row into the table: "price_type" */
   insert_price_type_one?: Maybe<Price_Type>;
+  /** insert data into the table: "product_category" */
+  insert_product_category?: Maybe<Product_Category_Mutation_Response>;
+  /** insert a single row into the table: "product_category" */
+  insert_product_category_one?: Maybe<Product_Category>;
+  /** insert data into the table: "product_status" */
+  insert_product_status?: Maybe<Product_Status_Mutation_Response>;
+  /** insert a single row into the table: "product_status" */
+  insert_product_status_one?: Maybe<Product_Status>;
+  /** insert data into the table: "product_variants" */
+  insert_product_variants?: Maybe<Product_Variants_Mutation_Response>;
+  /** insert a single row into the table: "product_variants" */
+  insert_product_variants_one?: Maybe<Product_Variants>;
+  /** insert data into the table: "products" */
+  insert_products?: Maybe<Products_Mutation_Response>;
+  /** insert a single row into the table: "products" */
+  insert_products_one?: Maybe<Products>;
   /** insert data into the table: "provider_type" */
   insert_provider_type?: Maybe<Provider_Type_Mutation_Response>;
   /** insert a single row into the table: "provider_type" */
@@ -4386,6 +3856,36 @@ export type Mutation_Root = {
   update_chains_by_pk?: Maybe<Chains>;
   /** update multiples rows of table: "chains" */
   update_chains_many?: Maybe<Array<Maybe<Chains_Mutation_Response>>>;
+  /** update data of the table: "clothing_age_group" */
+  update_clothing_age_group?: Maybe<Clothing_Age_Group_Mutation_Response>;
+  /** update single row of the table: "clothing_age_group" */
+  update_clothing_age_group_by_pk?: Maybe<Clothing_Age_Group>;
+  /** update multiples rows of table: "clothing_age_group" */
+  update_clothing_age_group_many?: Maybe<Array<Maybe<Clothing_Age_Group_Mutation_Response>>>;
+  /** update data of the table: "clothing_gender" */
+  update_clothing_gender?: Maybe<Clothing_Gender_Mutation_Response>;
+  /** update single row of the table: "clothing_gender" */
+  update_clothing_gender_by_pk?: Maybe<Clothing_Gender>;
+  /** update multiples rows of table: "clothing_gender" */
+  update_clothing_gender_many?: Maybe<Array<Maybe<Clothing_Gender_Mutation_Response>>>;
+  /** update data of the table: "clothing_product_details" */
+  update_clothing_product_details?: Maybe<Clothing_Product_Details_Mutation_Response>;
+  /** update single row of the table: "clothing_product_details" */
+  update_clothing_product_details_by_pk?: Maybe<Clothing_Product_Details>;
+  /** update multiples rows of table: "clothing_product_details" */
+  update_clothing_product_details_many?: Maybe<Array<Maybe<Clothing_Product_Details_Mutation_Response>>>;
+  /** update data of the table: "clothing_size" */
+  update_clothing_size?: Maybe<Clothing_Size_Mutation_Response>;
+  /** update single row of the table: "clothing_size" */
+  update_clothing_size_by_pk?: Maybe<Clothing_Size>;
+  /** update multiples rows of table: "clothing_size" */
+  update_clothing_size_many?: Maybe<Array<Maybe<Clothing_Size_Mutation_Response>>>;
+  /** update data of the table: "clothing_type" */
+  update_clothing_type?: Maybe<Clothing_Type_Mutation_Response>;
+  /** update single row of the table: "clothing_type" */
+  update_clothing_type_by_pk?: Maybe<Clothing_Type>;
+  /** update multiples rows of table: "clothing_type" */
+  update_clothing_type_many?: Maybe<Array<Maybe<Clothing_Type_Mutation_Response>>>;
   /** update data of the table: "event_status" */
   update_event_status?: Maybe<Event_Status_Mutation_Response>;
   /** update single row of the table: "event_status" */
@@ -4416,12 +3916,54 @@ export type Mutation_Root = {
   update_events_event_tags_many?: Maybe<Array<Maybe<Events_Event_Tags_Mutation_Response>>>;
   /** update multiples rows of table: "events" */
   update_events_many?: Maybe<Array<Maybe<Events_Mutation_Response>>>;
+  /** update data of the table: "order_items" */
+  update_order_items?: Maybe<Order_Items_Mutation_Response>;
+  /** update single row of the table: "order_items" */
+  update_order_items_by_pk?: Maybe<Order_Items>;
+  /** update multiples rows of table: "order_items" */
+  update_order_items_many?: Maybe<Array<Maybe<Order_Items_Mutation_Response>>>;
+  /** update data of the table: "order_status" */
+  update_order_status?: Maybe<Order_Status_Mutation_Response>;
+  /** update single row of the table: "order_status" */
+  update_order_status_by_pk?: Maybe<Order_Status>;
+  /** update multiples rows of table: "order_status" */
+  update_order_status_many?: Maybe<Array<Maybe<Order_Status_Mutation_Response>>>;
+  /** update data of the table: "orders" */
+  update_orders?: Maybe<Orders_Mutation_Response>;
+  /** update single row of the table: "orders" */
+  update_orders_by_pk?: Maybe<Orders>;
+  /** update multiples rows of table: "orders" */
+  update_orders_many?: Maybe<Array<Maybe<Orders_Mutation_Response>>>;
   /** update data of the table: "price_type" */
   update_price_type?: Maybe<Price_Type_Mutation_Response>;
   /** update single row of the table: "price_type" */
   update_price_type_by_pk?: Maybe<Price_Type>;
   /** update multiples rows of table: "price_type" */
   update_price_type_many?: Maybe<Array<Maybe<Price_Type_Mutation_Response>>>;
+  /** update data of the table: "product_category" */
+  update_product_category?: Maybe<Product_Category_Mutation_Response>;
+  /** update single row of the table: "product_category" */
+  update_product_category_by_pk?: Maybe<Product_Category>;
+  /** update multiples rows of table: "product_category" */
+  update_product_category_many?: Maybe<Array<Maybe<Product_Category_Mutation_Response>>>;
+  /** update data of the table: "product_status" */
+  update_product_status?: Maybe<Product_Status_Mutation_Response>;
+  /** update single row of the table: "product_status" */
+  update_product_status_by_pk?: Maybe<Product_Status>;
+  /** update multiples rows of table: "product_status" */
+  update_product_status_many?: Maybe<Array<Maybe<Product_Status_Mutation_Response>>>;
+  /** update data of the table: "product_variants" */
+  update_product_variants?: Maybe<Product_Variants_Mutation_Response>;
+  /** update single row of the table: "product_variants" */
+  update_product_variants_by_pk?: Maybe<Product_Variants>;
+  /** update multiples rows of table: "product_variants" */
+  update_product_variants_many?: Maybe<Array<Maybe<Product_Variants_Mutation_Response>>>;
+  /** update data of the table: "products" */
+  update_products?: Maybe<Products_Mutation_Response>;
+  /** update single row of the table: "products" */
+  update_products_by_pk?: Maybe<Products>;
+  /** update multiples rows of table: "products" */
+  update_products_many?: Maybe<Array<Maybe<Products_Mutation_Response>>>;
   /** update data of the table: "provider_type" */
   update_provider_type?: Maybe<Provider_Type_Mutation_Response>;
   /** update single row of the table: "provider_type" */
@@ -4515,17 +4057,12 @@ export type Mutation_Root = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Accounts_By_PkArgs = {
-  id: Scalars["uuid"]["input"];
-};
-
-/** mutation root */
 export type Mutation_RootDelete_AccountsArgs = {
   where: Accounts_Bool_Exp;
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Chains_By_PkArgs = {
+export type Mutation_RootDelete_Accounts_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
@@ -4535,7 +4072,57 @@ export type Mutation_RootDelete_ChainsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Event_Status_By_PkArgs = {
+export type Mutation_RootDelete_Chains_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_Age_GroupArgs = {
+  where: Clothing_Age_Group_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_Age_Group_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_GenderArgs = {
+  where: Clothing_Gender_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_Gender_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_Product_DetailsArgs = {
+  where: Clothing_Product_Details_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_Product_Details_By_PkArgs = {
+  product_id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_SizeArgs = {
+  where: Clothing_Size_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_Size_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_TypeArgs = {
+  where: Clothing_Type_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Clothing_Type_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
@@ -4545,8 +4132,8 @@ export type Mutation_RootDelete_Event_StatusArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Event_Tags_By_PkArgs = {
-  id: Scalars["uuid"]["input"];
+export type Mutation_RootDelete_Event_Status_By_PkArgs = {
+  value: Scalars["String"]["input"];
 };
 
 /** mutation root */
@@ -4555,8 +4142,8 @@ export type Mutation_RootDelete_Event_TagsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Event_Type_By_PkArgs = {
-  value: Scalars["String"]["input"];
+export type Mutation_RootDelete_Event_Tags_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
@@ -4565,8 +4152,23 @@ export type Mutation_RootDelete_Event_TypeArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootDelete_Event_Type_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_EventsArgs = {
+  where: Events_Bool_Exp;
+};
+
+/** mutation root */
 export type Mutation_RootDelete_Events_By_PkArgs = {
   id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Events_Event_TagsArgs = {
+  where: Events_Event_Tags_Bool_Exp;
 };
 
 /** mutation root */
@@ -4576,18 +4178,33 @@ export type Mutation_RootDelete_Events_Event_Tags_By_PkArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Events_Event_TagsArgs = {
-  where: Events_Event_Tags_Bool_Exp;
+export type Mutation_RootDelete_Order_ItemsArgs = {
+  where: Order_Items_Bool_Exp;
 };
 
 /** mutation root */
-export type Mutation_RootDelete_EventsArgs = {
-  where: Events_Bool_Exp;
+export type Mutation_RootDelete_Order_Items_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Price_Type_By_PkArgs = {
+export type Mutation_RootDelete_Order_StatusArgs = {
+  where: Order_Status_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Order_Status_By_PkArgs = {
   value: Scalars["String"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_OrdersArgs = {
+  where: Orders_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Orders_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
@@ -4596,8 +4213,48 @@ export type Mutation_RootDelete_Price_TypeArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Provider_Type_By_PkArgs = {
+export type Mutation_RootDelete_Price_Type_By_PkArgs = {
   value: Scalars["String"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Product_CategoryArgs = {
+  where: Product_Category_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Product_Category_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Product_StatusArgs = {
+  where: Product_Status_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Product_Status_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Product_VariantsArgs = {
+  where: Product_Variants_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Product_Variants_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_ProductsArgs = {
+  where: Products_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Products_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
@@ -4606,8 +4263,8 @@ export type Mutation_RootDelete_Provider_TypeArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Sessions_By_PkArgs = {
-  sessionToken: Scalars["String"]["input"];
+export type Mutation_RootDelete_Provider_Type_By_PkArgs = {
+  value: Scalars["String"]["input"];
 };
 
 /** mutation root */
@@ -4616,8 +4273,8 @@ export type Mutation_RootDelete_SessionsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_User_Role_By_PkArgs = {
-  value: Scalars["String"]["input"];
+export type Mutation_RootDelete_Sessions_By_PkArgs = {
+  sessionToken: Scalars["String"]["input"];
 };
 
 /** mutation root */
@@ -4626,7 +4283,7 @@ export type Mutation_RootDelete_User_RoleArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_User_Status_By_PkArgs = {
+export type Mutation_RootDelete_User_Role_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
@@ -4636,8 +4293,8 @@ export type Mutation_RootDelete_User_StatusArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Users_By_PkArgs = {
-  id: Scalars["uuid"]["input"];
+export type Mutation_RootDelete_User_Status_By_PkArgs = {
+  value: Scalars["String"]["input"];
 };
 
 /** mutation root */
@@ -4646,8 +4303,8 @@ export type Mutation_RootDelete_UsersArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_Accommodation_Details_By_PkArgs = {
-  venue_id: Scalars["uuid"]["input"];
+export type Mutation_RootDelete_Users_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
@@ -4656,7 +4313,7 @@ export type Mutation_RootDelete_Venue_Accommodation_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_Beauty_Salon_Details_By_PkArgs = {
+export type Mutation_RootDelete_Venue_Accommodation_Details_By_PkArgs = {
   venue_id: Scalars["uuid"]["input"];
 };
 
@@ -4666,8 +4323,8 @@ export type Mutation_RootDelete_Venue_Beauty_Salon_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_Category_By_PkArgs = {
-  value: Scalars["String"]["input"];
+export type Mutation_RootDelete_Venue_Beauty_Salon_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
@@ -4676,8 +4333,8 @@ export type Mutation_RootDelete_Venue_CategoryArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_Restaurant_Details_By_PkArgs = {
-  venue_id: Scalars["uuid"]["input"];
+export type Mutation_RootDelete_Venue_Category_By_PkArgs = {
+  value: Scalars["String"]["input"];
 };
 
 /** mutation root */
@@ -4686,8 +4343,8 @@ export type Mutation_RootDelete_Venue_Restaurant_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_Schedule_By_PkArgs = {
-  id: Scalars["uuid"]["input"];
+export type Mutation_RootDelete_Venue_Restaurant_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
@@ -4696,8 +4353,8 @@ export type Mutation_RootDelete_Venue_ScheduleArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_School_Details_By_PkArgs = {
-  venue_id: Scalars["uuid"]["input"];
+export type Mutation_RootDelete_Venue_Schedule_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
@@ -4706,7 +4363,7 @@ export type Mutation_RootDelete_Venue_School_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_Shop_Details_By_PkArgs = {
+export type Mutation_RootDelete_Venue_School_Details_By_PkArgs = {
   venue_id: Scalars["uuid"]["input"];
 };
 
@@ -4716,8 +4373,8 @@ export type Mutation_RootDelete_Venue_Shop_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Venue_Status_By_PkArgs = {
-  value: Scalars["String"]["input"];
+export type Mutation_RootDelete_Venue_Shop_Details_By_PkArgs = {
+  venue_id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
@@ -4726,8 +4383,8 @@ export type Mutation_RootDelete_Venue_StatusArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Venues_By_PkArgs = {
-  id: Scalars["uuid"]["input"];
+export type Mutation_RootDelete_Venue_Status_By_PkArgs = {
+  value: Scalars["String"]["input"];
 };
 
 /** mutation root */
@@ -4736,8 +4393,8 @@ export type Mutation_RootDelete_VenuesArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootDelete_Verification_Tokens_By_PkArgs = {
-  token: Scalars["String"]["input"];
+export type Mutation_RootDelete_Venues_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
 };
 
 /** mutation root */
@@ -4746,9 +4403,8 @@ export type Mutation_RootDelete_Verification_TokensArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Accounts_OneArgs = {
-  object: Accounts_Insert_Input;
-  on_conflict?: InputMaybe<Accounts_On_Conflict>;
+export type Mutation_RootDelete_Verification_Tokens_By_PkArgs = {
+  token: Scalars["String"]["input"];
 };
 
 /** mutation root */
@@ -4758,9 +4414,9 @@ export type Mutation_RootInsert_AccountsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Chains_OneArgs = {
-  object: Chains_Insert_Input;
-  on_conflict?: InputMaybe<Chains_On_Conflict>;
+export type Mutation_RootInsert_Accounts_OneArgs = {
+  object: Accounts_Insert_Input;
+  on_conflict?: InputMaybe<Accounts_On_Conflict>;
 };
 
 /** mutation root */
@@ -4770,9 +4426,69 @@ export type Mutation_RootInsert_ChainsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Event_Status_OneArgs = {
-  object: Event_Status_Insert_Input;
-  on_conflict?: InputMaybe<Event_Status_On_Conflict>;
+export type Mutation_RootInsert_Chains_OneArgs = {
+  object: Chains_Insert_Input;
+  on_conflict?: InputMaybe<Chains_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_Age_GroupArgs = {
+  objects: Array<Clothing_Age_Group_Insert_Input>;
+  on_conflict?: InputMaybe<Clothing_Age_Group_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_Age_Group_OneArgs = {
+  object: Clothing_Age_Group_Insert_Input;
+  on_conflict?: InputMaybe<Clothing_Age_Group_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_GenderArgs = {
+  objects: Array<Clothing_Gender_Insert_Input>;
+  on_conflict?: InputMaybe<Clothing_Gender_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_Gender_OneArgs = {
+  object: Clothing_Gender_Insert_Input;
+  on_conflict?: InputMaybe<Clothing_Gender_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_Product_DetailsArgs = {
+  objects: Array<Clothing_Product_Details_Insert_Input>;
+  on_conflict?: InputMaybe<Clothing_Product_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_Product_Details_OneArgs = {
+  object: Clothing_Product_Details_Insert_Input;
+  on_conflict?: InputMaybe<Clothing_Product_Details_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_SizeArgs = {
+  objects: Array<Clothing_Size_Insert_Input>;
+  on_conflict?: InputMaybe<Clothing_Size_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_Size_OneArgs = {
+  object: Clothing_Size_Insert_Input;
+  on_conflict?: InputMaybe<Clothing_Size_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_TypeArgs = {
+  objects: Array<Clothing_Type_Insert_Input>;
+  on_conflict?: InputMaybe<Clothing_Type_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Clothing_Type_OneArgs = {
+  object: Clothing_Type_Insert_Input;
+  on_conflict?: InputMaybe<Clothing_Type_On_Conflict>;
 };
 
 /** mutation root */
@@ -4782,9 +4498,9 @@ export type Mutation_RootInsert_Event_StatusArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Event_Tags_OneArgs = {
-  object: Event_Tags_Insert_Input;
-  on_conflict?: InputMaybe<Event_Tags_On_Conflict>;
+export type Mutation_RootInsert_Event_Status_OneArgs = {
+  object: Event_Status_Insert_Input;
+  on_conflict?: InputMaybe<Event_Status_On_Conflict>;
 };
 
 /** mutation root */
@@ -4794,9 +4510,9 @@ export type Mutation_RootInsert_Event_TagsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Event_Type_OneArgs = {
-  object: Event_Type_Insert_Input;
-  on_conflict?: InputMaybe<Event_Type_On_Conflict>;
+export type Mutation_RootInsert_Event_Tags_OneArgs = {
+  object: Event_Tags_Insert_Input;
+  on_conflict?: InputMaybe<Event_Tags_On_Conflict>;
 };
 
 /** mutation root */
@@ -4806,14 +4522,26 @@ export type Mutation_RootInsert_Event_TypeArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Events_Event_Tags_OneArgs = {
-  object: Events_Event_Tags_Insert_Input;
-  on_conflict?: InputMaybe<Events_Event_Tags_On_Conflict>;
+export type Mutation_RootInsert_Event_Type_OneArgs = {
+  object: Event_Type_Insert_Input;
+  on_conflict?: InputMaybe<Event_Type_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_EventsArgs = {
+  objects: Array<Events_Insert_Input>;
+  on_conflict?: InputMaybe<Events_On_Conflict>;
 };
 
 /** mutation root */
 export type Mutation_RootInsert_Events_Event_TagsArgs = {
   objects: Array<Events_Event_Tags_Insert_Input>;
+  on_conflict?: InputMaybe<Events_Event_Tags_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Events_Event_Tags_OneArgs = {
+  object: Events_Event_Tags_Insert_Input;
   on_conflict?: InputMaybe<Events_Event_Tags_On_Conflict>;
 };
 
@@ -4824,15 +4552,39 @@ export type Mutation_RootInsert_Events_OneArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_EventsArgs = {
-  objects: Array<Events_Insert_Input>;
-  on_conflict?: InputMaybe<Events_On_Conflict>;
+export type Mutation_RootInsert_Order_ItemsArgs = {
+  objects: Array<Order_Items_Insert_Input>;
+  on_conflict?: InputMaybe<Order_Items_On_Conflict>;
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Price_Type_OneArgs = {
-  object: Price_Type_Insert_Input;
-  on_conflict?: InputMaybe<Price_Type_On_Conflict>;
+export type Mutation_RootInsert_Order_Items_OneArgs = {
+  object: Order_Items_Insert_Input;
+  on_conflict?: InputMaybe<Order_Items_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Order_StatusArgs = {
+  objects: Array<Order_Status_Insert_Input>;
+  on_conflict?: InputMaybe<Order_Status_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Order_Status_OneArgs = {
+  object: Order_Status_Insert_Input;
+  on_conflict?: InputMaybe<Order_Status_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_OrdersArgs = {
+  objects: Array<Orders_Insert_Input>;
+  on_conflict?: InputMaybe<Orders_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Orders_OneArgs = {
+  object: Orders_Insert_Input;
+  on_conflict?: InputMaybe<Orders_On_Conflict>;
 };
 
 /** mutation root */
@@ -4842,9 +4594,57 @@ export type Mutation_RootInsert_Price_TypeArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Provider_Type_OneArgs = {
-  object: Provider_Type_Insert_Input;
-  on_conflict?: InputMaybe<Provider_Type_On_Conflict>;
+export type Mutation_RootInsert_Price_Type_OneArgs = {
+  object: Price_Type_Insert_Input;
+  on_conflict?: InputMaybe<Price_Type_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Product_CategoryArgs = {
+  objects: Array<Product_Category_Insert_Input>;
+  on_conflict?: InputMaybe<Product_Category_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Product_Category_OneArgs = {
+  object: Product_Category_Insert_Input;
+  on_conflict?: InputMaybe<Product_Category_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Product_StatusArgs = {
+  objects: Array<Product_Status_Insert_Input>;
+  on_conflict?: InputMaybe<Product_Status_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Product_Status_OneArgs = {
+  object: Product_Status_Insert_Input;
+  on_conflict?: InputMaybe<Product_Status_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Product_VariantsArgs = {
+  objects: Array<Product_Variants_Insert_Input>;
+  on_conflict?: InputMaybe<Product_Variants_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Product_Variants_OneArgs = {
+  object: Product_Variants_Insert_Input;
+  on_conflict?: InputMaybe<Product_Variants_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_ProductsArgs = {
+  objects: Array<Products_Insert_Input>;
+  on_conflict?: InputMaybe<Products_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Products_OneArgs = {
+  object: Products_Insert_Input;
+  on_conflict?: InputMaybe<Products_On_Conflict>;
 };
 
 /** mutation root */
@@ -4854,9 +4654,9 @@ export type Mutation_RootInsert_Provider_TypeArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Sessions_OneArgs = {
-  object: Sessions_Insert_Input;
-  on_conflict?: InputMaybe<Sessions_On_Conflict>;
+export type Mutation_RootInsert_Provider_Type_OneArgs = {
+  object: Provider_Type_Insert_Input;
+  on_conflict?: InputMaybe<Provider_Type_On_Conflict>;
 };
 
 /** mutation root */
@@ -4866,9 +4666,9 @@ export type Mutation_RootInsert_SessionsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_User_Role_OneArgs = {
-  object: User_Role_Insert_Input;
-  on_conflict?: InputMaybe<User_Role_On_Conflict>;
+export type Mutation_RootInsert_Sessions_OneArgs = {
+  object: Sessions_Insert_Input;
+  on_conflict?: InputMaybe<Sessions_On_Conflict>;
 };
 
 /** mutation root */
@@ -4878,9 +4678,9 @@ export type Mutation_RootInsert_User_RoleArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_User_Status_OneArgs = {
-  object: User_Status_Insert_Input;
-  on_conflict?: InputMaybe<User_Status_On_Conflict>;
+export type Mutation_RootInsert_User_Role_OneArgs = {
+  object: User_Role_Insert_Input;
+  on_conflict?: InputMaybe<User_Role_On_Conflict>;
 };
 
 /** mutation root */
@@ -4890,9 +4690,9 @@ export type Mutation_RootInsert_User_StatusArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Users_OneArgs = {
-  object: Users_Insert_Input;
-  on_conflict?: InputMaybe<Users_On_Conflict>;
+export type Mutation_RootInsert_User_Status_OneArgs = {
+  object: User_Status_Insert_Input;
+  on_conflict?: InputMaybe<User_Status_On_Conflict>;
 };
 
 /** mutation root */
@@ -4902,9 +4702,9 @@ export type Mutation_RootInsert_UsersArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_Accommodation_Details_OneArgs = {
-  object: Venue_Accommodation_Details_Insert_Input;
-  on_conflict?: InputMaybe<Venue_Accommodation_Details_On_Conflict>;
+export type Mutation_RootInsert_Users_OneArgs = {
+  object: Users_Insert_Input;
+  on_conflict?: InputMaybe<Users_On_Conflict>;
 };
 
 /** mutation root */
@@ -4914,9 +4714,9 @@ export type Mutation_RootInsert_Venue_Accommodation_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_Beauty_Salon_Details_OneArgs = {
-  object: Venue_Beauty_Salon_Details_Insert_Input;
-  on_conflict?: InputMaybe<Venue_Beauty_Salon_Details_On_Conflict>;
+export type Mutation_RootInsert_Venue_Accommodation_Details_OneArgs = {
+  object: Venue_Accommodation_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Accommodation_Details_On_Conflict>;
 };
 
 /** mutation root */
@@ -4926,9 +4726,9 @@ export type Mutation_RootInsert_Venue_Beauty_Salon_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_Category_OneArgs = {
-  object: Venue_Category_Insert_Input;
-  on_conflict?: InputMaybe<Venue_Category_On_Conflict>;
+export type Mutation_RootInsert_Venue_Beauty_Salon_Details_OneArgs = {
+  object: Venue_Beauty_Salon_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Beauty_Salon_Details_On_Conflict>;
 };
 
 /** mutation root */
@@ -4938,9 +4738,9 @@ export type Mutation_RootInsert_Venue_CategoryArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_Restaurant_Details_OneArgs = {
-  object: Venue_Restaurant_Details_Insert_Input;
-  on_conflict?: InputMaybe<Venue_Restaurant_Details_On_Conflict>;
+export type Mutation_RootInsert_Venue_Category_OneArgs = {
+  object: Venue_Category_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Category_On_Conflict>;
 };
 
 /** mutation root */
@@ -4950,9 +4750,9 @@ export type Mutation_RootInsert_Venue_Restaurant_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_Schedule_OneArgs = {
-  object: Venue_Schedule_Insert_Input;
-  on_conflict?: InputMaybe<Venue_Schedule_On_Conflict>;
+export type Mutation_RootInsert_Venue_Restaurant_Details_OneArgs = {
+  object: Venue_Restaurant_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Restaurant_Details_On_Conflict>;
 };
 
 /** mutation root */
@@ -4962,9 +4762,9 @@ export type Mutation_RootInsert_Venue_ScheduleArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_School_Details_OneArgs = {
-  object: Venue_School_Details_Insert_Input;
-  on_conflict?: InputMaybe<Venue_School_Details_On_Conflict>;
+export type Mutation_RootInsert_Venue_Schedule_OneArgs = {
+  object: Venue_Schedule_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Schedule_On_Conflict>;
 };
 
 /** mutation root */
@@ -4974,9 +4774,9 @@ export type Mutation_RootInsert_Venue_School_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_Shop_Details_OneArgs = {
-  object: Venue_Shop_Details_Insert_Input;
-  on_conflict?: InputMaybe<Venue_Shop_Details_On_Conflict>;
+export type Mutation_RootInsert_Venue_School_Details_OneArgs = {
+  object: Venue_School_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_School_Details_On_Conflict>;
 };
 
 /** mutation root */
@@ -4986,9 +4786,9 @@ export type Mutation_RootInsert_Venue_Shop_DetailsArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Venue_Status_OneArgs = {
-  object: Venue_Status_Insert_Input;
-  on_conflict?: InputMaybe<Venue_Status_On_Conflict>;
+export type Mutation_RootInsert_Venue_Shop_Details_OneArgs = {
+  object: Venue_Shop_Details_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Shop_Details_On_Conflict>;
 };
 
 /** mutation root */
@@ -4998,9 +4798,9 @@ export type Mutation_RootInsert_Venue_StatusArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Venues_OneArgs = {
-  object: Venues_Insert_Input;
-  on_conflict?: InputMaybe<Venues_On_Conflict>;
+export type Mutation_RootInsert_Venue_Status_OneArgs = {
+  object: Venue_Status_Insert_Input;
+  on_conflict?: InputMaybe<Venue_Status_On_Conflict>;
 };
 
 /** mutation root */
@@ -5010,15 +4810,28 @@ export type Mutation_RootInsert_VenuesArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootInsert_Verification_Tokens_OneArgs = {
-  object: Verification_Tokens_Insert_Input;
-  on_conflict?: InputMaybe<Verification_Tokens_On_Conflict>;
+export type Mutation_RootInsert_Venues_OneArgs = {
+  object: Venues_Insert_Input;
+  on_conflict?: InputMaybe<Venues_On_Conflict>;
 };
 
 /** mutation root */
 export type Mutation_RootInsert_Verification_TokensArgs = {
   objects: Array<Verification_Tokens_Insert_Input>;
   on_conflict?: InputMaybe<Verification_Tokens_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Verification_Tokens_OneArgs = {
+  object: Verification_Tokens_Insert_Input;
+  on_conflict?: InputMaybe<Verification_Tokens_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_AccountsArgs = {
+  _inc?: InputMaybe<Accounts_Inc_Input>;
+  _set?: InputMaybe<Accounts_Set_Input>;
+  where: Accounts_Bool_Exp;
 };
 
 /** mutation root */
@@ -5034,10 +4847,9 @@ export type Mutation_RootUpdate_Accounts_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_AccountsArgs = {
-  _inc?: InputMaybe<Accounts_Inc_Input>;
-  _set?: InputMaybe<Accounts_Set_Input>;
-  where: Accounts_Bool_Exp;
+export type Mutation_RootUpdate_ChainsArgs = {
+  _set?: InputMaybe<Chains_Set_Input>;
+  where: Chains_Bool_Exp;
 };
 
 /** mutation root */
@@ -5052,9 +4864,94 @@ export type Mutation_RootUpdate_Chains_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_ChainsArgs = {
-  _set?: InputMaybe<Chains_Set_Input>;
-  where: Chains_Bool_Exp;
+export type Mutation_RootUpdate_Clothing_Age_GroupArgs = {
+  _set?: InputMaybe<Clothing_Age_Group_Set_Input>;
+  where: Clothing_Age_Group_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Age_Group_By_PkArgs = {
+  _set?: InputMaybe<Clothing_Age_Group_Set_Input>;
+  pk_columns: Clothing_Age_Group_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Age_Group_ManyArgs = {
+  updates: Array<Clothing_Age_Group_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_GenderArgs = {
+  _set?: InputMaybe<Clothing_Gender_Set_Input>;
+  where: Clothing_Gender_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Gender_By_PkArgs = {
+  _set?: InputMaybe<Clothing_Gender_Set_Input>;
+  pk_columns: Clothing_Gender_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Gender_ManyArgs = {
+  updates: Array<Clothing_Gender_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Product_DetailsArgs = {
+  _set?: InputMaybe<Clothing_Product_Details_Set_Input>;
+  where: Clothing_Product_Details_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Product_Details_By_PkArgs = {
+  _set?: InputMaybe<Clothing_Product_Details_Set_Input>;
+  pk_columns: Clothing_Product_Details_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Product_Details_ManyArgs = {
+  updates: Array<Clothing_Product_Details_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_SizeArgs = {
+  _set?: InputMaybe<Clothing_Size_Set_Input>;
+  where: Clothing_Size_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Size_By_PkArgs = {
+  _set?: InputMaybe<Clothing_Size_Set_Input>;
+  pk_columns: Clothing_Size_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Size_ManyArgs = {
+  updates: Array<Clothing_Size_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_TypeArgs = {
+  _set?: InputMaybe<Clothing_Type_Set_Input>;
+  where: Clothing_Type_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Type_By_PkArgs = {
+  _set?: InputMaybe<Clothing_Type_Set_Input>;
+  pk_columns: Clothing_Type_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Clothing_Type_ManyArgs = {
+  updates: Array<Clothing_Type_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Event_StatusArgs = {
+  _set?: InputMaybe<Event_Status_Set_Input>;
+  where: Event_Status_Bool_Exp;
 };
 
 /** mutation root */
@@ -5069,9 +4966,9 @@ export type Mutation_RootUpdate_Event_Status_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Event_StatusArgs = {
-  _set?: InputMaybe<Event_Status_Set_Input>;
-  where: Event_Status_Bool_Exp;
+export type Mutation_RootUpdate_Event_TagsArgs = {
+  _set?: InputMaybe<Event_Tags_Set_Input>;
+  where: Event_Tags_Bool_Exp;
 };
 
 /** mutation root */
@@ -5086,9 +4983,9 @@ export type Mutation_RootUpdate_Event_Tags_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Event_TagsArgs = {
-  _set?: InputMaybe<Event_Tags_Set_Input>;
-  where: Event_Tags_Bool_Exp;
+export type Mutation_RootUpdate_Event_TypeArgs = {
+  _set?: InputMaybe<Event_Type_Set_Input>;
+  where: Event_Type_Bool_Exp;
 };
 
 /** mutation root */
@@ -5100,46 +4997,6 @@ export type Mutation_RootUpdate_Event_Type_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Event_Type_ManyArgs = {
   updates: Array<Event_Type_Updates>;
-};
-
-/** mutation root */
-export type Mutation_RootUpdate_Event_TypeArgs = {
-  _set?: InputMaybe<Event_Type_Set_Input>;
-  where: Event_Type_Bool_Exp;
-};
-
-/** mutation root */
-export type Mutation_RootUpdate_Events_By_PkArgs = {
-  _append?: InputMaybe<Events_Append_Input>;
-  _delete_at_path?: InputMaybe<Events_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Events_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Events_Delete_Key_Input>;
-  _inc?: InputMaybe<Events_Inc_Input>;
-  _prepend?: InputMaybe<Events_Prepend_Input>;
-  _set?: InputMaybe<Events_Set_Input>;
-  pk_columns: Events_Pk_Columns_Input;
-};
-
-/** mutation root */
-export type Mutation_RootUpdate_Events_Event_Tags_By_PkArgs = {
-  _set?: InputMaybe<Events_Event_Tags_Set_Input>;
-  pk_columns: Events_Event_Tags_Pk_Columns_Input;
-};
-
-/** mutation root */
-export type Mutation_RootUpdate_Events_Event_Tags_ManyArgs = {
-  updates: Array<Events_Event_Tags_Updates>;
-};
-
-/** mutation root */
-export type Mutation_RootUpdate_Events_Event_TagsArgs = {
-  _set?: InputMaybe<Events_Event_Tags_Set_Input>;
-  where: Events_Event_Tags_Bool_Exp;
-};
-
-/** mutation root */
-export type Mutation_RootUpdate_Events_ManyArgs = {
-  updates: Array<Events_Updates>;
 };
 
 /** mutation root */
@@ -5155,6 +5012,111 @@ export type Mutation_RootUpdate_EventsArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootUpdate_Events_By_PkArgs = {
+  _append?: InputMaybe<Events_Append_Input>;
+  _delete_at_path?: InputMaybe<Events_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Events_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Events_Delete_Key_Input>;
+  _inc?: InputMaybe<Events_Inc_Input>;
+  _prepend?: InputMaybe<Events_Prepend_Input>;
+  _set?: InputMaybe<Events_Set_Input>;
+  pk_columns: Events_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Events_Event_TagsArgs = {
+  _set?: InputMaybe<Events_Event_Tags_Set_Input>;
+  where: Events_Event_Tags_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Events_Event_Tags_By_PkArgs = {
+  _set?: InputMaybe<Events_Event_Tags_Set_Input>;
+  pk_columns: Events_Event_Tags_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Events_Event_Tags_ManyArgs = {
+  updates: Array<Events_Event_Tags_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Events_ManyArgs = {
+  updates: Array<Events_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Order_ItemsArgs = {
+  _append?: InputMaybe<Order_Items_Append_Input>;
+  _delete_at_path?: InputMaybe<Order_Items_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Order_Items_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Order_Items_Delete_Key_Input>;
+  _inc?: InputMaybe<Order_Items_Inc_Input>;
+  _prepend?: InputMaybe<Order_Items_Prepend_Input>;
+  _set?: InputMaybe<Order_Items_Set_Input>;
+  where: Order_Items_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Order_Items_By_PkArgs = {
+  _append?: InputMaybe<Order_Items_Append_Input>;
+  _delete_at_path?: InputMaybe<Order_Items_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Order_Items_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Order_Items_Delete_Key_Input>;
+  _inc?: InputMaybe<Order_Items_Inc_Input>;
+  _prepend?: InputMaybe<Order_Items_Prepend_Input>;
+  _set?: InputMaybe<Order_Items_Set_Input>;
+  pk_columns: Order_Items_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Order_Items_ManyArgs = {
+  updates: Array<Order_Items_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Order_StatusArgs = {
+  _set?: InputMaybe<Order_Status_Set_Input>;
+  where: Order_Status_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Order_Status_By_PkArgs = {
+  _set?: InputMaybe<Order_Status_Set_Input>;
+  pk_columns: Order_Status_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Order_Status_ManyArgs = {
+  updates: Array<Order_Status_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_OrdersArgs = {
+  _inc?: InputMaybe<Orders_Inc_Input>;
+  _set?: InputMaybe<Orders_Set_Input>;
+  where: Orders_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Orders_By_PkArgs = {
+  _inc?: InputMaybe<Orders_Inc_Input>;
+  _set?: InputMaybe<Orders_Set_Input>;
+  pk_columns: Orders_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Orders_ManyArgs = {
+  updates: Array<Orders_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Price_TypeArgs = {
+  _set?: InputMaybe<Price_Type_Set_Input>;
+  where: Price_Type_Bool_Exp;
+};
+
+/** mutation root */
 export type Mutation_RootUpdate_Price_Type_By_PkArgs = {
   _set?: InputMaybe<Price_Type_Set_Input>;
   pk_columns: Price_Type_Pk_Columns_Input;
@@ -5166,9 +5128,81 @@ export type Mutation_RootUpdate_Price_Type_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Price_TypeArgs = {
-  _set?: InputMaybe<Price_Type_Set_Input>;
-  where: Price_Type_Bool_Exp;
+export type Mutation_RootUpdate_Product_CategoryArgs = {
+  _set?: InputMaybe<Product_Category_Set_Input>;
+  where: Product_Category_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_Category_By_PkArgs = {
+  _set?: InputMaybe<Product_Category_Set_Input>;
+  pk_columns: Product_Category_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_Category_ManyArgs = {
+  updates: Array<Product_Category_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_StatusArgs = {
+  _set?: InputMaybe<Product_Status_Set_Input>;
+  where: Product_Status_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_Status_By_PkArgs = {
+  _set?: InputMaybe<Product_Status_Set_Input>;
+  pk_columns: Product_Status_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_Status_ManyArgs = {
+  updates: Array<Product_Status_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_VariantsArgs = {
+  _inc?: InputMaybe<Product_Variants_Inc_Input>;
+  _set?: InputMaybe<Product_Variants_Set_Input>;
+  where: Product_Variants_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_Variants_By_PkArgs = {
+  _inc?: InputMaybe<Product_Variants_Inc_Input>;
+  _set?: InputMaybe<Product_Variants_Set_Input>;
+  pk_columns: Product_Variants_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Product_Variants_ManyArgs = {
+  updates: Array<Product_Variants_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_ProductsArgs = {
+  _inc?: InputMaybe<Products_Inc_Input>;
+  _set?: InputMaybe<Products_Set_Input>;
+  where: Products_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Products_By_PkArgs = {
+  _inc?: InputMaybe<Products_Inc_Input>;
+  _set?: InputMaybe<Products_Set_Input>;
+  pk_columns: Products_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Products_ManyArgs = {
+  updates: Array<Products_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Provider_TypeArgs = {
+  _set?: InputMaybe<Provider_Type_Set_Input>;
+  where: Provider_Type_Bool_Exp;
 };
 
 /** mutation root */
@@ -5183,9 +5217,9 @@ export type Mutation_RootUpdate_Provider_Type_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Provider_TypeArgs = {
-  _set?: InputMaybe<Provider_Type_Set_Input>;
-  where: Provider_Type_Bool_Exp;
+export type Mutation_RootUpdate_SessionsArgs = {
+  _set?: InputMaybe<Sessions_Set_Input>;
+  where: Sessions_Bool_Exp;
 };
 
 /** mutation root */
@@ -5200,9 +5234,9 @@ export type Mutation_RootUpdate_Sessions_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_SessionsArgs = {
-  _set?: InputMaybe<Sessions_Set_Input>;
-  where: Sessions_Bool_Exp;
+export type Mutation_RootUpdate_User_RoleArgs = {
+  _set?: InputMaybe<User_Role_Set_Input>;
+  where: User_Role_Bool_Exp;
 };
 
 /** mutation root */
@@ -5217,9 +5251,9 @@ export type Mutation_RootUpdate_User_Role_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_User_RoleArgs = {
-  _set?: InputMaybe<User_Role_Set_Input>;
-  where: User_Role_Bool_Exp;
+export type Mutation_RootUpdate_User_StatusArgs = {
+  _set?: InputMaybe<User_Status_Set_Input>;
+  where: User_Status_Bool_Exp;
 };
 
 /** mutation root */
@@ -5234,9 +5268,10 @@ export type Mutation_RootUpdate_User_Status_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_User_StatusArgs = {
-  _set?: InputMaybe<User_Status_Set_Input>;
-  where: User_Status_Bool_Exp;
+export type Mutation_RootUpdate_UsersArgs = {
+  _inc?: InputMaybe<Users_Inc_Input>;
+  _set?: InputMaybe<Users_Set_Input>;
+  where: Users_Bool_Exp;
 };
 
 /** mutation root */
@@ -5252,10 +5287,10 @@ export type Mutation_RootUpdate_Users_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_UsersArgs = {
-  _inc?: InputMaybe<Users_Inc_Input>;
-  _set?: InputMaybe<Users_Set_Input>;
-  where: Users_Bool_Exp;
+export type Mutation_RootUpdate_Venue_Accommodation_DetailsArgs = {
+  _inc?: InputMaybe<Venue_Accommodation_Details_Inc_Input>;
+  _set?: InputMaybe<Venue_Accommodation_Details_Set_Input>;
+  where: Venue_Accommodation_Details_Bool_Exp;
 };
 
 /** mutation root */
@@ -5271,10 +5306,9 @@ export type Mutation_RootUpdate_Venue_Accommodation_Details_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Venue_Accommodation_DetailsArgs = {
-  _inc?: InputMaybe<Venue_Accommodation_Details_Inc_Input>;
-  _set?: InputMaybe<Venue_Accommodation_Details_Set_Input>;
-  where: Venue_Accommodation_Details_Bool_Exp;
+export type Mutation_RootUpdate_Venue_Beauty_Salon_DetailsArgs = {
+  _set?: InputMaybe<Venue_Beauty_Salon_Details_Set_Input>;
+  where: Venue_Beauty_Salon_Details_Bool_Exp;
 };
 
 /** mutation root */
@@ -5289,9 +5323,9 @@ export type Mutation_RootUpdate_Venue_Beauty_Salon_Details_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Venue_Beauty_Salon_DetailsArgs = {
-  _set?: InputMaybe<Venue_Beauty_Salon_Details_Set_Input>;
-  where: Venue_Beauty_Salon_Details_Bool_Exp;
+export type Mutation_RootUpdate_Venue_CategoryArgs = {
+  _set?: InputMaybe<Venue_Category_Set_Input>;
+  where: Venue_Category_Bool_Exp;
 };
 
 /** mutation root */
@@ -5306,9 +5340,10 @@ export type Mutation_RootUpdate_Venue_Category_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Venue_CategoryArgs = {
-  _set?: InputMaybe<Venue_Category_Set_Input>;
-  where: Venue_Category_Bool_Exp;
+export type Mutation_RootUpdate_Venue_Restaurant_DetailsArgs = {
+  _inc?: InputMaybe<Venue_Restaurant_Details_Inc_Input>;
+  _set?: InputMaybe<Venue_Restaurant_Details_Set_Input>;
+  where: Venue_Restaurant_Details_Bool_Exp;
 };
 
 /** mutation root */
@@ -5324,10 +5359,9 @@ export type Mutation_RootUpdate_Venue_Restaurant_Details_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Venue_Restaurant_DetailsArgs = {
-  _inc?: InputMaybe<Venue_Restaurant_Details_Inc_Input>;
-  _set?: InputMaybe<Venue_Restaurant_Details_Set_Input>;
-  where: Venue_Restaurant_Details_Bool_Exp;
+export type Mutation_RootUpdate_Venue_ScheduleArgs = {
+  _set?: InputMaybe<Venue_Schedule_Set_Input>;
+  where: Venue_Schedule_Bool_Exp;
 };
 
 /** mutation root */
@@ -5342,9 +5376,10 @@ export type Mutation_RootUpdate_Venue_Schedule_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Venue_ScheduleArgs = {
-  _set?: InputMaybe<Venue_Schedule_Set_Input>;
-  where: Venue_Schedule_Bool_Exp;
+export type Mutation_RootUpdate_Venue_School_DetailsArgs = {
+  _inc?: InputMaybe<Venue_School_Details_Inc_Input>;
+  _set?: InputMaybe<Venue_School_Details_Set_Input>;
+  where: Venue_School_Details_Bool_Exp;
 };
 
 /** mutation root */
@@ -5360,10 +5395,9 @@ export type Mutation_RootUpdate_Venue_School_Details_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Venue_School_DetailsArgs = {
-  _inc?: InputMaybe<Venue_School_Details_Inc_Input>;
-  _set?: InputMaybe<Venue_School_Details_Set_Input>;
-  where: Venue_School_Details_Bool_Exp;
+export type Mutation_RootUpdate_Venue_Shop_DetailsArgs = {
+  _set?: InputMaybe<Venue_Shop_Details_Set_Input>;
+  where: Venue_Shop_Details_Bool_Exp;
 };
 
 /** mutation root */
@@ -5378,9 +5412,9 @@ export type Mutation_RootUpdate_Venue_Shop_Details_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Venue_Shop_DetailsArgs = {
-  _set?: InputMaybe<Venue_Shop_Details_Set_Input>;
-  where: Venue_Shop_Details_Bool_Exp;
+export type Mutation_RootUpdate_Venue_StatusArgs = {
+  _set?: InputMaybe<Venue_Status_Set_Input>;
+  where: Venue_Status_Bool_Exp;
 };
 
 /** mutation root */
@@ -5395,9 +5429,9 @@ export type Mutation_RootUpdate_Venue_Status_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_Venue_StatusArgs = {
-  _set?: InputMaybe<Venue_Status_Set_Input>;
-  where: Venue_Status_Bool_Exp;
+export type Mutation_RootUpdate_VenuesArgs = {
+  _set?: InputMaybe<Venues_Set_Input>;
+  where: Venues_Bool_Exp;
 };
 
 /** mutation root */
@@ -5412,9 +5446,9 @@ export type Mutation_RootUpdate_Venues_ManyArgs = {
 };
 
 /** mutation root */
-export type Mutation_RootUpdate_VenuesArgs = {
-  _set?: InputMaybe<Venues_Set_Input>;
-  where: Venues_Bool_Exp;
+export type Mutation_RootUpdate_Verification_TokensArgs = {
+  _set?: InputMaybe<Verification_Tokens_Set_Input>;
+  where: Verification_Tokens_Bool_Exp;
 };
 
 /** mutation root */
@@ -5428,12 +5462,6 @@ export type Mutation_RootUpdate_Verification_Tokens_ManyArgs = {
   updates: Array<Verification_Tokens_Updates>;
 };
 
-/** mutation root */
-export type Mutation_RootUpdate_Verification_TokensArgs = {
-  _set?: InputMaybe<Verification_Tokens_Set_Input>;
-  where: Verification_Tokens_Bool_Exp;
-};
-
 /** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
 export type Numeric_Comparison_Exp = {
   _eq?: InputMaybe<Scalars["numeric"]["input"]>;
@@ -5445,6 +5473,992 @@ export type Numeric_Comparison_Exp = {
   _lte?: InputMaybe<Scalars["numeric"]["input"]>;
   _neq?: InputMaybe<Scalars["numeric"]["input"]>;
   _nin?: InputMaybe<Array<Scalars["numeric"]["input"]>>;
+};
+
+/** column ordering options */
+export enum Order_By {
+  /** in ascending order, nulls last */
+  Asc = "asc",
+  /** in ascending order, nulls first */
+  AscNullsFirst = "asc_nulls_first",
+  /** in ascending order, nulls last */
+  AscNullsLast = "asc_nulls_last",
+  /** in descending order, nulls first */
+  Desc = "desc",
+  /** in descending order, nulls first */
+  DescNullsFirst = "desc_nulls_first",
+  /** in descending order, nulls last */
+  DescNullsLast = "desc_nulls_last",
+}
+
+/** Individual items within an order */
+export type Order_Items = {
+  __typename?: "order_items";
+  created_at: Scalars["timestamptz"]["output"];
+  currency: Scalars["String"]["output"];
+  id: Scalars["uuid"]["output"];
+  metadata?: Maybe<Scalars["jsonb"]["output"]>;
+  name_snapshot: Scalars["String"]["output"];
+  /** An object relationship */
+  order: Orders;
+  order_id: Scalars["uuid"]["output"];
+  /** An object relationship */
+  product?: Maybe<Products>;
+  product_id?: Maybe<Scalars["uuid"]["output"]>;
+  quantity: Scalars["Int"]["output"];
+  unit_price_minor: Scalars["Int"]["output"];
+  /** An object relationship */
+  variant?: Maybe<Product_Variants>;
+  variant_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** Individual items within an order */
+export type Order_ItemsMetadataArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregated selection of "order_items" */
+export type Order_Items_Aggregate = {
+  __typename?: "order_items_aggregate";
+  aggregate?: Maybe<Order_Items_Aggregate_Fields>;
+  nodes: Array<Order_Items>;
+};
+
+export type Order_Items_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Order_Items_Aggregate_Bool_Exp_Count>;
+};
+
+export type Order_Items_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Order_Items_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Order_Items_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "order_items" */
+export type Order_Items_Aggregate_Fields = {
+  __typename?: "order_items_aggregate_fields";
+  avg?: Maybe<Order_Items_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Order_Items_Max_Fields>;
+  min?: Maybe<Order_Items_Min_Fields>;
+  stddev?: Maybe<Order_Items_Stddev_Fields>;
+  stddev_pop?: Maybe<Order_Items_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Order_Items_Stddev_Samp_Fields>;
+  sum?: Maybe<Order_Items_Sum_Fields>;
+  var_pop?: Maybe<Order_Items_Var_Pop_Fields>;
+  var_samp?: Maybe<Order_Items_Var_Samp_Fields>;
+  variance?: Maybe<Order_Items_Variance_Fields>;
+};
+
+/** aggregate fields of "order_items" */
+export type Order_Items_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Order_Items_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "order_items" */
+export type Order_Items_Aggregate_Order_By = {
+  avg?: InputMaybe<Order_Items_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Order_Items_Max_Order_By>;
+  min?: InputMaybe<Order_Items_Min_Order_By>;
+  stddev?: InputMaybe<Order_Items_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Order_Items_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Order_Items_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Order_Items_Sum_Order_By>;
+  var_pop?: InputMaybe<Order_Items_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Order_Items_Var_Samp_Order_By>;
+  variance?: InputMaybe<Order_Items_Variance_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Order_Items_Append_Input = {
+  metadata?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
+/** input type for inserting array relation for remote table "order_items" */
+export type Order_Items_Arr_Rel_Insert_Input = {
+  data: Array<Order_Items_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Order_Items_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Order_Items_Avg_Fields = {
+  __typename?: "order_items_avg_fields";
+  quantity?: Maybe<Scalars["Float"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "order_items" */
+export type Order_Items_Avg_Order_By = {
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "order_items". All fields are combined with a logical 'AND'. */
+export type Order_Items_Bool_Exp = {
+  _and?: InputMaybe<Array<Order_Items_Bool_Exp>>;
+  _not?: InputMaybe<Order_Items_Bool_Exp>;
+  _or?: InputMaybe<Array<Order_Items_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  currency?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
+  name_snapshot?: InputMaybe<String_Comparison_Exp>;
+  order?: InputMaybe<Orders_Bool_Exp>;
+  order_id?: InputMaybe<Uuid_Comparison_Exp>;
+  product?: InputMaybe<Products_Bool_Exp>;
+  product_id?: InputMaybe<Uuid_Comparison_Exp>;
+  quantity?: InputMaybe<Int_Comparison_Exp>;
+  unit_price_minor?: InputMaybe<Int_Comparison_Exp>;
+  variant?: InputMaybe<Product_Variants_Bool_Exp>;
+  variant_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "order_items" */
+export enum Order_Items_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  OrderItemsPkey = "order_items_pkey",
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Order_Items_Delete_At_Path_Input = {
+  metadata?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Order_Items_Delete_Elem_Input = {
+  metadata?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Order_Items_Delete_Key_Input = {
+  metadata?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** input type for incrementing numeric columns in table "order_items" */
+export type Order_Items_Inc_Input = {
+  quantity?: InputMaybe<Scalars["Int"]["input"]>;
+  unit_price_minor?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "order_items" */
+export type Order_Items_Insert_Input = {
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  metadata?: InputMaybe<Scalars["jsonb"]["input"]>;
+  name_snapshot?: InputMaybe<Scalars["String"]["input"]>;
+  order?: InputMaybe<Orders_Obj_Rel_Insert_Input>;
+  order_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  product?: InputMaybe<Products_Obj_Rel_Insert_Input>;
+  product_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  quantity?: InputMaybe<Scalars["Int"]["input"]>;
+  unit_price_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  variant?: InputMaybe<Product_Variants_Obj_Rel_Insert_Input>;
+  variant_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Order_Items_Max_Fields = {
+  __typename?: "order_items_max_fields";
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  currency?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  name_snapshot?: Maybe<Scalars["String"]["output"]>;
+  order_id?: Maybe<Scalars["uuid"]["output"]>;
+  product_id?: Maybe<Scalars["uuid"]["output"]>;
+  quantity?: Maybe<Scalars["Int"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Int"]["output"]>;
+  variant_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "order_items" */
+export type Order_Items_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  currency?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name_snapshot?: InputMaybe<Order_By>;
+  order_id?: InputMaybe<Order_By>;
+  product_id?: InputMaybe<Order_By>;
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+  variant_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Order_Items_Min_Fields = {
+  __typename?: "order_items_min_fields";
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  currency?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  name_snapshot?: Maybe<Scalars["String"]["output"]>;
+  order_id?: Maybe<Scalars["uuid"]["output"]>;
+  product_id?: Maybe<Scalars["uuid"]["output"]>;
+  quantity?: Maybe<Scalars["Int"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Int"]["output"]>;
+  variant_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "order_items" */
+export type Order_Items_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  currency?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name_snapshot?: InputMaybe<Order_By>;
+  order_id?: InputMaybe<Order_By>;
+  product_id?: InputMaybe<Order_By>;
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+  variant_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "order_items" */
+export type Order_Items_Mutation_Response = {
+  __typename?: "order_items_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Order_Items>;
+};
+
+/** on_conflict condition type for table "order_items" */
+export type Order_Items_On_Conflict = {
+  constraint: Order_Items_Constraint;
+  update_columns?: Array<Order_Items_Update_Column>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "order_items". */
+export type Order_Items_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  currency?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
+  name_snapshot?: InputMaybe<Order_By>;
+  order?: InputMaybe<Orders_Order_By>;
+  order_id?: InputMaybe<Order_By>;
+  product?: InputMaybe<Products_Order_By>;
+  product_id?: InputMaybe<Order_By>;
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+  variant?: InputMaybe<Product_Variants_Order_By>;
+  variant_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: order_items */
+export type Order_Items_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Order_Items_Prepend_Input = {
+  metadata?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
+/** select columns of table "order_items" */
+export enum Order_Items_Select_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Currency = "currency",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Metadata = "metadata",
+  /** column name */
+  NameSnapshot = "name_snapshot",
+  /** column name */
+  OrderId = "order_id",
+  /** column name */
+  ProductId = "product_id",
+  /** column name */
+  Quantity = "quantity",
+  /** column name */
+  UnitPriceMinor = "unit_price_minor",
+  /** column name */
+  VariantId = "variant_id",
+}
+
+/** input type for updating data in table "order_items" */
+export type Order_Items_Set_Input = {
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  metadata?: InputMaybe<Scalars["jsonb"]["input"]>;
+  name_snapshot?: InputMaybe<Scalars["String"]["input"]>;
+  order_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  product_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  quantity?: InputMaybe<Scalars["Int"]["input"]>;
+  unit_price_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  variant_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Order_Items_Stddev_Fields = {
+  __typename?: "order_items_stddev_fields";
+  quantity?: Maybe<Scalars["Float"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "order_items" */
+export type Order_Items_Stddev_Order_By = {
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Order_Items_Stddev_Pop_Fields = {
+  __typename?: "order_items_stddev_pop_fields";
+  quantity?: Maybe<Scalars["Float"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "order_items" */
+export type Order_Items_Stddev_Pop_Order_By = {
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Order_Items_Stddev_Samp_Fields = {
+  __typename?: "order_items_stddev_samp_fields";
+  quantity?: Maybe<Scalars["Float"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "order_items" */
+export type Order_Items_Stddev_Samp_Order_By = {
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "order_items" */
+export type Order_Items_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Order_Items_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Order_Items_Stream_Cursor_Value_Input = {
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  metadata?: InputMaybe<Scalars["jsonb"]["input"]>;
+  name_snapshot?: InputMaybe<Scalars["String"]["input"]>;
+  order_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  product_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  quantity?: InputMaybe<Scalars["Int"]["input"]>;
+  unit_price_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  variant_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Order_Items_Sum_Fields = {
+  __typename?: "order_items_sum_fields";
+  quantity?: Maybe<Scalars["Int"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "order_items" */
+export type Order_Items_Sum_Order_By = {
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "order_items" */
+export enum Order_Items_Update_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Currency = "currency",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Metadata = "metadata",
+  /** column name */
+  NameSnapshot = "name_snapshot",
+  /** column name */
+  OrderId = "order_id",
+  /** column name */
+  ProductId = "product_id",
+  /** column name */
+  Quantity = "quantity",
+  /** column name */
+  UnitPriceMinor = "unit_price_minor",
+  /** column name */
+  VariantId = "variant_id",
+}
+
+export type Order_Items_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Order_Items_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Order_Items_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Order_Items_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Order_Items_Delete_Key_Input>;
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Order_Items_Inc_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Order_Items_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Order_Items_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Order_Items_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Order_Items_Var_Pop_Fields = {
+  __typename?: "order_items_var_pop_fields";
+  quantity?: Maybe<Scalars["Float"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "order_items" */
+export type Order_Items_Var_Pop_Order_By = {
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Order_Items_Var_Samp_Fields = {
+  __typename?: "order_items_var_samp_fields";
+  quantity?: Maybe<Scalars["Float"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "order_items" */
+export type Order_Items_Var_Samp_Order_By = {
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Order_Items_Variance_Fields = {
+  __typename?: "order_items_variance_fields";
+  quantity?: Maybe<Scalars["Float"]["output"]>;
+  unit_price_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "order_items" */
+export type Order_Items_Variance_Order_By = {
+  quantity?: InputMaybe<Order_By>;
+  unit_price_minor?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "order_status" */
+export type Order_Status = {
+  __typename?: "order_status";
+  value: Scalars["String"]["output"];
+};
+
+/** aggregated selection of "order_status" */
+export type Order_Status_Aggregate = {
+  __typename?: "order_status_aggregate";
+  aggregate?: Maybe<Order_Status_Aggregate_Fields>;
+  nodes: Array<Order_Status>;
+};
+
+/** aggregate fields of "order_status" */
+export type Order_Status_Aggregate_Fields = {
+  __typename?: "order_status_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Order_Status_Max_Fields>;
+  min?: Maybe<Order_Status_Min_Fields>;
+};
+
+/** aggregate fields of "order_status" */
+export type Order_Status_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Order_Status_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** Boolean expression to filter rows from the table "order_status". All fields are combined with a logical 'AND'. */
+export type Order_Status_Bool_Exp = {
+  _and?: InputMaybe<Array<Order_Status_Bool_Exp>>;
+  _not?: InputMaybe<Order_Status_Bool_Exp>;
+  _or?: InputMaybe<Array<Order_Status_Bool_Exp>>;
+  value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "order_status" */
+export enum Order_Status_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  OrderStatusPkey = "order_status_pkey",
+}
+
+export enum Order_Status_Enum {
+  Cancelled = "cancelled",
+  Delivered = "delivered",
+  Paid = "paid",
+  Pending = "pending",
+  Processing = "processing",
+  Refunded = "refunded",
+  Shipped = "shipped",
+}
+
+/** Boolean expression to compare columns of type "order_status_enum". All fields are combined with logical 'AND'. */
+export type Order_Status_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Order_Status_Enum>;
+  _in?: InputMaybe<Array<Order_Status_Enum>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _neq?: InputMaybe<Order_Status_Enum>;
+  _nin?: InputMaybe<Array<Order_Status_Enum>>;
+};
+
+/** input type for inserting data into table "order_status" */
+export type Order_Status_Insert_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Order_Status_Max_Fields = {
+  __typename?: "order_status_max_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type Order_Status_Min_Fields = {
+  __typename?: "order_status_min_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** response of any mutation on the table "order_status" */
+export type Order_Status_Mutation_Response = {
+  __typename?: "order_status_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Order_Status>;
+};
+
+/** input type for inserting object relation for remote table "order_status" */
+export type Order_Status_Obj_Rel_Insert_Input = {
+  data: Order_Status_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Order_Status_On_Conflict>;
+};
+
+/** on_conflict condition type for table "order_status" */
+export type Order_Status_On_Conflict = {
+  constraint: Order_Status_Constraint;
+  update_columns?: Array<Order_Status_Update_Column>;
+  where?: InputMaybe<Order_Status_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "order_status". */
+export type Order_Status_Order_By = {
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: order_status */
+export type Order_Status_Pk_Columns_Input = {
+  value: Scalars["String"]["input"];
+};
+
+/** select columns of table "order_status" */
+export enum Order_Status_Select_Column {
+  /** column name */
+  Value = "value",
+}
+
+/** input type for updating data in table "order_status" */
+export type Order_Status_Set_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Streaming cursor of the table "order_status" */
+export type Order_Status_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Order_Status_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Order_Status_Stream_Cursor_Value_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** update columns of table "order_status" */
+export enum Order_Status_Update_Column {
+  /** column name */
+  Value = "value",
+}
+
+export type Order_Status_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Order_Status_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Order_Status_Bool_Exp;
+};
+
+/** Customer orders with payment status */
+export type Orders = {
+  __typename?: "orders";
+  created_at: Scalars["timestamptz"]["output"];
+  currency: Scalars["String"]["output"];
+  email: Scalars["String"]["output"];
+  id: Scalars["uuid"]["output"];
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: Maybe<Scalars["String"]["output"]>;
+  /** An array relationship */
+  order_items: Array<Order_Items>;
+  /** An aggregate relationship */
+  order_items_aggregate: Order_Items_Aggregate;
+  /** An object relationship */
+  order_status: Order_Status;
+  payment_intent_id?: Maybe<Scalars["String"]["output"]>;
+  status: Order_Status_Enum;
+  subtotal_minor: Scalars["Int"]["output"];
+  total_minor: Scalars["Int"]["output"];
+  updated_at: Scalars["timestamptz"]["output"];
+  /** An object relationship */
+  user?: Maybe<Users>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** Customer orders with payment status */
+export type OrdersOrder_ItemsArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+/** Customer orders with payment status */
+export type OrdersOrder_Items_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+/** aggregated selection of "orders" */
+export type Orders_Aggregate = {
+  __typename?: "orders_aggregate";
+  aggregate?: Maybe<Orders_Aggregate_Fields>;
+  nodes: Array<Orders>;
+};
+
+/** aggregate fields of "orders" */
+export type Orders_Aggregate_Fields = {
+  __typename?: "orders_aggregate_fields";
+  avg?: Maybe<Orders_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Orders_Max_Fields>;
+  min?: Maybe<Orders_Min_Fields>;
+  stddev?: Maybe<Orders_Stddev_Fields>;
+  stddev_pop?: Maybe<Orders_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Orders_Stddev_Samp_Fields>;
+  sum?: Maybe<Orders_Sum_Fields>;
+  var_pop?: Maybe<Orders_Var_Pop_Fields>;
+  var_samp?: Maybe<Orders_Var_Samp_Fields>;
+  variance?: Maybe<Orders_Variance_Fields>;
+};
+
+/** aggregate fields of "orders" */
+export type Orders_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Orders_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** aggregate avg on columns */
+export type Orders_Avg_Fields = {
+  __typename?: "orders_avg_fields";
+  subtotal_minor?: Maybe<Scalars["Float"]["output"]>;
+  total_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** Boolean expression to filter rows from the table "orders". All fields are combined with a logical 'AND'. */
+export type Orders_Bool_Exp = {
+  _and?: InputMaybe<Array<Orders_Bool_Exp>>;
+  _not?: InputMaybe<Orders_Bool_Exp>;
+  _or?: InputMaybe<Array<Orders_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  currency?: InputMaybe<String_Comparison_Exp>;
+  email?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  idempotency_key?: InputMaybe<String_Comparison_Exp>;
+  order_items?: InputMaybe<Order_Items_Bool_Exp>;
+  order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Bool_Exp>;
+  order_status?: InputMaybe<Order_Status_Bool_Exp>;
+  payment_intent_id?: InputMaybe<String_Comparison_Exp>;
+  status?: InputMaybe<Order_Status_Enum_Comparison_Exp>;
+  subtotal_minor?: InputMaybe<Int_Comparison_Exp>;
+  total_minor?: InputMaybe<Int_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "orders" */
+export enum Orders_Constraint {
+  /** unique or primary key constraint on columns "idempotency_key" */
+  OrdersIdempotencyKeyKey = "orders_idempotency_key_key",
+  /** unique or primary key constraint on columns "id" */
+  OrdersPkey = "orders_pkey",
+}
+
+/** input type for incrementing numeric columns in table "orders" */
+export type Orders_Inc_Input = {
+  subtotal_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  total_minor?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "orders" */
+export type Orders_Insert_Input = {
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: InputMaybe<Scalars["String"]["input"]>;
+  order_items?: InputMaybe<Order_Items_Arr_Rel_Insert_Input>;
+  order_status?: InputMaybe<Order_Status_Obj_Rel_Insert_Input>;
+  payment_intent_id?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Order_Status_Enum>;
+  subtotal_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  total_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Orders_Max_Fields = {
+  __typename?: "orders_max_fields";
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  currency?: Maybe<Scalars["String"]["output"]>;
+  email?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: Maybe<Scalars["String"]["output"]>;
+  payment_intent_id?: Maybe<Scalars["String"]["output"]>;
+  subtotal_minor?: Maybe<Scalars["Int"]["output"]>;
+  total_minor?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type Orders_Min_Fields = {
+  __typename?: "orders_min_fields";
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  currency?: Maybe<Scalars["String"]["output"]>;
+  email?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: Maybe<Scalars["String"]["output"]>;
+  payment_intent_id?: Maybe<Scalars["String"]["output"]>;
+  subtotal_minor?: Maybe<Scalars["Int"]["output"]>;
+  total_minor?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** response of any mutation on the table "orders" */
+export type Orders_Mutation_Response = {
+  __typename?: "orders_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Orders>;
+};
+
+/** input type for inserting object relation for remote table "orders" */
+export type Orders_Obj_Rel_Insert_Input = {
+  data: Orders_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Orders_On_Conflict>;
+};
+
+/** on_conflict condition type for table "orders" */
+export type Orders_On_Conflict = {
+  constraint: Orders_Constraint;
+  update_columns?: Array<Orders_Update_Column>;
+  where?: InputMaybe<Orders_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "orders". */
+export type Orders_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  currency?: InputMaybe<Order_By>;
+  email?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  idempotency_key?: InputMaybe<Order_By>;
+  order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Order_By>;
+  order_status?: InputMaybe<Order_Status_Order_By>;
+  payment_intent_id?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  subtotal_minor?: InputMaybe<Order_By>;
+  total_minor?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: orders */
+export type Orders_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "orders" */
+export enum Orders_Select_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Currency = "currency",
+  /** column name */
+  Email = "email",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IdempotencyKey = "idempotency_key",
+  /** column name */
+  PaymentIntentId = "payment_intent_id",
+  /** column name */
+  Status = "status",
+  /** column name */
+  SubtotalMinor = "subtotal_minor",
+  /** column name */
+  TotalMinor = "total_minor",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+}
+
+/** input type for updating data in table "orders" */
+export type Orders_Set_Input = {
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: InputMaybe<Scalars["String"]["input"]>;
+  payment_intent_id?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Order_Status_Enum>;
+  subtotal_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  total_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Orders_Stddev_Fields = {
+  __typename?: "orders_stddev_fields";
+  subtotal_minor?: Maybe<Scalars["Float"]["output"]>;
+  total_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Orders_Stddev_Pop_Fields = {
+  __typename?: "orders_stddev_pop_fields";
+  subtotal_minor?: Maybe<Scalars["Float"]["output"]>;
+  total_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Orders_Stddev_Samp_Fields = {
+  __typename?: "orders_stddev_samp_fields";
+  subtotal_minor?: Maybe<Scalars["Float"]["output"]>;
+  total_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** Streaming cursor of the table "orders" */
+export type Orders_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Orders_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Orders_Stream_Cursor_Value_Input = {
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  /** Unique key for order deduplication (hash of cart + email) */
+  idempotency_key?: InputMaybe<Scalars["String"]["input"]>;
+  payment_intent_id?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Order_Status_Enum>;
+  subtotal_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  total_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Orders_Sum_Fields = {
+  __typename?: "orders_sum_fields";
+  subtotal_minor?: Maybe<Scalars["Int"]["output"]>;
+  total_minor?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** update columns of table "orders" */
+export enum Orders_Update_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Currency = "currency",
+  /** column name */
+  Email = "email",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IdempotencyKey = "idempotency_key",
+  /** column name */
+  PaymentIntentId = "payment_intent_id",
+  /** column name */
+  Status = "status",
+  /** column name */
+  SubtotalMinor = "subtotal_minor",
+  /** column name */
+  TotalMinor = "total_minor",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+}
+
+export type Orders_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Orders_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Orders_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Orders_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Orders_Var_Pop_Fields = {
+  __typename?: "orders_var_pop_fields";
+  subtotal_minor?: Maybe<Scalars["Float"]["output"]>;
+  total_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate var_samp on columns */
+export type Orders_Var_Samp_Fields = {
+  __typename?: "orders_var_samp_fields";
+  subtotal_minor?: Maybe<Scalars["Float"]["output"]>;
+  total_minor?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate variance on columns */
+export type Orders_Variance_Fields = {
+  __typename?: "orders_variance_fields";
+  subtotal_minor?: Maybe<Scalars["Float"]["output"]>;
+  total_minor?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** columns and relationships of "price_type" */
@@ -5483,6 +6497,23 @@ export type Price_Type_Bool_Exp = {
   description?: InputMaybe<String_Comparison_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "price_type" */
+export enum Price_Type_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  PriceTypePkey = "price_type_pkey",
+}
+
+export enum Price_Type_Enum {
+  /** Donation-based event */
+  Donation = "DONATION",
+  /** Free event with no cost */
+  Free = "FREE",
+  /** Paid event with fixed ticket price */
+  Paid = "PAID",
+  /** Event with suggested donation amount */
+  SuggestedDonation = "SUGGESTED_DONATION",
+}
 
 /** Boolean expression to compare columns of type "price_type_enum". All fields are combined with logical 'AND'. */
 export type Price_Type_Enum_Comparison_Exp = {
@@ -5547,6 +6578,14 @@ export type Price_Type_Pk_Columns_Input = {
   value: Scalars["String"]["input"];
 };
 
+/** select columns of table "price_type" */
+export enum Price_Type_Select_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 /** input type for updating data in table "price_type" */
 export type Price_Type_Set_Input = {
   description?: InputMaybe<Scalars["String"]["input"]>;
@@ -5567,11 +6606,1448 @@ export type Price_Type_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "price_type" */
+export enum Price_Type_Update_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 export type Price_Type_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Price_Type_Set_Input>;
   /** filter the rows which have to be updated */
   where: Price_Type_Bool_Exp;
+};
+
+/** Enum table for product categories */
+export type Product_Category = {
+  __typename?: "product_category";
+  /** An array relationship */
+  products: Array<Products>;
+  /** An aggregate relationship */
+  products_aggregate: Products_Aggregate;
+  value: Scalars["String"]["output"];
+};
+
+/** Enum table for product categories */
+export type Product_CategoryProductsArgs = {
+  distinct_on?: InputMaybe<Array<Products_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Products_Order_By>>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+/** Enum table for product categories */
+export type Product_CategoryProducts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Products_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Products_Order_By>>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+/** aggregated selection of "product_category" */
+export type Product_Category_Aggregate = {
+  __typename?: "product_category_aggregate";
+  aggregate?: Maybe<Product_Category_Aggregate_Fields>;
+  nodes: Array<Product_Category>;
+};
+
+/** aggregate fields of "product_category" */
+export type Product_Category_Aggregate_Fields = {
+  __typename?: "product_category_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Product_Category_Max_Fields>;
+  min?: Maybe<Product_Category_Min_Fields>;
+};
+
+/** aggregate fields of "product_category" */
+export type Product_Category_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Product_Category_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** Boolean expression to filter rows from the table "product_category". All fields are combined with a logical 'AND'. */
+export type Product_Category_Bool_Exp = {
+  _and?: InputMaybe<Array<Product_Category_Bool_Exp>>;
+  _not?: InputMaybe<Product_Category_Bool_Exp>;
+  _or?: InputMaybe<Array<Product_Category_Bool_Exp>>;
+  products?: InputMaybe<Products_Bool_Exp>;
+  products_aggregate?: InputMaybe<Products_Aggregate_Bool_Exp>;
+  value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "product_category" */
+export enum Product_Category_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ProductCategoryPkey = "product_category_pkey",
+}
+
+export enum Product_Category_Enum {
+  Accessories = "accessories",
+  Clothing = "clothing",
+  Gifts = "gifts",
+}
+
+/** Boolean expression to compare columns of type "product_category_enum". All fields are combined with logical 'AND'. */
+export type Product_Category_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Product_Category_Enum>;
+  _in?: InputMaybe<Array<Product_Category_Enum>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _neq?: InputMaybe<Product_Category_Enum>;
+  _nin?: InputMaybe<Array<Product_Category_Enum>>;
+};
+
+/** input type for inserting data into table "product_category" */
+export type Product_Category_Insert_Input = {
+  products?: InputMaybe<Products_Arr_Rel_Insert_Input>;
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Product_Category_Max_Fields = {
+  __typename?: "product_category_max_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type Product_Category_Min_Fields = {
+  __typename?: "product_category_min_fields";
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** response of any mutation on the table "product_category" */
+export type Product_Category_Mutation_Response = {
+  __typename?: "product_category_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Product_Category>;
+};
+
+/** input type for inserting object relation for remote table "product_category" */
+export type Product_Category_Obj_Rel_Insert_Input = {
+  data: Product_Category_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Product_Category_On_Conflict>;
+};
+
+/** on_conflict condition type for table "product_category" */
+export type Product_Category_On_Conflict = {
+  constraint: Product_Category_Constraint;
+  update_columns?: Array<Product_Category_Update_Column>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "product_category". */
+export type Product_Category_Order_By = {
+  products_aggregate?: InputMaybe<Products_Aggregate_Order_By>;
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: product_category */
+export type Product_Category_Pk_Columns_Input = {
+  value: Scalars["String"]["input"];
+};
+
+/** select columns of table "product_category" */
+export enum Product_Category_Select_Column {
+  /** column name */
+  Value = "value",
+}
+
+/** input type for updating data in table "product_category" */
+export type Product_Category_Set_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Streaming cursor of the table "product_category" */
+export type Product_Category_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Product_Category_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Product_Category_Stream_Cursor_Value_Input = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** update columns of table "product_category" */
+export enum Product_Category_Update_Column {
+  /** column name */
+  Value = "value",
+}
+
+export type Product_Category_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Product_Category_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Product_Category_Bool_Exp;
+};
+
+/** columns and relationships of "product_status" */
+export type Product_Status = {
+  __typename?: "product_status";
+  description?: Maybe<Scalars["String"]["output"]>;
+  value: Scalars["String"]["output"];
+};
+
+/** aggregated selection of "product_status" */
+export type Product_Status_Aggregate = {
+  __typename?: "product_status_aggregate";
+  aggregate?: Maybe<Product_Status_Aggregate_Fields>;
+  nodes: Array<Product_Status>;
+};
+
+/** aggregate fields of "product_status" */
+export type Product_Status_Aggregate_Fields = {
+  __typename?: "product_status_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Product_Status_Max_Fields>;
+  min?: Maybe<Product_Status_Min_Fields>;
+};
+
+/** aggregate fields of "product_status" */
+export type Product_Status_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Product_Status_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** Boolean expression to filter rows from the table "product_status". All fields are combined with a logical 'AND'. */
+export type Product_Status_Bool_Exp = {
+  _and?: InputMaybe<Array<Product_Status_Bool_Exp>>;
+  _not?: InputMaybe<Product_Status_Bool_Exp>;
+  _or?: InputMaybe<Array<Product_Status_Bool_Exp>>;
+  description?: InputMaybe<String_Comparison_Exp>;
+  value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "product_status" */
+export enum Product_Status_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ProductStatusPkey = "product_status_pkey",
+}
+
+export enum Product_Status_Enum {
+  /** Product is visible and available for purchase */
+  Active = "ACTIVE",
+  /** Product is no longer available */
+  Archived = "ARCHIVED",
+  /** Product is being prepared, not visible to customers */
+  Draft = "DRAFT",
+  /** Product is visible but cannot be purchased */
+  OutOfStock = "OUT_OF_STOCK",
+}
+
+/** Boolean expression to compare columns of type "product_status_enum". All fields are combined with logical 'AND'. */
+export type Product_Status_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Product_Status_Enum>;
+  _in?: InputMaybe<Array<Product_Status_Enum>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _neq?: InputMaybe<Product_Status_Enum>;
+  _nin?: InputMaybe<Array<Product_Status_Enum>>;
+};
+
+/** input type for inserting data into table "product_status" */
+export type Product_Status_Insert_Input = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Product_Status_Max_Fields = {
+  __typename?: "product_status_max_fields";
+  description?: Maybe<Scalars["String"]["output"]>;
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type Product_Status_Min_Fields = {
+  __typename?: "product_status_min_fields";
+  description?: Maybe<Scalars["String"]["output"]>;
+  value?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** response of any mutation on the table "product_status" */
+export type Product_Status_Mutation_Response = {
+  __typename?: "product_status_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Product_Status>;
+};
+
+/** input type for inserting object relation for remote table "product_status" */
+export type Product_Status_Obj_Rel_Insert_Input = {
+  data: Product_Status_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Product_Status_On_Conflict>;
+};
+
+/** on_conflict condition type for table "product_status" */
+export type Product_Status_On_Conflict = {
+  constraint: Product_Status_Constraint;
+  update_columns?: Array<Product_Status_Update_Column>;
+  where?: InputMaybe<Product_Status_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "product_status". */
+export type Product_Status_Order_By = {
+  description?: InputMaybe<Order_By>;
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: product_status */
+export type Product_Status_Pk_Columns_Input = {
+  value: Scalars["String"]["input"];
+};
+
+/** select columns of table "product_status" */
+export enum Product_Status_Select_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
+/** input type for updating data in table "product_status" */
+export type Product_Status_Set_Input = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Streaming cursor of the table "product_status" */
+export type Product_Status_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Product_Status_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Product_Status_Stream_Cursor_Value_Input = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** update columns of table "product_status" */
+export enum Product_Status_Update_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
+export type Product_Status_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Product_Status_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Product_Status_Bool_Exp;
+};
+
+/**
+ * Product variants for inventory management.
+ * For clothing: gender, age_group, size, and optionally color define the variant.
+ * For non-clothing: these fields can be NULL, using a single default variant per product.
+ */
+export type Product_Variants = {
+  __typename?: "product_variants";
+  age_group?: Maybe<Clothing_Age_Group_Enum>;
+  /** An object relationship */
+  clothing_age_group?: Maybe<Clothing_Age_Group>;
+  /** An object relationship */
+  clothing_gender?: Maybe<Clothing_Gender>;
+  /** An object relationship */
+  clothing_size?: Maybe<Clothing_Size>;
+  /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
+  color?: Maybe<Scalars["String"]["output"]>;
+  created_at: Scalars["timestamptz"]["output"];
+  gender?: Maybe<Clothing_Gender_Enum>;
+  id: Scalars["uuid"]["output"];
+  /** An array relationship */
+  order_items: Array<Order_Items>;
+  /** An aggregate relationship */
+  order_items_aggregate: Order_Items_Aggregate;
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Int"]["output"]>;
+  /** An object relationship */
+  product: Products;
+  product_id: Scalars["uuid"]["output"];
+  size?: Maybe<Clothing_Size_Enum>;
+  sku?: Maybe<Scalars["String"]["output"]>;
+  stock: Scalars["Int"]["output"];
+  updated_at: Scalars["timestamptz"]["output"];
+};
+
+/**
+ * Product variants for inventory management.
+ * For clothing: gender, age_group, size, and optionally color define the variant.
+ * For non-clothing: these fields can be NULL, using a single default variant per product.
+ */
+export type Product_VariantsOrder_ItemsArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+/**
+ * Product variants for inventory management.
+ * For clothing: gender, age_group, size, and optionally color define the variant.
+ * For non-clothing: these fields can be NULL, using a single default variant per product.
+ */
+export type Product_VariantsOrder_Items_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+/** aggregated selection of "product_variants" */
+export type Product_Variants_Aggregate = {
+  __typename?: "product_variants_aggregate";
+  aggregate?: Maybe<Product_Variants_Aggregate_Fields>;
+  nodes: Array<Product_Variants>;
+};
+
+export type Product_Variants_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Product_Variants_Aggregate_Bool_Exp_Count>;
+};
+
+export type Product_Variants_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Product_Variants_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Product_Variants_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "product_variants" */
+export type Product_Variants_Aggregate_Fields = {
+  __typename?: "product_variants_aggregate_fields";
+  avg?: Maybe<Product_Variants_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Product_Variants_Max_Fields>;
+  min?: Maybe<Product_Variants_Min_Fields>;
+  stddev?: Maybe<Product_Variants_Stddev_Fields>;
+  stddev_pop?: Maybe<Product_Variants_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Product_Variants_Stddev_Samp_Fields>;
+  sum?: Maybe<Product_Variants_Sum_Fields>;
+  var_pop?: Maybe<Product_Variants_Var_Pop_Fields>;
+  var_samp?: Maybe<Product_Variants_Var_Samp_Fields>;
+  variance?: Maybe<Product_Variants_Variance_Fields>;
+};
+
+/** aggregate fields of "product_variants" */
+export type Product_Variants_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Product_Variants_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "product_variants" */
+export type Product_Variants_Aggregate_Order_By = {
+  avg?: InputMaybe<Product_Variants_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Product_Variants_Max_Order_By>;
+  min?: InputMaybe<Product_Variants_Min_Order_By>;
+  stddev?: InputMaybe<Product_Variants_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Product_Variants_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Product_Variants_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Product_Variants_Sum_Order_By>;
+  var_pop?: InputMaybe<Product_Variants_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Product_Variants_Var_Samp_Order_By>;
+  variance?: InputMaybe<Product_Variants_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "product_variants" */
+export type Product_Variants_Arr_Rel_Insert_Input = {
+  data: Array<Product_Variants_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Product_Variants_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Product_Variants_Avg_Fields = {
+  __typename?: "product_variants_avg_fields";
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Float"]["output"]>;
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "product_variants" */
+export type Product_Variants_Avg_Order_By = {
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "product_variants". All fields are combined with a logical 'AND'. */
+export type Product_Variants_Bool_Exp = {
+  _and?: InputMaybe<Array<Product_Variants_Bool_Exp>>;
+  _not?: InputMaybe<Product_Variants_Bool_Exp>;
+  _or?: InputMaybe<Array<Product_Variants_Bool_Exp>>;
+  age_group?: InputMaybe<Clothing_Age_Group_Enum_Comparison_Exp>;
+  clothing_age_group?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
+  clothing_gender?: InputMaybe<Clothing_Gender_Bool_Exp>;
+  clothing_size?: InputMaybe<Clothing_Size_Bool_Exp>;
+  color?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  gender?: InputMaybe<Clothing_Gender_Enum_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  order_items?: InputMaybe<Order_Items_Bool_Exp>;
+  order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Bool_Exp>;
+  price_override_minor?: InputMaybe<Int_Comparison_Exp>;
+  product?: InputMaybe<Products_Bool_Exp>;
+  product_id?: InputMaybe<Uuid_Comparison_Exp>;
+  size?: InputMaybe<Clothing_Size_Enum_Comparison_Exp>;
+  sku?: InputMaybe<String_Comparison_Exp>;
+  stock?: InputMaybe<Int_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "product_variants" */
+export enum Product_Variants_Constraint {
+  /** unique or primary key constraint on columns "product_id" */
+  IdxProductVariantsNonClothing = "idx_product_variants_non_clothing",
+  /** unique or primary key constraint on columns "size", "product_id", "color", "age_group", "gender" */
+  IdxProductVariantsWithColor = "idx_product_variants_with_color",
+  /** unique or primary key constraint on columns "size", "product_id", "age_group", "gender" */
+  IdxProductVariantsWithoutColor = "idx_product_variants_without_color",
+  /** unique or primary key constraint on columns "id" */
+  ProductVariantsPkey = "product_variants_pkey",
+}
+
+/** input type for incrementing numeric columns in table "product_variants" */
+export type Product_Variants_Inc_Input = {
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  stock?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "product_variants" */
+export type Product_Variants_Insert_Input = {
+  age_group?: InputMaybe<Clothing_Age_Group_Enum>;
+  clothing_age_group?: InputMaybe<Clothing_Age_Group_Obj_Rel_Insert_Input>;
+  clothing_gender?: InputMaybe<Clothing_Gender_Obj_Rel_Insert_Input>;
+  clothing_size?: InputMaybe<Clothing_Size_Obj_Rel_Insert_Input>;
+  /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  gender?: InputMaybe<Clothing_Gender_Enum>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  order_items?: InputMaybe<Order_Items_Arr_Rel_Insert_Input>;
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  product?: InputMaybe<Products_Obj_Rel_Insert_Input>;
+  product_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  size?: InputMaybe<Clothing_Size_Enum>;
+  sku?: InputMaybe<Scalars["String"]["input"]>;
+  stock?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Product_Variants_Max_Fields = {
+  __typename?: "product_variants_max_fields";
+  /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
+  color?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Int"]["output"]>;
+  product_id?: Maybe<Scalars["uuid"]["output"]>;
+  sku?: Maybe<Scalars["String"]["output"]>;
+  stock?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+};
+
+/** order by max() on columns of table "product_variants" */
+export type Product_Variants_Max_Order_By = {
+  /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
+  color?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  product_id?: InputMaybe<Order_By>;
+  sku?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Product_Variants_Min_Fields = {
+  __typename?: "product_variants_min_fields";
+  /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
+  color?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Int"]["output"]>;
+  product_id?: Maybe<Scalars["uuid"]["output"]>;
+  sku?: Maybe<Scalars["String"]["output"]>;
+  stock?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+};
+
+/** order by min() on columns of table "product_variants" */
+export type Product_Variants_Min_Order_By = {
+  /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
+  color?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  product_id?: InputMaybe<Order_By>;
+  sku?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "product_variants" */
+export type Product_Variants_Mutation_Response = {
+  __typename?: "product_variants_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Product_Variants>;
+};
+
+/** input type for inserting object relation for remote table "product_variants" */
+export type Product_Variants_Obj_Rel_Insert_Input = {
+  data: Product_Variants_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Product_Variants_On_Conflict>;
+};
+
+/** on_conflict condition type for table "product_variants" */
+export type Product_Variants_On_Conflict = {
+  constraint: Product_Variants_Constraint;
+  update_columns?: Array<Product_Variants_Update_Column>;
+  where?: InputMaybe<Product_Variants_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "product_variants". */
+export type Product_Variants_Order_By = {
+  age_group?: InputMaybe<Order_By>;
+  clothing_age_group?: InputMaybe<Clothing_Age_Group_Order_By>;
+  clothing_gender?: InputMaybe<Clothing_Gender_Order_By>;
+  clothing_size?: InputMaybe<Clothing_Size_Order_By>;
+  color?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  gender?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Order_By>;
+  price_override_minor?: InputMaybe<Order_By>;
+  product?: InputMaybe<Products_Order_By>;
+  product_id?: InputMaybe<Order_By>;
+  size?: InputMaybe<Order_By>;
+  sku?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: product_variants */
+export type Product_Variants_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "product_variants" */
+export enum Product_Variants_Select_Column {
+  /** column name */
+  AgeGroup = "age_group",
+  /** column name */
+  Color = "color",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Gender = "gender",
+  /** column name */
+  Id = "id",
+  /** column name */
+  PriceOverrideMinor = "price_override_minor",
+  /** column name */
+  ProductId = "product_id",
+  /** column name */
+  Size = "size",
+  /** column name */
+  Sku = "sku",
+  /** column name */
+  Stock = "stock",
+  /** column name */
+  UpdatedAt = "updated_at",
+}
+
+/** input type for updating data in table "product_variants" */
+export type Product_Variants_Set_Input = {
+  age_group?: InputMaybe<Clothing_Age_Group_Enum>;
+  /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  gender?: InputMaybe<Clothing_Gender_Enum>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  product_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  size?: InputMaybe<Clothing_Size_Enum>;
+  sku?: InputMaybe<Scalars["String"]["input"]>;
+  stock?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Product_Variants_Stddev_Fields = {
+  __typename?: "product_variants_stddev_fields";
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Float"]["output"]>;
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "product_variants" */
+export type Product_Variants_Stddev_Order_By = {
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Product_Variants_Stddev_Pop_Fields = {
+  __typename?: "product_variants_stddev_pop_fields";
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Float"]["output"]>;
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "product_variants" */
+export type Product_Variants_Stddev_Pop_Order_By = {
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Product_Variants_Stddev_Samp_Fields = {
+  __typename?: "product_variants_stddev_samp_fields";
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Float"]["output"]>;
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "product_variants" */
+export type Product_Variants_Stddev_Samp_Order_By = {
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "product_variants" */
+export type Product_Variants_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Product_Variants_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Product_Variants_Stream_Cursor_Value_Input = {
+  age_group?: InputMaybe<Clothing_Age_Group_Enum>;
+  /** Optional color variant (e.g., black, white, blue). NULL means no color option. */
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  gender?: InputMaybe<Clothing_Gender_Enum>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  product_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  size?: InputMaybe<Clothing_Size_Enum>;
+  sku?: InputMaybe<Scalars["String"]["input"]>;
+  stock?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Product_Variants_Sum_Fields = {
+  __typename?: "product_variants_sum_fields";
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Int"]["output"]>;
+  stock?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "product_variants" */
+export type Product_Variants_Sum_Order_By = {
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "product_variants" */
+export enum Product_Variants_Update_Column {
+  /** column name */
+  AgeGroup = "age_group",
+  /** column name */
+  Color = "color",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Gender = "gender",
+  /** column name */
+  Id = "id",
+  /** column name */
+  PriceOverrideMinor = "price_override_minor",
+  /** column name */
+  ProductId = "product_id",
+  /** column name */
+  Size = "size",
+  /** column name */
+  Sku = "sku",
+  /** column name */
+  Stock = "stock",
+  /** column name */
+  UpdatedAt = "updated_at",
+}
+
+export type Product_Variants_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Product_Variants_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Product_Variants_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Product_Variants_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Product_Variants_Var_Pop_Fields = {
+  __typename?: "product_variants_var_pop_fields";
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Float"]["output"]>;
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "product_variants" */
+export type Product_Variants_Var_Pop_Order_By = {
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Product_Variants_Var_Samp_Fields = {
+  __typename?: "product_variants_var_samp_fields";
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Float"]["output"]>;
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "product_variants" */
+export type Product_Variants_Var_Samp_Order_By = {
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Product_Variants_Variance_Fields = {
+  __typename?: "product_variants_variance_fields";
+  /** Optional variant-specific price override */
+  price_override_minor?: Maybe<Scalars["Float"]["output"]>;
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "product_variants" */
+export type Product_Variants_Variance_Order_By = {
+  /** Optional variant-specific price override */
+  price_override_minor?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+};
+
+/** Shop products available for purchase */
+export type Products = {
+  __typename?: "products";
+  badge?: Maybe<Scalars["String"]["output"]>;
+  category: Product_Category_Enum;
+  /** An object relationship */
+  clothing_product_details?: Maybe<Clothing_Product_Details>;
+  created_at: Scalars["timestamptz"]["output"];
+  currency: Scalars["String"]["output"];
+  description_en?: Maybe<Scalars["String"]["output"]>;
+  description_uk?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  images?: Maybe<Array<Scalars["String"]["output"]>>;
+  name: Scalars["String"]["output"];
+  /** An array relationship */
+  order_items: Array<Order_Items>;
+  /** An aggregate relationship */
+  order_items_aggregate: Order_Items_Aggregate;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor: Scalars["Int"]["output"];
+  /** An object relationship */
+  product_category_enum: Product_Category;
+  /** An object relationship */
+  product_status: Product_Status;
+  /** An array relationship */
+  product_variants: Array<Product_Variants>;
+  /** An aggregate relationship */
+  product_variants_aggregate: Product_Variants_Aggregate;
+  slug: Scalars["String"]["output"];
+  status: Product_Status_Enum;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Int"]["output"]>;
+  updated_at: Scalars["timestamptz"]["output"];
+};
+
+/** Shop products available for purchase */
+export type ProductsOrder_ItemsArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+/** Shop products available for purchase */
+export type ProductsOrder_Items_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+/** Shop products available for purchase */
+export type ProductsProduct_VariantsArgs = {
+  distinct_on?: InputMaybe<Array<Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Variants_Order_By>>;
+  where?: InputMaybe<Product_Variants_Bool_Exp>;
+};
+
+/** Shop products available for purchase */
+export type ProductsProduct_Variants_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Variants_Order_By>>;
+  where?: InputMaybe<Product_Variants_Bool_Exp>;
+};
+
+/** aggregated selection of "products" */
+export type Products_Aggregate = {
+  __typename?: "products_aggregate";
+  aggregate?: Maybe<Products_Aggregate_Fields>;
+  nodes: Array<Products>;
+};
+
+export type Products_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Products_Aggregate_Bool_Exp_Count>;
+};
+
+export type Products_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Products_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Products_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "products" */
+export type Products_Aggregate_Fields = {
+  __typename?: "products_aggregate_fields";
+  avg?: Maybe<Products_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Products_Max_Fields>;
+  min?: Maybe<Products_Min_Fields>;
+  stddev?: Maybe<Products_Stddev_Fields>;
+  stddev_pop?: Maybe<Products_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Products_Stddev_Samp_Fields>;
+  sum?: Maybe<Products_Sum_Fields>;
+  var_pop?: Maybe<Products_Var_Pop_Fields>;
+  var_samp?: Maybe<Products_Var_Samp_Fields>;
+  variance?: Maybe<Products_Variance_Fields>;
+};
+
+/** aggregate fields of "products" */
+export type Products_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Products_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "products" */
+export type Products_Aggregate_Order_By = {
+  avg?: InputMaybe<Products_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Products_Max_Order_By>;
+  min?: InputMaybe<Products_Min_Order_By>;
+  stddev?: InputMaybe<Products_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Products_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Products_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Products_Sum_Order_By>;
+  var_pop?: InputMaybe<Products_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Products_Var_Samp_Order_By>;
+  variance?: InputMaybe<Products_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "products" */
+export type Products_Arr_Rel_Insert_Input = {
+  data: Array<Products_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Products_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Products_Avg_Fields = {
+  __typename?: "products_avg_fields";
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Float"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "products" */
+export type Products_Avg_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "products". All fields are combined with a logical 'AND'. */
+export type Products_Bool_Exp = {
+  _and?: InputMaybe<Array<Products_Bool_Exp>>;
+  _not?: InputMaybe<Products_Bool_Exp>;
+  _or?: InputMaybe<Array<Products_Bool_Exp>>;
+  badge?: InputMaybe<String_Comparison_Exp>;
+  category?: InputMaybe<Product_Category_Enum_Comparison_Exp>;
+  clothing_product_details?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  currency?: InputMaybe<String_Comparison_Exp>;
+  description_en?: InputMaybe<String_Comparison_Exp>;
+  description_uk?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  images?: InputMaybe<String_Array_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  order_items?: InputMaybe<Order_Items_Bool_Exp>;
+  order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Bool_Exp>;
+  price_minor?: InputMaybe<Int_Comparison_Exp>;
+  product_category_enum?: InputMaybe<Product_Category_Bool_Exp>;
+  product_status?: InputMaybe<Product_Status_Bool_Exp>;
+  product_variants?: InputMaybe<Product_Variants_Bool_Exp>;
+  product_variants_aggregate?: InputMaybe<Product_Variants_Aggregate_Bool_Exp>;
+  slug?: InputMaybe<String_Comparison_Exp>;
+  status?: InputMaybe<Product_Status_Enum_Comparison_Exp>;
+  stock?: InputMaybe<Int_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "products" */
+export enum Products_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ProductsPkey = "products_pkey",
+  /** unique or primary key constraint on columns "slug" */
+  ProductsSlugKey = "products_slug_key",
+}
+
+/** input type for incrementing numeric columns in table "products" */
+export type Products_Inc_Input = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "products" */
+export type Products_Insert_Input = {
+  badge?: InputMaybe<Scalars["String"]["input"]>;
+  category?: InputMaybe<Product_Category_Enum>;
+  clothing_product_details?: InputMaybe<Clothing_Product_Details_Obj_Rel_Insert_Input>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  description_en?: InputMaybe<Scalars["String"]["input"]>;
+  description_uk?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  images?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  order_items?: InputMaybe<Order_Items_Arr_Rel_Insert_Input>;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  product_category_enum?: InputMaybe<Product_Category_Obj_Rel_Insert_Input>;
+  product_status?: InputMaybe<Product_Status_Obj_Rel_Insert_Input>;
+  product_variants?: InputMaybe<Product_Variants_Arr_Rel_Insert_Input>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Product_Status_Enum>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Products_Max_Fields = {
+  __typename?: "products_max_fields";
+  badge?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  currency?: Maybe<Scalars["String"]["output"]>;
+  description_en?: Maybe<Scalars["String"]["output"]>;
+  description_uk?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  images?: Maybe<Array<Scalars["String"]["output"]>>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Int"]["output"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+};
+
+/** order by max() on columns of table "products" */
+export type Products_Max_Order_By = {
+  badge?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  currency?: InputMaybe<Order_By>;
+  description_en?: InputMaybe<Order_By>;
+  description_uk?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  images?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Products_Min_Fields = {
+  __typename?: "products_min_fields";
+  badge?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  currency?: Maybe<Scalars["String"]["output"]>;
+  description_en?: Maybe<Scalars["String"]["output"]>;
+  description_uk?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  images?: Maybe<Array<Scalars["String"]["output"]>>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Int"]["output"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+};
+
+/** order by min() on columns of table "products" */
+export type Products_Min_Order_By = {
+  badge?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  currency?: InputMaybe<Order_By>;
+  description_en?: InputMaybe<Order_By>;
+  description_uk?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  images?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "products" */
+export type Products_Mutation_Response = {
+  __typename?: "products_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Products>;
+};
+
+/** input type for inserting object relation for remote table "products" */
+export type Products_Obj_Rel_Insert_Input = {
+  data: Products_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Products_On_Conflict>;
+};
+
+/** on_conflict condition type for table "products" */
+export type Products_On_Conflict = {
+  constraint: Products_Constraint;
+  update_columns?: Array<Products_Update_Column>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "products". */
+export type Products_Order_By = {
+  badge?: InputMaybe<Order_By>;
+  category?: InputMaybe<Order_By>;
+  clothing_product_details?: InputMaybe<Clothing_Product_Details_Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  currency?: InputMaybe<Order_By>;
+  description_en?: InputMaybe<Order_By>;
+  description_uk?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  images?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  order_items_aggregate?: InputMaybe<Order_Items_Aggregate_Order_By>;
+  price_minor?: InputMaybe<Order_By>;
+  product_category_enum?: InputMaybe<Product_Category_Order_By>;
+  product_status?: InputMaybe<Product_Status_Order_By>;
+  product_variants_aggregate?: InputMaybe<Product_Variants_Aggregate_Order_By>;
+  slug?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  stock?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: products */
+export type Products_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "products" */
+export enum Products_Select_Column {
+  /** column name */
+  Badge = "badge",
+  /** column name */
+  Category = "category",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Currency = "currency",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Images = "images",
+  /** column name */
+  Name = "name",
+  /** column name */
+  PriceMinor = "price_minor",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  Status = "status",
+  /** column name */
+  Stock = "stock",
+  /** column name */
+  UpdatedAt = "updated_at",
+}
+
+/** input type for updating data in table "products" */
+export type Products_Set_Input = {
+  badge?: InputMaybe<Scalars["String"]["input"]>;
+  category?: InputMaybe<Product_Category_Enum>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  description_en?: InputMaybe<Scalars["String"]["input"]>;
+  description_uk?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  images?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Product_Status_Enum>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Products_Stddev_Fields = {
+  __typename?: "products_stddev_fields";
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Float"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "products" */
+export type Products_Stddev_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Products_Stddev_Pop_Fields = {
+  __typename?: "products_stddev_pop_fields";
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Float"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "products" */
+export type Products_Stddev_Pop_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Products_Stddev_Samp_Fields = {
+  __typename?: "products_stddev_samp_fields";
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Float"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "products" */
+export type Products_Stddev_Samp_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "products" */
+export type Products_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Products_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Products_Stream_Cursor_Value_Input = {
+  badge?: InputMaybe<Scalars["String"]["input"]>;
+  category?: InputMaybe<Product_Category_Enum>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  description_en?: InputMaybe<Scalars["String"]["input"]>;
+  description_uk?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  images?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Scalars["Int"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Product_Status_Enum>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Products_Sum_Fields = {
+  __typename?: "products_sum_fields";
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Int"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "products" */
+export type Products_Sum_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "products" */
+export enum Products_Update_Column {
+  /** column name */
+  Badge = "badge",
+  /** column name */
+  Category = "category",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Currency = "currency",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Images = "images",
+  /** column name */
+  Name = "name",
+  /** column name */
+  PriceMinor = "price_minor",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  Status = "status",
+  /** column name */
+  Stock = "stock",
+  /** column name */
+  UpdatedAt = "updated_at",
+}
+
+export type Products_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Products_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Products_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Products_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Products_Var_Pop_Fields = {
+  __typename?: "products_var_pop_fields";
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Float"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "products" */
+export type Products_Var_Pop_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Products_Var_Samp_Fields = {
+  __typename?: "products_var_samp_fields";
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Float"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "products" */
+export type Products_Var_Samp_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Products_Variance_Fields = {
+  __typename?: "products_variance_fields";
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: Maybe<Scalars["Float"]["output"]>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "products" */
+export type Products_Variance_Order_By = {
+  /** Price in minor currency units (e.g., pence for GBP) */
+  price_minor?: InputMaybe<Order_By>;
+  /** Stock count for products without variants. NULL means stock is managed at variant level. */
+  stock?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "provider_type" */
@@ -5582,6 +8058,24 @@ export type Provider_Type = {
   /** An aggregate relationship */
   accounts_aggregate: Accounts_Aggregate;
   value: Scalars["String"]["output"];
+};
+
+/** columns and relationships of "provider_type" */
+export type Provider_TypeAccountsArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
+/** columns and relationships of "provider_type" */
+export type Provider_TypeAccounts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
 };
 
 /** aggregated selection of "provider_type" */
@@ -5614,6 +8108,12 @@ export type Provider_Type_Bool_Exp = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Bool_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "provider_type" */
+export enum Provider_Type_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ProviderTypePkey = "provider_type_pkey",
+}
 
 /** input type for inserting data into table "provider_type" */
 export type Provider_Type_Insert_Input = {
@@ -5667,6 +8167,12 @@ export type Provider_Type_Pk_Columns_Input = {
   value: Scalars["String"]["input"];
 };
 
+/** select columns of table "provider_type" */
+export enum Provider_Type_Select_Column {
+  /** column name */
+  Value = "value",
+}
+
 /** input type for updating data in table "provider_type" */
 export type Provider_Type_Set_Input = {
   value?: InputMaybe<Scalars["String"]["input"]>;
@@ -5685,29 +8191,17 @@ export type Provider_Type_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "provider_type" */
+export enum Provider_Type_Update_Column {
+  /** column name */
+  Value = "value",
+}
+
 export type Provider_Type_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Provider_Type_Set_Input>;
   /** filter the rows which have to be updated */
   where: Provider_Type_Bool_Exp;
-};
-
-/** columns and relationships of "provider_type" */
-export type Provider_TypeAccounts_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
-};
-
-/** columns and relationships of "provider_type" */
-export type Provider_TypeAccountsArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
 };
 
 export type Query_Root = {
@@ -5724,6 +8218,36 @@ export type Query_Root = {
   chains_aggregate: Chains_Aggregate;
   /** fetch data from the table: "chains" using primary key columns */
   chains_by_pk?: Maybe<Chains>;
+  /** fetch data from the table: "clothing_age_group" */
+  clothing_age_group: Array<Clothing_Age_Group>;
+  /** fetch aggregated fields from the table: "clothing_age_group" */
+  clothing_age_group_aggregate: Clothing_Age_Group_Aggregate;
+  /** fetch data from the table: "clothing_age_group" using primary key columns */
+  clothing_age_group_by_pk?: Maybe<Clothing_Age_Group>;
+  /** fetch data from the table: "clothing_gender" */
+  clothing_gender: Array<Clothing_Gender>;
+  /** fetch aggregated fields from the table: "clothing_gender" */
+  clothing_gender_aggregate: Clothing_Gender_Aggregate;
+  /** fetch data from the table: "clothing_gender" using primary key columns */
+  clothing_gender_by_pk?: Maybe<Clothing_Gender>;
+  /** fetch data from the table: "clothing_product_details" */
+  clothing_product_details: Array<Clothing_Product_Details>;
+  /** fetch aggregated fields from the table: "clothing_product_details" */
+  clothing_product_details_aggregate: Clothing_Product_Details_Aggregate;
+  /** fetch data from the table: "clothing_product_details" using primary key columns */
+  clothing_product_details_by_pk?: Maybe<Clothing_Product_Details>;
+  /** fetch data from the table: "clothing_size" */
+  clothing_size: Array<Clothing_Size>;
+  /** fetch aggregated fields from the table: "clothing_size" */
+  clothing_size_aggregate: Clothing_Size_Aggregate;
+  /** fetch data from the table: "clothing_size" using primary key columns */
+  clothing_size_by_pk?: Maybe<Clothing_Size>;
+  /** fetch data from the table: "clothing_type" */
+  clothing_type: Array<Clothing_Type>;
+  /** fetch aggregated fields from the table: "clothing_type" */
+  clothing_type_aggregate: Clothing_Type_Aggregate;
+  /** fetch data from the table: "clothing_type" using primary key columns */
+  clothing_type_by_pk?: Maybe<Clothing_Type>;
   /** fetch data from the table: "event_status" */
   event_status: Array<Event_Status>;
   /** fetch aggregated fields from the table: "event_status" */
@@ -5754,12 +8278,54 @@ export type Query_Root = {
   events_event_tags_aggregate: Events_Event_Tags_Aggregate;
   /** fetch data from the table: "events_event_tags" using primary key columns */
   events_event_tags_by_pk?: Maybe<Events_Event_Tags>;
+  /** An array relationship */
+  order_items: Array<Order_Items>;
+  /** An aggregate relationship */
+  order_items_aggregate: Order_Items_Aggregate;
+  /** fetch data from the table: "order_items" using primary key columns */
+  order_items_by_pk?: Maybe<Order_Items>;
+  /** fetch data from the table: "order_status" */
+  order_status: Array<Order_Status>;
+  /** fetch aggregated fields from the table: "order_status" */
+  order_status_aggregate: Order_Status_Aggregate;
+  /** fetch data from the table: "order_status" using primary key columns */
+  order_status_by_pk?: Maybe<Order_Status>;
+  /** fetch data from the table: "orders" */
+  orders: Array<Orders>;
+  /** fetch aggregated fields from the table: "orders" */
+  orders_aggregate: Orders_Aggregate;
+  /** fetch data from the table: "orders" using primary key columns */
+  orders_by_pk?: Maybe<Orders>;
   /** fetch data from the table: "price_type" */
   price_type: Array<Price_Type>;
   /** fetch aggregated fields from the table: "price_type" */
   price_type_aggregate: Price_Type_Aggregate;
   /** fetch data from the table: "price_type" using primary key columns */
   price_type_by_pk?: Maybe<Price_Type>;
+  /** fetch data from the table: "product_category" */
+  product_category: Array<Product_Category>;
+  /** fetch aggregated fields from the table: "product_category" */
+  product_category_aggregate: Product_Category_Aggregate;
+  /** fetch data from the table: "product_category" using primary key columns */
+  product_category_by_pk?: Maybe<Product_Category>;
+  /** fetch data from the table: "product_status" */
+  product_status: Array<Product_Status>;
+  /** fetch aggregated fields from the table: "product_status" */
+  product_status_aggregate: Product_Status_Aggregate;
+  /** fetch data from the table: "product_status" using primary key columns */
+  product_status_by_pk?: Maybe<Product_Status>;
+  /** An array relationship */
+  product_variants: Array<Product_Variants>;
+  /** An aggregate relationship */
+  product_variants_aggregate: Product_Variants_Aggregate;
+  /** fetch data from the table: "product_variants" using primary key columns */
+  product_variants_by_pk?: Maybe<Product_Variants>;
+  /** An array relationship */
+  products: Array<Products>;
+  /** An aggregate relationship */
+  products_aggregate: Products_Aggregate;
+  /** fetch data from the table: "products" using primary key columns */
+  products_by_pk?: Maybe<Products>;
   /** fetch data from the table: "provider_type" */
   provider_type: Array<Provider_Type>;
   /** fetch aggregated fields from the table: "provider_type" */
@@ -5852,6 +8418,14 @@ export type Query_Root = {
   verification_tokens_by_pk?: Maybe<Verification_Tokens>;
 };
 
+export type Query_RootAccountsArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
 export type Query_RootAccounts_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -5864,12 +8438,12 @@ export type Query_RootAccounts_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootAccountsArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+export type Query_RootChainsArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
 };
 
 export type Query_RootChains_AggregateArgs = {
@@ -5884,12 +8458,112 @@ export type Query_RootChains_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootChainsArgs = {
-  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+export type Query_RootClothing_Age_GroupArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Age_Group_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Chains_Order_By>>;
-  where?: InputMaybe<Chains_Bool_Exp>;
+  order_by?: InputMaybe<Array<Clothing_Age_Group_Order_By>>;
+  where?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
+};
+
+export type Query_RootClothing_Age_Group_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Age_Group_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Age_Group_Order_By>>;
+  where?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
+};
+
+export type Query_RootClothing_Age_Group_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Query_RootClothing_GenderArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Gender_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Gender_Order_By>>;
+  where?: InputMaybe<Clothing_Gender_Bool_Exp>;
+};
+
+export type Query_RootClothing_Gender_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Gender_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Gender_Order_By>>;
+  where?: InputMaybe<Clothing_Gender_Bool_Exp>;
+};
+
+export type Query_RootClothing_Gender_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Query_RootClothing_Product_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Product_Details_Order_By>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+export type Query_RootClothing_Product_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Product_Details_Order_By>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+export type Query_RootClothing_Product_Details_By_PkArgs = {
+  product_id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootClothing_SizeArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Size_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Size_Order_By>>;
+  where?: InputMaybe<Clothing_Size_Bool_Exp>;
+};
+
+export type Query_RootClothing_Size_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Size_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Size_Order_By>>;
+  where?: InputMaybe<Clothing_Size_Bool_Exp>;
+};
+
+export type Query_RootClothing_Size_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Query_RootClothing_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Type_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Type_Order_By>>;
+  where?: InputMaybe<Clothing_Type_Bool_Exp>;
+};
+
+export type Query_RootClothing_Type_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Type_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Type_Order_By>>;
+  where?: InputMaybe<Clothing_Type_Bool_Exp>;
+};
+
+export type Query_RootClothing_Type_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Query_RootEvent_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Event_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Event_Status_Order_By>>;
+  where?: InputMaybe<Event_Status_Bool_Exp>;
 };
 
 export type Query_RootEvent_Status_AggregateArgs = {
@@ -5904,12 +8578,12 @@ export type Query_RootEvent_Status_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
-export type Query_RootEvent_StatusArgs = {
-  distinct_on?: InputMaybe<Array<Event_Status_Select_Column>>;
+export type Query_RootEvent_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Event_Tags_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Event_Status_Order_By>>;
-  where?: InputMaybe<Event_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Tags_Order_By>>;
+  where?: InputMaybe<Event_Tags_Bool_Exp>;
 };
 
 export type Query_RootEvent_Tags_AggregateArgs = {
@@ -5924,12 +8598,12 @@ export type Query_RootEvent_Tags_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootEvent_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Event_Tags_Select_Column>>;
+export type Query_RootEvent_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Event_Type_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Event_Tags_Order_By>>;
-  where?: InputMaybe<Event_Tags_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Type_Order_By>>;
+  where?: InputMaybe<Event_Type_Bool_Exp>;
 };
 
 export type Query_RootEvent_Type_AggregateArgs = {
@@ -5944,12 +8618,12 @@ export type Query_RootEvent_Type_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
-export type Query_RootEvent_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Event_Type_Select_Column>>;
+export type Query_RootEventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Event_Type_Order_By>>;
-  where?: InputMaybe<Event_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
 };
 
 export type Query_RootEvents_AggregateArgs = {
@@ -5962,6 +8636,14 @@ export type Query_RootEvents_AggregateArgs = {
 
 export type Query_RootEvents_By_PkArgs = {
   id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootEvents_Event_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
 export type Query_RootEvents_Event_Tags_AggregateArgs = {
@@ -5977,20 +8659,72 @@ export type Query_RootEvents_Event_Tags_By_PkArgs = {
   tag_id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootEvents_Event_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+export type Query_RootOrder_ItemsArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
 };
 
-export type Query_RootEventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+export type Query_RootOrder_Items_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+export type Query_RootOrder_Items_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootOrder_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Order_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Status_Order_By>>;
+  where?: InputMaybe<Order_Status_Bool_Exp>;
+};
+
+export type Query_RootOrder_Status_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Order_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Status_Order_By>>;
+  where?: InputMaybe<Order_Status_Bool_Exp>;
+};
+
+export type Query_RootOrder_Status_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Query_RootOrdersArgs = {
+  distinct_on?: InputMaybe<Array<Orders_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Orders_Order_By>>;
+  where?: InputMaybe<Orders_Bool_Exp>;
+};
+
+export type Query_RootOrders_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Orders_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Orders_Order_By>>;
+  where?: InputMaybe<Orders_Bool_Exp>;
+};
+
+export type Query_RootOrders_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootPrice_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Price_Type_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Price_Type_Order_By>>;
+  where?: InputMaybe<Price_Type_Bool_Exp>;
 };
 
 export type Query_RootPrice_Type_AggregateArgs = {
@@ -6005,12 +8739,92 @@ export type Query_RootPrice_Type_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
-export type Query_RootPrice_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Price_Type_Select_Column>>;
+export type Query_RootProduct_CategoryArgs = {
+  distinct_on?: InputMaybe<Array<Product_Category_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Price_Type_Order_By>>;
-  where?: InputMaybe<Price_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Product_Category_Order_By>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+export type Query_RootProduct_Category_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Product_Category_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Category_Order_By>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+export type Query_RootProduct_Category_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Query_RootProduct_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Product_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Status_Order_By>>;
+  where?: InputMaybe<Product_Status_Bool_Exp>;
+};
+
+export type Query_RootProduct_Status_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Product_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Status_Order_By>>;
+  where?: InputMaybe<Product_Status_Bool_Exp>;
+};
+
+export type Query_RootProduct_Status_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Query_RootProduct_VariantsArgs = {
+  distinct_on?: InputMaybe<Array<Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Variants_Order_By>>;
+  where?: InputMaybe<Product_Variants_Bool_Exp>;
+};
+
+export type Query_RootProduct_Variants_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Variants_Order_By>>;
+  where?: InputMaybe<Product_Variants_Bool_Exp>;
+};
+
+export type Query_RootProduct_Variants_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootProductsArgs = {
+  distinct_on?: InputMaybe<Array<Products_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Products_Order_By>>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+export type Query_RootProducts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Products_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Products_Order_By>>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+export type Query_RootProducts_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootProvider_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Provider_Type_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Provider_Type_Order_By>>;
+  where?: InputMaybe<Provider_Type_Bool_Exp>;
 };
 
 export type Query_RootProvider_Type_AggregateArgs = {
@@ -6025,12 +8839,12 @@ export type Query_RootProvider_Type_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
-export type Query_RootProvider_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Provider_Type_Select_Column>>;
+export type Query_RootSessionsArgs = {
+  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Provider_Type_Order_By>>;
-  where?: InputMaybe<Provider_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Sessions_Order_By>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
 export type Query_RootSessions_AggregateArgs = {
@@ -6045,12 +8859,12 @@ export type Query_RootSessions_By_PkArgs = {
   sessionToken: Scalars["String"]["input"];
 };
 
-export type Query_RootSessionsArgs = {
-  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
+export type Query_RootUser_RoleArgs = {
+  distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Sessions_Order_By>>;
-  where?: InputMaybe<Sessions_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Role_Order_By>>;
+  where?: InputMaybe<User_Role_Bool_Exp>;
 };
 
 export type Query_RootUser_Role_AggregateArgs = {
@@ -6065,12 +8879,12 @@ export type Query_RootUser_Role_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
-export type Query_RootUser_RoleArgs = {
-  distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
+export type Query_RootUser_StatusArgs = {
+  distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<User_Role_Order_By>>;
-  where?: InputMaybe<User_Role_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Status_Order_By>>;
+  where?: InputMaybe<User_Status_Bool_Exp>;
 };
 
 export type Query_RootUser_Status_AggregateArgs = {
@@ -6085,12 +8899,12 @@ export type Query_RootUser_Status_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
-export type Query_RootUser_StatusArgs = {
-  distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
+export type Query_RootUsersArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<User_Status_Order_By>>;
-  where?: InputMaybe<User_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 export type Query_RootUsers_AggregateArgs = {
@@ -6105,12 +8919,12 @@ export type Query_RootUsers_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+export type Query_RootVenue_Accommodation_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
 };
 
 export type Query_RootVenue_Accommodation_Details_AggregateArgs = {
@@ -6125,12 +8939,12 @@ export type Query_RootVenue_Accommodation_Details_By_PkArgs = {
   venue_id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootVenue_Accommodation_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+export type Query_RootVenue_Beauty_Salon_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
-  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
 };
 
 export type Query_RootVenue_Beauty_Salon_Details_AggregateArgs = {
@@ -6145,12 +8959,12 @@ export type Query_RootVenue_Beauty_Salon_Details_By_PkArgs = {
   venue_id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootVenue_Beauty_Salon_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+export type Query_RootVenue_CategoryArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
-  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
+  where?: InputMaybe<Venue_Category_Bool_Exp>;
 };
 
 export type Query_RootVenue_Category_AggregateArgs = {
@@ -6165,12 +8979,12 @@ export type Query_RootVenue_Category_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
-export type Query_RootVenue_CategoryArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
+export type Query_RootVenue_Restaurant_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
-  where?: InputMaybe<Venue_Category_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
 };
 
 export type Query_RootVenue_Restaurant_Details_AggregateArgs = {
@@ -6185,12 +8999,12 @@ export type Query_RootVenue_Restaurant_Details_By_PkArgs = {
   venue_id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootVenue_Restaurant_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+export type Query_RootVenue_ScheduleArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
-  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
 };
 
 export type Query_RootVenue_Schedule_AggregateArgs = {
@@ -6205,12 +9019,12 @@ export type Query_RootVenue_Schedule_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootVenue_ScheduleArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+export type Query_RootVenue_School_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
-  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
 };
 
 export type Query_RootVenue_School_Details_AggregateArgs = {
@@ -6225,12 +9039,12 @@ export type Query_RootVenue_School_Details_By_PkArgs = {
   venue_id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootVenue_School_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+export type Query_RootVenue_Shop_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
-  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
 };
 
 export type Query_RootVenue_Shop_Details_AggregateArgs = {
@@ -6245,12 +9059,12 @@ export type Query_RootVenue_Shop_Details_By_PkArgs = {
   venue_id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootVenue_Shop_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+export type Query_RootVenue_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Status_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
-  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Status_Order_By>>;
+  where?: InputMaybe<Venue_Status_Bool_Exp>;
 };
 
 export type Query_RootVenue_Status_AggregateArgs = {
@@ -6265,12 +9079,12 @@ export type Query_RootVenue_Status_By_PkArgs = {
   value: Scalars["String"]["input"];
 };
 
-export type Query_RootVenue_StatusArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Status_Select_Column>>;
+export type Query_RootVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Status_Order_By>>;
-  where?: InputMaybe<Venue_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
 };
 
 export type Query_RootVenues_AggregateArgs = {
@@ -6285,12 +9099,12 @@ export type Query_RootVenues_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
-export type Query_RootVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+export type Query_RootVerification_TokensArgs = {
+  distinct_on?: InputMaybe<Array<Verification_Tokens_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
+  order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
+  where?: InputMaybe<Verification_Tokens_Bool_Exp>;
 };
 
 export type Query_RootVerification_Tokens_AggregateArgs = {
@@ -6303,32 +9117,6 @@ export type Query_RootVerification_Tokens_AggregateArgs = {
 
 export type Query_RootVerification_Tokens_By_PkArgs = {
   token: Scalars["String"]["input"];
-};
-
-export type Query_RootVerification_TokensArgs = {
-  distinct_on?: InputMaybe<Array<Verification_Tokens_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
-  where?: InputMaybe<Verification_Tokens_Bool_Exp>;
-};
-
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  Boolean: { input: boolean; output: boolean };
-  Float: { input: number; output: number };
-  geography: { input: Geography; output: Geography };
-  geometry: { input: Geometry; output: Geometry };
-  ID: { input: string; output: string };
-  Int: { input: number; output: number };
-  json: { input: Json; output: Json };
-  jsonb: { input: Json; output: Json };
-  numeric: { input: Numeric; output: Numeric };
-  String: { input: string; output: string };
-  time: { input: Time; output: Time };
-  timestamp: { input: Timestamp; output: Timestamp };
-  timestamptz: { input: Timestamp; output: Timestamp };
-  uuid: { input: UUID; output: UUID };
 };
 
 /** columns and relationships of "sessions" */
@@ -6399,6 +9187,12 @@ export type Sessions_Bool_Exp = {
   user?: InputMaybe<Users_Bool_Exp>;
   userId?: InputMaybe<Uuid_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "sessions" */
+export enum Sessions_Constraint {
+  /** unique or primary key constraint on columns "sessionToken" */
+  SessionsPkey = "sessions_pkey",
+}
 
 /** input type for inserting data into table "sessions" */
 export type Sessions_Insert_Input = {
@@ -6473,6 +9267,18 @@ export type Sessions_Pk_Columns_Input = {
   sessionToken: Scalars["String"]["input"];
 };
 
+/** select columns of table "sessions" */
+export enum Sessions_Select_Column {
+  /** column name */
+  Expires = "expires",
+  /** column name */
+  Id = "id",
+  /** column name */
+  SessionToken = "sessionToken",
+  /** column name */
+  UserId = "userId",
+}
+
 /** input type for updating data in table "sessions" */
 export type Sessions_Set_Input = {
   expires?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -6497,6 +9303,18 @@ export type Sessions_Stream_Cursor_Value_Input = {
   userId?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
+/** update columns of table "sessions" */
+export enum Sessions_Update_Column {
+  /** column name */
+  Expires = "expires",
+  /** column name */
+  Id = "id",
+  /** column name */
+  SessionToken = "sessionToken",
+  /** column name */
+  UserId = "userId",
+}
+
 export type Sessions_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Sessions_Set_Input>;
@@ -6513,56 +9331,6 @@ export type St_D_Within_Geography_Input = {
 export type St_D_Within_Input = {
   distance: Scalars["Float"]["input"];
   from: Scalars["geometry"]["input"];
-};
-
-/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
-export type String_Array_Comparison_Exp = {
-  /** is the array contained in the given array value */
-  _contained_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  /** does the array contain the given value */
-  _contains?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  _eq?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  _gt?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  _gte?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  _in?: InputMaybe<Array<Array<Scalars["String"]["input"]>>>;
-  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _lt?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  _lte?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  _neq?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  _nin?: InputMaybe<Array<Array<Scalars["String"]["input"]>>>;
-};
-
-/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
-export type String_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars["String"]["input"]>;
-  _gt?: InputMaybe<Scalars["String"]["input"]>;
-  _gte?: InputMaybe<Scalars["String"]["input"]>;
-  /** does the column match the given case-insensitive pattern */
-  _ilike?: InputMaybe<Scalars["String"]["input"]>;
-  _in?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  /** does the column match the given POSIX regular expression, case insensitive */
-  _iregex?: InputMaybe<Scalars["String"]["input"]>;
-  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
-  /** does the column match the given pattern */
-  _like?: InputMaybe<Scalars["String"]["input"]>;
-  _lt?: InputMaybe<Scalars["String"]["input"]>;
-  _lte?: InputMaybe<Scalars["String"]["input"]>;
-  _neq?: InputMaybe<Scalars["String"]["input"]>;
-  /** does the column NOT match the given case-insensitive pattern */
-  _nilike?: InputMaybe<Scalars["String"]["input"]>;
-  _nin?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  /** does the column NOT match the given POSIX regular expression, case insensitive */
-  _niregex?: InputMaybe<Scalars["String"]["input"]>;
-  /** does the column NOT match the given pattern */
-  _nlike?: InputMaybe<Scalars["String"]["input"]>;
-  /** does the column NOT match the given POSIX regular expression, case sensitive */
-  _nregex?: InputMaybe<Scalars["String"]["input"]>;
-  /** does the column NOT match the given SQL regular expression */
-  _nsimilar?: InputMaybe<Scalars["String"]["input"]>;
-  /** does the column match the given POSIX regular expression, case sensitive */
-  _regex?: InputMaybe<Scalars["String"]["input"]>;
-  /** does the column match the given SQL regular expression */
-  _similar?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type Subscription_Root = {
@@ -6583,6 +9351,46 @@ export type Subscription_Root = {
   chains_by_pk?: Maybe<Chains>;
   /** fetch data from the table in a streaming manner: "chains" */
   chains_stream: Array<Chains>;
+  /** fetch data from the table: "clothing_age_group" */
+  clothing_age_group: Array<Clothing_Age_Group>;
+  /** fetch aggregated fields from the table: "clothing_age_group" */
+  clothing_age_group_aggregate: Clothing_Age_Group_Aggregate;
+  /** fetch data from the table: "clothing_age_group" using primary key columns */
+  clothing_age_group_by_pk?: Maybe<Clothing_Age_Group>;
+  /** fetch data from the table in a streaming manner: "clothing_age_group" */
+  clothing_age_group_stream: Array<Clothing_Age_Group>;
+  /** fetch data from the table: "clothing_gender" */
+  clothing_gender: Array<Clothing_Gender>;
+  /** fetch aggregated fields from the table: "clothing_gender" */
+  clothing_gender_aggregate: Clothing_Gender_Aggregate;
+  /** fetch data from the table: "clothing_gender" using primary key columns */
+  clothing_gender_by_pk?: Maybe<Clothing_Gender>;
+  /** fetch data from the table in a streaming manner: "clothing_gender" */
+  clothing_gender_stream: Array<Clothing_Gender>;
+  /** fetch data from the table: "clothing_product_details" */
+  clothing_product_details: Array<Clothing_Product_Details>;
+  /** fetch aggregated fields from the table: "clothing_product_details" */
+  clothing_product_details_aggregate: Clothing_Product_Details_Aggregate;
+  /** fetch data from the table: "clothing_product_details" using primary key columns */
+  clothing_product_details_by_pk?: Maybe<Clothing_Product_Details>;
+  /** fetch data from the table in a streaming manner: "clothing_product_details" */
+  clothing_product_details_stream: Array<Clothing_Product_Details>;
+  /** fetch data from the table: "clothing_size" */
+  clothing_size: Array<Clothing_Size>;
+  /** fetch aggregated fields from the table: "clothing_size" */
+  clothing_size_aggregate: Clothing_Size_Aggregate;
+  /** fetch data from the table: "clothing_size" using primary key columns */
+  clothing_size_by_pk?: Maybe<Clothing_Size>;
+  /** fetch data from the table in a streaming manner: "clothing_size" */
+  clothing_size_stream: Array<Clothing_Size>;
+  /** fetch data from the table: "clothing_type" */
+  clothing_type: Array<Clothing_Type>;
+  /** fetch aggregated fields from the table: "clothing_type" */
+  clothing_type_aggregate: Clothing_Type_Aggregate;
+  /** fetch data from the table: "clothing_type" using primary key columns */
+  clothing_type_by_pk?: Maybe<Clothing_Type>;
+  /** fetch data from the table in a streaming manner: "clothing_type" */
+  clothing_type_stream: Array<Clothing_Type>;
   /** fetch data from the table: "event_status" */
   event_status: Array<Event_Status>;
   /** fetch aggregated fields from the table: "event_status" */
@@ -6623,6 +9431,30 @@ export type Subscription_Root = {
   events_event_tags_stream: Array<Events_Event_Tags>;
   /** fetch data from the table in a streaming manner: "events" */
   events_stream: Array<Events>;
+  /** An array relationship */
+  order_items: Array<Order_Items>;
+  /** An aggregate relationship */
+  order_items_aggregate: Order_Items_Aggregate;
+  /** fetch data from the table: "order_items" using primary key columns */
+  order_items_by_pk?: Maybe<Order_Items>;
+  /** fetch data from the table in a streaming manner: "order_items" */
+  order_items_stream: Array<Order_Items>;
+  /** fetch data from the table: "order_status" */
+  order_status: Array<Order_Status>;
+  /** fetch aggregated fields from the table: "order_status" */
+  order_status_aggregate: Order_Status_Aggregate;
+  /** fetch data from the table: "order_status" using primary key columns */
+  order_status_by_pk?: Maybe<Order_Status>;
+  /** fetch data from the table in a streaming manner: "order_status" */
+  order_status_stream: Array<Order_Status>;
+  /** fetch data from the table: "orders" */
+  orders: Array<Orders>;
+  /** fetch aggregated fields from the table: "orders" */
+  orders_aggregate: Orders_Aggregate;
+  /** fetch data from the table: "orders" using primary key columns */
+  orders_by_pk?: Maybe<Orders>;
+  /** fetch data from the table in a streaming manner: "orders" */
+  orders_stream: Array<Orders>;
   /** fetch data from the table: "price_type" */
   price_type: Array<Price_Type>;
   /** fetch aggregated fields from the table: "price_type" */
@@ -6631,6 +9463,38 @@ export type Subscription_Root = {
   price_type_by_pk?: Maybe<Price_Type>;
   /** fetch data from the table in a streaming manner: "price_type" */
   price_type_stream: Array<Price_Type>;
+  /** fetch data from the table: "product_category" */
+  product_category: Array<Product_Category>;
+  /** fetch aggregated fields from the table: "product_category" */
+  product_category_aggregate: Product_Category_Aggregate;
+  /** fetch data from the table: "product_category" using primary key columns */
+  product_category_by_pk?: Maybe<Product_Category>;
+  /** fetch data from the table in a streaming manner: "product_category" */
+  product_category_stream: Array<Product_Category>;
+  /** fetch data from the table: "product_status" */
+  product_status: Array<Product_Status>;
+  /** fetch aggregated fields from the table: "product_status" */
+  product_status_aggregate: Product_Status_Aggregate;
+  /** fetch data from the table: "product_status" using primary key columns */
+  product_status_by_pk?: Maybe<Product_Status>;
+  /** fetch data from the table in a streaming manner: "product_status" */
+  product_status_stream: Array<Product_Status>;
+  /** An array relationship */
+  product_variants: Array<Product_Variants>;
+  /** An aggregate relationship */
+  product_variants_aggregate: Product_Variants_Aggregate;
+  /** fetch data from the table: "product_variants" using primary key columns */
+  product_variants_by_pk?: Maybe<Product_Variants>;
+  /** fetch data from the table in a streaming manner: "product_variants" */
+  product_variants_stream: Array<Product_Variants>;
+  /** An array relationship */
+  products: Array<Products>;
+  /** An aggregate relationship */
+  products_aggregate: Products_Aggregate;
+  /** fetch data from the table: "products" using primary key columns */
+  products_by_pk?: Maybe<Products>;
+  /** fetch data from the table in a streaming manner: "products" */
+  products_stream: Array<Products>;
   /** fetch data from the table: "provider_type" */
   provider_type: Array<Provider_Type>;
   /** fetch aggregated fields from the table: "provider_type" */
@@ -6753,6 +9617,14 @@ export type Subscription_Root = {
   verification_tokens_stream: Array<Verification_Tokens>;
 };
 
+export type Subscription_RootAccountsArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
 export type Subscription_RootAccounts_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6771,12 +9643,12 @@ export type Subscription_RootAccounts_StreamArgs = {
   where?: InputMaybe<Accounts_Bool_Exp>;
 };
 
-export type Subscription_RootAccountsArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+export type Subscription_RootChainsArgs = {
+  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
+  order_by?: InputMaybe<Array<Chains_Order_By>>;
+  where?: InputMaybe<Chains_Bool_Exp>;
 };
 
 export type Subscription_RootChains_AggregateArgs = {
@@ -6797,12 +9669,142 @@ export type Subscription_RootChains_StreamArgs = {
   where?: InputMaybe<Chains_Bool_Exp>;
 };
 
-export type Subscription_RootChainsArgs = {
-  distinct_on?: InputMaybe<Array<Chains_Select_Column>>;
+export type Subscription_RootClothing_Age_GroupArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Age_Group_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Chains_Order_By>>;
-  where?: InputMaybe<Chains_Bool_Exp>;
+  order_by?: InputMaybe<Array<Clothing_Age_Group_Order_By>>;
+  where?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Age_Group_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Age_Group_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Age_Group_Order_By>>;
+  where?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Age_Group_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Subscription_RootClothing_Age_Group_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Clothing_Age_Group_Stream_Cursor_Input>>;
+  where?: InputMaybe<Clothing_Age_Group_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_GenderArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Gender_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Gender_Order_By>>;
+  where?: InputMaybe<Clothing_Gender_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Gender_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Gender_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Gender_Order_By>>;
+  where?: InputMaybe<Clothing_Gender_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Gender_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Subscription_RootClothing_Gender_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Clothing_Gender_Stream_Cursor_Input>>;
+  where?: InputMaybe<Clothing_Gender_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Product_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Product_Details_Order_By>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Product_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Product_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Product_Details_Order_By>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Product_Details_By_PkArgs = {
+  product_id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootClothing_Product_Details_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Clothing_Product_Details_Stream_Cursor_Input>>;
+  where?: InputMaybe<Clothing_Product_Details_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_SizeArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Size_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Size_Order_By>>;
+  where?: InputMaybe<Clothing_Size_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Size_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Size_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Size_Order_By>>;
+  where?: InputMaybe<Clothing_Size_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Size_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Subscription_RootClothing_Size_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Clothing_Size_Stream_Cursor_Input>>;
+  where?: InputMaybe<Clothing_Size_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Type_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Type_Order_By>>;
+  where?: InputMaybe<Clothing_Type_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Type_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Clothing_Type_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Clothing_Type_Order_By>>;
+  where?: InputMaybe<Clothing_Type_Bool_Exp>;
+};
+
+export type Subscription_RootClothing_Type_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Subscription_RootClothing_Type_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Clothing_Type_Stream_Cursor_Input>>;
+  where?: InputMaybe<Clothing_Type_Bool_Exp>;
+};
+
+export type Subscription_RootEvent_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Event_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Event_Status_Order_By>>;
+  where?: InputMaybe<Event_Status_Bool_Exp>;
 };
 
 export type Subscription_RootEvent_Status_AggregateArgs = {
@@ -6823,12 +9825,12 @@ export type Subscription_RootEvent_Status_StreamArgs = {
   where?: InputMaybe<Event_Status_Bool_Exp>;
 };
 
-export type Subscription_RootEvent_StatusArgs = {
-  distinct_on?: InputMaybe<Array<Event_Status_Select_Column>>;
+export type Subscription_RootEvent_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Event_Tags_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Event_Status_Order_By>>;
-  where?: InputMaybe<Event_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Tags_Order_By>>;
+  where?: InputMaybe<Event_Tags_Bool_Exp>;
 };
 
 export type Subscription_RootEvent_Tags_AggregateArgs = {
@@ -6849,12 +9851,12 @@ export type Subscription_RootEvent_Tags_StreamArgs = {
   where?: InputMaybe<Event_Tags_Bool_Exp>;
 };
 
-export type Subscription_RootEvent_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Event_Tags_Select_Column>>;
+export type Subscription_RootEvent_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Event_Type_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Event_Tags_Order_By>>;
-  where?: InputMaybe<Event_Tags_Bool_Exp>;
+  order_by?: InputMaybe<Array<Event_Type_Order_By>>;
+  where?: InputMaybe<Event_Type_Bool_Exp>;
 };
 
 export type Subscription_RootEvent_Type_AggregateArgs = {
@@ -6875,12 +9877,12 @@ export type Subscription_RootEvent_Type_StreamArgs = {
   where?: InputMaybe<Event_Type_Bool_Exp>;
 };
 
-export type Subscription_RootEvent_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Event_Type_Select_Column>>;
+export type Subscription_RootEventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Event_Type_Order_By>>;
-  where?: InputMaybe<Event_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
 };
 
 export type Subscription_RootEvents_AggregateArgs = {
@@ -6893,6 +9895,14 @@ export type Subscription_RootEvents_AggregateArgs = {
 
 export type Subscription_RootEvents_By_PkArgs = {
   id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootEvents_Event_TagsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
+  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
 export type Subscription_RootEvents_Event_Tags_AggregateArgs = {
@@ -6914,26 +9924,96 @@ export type Subscription_RootEvents_Event_Tags_StreamArgs = {
   where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
 };
 
-export type Subscription_RootEvents_Event_TagsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Event_Tags_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Event_Tags_Order_By>>;
-  where?: InputMaybe<Events_Event_Tags_Bool_Exp>;
-};
-
 export type Subscription_RootEvents_StreamArgs = {
   batch_size: Scalars["Int"]["input"];
   cursor: Array<InputMaybe<Events_Stream_Cursor_Input>>;
   where?: InputMaybe<Events_Bool_Exp>;
 };
 
-export type Subscription_RootEventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+export type Subscription_RootOrder_ItemsArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+export type Subscription_RootOrder_Items_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Order_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Items_Order_By>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+export type Subscription_RootOrder_Items_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootOrder_Items_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Order_Items_Stream_Cursor_Input>>;
+  where?: InputMaybe<Order_Items_Bool_Exp>;
+};
+
+export type Subscription_RootOrder_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Order_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Status_Order_By>>;
+  where?: InputMaybe<Order_Status_Bool_Exp>;
+};
+
+export type Subscription_RootOrder_Status_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Order_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Order_Status_Order_By>>;
+  where?: InputMaybe<Order_Status_Bool_Exp>;
+};
+
+export type Subscription_RootOrder_Status_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Subscription_RootOrder_Status_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Order_Status_Stream_Cursor_Input>>;
+  where?: InputMaybe<Order_Status_Bool_Exp>;
+};
+
+export type Subscription_RootOrdersArgs = {
+  distinct_on?: InputMaybe<Array<Orders_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Orders_Order_By>>;
+  where?: InputMaybe<Orders_Bool_Exp>;
+};
+
+export type Subscription_RootOrders_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Orders_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Orders_Order_By>>;
+  where?: InputMaybe<Orders_Bool_Exp>;
+};
+
+export type Subscription_RootOrders_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootOrders_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Orders_Stream_Cursor_Input>>;
+  where?: InputMaybe<Orders_Bool_Exp>;
+};
+
+export type Subscription_RootPrice_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Price_Type_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Price_Type_Order_By>>;
+  where?: InputMaybe<Price_Type_Bool_Exp>;
 };
 
 export type Subscription_RootPrice_Type_AggregateArgs = {
@@ -6954,12 +10034,116 @@ export type Subscription_RootPrice_Type_StreamArgs = {
   where?: InputMaybe<Price_Type_Bool_Exp>;
 };
 
-export type Subscription_RootPrice_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Price_Type_Select_Column>>;
+export type Subscription_RootProduct_CategoryArgs = {
+  distinct_on?: InputMaybe<Array<Product_Category_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Price_Type_Order_By>>;
-  where?: InputMaybe<Price_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Product_Category_Order_By>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+export type Subscription_RootProduct_Category_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Product_Category_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Category_Order_By>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+export type Subscription_RootProduct_Category_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Subscription_RootProduct_Category_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Product_Category_Stream_Cursor_Input>>;
+  where?: InputMaybe<Product_Category_Bool_Exp>;
+};
+
+export type Subscription_RootProduct_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Product_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Status_Order_By>>;
+  where?: InputMaybe<Product_Status_Bool_Exp>;
+};
+
+export type Subscription_RootProduct_Status_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Product_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Status_Order_By>>;
+  where?: InputMaybe<Product_Status_Bool_Exp>;
+};
+
+export type Subscription_RootProduct_Status_By_PkArgs = {
+  value: Scalars["String"]["input"];
+};
+
+export type Subscription_RootProduct_Status_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Product_Status_Stream_Cursor_Input>>;
+  where?: InputMaybe<Product_Status_Bool_Exp>;
+};
+
+export type Subscription_RootProduct_VariantsArgs = {
+  distinct_on?: InputMaybe<Array<Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Variants_Order_By>>;
+  where?: InputMaybe<Product_Variants_Bool_Exp>;
+};
+
+export type Subscription_RootProduct_Variants_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Product_Variants_Order_By>>;
+  where?: InputMaybe<Product_Variants_Bool_Exp>;
+};
+
+export type Subscription_RootProduct_Variants_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootProduct_Variants_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Product_Variants_Stream_Cursor_Input>>;
+  where?: InputMaybe<Product_Variants_Bool_Exp>;
+};
+
+export type Subscription_RootProductsArgs = {
+  distinct_on?: InputMaybe<Array<Products_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Products_Order_By>>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+export type Subscription_RootProducts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Products_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Products_Order_By>>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+export type Subscription_RootProducts_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootProducts_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Products_Stream_Cursor_Input>>;
+  where?: InputMaybe<Products_Bool_Exp>;
+};
+
+export type Subscription_RootProvider_TypeArgs = {
+  distinct_on?: InputMaybe<Array<Provider_Type_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Provider_Type_Order_By>>;
+  where?: InputMaybe<Provider_Type_Bool_Exp>;
 };
 
 export type Subscription_RootProvider_Type_AggregateArgs = {
@@ -6980,12 +10164,12 @@ export type Subscription_RootProvider_Type_StreamArgs = {
   where?: InputMaybe<Provider_Type_Bool_Exp>;
 };
 
-export type Subscription_RootProvider_TypeArgs = {
-  distinct_on?: InputMaybe<Array<Provider_Type_Select_Column>>;
+export type Subscription_RootSessionsArgs = {
+  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Provider_Type_Order_By>>;
-  where?: InputMaybe<Provider_Type_Bool_Exp>;
+  order_by?: InputMaybe<Array<Sessions_Order_By>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
 export type Subscription_RootSessions_AggregateArgs = {
@@ -7006,12 +10190,12 @@ export type Subscription_RootSessions_StreamArgs = {
   where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
-export type Subscription_RootSessionsArgs = {
-  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
+export type Subscription_RootUser_RoleArgs = {
+  distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Sessions_Order_By>>;
-  where?: InputMaybe<Sessions_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Role_Order_By>>;
+  where?: InputMaybe<User_Role_Bool_Exp>;
 };
 
 export type Subscription_RootUser_Role_AggregateArgs = {
@@ -7032,12 +10216,12 @@ export type Subscription_RootUser_Role_StreamArgs = {
   where?: InputMaybe<User_Role_Bool_Exp>;
 };
 
-export type Subscription_RootUser_RoleArgs = {
-  distinct_on?: InputMaybe<Array<User_Role_Select_Column>>;
+export type Subscription_RootUser_StatusArgs = {
+  distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<User_Role_Order_By>>;
-  where?: InputMaybe<User_Role_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Status_Order_By>>;
+  where?: InputMaybe<User_Status_Bool_Exp>;
 };
 
 export type Subscription_RootUser_Status_AggregateArgs = {
@@ -7058,12 +10242,12 @@ export type Subscription_RootUser_Status_StreamArgs = {
   where?: InputMaybe<User_Status_Bool_Exp>;
 };
 
-export type Subscription_RootUser_StatusArgs = {
-  distinct_on?: InputMaybe<Array<User_Status_Select_Column>>;
+export type Subscription_RootUsersArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<User_Status_Order_By>>;
-  where?: InputMaybe<User_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 export type Subscription_RootUsers_AggregateArgs = {
@@ -7084,12 +10268,12 @@ export type Subscription_RootUsers_StreamArgs = {
   where?: InputMaybe<Users_Bool_Exp>;
 };
 
-export type Subscription_RootUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+export type Subscription_RootVenue_Accommodation_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
 };
 
 export type Subscription_RootVenue_Accommodation_Details_AggregateArgs = {
@@ -7110,12 +10294,12 @@ export type Subscription_RootVenue_Accommodation_Details_StreamArgs = {
   where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
 };
 
-export type Subscription_RootVenue_Accommodation_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+export type Subscription_RootVenue_Beauty_Salon_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
-  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
 };
 
 export type Subscription_RootVenue_Beauty_Salon_Details_AggregateArgs = {
@@ -7136,12 +10320,12 @@ export type Subscription_RootVenue_Beauty_Salon_Details_StreamArgs = {
   where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
 };
 
-export type Subscription_RootVenue_Beauty_Salon_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+export type Subscription_RootVenue_CategoryArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
-  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
+  where?: InputMaybe<Venue_Category_Bool_Exp>;
 };
 
 export type Subscription_RootVenue_Category_AggregateArgs = {
@@ -7162,12 +10346,12 @@ export type Subscription_RootVenue_Category_StreamArgs = {
   where?: InputMaybe<Venue_Category_Bool_Exp>;
 };
 
-export type Subscription_RootVenue_CategoryArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Category_Select_Column>>;
+export type Subscription_RootVenue_Restaurant_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Category_Order_By>>;
-  where?: InputMaybe<Venue_Category_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
 };
 
 export type Subscription_RootVenue_Restaurant_Details_AggregateArgs = {
@@ -7188,12 +10372,12 @@ export type Subscription_RootVenue_Restaurant_Details_StreamArgs = {
   where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
 };
 
-export type Subscription_RootVenue_Restaurant_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+export type Subscription_RootVenue_ScheduleArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
-  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
 };
 
 export type Subscription_RootVenue_Schedule_AggregateArgs = {
@@ -7214,12 +10398,12 @@ export type Subscription_RootVenue_Schedule_StreamArgs = {
   where?: InputMaybe<Venue_Schedule_Bool_Exp>;
 };
 
-export type Subscription_RootVenue_ScheduleArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+export type Subscription_RootVenue_School_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
-  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
 };
 
 export type Subscription_RootVenue_School_Details_AggregateArgs = {
@@ -7240,12 +10424,12 @@ export type Subscription_RootVenue_School_Details_StreamArgs = {
   where?: InputMaybe<Venue_School_Details_Bool_Exp>;
 };
 
-export type Subscription_RootVenue_School_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+export type Subscription_RootVenue_Shop_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
-  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
 };
 
 export type Subscription_RootVenue_Shop_Details_AggregateArgs = {
@@ -7266,12 +10450,12 @@ export type Subscription_RootVenue_Shop_Details_StreamArgs = {
   where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
 };
 
-export type Subscription_RootVenue_Shop_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+export type Subscription_RootVenue_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Status_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
-  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venue_Status_Order_By>>;
+  where?: InputMaybe<Venue_Status_Bool_Exp>;
 };
 
 export type Subscription_RootVenue_Status_AggregateArgs = {
@@ -7292,12 +10476,12 @@ export type Subscription_RootVenue_Status_StreamArgs = {
   where?: InputMaybe<Venue_Status_Bool_Exp>;
 };
 
-export type Subscription_RootVenue_StatusArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Status_Select_Column>>;
+export type Subscription_RootVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Status_Order_By>>;
-  where?: InputMaybe<Venue_Status_Bool_Exp>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
 };
 
 export type Subscription_RootVenues_AggregateArgs = {
@@ -7318,12 +10502,12 @@ export type Subscription_RootVenues_StreamArgs = {
   where?: InputMaybe<Venues_Bool_Exp>;
 };
 
-export type Subscription_RootVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+export type Subscription_RootVerification_TokensArgs = {
+  distinct_on?: InputMaybe<Array<Verification_Tokens_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
+  order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
+  where?: InputMaybe<Verification_Tokens_Bool_Exp>;
 };
 
 export type Subscription_RootVerification_Tokens_AggregateArgs = {
@@ -7341,14 +10525,6 @@ export type Subscription_RootVerification_Tokens_By_PkArgs = {
 export type Subscription_RootVerification_Tokens_StreamArgs = {
   batch_size: Scalars["Int"]["input"];
   cursor: Array<InputMaybe<Verification_Tokens_Stream_Cursor_Input>>;
-  where?: InputMaybe<Verification_Tokens_Bool_Exp>;
-};
-
-export type Subscription_RootVerification_TokensArgs = {
-  distinct_on?: InputMaybe<Array<Verification_Tokens_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Verification_Tokens_Order_By>>;
   where?: InputMaybe<Verification_Tokens_Bool_Exp>;
 };
 
@@ -7391,26 +10567,6 @@ export type Timestamptz_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars["timestamptz"]["input"]>>;
 };
 
-export type UpdateEventStatusMutation = {
-  __typename?: "mutation_root";
-  update_events_by_pk?: { __typename?: "events"; id: UUID; status: Event_Status_Enum; updated_at: Timestamp } | null;
-};
-
-export type UpdateEventStatusMutationVariables = Exact<{
-  id: Scalars["uuid"]["input"];
-  status: Event_Status_Enum;
-}>;
-
-export type UpdateVenueStatusMutation = {
-  __typename?: "mutation_root";
-  update_venues_by_pk?: { __typename?: "venues"; id: UUID; status: Venue_Status_Enum; updated_at: Timestamp } | null;
-};
-
-export type UpdateVenueStatusMutationVariables = Exact<{
-  id: Scalars["uuid"]["input"];
-  status: Venue_Status_Enum;
-}>;
-
 /** columns and relationships of "user_role" */
 export type User_Role = {
   __typename?: "user_role";
@@ -7420,6 +10576,24 @@ export type User_Role = {
   /** An aggregate relationship */
   users_aggregate: Users_Aggregate;
   value: Scalars["String"]["output"];
+};
+
+/** columns and relationships of "user_role" */
+export type User_RoleUsersArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
+};
+
+/** columns and relationships of "user_role" */
+export type User_RoleUsers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** aggregated selection of "user_role" */
@@ -7453,6 +10627,19 @@ export type User_Role_Bool_Exp = {
   users_aggregate?: InputMaybe<Users_Aggregate_Bool_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "user_role" */
+export enum User_Role_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  UserRolePkey = "user_role_pkey",
+}
+
+export enum User_Role_Enum {
+  /** Administrator with full access */
+  Admin = "admin",
+  /** Regular user with standard access */
+  User = "user",
+}
 
 /** Boolean expression to compare columns of type "user_role_enum". All fields are combined with logical 'AND'. */
 export type User_Role_Enum_Comparison_Exp = {
@@ -7519,6 +10706,14 @@ export type User_Role_Pk_Columns_Input = {
   value: Scalars["String"]["input"];
 };
 
+/** select columns of table "user_role" */
+export enum User_Role_Select_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 /** input type for updating data in table "user_role" */
 export type User_Role_Set_Input = {
   description?: InputMaybe<Scalars["String"]["input"]>;
@@ -7539,29 +10734,19 @@ export type User_Role_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "user_role" */
+export enum User_Role_Update_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 export type User_Role_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<User_Role_Set_Input>;
   /** filter the rows which have to be updated */
   where: User_Role_Bool_Exp;
-};
-
-/** columns and relationships of "user_role" */
-export type User_RoleUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** columns and relationships of "user_role" */
-export type User_RoleUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** columns and relationships of "user_status" */
@@ -7573,6 +10758,24 @@ export type User_Status = {
   /** An aggregate relationship */
   users_aggregate: Users_Aggregate;
   value: Scalars["String"]["output"];
+};
+
+/** columns and relationships of "user_status" */
+export type User_StatusUsersArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
+};
+
+/** columns and relationships of "user_status" */
+export type User_StatusUsers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** aggregated selection of "user_status" */
@@ -7606,6 +10809,19 @@ export type User_Status_Bool_Exp = {
   users_aggregate?: InputMaybe<Users_Aggregate_Bool_Exp>;
   value?: InputMaybe<String_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "user_status" */
+export enum User_Status_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  UserStatusPkey = "user_status_pkey",
+}
+
+export enum User_Status_Enum {
+  /** Currently active and able to log in */
+  Active = "active",
+  /** Inactive but can be reactivated */
+  Inactive = "inactive",
+}
 
 /** Boolean expression to compare columns of type "user_status_enum". All fields are combined with logical 'AND'. */
 export type User_Status_Enum_Comparison_Exp = {
@@ -7672,6 +10888,14 @@ export type User_Status_Pk_Columns_Input = {
   value: Scalars["String"]["input"];
 };
 
+/** select columns of table "user_status" */
+export enum User_Status_Select_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 /** input type for updating data in table "user_status" */
 export type User_Status_Set_Input = {
   description?: InputMaybe<Scalars["String"]["input"]>;
@@ -7692,29 +10916,19 @@ export type User_Status_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "user_status" */
+export enum User_Status_Update_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 export type User_Status_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<User_Status_Set_Input>;
   /** filter the rows which have to be updated */
   where: User_Status_Bool_Exp;
-};
-
-/** columns and relationships of "user_status" */
-export type User_StatusUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** columns and relationships of "user_status" */
-export type User_StatusUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** columns and relationships of "users" */
@@ -7756,6 +10970,78 @@ export type Users = {
   /** An object relationship */
   user_status: User_Status;
   venues_created: Scalars["Int"]["output"];
+};
+
+/** columns and relationships of "users" */
+export type UsersAccountsArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersAccounts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Accounts_Order_By>>;
+  where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersEventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersEvents_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersOwned_EventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersOwned_Events_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersSessionsArgs = {
+  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Sessions_Order_By>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersSessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Sessions_Order_By>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
 /** aggregated selection of "users" */
@@ -7889,6 +11175,14 @@ export type Users_Bool_Exp = {
   user_status?: InputMaybe<User_Status_Bool_Exp>;
   venues_created?: InputMaybe<Int_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "users" */
+export enum Users_Constraint {
+  /** unique or primary key constraint on columns "email" */
+  UsersEmailKey = "users_email_key",
+  /** unique or primary key constraint on columns "id" */
+  UsersPkey = "users_pkey",
+}
 
 /** input type for incrementing numeric columns in table "users" */
 export type Users_Inc_Input = {
@@ -8050,6 +11344,54 @@ export type Users_Pk_Columns_Input = {
   id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "users" */
+export enum Users_Select_Column {
+  /** column name */
+  City = "city",
+  /** column name */
+  Email = "email",
+  /** column name */
+  EmailVerified = "emailVerified",
+  /** column name */
+  EventsCreated = "events_created",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Image = "image",
+  /** column name */
+  IsVerifiedContributor = "is_verified_contributor",
+  /** column name */
+  LastActivityAt = "last_activity_at",
+  /** column name */
+  Level = "level",
+  /** column name */
+  Name = "name",
+  /** column name */
+  Points = "points",
+  /** column name */
+  ReviewsCreated = "reviews_created",
+  /** column name */
+  Role = "role",
+  /** column name */
+  Status = "status",
+  /** column name */
+  ThankYouCount = "thank_you_count",
+  /** column name */
+  VenuesCreated = "venues_created",
+}
+
+/** select "users_aggregate_bool_exp_bool_and_arguments_columns" columns of table "users" */
+export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsVerifiedContributor = "is_verified_contributor",
+}
+
+/** select "users_aggregate_bool_exp_bool_or_arguments_columns" columns of table "users" */
+export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsVerifiedContributor = "is_verified_contributor",
+}
+
 /** input type for updating data in table "users" */
 export type Users_Set_Input = {
   city?: InputMaybe<Scalars["String"]["input"]>;
@@ -8182,6 +11524,42 @@ export type Users_Sum_Order_By = {
   venues_created?: InputMaybe<Order_By>;
 };
 
+/** update columns of table "users" */
+export enum Users_Update_Column {
+  /** column name */
+  City = "city",
+  /** column name */
+  Email = "email",
+  /** column name */
+  EmailVerified = "emailVerified",
+  /** column name */
+  EventsCreated = "events_created",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Image = "image",
+  /** column name */
+  IsVerifiedContributor = "is_verified_contributor",
+  /** column name */
+  LastActivityAt = "last_activity_at",
+  /** column name */
+  Level = "level",
+  /** column name */
+  Name = "name",
+  /** column name */
+  Points = "points",
+  /** column name */
+  ReviewsCreated = "reviews_created",
+  /** column name */
+  Role = "role",
+  /** column name */
+  Status = "status",
+  /** column name */
+  ThankYouCount = "thank_you_count",
+  /** column name */
+  VenuesCreated = "venues_created",
+}
+
 export type Users_Updates = {
   /** increments the numeric columns with given value of the filtered values */
   _inc?: InputMaybe<Users_Inc_Input>;
@@ -8252,78 +11630,6 @@ export type Users_Variance_Order_By = {
   reviews_created?: InputMaybe<Order_By>;
   thank_you_count?: InputMaybe<Order_By>;
   venues_created?: InputMaybe<Order_By>;
-};
-
-/** columns and relationships of "users" */
-export type UsersAccounts_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
-};
-
-/** columns and relationships of "users" */
-export type UsersAccountsArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Accounts_Order_By>>;
-  where?: InputMaybe<Accounts_Bool_Exp>;
-};
-
-/** columns and relationships of "users" */
-export type UsersEvents_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-/** columns and relationships of "users" */
-export type UsersEventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-/** columns and relationships of "users" */
-export type UsersOwned_Events_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-/** columns and relationships of "users" */
-export type UsersOwned_EventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-/** columns and relationships of "users" */
-export type UsersSessions_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Sessions_Order_By>>;
-  where?: InputMaybe<Sessions_Bool_Exp>;
-};
-
-/** columns and relationships of "users" */
-export type UsersSessionsArgs = {
-  distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Sessions_Order_By>>;
-  where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
@@ -8451,6 +11757,12 @@ export type Venue_Accommodation_Details_Bool_Exp = {
   venue_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "venue_accommodation_details" */
+export enum Venue_Accommodation_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueAccommodationDetailsPkey = "venue_accommodation_details_pkey",
+}
+
 /** input type for incrementing numeric columns in table "venue_accommodation_details" */
 export type Venue_Accommodation_Details_Inc_Input = {
   bathrooms?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8561,6 +11873,28 @@ export type Venue_Accommodation_Details_Pk_Columns_Input = {
   venue_id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "venue_accommodation_details" */
+export enum Venue_Accommodation_Details_Select_Column {
+  /** column name */
+  Amenities = "amenities",
+  /** column name */
+  Bathrooms = "bathrooms",
+  /** column name */
+  Bedrooms = "bedrooms",
+  /** column name */
+  CheckInTime = "check_in_time",
+  /** column name */
+  CheckOutTime = "check_out_time",
+  /** column name */
+  MaxGuests = "max_guests",
+  /** column name */
+  MinimumStayNights = "minimum_stay_nights",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
 /** input type for updating data in table "venue_accommodation_details" */
 export type Venue_Accommodation_Details_Set_Input = {
   amenities?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -8662,6 +11996,28 @@ export type Venue_Accommodation_Details_Sum_Order_By = {
   max_guests?: InputMaybe<Order_By>;
   minimum_stay_nights?: InputMaybe<Order_By>;
 };
+
+/** update columns of table "venue_accommodation_details" */
+export enum Venue_Accommodation_Details_Update_Column {
+  /** column name */
+  Amenities = "amenities",
+  /** column name */
+  Bathrooms = "bathrooms",
+  /** column name */
+  Bedrooms = "bedrooms",
+  /** column name */
+  CheckInTime = "check_in_time",
+  /** column name */
+  CheckOutTime = "check_out_time",
+  /** column name */
+  MaxGuests = "max_guests",
+  /** column name */
+  MinimumStayNights = "minimum_stay_nights",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
 
 export type Venue_Accommodation_Details_Updates = {
   /** increments the numeric columns with given value of the filtered values */
@@ -8810,6 +12166,12 @@ export type Venue_Beauty_Salon_Details_Bool_Exp = {
   walk_ins_accepted?: InputMaybe<Boolean_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueBeautySalonDetailsPkey = "venue_beauty_salon_details_pkey",
+}
+
 /** input type for inserting data into table "venue_beauty_salon_details" */
 export type Venue_Beauty_Salon_Details_Insert_Input = {
   appointment_required?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -8888,6 +12250,36 @@ export type Venue_Beauty_Salon_Details_Pk_Columns_Input = {
   venue_id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Select_Column {
+  /** column name */
+  AppointmentRequired = "appointment_required",
+  /** column name */
+  Services = "services",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+  /** column name */
+  WalkInsAccepted = "walk_ins_accepted",
+}
+
+/** select "venue_beauty_salon_details_aggregate_bool_exp_bool_and_arguments_columns" columns of table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Select_Column_Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  AppointmentRequired = "appointment_required",
+  /** column name */
+  WalkInsAccepted = "walk_ins_accepted",
+}
+
+/** select "venue_beauty_salon_details_aggregate_bool_exp_bool_or_arguments_columns" columns of table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Select_Column_Venue_Beauty_Salon_Details_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  AppointmentRequired = "appointment_required",
+  /** column name */
+  WalkInsAccepted = "walk_ins_accepted",
+}
+
 /** input type for updating data in table "venue_beauty_salon_details" */
 export type Venue_Beauty_Salon_Details_Set_Input = {
   appointment_required?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -8914,6 +12306,20 @@ export type Venue_Beauty_Salon_Details_Stream_Cursor_Value_Input = {
   walk_ins_accepted?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** update columns of table "venue_beauty_salon_details" */
+export enum Venue_Beauty_Salon_Details_Update_Column {
+  /** column name */
+  AppointmentRequired = "appointment_required",
+  /** column name */
+  Services = "services",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+  /** column name */
+  WalkInsAccepted = "walk_ins_accepted",
+}
+
 export type Venue_Beauty_Salon_Details_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Venue_Beauty_Salon_Details_Set_Input>;
@@ -8929,6 +12335,24 @@ export type Venue_Category = {
   venues: Array<Venues>;
   /** An aggregate relationship */
   venues_aggregate: Venues_Aggregate;
+};
+
+/** columns and relationships of "venue_category" */
+export type Venue_CategoryVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+/** columns and relationships of "venue_category" */
+export type Venue_CategoryVenues_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
 };
 
 /** aggregated selection of "venue_category" */
@@ -8961,6 +12385,31 @@ export type Venue_Category_Bool_Exp = {
   venues?: InputMaybe<Venues_Bool_Exp>;
   venues_aggregate?: InputMaybe<Venues_Aggregate_Bool_Exp>;
 };
+
+/** unique or primary key constraints on table "venue_category" */
+export enum Venue_Category_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  VenueCategoryPkey = "venue_category_pkey",
+}
+
+export enum Venue_Category_Enum {
+  Accommodation = "ACCOMMODATION",
+  BeautySalon = "BEAUTY_SALON",
+  Cafe = "CAFE",
+  Catering = "CATERING",
+  Church = "CHURCH",
+  Club = "CLUB",
+  CulturalCentre = "CULTURAL_CENTRE",
+  Delivery = "DELIVERY",
+  GroceryStore = "GROCERY_STORE",
+  LegalService = "LEGAL_SERVICE",
+  Library = "LIBRARY",
+  Medical = "MEDICAL",
+  Organization = "ORGANIZATION",
+  Restaurant = "RESTAURANT",
+  School = "SCHOOL",
+  Shop = "SHOP",
+}
 
 /** Boolean expression to compare columns of type "venue_category_enum". All fields are combined with logical 'AND'. */
 export type Venue_Category_Enum_Comparison_Exp = {
@@ -9023,6 +12472,12 @@ export type Venue_Category_Pk_Columns_Input = {
   value: Scalars["String"]["input"];
 };
 
+/** select columns of table "venue_category" */
+export enum Venue_Category_Select_Column {
+  /** column name */
+  Value = "value",
+}
+
 /** input type for updating data in table "venue_category" */
 export type Venue_Category_Set_Input = {
   value?: InputMaybe<Scalars["String"]["input"]>;
@@ -9041,29 +12496,17 @@ export type Venue_Category_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "venue_category" */
+export enum Venue_Category_Update_Column {
+  /** column name */
+  Value = "value",
+}
+
 export type Venue_Category_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Venue_Category_Set_Input>;
   /** filter the rows which have to be updated */
   where: Venue_Category_Bool_Exp;
-};
-
-/** columns and relationships of "venue_category" */
-export type Venue_CategoryVenues_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
-};
-
-/** columns and relationships of "venue_category" */
-export type Venue_CategoryVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
 };
 
 /** columns and relationships of "venue_restaurant_details" */
@@ -9166,6 +12609,12 @@ export type Venue_Restaurant_Details_Bool_Exp = {
   venue_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "venue_restaurant_details" */
+export enum Venue_Restaurant_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueRestaurantDetailsPkey = "venue_restaurant_details_pkey",
+}
+
 /** input type for incrementing numeric columns in table "venue_restaurant_details" */
 export type Venue_Restaurant_Details_Inc_Input = {
   seating_capacity?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9263,6 +12712,22 @@ export type Venue_Restaurant_Details_Pk_Columns_Input = {
   venue_id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "venue_restaurant_details" */
+export enum Venue_Restaurant_Details_Select_Column {
+  /** column name */
+  CuisineTypes = "cuisine_types",
+  /** column name */
+  Features = "features",
+  /** column name */
+  PriceRange = "price_range",
+  /** column name */
+  SeatingCapacity = "seating_capacity",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
 /** input type for updating data in table "venue_restaurant_details" */
 export type Venue_Restaurant_Details_Set_Input = {
   cuisine_types?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -9334,6 +12799,22 @@ export type Venue_Restaurant_Details_Sum_Fields = {
 export type Venue_Restaurant_Details_Sum_Order_By = {
   seating_capacity?: InputMaybe<Order_By>;
 };
+
+/** update columns of table "venue_restaurant_details" */
+export enum Venue_Restaurant_Details_Update_Column {
+  /** column name */
+  CuisineTypes = "cuisine_types",
+  /** column name */
+  Features = "features",
+  /** column name */
+  PriceRange = "price_range",
+  /** column name */
+  SeatingCapacity = "seating_capacity",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
 
 export type Venue_Restaurant_Details_Updates = {
   /** increments the numeric columns with given value of the filtered values */
@@ -9450,6 +12931,14 @@ export type Venue_Schedule_Bool_Exp = {
   venue_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "venue_schedule" */
+export enum Venue_Schedule_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  VenueSchedulePkey = "venue_schedule_pkey",
+  /** unique or primary key constraint on columns "id", "venue_id", "day_of_week" */
+  VenueScheduleVenueIdDayOfWeekKey = "venue_schedule_venue_id_day_of_week_key",
+}
+
 /** input type for inserting data into table "venue_schedule" */
 export type Venue_Schedule_Insert_Input = {
   close_time?: InputMaybe<Scalars["time"]["input"]>;
@@ -9527,6 +13016,22 @@ export type Venue_Schedule_Pk_Columns_Input = {
   id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "venue_schedule" */
+export enum Venue_Schedule_Select_Column {
+  /** column name */
+  CloseTime = "close_time",
+  /** column name */
+  DayOfWeek = "day_of_week",
+  /** column name */
+  Id = "id",
+  /** column name */
+  OpenTime = "open_time",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
 /** input type for updating data in table "venue_schedule" */
 export type Venue_Schedule_Set_Input = {
   close_time?: InputMaybe<Scalars["time"]["input"]>;
@@ -9554,6 +13059,22 @@ export type Venue_Schedule_Stream_Cursor_Value_Input = {
   updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
+
+/** update columns of table "venue_schedule" */
+export enum Venue_Schedule_Update_Column {
+  /** column name */
+  CloseTime = "close_time",
+  /** column name */
+  DayOfWeek = "day_of_week",
+  /** column name */
+  Id = "id",
+  /** column name */
+  OpenTime = "open_time",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
 
 export type Venue_Schedule_Updates = {
   /** sets the columns of the filtered rows to the given values */
@@ -9680,6 +13201,12 @@ export type Venue_School_Details_Bool_Exp = {
   venue_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "venue_school_details" */
+export enum Venue_School_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueSchoolDetailsPkey = "venue_school_details_pkey",
+}
+
 /** input type for incrementing numeric columns in table "venue_school_details" */
 export type Venue_School_Details_Inc_Input = {
   class_size_max?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9779,6 +13306,36 @@ export type Venue_School_Details_Pk_Columns_Input = {
   venue_id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "venue_school_details" */
+export enum Venue_School_Details_Select_Column {
+  /** column name */
+  AgeGroups = "age_groups",
+  /** column name */
+  ClassSizeMax = "class_size_max",
+  /** column name */
+  LanguagesTaught = "languages_taught",
+  /** column name */
+  OnlineClassesAvailable = "online_classes_available",
+  /** column name */
+  Subjects = "subjects",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
+/** select "venue_school_details_aggregate_bool_exp_bool_and_arguments_columns" columns of table "venue_school_details" */
+export enum Venue_School_Details_Select_Column_Venue_School_Details_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  OnlineClassesAvailable = "online_classes_available",
+}
+
+/** select "venue_school_details_aggregate_bool_exp_bool_or_arguments_columns" columns of table "venue_school_details" */
+export enum Venue_School_Details_Select_Column_Venue_School_Details_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  OnlineClassesAvailable = "online_classes_available",
+}
+
 /** input type for updating data in table "venue_school_details" */
 export type Venue_School_Details_Set_Input = {
   age_groups?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -9852,6 +13409,24 @@ export type Venue_School_Details_Sum_Fields = {
 export type Venue_School_Details_Sum_Order_By = {
   class_size_max?: InputMaybe<Order_By>;
 };
+
+/** update columns of table "venue_school_details" */
+export enum Venue_School_Details_Update_Column {
+  /** column name */
+  AgeGroups = "age_groups",
+  /** column name */
+  ClassSizeMax = "class_size_max",
+  /** column name */
+  LanguagesTaught = "languages_taught",
+  /** column name */
+  OnlineClassesAvailable = "online_classes_available",
+  /** column name */
+  Subjects = "subjects",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
 
 export type Venue_School_Details_Updates = {
   /** increments the numeric columns with given value of the filtered values */
@@ -9964,6 +13539,12 @@ export type Venue_Shop_Details_Bool_Exp = {
   venue_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "venue_shop_details" */
+export enum Venue_Shop_Details_Constraint {
+  /** unique or primary key constraint on columns "venue_id" */
+  VenueShopDetailsPkey = "venue_shop_details_pkey",
+}
+
 /** input type for inserting data into table "venue_shop_details" */
 export type Venue_Shop_Details_Insert_Input = {
   payment_methods?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -10044,6 +13625,18 @@ export type Venue_Shop_Details_Pk_Columns_Input = {
   venue_id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "venue_shop_details" */
+export enum Venue_Shop_Details_Select_Column {
+  /** column name */
+  PaymentMethods = "payment_methods",
+  /** column name */
+  ProductCategories = "product_categories",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
 /** input type for updating data in table "venue_shop_details" */
 export type Venue_Shop_Details_Set_Input = {
   payment_methods?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -10068,6 +13661,18 @@ export type Venue_Shop_Details_Stream_Cursor_Value_Input = {
   venue_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
+/** update columns of table "venue_shop_details" */
+export enum Venue_Shop_Details_Update_Column {
+  /** column name */
+  PaymentMethods = "payment_methods",
+  /** column name */
+  ProductCategories = "product_categories",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  VenueId = "venue_id",
+}
+
 export type Venue_Shop_Details_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Venue_Shop_Details_Set_Input>;
@@ -10084,6 +13689,24 @@ export type Venue_Status = {
   venues: Array<Venues>;
   /** An aggregate relationship */
   venues_aggregate: Venues_Aggregate;
+};
+
+/** columns and relationships of "venue_status" */
+export type Venue_StatusVenuesArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
+};
+
+/** columns and relationships of "venue_status" */
+export type Venue_StatusVenues_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By>>;
+  where?: InputMaybe<Venues_Bool_Exp>;
 };
 
 /** aggregated selection of "venue_status" */
@@ -10117,6 +13740,25 @@ export type Venue_Status_Bool_Exp = {
   venues?: InputMaybe<Venues_Bool_Exp>;
   venues_aggregate?: InputMaybe<Venues_Aggregate_Bool_Exp>;
 };
+
+/** unique or primary key constraints on table "venue_status" */
+export enum Venue_Status_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  VenueStatusPkey = "venue_status_pkey",
+}
+
+export enum Venue_Status_Enum {
+  /** Verified and visible to the public */
+  Active = "ACTIVE",
+  /** No longer active but kept for reference */
+  Archived = "ARCHIVED",
+  /** Temporarily hidden from public view */
+  Hidden = "HIDDEN",
+  /** Submitted but not yet reviewed */
+  Pending = "PENDING",
+  /** Rejected by moderator/admin */
+  Rejected = "REJECTED",
+}
 
 /** Boolean expression to compare columns of type "venue_status_enum". All fields are combined with logical 'AND'. */
 export type Venue_Status_Enum_Comparison_Exp = {
@@ -10183,6 +13825,14 @@ export type Venue_Status_Pk_Columns_Input = {
   value: Scalars["String"]["input"];
 };
 
+/** select columns of table "venue_status" */
+export enum Venue_Status_Select_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 /** input type for updating data in table "venue_status" */
 export type Venue_Status_Set_Input = {
   description?: InputMaybe<Scalars["String"]["input"]>;
@@ -10203,163 +13853,19 @@ export type Venue_Status_Stream_Cursor_Value_Input = {
   value?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "venue_status" */
+export enum Venue_Status_Update_Column {
+  /** column name */
+  Description = "description",
+  /** column name */
+  Value = "value",
+}
+
 export type Venue_Status_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Venue_Status_Set_Input>;
   /** filter the rows which have to be updated */
   where: Venue_Status_Bool_Exp;
-};
-
-/** columns and relationships of "venue_status" */
-export type Venue_StatusVenues_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
-};
-
-/** columns and relationships of "venue_status" */
-export type Venue_StatusVenuesArgs = {
-  distinct_on?: InputMaybe<Array<Venues_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venues_Order_By>>;
-  where?: InputMaybe<Venues_Bool_Exp>;
-};
-
-export type VenueFieldsFragment = {
-  __typename?: "venues";
-  address?: null | string;
-  category: Venue_Category_Enum;
-  chain?: {
-    __typename?: "chains";
-    chain?: {
-      __typename?: "chains";
-      chains: Array<{
-        __typename?: "chains";
-        country?: null | string;
-        id: UUID;
-        name: string;
-        slug: string;
-        venues: Array<{
-          __typename?: "venues";
-          city?: null | string;
-          country?: null | string;
-          id: UUID;
-          name: string;
-          slug: string;
-        }>;
-        venues_aggregate: {
-          __typename?: "venues_aggregate";
-          aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-        };
-      }>;
-      chains_aggregate: {
-        __typename?: "chains_aggregate";
-        aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
-      };
-      country?: null | string;
-      description_en?: null | string;
-      description_uk?: null | string;
-      emails?: Array<string> | null;
-      id: UUID;
-      logo?: null | string;
-      name: string;
-      phone_numbers?: Array<string> | null;
-      slug: string;
-      social_links: Json;
-      website?: null | string;
-    } | null;
-    country?: null | string;
-    description_en?: null | string;
-    description_uk?: null | string;
-    emails?: Array<string> | null;
-    id: UUID;
-    logo?: null | string;
-    name: string;
-    phone_numbers?: Array<string> | null;
-    slug: string;
-    social_links: Json;
-    venues: Array<{
-      __typename?: "venues";
-      city?: null | string;
-      country?: null | string;
-      id: UUID;
-      name: string;
-      slug: string;
-    }>;
-    venues_aggregate: {
-      __typename?: "venues_aggregate";
-      aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
-    };
-    website?: null | string;
-  } | null;
-  city?: null | string;
-  country?: null | string;
-  description_en?: null | string;
-  description_uk?: null | string;
-  emails?: Array<string> | null;
-  events_aggregate: {
-    __typename?: "events_aggregate";
-    aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
-  };
-  geo?: Geography | null;
-  id: UUID;
-  images?: Array<string> | null;
-  logo?: null | string;
-  name: string;
-  owner_id?: null | UUID;
-  phone_numbers?: Array<string> | null;
-  slug: string;
-  social_links: Json;
-  status: Venue_Status_Enum;
-  updated_at: Timestamp;
-  user_id?: null | UUID;
-  venue_accommodation_details: Array<{
-    __typename?: "venue_accommodation_details";
-    amenities?: Array<string> | null;
-    bathrooms?: null | number;
-    bedrooms?: null | number;
-    check_in_time?: null | Time;
-    check_out_time?: null | Time;
-    max_guests?: null | number;
-    minimum_stay_nights?: null | number;
-  }>;
-  venue_beauty_salon_details: Array<{
-    __typename?: "venue_beauty_salon_details";
-    appointment_required?: boolean | null;
-    services?: Array<string> | null;
-    walk_ins_accepted?: boolean | null;
-  }>;
-  venue_restaurant_details: Array<{
-    __typename?: "venue_restaurant_details";
-    cuisine_types?: Array<string> | null;
-    features?: Array<string> | null;
-    price_range?: null | string;
-    seating_capacity?: null | number;
-  }>;
-  venue_schedules: Array<{
-    __typename?: "venue_schedule";
-    close_time: Time;
-    day_of_week: string;
-    id: UUID;
-    open_time: Time;
-  }>;
-  venue_school_details: Array<{
-    __typename?: "venue_school_details";
-    age_groups?: Array<string> | null;
-    class_size_max?: null | number;
-    languages_taught?: Array<string> | null;
-    online_classes_available?: boolean | null;
-    subjects?: Array<string> | null;
-  }>;
-  venue_shop_details: Array<{
-    __typename?: "venue_shop_details";
-    payment_methods?: Array<string> | null;
-    product_categories?: Array<string> | null;
-  }>;
-  website?: null | string;
 };
 
 /** columns and relationships of "venues" */
@@ -10437,6 +13943,137 @@ export type Venues = {
   /** An object relationship */
   venue_status: Venue_Status;
   website?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesEventsArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesEvents_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Order_By>>;
+  where?: InputMaybe<Events_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesSocial_LinksArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Accommodation_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Accommodation_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
+  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Beauty_Salon_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Beauty_Salon_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
+  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Restaurant_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Restaurant_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
+  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_SchedulesArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Schedules_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
+  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_School_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_School_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
+  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Shop_DetailsArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
+};
+
+/** columns and relationships of "venues" */
+export type VenuesVenue_Shop_Details_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
+  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
 };
 
 /** aggregated selection of "venues" */
@@ -10539,6 +14176,14 @@ export type Venues_Bool_Exp = {
   venue_status?: InputMaybe<Venue_Status_Bool_Exp>;
   website?: InputMaybe<String_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "venues" */
+export enum Venues_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  VenuePkey = "venue_pkey",
+  /** unique or primary key constraint on columns "slug" */
+  VenueSlugKey = "venue_slug_key",
+}
 
 /** input type for inserting data into table "venues" */
 export type Venues_Insert_Input = {
@@ -10756,6 +14401,58 @@ export type Venues_Pk_Columns_Input = {
   id: Scalars["uuid"]["input"];
 };
 
+/** select columns of table "venues" */
+export enum Venues_Select_Column {
+  /** column name */
+  Address = "address",
+  /** column name */
+  Area = "area",
+  /** column name */
+  Category = "category",
+  /** column name */
+  ChainId = "chain_id",
+  /** column name */
+  City = "city",
+  /** column name */
+  Country = "country",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  Emails = "emails",
+  /** column name */
+  Geo = "geo",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Images = "images",
+  /** column name */
+  Logo = "logo",
+  /** column name */
+  Name = "name",
+  /** column name */
+  OwnerId = "owner_id",
+  /** column name */
+  PhoneNumbers = "phone_numbers",
+  /** column name */
+  Postcode = "postcode",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  SocialLinks = "social_links",
+  /** column name */
+  Status = "status",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  Website = "website",
+}
+
 /** input type for updating data in table "venues" */
 export type Venues_Set_Input = {
   address?: InputMaybe<Scalars["String"]["input"]>;
@@ -10820,142 +14517,63 @@ export type Venues_Stream_Cursor_Value_Input = {
   website?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "venues" */
+export enum Venues_Update_Column {
+  /** column name */
+  Address = "address",
+  /** column name */
+  Area = "area",
+  /** column name */
+  Category = "category",
+  /** column name */
+  ChainId = "chain_id",
+  /** column name */
+  City = "city",
+  /** column name */
+  Country = "country",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DescriptionEn = "description_en",
+  /** column name */
+  DescriptionUk = "description_uk",
+  /** column name */
+  Emails = "emails",
+  /** column name */
+  Geo = "geo",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Images = "images",
+  /** column name */
+  Logo = "logo",
+  /** column name */
+  Name = "name",
+  /** column name */
+  OwnerId = "owner_id",
+  /** column name */
+  PhoneNumbers = "phone_numbers",
+  /** column name */
+  Postcode = "postcode",
+  /** column name */
+  Slug = "slug",
+  /** column name */
+  SocialLinks = "social_links",
+  /** column name */
+  Status = "status",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  Website = "website",
+}
+
 export type Venues_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Venues_Set_Input>;
   /** filter the rows which have to be updated */
   where: Venues_Bool_Exp;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesEvents_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesEventsArgs = {
-  distinct_on?: InputMaybe<Array<Events_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Events_Order_By>>;
-  where?: InputMaybe<Events_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesSocial_LinksArgs = {
-  path?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_Accommodation_Details_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
-  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_Accommodation_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Accommodation_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Accommodation_Details_Order_By>>;
-  where?: InputMaybe<Venue_Accommodation_Details_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_Beauty_Salon_Details_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
-  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_Beauty_Salon_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Beauty_Salon_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Beauty_Salon_Details_Order_By>>;
-  where?: InputMaybe<Venue_Beauty_Salon_Details_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_Restaurant_Details_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
-  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_Restaurant_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Restaurant_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Restaurant_Details_Order_By>>;
-  where?: InputMaybe<Venue_Restaurant_Details_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_Schedules_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
-  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_SchedulesArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Schedule_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Schedule_Order_By>>;
-  where?: InputMaybe<Venue_Schedule_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_School_Details_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
-  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_School_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_School_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_School_Details_Order_By>>;
-  where?: InputMaybe<Venue_School_Details_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_Shop_Details_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
-  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
-};
-
-/** columns and relationships of "venues" */
-export type VenuesVenue_Shop_DetailsArgs = {
-  distinct_on?: InputMaybe<Array<Venue_Shop_Details_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Venue_Shop_Details_Order_By>>;
-  where?: InputMaybe<Venue_Shop_Details_Bool_Exp>;
 };
 
 /** columns and relationships of "verification_tokens" */
@@ -10996,6 +14614,12 @@ export type Verification_Tokens_Bool_Exp = {
   identifier?: InputMaybe<String_Comparison_Exp>;
   token?: InputMaybe<String_Comparison_Exp>;
 };
+
+/** unique or primary key constraints on table "verification_tokens" */
+export enum Verification_Tokens_Constraint {
+  /** unique or primary key constraint on columns "token" */
+  VerificationTokensPkey = "verification_tokens_pkey",
+}
 
 /** input type for inserting data into table "verification_tokens" */
 export type Verification_Tokens_Insert_Input = {
@@ -11048,6 +14672,16 @@ export type Verification_Tokens_Pk_Columns_Input = {
   token: Scalars["String"]["input"];
 };
 
+/** select columns of table "verification_tokens" */
+export enum Verification_Tokens_Select_Column {
+  /** column name */
+  Expires = "expires",
+  /** column name */
+  Identifier = "identifier",
+  /** column name */
+  Token = "token",
+}
+
 /** input type for updating data in table "verification_tokens" */
 export type Verification_Tokens_Set_Input = {
   expires?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -11070,11 +14704,1276 @@ export type Verification_Tokens_Stream_Cursor_Value_Input = {
   token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** update columns of table "verification_tokens" */
+export enum Verification_Tokens_Update_Column {
+  /** column name */
+  Expires = "expires",
+  /** column name */
+  Identifier = "identifier",
+  /** column name */
+  Token = "token",
+}
+
 export type Verification_Tokens_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Verification_Tokens_Set_Input>;
   /** filter the rows which have to be updated */
   where: Verification_Tokens_Bool_Exp;
+};
+
+export type GetOrderWithItemsQueryVariables = Exact<{
+  paymentIntentId: Scalars["String"]["input"];
+}>;
+
+export type GetOrderWithItemsQuery = {
+  __typename?: "query_root";
+  orders: Array<{
+    __typename?: "orders";
+    email: string;
+    id: UUID;
+    status: Order_Status_Enum;
+    total_minor: number;
+    order_items: Array<{
+      __typename?: "order_items";
+      metadata?: Json | null;
+      name_snapshot: string;
+      product_id?: UUID | null;
+      quantity: number;
+      unit_price_minor: number;
+      variant_id?: UUID | null;
+    }>;
+  }>;
+};
+
+export type GetOrderByIdSimpleQueryVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+}>;
+
+export type GetOrderByIdSimpleQuery = {
+  __typename?: "query_root";
+  orders_by_pk?: { __typename?: "orders"; id: UUID; status: Order_Status_Enum } | null;
+};
+
+export type GetUserProfileQueryVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+}>;
+
+export type GetUserProfileQuery = {
+  __typename?: "query_root";
+  users_by_pk?: {
+    __typename?: "users";
+    id: UUID;
+    name?: string | null;
+    email: string;
+    role: User_Role_Enum;
+    status: User_Status_Enum;
+    image?: string | null;
+    points: number;
+    venues_created: number;
+    events_created: number;
+    level: number;
+  } | null;
+};
+
+export type EventFieldsFragment = {
+  __typename?: "events";
+  id: UUID;
+  title_en: string;
+  title_uk: string;
+  slug: string;
+  description_en?: string | null;
+  description_uk?: string | null;
+  type: Event_Type_Enum;
+  price_type: Price_Type_Enum;
+  price_amount?: Numeric | null;
+  price_currency?: string | null;
+  start_date: Timestamp;
+  end_date?: Timestamp | null;
+  is_online: boolean;
+  external_url?: string | null;
+  custom_location_address?: string | null;
+  custom_location_name?: string | null;
+  area?: string | null;
+  city?: string | null;
+  country?: string | null;
+  geo?: Geography | null;
+  images?: Array<string> | null;
+  registration_url?: string | null;
+  registration_required: boolean;
+  capacity?: number | null;
+  age_restriction?: string | null;
+  language?: Array<string> | null;
+  accessibility_info?: string | null;
+  social_links?: Json | null;
+  status: Event_Status_Enum;
+  created_at: Timestamp;
+  is_recurring: boolean;
+  recurrence_rule?: string | null;
+  organizer_name?: string | null;
+  organizer_phone_number?: string | null;
+  organizer_email?: string | null;
+  owner_id?: UUID | null;
+  venue_id?: UUID | null;
+  user_id: UUID;
+  venue?: {
+    __typename?: "venues";
+    id: UUID;
+    name: string;
+    slug: string;
+    city?: string | null;
+    country?: string | null;
+    logo?: string | null;
+    category: Venue_Category_Enum;
+    geo?: Geography | null;
+  } | null;
+};
+
+export type GetPublicEventsQueryVariables = Exact<{
+  where: Events_Bool_Exp;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Order_By> | Events_Order_By>;
+}>;
+
+export type GetPublicEventsQuery = {
+  __typename?: "query_root";
+  events: Array<{
+    __typename?: "events";
+    id: UUID;
+    title_en: string;
+    title_uk: string;
+    slug: string;
+    description_en?: string | null;
+    description_uk?: string | null;
+    type: Event_Type_Enum;
+    price_type: Price_Type_Enum;
+    price_amount?: Numeric | null;
+    price_currency?: string | null;
+    start_date: Timestamp;
+    end_date?: Timestamp | null;
+    is_online: boolean;
+    external_url?: string | null;
+    custom_location_address?: string | null;
+    custom_location_name?: string | null;
+    area?: string | null;
+    city?: string | null;
+    country?: string | null;
+    geo?: Geography | null;
+    images?: Array<string> | null;
+    registration_url?: string | null;
+    registration_required: boolean;
+    capacity?: number | null;
+    age_restriction?: string | null;
+    language?: Array<string> | null;
+    accessibility_info?: string | null;
+    social_links?: Json | null;
+    status: Event_Status_Enum;
+    created_at: Timestamp;
+    is_recurring: boolean;
+    recurrence_rule?: string | null;
+    organizer_name?: string | null;
+    organizer_phone_number?: string | null;
+    organizer_email?: string | null;
+    owner_id?: UUID | null;
+    venue_id?: UUID | null;
+    user_id: UUID;
+    venue?: {
+      __typename?: "venues";
+      id: UUID;
+      name: string;
+      slug: string;
+      city?: string | null;
+      country?: string | null;
+      logo?: string | null;
+      category: Venue_Category_Enum;
+      geo?: Geography | null;
+    } | null;
+  }>;
+  events_aggregate: {
+    __typename?: "events_aggregate";
+    aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
+  };
+  total: {
+    __typename?: "events_aggregate";
+    aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type CreateOrderMutationVariables = Exact<{
+  email: Scalars["String"]["input"];
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  subtotal_minor: Scalars["Int"]["input"];
+  total_minor: Scalars["Int"]["input"];
+  currency: Scalars["String"]["input"];
+  status: Order_Status_Enum;
+  payment_intent_id?: InputMaybe<Scalars["String"]["input"]>;
+  idempotency_key: Scalars["String"]["input"];
+  items: Array<Order_Items_Insert_Input> | Order_Items_Insert_Input;
+}>;
+
+export type CreateOrderMutation = {
+  __typename?: "mutation_root";
+  insert_orders_one?: {
+    __typename?: "orders";
+    id: UUID;
+    email: string;
+    status: Order_Status_Enum;
+    total_minor: number;
+    currency: string;
+    created_at: Timestamp;
+    order_items: Array<{
+      __typename?: "order_items";
+      id: UUID;
+      name_snapshot: string;
+      quantity: number;
+      unit_price_minor: number;
+    }>;
+  } | null;
+};
+
+export type UpdateOrderStatusMutationVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+  status: Order_Status_Enum;
+}>;
+
+export type UpdateOrderStatusMutation = {
+  __typename?: "mutation_root";
+  update_orders_by_pk?: { __typename?: "orders"; id: UUID; status: Order_Status_Enum; updated_at: Timestamp } | null;
+};
+
+export type GetOrderByIdQueryVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+}>;
+
+export type GetOrderByIdQuery = {
+  __typename?: "query_root";
+  orders_by_pk?: {
+    __typename?: "orders";
+    id: UUID;
+    email: string;
+    status: Order_Status_Enum;
+    subtotal_minor: number;
+    total_minor: number;
+    currency: string;
+    payment_intent_id?: string | null;
+    created_at: Timestamp;
+    order_items: Array<{
+      __typename?: "order_items";
+      id: UUID;
+      name_snapshot: string;
+      quantity: number;
+      unit_price_minor: number;
+      currency: string;
+      metadata?: Json | null;
+      product?: { __typename?: "products"; id: UUID; name: string; slug: string; images?: Array<string> | null } | null;
+    }>;
+  } | null;
+};
+
+export type DecrementVariantStockMutationVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+  amount: Scalars["Int"]["input"];
+}>;
+
+export type DecrementVariantStockMutation = {
+  __typename?: "mutation_root";
+  update_product_variants_by_pk?: { __typename?: "product_variants"; id: UUID; stock: number } | null;
+};
+
+export type DecrementProductStockMutationVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+  amount: Scalars["Int"]["input"];
+}>;
+
+export type DecrementProductStockMutation = {
+  __typename?: "mutation_root";
+  update_products_by_pk?: { __typename?: "products"; id: UUID; stock?: number | null } | null;
+};
+
+export type IncrementVariantStockMutationVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+  amount: Scalars["Int"]["input"];
+}>;
+
+export type IncrementVariantStockMutation = {
+  __typename?: "mutation_root";
+  update_product_variants_by_pk?: { __typename?: "product_variants"; id: UUID; stock: number } | null;
+};
+
+export type IncrementProductStockMutationVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+  amount: Scalars["Int"]["input"];
+}>;
+
+export type IncrementProductStockMutation = {
+  __typename?: "mutation_root";
+  update_products_by_pk?: { __typename?: "products"; id: UUID; stock?: number | null } | null;
+};
+
+export type DeleteOrderMutationVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+}>;
+
+export type DeleteOrderMutation = {
+  __typename?: "mutation_root";
+  delete_orders_by_pk?: { __typename?: "orders"; id: UUID } | null;
+};
+
+export type GetOrderByIdempotencyKeyQueryVariables = Exact<{
+  idempotencyKey: Scalars["String"]["input"];
+}>;
+
+export type GetOrderByIdempotencyKeyQuery = {
+  __typename?: "query_root";
+  orders: Array<{ __typename?: "orders"; id: UUID; payment_intent_id?: string | null; status: Order_Status_Enum }>;
+};
+
+export type UpdateOrderPaymentIntentMutationVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+  payment_intent_id: Scalars["String"]["input"];
+}>;
+
+export type UpdateOrderPaymentIntentMutation = {
+  __typename?: "mutation_root";
+  update_orders_by_pk?: { __typename?: "orders"; id: UUID; payment_intent_id?: string | null } | null;
+};
+
+export type ProductVariantFieldsFragment = {
+  __typename?: "product_variants";
+  id: UUID;
+  gender?: Clothing_Gender_Enum | null;
+  age_group?: Clothing_Age_Group_Enum | null;
+  size?: Clothing_Size_Enum | null;
+  color?: string | null;
+  stock: number;
+  sku?: string | null;
+  price_override_minor?: number | null;
+};
+
+export type ProductFieldsFragment = {
+  __typename?: "products";
+  id: UUID;
+  name: string;
+  slug: string;
+  description_en?: string | null;
+  description_uk?: string | null;
+  category: Product_Category_Enum;
+  price_minor: number;
+  currency: string;
+  images?: Array<string> | null;
+  badge?: string | null;
+  status: Product_Status_Enum;
+  stock?: number | null;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+  clothing_product_details?: { __typename?: "clothing_product_details"; clothing_type: Clothing_Type_Enum } | null;
+  product_variants: Array<{
+    __typename?: "product_variants";
+    id: UUID;
+    gender?: Clothing_Gender_Enum | null;
+    age_group?: Clothing_Age_Group_Enum | null;
+    size?: Clothing_Size_Enum | null;
+    color?: string | null;
+    stock: number;
+    sku?: string | null;
+    price_override_minor?: number | null;
+  }>;
+};
+
+export type GetPublicProductsQueryVariables = Exact<{
+  where: Products_Bool_Exp;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Products_Order_By> | Products_Order_By>;
+}>;
+
+export type GetPublicProductsQuery = {
+  __typename?: "query_root";
+  products: Array<{
+    __typename?: "products";
+    id: UUID;
+    name: string;
+    slug: string;
+    description_en?: string | null;
+    description_uk?: string | null;
+    category: Product_Category_Enum;
+    price_minor: number;
+    currency: string;
+    images?: Array<string> | null;
+    badge?: string | null;
+    status: Product_Status_Enum;
+    stock?: number | null;
+    created_at: Timestamp;
+    updated_at: Timestamp;
+    clothing_product_details?: { __typename?: "clothing_product_details"; clothing_type: Clothing_Type_Enum } | null;
+    product_variants: Array<{
+      __typename?: "product_variants";
+      id: UUID;
+      gender?: Clothing_Gender_Enum | null;
+      age_group?: Clothing_Age_Group_Enum | null;
+      size?: Clothing_Size_Enum | null;
+      color?: string | null;
+      stock: number;
+      sku?: string | null;
+      price_override_minor?: number | null;
+    }>;
+  }>;
+  products_aggregate: {
+    __typename?: "products_aggregate";
+    aggregate?: { __typename?: "products_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type GetProductBySlugQueryVariables = Exact<{
+  slug: Scalars["String"]["input"];
+}>;
+
+export type GetProductBySlugQuery = {
+  __typename?: "query_root";
+  products: Array<{
+    __typename?: "products";
+    id: UUID;
+    name: string;
+    slug: string;
+    description_en?: string | null;
+    description_uk?: string | null;
+    category: Product_Category_Enum;
+    price_minor: number;
+    currency: string;
+    images?: Array<string> | null;
+    badge?: string | null;
+    status: Product_Status_Enum;
+    stock?: number | null;
+    created_at: Timestamp;
+    updated_at: Timestamp;
+    clothing_product_details?: { __typename?: "clothing_product_details"; clothing_type: Clothing_Type_Enum } | null;
+    product_variants: Array<{
+      __typename?: "product_variants";
+      id: UUID;
+      gender?: Clothing_Gender_Enum | null;
+      age_group?: Clothing_Age_Group_Enum | null;
+      size?: Clothing_Size_Enum | null;
+      color?: string | null;
+      stock: number;
+      sku?: string | null;
+      price_override_minor?: number | null;
+    }>;
+  }>;
+};
+
+export type GetProductsByIdsQueryVariables = Exact<{
+  ids: Array<Scalars["uuid"]["input"]> | Scalars["uuid"]["input"];
+}>;
+
+export type GetProductsByIdsQuery = {
+  __typename?: "query_root";
+  products: Array<{
+    __typename?: "products";
+    id: UUID;
+    name: string;
+    slug: string;
+    description_en?: string | null;
+    description_uk?: string | null;
+    category: Product_Category_Enum;
+    price_minor: number;
+    currency: string;
+    images?: Array<string> | null;
+    badge?: string | null;
+    status: Product_Status_Enum;
+    stock?: number | null;
+    created_at: Timestamp;
+    updated_at: Timestamp;
+    clothing_product_details?: { __typename?: "clothing_product_details"; clothing_type: Clothing_Type_Enum } | null;
+    product_variants: Array<{
+      __typename?: "product_variants";
+      id: UUID;
+      gender?: Clothing_Gender_Enum | null;
+      age_group?: Clothing_Age_Group_Enum | null;
+      size?: Clothing_Size_Enum | null;
+      color?: string | null;
+      stock: number;
+      sku?: string | null;
+      price_override_minor?: number | null;
+    }>;
+  }>;
+};
+
+export type GetVariantsByIdsQueryVariables = Exact<{
+  ids: Array<Scalars["uuid"]["input"]> | Scalars["uuid"]["input"];
+}>;
+
+export type GetVariantsByIdsQuery = {
+  __typename?: "query_root";
+  product_variants: Array<{
+    __typename?: "product_variants";
+    id: UUID;
+    gender?: Clothing_Gender_Enum | null;
+    age_group?: Clothing_Age_Group_Enum | null;
+    size?: Clothing_Size_Enum | null;
+    color?: string | null;
+    stock: number;
+    sku?: string | null;
+    price_override_minor?: number | null;
+    product: {
+      __typename?: "products";
+      id: UUID;
+      name: string;
+      slug: string;
+      price_minor: number;
+      currency: string;
+      status: Product_Status_Enum;
+    };
+  }>;
+};
+
+export type GetUserEventsQueryVariables = Exact<{
+  where: Events_Bool_Exp;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Events_Order_By> | Events_Order_By>;
+}>;
+
+export type GetUserEventsQuery = {
+  __typename?: "query_root";
+  events: Array<{
+    __typename?: "events";
+    updated_at: Timestamp;
+    id: UUID;
+    title_en: string;
+    title_uk: string;
+    slug: string;
+    description_en?: string | null;
+    description_uk?: string | null;
+    type: Event_Type_Enum;
+    price_type: Price_Type_Enum;
+    price_amount?: Numeric | null;
+    price_currency?: string | null;
+    start_date: Timestamp;
+    end_date?: Timestamp | null;
+    is_online: boolean;
+    external_url?: string | null;
+    custom_location_address?: string | null;
+    custom_location_name?: string | null;
+    area?: string | null;
+    city?: string | null;
+    country?: string | null;
+    geo?: Geography | null;
+    images?: Array<string> | null;
+    registration_url?: string | null;
+    registration_required: boolean;
+    capacity?: number | null;
+    age_restriction?: string | null;
+    language?: Array<string> | null;
+    accessibility_info?: string | null;
+    social_links?: Json | null;
+    status: Event_Status_Enum;
+    created_at: Timestamp;
+    is_recurring: boolean;
+    recurrence_rule?: string | null;
+    organizer_name?: string | null;
+    organizer_phone_number?: string | null;
+    organizer_email?: string | null;
+    owner_id?: UUID | null;
+    venue_id?: UUID | null;
+    user_id: UUID;
+    venue?: {
+      __typename?: "venues";
+      id: UUID;
+      name: string;
+      slug: string;
+      city?: string | null;
+      country?: string | null;
+      logo?: string | null;
+      category: Venue_Category_Enum;
+      geo?: Geography | null;
+    } | null;
+  }>;
+  events_aggregate: {
+    __typename?: "events_aggregate";
+    aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type UpdateEventStatusMutationVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+  status: Event_Status_Enum;
+}>;
+
+export type UpdateEventStatusMutation = {
+  __typename?: "mutation_root";
+  update_events_by_pk?: { __typename?: "events"; id: UUID; status: Event_Status_Enum; updated_at: Timestamp } | null;
+};
+
+export type ChainFieldsFragment = {
+  __typename?: "chains";
+  id: UUID;
+  name: string;
+  slug: string;
+  logo?: string | null;
+  country?: string | null;
+  description_uk?: string | null;
+  description_en?: string | null;
+  phone_numbers?: Array<string> | null;
+  emails?: Array<string> | null;
+  website?: string | null;
+  social_links: Json;
+};
+
+export type ChainWithVenuesFragment = {
+  __typename?: "chains";
+  id: UUID;
+  name: string;
+  slug: string;
+  logo?: string | null;
+  country?: string | null;
+  description_uk?: string | null;
+  description_en?: string | null;
+  phone_numbers?: Array<string> | null;
+  emails?: Array<string> | null;
+  website?: string | null;
+  social_links: Json;
+  venues: Array<{
+    __typename?: "venues";
+    id: UUID;
+    name: string;
+    slug: string;
+    city?: string | null;
+    country?: string | null;
+  }>;
+  venues_aggregate: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type ChainWithChainsFragment = {
+  __typename?: "chains";
+  id: UUID;
+  name: string;
+  slug: string;
+  logo?: string | null;
+  country?: string | null;
+  description_uk?: string | null;
+  description_en?: string | null;
+  phone_numbers?: Array<string> | null;
+  emails?: Array<string> | null;
+  website?: string | null;
+  social_links: Json;
+  chains: Array<{
+    __typename?: "chains";
+    id: UUID;
+    name: string;
+    slug: string;
+    country?: string | null;
+    venues: Array<{
+      __typename?: "venues";
+      id: UUID;
+      name: string;
+      slug: string;
+      city?: string | null;
+      country?: string | null;
+    }>;
+    venues_aggregate: {
+      __typename?: "venues_aggregate";
+      aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+    };
+  }>;
+  chains_aggregate: {
+    __typename?: "chains_aggregate";
+    aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type VenueFieldsFragment = {
+  __typename?: "venues";
+  id: UUID;
+  name: string;
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  logo?: string | null;
+  images?: Array<string> | null;
+  description_uk?: string | null;
+  description_en?: string | null;
+  geo?: Geography | null;
+  category: Venue_Category_Enum;
+  emails?: Array<string> | null;
+  website?: string | null;
+  phone_numbers?: Array<string> | null;
+  social_links: Json;
+  slug: string;
+  status: Venue_Status_Enum;
+  owner_id?: UUID | null;
+  user_id?: UUID | null;
+  updated_at: Timestamp;
+  venue_schedules: Array<{
+    __typename?: "venue_schedule";
+    id: UUID;
+    open_time: Time;
+    close_time: Time;
+    day_of_week: string;
+  }>;
+  venue_accommodation_details: Array<{
+    __typename?: "venue_accommodation_details";
+    bedrooms?: number | null;
+    bathrooms?: number | null;
+    max_guests?: number | null;
+    check_in_time?: Time | null;
+    check_out_time?: Time | null;
+    minimum_stay_nights?: number | null;
+    amenities?: Array<string> | null;
+  }>;
+  venue_beauty_salon_details: Array<{
+    __typename?: "venue_beauty_salon_details";
+    services?: Array<string> | null;
+    appointment_required?: boolean | null;
+    walk_ins_accepted?: boolean | null;
+  }>;
+  venue_restaurant_details: Array<{
+    __typename?: "venue_restaurant_details";
+    cuisine_types?: Array<string> | null;
+    seating_capacity?: number | null;
+    price_range?: string | null;
+    features?: Array<string> | null;
+  }>;
+  venue_school_details: Array<{
+    __typename?: "venue_school_details";
+    subjects?: Array<string> | null;
+    languages_taught?: Array<string> | null;
+    age_groups?: Array<string> | null;
+    class_size_max?: number | null;
+    online_classes_available?: boolean | null;
+  }>;
+  venue_shop_details: Array<{
+    __typename?: "venue_shop_details";
+    product_categories?: Array<string> | null;
+    payment_methods?: Array<string> | null;
+  }>;
+  events_aggregate: {
+    __typename?: "events_aggregate";
+    aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
+  };
+  chain?: {
+    __typename?: "chains";
+    id: UUID;
+    name: string;
+    slug: string;
+    logo?: string | null;
+    country?: string | null;
+    description_uk?: string | null;
+    description_en?: string | null;
+    phone_numbers?: Array<string> | null;
+    emails?: Array<string> | null;
+    website?: string | null;
+    social_links: Json;
+    chain?: {
+      __typename?: "chains";
+      id: UUID;
+      name: string;
+      slug: string;
+      logo?: string | null;
+      country?: string | null;
+      description_uk?: string | null;
+      description_en?: string | null;
+      phone_numbers?: Array<string> | null;
+      emails?: Array<string> | null;
+      website?: string | null;
+      social_links: Json;
+      chains: Array<{
+        __typename?: "chains";
+        id: UUID;
+        name: string;
+        slug: string;
+        country?: string | null;
+        venues: Array<{
+          __typename?: "venues";
+          id: UUID;
+          name: string;
+          slug: string;
+          city?: string | null;
+          country?: string | null;
+        }>;
+        venues_aggregate: {
+          __typename?: "venues_aggregate";
+          aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+        };
+      }>;
+      chains_aggregate: {
+        __typename?: "chains_aggregate";
+        aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+      };
+    } | null;
+    venues: Array<{
+      __typename?: "venues";
+      id: UUID;
+      name: string;
+      slug: string;
+      city?: string | null;
+      country?: string | null;
+    }>;
+    venues_aggregate: {
+      __typename?: "venues_aggregate";
+      aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+    };
+  } | null;
+};
+
+export type GetPublicVenuesQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
+}>;
+
+export type GetPublicVenuesQuery = {
+  __typename?: "query_root";
+  venues: Array<{
+    __typename?: "venues";
+    id: UUID;
+    name: string;
+    address?: string | null;
+    city?: string | null;
+    country?: string | null;
+    logo?: string | null;
+    images?: Array<string> | null;
+    description_uk?: string | null;
+    description_en?: string | null;
+    geo?: Geography | null;
+    category: Venue_Category_Enum;
+    emails?: Array<string> | null;
+    website?: string | null;
+    phone_numbers?: Array<string> | null;
+    social_links: Json;
+    slug: string;
+    status: Venue_Status_Enum;
+    owner_id?: UUID | null;
+    user_id?: UUID | null;
+    updated_at: Timestamp;
+    venue_schedules: Array<{
+      __typename?: "venue_schedule";
+      id: UUID;
+      open_time: Time;
+      close_time: Time;
+      day_of_week: string;
+    }>;
+    venue_accommodation_details: Array<{
+      __typename?: "venue_accommodation_details";
+      bedrooms?: number | null;
+      bathrooms?: number | null;
+      max_guests?: number | null;
+      check_in_time?: Time | null;
+      check_out_time?: Time | null;
+      minimum_stay_nights?: number | null;
+      amenities?: Array<string> | null;
+    }>;
+    venue_beauty_salon_details: Array<{
+      __typename?: "venue_beauty_salon_details";
+      services?: Array<string> | null;
+      appointment_required?: boolean | null;
+      walk_ins_accepted?: boolean | null;
+    }>;
+    venue_restaurant_details: Array<{
+      __typename?: "venue_restaurant_details";
+      cuisine_types?: Array<string> | null;
+      seating_capacity?: number | null;
+      price_range?: string | null;
+      features?: Array<string> | null;
+    }>;
+    venue_school_details: Array<{
+      __typename?: "venue_school_details";
+      subjects?: Array<string> | null;
+      languages_taught?: Array<string> | null;
+      age_groups?: Array<string> | null;
+      class_size_max?: number | null;
+      online_classes_available?: boolean | null;
+    }>;
+    venue_shop_details: Array<{
+      __typename?: "venue_shop_details";
+      product_categories?: Array<string> | null;
+      payment_methods?: Array<string> | null;
+    }>;
+    events_aggregate: {
+      __typename?: "events_aggregate";
+      aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
+    };
+    chain?: {
+      __typename?: "chains";
+      id: UUID;
+      name: string;
+      slug: string;
+      logo?: string | null;
+      country?: string | null;
+      description_uk?: string | null;
+      description_en?: string | null;
+      phone_numbers?: Array<string> | null;
+      emails?: Array<string> | null;
+      website?: string | null;
+      social_links: Json;
+      chain?: {
+        __typename?: "chains";
+        id: UUID;
+        name: string;
+        slug: string;
+        logo?: string | null;
+        country?: string | null;
+        description_uk?: string | null;
+        description_en?: string | null;
+        phone_numbers?: Array<string> | null;
+        emails?: Array<string> | null;
+        website?: string | null;
+        social_links: Json;
+        chains: Array<{
+          __typename?: "chains";
+          id: UUID;
+          name: string;
+          slug: string;
+          country?: string | null;
+          venues: Array<{
+            __typename?: "venues";
+            id: UUID;
+            name: string;
+            slug: string;
+            city?: string | null;
+            country?: string | null;
+          }>;
+          venues_aggregate: {
+            __typename?: "venues_aggregate";
+            aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+          };
+        }>;
+        chains_aggregate: {
+          __typename?: "chains_aggregate";
+          aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+        };
+      } | null;
+      venues: Array<{
+        __typename?: "venues";
+        id: UUID;
+        name: string;
+        slug: string;
+        city?: string | null;
+        country?: string | null;
+      }>;
+      venues_aggregate: {
+        __typename?: "venues_aggregate";
+        aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+      };
+    } | null;
+  }>;
+  venues_aggregate: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+  total: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type GetUserVenuesQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
+}>;
+
+export type GetUserVenuesQuery = {
+  __typename?: "query_root";
+  venues: Array<{
+    __typename?: "venues";
+    postcode?: string | null;
+    created_at: Timestamp;
+    id: UUID;
+    name: string;
+    address?: string | null;
+    city?: string | null;
+    country?: string | null;
+    logo?: string | null;
+    images?: Array<string> | null;
+    description_uk?: string | null;
+    description_en?: string | null;
+    geo?: Geography | null;
+    category: Venue_Category_Enum;
+    emails?: Array<string> | null;
+    website?: string | null;
+    phone_numbers?: Array<string> | null;
+    social_links: Json;
+    slug: string;
+    status: Venue_Status_Enum;
+    owner_id?: UUID | null;
+    user_id?: UUID | null;
+    updated_at: Timestamp;
+    venue_schedules: Array<{
+      __typename?: "venue_schedule";
+      id: UUID;
+      open_time: Time;
+      close_time: Time;
+      day_of_week: string;
+    }>;
+    venue_accommodation_details: Array<{
+      __typename?: "venue_accommodation_details";
+      bedrooms?: number | null;
+      bathrooms?: number | null;
+      max_guests?: number | null;
+      check_in_time?: Time | null;
+      check_out_time?: Time | null;
+      minimum_stay_nights?: number | null;
+      amenities?: Array<string> | null;
+    }>;
+    venue_beauty_salon_details: Array<{
+      __typename?: "venue_beauty_salon_details";
+      services?: Array<string> | null;
+      appointment_required?: boolean | null;
+      walk_ins_accepted?: boolean | null;
+    }>;
+    venue_restaurant_details: Array<{
+      __typename?: "venue_restaurant_details";
+      cuisine_types?: Array<string> | null;
+      seating_capacity?: number | null;
+      price_range?: string | null;
+      features?: Array<string> | null;
+    }>;
+    venue_school_details: Array<{
+      __typename?: "venue_school_details";
+      subjects?: Array<string> | null;
+      languages_taught?: Array<string> | null;
+      age_groups?: Array<string> | null;
+      class_size_max?: number | null;
+      online_classes_available?: boolean | null;
+    }>;
+    venue_shop_details: Array<{
+      __typename?: "venue_shop_details";
+      product_categories?: Array<string> | null;
+      payment_methods?: Array<string> | null;
+    }>;
+    events_aggregate: {
+      __typename?: "events_aggregate";
+      aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
+    };
+    chain?: {
+      __typename?: "chains";
+      id: UUID;
+      name: string;
+      slug: string;
+      logo?: string | null;
+      country?: string | null;
+      description_uk?: string | null;
+      description_en?: string | null;
+      phone_numbers?: Array<string> | null;
+      emails?: Array<string> | null;
+      website?: string | null;
+      social_links: Json;
+      chain?: {
+        __typename?: "chains";
+        id: UUID;
+        name: string;
+        slug: string;
+        logo?: string | null;
+        country?: string | null;
+        description_uk?: string | null;
+        description_en?: string | null;
+        phone_numbers?: Array<string> | null;
+        emails?: Array<string> | null;
+        website?: string | null;
+        social_links: Json;
+        chains: Array<{
+          __typename?: "chains";
+          id: UUID;
+          name: string;
+          slug: string;
+          country?: string | null;
+          venues: Array<{
+            __typename?: "venues";
+            id: UUID;
+            name: string;
+            slug: string;
+            city?: string | null;
+            country?: string | null;
+          }>;
+          venues_aggregate: {
+            __typename?: "venues_aggregate";
+            aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+          };
+        }>;
+        chains_aggregate: {
+          __typename?: "chains_aggregate";
+          aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+        };
+      } | null;
+      venues: Array<{
+        __typename?: "venues";
+        id: UUID;
+        name: string;
+        slug: string;
+        city?: string | null;
+        country?: string | null;
+      }>;
+      venues_aggregate: {
+        __typename?: "venues_aggregate";
+        aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+      };
+    } | null;
+  }>;
+  venues_aggregate: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type GetAdminVenuesQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+}>;
+
+export type GetAdminVenuesQuery = {
+  __typename?: "query_root";
+  venues: Array<{
+    __typename?: "venues";
+    created_at: Timestamp;
+    id: UUID;
+    name: string;
+    address?: string | null;
+    city?: string | null;
+    country?: string | null;
+    logo?: string | null;
+    images?: Array<string> | null;
+    description_uk?: string | null;
+    description_en?: string | null;
+    geo?: Geography | null;
+    category: Venue_Category_Enum;
+    emails?: Array<string> | null;
+    website?: string | null;
+    phone_numbers?: Array<string> | null;
+    social_links: Json;
+    slug: string;
+    status: Venue_Status_Enum;
+    owner_id?: UUID | null;
+    user_id?: UUID | null;
+    updated_at: Timestamp;
+    venue_schedules: Array<{
+      __typename?: "venue_schedule";
+      id: UUID;
+      open_time: Time;
+      close_time: Time;
+      day_of_week: string;
+    }>;
+    venue_accommodation_details: Array<{
+      __typename?: "venue_accommodation_details";
+      bedrooms?: number | null;
+      bathrooms?: number | null;
+      max_guests?: number | null;
+      check_in_time?: Time | null;
+      check_out_time?: Time | null;
+      minimum_stay_nights?: number | null;
+      amenities?: Array<string> | null;
+    }>;
+    venue_beauty_salon_details: Array<{
+      __typename?: "venue_beauty_salon_details";
+      services?: Array<string> | null;
+      appointment_required?: boolean | null;
+      walk_ins_accepted?: boolean | null;
+    }>;
+    venue_restaurant_details: Array<{
+      __typename?: "venue_restaurant_details";
+      cuisine_types?: Array<string> | null;
+      seating_capacity?: number | null;
+      price_range?: string | null;
+      features?: Array<string> | null;
+    }>;
+    venue_school_details: Array<{
+      __typename?: "venue_school_details";
+      subjects?: Array<string> | null;
+      languages_taught?: Array<string> | null;
+      age_groups?: Array<string> | null;
+      class_size_max?: number | null;
+      online_classes_available?: boolean | null;
+    }>;
+    venue_shop_details: Array<{
+      __typename?: "venue_shop_details";
+      product_categories?: Array<string> | null;
+      payment_methods?: Array<string> | null;
+    }>;
+    events_aggregate: {
+      __typename?: "events_aggregate";
+      aggregate?: { __typename?: "events_aggregate_fields"; count: number } | null;
+    };
+    chain?: {
+      __typename?: "chains";
+      id: UUID;
+      name: string;
+      slug: string;
+      logo?: string | null;
+      country?: string | null;
+      description_uk?: string | null;
+      description_en?: string | null;
+      phone_numbers?: Array<string> | null;
+      emails?: Array<string> | null;
+      website?: string | null;
+      social_links: Json;
+      chain?: {
+        __typename?: "chains";
+        id: UUID;
+        name: string;
+        slug: string;
+        logo?: string | null;
+        country?: string | null;
+        description_uk?: string | null;
+        description_en?: string | null;
+        phone_numbers?: Array<string> | null;
+        emails?: Array<string> | null;
+        website?: string | null;
+        social_links: Json;
+        chains: Array<{
+          __typename?: "chains";
+          id: UUID;
+          name: string;
+          slug: string;
+          country?: string | null;
+          venues: Array<{
+            __typename?: "venues";
+            id: UUID;
+            name: string;
+            slug: string;
+            city?: string | null;
+            country?: string | null;
+          }>;
+          venues_aggregate: {
+            __typename?: "venues_aggregate";
+            aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+          };
+        }>;
+        chains_aggregate: {
+          __typename?: "chains_aggregate";
+          aggregate?: { __typename?: "chains_aggregate_fields"; count: number } | null;
+        };
+      } | null;
+      venues: Array<{
+        __typename?: "venues";
+        id: UUID;
+        name: string;
+        slug: string;
+        city?: string | null;
+        country?: string | null;
+      }>;
+      venues_aggregate: {
+        __typename?: "venues_aggregate";
+        aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+      };
+    } | null;
+  }>;
+  venues_aggregate: {
+    __typename?: "venues_aggregate";
+    aggregate?: { __typename?: "venues_aggregate_fields"; count: number } | null;
+  };
+};
+
+export type UpdateVenueStatusMutationVariables = Exact<{
+  id: Scalars["uuid"]["input"];
+  status: Venue_Status_Enum;
+}>;
+
+export type UpdateVenueStatusMutation = {
+  __typename?: "mutation_root";
+  update_venues_by_pk?: { __typename?: "venues"; id: UUID; status: Venue_Status_Enum; updated_at: Timestamp } | null;
 };
 
 export const EventFieldsFragmentDoc = gql`
@@ -11128,6 +16027,43 @@ export const EventFieldsFragmentDoc = gql`
       geo
     }
   }
+`;
+export const ProductVariantFieldsFragmentDoc = gql`
+  fragment ProductVariantFields on product_variants {
+    id
+    gender
+    age_group
+    size
+    color
+    stock
+    sku
+    price_override_minor
+  }
+`;
+export const ProductFieldsFragmentDoc = gql`
+  fragment ProductFields on products {
+    id
+    name
+    slug
+    description_en
+    description_uk
+    category
+    clothing_product_details {
+      clothing_type
+    }
+    price_minor
+    currency
+    images
+    badge
+    status
+    stock
+    created_at
+    updated_at
+    product_variants {
+      ...ProductVariantFields
+    }
+  }
+  ${ProductVariantFieldsFragmentDoc}
 `;
 export const ChainFieldsFragmentDoc = gql`
   fragment ChainFields on chains {
@@ -11265,6 +16201,134 @@ export const VenueFieldsFragmentDoc = gql`
   ${ChainWithVenuesFragmentDoc}
   ${ChainWithChainsFragmentDoc}
 `;
+export const GetOrderWithItemsDocument = gql`
+  query GetOrderWithItems($paymentIntentId: String!) {
+    orders(where: { payment_intent_id: { _eq: $paymentIntentId } }) {
+      email
+      id
+      status
+      total_minor
+      order_items {
+        metadata
+        name_snapshot
+        product_id
+        quantity
+        unit_price_minor
+        variant_id
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetOrderWithItemsQuery__
+ *
+ * To run a query within a React component, call `useGetOrderWithItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderWithItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderWithItemsQuery({
+ *   variables: {
+ *      paymentIntentId: // value for 'paymentIntentId'
+ *   },
+ * });
+ */
+export function useGetOrderWithItemsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables> &
+    ({ variables: GetOrderWithItemsQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>(GetOrderWithItemsDocument, options);
+}
+export function useGetOrderWithItemsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>(
+    GetOrderWithItemsDocument,
+    options,
+  );
+}
+export function useGetOrderWithItemsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>(
+    GetOrderWithItemsDocument,
+    options,
+  );
+}
+export type GetOrderWithItemsQueryHookResult = ReturnType<typeof useGetOrderWithItemsQuery>;
+export type GetOrderWithItemsLazyQueryHookResult = ReturnType<typeof useGetOrderWithItemsLazyQuery>;
+export type GetOrderWithItemsSuspenseQueryHookResult = ReturnType<typeof useGetOrderWithItemsSuspenseQuery>;
+export type GetOrderWithItemsQueryResult = Apollo.QueryResult<GetOrderWithItemsQuery, GetOrderWithItemsQueryVariables>;
+export const GetOrderByIdSimpleDocument = gql`
+  query GetOrderByIdSimple($id: uuid!) {
+    orders_by_pk(id: $id) {
+      id
+      status
+    }
+  }
+`;
+
+/**
+ * __useGetOrderByIdSimpleQuery__
+ *
+ * To run a query within a React component, call `useGetOrderByIdSimpleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderByIdSimpleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderByIdSimpleQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrderByIdSimpleQuery(
+  baseOptions: Apollo.QueryHookOptions<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables> &
+    ({ variables: GetOrderByIdSimpleQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>(
+    GetOrderByIdSimpleDocument,
+    options,
+  );
+}
+export function useGetOrderByIdSimpleLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>(
+    GetOrderByIdSimpleDocument,
+    options,
+  );
+}
+export function useGetOrderByIdSimpleSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetOrderByIdSimpleQuery, GetOrderByIdSimpleQueryVariables>(
+    GetOrderByIdSimpleDocument,
+    options,
+  );
+}
+export type GetOrderByIdSimpleQueryHookResult = ReturnType<typeof useGetOrderByIdSimpleQuery>;
+export type GetOrderByIdSimpleLazyQueryHookResult = ReturnType<typeof useGetOrderByIdSimpleLazyQuery>;
+export type GetOrderByIdSimpleSuspenseQueryHookResult = ReturnType<typeof useGetOrderByIdSimpleSuspenseQuery>;
+export type GetOrderByIdSimpleQueryResult = Apollo.QueryResult<
+  GetOrderByIdSimpleQuery,
+  GetOrderByIdSimpleQueryVariables
+>;
 export const GetUserProfileDocument = gql`
   query GetUserProfile($id: uuid!) {
     users_by_pk(id: $id) {
@@ -11282,16 +16346,6 @@ export const GetUserProfileDocument = gql`
   }
 `;
 
-export type GetUserProfileLazyQueryHookResult = ReturnType<typeof useGetUserProfileLazyQuery>;
-export type GetUserProfileQueryHookResult = ReturnType<typeof useGetUserProfileQuery>;
-export type GetUserProfileQueryResult = Apollo.QueryResult<GetUserProfileQuery, GetUserProfileQueryVariables>;
-export type GetUserProfileSuspenseQueryHookResult = ReturnType<typeof useGetUserProfileSuspenseQuery>;
-export function useGetUserProfileLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
-}
 /**
  * __useGetUserProfileQuery__
  *
@@ -11309,11 +16363,17 @@ export function useGetUserProfileLazyQuery(
  * });
  */
 export function useGetUserProfileQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserProfileQueryVariables }) &
-    Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables> &
+    ({ variables: GetUserProfileQueryVariables; skip?: boolean } | { skip: boolean }),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
+}
+export function useGetUserProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
 }
 export function useGetUserProfileSuspenseQuery(
   baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
@@ -11321,6 +16381,10 @@ export function useGetUserProfileSuspenseQuery(
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, options);
 }
+export type GetUserProfileQueryHookResult = ReturnType<typeof useGetUserProfileQuery>;
+export type GetUserProfileLazyQueryHookResult = ReturnType<typeof useGetUserProfileLazyQuery>;
+export type GetUserProfileSuspenseQueryHookResult = ReturnType<typeof useGetUserProfileSuspenseQuery>;
+export type GetUserProfileQueryResult = Apollo.QueryResult<GetUserProfileQuery, GetUserProfileQueryVariables>;
 export const GetPublicEventsDocument = gql`
   query GetPublicEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
     events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -11340,16 +16404,6 @@ export const GetPublicEventsDocument = gql`
   ${EventFieldsFragmentDoc}
 `;
 
-export type GetPublicEventsLazyQueryHookResult = ReturnType<typeof useGetPublicEventsLazyQuery>;
-export type GetPublicEventsQueryHookResult = ReturnType<typeof useGetPublicEventsQuery>;
-export type GetPublicEventsQueryResult = Apollo.QueryResult<GetPublicEventsQuery, GetPublicEventsQueryVariables>;
-export type GetPublicEventsSuspenseQueryHookResult = ReturnType<typeof useGetPublicEventsSuspenseQuery>;
-export function useGetPublicEventsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetPublicEventsQuery, GetPublicEventsQueryVariables>(GetPublicEventsDocument, options);
-}
 /**
  * __useGetPublicEventsQuery__
  *
@@ -11370,11 +16424,17 @@ export function useGetPublicEventsLazyQuery(
  * });
  */
 export function useGetPublicEventsQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicEventsQueryVariables }) &
-    Apollo.QueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables> &
+    ({ variables: GetPublicEventsQueryVariables; skip?: boolean } | { skip: boolean }),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetPublicEventsQuery, GetPublicEventsQueryVariables>(GetPublicEventsDocument, options);
+}
+export function useGetPublicEventsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPublicEventsQuery, GetPublicEventsQueryVariables>(GetPublicEventsDocument, options);
 }
 export function useGetPublicEventsSuspenseQuery(
   baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPublicEventsQuery, GetPublicEventsQueryVariables>,
@@ -11382,6 +16442,762 @@ export function useGetPublicEventsSuspenseQuery(
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetPublicEventsQuery, GetPublicEventsQueryVariables>(GetPublicEventsDocument, options);
 }
+export type GetPublicEventsQueryHookResult = ReturnType<typeof useGetPublicEventsQuery>;
+export type GetPublicEventsLazyQueryHookResult = ReturnType<typeof useGetPublicEventsLazyQuery>;
+export type GetPublicEventsSuspenseQueryHookResult = ReturnType<typeof useGetPublicEventsSuspenseQuery>;
+export type GetPublicEventsQueryResult = Apollo.QueryResult<GetPublicEventsQuery, GetPublicEventsQueryVariables>;
+export const CreateOrderDocument = gql`
+  mutation CreateOrder(
+    $email: String!
+    $user_id: uuid
+    $subtotal_minor: Int!
+    $total_minor: Int!
+    $currency: String!
+    $status: order_status_enum!
+    $payment_intent_id: String
+    $idempotency_key: String!
+    $items: [order_items_insert_input!]!
+  ) {
+    insert_orders_one(
+      object: {
+        email: $email
+        user_id: $user_id
+        subtotal_minor: $subtotal_minor
+        total_minor: $total_minor
+        currency: $currency
+        status: $status
+        payment_intent_id: $payment_intent_id
+        idempotency_key: $idempotency_key
+        order_items: { data: $items }
+      }
+    ) {
+      id
+      email
+      status
+      total_minor
+      currency
+      created_at
+      order_items {
+        id
+        name_snapshot
+        quantity
+        unit_price_minor
+      }
+    }
+  }
+`;
+export type CreateOrderMutationFn = Apollo.MutationFunction<CreateOrderMutation, CreateOrderMutationVariables>;
+
+/**
+ * __useCreateOrderMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderMutation, { data, loading, error }] = useCreateOrderMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      user_id: // value for 'user_id'
+ *      subtotal_minor: // value for 'subtotal_minor'
+ *      total_minor: // value for 'total_minor'
+ *      currency: // value for 'currency'
+ *      status: // value for 'status'
+ *      payment_intent_id: // value for 'payment_intent_id'
+ *      idempotency_key: // value for 'idempotency_key'
+ *      items: // value for 'items'
+ *   },
+ * });
+ */
+export function useCreateOrderMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateOrderMutation, CreateOrderMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument, options);
+}
+export type CreateOrderMutationHookResult = ReturnType<typeof useCreateOrderMutation>;
+export type CreateOrderMutationResult = Apollo.MutationResult<CreateOrderMutation>;
+export type CreateOrderMutationOptions = Apollo.BaseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables>;
+export const UpdateOrderStatusDocument = gql`
+  mutation UpdateOrderStatus($id: uuid!, $status: order_status_enum!) {
+    update_orders_by_pk(pk_columns: { id: $id }, _set: { status: $status }) {
+      id
+      status
+      updated_at
+    }
+  }
+`;
+export type UpdateOrderStatusMutationFn = Apollo.MutationFunction<
+  UpdateOrderStatusMutation,
+  UpdateOrderStatusMutationVariables
+>;
+
+/**
+ * __useUpdateOrderStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrderStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrderStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrderStatusMutation, { data, loading, error }] = useUpdateOrderStatusMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateOrderStatusMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>(
+    UpdateOrderStatusDocument,
+    options,
+  );
+}
+export type UpdateOrderStatusMutationHookResult = ReturnType<typeof useUpdateOrderStatusMutation>;
+export type UpdateOrderStatusMutationResult = Apollo.MutationResult<UpdateOrderStatusMutation>;
+export type UpdateOrderStatusMutationOptions = Apollo.BaseMutationOptions<
+  UpdateOrderStatusMutation,
+  UpdateOrderStatusMutationVariables
+>;
+export const GetOrderByIdDocument = gql`
+  query GetOrderById($id: uuid!) {
+    orders_by_pk(id: $id) {
+      id
+      email
+      status
+      subtotal_minor
+      total_minor
+      currency
+      payment_intent_id
+      created_at
+      order_items {
+        id
+        name_snapshot
+        quantity
+        unit_price_minor
+        currency
+        metadata
+        product {
+          id
+          name
+          slug
+          images
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetOrderByIdQuery__
+ *
+ * To run a query within a React component, call `useGetOrderByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrderByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<GetOrderByIdQuery, GetOrderByIdQueryVariables> &
+    ({ variables: GetOrderByIdQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetOrderByIdQuery, GetOrderByIdQueryVariables>(GetOrderByIdDocument, options);
+}
+export function useGetOrderByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetOrderByIdQuery, GetOrderByIdQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetOrderByIdQuery, GetOrderByIdQueryVariables>(GetOrderByIdDocument, options);
+}
+export function useGetOrderByIdSuspenseQuery(
+  baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOrderByIdQuery, GetOrderByIdQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetOrderByIdQuery, GetOrderByIdQueryVariables>(GetOrderByIdDocument, options);
+}
+export type GetOrderByIdQueryHookResult = ReturnType<typeof useGetOrderByIdQuery>;
+export type GetOrderByIdLazyQueryHookResult = ReturnType<typeof useGetOrderByIdLazyQuery>;
+export type GetOrderByIdSuspenseQueryHookResult = ReturnType<typeof useGetOrderByIdSuspenseQuery>;
+export type GetOrderByIdQueryResult = Apollo.QueryResult<GetOrderByIdQuery, GetOrderByIdQueryVariables>;
+export const DecrementVariantStockDocument = gql`
+  mutation DecrementVariantStock($id: uuid!, $amount: Int!) {
+    update_product_variants_by_pk(pk_columns: { id: $id }, _inc: { stock: $amount }) {
+      id
+      stock
+    }
+  }
+`;
+export type DecrementVariantStockMutationFn = Apollo.MutationFunction<
+  DecrementVariantStockMutation,
+  DecrementVariantStockMutationVariables
+>;
+
+/**
+ * __useDecrementVariantStockMutation__
+ *
+ * To run a mutation, you first call `useDecrementVariantStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDecrementVariantStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [decrementVariantStockMutation, { data, loading, error }] = useDecrementVariantStockMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useDecrementVariantStockMutation(
+  baseOptions?: Apollo.MutationHookOptions<DecrementVariantStockMutation, DecrementVariantStockMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DecrementVariantStockMutation, DecrementVariantStockMutationVariables>(
+    DecrementVariantStockDocument,
+    options,
+  );
+}
+export type DecrementVariantStockMutationHookResult = ReturnType<typeof useDecrementVariantStockMutation>;
+export type DecrementVariantStockMutationResult = Apollo.MutationResult<DecrementVariantStockMutation>;
+export type DecrementVariantStockMutationOptions = Apollo.BaseMutationOptions<
+  DecrementVariantStockMutation,
+  DecrementVariantStockMutationVariables
+>;
+export const DecrementProductStockDocument = gql`
+  mutation DecrementProductStock($id: uuid!, $amount: Int!) {
+    update_products_by_pk(pk_columns: { id: $id }, _inc: { stock: $amount }) {
+      id
+      stock
+    }
+  }
+`;
+export type DecrementProductStockMutationFn = Apollo.MutationFunction<
+  DecrementProductStockMutation,
+  DecrementProductStockMutationVariables
+>;
+
+/**
+ * __useDecrementProductStockMutation__
+ *
+ * To run a mutation, you first call `useDecrementProductStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDecrementProductStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [decrementProductStockMutation, { data, loading, error }] = useDecrementProductStockMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useDecrementProductStockMutation(
+  baseOptions?: Apollo.MutationHookOptions<DecrementProductStockMutation, DecrementProductStockMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DecrementProductStockMutation, DecrementProductStockMutationVariables>(
+    DecrementProductStockDocument,
+    options,
+  );
+}
+export type DecrementProductStockMutationHookResult = ReturnType<typeof useDecrementProductStockMutation>;
+export type DecrementProductStockMutationResult = Apollo.MutationResult<DecrementProductStockMutation>;
+export type DecrementProductStockMutationOptions = Apollo.BaseMutationOptions<
+  DecrementProductStockMutation,
+  DecrementProductStockMutationVariables
+>;
+export const IncrementVariantStockDocument = gql`
+  mutation IncrementVariantStock($id: uuid!, $amount: Int!) {
+    update_product_variants_by_pk(pk_columns: { id: $id }, _inc: { stock: $amount }) {
+      id
+      stock
+    }
+  }
+`;
+export type IncrementVariantStockMutationFn = Apollo.MutationFunction<
+  IncrementVariantStockMutation,
+  IncrementVariantStockMutationVariables
+>;
+
+/**
+ * __useIncrementVariantStockMutation__
+ *
+ * To run a mutation, you first call `useIncrementVariantStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useIncrementVariantStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [incrementVariantStockMutation, { data, loading, error }] = useIncrementVariantStockMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useIncrementVariantStockMutation(
+  baseOptions?: Apollo.MutationHookOptions<IncrementVariantStockMutation, IncrementVariantStockMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<IncrementVariantStockMutation, IncrementVariantStockMutationVariables>(
+    IncrementVariantStockDocument,
+    options,
+  );
+}
+export type IncrementVariantStockMutationHookResult = ReturnType<typeof useIncrementVariantStockMutation>;
+export type IncrementVariantStockMutationResult = Apollo.MutationResult<IncrementVariantStockMutation>;
+export type IncrementVariantStockMutationOptions = Apollo.BaseMutationOptions<
+  IncrementVariantStockMutation,
+  IncrementVariantStockMutationVariables
+>;
+export const IncrementProductStockDocument = gql`
+  mutation IncrementProductStock($id: uuid!, $amount: Int!) {
+    update_products_by_pk(pk_columns: { id: $id }, _inc: { stock: $amount }) {
+      id
+      stock
+    }
+  }
+`;
+export type IncrementProductStockMutationFn = Apollo.MutationFunction<
+  IncrementProductStockMutation,
+  IncrementProductStockMutationVariables
+>;
+
+/**
+ * __useIncrementProductStockMutation__
+ *
+ * To run a mutation, you first call `useIncrementProductStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useIncrementProductStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [incrementProductStockMutation, { data, loading, error }] = useIncrementProductStockMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useIncrementProductStockMutation(
+  baseOptions?: Apollo.MutationHookOptions<IncrementProductStockMutation, IncrementProductStockMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<IncrementProductStockMutation, IncrementProductStockMutationVariables>(
+    IncrementProductStockDocument,
+    options,
+  );
+}
+export type IncrementProductStockMutationHookResult = ReturnType<typeof useIncrementProductStockMutation>;
+export type IncrementProductStockMutationResult = Apollo.MutationResult<IncrementProductStockMutation>;
+export type IncrementProductStockMutationOptions = Apollo.BaseMutationOptions<
+  IncrementProductStockMutation,
+  IncrementProductStockMutationVariables
+>;
+export const DeleteOrderDocument = gql`
+  mutation DeleteOrder($id: uuid!) {
+    delete_orders_by_pk(id: $id) {
+      id
+    }
+  }
+`;
+export type DeleteOrderMutationFn = Apollo.MutationFunction<DeleteOrderMutation, DeleteOrderMutationVariables>;
+
+/**
+ * __useDeleteOrderMutation__
+ *
+ * To run a mutation, you first call `useDeleteOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteOrderMutation, { data, loading, error }] = useDeleteOrderMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteOrderMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteOrderMutation, DeleteOrderMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteOrderMutation, DeleteOrderMutationVariables>(DeleteOrderDocument, options);
+}
+export type DeleteOrderMutationHookResult = ReturnType<typeof useDeleteOrderMutation>;
+export type DeleteOrderMutationResult = Apollo.MutationResult<DeleteOrderMutation>;
+export type DeleteOrderMutationOptions = Apollo.BaseMutationOptions<DeleteOrderMutation, DeleteOrderMutationVariables>;
+export const GetOrderByIdempotencyKeyDocument = gql`
+  query GetOrderByIdempotencyKey($idempotencyKey: String!) {
+    orders(where: { idempotency_key: { _eq: $idempotencyKey } }, limit: 1) {
+      id
+      payment_intent_id
+      status
+    }
+  }
+`;
+
+/**
+ * __useGetOrderByIdempotencyKeyQuery__
+ *
+ * To run a query within a React component, call `useGetOrderByIdempotencyKeyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderByIdempotencyKeyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderByIdempotencyKeyQuery({
+ *   variables: {
+ *      idempotencyKey: // value for 'idempotencyKey'
+ *   },
+ * });
+ */
+export function useGetOrderByIdempotencyKeyQuery(
+  baseOptions: Apollo.QueryHookOptions<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables> &
+    ({ variables: GetOrderByIdempotencyKeyQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>(
+    GetOrderByIdempotencyKeyDocument,
+    options,
+  );
+}
+export function useGetOrderByIdempotencyKeyLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>(
+    GetOrderByIdempotencyKeyDocument,
+    options,
+  );
+}
+export function useGetOrderByIdempotencyKeySuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetOrderByIdempotencyKeyQuery, GetOrderByIdempotencyKeyQueryVariables>(
+    GetOrderByIdempotencyKeyDocument,
+    options,
+  );
+}
+export type GetOrderByIdempotencyKeyQueryHookResult = ReturnType<typeof useGetOrderByIdempotencyKeyQuery>;
+export type GetOrderByIdempotencyKeyLazyQueryHookResult = ReturnType<typeof useGetOrderByIdempotencyKeyLazyQuery>;
+export type GetOrderByIdempotencyKeySuspenseQueryHookResult = ReturnType<
+  typeof useGetOrderByIdempotencyKeySuspenseQuery
+>;
+export type GetOrderByIdempotencyKeyQueryResult = Apollo.QueryResult<
+  GetOrderByIdempotencyKeyQuery,
+  GetOrderByIdempotencyKeyQueryVariables
+>;
+export const UpdateOrderPaymentIntentDocument = gql`
+  mutation UpdateOrderPaymentIntent($id: uuid!, $payment_intent_id: String!) {
+    update_orders_by_pk(pk_columns: { id: $id }, _set: { payment_intent_id: $payment_intent_id }) {
+      id
+      payment_intent_id
+    }
+  }
+`;
+export type UpdateOrderPaymentIntentMutationFn = Apollo.MutationFunction<
+  UpdateOrderPaymentIntentMutation,
+  UpdateOrderPaymentIntentMutationVariables
+>;
+
+/**
+ * __useUpdateOrderPaymentIntentMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrderPaymentIntentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrderPaymentIntentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrderPaymentIntentMutation, { data, loading, error }] = useUpdateOrderPaymentIntentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      payment_intent_id: // value for 'payment_intent_id'
+ *   },
+ * });
+ */
+export function useUpdateOrderPaymentIntentMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateOrderPaymentIntentMutation, UpdateOrderPaymentIntentMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateOrderPaymentIntentMutation, UpdateOrderPaymentIntentMutationVariables>(
+    UpdateOrderPaymentIntentDocument,
+    options,
+  );
+}
+export type UpdateOrderPaymentIntentMutationHookResult = ReturnType<typeof useUpdateOrderPaymentIntentMutation>;
+export type UpdateOrderPaymentIntentMutationResult = Apollo.MutationResult<UpdateOrderPaymentIntentMutation>;
+export type UpdateOrderPaymentIntentMutationOptions = Apollo.BaseMutationOptions<
+  UpdateOrderPaymentIntentMutation,
+  UpdateOrderPaymentIntentMutationVariables
+>;
+export const GetPublicProductsDocument = gql`
+  query GetPublicProducts($where: products_bool_exp!, $limit: Int, $offset: Int, $order_by: [products_order_by!]) {
+    products(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+      ...ProductFields
+    }
+    products_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+  ${ProductFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetPublicProductsQuery__
+ *
+ * To run a query within a React component, call `useGetPublicProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicProductsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      order_by: // value for 'order_by'
+ *   },
+ * });
+ */
+export function useGetPublicProductsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPublicProductsQuery, GetPublicProductsQueryVariables> &
+    ({ variables: GetPublicProductsQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPublicProductsQuery, GetPublicProductsQueryVariables>(GetPublicProductsDocument, options);
+}
+export function useGetPublicProductsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPublicProductsQuery, GetPublicProductsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPublicProductsQuery, GetPublicProductsQueryVariables>(
+    GetPublicProductsDocument,
+    options,
+  );
+}
+export function useGetPublicProductsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetPublicProductsQuery, GetPublicProductsQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetPublicProductsQuery, GetPublicProductsQueryVariables>(
+    GetPublicProductsDocument,
+    options,
+  );
+}
+export type GetPublicProductsQueryHookResult = ReturnType<typeof useGetPublicProductsQuery>;
+export type GetPublicProductsLazyQueryHookResult = ReturnType<typeof useGetPublicProductsLazyQuery>;
+export type GetPublicProductsSuspenseQueryHookResult = ReturnType<typeof useGetPublicProductsSuspenseQuery>;
+export type GetPublicProductsQueryResult = Apollo.QueryResult<GetPublicProductsQuery, GetPublicProductsQueryVariables>;
+export const GetProductBySlugDocument = gql`
+  query GetProductBySlug($slug: String!) {
+    products(where: { slug: { _eq: $slug }, status: { _eq: ACTIVE } }, limit: 1) {
+      ...ProductFields
+    }
+  }
+  ${ProductFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetProductBySlugQuery__
+ *
+ * To run a query within a React component, call `useGetProductBySlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductBySlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductBySlugQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetProductBySlugQuery(
+  baseOptions: Apollo.QueryHookOptions<GetProductBySlugQuery, GetProductBySlugQueryVariables> &
+    ({ variables: GetProductBySlugQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetProductBySlugQuery, GetProductBySlugQueryVariables>(GetProductBySlugDocument, options);
+}
+export function useGetProductBySlugLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetProductBySlugQuery, GetProductBySlugQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetProductBySlugQuery, GetProductBySlugQueryVariables>(GetProductBySlugDocument, options);
+}
+export function useGetProductBySlugSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetProductBySlugQuery, GetProductBySlugQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetProductBySlugQuery, GetProductBySlugQueryVariables>(
+    GetProductBySlugDocument,
+    options,
+  );
+}
+export type GetProductBySlugQueryHookResult = ReturnType<typeof useGetProductBySlugQuery>;
+export type GetProductBySlugLazyQueryHookResult = ReturnType<typeof useGetProductBySlugLazyQuery>;
+export type GetProductBySlugSuspenseQueryHookResult = ReturnType<typeof useGetProductBySlugSuspenseQuery>;
+export type GetProductBySlugQueryResult = Apollo.QueryResult<GetProductBySlugQuery, GetProductBySlugQueryVariables>;
+export const GetProductsByIdsDocument = gql`
+  query GetProductsByIds($ids: [uuid!]!) {
+    products(where: { id: { _in: $ids }, status: { _eq: ACTIVE } }) {
+      ...ProductFields
+    }
+  }
+  ${ProductFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetProductsByIdsQuery__
+ *
+ * To run a query within a React component, call `useGetProductsByIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductsByIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductsByIdsQuery({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useGetProductsByIdsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetProductsByIdsQuery, GetProductsByIdsQueryVariables> &
+    ({ variables: GetProductsByIdsQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>(GetProductsByIdsDocument, options);
+}
+export function useGetProductsByIdsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>(GetProductsByIdsDocument, options);
+}
+export function useGetProductsByIdsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>(
+    GetProductsByIdsDocument,
+    options,
+  );
+}
+export type GetProductsByIdsQueryHookResult = ReturnType<typeof useGetProductsByIdsQuery>;
+export type GetProductsByIdsLazyQueryHookResult = ReturnType<typeof useGetProductsByIdsLazyQuery>;
+export type GetProductsByIdsSuspenseQueryHookResult = ReturnType<typeof useGetProductsByIdsSuspenseQuery>;
+export type GetProductsByIdsQueryResult = Apollo.QueryResult<GetProductsByIdsQuery, GetProductsByIdsQueryVariables>;
+export const GetVariantsByIdsDocument = gql`
+  query GetVariantsByIds($ids: [uuid!]!) {
+    product_variants(where: { id: { _in: $ids } }) {
+      ...ProductVariantFields
+      product {
+        id
+        name
+        slug
+        price_minor
+        currency
+        status
+      }
+    }
+  }
+  ${ProductVariantFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetVariantsByIdsQuery__
+ *
+ * To run a query within a React component, call `useGetVariantsByIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVariantsByIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVariantsByIdsQuery({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useGetVariantsByIdsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables> &
+    ({ variables: GetVariantsByIdsQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>(GetVariantsByIdsDocument, options);
+}
+export function useGetVariantsByIdsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>(GetVariantsByIdsDocument, options);
+}
+export function useGetVariantsByIdsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>(
+    GetVariantsByIdsDocument,
+    options,
+  );
+}
+export type GetVariantsByIdsQueryHookResult = ReturnType<typeof useGetVariantsByIdsQuery>;
+export type GetVariantsByIdsLazyQueryHookResult = ReturnType<typeof useGetVariantsByIdsLazyQuery>;
+export type GetVariantsByIdsSuspenseQueryHookResult = ReturnType<typeof useGetVariantsByIdsSuspenseQuery>;
+export type GetVariantsByIdsQueryResult = Apollo.QueryResult<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>;
 export const GetUserEventsDocument = gql`
   query GetUserEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
     events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -11397,16 +17213,6 @@ export const GetUserEventsDocument = gql`
   ${EventFieldsFragmentDoc}
 `;
 
-export type GetUserEventsLazyQueryHookResult = ReturnType<typeof useGetUserEventsLazyQuery>;
-export type GetUserEventsQueryHookResult = ReturnType<typeof useGetUserEventsQuery>;
-export type GetUserEventsQueryResult = Apollo.QueryResult<GetUserEventsQuery, GetUserEventsQueryVariables>;
-export type GetUserEventsSuspenseQueryHookResult = ReturnType<typeof useGetUserEventsSuspenseQuery>;
-export function useGetUserEventsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetUserEventsQuery, GetUserEventsQueryVariables>(GetUserEventsDocument, options);
-}
 /**
  * __useGetUserEventsQuery__
  *
@@ -11427,11 +17233,17 @@ export function useGetUserEventsLazyQuery(
  * });
  */
 export function useGetUserEventsQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserEventsQueryVariables }) &
-    Apollo.QueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables> &
+    ({ variables: GetUserEventsQueryVariables; skip?: boolean } | { skip: boolean }),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetUserEventsQuery, GetUserEventsQueryVariables>(GetUserEventsDocument, options);
+}
+export function useGetUserEventsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserEventsQuery, GetUserEventsQueryVariables>(GetUserEventsDocument, options);
 }
 export function useGetUserEventsSuspenseQuery(
   baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserEventsQuery, GetUserEventsQueryVariables>,
@@ -11439,6 +17251,10 @@ export function useGetUserEventsSuspenseQuery(
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetUserEventsQuery, GetUserEventsQueryVariables>(GetUserEventsDocument, options);
 }
+export type GetUserEventsQueryHookResult = ReturnType<typeof useGetUserEventsQuery>;
+export type GetUserEventsLazyQueryHookResult = ReturnType<typeof useGetUserEventsLazyQuery>;
+export type GetUserEventsSuspenseQueryHookResult = ReturnType<typeof useGetUserEventsSuspenseQuery>;
+export type GetUserEventsQueryResult = Apollo.QueryResult<GetUserEventsQuery, GetUserEventsQueryVariables>;
 export const UpdateEventStatusDocument = gql`
   mutation UpdateEventStatus($id: uuid!, $status: event_status_enum!) {
     update_events_by_pk(pk_columns: { id: $id }, _set: { status: $status }) {
@@ -11453,12 +17269,6 @@ export type UpdateEventStatusMutationFn = Apollo.MutationFunction<
   UpdateEventStatusMutationVariables
 >;
 
-export type UpdateEventStatusMutationHookResult = ReturnType<typeof useUpdateEventStatusMutation>;
-export type UpdateEventStatusMutationOptions = Apollo.BaseMutationOptions<
-  UpdateEventStatusMutation,
-  UpdateEventStatusMutationVariables
->;
-export type UpdateEventStatusMutationResult = Apollo.MutationResult<UpdateEventStatusMutation>;
 /**
  * __useUpdateEventStatusMutation__
  *
@@ -11486,6 +17296,12 @@ export function useUpdateEventStatusMutation(
     options,
   );
 }
+export type UpdateEventStatusMutationHookResult = ReturnType<typeof useUpdateEventStatusMutation>;
+export type UpdateEventStatusMutationResult = Apollo.MutationResult<UpdateEventStatusMutation>;
+export type UpdateEventStatusMutationOptions = Apollo.BaseMutationOptions<
+  UpdateEventStatusMutation,
+  UpdateEventStatusMutationVariables
+>;
 export const GetPublicVenuesDocument = gql`
   query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
     venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -11505,16 +17321,6 @@ export const GetPublicVenuesDocument = gql`
   ${VenueFieldsFragmentDoc}
 `;
 
-export type GetPublicVenuesLazyQueryHookResult = ReturnType<typeof useGetPublicVenuesLazyQuery>;
-export type GetPublicVenuesQueryHookResult = ReturnType<typeof useGetPublicVenuesQuery>;
-export type GetPublicVenuesQueryResult = Apollo.QueryResult<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>;
-export type GetPublicVenuesSuspenseQueryHookResult = ReturnType<typeof useGetPublicVenuesSuspenseQuery>;
-export function useGetPublicVenuesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
-}
 /**
  * __useGetPublicVenuesQuery__
  *
@@ -11535,11 +17341,17 @@ export function useGetPublicVenuesLazyQuery(
  * });
  */
 export function useGetPublicVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetPublicVenuesQueryVariables }) &
-    Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables> &
+    ({ variables: GetPublicVenuesQueryVariables; skip?: boolean } | { skip: boolean }),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
+}
+export function useGetPublicVenuesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
 }
 export function useGetPublicVenuesSuspenseQuery(
   baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>,
@@ -11547,6 +17359,10 @@ export function useGetPublicVenuesSuspenseQuery(
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
 }
+export type GetPublicVenuesQueryHookResult = ReturnType<typeof useGetPublicVenuesQuery>;
+export type GetPublicVenuesLazyQueryHookResult = ReturnType<typeof useGetPublicVenuesLazyQuery>;
+export type GetPublicVenuesSuspenseQueryHookResult = ReturnType<typeof useGetPublicVenuesSuspenseQuery>;
+export type GetPublicVenuesQueryResult = Apollo.QueryResult<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>;
 export const GetUserVenuesDocument = gql`
   query GetUserVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
     venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -11563,16 +17379,6 @@ export const GetUserVenuesDocument = gql`
   ${VenueFieldsFragmentDoc}
 `;
 
-export type GetUserVenuesLazyQueryHookResult = ReturnType<typeof useGetUserVenuesLazyQuery>;
-export type GetUserVenuesQueryHookResult = ReturnType<typeof useGetUserVenuesQuery>;
-export type GetUserVenuesQueryResult = Apollo.QueryResult<GetUserVenuesQuery, GetUserVenuesQueryVariables>;
-export type GetUserVenuesSuspenseQueryHookResult = ReturnType<typeof useGetUserVenuesSuspenseQuery>;
-export function useGetUserVenuesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
-}
 /**
  * __useGetUserVenuesQuery__
  *
@@ -11593,11 +17399,17 @@ export function useGetUserVenuesLazyQuery(
  * });
  */
 export function useGetUserVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetUserVenuesQueryVariables }) &
-    Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables> &
+    ({ variables: GetUserVenuesQueryVariables; skip?: boolean } | { skip: boolean }),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
+}
+export function useGetUserVenuesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
 }
 export function useGetUserVenuesSuspenseQuery(
   baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>,
@@ -11605,6 +17417,10 @@ export function useGetUserVenuesSuspenseQuery(
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
 }
+export type GetUserVenuesQueryHookResult = ReturnType<typeof useGetUserVenuesQuery>;
+export type GetUserVenuesLazyQueryHookResult = ReturnType<typeof useGetUserVenuesLazyQuery>;
+export type GetUserVenuesSuspenseQueryHookResult = ReturnType<typeof useGetUserVenuesSuspenseQuery>;
+export type GetUserVenuesQueryResult = Apollo.QueryResult<GetUserVenuesQuery, GetUserVenuesQueryVariables>;
 export const GetAdminVenuesDocument = gql`
   query GetAdminVenues($where: venues_bool_exp!) {
     venues(where: $where, order_by: { updated_at: desc }) {
@@ -11620,16 +17436,6 @@ export const GetAdminVenuesDocument = gql`
   ${VenueFieldsFragmentDoc}
 `;
 
-export type GetAdminVenuesLazyQueryHookResult = ReturnType<typeof useGetAdminVenuesLazyQuery>;
-export type GetAdminVenuesQueryHookResult = ReturnType<typeof useGetAdminVenuesQuery>;
-export type GetAdminVenuesQueryResult = Apollo.QueryResult<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>;
-export type GetAdminVenuesSuspenseQueryHookResult = ReturnType<typeof useGetAdminVenuesSuspenseQuery>;
-export function useGetAdminVenuesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
-}
 /**
  * __useGetAdminVenuesQuery__
  *
@@ -11647,11 +17453,17 @@ export function useGetAdminVenuesLazyQuery(
  * });
  */
 export function useGetAdminVenuesQuery(
-  baseOptions: ({ skip: boolean } | { skip?: boolean; variables: GetAdminVenuesQueryVariables }) &
-    Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables> &
+    ({ variables: GetAdminVenuesQueryVariables; skip?: boolean } | { skip: boolean }),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
+}
+export function useGetAdminVenuesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
 }
 export function useGetAdminVenuesSuspenseQuery(
   baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>,
@@ -11659,6 +17471,10 @@ export function useGetAdminVenuesSuspenseQuery(
   const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
 }
+export type GetAdminVenuesQueryHookResult = ReturnType<typeof useGetAdminVenuesQuery>;
+export type GetAdminVenuesLazyQueryHookResult = ReturnType<typeof useGetAdminVenuesLazyQuery>;
+export type GetAdminVenuesSuspenseQueryHookResult = ReturnType<typeof useGetAdminVenuesSuspenseQuery>;
+export type GetAdminVenuesQueryResult = Apollo.QueryResult<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>;
 export const UpdateVenueStatusDocument = gql`
   mutation UpdateVenueStatus($id: uuid!, $status: venue_status_enum!) {
     update_venues_by_pk(pk_columns: { id: $id }, _set: { status: $status }) {
@@ -11673,12 +17489,6 @@ export type UpdateVenueStatusMutationFn = Apollo.MutationFunction<
   UpdateVenueStatusMutationVariables
 >;
 
-export type UpdateVenueStatusMutationHookResult = ReturnType<typeof useUpdateVenueStatusMutation>;
-export type UpdateVenueStatusMutationOptions = Apollo.BaseMutationOptions<
-  UpdateVenueStatusMutation,
-  UpdateVenueStatusMutationVariables
->;
-export type UpdateVenueStatusMutationResult = Apollo.MutationResult<UpdateVenueStatusMutation>;
 /**
  * __useUpdateVenueStatusMutation__
  *
@@ -11706,3 +17516,9 @@ export function useUpdateVenueStatusMutation(
     options,
   );
 }
+export type UpdateVenueStatusMutationHookResult = ReturnType<typeof useUpdateVenueStatusMutation>;
+export type UpdateVenueStatusMutationResult = Apollo.MutationResult<UpdateVenueStatusMutation>;
+export type UpdateVenueStatusMutationOptions = Apollo.BaseMutationOptions<
+  UpdateVenueStatusMutation,
+  UpdateVenueStatusMutationVariables
+>;

@@ -32,7 +32,7 @@ export default defineConfig({
   ],
   reporter: [["html", { open: process.env.CI ? "never" : "on-failure" }]],
   retries: process.env.CI ? 2 : 0,
-  testDir: "./test-suite",
+  testDir: "./e2e",
 
   use: {
     baseURL: process.env.BASE_URL ?? "http://localhost:3000",

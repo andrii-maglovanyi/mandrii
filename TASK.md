@@ -1,9 +1,36 @@
 # Mandrii - Active Tasks
 
-**Last Updated**: November 4, 2025  
-**Current Branch**: MNDR-008_add-events-database-schema
+**Last Updated**: December 3, 2025  
+**Current Branch**: shop
 
 > This file tracks active tasks, improvements, and fixes for the Mandrii project. Tasks are organized by priority and category. For completed tasks, see `COMPLETED.md`. For architectural decisions, see `DECISIONS.md`.
+
+---
+
+## 🚨 Production Blockers (Must Fix Before Launch)
+
+### Shop Feature - Cannot Go Live Without Checkout
+
+**Status**: ❌ **BLOCKED** - Checkout is completely stubbed
+
+**Current State**:
+
+- ✅ Shop catalog working (products, filtering, search)
+- ✅ Product detail pages working (variants, colors, stock indicators)
+- ✅ Cart functionality working (add/remove, quantity, currency validation)
+- ✅ 121 tests passing (95 unit + 26 e2e)
+- ❌ **Checkout button is stubbed** - no payment processing
+- ❌ **No server-side validation** - prices/stock can be manipulated
+- ❌ **No order creation** - cannot track/fulfill orders
+
+**What's Needed**:
+
+1. Checkout API with server-side price/stock validation
+2. Stripe payment integration
+3. Order creation and stock decrement
+4. Checkout UI flow
+
+**See**: Task "🚨 PRODUCTION BLOCKER: Implement Checkout with Server-Side Validation" below for full details
 
 ---
 
@@ -32,6 +59,7 @@
 ### Backend Services Implementation
 
 - [ ] **Implement FastAPI Services Backend**
+
   - **Current State**: Minimal FastAPI skeleton exists (`apps/services/src/main.py`)
   - **Status**: Marked as "not implemented yet" in architecture docs
   - **Scope**: Define what services should handle
@@ -44,6 +72,102 @@
     - Set up deployment pipeline (Vercel? Separate hosting?)
     - Configure `/services/*` proxy for production
   - **Files**: `apps/services/src/main.py`, `apps/services/README.md` (empty)
+
+- [ ] **🚨 PRODUCTION BLOCKER: Implement Checkout with Server-Side Validation**
+
+  - **Current State**:
+    - ❌ Cart is client-side only (localStorage)
+    - ❌ Price and stock stored in CartContext but NOT authoritative
+    - ❌ No checkout backend or payment processing
+    - ❌ Checkout button is stubbed (CartView.tsx lines 118-133)
+    - ⚠️ **SHOP CANNOT GO LIVE WITHOUT THIS**
+  - **Why This Is Critical**:
+    - Client can manipulate localStorage to change prices/stock
+    - No order persistence - cart lost on browser clear
+    - No payment processing - cannot accept money
+    - No stock management - risk of overselling
+  - **Critical Security Requirements**:
+    - ⚠️ **Server MUST re-validate all prices** - client priceMinor cannot be trusted
+    - ⚠️ **Server MUST check stock availability** - prevent overselling
+    - ⚠️ **Server MUST enforce currency consistency** - verify all items use same currency
+    - Fetch authoritative product data from database before processing payment
+  - **Implementation Steps**:
+    1. **Database Schema** (if not exists):
+       - `orders` table (id, user_id/email, status, total_minor, currency, created_at)
+       - `order_items` table (order_id, product_id, variant_json, quantity, price_minor, name)
+    2. **Create Checkout API** (`/api/checkout/route.ts`):
+       - Accept: `{ items: [{ productId, variant?, quantity }] }`
+       - Validate session/user
+       - Query Hasura for current product prices, stock, availability
+       - Verify currency consistency across all products
+       - Calculate authoritative total server-side
+       - Check stock availability (return error if insufficient)
+       - Create Stripe Payment Intent with server-calculated total
+       - Return client secret + validated cart summary
+    3. **Create Payment Confirmation API** (`/api/checkout/confirm/route.ts`):
+       - Verify payment succeeded via Stripe webhook or API
+       - Create order record in database
+       - Decrement stock atomically (use SQL transaction)
+       - Send order confirmation email
+       - Return order ID and confirmation
+    4. **Client Checkout Flow** (`features/Shop/Checkout.tsx`):
+       - Call `/api/checkout` to validate cart + get payment intent
+       - Handle validation errors (price changed, out of stock, currency mismatch)
+       - Show Stripe payment form (CardElement)
+       - Submit payment to Stripe
+       - Call `/api/checkout/confirm` after payment succeeds
+       - Redirect to order confirmation page
+    5. **Update CartView.tsx**:
+       - Remove stub message (lines 141-144)
+       - Wire "Proceed to checkout" button to navigate to `/checkout`
+       - Pass cart items as URL params or use CartContext
+  - **Priority**: 🔴 **CRITICAL** - required before shop can accept real orders
+  - **Estimated Effort**: 2-3 days (backend + frontend + testing)
+  - **Blockers**: None - auth system exists, Hasura is configured
+  - **Files to Create/Modify**:
+    - `apps/web/src/app/api/checkout/route.ts` (new)
+    - `apps/web/src/app/api/checkout/confirm/route.ts` (new)
+    - `apps/web/src/features/Shop/Checkout.tsx` (new)
+    - `apps/web/src/features/Shop/CartView.tsx` (modify - wire button)
+    - `apps/web/src/app/[locale]/(public)/checkout/page.tsx` (new)
+    - Hasura migrations for orders tables (if not exists)
+    - Environment variables for Stripe keys
+
+- [ ] **Convert Shop Features to SSR + Server-Synced Cart**
+  - **Current State**:
+    - `ShopCatalog` and `ProductView` are client components using Apollo hooks
+    - Cart is 100% localStorage (no cross-device sync)
+  - **Issues**:
+    - No SEO for product pages (client-side data fetching)
+    - Cart not synced across devices for logged-in users
+    - Cart lost on browser clear/incognito mode
+    - Currency mismatch warning only appears after hydration (confusing UX)
+  - **Required Changes**:
+    1. **SSR Product Pages**: Convert to RSC (React Server Components)
+       - Fetch products in server components via Apollo Server Client
+       - Pass data as props to client components
+       - Improves SEO, eliminates loading states
+    2. **Server-Synced Cart**: Hybrid approach
+       - **Guest users**: Continue using localStorage (fast, no auth)
+       - **Logged-in users**: Sync cart to Hasura DB
+       - Cart merge logic on login
+       - Optimistic UI updates with background sync
+       - Immediate currency validation (before add-to-cart completes)
+    3. **Database Schema**: Add cart tables
+       - `user_carts` (user_id, currency, created_at, updated_at)
+       - `user_cart_items` (cart_id, product_id, variant, quantity, price_minor_cache, etc.)
+       - Note: price_minor_cache for display only - NOT authoritative for checkout
+  - **Dependencies**:
+    - **Requires auth system** (NextAuth fully implemented)
+    - Should be done together with checkout implementation
+  - **Impact**: Major refactoring - CartContext, all components, tests
+  - **Priority**: Defer until auth + checkout backend are built
+  - **Files**:
+    - `apps/web/src/contexts/CartContext.tsx`
+    - `apps/web/src/features/Shop/ShopCatalog.tsx`
+    - `apps/web/src/features/Shop/ProductView.tsx`
+    - `apps/web/src/app/[locale]/(public)/shop/**/*.tsx`
+    - Hasura migrations for cart tables
 
 ---
 

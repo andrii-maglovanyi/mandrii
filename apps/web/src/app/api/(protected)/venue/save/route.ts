@@ -19,6 +19,7 @@ import { upsertVenueSchedules } from "~/lib/models/venue-schedule";
 import { upsertVenueSchoolDetails } from "~/lib/models/venue-school-details";
 import { upsertVenueShopDetails } from "~/lib/models/venue-shop-details";
 import { sendSlackNotification } from "~/lib/slack/venue";
+import { constructSlug } from "~/lib/utils";
 import { processImages } from "~/lib/utils/images";
 import { getVenueSchema } from "~/lib/validation/venue";
 import {
@@ -98,7 +99,7 @@ export const POST = (req: Request) =>
         ]);
       }
 
-      venueData.slug = slug.trim();
+      venueData.slug = slug.length >= 10 ? slug.trim() : constructSlug(category, name, area?.split(",")[0]?.trim());
     }
 
     if (address) {

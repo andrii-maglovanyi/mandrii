@@ -55,8 +55,8 @@ export function ProgressBar({ isLoading, onLoaded }: Readonly<ProgressBarProps>)
     <div className="h-1.5 w-full overflow-hidden rounded bg-gray-200">
       <div
         className={`
-          h-full rounded bg-gradient-to-r from-primary to-secondary
-          transition-all duration-200
+          h-full rounded bg-linear-to-r from-primary to-secondary transition-all
+          duration-200
         `}
         style={{ width: `${progress}%` }}
       />

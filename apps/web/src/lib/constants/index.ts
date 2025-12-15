@@ -1,10 +1,14 @@
 import { UrlHelper } from "../url-helper";
-import { COUNTRIES } from "./COUNTRIES";
+import { COUNTRIES, EU_COUNTRY_CODES } from "./COUNTRIES";
 import { EVENT_TYPES } from "./EVENT_TYPES";
 import {
   AGE_GROUPS,
   AMENITIES,
   BEAUTY_SERVICES,
+  CLOTHING_AGE_GROUPS,
+  CLOTHING_GENDERS,
+  CLOTHING_SIZES,
+  CLOTHING_TYPES,
   CUISINE,
   CURRICULUM,
   FEATURES,
@@ -14,6 +18,7 @@ import {
   PRODUCT_CATEGORIES,
 } from "./options";
 import { PRICE_TYPES } from "./PRICE_TYPES";
+import { EU_SHIPPING_COST, FREE_SHIPPING_THRESHOLD, ROW_SHIPPING_COST, UK_SHIPPING_COST } from "./SHIPPING_COST";
 import { CATEGORIES } from "./VENUE_CATEGORIES";
 import { WEEKDAYS } from "./WEEKDAYS";
 
@@ -24,6 +29,9 @@ export const constants = {
   eventTypes: EVENT_TYPES,
   fromEmail: (locale = "en") =>
     `${locale === "en" ? "Mandrii" : "Мандрій"} <hello@${UrlHelper.getProductionHostname()}>`,
+  isEUCountry: (countryCode: string): boolean => {
+    return EU_COUNTRY_CODES.includes(countryCode.toLowerCase());
+  },
   london_coordinates: {
     lat: 51.509865,
     lng: -0.118092,
@@ -32,6 +40,10 @@ export const constants = {
     AGE_GROUPS,
     AMENITIES,
     BEAUTY_SERVICES,
+    CLOTHING_AGE_GROUPS,
+    CLOTHING_GENDERS,
+    CLOTHING_SIZES,
+    CLOTHING_TYPES,
     CUISINE,
     CURRICULUM,
     FEATURES,
@@ -41,6 +53,12 @@ export const constants = {
     PRODUCT_CATEGORIES,
   },
   priceTypes: PRICE_TYPES,
+  shippingCost: {
+    eu: EU_SHIPPING_COST,
+    freeThreshold: FREE_SHIPPING_THRESHOLD,
+    row: ROW_SHIPPING_COST,
+    uk: UK_SHIPPING_COST,
+  },
   vercelBlobStorageUrl: "https://yiiprxif648vopwe.public.blob.vercel-storage.com",
   weekdays: WEEKDAYS,
   whitelisted_countries: COUNTRIES,

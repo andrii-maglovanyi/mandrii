@@ -2,7 +2,6 @@
 
 import { useLocale } from "next-intl";
 import { useEffect, useMemo } from "react";
-import slugify from "slugify";
 
 import { FormFooter } from "~/components/layout";
 import { Input, RichText, Select, TabPane, Tabs } from "~/components/ui";
@@ -11,6 +10,7 @@ import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
+import { constructSlug } from "~/lib/utils/slug";
 import { EventSchema, getEventSchema } from "~/lib/validation/event";
 import { Event_Type_Enum, Locale, Status, Venue_Status_Enum } from "~/types";
 
@@ -67,27 +67,9 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
 
     if (initialValues.id || !title) return;
 
-    let slugConstructor = title;
-
-    if (values.venue_id && venues) {
-      const selectedVenue = venues.find((v) => v.id === values.venue_id);
-      if (selectedVenue?.slug) {
-        slugConstructor = `${slugConstructor} ${selectedVenue.slug}`;
-      }
-    } else if (values.area && !values.venue_id) {
-      slugConstructor = `${slugConstructor} ${values.area?.split(",")[0].trim()}`;
-    }
-
-    if (values.type) {
-      slugConstructor = `${values.type} ${slugConstructor}`;
-    }
-
     setValues((prev) => ({
       ...prev,
-      slug: slugify(slugConstructor, {
-        lower: true,
-        strict: true,
-      }),
+      slug: constructSlug(values.type, title, values.area?.split(",")[0]?.trim()),
     }));
   }, [
     initialValues.id,

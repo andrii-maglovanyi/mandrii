@@ -12,13 +12,22 @@ export default defineConfig({
   test: {
     coverage: {
       exclude: ["**/.storybook/**", "**/*.stories.*", "**/storybook-static/**"],
-      include: ["src/components/**/*.ts?(x)", "src/features/**/*.ts?(x)", "src/hooks/**/*.ts", "src/lib/**/*.ts"],
+      include: [
+        "src/app/**/*.ts?(x)",
+        "src/components/**/*.ts?(x)",
+        "src/contexts/**/*.ts?(x)",
+        "src/features/**/*.ts?(x)",
+        "src/hooks/**/*.ts",
+        "src/lib/**/*.ts",
+      ],
       provider: "v8",
     },
     environment: "jsdom",
     globals: true,
     include: [
+      "src/app/**/*.test.ts?(x)",
       "src/components/**/*.test.ts?(x)",
+      "src/contexts/**/*.test.ts?(x)",
       "src/features/**/*.test.ts?(x)",
       "src/hooks/**/*.test.ts",
       "src/lib/**/*.test.ts",

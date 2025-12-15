@@ -161,9 +161,7 @@ export const ImageCarousel = ({
           md:min-w-40
         `}
       >
-        <svg aria-hidden="true" className="h-full w-full" role="img">
-          <use href="/assets/sprite.svg#no-image" />
-        </svg>
+        <Image alt="No image available" className="object-cover" fill src="/static/no-image.webp" />
       </div>
     );
   }

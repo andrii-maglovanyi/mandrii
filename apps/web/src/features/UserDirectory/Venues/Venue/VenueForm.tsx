@@ -2,7 +2,6 @@
 
 import { useLocale } from "next-intl";
 import { useEffect, useMemo } from "react";
-import slugify from "slugify";
 
 import { FormFooter } from "~/components/layout";
 import { Checkbox, Input, RichText, Select, TabPane, Tabs } from "~/components/ui";
@@ -10,7 +9,7 @@ import { InitialValuesType, OnFormSubmitHandler, useForm } from "~/hooks/form/us
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
-import { hasOperatingHours } from "~/lib/utils";
+import { constructSlug, hasOperatingHours } from "~/lib/utils";
 import { getVenueSchema, VenueSchema } from "~/lib/validation/venue";
 import { Locale, Status, Venue_Category_Enum } from "~/types";
 
@@ -66,22 +65,9 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
   useEffect(() => {
     if (isEditMode || !name) return;
 
-    let slugConstructor = name;
-
-    if (area) {
-      slugConstructor = `${slugConstructor} ${area.split(",")[0].trim()}`;
-    }
-
-    if (category) {
-      slugConstructor = `${category} ${slugConstructor}`;
-    }
-
     setValues((prev) => ({
       ...prev,
-      slug: slugify(slugConstructor, {
-        lower: true,
-        strict: true,
-      }),
+      slug: constructSlug(category, name, area?.split(",")[0]?.trim()),
     }));
   }, [isEditMode, name, area, category, setValues]);
 
