@@ -20,6 +20,9 @@ interface PublicConfig {
   recaptcha: {
     siteKey: string;
   };
+  stripe: {
+    publishableKey: string;
+  };
 }
 
 export const publicConfig: PublicConfig = {
@@ -45,5 +48,8 @@ export const publicConfig: PublicConfig = {
   },
   recaptcha: {
     siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "__UNSET__",
+  },
+  stripe: {
+    publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "__UNSET__",
   },
 };

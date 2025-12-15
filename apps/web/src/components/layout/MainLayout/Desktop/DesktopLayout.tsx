@@ -1,4 +1,7 @@
+import { envName } from "~/lib/config/env";
+
 import { DesktopAuth } from "../../Auth/DesktopAuth";
+import { CartButton } from "../../CartButton/CartButton";
 import { LanguageToggle } from "../../LanguageToggle/LanguageToggle";
 import { LoveButton } from "../../LoveButton/LoveButton";
 import { ThemeToggle } from "../../ThemeToggle/ThemeToggle";
@@ -14,7 +17,7 @@ export function DesktopLayout({ children, navLinks }: Readonly<DesktopLayoutProp
   return (
     <div className={`
       hidden
-      lg:block
+      md:block
     `}>
       <header
         className={`
@@ -31,6 +34,7 @@ export function DesktopLayout({ children, navLinks }: Readonly<DesktopLayoutProp
           {navLinks}
 
           <div className="flex space-x-2">
+            {envName !== "production" && <CartButton />}
             <LoveButton />
             <ThemeToggle data-testid="theme-toggle-desktop" />
             <LanguageToggle data-testid="language-toggle-desktop" />

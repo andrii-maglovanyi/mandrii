@@ -3,6 +3,7 @@
 import { Grid3X3, List, MapPinOff } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import { useDebouncedCallback } from "use-debounce";
 
 import { ActionButton, AnimatedEllipsis, EmptyState, Pagination, RichText } from "~/components/ui";
 import { generateCatalogLayouts } from "~/features/shared/Catalog/layoutConfig";
@@ -18,6 +19,7 @@ import { VenuesCatalogFilter } from "./VenuesCatalogFilter";
 type ViewMode = "grid" | "list";
 
 const ITEMS_LIMIT = 12;
+const SEARCH_DEBOUNCE_MS = 300;
 
 export const VenuesCatalog = () => {
   const i18n = useI18n();
@@ -27,6 +29,7 @@ export const VenuesCatalog = () => {
   const [category, setCategory] = useState<undefined | Venue_Category_Enum>();
   const [country, setCountry] = useState<string | undefined>();
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const { usePublicVenues } = useVenues();
 
@@ -40,15 +43,25 @@ export const VenuesCatalog = () => {
     return Math.ceil(count / ITEMS_LIMIT);
   }, [count, venues]);
 
+  // Debounce search to avoid hammering the API
+  const debouncedSetSearch = useDebouncedCallback((value: string) => {
+    setDebouncedSearch(value);
+  }, SEARCH_DEBOUNCE_MS);
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    debouncedSetSearch(query);
+  };
+
   useEffect(() => {
     const { variables } = getVenuesFilter({
       category,
       country,
-      name: searchQuery,
+      name: debouncedSearch,
     });
 
     handleFilter(variables.where);
-  }, [category, searchQuery, country, handleFilter]);
+  }, [category, debouncedSearch, country, handleFilter]);
 
   const handlePageChange = (pageIndex: number) => {
     const actualOffset = (pageIndex - 1) * ITEMS_LIMIT;
@@ -76,7 +89,7 @@ export const VenuesCatalog = () => {
         country={country}
         onCategoryChange={setCategory}
         onCountryChange={setCountry}
-        onSearchChange={setSearchQuery}
+        onSearchChange={handleSearchChange}
         searchQuery={searchQuery}
       />
 

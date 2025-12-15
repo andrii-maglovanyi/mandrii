@@ -7,8 +7,10 @@ import { useEffect, useState } from "react";
 
 import { ActionButton, Separator } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
+import { envName } from "~/lib/config/env";
 
 import { MobileAuth } from "../../Auth/MobileAuth";
+import { CartButton } from "../../CartButton/CartButton";
 import { LanguageToggle } from "../../LanguageToggle/LanguageToggle";
 import { LoveButton } from "../../LoveButton/LoveButton";
 import { ThemeToggle } from "../../ThemeToggle/ThemeToggle";
@@ -51,8 +53,10 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
   return (
     <div className="lg:hidden">
       <header className={`
-        relative z-50 flex h-16 items-center justify-end px-4 shadow-md
+        relative z-50 flex h-16 items-center justify-between px-4 shadow-md
       `}>
+        <CartButton />
+
         <span className="absolute left-1/2 -translate-x-1/2 transform">
           <Logo />
         </span>
@@ -86,6 +90,7 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
           <Separator variant="margin" />
 
           <div className="mt-4 flex justify-end space-x-2">
+            {envName !== "production" && <CartButton onClick={() => setIsOpen(false)} />}
             <LoveButton onClick={() => setIsOpen((prev) => !prev)} />
             <ThemeToggle data-testid="theme-toggle-mobile" />
             <LanguageToggle data-testid="language-toggle-mobile" />

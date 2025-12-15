@@ -6,6 +6,7 @@ import { saveEvent } from "~/lib/models/event";
 import { UserModel } from "~/lib/models/user";
 import { sendSlackNotification } from "~/lib/slack/event";
 import { processImages } from "~/lib/utils/images";
+import { constructSlug } from "~/lib/utils/slug";
 import { getEventSchema } from "~/lib/validation/event";
 import { Events, Price_Type_Enum } from "~/types";
 import { Timestamp } from "~/types/timestamp";
@@ -104,7 +105,7 @@ export const POST = (req: Request) =>
         ]);
       }
 
-      eventData.slug = slug.trim();
+      eventData.slug = slug.length >= 10 ? slug.trim() : constructSlug(type, title_en, area?.split(",")[0]?.trim());
     }
 
     if (latitude !== null && latitude !== undefined && longitude !== null && longitude !== undefined) {

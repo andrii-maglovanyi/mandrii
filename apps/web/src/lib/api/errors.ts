@@ -18,7 +18,11 @@ export class BadGateway extends ApiError {
 }
 
 export class BadRequestError extends ApiError {
-  constructor(message = "Bad request", code = "BAD_REQUEST") {
+  constructor(
+    message = "Bad request",
+    code = "BAD_REQUEST",
+    public data?: Record<string, unknown>,
+  ) {
     super(message, 400, code);
   }
 }

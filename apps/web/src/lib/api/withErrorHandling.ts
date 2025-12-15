@@ -1,7 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 
 import { envName } from "../config/env";
-import { ApiError, InternalServerError, ValidationError } from "./errors";
+import { ApiError, BadRequestError, InternalServerError, ValidationError } from "./errors";
 
 export async function withErrorHandling(handler: () => Promise<Response | undefined>): Promise<Response> {
   try {
@@ -42,6 +42,10 @@ export async function withErrorHandling(handler: () => Promise<Response | undefi
 
       if (error instanceof ValidationError && error.errors) {
         response.errors = error.errors;
+      }
+
+      if (error instanceof BadRequestError && error.data) {
+        response.data = error.data;
       }
 
       return Response.json(response, { status: error.statusCode });
