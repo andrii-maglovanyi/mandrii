@@ -19,16 +19,10 @@ const PostsPageLayout = ({ locale, posts }: PostsLayoutProps) => {
 
   return (
     <>
-      <h1 className={`
-        mb-12 text-3xl font-extrabold text-on-surface
-        md:text-5xl
-      `}>{i18n("Posts")}</h1>
+      <h1 className={`text-on-surface mb-12 text-3xl font-extrabold md:text-5xl`}>{i18n("Posts")}</h1>
 
       <div
-        className={`
-          mb-32 grid gap-8 text-center
-          lg:mt-2 lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left
-        `}
+        className={`mb-32 grid gap-8 text-center lg:mt-2 lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left`}
       >
         {posts.map(({ content, id, meta }) => (
           <PostCard content={content} id={id} key={id} locale={locale} meta={meta} type={type} withCategory />

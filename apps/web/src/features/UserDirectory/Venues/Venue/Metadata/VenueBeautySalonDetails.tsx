@@ -55,11 +55,7 @@ export const VenueBeautySalonDetails = ({ setValues, values }: VenueBeautySalonD
           {i18n("Services offered")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-3
-          md:grid-cols-2
-          lg:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3`}>
           {constants.options.BEAUTY_SERVICES.map((service) => (
             <Checkbox
               checked={(beautyData.services || []).includes(service.value)}

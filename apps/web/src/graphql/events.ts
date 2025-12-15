@@ -1,9 +1,7 @@
 import { gql } from "@apollo/client";
 
-/**
- * Shared GraphQL fragment for event fields.
- * Used across multiple queries to ensure consistency.
- */
+const now = new Date().toISOString();
+
 export const EVENT_FIELDS_FRAGMENT = gql`
   fragment EventFields on events {
     id
@@ -59,7 +57,13 @@ export const EVENT_FIELDS_FRAGMENT = gql`
 
 export const GET_PUBLIC_EVENTS = gql`
   ${EVENT_FIELDS_FRAGMENT}
-  query GetPublicEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
+  query GetPublicEvents(
+    $where: events_bool_exp!
+    $whereTotal: events_bool_exp!
+    $limit: Int
+    $offset: Int
+    $order_by: [events_order_by!]
+  ) {
     events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       ...EventFields
     }
@@ -68,7 +72,7 @@ export const GET_PUBLIC_EVENTS = gql`
         count
       }
     }
-    total: events_aggregate {
+    total: events_aggregate(where: $whereTotal) {
       aggregate {
         count
       }

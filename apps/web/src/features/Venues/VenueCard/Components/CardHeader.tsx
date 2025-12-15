@@ -79,28 +79,19 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
           <ActionButton
             aria-label={i18n("Manage venue")}
             className="group"
-            icon={<PenTool className={hideUntilHover ? `
-              hidden
-              group-hover/card:flex
-            ` : ""} size={18} />}
+            icon={<PenTool className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
             onClick={handleManageClick}
             size="sm"
             variant="ghost"
           />
         ) : (
-          <div className={clsx(hideUntilHover && "hidden", `
-            group-hover/card:flex
-          `)}>
+          <div className={clsx(hideUntilHover && "hidden", `group-hover/card:flex`)}>
             <ActionButton
               aria-label={i18n("I own this venue")}
               className="group"
               icon={
                 <Crown
-                  className={`
-                    stroke-amber-600
-                    group-hover:fill-amber-600
-                    dark:stroke-amber-400 dark:group-hover:fill-amber-400
-                  `}
+                  className={`stroke-amber-600 group-hover:fill-amber-600 dark:stroke-amber-400 dark:group-hover:fill-amber-400`}
                   size={18}
                 />
               }
@@ -113,20 +104,14 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
         <ActionButton
           aria-label={i18n("Share this venue")}
           className="group"
-          icon={<Share2 className={hideUntilHover ? `
-            hidden
-            group-hover/card:flex
-          ` : ""} size={18} />}
+          icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
           onClick={handleShareClick}
           size="sm"
           variant="ghost"
         />
         {Boolean(venue.owner_id) && (
           <Tooltip label={i18n("Verified venue")} position="left">
-            <BadgeCheck className={`
-              stroke-green-600
-              dark:stroke-green-400
-            `} />
+            <BadgeCheck className={`stroke-green-600 dark:stroke-green-400`} />
           </Tooltip>
         )}
       </div>
@@ -135,9 +120,7 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
 
   return (
     <div className="mb-2 flex h-8 justify-between gap-2">
-      <div className={`
-        flex h-full min-w-0 flex-1 items-center gap-1 text-sm text-on-surface
-      `}>
+      <div className={`text-on-surface flex h-full min-w-0 flex-1 items-center gap-1 text-sm`}>
         {getIcon(iconName, { size: 18 })}
         <span className="block min-w-0 flex-1 truncate">{label[locale]}</span>
       </div>

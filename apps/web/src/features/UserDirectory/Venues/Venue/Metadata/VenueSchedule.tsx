@@ -134,7 +134,7 @@ export const VenueSchedule = ({ setValues, values }: VenueScheduleProps) => {
                 type="time"
                 value={slot.open_time || ""}
               />
-              <span className="pb-2 text-neutral">-</span>
+              <span className="text-neutral pb-2">-</span>
               <Input
                 className="w-32"
                 label={index === 0 ? i18n("Closes") : undefined}
@@ -187,7 +187,7 @@ export const VenueSchedule = ({ setValues, values }: VenueScheduleProps) => {
 
   return (
     <div className="space-y-4">
-      <RichText as="p" className="text-sm text-neutral">
+      <RichText as="p" className="text-neutral text-sm">
         {i18n(
           "Set your venue's opening hours for each day of the week. You can add multiple time slots per day (e.g., lunch and dinner hours) or leave a day empty if closed.",
         )}

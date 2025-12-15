@@ -27,10 +27,7 @@ export function Menu<K extends React.ReactNode, T>({ onSelect, options, ref }: R
   return (
     <div
       aria-activedescendant={focusedIndex !== null ? `option-${focusedIndex}` : undefined}
-      className={`
-        absolute top-full z-50 mt-1.5 h-max max-h-80 w-max min-w-full
-        overflow-y-scroll rounded-lg bg-surface p-1 text-on-surface shadow-xl
-      `}
+      className={`bg-surface text-on-surface absolute top-full z-50 mt-1.5 h-max max-h-80 w-max min-w-full overflow-y-scroll rounded-lg p-1 shadow-xl`}
       data-menu-overlay
       onKeyDown={(e) =>
         handleKeyDown(e, () => {
@@ -49,11 +46,7 @@ export function Menu<K extends React.ReactNode, T>({ onSelect, options, ref }: R
       {options.map((option, index) => (
         <div
           aria-selected={focusedIndex === index}
-          className={`
-            cursor-pointer rounded-lg px-4 py-3 whitespace-nowrap
-            hover:bg-surface-tint
-            focus:bg-surface-tint
-          `}
+          className={`hover:bg-surface-tint focus:bg-surface-tint cursor-pointer rounded-lg px-4 py-3 whitespace-nowrap`}
           id={`option-${index}`}
           key={String(option.value)}
           onClick={() => onSelect(option.value)}

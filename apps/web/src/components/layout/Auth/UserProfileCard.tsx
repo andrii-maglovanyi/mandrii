@@ -23,31 +23,21 @@ export const UserProfileCard = ({ profile }: UserProfileCardProps) => {
     <div>
       <button className="block w-full text-left" onClick={() => router.push("/user-profile")} type="button">
         <div
-          className={`
-            flex cursor-pointer items-center gap-3 rounded-lg bg-linear-to-r
-            from-primary/7.5 to-secondary/7.5 p-3 transition-all duration-200
-          `}
+          className={`from-primary/7.5 to-secondary/7.5 flex cursor-pointer items-center gap-3 rounded-lg bg-linear-to-r p-3 transition-all duration-200`}
         >
           <div className="relative">
             <div
-              className={`
-                absolute inset-0 rounded-full bg-linear-to-r from-primary
-                to-secondary opacity-20 blur-sm
-              `}
+              className={`from-primary to-secondary absolute inset-0 rounded-full bg-linear-to-r opacity-20 blur-sm`}
             />
             <Avatar avatarSize={48} className="relative" profile={profile} />
           </div>
 
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="mb-1 flex items-center gap-2">
-              <span className="truncate font-semibold text-on-surface">{userName}</span>
+              <span className="text-on-surface truncate font-semibold">{userName}</span>
               {isAdmin && (
                 <div
-                  className={`
-                    flex items-center gap-1 rounded-md bg-linear-to-r
-                    from-amber-500 to-amber-600 px-2 py-0.5 text-xs font-medium
-                    text-white
-                  `}
+                  className={`flex items-center gap-1 rounded-md bg-linear-to-r from-amber-500 to-amber-600 px-2 py-0.5 text-xs font-medium text-white`}
                 >
                   <Crown size={12} />
                   <span>Admin</span>
@@ -55,7 +45,7 @@ export const UserProfileCard = ({ profile }: UserProfileCardProps) => {
               )}
             </div>
 
-            <span className="truncate text-sm text-neutral">{email}</span>
+            <span className="text-neutral truncate text-sm">{email}</span>
           </div>
         </div>
       </button>

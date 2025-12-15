@@ -154,9 +154,9 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
   if (error) {
     return (
       <div className="mx-auto max-w-lg text-center">
-        <XCircle className="mx-auto mb-4 h-16 w-16 text-danger" />
+        <XCircle className="text-danger mx-auto mb-4 h-16 w-16" />
         <h1 className="mb-2 text-2xl font-bold">{i18n("Something went wrong")}</h1>
-        <p className="mb-6 text-neutral/70">{error}</p>
+        <p className="text-neutral/70 mb-6">{error}</p>
         <Link href={`/${locale}/shop`}>
           <Button color="primary" variant="filled">
             {i18n("Continue shopping")}
@@ -218,19 +218,16 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
   return (
     <div className="mx-auto max-w-lg">
       <div className="mb-8 text-center">
-        <StatusIcon className={`
-          mx-auto mb-4 h-16 w-16
-          ${config.color}
-        `} />
+        <StatusIcon className={`mx-auto mb-4 h-16 w-16 ${config.color} `} />
         <h1 className="mb-2 text-2xl font-bold">{config.title}</h1>
         <p className="text-neutral/70">{config.description}</p>
       </div>
 
       {/* Order details */}
-      <div className="mb-6 rounded-xl border border-primary/10 bg-surface p-4">
+      <div className="border-primary/10 bg-surface mb-6 rounded-xl border p-4">
         <h3 className="mb-3 font-semibold">{i18n("Order details")}</h3>
 
-        <div className="mb-4 space-y-1 text-sm text-neutral/70">
+        <div className="text-neutral/70 mb-4 space-y-1 text-sm">
           <p>
             <span className="font-medium">{i18n("Order ID")}:</span> {order.id.slice(0, 8)}...
           </p>
@@ -249,7 +246,7 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
 
         <ul className="mb-4 space-y-2">
           {order.order_items.map((item) => (
-            <li className="flex justify-between text-sm text-neutral/80" key={item.id}>
+            <li className="text-neutral/80 flex justify-between text-sm" key={item.id}>
               <span>
                 {item.name_snapshot} × {item.quantity}
               </span>
@@ -258,13 +255,13 @@ export function OrderConfirmationView({ orderId }: OrderConfirmationViewProps) {
           ))}
         </ul>
 
-        <div className="border-t border-primary/10 pt-3">
-          <div className="flex justify-between text-sm text-neutral/70">
+        <div className="border-primary/10 border-t pt-3">
+          <div className="text-neutral/70 flex justify-between text-sm">
             <span>{i18n("Subtotal")}</span>
             <span>{formatPrice(order.subtotal_minor, order.currency, locale)}</span>
           </div>
 
-          <div className="flex justify-between text-sm text-neutral/70">
+          <div className="text-neutral/70 flex justify-between text-sm">
             <span>{i18n("Shipping")}</span>
             <span>{formatPrice(order.shipping_minor, order.currency, locale)}</span>
           </div>

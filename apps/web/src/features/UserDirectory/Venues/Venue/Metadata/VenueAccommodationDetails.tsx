@@ -62,10 +62,7 @@ export const VenueAccommodationDetails = ({ setValues, values }: VenueAccommodat
           {i18n("Capacity")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-4
-          md:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-4 md:grid-cols-3`}>
           <div className="flex items-center gap-2">
             <Input
               label={i18n("Bedrooms")}
@@ -113,10 +110,7 @@ export const VenueAccommodationDetails = ({ setValues, values }: VenueAccommodat
           {i18n("Rules")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-4
-          md:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-4 md:grid-cols-3`}>
           <Input
             label={i18n("Check-in")}
             onChange={(e) => {
@@ -157,11 +151,7 @@ export const VenueAccommodationDetails = ({ setValues, values }: VenueAccommodat
           {i18n("Amenities")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-3
-          md:grid-cols-2
-          lg:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3`}>
           {constants.options.AMENITIES.map((amenity) => (
             <Checkbox
               checked={(accommodationData.amenities || []).includes(amenity.value)}

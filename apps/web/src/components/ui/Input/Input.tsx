@@ -101,8 +101,7 @@ export function Input<K extends string, T extends string>({
     commonClass,
     commonInputClass,
     isPhoneInput || type === "search" ? "pl-12" : "",
-    (type === "datetime-local" || type === "date" || type === "time") &&
-      `dark:[color-scheme:dark]`,
+    (type === "datetime-local" || type === "date" || type === "time") && `dark:[color-scheme:dark]`,
     className,
   );
 
@@ -174,7 +173,7 @@ export function Input<K extends string, T extends string>({
           {CountryFlag ? (
             <CountryFlag className="h-4 w-6 rounded-sm" />
           ) : (
-            <Phone className="mx-1 text-neutral-disabled" size={20} />
+            <Phone className="text-neutral-disabled mx-1" size={20} />
           )}
         </span>
       );
@@ -183,7 +182,7 @@ export function Input<K extends string, T extends string>({
     if (type === "search") {
       return (
         <span className={iconWrapperClass}>
-          <Search className="mx-1 text-neutral-disabled" size={20} />
+          <Search className="text-neutral-disabled mx-1" size={20} />
         </span>
       );
     }
@@ -194,7 +193,7 @@ export function Input<K extends string, T extends string>({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-sm font-medium text-on-surface" htmlFor={inputId}>
+        <label className="text-on-surface text-sm font-medium" htmlFor={inputId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>

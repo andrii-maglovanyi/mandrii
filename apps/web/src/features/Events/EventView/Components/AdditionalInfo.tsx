@@ -34,7 +34,7 @@ export const AdditionalInfo = ({ event: evt, expanded = true }: AdditionalInfoPr
   );
 
   return (
-    <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
+    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col text-sm">
       {capacity && (
         <Section>
           <InfoLine icon={<Users className="min-h-4 min-w-4" size={16} />} info={`${capacity} ${i18n("people")}`} />

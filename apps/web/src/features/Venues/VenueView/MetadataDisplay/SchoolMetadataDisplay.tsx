@@ -61,10 +61,7 @@ export const SchoolMetadataDisplay = ({ schoolDetails }: SchoolMetadataDisplayPr
               label={i18n("Online classes")}
               showDots
               value={
-                <span className={`
-                  inline-flex items-center gap-1 text-green-600
-                  dark:text-green-400
-                `}>
+                <span className={`inline-flex items-center gap-1 text-green-600 dark:text-green-400`}>
                   ✓ {i18n("Available")}
                 </span>
               }

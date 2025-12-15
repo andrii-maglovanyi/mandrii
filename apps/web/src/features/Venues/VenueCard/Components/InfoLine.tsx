@@ -71,7 +71,7 @@ export const InfoLine = ({
   // Render link-based info lines (email, address, phone)
   const renderLinkLine = (href: string, copyLabel: string, leadingIcon?: React.ReactNode) => (
     <div className="flex min-w-0 flex-1 justify-between py-0.5 pr-2 pl-4">
-      <div className="flex min-w-0 items-center gap-2 text-neutral">
+      <div className="text-neutral flex min-w-0 items-center gap-2">
         {leadingIcon || icon}
         {strikethrough ? (
           <Tooltip label={i18n("This venue is archived")}>
@@ -107,10 +107,7 @@ export const InfoLine = ({
     const data = processPhoneNumber(info);
     const CountryFlag = getFlagComponent(data.detectedCountry?.country);
     return (
-      <div className={`
-        group/info flex w-full items-center justify-between text-left
-        hover:bg-on-surface/5
-      `}>
+      <div className={`group/info hover:bg-on-surface/5 flex w-full items-center justify-between text-left`}>
         {renderLinkLine(
           `tel:${data.formatted}`,
           i18n("Copy phone number"),
@@ -123,10 +120,7 @@ export const InfoLine = ({
   // Email
   if (isEmail) {
     return (
-      <div className={`
-        group/info flex w-full items-center justify-between text-left
-        hover:bg-on-surface/5
-      `}>
+      <div className={`group/info hover:bg-on-surface/5 flex w-full items-center justify-between text-left`}>
         {renderLinkLine(`mailto:${info}`, i18n("Copy email address"))}
       </div>
     );
@@ -135,10 +129,7 @@ export const InfoLine = ({
   // Address (Google Maps)
   if (isAddress) {
     return (
-      <div className={`
-        group/info flex w-full items-center justify-between text-left
-        hover:bg-on-surface/5
-      `}>
+      <div className={`group/info hover:bg-on-surface/5 flex w-full items-center justify-between text-left`}>
         {renderLinkLine(
           `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(info)}`,
           i18n("Copy address"),
@@ -149,14 +140,9 @@ export const InfoLine = ({
 
   if (isLink) {
     return (
-      <div className={`
-        group/info flex w-full items-center justify-between text-left
-        hover:bg-on-surface/5
-      `}>
-        <div className={`
-          flex min-w-0 flex-1 items-center justify-between px-4 py-2
-        `}>
-          <div className="flex min-w-0 items-center gap-2 text-neutral">
+      <div className={`group/info hover:bg-on-surface/5 flex w-full items-center justify-between text-left`}>
+        <div className={`flex min-w-0 flex-1 items-center justify-between px-4 py-2`}>
+          <div className="text-neutral flex min-w-0 items-center gap-2">
             {icon}
             <a
               className="min-w-0 truncate"
@@ -169,9 +155,7 @@ export const InfoLine = ({
             </a>
           </div>
 
-          <ArrowUpRight className={clsx(hideClasses, `
-            ml-auto stroke-neutral-disabled
-          `)} size={16} />
+          <ArrowUpRight className={clsx(hideClasses, `stroke-neutral-disabled ml-auto`)} size={16} />
         </div>
       </div>
     );
@@ -180,16 +164,10 @@ export const InfoLine = ({
   // Default: copy-to-clipboard button or plain text
   if (withCopy && tooltipText) {
     return (
-      <div className={`
-        group/info flex w-full items-center justify-between text-left
-        hover:bg-on-surface/5
-      `}>
+      <div className={`group/info hover:bg-on-surface/5 flex w-full items-center justify-between text-left`}>
         <Tooltip className="w-full! flex-1" label={tooltipText}>
           <button
-            className={`
-              flex w-full min-w-0 cursor-pointer items-center justify-between
-              gap-2 px-4 py-2 text-left
-            `}
+            className={`flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 px-4 py-2 text-left`}
             onClick={handleCopy}
           >
             <div className="flex min-w-0 items-center gap-2">
@@ -205,12 +183,9 @@ export const InfoLine = ({
 
   // Plain text (not withCopy)
   return (
-    <div className={`
-      flex w-full items-center px-4 py-2 text-left text-neutral
-      hover:bg-on-surface/5
-    `}>
+    <div className={`text-neutral hover:bg-on-surface/5 flex w-full items-center px-4 py-2 text-left`}>
       {icon && <span className="mr-2">{icon}</span>}
-      <span className="min-w-0 truncate text-on-surface">{info}</span>
+      <span className="text-on-surface min-w-0 truncate">{info}</span>
     </div>
   );
 };

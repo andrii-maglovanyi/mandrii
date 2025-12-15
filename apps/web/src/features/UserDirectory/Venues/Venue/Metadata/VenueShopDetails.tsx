@@ -67,11 +67,7 @@ export const VenueShopDetails = ({ setValues, values }: VenueShopDetailsProps) =
           {i18n("Categories")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-3
-          md:grid-cols-2
-          lg:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3`}>
           {constants.options.PRODUCT_CATEGORIES.map((category) => (
             <Checkbox
               checked={(shopData.product_categories || []).includes(category.value)}
@@ -93,10 +89,7 @@ export const VenueShopDetails = ({ setValues, values }: VenueShopDetailsProps) =
           {i18n("Payment methods")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-3
-          md:grid-cols-2
-        `}>
+        <div className={`grid grid-cols-1 gap-3 md:grid-cols-2`}>
           {constants.options.PAYMENT.map((method) => (
             <Checkbox
               checked={(shopData.payment_methods || []).includes(method.value)}

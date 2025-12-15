@@ -67,11 +67,7 @@ export const VenueRestaurantDetails = ({ setValues, values }: VenueRestaurantDet
           {i18n("Cuisine")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-3
-          md:grid-cols-2
-          lg:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3`}>
           {constants.options.CUISINE.map((cuisine) => (
             <Checkbox
               checked={(restaurantData.cuisine_types || []).includes(cuisine.value)}
@@ -93,10 +89,7 @@ export const VenueRestaurantDetails = ({ setValues, values }: VenueRestaurantDet
           {i18n("Capacity & pricing")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-4
-          md:grid-cols-2
-        `}>
+        <div className={`grid grid-cols-1 gap-4 md:grid-cols-2`}>
           <Input
             label={i18n("Capacity")}
             min={0}
@@ -130,11 +123,7 @@ export const VenueRestaurantDetails = ({ setValues, values }: VenueRestaurantDet
           {i18n("Features & services")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-3
-          md:grid-cols-2
-          lg:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3`}>
           {constants.options.FEATURES.map((feature) => (
             <Checkbox
               checked={(restaurantData.features || []).includes(feature.value)}

@@ -39,38 +39,14 @@ export const EventStatus = ({ expanded, status }: EventStatusProps) => {
   return (
     <div
       className={clsx(
-        `
-          flex w-min cursor-default items-center justify-center text-xs
-          font-medium uppercase
-        `,
-        status === Event_Status_Enum.Active && `
-          bg-green-600/75 text-surface
-          dark:bg-green-400/75
-        `,
-        status === Event_Status_Enum.Draft && `
-          bg-gray-600/75 text-surface
-          dark:bg-gray-400/75
-        `,
-        status === Event_Status_Enum.Cancelled && `
-          bg-red-600/75 text-surface
-          dark:bg-red-400/75
-        `,
-        status === Event_Status_Enum.Completed && `
-          bg-blue-600/75 text-surface
-          dark:bg-blue-400/75
-        `,
-        status === Event_Status_Enum.Postponed && `
-          bg-orange-600/75 text-surface
-          dark:bg-orange-400/75
-        `,
-        status === Event_Status_Enum.Archived && `
-          bg-slate-600/75 text-surface
-          dark:bg-slate-400/75
-        `,
-        status === Event_Status_Enum.Pending && `
-          bg-yellow-600/75 text-surface
-          dark:bg-yellow-400/75
-        `,
+        `flex w-min cursor-default items-center justify-center text-xs font-medium uppercase`,
+        status === Event_Status_Enum.Active && `text-surface bg-green-600/75 dark:bg-green-400/75`,
+        status === Event_Status_Enum.Draft && `text-surface bg-gray-600/75 dark:bg-gray-400/75`,
+        status === Event_Status_Enum.Cancelled && `text-surface bg-red-600/75 dark:bg-red-400/75`,
+        status === Event_Status_Enum.Completed && `text-surface bg-blue-600/75 dark:bg-blue-400/75`,
+        status === Event_Status_Enum.Postponed && `text-surface bg-orange-600/75 dark:bg-orange-400/75`,
+        status === Event_Status_Enum.Archived && `text-surface bg-slate-600/75 dark:bg-slate-400/75`,
+        status === Event_Status_Enum.Pending && `text-surface bg-yellow-600/75 dark:bg-yellow-400/75`,
         expanded ? `rounded-md px-3 py-1.5` : `rounded-full p-2`,
       )}
     >

@@ -8,6 +8,7 @@ import { useI18n } from "~/i18n/useI18n";
 import { GetPublicEventsQuery, Locale } from "~/types";
 
 import { formatEventPrice } from "../../utils";
+import { toDateLocale } from "~/lib/utils";
 
 interface CardMetadataProps {
   event: GetPublicEventsQuery["events"][number];
@@ -45,18 +46,22 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
   const showPrice = variant === "list" || variant === "map";
 
   return (
-    <div className="-mx-4 mt-4 mb-2 flex flex-col gap-2 text-sm text-on-surface">
+    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col gap-2 text-sm">
       {startDate && (
         <div className="flex items-start gap-2 px-4">
           <Calendar className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
           <div className="flex-1">
-            <div className="font-medium">
-              {format(startDate, "MMM d, yyyy")}
-              {endDate && endDate.getTime() !== startDate.getTime() && <span> - {format(endDate, "MMM d, yyyy")}</span>}
+            <div className="gap-2 font-medium">
+              <span>{format(startDate, "EE, d MMMM yyyy", { locale: toDateLocale(locale) })} - </span>
+              <span>
+                {endDate &&
+                  endDate.getTime() !== startDate.getTime() &&
+                  format(endDate, "EE, d MMMM yyyy", { locale: toDateLocale(locale) })}
+              </span>
             </div>
-            <div className="text-xs text-neutral">
-              {format(startDate, "h:mm a")}
-              {endDate && <span> - {format(endDate, "h:mm a")}</span>}
+            <div className="text-neutral text-xs">
+              {format(startDate, "HH:mm")}
+              {endDate && <span> - {format(endDate, "HH:mm")}</span>}
             </div>
           </div>
         </div>
@@ -92,11 +97,10 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
         </div>
       )}
 
-      {/* Price */}
       {showPrice && (
         <div className="flex items-start gap-2 px-4">
           <PoundSterling className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
-          <span className="font-medium text-primary">{priceInfo}</span>
+          <span className="text-primary font-medium">{priceInfo}</span>
         </div>
       )}
     </div>

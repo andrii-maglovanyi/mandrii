@@ -23,10 +23,7 @@ export const PlatformLink = ({ href, label, size = "medium", type }: Readonly<Pl
         className={clsx(
           baseClass,
           variantClasses.ghost.neutral,
-          `
-            fill-on-surface p-2 text-surface
-            hover:text-surface-tint
-          `,
+          `fill-on-surface text-surface hover:text-surface-tint p-2`,
         )}
         href={href}
         onClick={handleClick}

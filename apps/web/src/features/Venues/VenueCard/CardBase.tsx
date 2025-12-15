@@ -41,38 +41,24 @@ export const CardBase = ({ hasImage = false, showFlag, variant, venue }: CardBas
           <div className={config.imageContainerClasses}>
             <Image
               alt={venue.name}
-              className={`
-                object-cover transition-transform duration-300
-                group-hover/card:scale-110
-              `}
+              className={`object-cover transition-transform duration-300 group-hover/card:scale-110`}
               fill
               sizes={config.imageSizes}
               src={`${constants.vercelBlobStorageUrl}/${mainImage}`}
             />
             <div
-              className={`
-                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
-                to-transparent opacity-0 transition-opacity
-                group-hover/card:opacity-100
-              `}
+              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
             />
           </div>
         )}
 
         {hasImage && !mainImage && variant.startsWith("masonry") && (
           <div className={config.imageContainerClasses}>
-            <div className={`
-              flex h-full items-center justify-center bg-linear-to-br
-              from-primary/10 to-secondary/10
-            `}>
+            <div className={`from-primary/10 to-secondary/10 flex h-full items-center justify-center bg-linear-to-br`}>
               <MapPin className="text-neutral opacity-30" size={48} />
             </div>
             <div
-              className={`
-                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
-                to-transparent opacity-0 transition-opacity
-                group-hover/card:opacity-100
-              `}
+              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
             />
           </div>
         )}
@@ -84,19 +70,14 @@ export const CardBase = ({ hasImage = false, showFlag, variant, venue }: CardBas
             <h3 className={config.titleClasses}>{venue.name}</h3>
 
             {venue.address && (
-              <div className="mb-2 flex items-start gap-1 text-sm text-neutral">
+              <div className="text-neutral mb-2 flex items-start gap-1 text-sm">
                 <MapPin className="mt-0.5 shrink-0" size={16} />
-                <span className={variant.startsWith("list") ? "line-clamp-1" : `
-                  line-clamp-2
-                `}>{venue.address}</span>
+                <span className={variant.startsWith("list") ? "line-clamp-1" : `line-clamp-2`}>{venue.address}</span>
               </div>
             )}
 
             {config.showDescription && description && (
-              <RichText className={clsx(`
-                prose max-w-none
-                dark:prose-invert
-              `, config.descriptionClasses)}>
+              <RichText className={clsx(`prose dark:prose-invert max-w-none`, config.descriptionClasses)}>
                 {variant.startsWith("list") ? truncatedDescription : description}
               </RichText>
             )}

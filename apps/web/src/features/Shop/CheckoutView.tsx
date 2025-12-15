@@ -249,10 +249,7 @@ function CheckoutViewInner() {
         ]}
       />
 
-      <h1 className={`
-        text-2xl font-semibold
-        md:text-3xl
-      `}>{i18n("Checkout")}</h1>
+      <h1 className={`text-2xl font-semibold md:text-3xl`}>{i18n("Checkout")}</h1>
 
       {/* Honeypot field - hidden from humans, bots fill it out */}
       <input
@@ -266,25 +263,13 @@ function CheckoutViewInner() {
         value={website}
       />
 
-      <div className={`
-        grid gap-10
-        lg:grid-cols-2 lg:gap-16
-      `}>
+      <div className={`grid gap-10 lg:grid-cols-2 lg:gap-16`}>
         {/* Left column: Order summary */}
-        <div className={`
-          order-2
-          lg:order-1
-        `}>
-          <div className={`
-            space-y-5
-            lg:sticky lg:top-24
-          `}>
+        <div className={`order-2 lg:order-1`}>
+          <div className={`space-y-5 lg:sticky lg:top-24`}>
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-semibold">{i18n("Order summary:")}</h3>
-              <Link className={`
-                mt-2 inline-block text-primary
-                hover:text-primary/80
-              `} href="/shop/cart">
+              <Link className={`text-primary hover:text-primary/80 mt-2 inline-block`} href="/shop/cart">
                 <Button color="neutral" size="sm" variant="filled">
                   ← {i18n("Edit bag")}
                 </Button>
@@ -297,14 +282,8 @@ function CheckoutViewInner() {
                 const itemError = validationErrors.find((e) => e.itemId === item.id);
 
                 return (
-                  <div className={`
-                    flex items-start gap-4
-                    ${itemError ? `text-danger` : ""}
-                  `} key={item.id}>
-                    <div className={`
-                      relative h-14 w-14 shrink-0 overflow-hidden rounded-lg
-                      bg-surface-tint
-                    `}>
+                  <div className={`flex items-start gap-4 ${itemError ? `text-danger` : ""} `} key={item.id}>
+                    <div className={`bg-surface-tint relative h-14 w-14 shrink-0 overflow-hidden rounded-lg`}>
                       <FallbackImage
                         alt={item.name}
                         className="object-cover"
@@ -322,10 +301,10 @@ function CheckoutViewInner() {
                           </span>
                         </div>
                       </div>
-                      <p className="mt-1 text-sm text-neutral/60">
+                      <p className="text-neutral/60 mt-1 text-sm">
                         {i18n("Qty")}: {item.quantity}
                       </p>
-                      {itemError && <p className="mt-1 text-xs text-danger">{itemError.message}</p>}
+                      {itemError && <p className="text-danger mt-1 text-xs">{itemError.message}</p>}
                     </div>
                   </div>
                 );
@@ -333,7 +312,7 @@ function CheckoutViewInner() {
             </div>
 
             {/* Shipping selection */}
-            <div className="space-y-2 border-t border-neutral/10 pt-5">
+            <div className="border-neutral/10 space-y-2 border-t pt-5">
               <Select
                 label={i18n("Shipping destination")}
                 onChange={(e) => {
@@ -351,29 +330,26 @@ function CheckoutViewInner() {
             </div>
 
             {/* Totals */}
-            <div className="space-y-3 border-t border-neutral/10 pt-5">
-              <div className="flex justify-between text-neutral/70">
+            <div className="border-neutral/10 space-y-3 border-t pt-5">
+              <div className="text-neutral/70 flex justify-between">
                 <span>
                   {i18n("Subtotal")} ({totalQuantity} {totalQuantity === 1 ? i18n("item") : i18n("items")})
                 </span>
                 <span>{formatPrice(subtotalMinor, currency, locale)}</span>
               </div>
-              <div className="flex justify-between text-neutral/70">
+              <div className="text-neutral/70 flex justify-between">
                 <span>{i18n("Shipping")}</span>
                 <span>{shippingMinor === 0 ? i18n("Free") : formatPrice(shippingMinor, currency, locale)}</span>
               </div>
             </div>
 
-            <div className={`
-              flex justify-between border-t border-neutral/10 pt-5 text-lg
-              font-semibold
-            `}>
+            <div className={`border-neutral/10 flex justify-between border-t pt-5 text-lg font-semibold`}>
               <span>{i18n("Total")}</span>
               <span>{formatPrice(totalMinor, currency, locale)}</span>
             </div>
 
             {shippingDestination === "GB" && subtotalMinor < shippingCost.freeThreshold && (
-              <p className="text-sm text-primary">
+              <p className="text-primary text-sm">
                 {i18n("Add {amount} more for free UK shipping", {
                   amount: formatPrice(shippingCost.freeThreshold - subtotalMinor, currency, locale),
                 })}
@@ -383,10 +359,7 @@ function CheckoutViewInner() {
         </div>
 
         {/* Right column: Checkout form */}
-        <div className={`
-          order-1 space-y-8
-          lg:order-2
-        `}>
+        <div className={`order-1 space-y-8 lg:order-2`}>
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">{i18n("Contact information")}</h3>
             <div>
@@ -400,7 +373,7 @@ function CheckoutViewInner() {
                 type="email"
                 value={email}
               />
-              <p className="mt-2 text-xs text-neutral/60">
+              <p className="text-neutral/60 mt-2 text-xs">
                 {i18n("I'll send your order confirmation to this address.")}
               </p>
             </div>
@@ -408,7 +381,7 @@ function CheckoutViewInner() {
 
           {/* Validation errors */}
           {validationErrors.length > 0 && (
-            <div className="rounded-lg bg-danger/10 p-4 text-danger">
+            <div className="bg-danger/10 text-danger rounded-lg p-4">
               <div className="mb-2 flex items-center gap-2 font-medium">
                 <AlertCircle size={16} />
                 <span>{i18n("Cart issues detected")}</span>
@@ -423,9 +396,7 @@ function CheckoutViewInner() {
 
           {/* General error */}
           {error && !validationErrors.length && (
-            <div className={`
-              flex items-center gap-3 rounded-lg bg-danger/10 p-4 text-danger
-            `}>
+            <div className={`bg-danger/10 text-danger flex items-center gap-3 rounded-lg p-4`}>
               <AlertCircle size={18} />
               <span>{error}</span>
             </div>
@@ -477,10 +448,7 @@ function CheckoutViewInner() {
                   />
                 </Elements>
               ) : (
-                <div className={`
-                  flex items-center gap-3 rounded-lg bg-danger/10 p-4
-                  text-danger
-                `}>
+                <div className={`bg-danger/10 text-danger flex items-center gap-3 rounded-lg p-4`}>
                   <AlertCircle size={18} />
                   <span>{i18n("Payment system is not configured. Please contact support.")}</span>
                 </div>

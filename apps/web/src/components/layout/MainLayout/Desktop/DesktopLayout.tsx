@@ -15,22 +15,13 @@ type DesktopLayoutProps = {
 
 export function DesktopLayout({ children, navLinks }: Readonly<DesktopLayoutProps>) {
   return (
-    <div className={`
-      hidden
-      md:block
-    `}>
+    <div className={`hidden md:block`}>
       <header
-        className={`
-          relative z-50 flex h-16 items-center justify-between px-4 shadow-md
-          dark:shadow-neutral-500/10
-        `}
+        className={`relative z-50 flex h-16 items-center justify-between px-4 shadow-md dark:shadow-neutral-500/10`}
       >
         <Logo />
 
-        <nav className={`
-          hidden space-x-12
-          md:flex
-        `}>
+        <nav className={`hidden space-x-12 md:flex`}>
           {navLinks}
 
           <div className="flex space-x-2">

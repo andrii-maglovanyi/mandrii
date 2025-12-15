@@ -106,10 +106,7 @@ export const EditEvent = ({ slug }: EventProps) => {
     return (
       <>
         {data && meta ? (
-          <div className={`
-            flex cursor-default items-center justify-end space-x-3 text-sm
-            text-neutral-disabled
-          `}>
+          <div className={`text-neutral-disabled flex cursor-default items-center justify-end space-x-3 text-sm`}>
             <Tooltip label={i18n("Created on")}>
               {format(new Date(meta.createdAt), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
             </Tooltip>
@@ -177,7 +174,7 @@ export const EditEvent = ({ slug }: EventProps) => {
             )}
           </div>
         ) : null}
-        <RichText as="div" className="mb-6 text-sm text-neutral">
+        <RichText as="div" className="text-neutral mb-6 text-sm">
           {slug
             ? i18n(
                 "Edit your event details below.<br/>You can update all fields except the slug, which is locked after the first creation.",

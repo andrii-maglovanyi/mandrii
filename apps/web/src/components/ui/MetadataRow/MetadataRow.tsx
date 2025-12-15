@@ -22,7 +22,7 @@ interface MetadataRowProps {
 export const MetadataRow = ({ icon: Icon, label, showDots = false, value }: MetadataRowProps) => {
   return (
     <div className="flex items-center justify-between gap-4 py-2 text-sm">
-      <div className="flex items-center gap-2 text-neutral">
+      <div className="text-neutral flex items-center gap-2">
         {Icon && <Icon size={16} />}
         <span>{label}</span>
       </div>
@@ -38,7 +38,7 @@ export const MetadataRow = ({ icon: Icon, label, showDots = false, value }: Meta
           }}
         />
       )}
-      <div className="font-medium text-on-surface">{value}</div>
+      <div className="text-on-surface font-medium">{value}</div>
     </div>
   );
 };

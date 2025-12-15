@@ -29,10 +29,7 @@ export const Pagination = ({ count, index, loading, nextText, onPaginate, prevTe
           <InfiniteScroll count={count} index={index} loading={loading} onScroll={onPaginate} />
         </div>
       ) : (
-        <div className={`
-          hidden
-          md:flex
-        `}>
+        <div className={`hidden md:flex`}>
           <NumberedPagination
             count={count}
             index={index}

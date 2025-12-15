@@ -35,7 +35,7 @@ export const OrganizerInfo = ({ event: evt, expanded = true }: OrganizerInfoProp
   );
 
   return (
-    <div className="-mx-4 mt-4 mb-2 flex flex-col text-sm text-on-surface">
+    <div className="text-on-surface -mx-4 mt-4 mb-2 flex flex-col text-sm">
       <Section>
         <InfoLine icon={<User className="min-h-4 min-w-4" size={16} />} info={evt.organizer_name} />
       </Section>

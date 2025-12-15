@@ -163,9 +163,9 @@ export function CheckoutForm({
         />
         {showExpressCheckout && (
           <div className="flex items-center gap-4">
-            <div className="h-px flex-1 bg-neutral/20" />
-            <span className="text-sm text-neutral/60">{i18n("Or pay another way")}</span>
-            <div className="h-px flex-1 bg-neutral/20" />
+            <div className="bg-neutral/20 h-px flex-1" />
+            <span className="text-neutral/60 text-sm">{i18n("Or pay another way")}</span>
+            <div className="bg-neutral/20 h-px flex-1" />
           </div>
         )}
       </div>
@@ -213,9 +213,7 @@ export function CheckoutForm({
 
       {/* Error message */}
       {error && (
-        <div className={`
-          flex items-center gap-3 rounded-lg bg-danger/10 p-4 text-danger
-        `}>
+        <div className={`bg-danger/10 text-danger flex items-center gap-3 rounded-lg p-4`}>
           <AlertCircle size={18} />
           <span>{error}</span>
         </div>
@@ -240,7 +238,7 @@ export function CheckoutForm({
         )}
       </Button>
 
-      <p className="text-center text-xs text-neutral/60">{i18n("Your payment is securely processed by Stripe.")}</p>
+      <p className="text-neutral/60 text-center text-xs">{i18n("Your payment is securely processed by Stripe.")}</p>
     </form>
   );
 }

@@ -44,27 +44,17 @@ const Venues = () => {
         return (
           <div className="flex flex-col">
             <Link
-              className={`
-                group text-2xl font-bold
-                md:text-base md:font-semibold
-              `}
+              className={`group text-2xl font-bold md:text-base md:font-semibold`}
               href={`/venues/${slug}`}
               target="_blank"
             >
               {String(name)}
               <ArrowUpRight
-                className={`
-                  mb-1.5 ml-0.5 inline-block align-bottom text-neutral opacity-0
-                  group-hover:opacity-100
-                  md:mb-1
-                `}
+                className={`text-neutral mb-1.5 ml-0.5 inline-block align-bottom opacity-0 group-hover:opacity-100 md:mb-1`}
                 size={16}
               />
             </Link>
-            <span className={`
-              text-base text-neutral-disabled
-              md:text-xs
-            `}>
+            <span className={`text-neutral-disabled text-base md:text-xs`}>
               <strong>{hasAddress ? city : i18n("Virtual venue")}</strong>
               {country ? `, ${country}` : null}
             </span>
@@ -83,16 +73,10 @@ const Venues = () => {
         const { iconName, label } = constants.categories[category as keyof typeof constants.categories];
         return (
           <>
-            <div className={`
-              hidden grow justify-center align-middle
-              md:flex
-            `}>
+            <div className={`hidden grow justify-center align-middle md:flex`}>
               <Tooltip label={label[locale]}>{getIcon(iconName)}</Tooltip>
             </div>
-            <div className={`
-              flex items-center
-              md:hidden
-            `}>
+            <div className={`flex items-center md:hidden`}>
               {getIcon(iconName)} <span className="ml-2">{label[locale]}</span>
             </div>
           </>

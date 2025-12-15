@@ -79,10 +79,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
           {i18n("Age groups")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-3
-          md:grid-cols-2
-        `}>
+        <div className={`grid grid-cols-1 gap-3 md:grid-cols-2`}>
           {constants.options.AGE_GROUPS.map((group) => (
             <Checkbox
               checked={(schoolData.age_groups || []).includes(group.value)}
@@ -104,11 +101,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
           {i18n("Languages taught")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-3
-          md:grid-cols-2
-          lg:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3`}>
           {constants.options.LANGUAGES.map((language) => (
             <Checkbox
               checked={(schoolData.languages_taught || []).includes(language.value)}
@@ -130,11 +123,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
           {i18n("Subjects")}
         </h3>
 
-        <div className={`
-          grid grid-cols-1 gap-3
-          md:grid-cols-2
-          lg:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3`}>
           {constants.options.CURRICULUM.map((subject) => (
             <Checkbox
               checked={(schoolData.subjects || []).includes(subject.value)}
@@ -147,10 +136,7 @@ export const VenueSchoolDetails = ({ setValues, values }: VenueSchoolDetailsProp
           ))}
         </div>
 
-        <div className={`
-          grid grid-cols-1 gap-4
-          md:grid-cols-2
-        `}>
+        <div className={`grid grid-cols-1 gap-4 md:grid-cols-2`}>
           <Input
             label={i18n("Maximum class size")}
             min={1}

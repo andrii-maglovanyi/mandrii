@@ -14,6 +14,7 @@ import {
 import { UUID } from "~/types/uuid";
 
 import { useGraphApi } from "./useGraphApi";
+import { getEventsFilter } from "~/features/Events/utils/getEventsFilter";
 
 interface VenuesParams {
   category?: Venue_Category_Enum;
@@ -26,6 +27,8 @@ interface VenuesParams {
   name?: string;
   slug?: string;
 }
+
+const now = new Date().toISOString();
 
 export const getVenuesFilter = ({ category, country, distance, geo, name, slug }: VenuesParams) => {
   const where: FilterParams = {};
@@ -194,7 +197,7 @@ const VENUE_FIELDS_FRAGMENT = gql`
       payment_methods
     }
     updated_at
-    events_aggregate {
+    events_aggregate(where: $whereEvents) {
       aggregate {
         count
       }
@@ -210,7 +213,13 @@ const VENUE_FIELDS_FRAGMENT = gql`
 
 const GET_PUBLIC_VENUES = gql`
   ${VENUE_FIELDS_FRAGMENT}
-  query GetPublicVenues($where: venues_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+  query GetPublicVenues(
+    $where: venues_bool_exp!
+    $whereEvents: events_bool_exp!
+    $limit: Int
+    $offset: Int
+    $order_by: [venues_order_by!]
+  ) {
     venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       ...VenueFields
     }
@@ -383,7 +392,14 @@ export const useVenues = () => {
   };
 
   const usePublicVenues = (params: APIParams) => {
-    const result = useGraphApi<GetPublicVenuesQuery["venues"]>(GET_PUBLIC_VENUES, params);
+    const { variables } = getEventsFilter({
+      dateFrom: now,
+    });
+
+    const result = useGraphApi<GetPublicVenuesQuery["venues"]>(GET_PUBLIC_VENUES, {
+      ...params,
+      whereEvents: variables.where,
+    });
 
     const transformedData = useMemo(() => result.data?.map(getVenueData), [result.data]);
 

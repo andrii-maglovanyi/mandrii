@@ -93,9 +93,7 @@ function clearMarkers(
   labelSpansRef: React.RefObject<Map<number | string, HTMLSpanElement>>,
 ) {
   for (const marker of markersRef.current.values()) {
-    if (marker.style.zIndex === "3") {
-      marker.map = null;
-    }
+    marker.map = null;
   }
 
   markersRef.current.clear();

@@ -21,7 +21,7 @@ export const ColorSelector = ({ disabled, label, onChange, options, value }: Col
 
   return (
     <div className="space-y-3">
-      <label className="text-sm font-medium text-on-surface">
+      <label className="text-on-surface text-sm font-medium">
         {label}
         {selectedLabel && <span className="text-neutral/70">: {selectedLabel}</span>}
       </label>
@@ -36,17 +36,10 @@ export const ColorSelector = ({ disabled, label, onChange, options, value }: Col
             <button
               aria-label={`${option.label}${isOutOfStock ? ` (${i18n("out of stock")})` : ""}`}
               className={clsx(
-                `
-                  group relative flex h-10 w-10 items-center justify-center
-                  rounded-full transition-all
-                `,
-                isSelected && `
-                  ring-2 ring-primary ring-offset-2 ring-offset-surface
-                `,
+                `group relative flex h-10 w-10 items-center justify-center rounded-full transition-all`,
+                isSelected && `ring-primary ring-offset-surface ring-2 ring-offset-2`,
                 isDisabled && "cursor-not-allowed opacity-40",
-                !isDisabled && !isSelected && `
-                  hover:ring-2 hover:ring-neutral/30 hover:ring-offset-2
-                `,
+                !isDisabled && !isSelected && `hover:ring-neutral/30 hover:ring-2 hover:ring-offset-2`,
               )}
               disabled={isDisabled}
               key={option.value}
@@ -57,15 +50,11 @@ export const ColorSelector = ({ disabled, label, onChange, options, value }: Col
               <span
                 className={clsx(
                   "h-8 w-8 rounded-full border",
-                  isLightColor(colorHex) ? "border-neutral/30" : `
-                    border-transparent
-                  `,
+                  isLightColor(colorHex) ? "border-neutral/30" : `border-transparent`,
                 )}
                 style={{ backgroundColor: colorHex }}
               />
-              {isOutOfStock && <span className={`
-                absolute h-px w-10 rotate-45 rounded-full bg-danger
-              `} />}
+              {isOutOfStock && <span className={`bg-danger absolute h-px w-10 rotate-45 rounded-full`} />}
             </button>
           );
         })}
@@ -77,10 +66,7 @@ export const ColorSelector = ({ disabled, label, onChange, options, value }: Col
           const stock = options.find((o) => o.value === value)?.stock ?? 0;
           if (stock > 0 && stock <= 5) {
             return (
-              <p className={`
-                text-xs text-orange-600
-                dark:text-orange-400
-              `}>
+              <p className={`text-xs text-orange-600 dark:text-orange-400`}>
                 {i18n("Only {count} left", { count: stock })}
               </p>
             );
