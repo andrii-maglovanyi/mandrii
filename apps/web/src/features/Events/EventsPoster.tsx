@@ -1,12 +1,12 @@
-import Link from "next/link";
-
 import { Alert } from "~/components/ui";
 import { GET_PUBLIC_EVENTS } from "~/graphql/events";
 import { getI18n } from "~/i18n/getI18n";
+import { Link } from "~/i18n/navigation";
 import { getServerClient } from "~/lib/apollo/server-client";
 import { GetPublicEventsQuery, GetPublicEventsQueryVariables, Order_By } from "~/types";
 
 import { EventsMasonryCard } from "./EventCard/EventsMasonryCard";
+import { getEventsFilter } from "./utils/getEventsFilter";
 
 interface EventsPosterProps {
   locale: string;
@@ -16,13 +16,21 @@ export const EventsPoster = async ({ locale }: EventsPosterProps) => {
   try {
     const client = await getServerClient();
     const i18n = await getI18n({ locale });
+    const now = new Date().toISOString();
+
+    const { variables } = getEventsFilter({
+      dateFrom: now,
+    });
 
     const { data } = await client.query<GetPublicEventsQuery, GetPublicEventsQueryVariables>({
       query: GET_PUBLIC_EVENTS,
       variables: {
+        ...variables,
         limit: 4,
         order_by: [{ created_at: Order_By.Desc }],
-        where: {},
+        whereTotal: {
+          _or: [{ start_date: { _gte: now } }, { end_date: { _gte: now } }],
+        },
       },
     });
 
@@ -38,8 +46,8 @@ export const EventsPoster = async ({ locale }: EventsPosterProps) => {
           <h2 className="text-2xl font-bold">{i18n("Upcoming events")}</h2>
           <Link
             className={`
-              inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm
-              font-medium text-primary no-underline transition-colors
+              inline-flex items-center gap-2 rounded-lg px-3 py-2 font-medium
+              no-underline
               hover:bg-primary/10
             `}
             href="/events"

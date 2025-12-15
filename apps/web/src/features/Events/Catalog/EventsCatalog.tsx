@@ -7,13 +7,14 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { ActionButton, AnimatedEllipsis, EmptyState, Pagination, RichText } from "~/components/ui";
 import { generateCatalogLayouts } from "~/features/shared/Catalog/layoutConfig";
-import { getEventsFilter, useEvents } from "~/hooks/useEvents";
+import { useEvents } from "~/hooks/useEvents";
 import { useListControls } from "~/hooks/useListControls";
 import { useI18n } from "~/i18n/useI18n";
 import { Event_Type_Enum, GetPublicEventsQuery, Price_Type_Enum } from "~/types";
 
 import { EventsListCard } from "../EventCard/EventsListCard";
 import { EventsMasonryCard } from "../EventCard/EventsMasonryCard";
+import { getEventsFilter } from "../utils/getEventsFilter";
 import { EventsCatalogFilter } from "./EventsCatalogFilter";
 
 type ViewMode = "grid" | "list";

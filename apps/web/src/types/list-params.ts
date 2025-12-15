@@ -24,6 +24,7 @@ export interface APIOptions {
 export interface APIParams extends PaginateParams {
   order_by?: SortParams;
   where?: FilterParams;
+  whereEvents?: FilterParams;
 }
 
 export type FilterOperators = {

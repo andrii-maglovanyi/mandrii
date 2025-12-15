@@ -97,9 +97,7 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
             )}
           </div>
 
-          {(variant === "masonry-full" || (variant === "masonry-half" && !hasImage)) && (
-            <CardMetadata event={event} hideUntilHover variant={variant.startsWith("list") ? "list" : "grid"} />
-          )}
+          <CardMetadata event={event} hideUntilHover variant={variant.startsWith("list") ? "list" : "grid"} />
           <CardFooter event={event} hideUntilHover={!isMobile} isInsideLink />
         </div>
       </CardWrapper>

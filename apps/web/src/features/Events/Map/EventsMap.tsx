@@ -11,7 +11,7 @@ import { SignInForm } from "~/components/layout/Auth/SignInForm";
 import { Button, EmptyState, Input, ProgressBar, RichText, Select } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useTheme } from "~/contexts/ThemeContext";
-import { getEventsFilter, useEvents } from "~/hooks/useEvents";
+import { useEvents } from "~/hooks/useEvents";
 import { useListControls } from "~/hooks/useListControls";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
@@ -24,6 +24,7 @@ import { UUID } from "~/types/uuid";
 
 import { MapListCard } from "../EventCard/MapListCard";
 import { MapMobileCard } from "../EventCard/MapMobileCard";
+import { getEventsFilter } from "../utils/getEventsFilter";
 import { GoogleMapRef, PinMap } from "./PinMap";
 
 type AutocompleteService = google.maps.places.AutocompleteService | null;

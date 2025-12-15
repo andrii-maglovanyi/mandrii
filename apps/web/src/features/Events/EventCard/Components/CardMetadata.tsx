@@ -5,6 +5,7 @@ import { Building, Calendar, MapPin, PoundSterling, Users } from "lucide-react";
 import { useLocale } from "next-intl";
 
 import { useI18n } from "~/i18n/useI18n";
+import { toDateLocale } from "~/lib/utils";
 import { GetPublicEventsQuery, Locale } from "~/types";
 
 import { formatEventPrice } from "../../utils";
@@ -50,13 +51,17 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
         <div className="flex items-start gap-2 px-4">
           <Calendar className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
           <div className="flex-1">
-            <div className="font-medium">
-              {format(startDate, "MMM d, yyyy")}
-              {endDate && endDate.getTime() !== startDate.getTime() && <span> - {format(endDate, "MMM d, yyyy")}</span>}
+            <div className="gap-2 font-medium">
+              <span>{format(startDate, "EE, d MMMM yyyy", { locale: toDateLocale(locale) })} - </span>
+              <span>
+                {endDate &&
+                  endDate.getTime() !== startDate.getTime() &&
+                  format(endDate, "EE, d MMMM yyyy", { locale: toDateLocale(locale) })}
+              </span>
             </div>
             <div className="text-xs text-neutral">
-              {format(startDate, "h:mm a")}
-              {endDate && <span> - {format(endDate, "h:mm a")}</span>}
+              {format(startDate, "HH:mm")}
+              {endDate && <span> - {format(endDate, "HH:mm")}</span>}
             </div>
           </div>
         </div>
@@ -92,7 +97,6 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
         </div>
       )}
 
-      {/* Price */}
       {showPrice && (
         <div className="flex items-start gap-2 px-4">
           <PoundSterling className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
