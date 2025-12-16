@@ -27,4 +27,5 @@ export const CATEGORIES: Record<
   RESTAURANT: { iconName: "Utensils", label: { en: "Restaurant", uk: "Ресторан" } },
   SCHOOL: { iconName: "GraduationCap", label: { en: "School", uk: "Школа" } },
   SHOP: { iconName: "ShoppingBag", label: { en: "Shop", uk: "Крамниця" } },
+  THEATRE: { iconName: "Drama", label: { en: "Theatre", uk: "Театр" } },
 };
