@@ -12964,7 +12964,8 @@ export enum Venue_Category_Enum {
   Organization = 'ORGANIZATION',
   Restaurant = 'RESTAURANT',
   School = 'SCHOOL',
-  Shop = 'SHOP'
+  Shop = 'SHOP',
+  Theatre = 'THEATRE'
 }
 
 /** Boolean expression to compare columns of type "venue_category_enum". All fields are combined with logical 'AND'. */
