@@ -68,7 +68,7 @@ const REFRESH_BUFFER_MS = 60 * 1000; // 1 minute buffer
 
 const authOptions: NextAuthConfig = {
   callbacks: {
-    async jwt({ token, user, trigger }) {
+    async jwt({ token, trigger, user }) {
       const userId = user?.id ?? token.sub;
 
       if (!userId) {
@@ -102,8 +102,8 @@ const authOptions: NextAuthConfig = {
 
         token.accessToken = jwt.sign(
           {
-            sub: userId,
             "https://hasura.io/jwt/claims": token.hasuraClaims,
+            sub: userId,
           },
           privateConfig.auth.nextAuthSecret,
           {
