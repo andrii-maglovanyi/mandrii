@@ -3,3 +3,4 @@ export { ILRCalculator } from "./ILRCalculator/ILRCalculator";
 export * from "./Shop";
 export { EditEvent, EditVenue, UserDirectory } from "./UserDirectory";
 export { UserProfile } from "./UserProfile/UserProfile";
+export { NonUS } from "./NonUS/NonUS";

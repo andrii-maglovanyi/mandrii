@@ -1,7 +1,6 @@
 import { HasuraAdapter } from "@auth/hasura-adapter";
 import jwt from "jsonwebtoken";
-import NextAuth, { Session, User } from "next-auth";
-import { JWT } from "next-auth/jwt";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 
@@ -15,8 +14,8 @@ import { UrlHelper } from "./url-helper";
 
 const getHasuraClaims = ({ id, role }: { id: string; role: UserRole }) => ({
   "x-hasura-allowed-roles": role === "admin" ? ["admin", "user"] : ["user"],
-  "x-hasura-default-role": role || "user",
-  "x-hasura-user-id": id || "",
+  "x-hasura-default-role": role,
+  "x-hasura-user-id": id,
 });
 
 const getUserById = async (id: string) => {
@@ -39,59 +38,100 @@ const getUserById = async (id: string) => {
     method: "POST",
   });
 
+  if (!res.ok) {
+    throw new Error(`Hasura request failed: ${res.status}`);
+  }
+
   const result = await res.json();
+
+  if (result.errors) {
+    throw new Error(result.errors[0]?.message ?? "Unknown Hasura error");
+  }
+
   const user = result.data?.users?.[0];
 
   if (!user) {
     throw new Error(`User with ID ${id} not found`);
   }
 
+  const role: UserRole = user.role === "admin" ? "admin" : "user";
+
   return {
-    hasuraClaims: getHasuraClaims(user),
+    hasuraClaims: getHasuraClaims({ id: user.id, role }),
     id: user.id,
-    role: user.role || "user",
+    role,
   };
 };
 
-const authOptions = {
+const ACCESS_TOKEN_EXPIRY_SECONDS = 60 * 60; // 1 hour
+const REFRESH_BUFFER_MS = 60 * 1000; // 1 minute buffer
+
+const authOptions: NextAuthConfig = {
   callbacks: {
-    async redirect({ url }: { url: string }) {
-      return url;
+    async jwt({ token, user, trigger }) {
+      const userId = user?.id ?? token.sub;
+
+      if (!userId) {
+        throw new Error("Missing user ID in token");
+      }
+
+      let dbUser;
+      if (user?.id || trigger === "update" || !token.hasuraClaims) {
+        dbUser = await getUserById(userId);
+      }
+
+      if (dbUser) {
+        token.role = dbUser.role;
+        token.hasuraClaims = dbUser.hasuraClaims;
+      }
+
+      const now = Date.now();
+      const expiry = token.accessTokenExpiry as number | undefined;
+
+      const shouldRefresh = !token.accessToken || !expiry || expiry < now + REFRESH_BUFFER_MS;
+
+      if (shouldRefresh) {
+        // Reuse dbUser if already fetched this cycle, otherwise fetch fresh
+        const freshUser = dbUser ?? (await getUserById(userId));
+        token.role = freshUser.role;
+        token.hasuraClaims = freshUser.hasuraClaims;
+
+        if (!token.hasuraClaims) {
+          throw new Error("Cannot sign token without Hasura claims");
+        }
+
+        token.accessToken = jwt.sign(
+          {
+            sub: userId,
+            "https://hasura.io/jwt/claims": token.hasuraClaims,
+          },
+          privateConfig.auth.nextAuthSecret,
+          {
+            algorithm: "HS256",
+            expiresIn: ACCESS_TOKEN_EXPIRY_SECONDS,
+            issuer: UrlHelper.getBaseUrl(isDevelopment ? "preview" : undefined),
+          },
+        );
+
+        token.accessTokenExpiry = now + ACCESS_TOKEN_EXPIRY_SECONDS * 1000;
+      }
+
+      return token;
     },
-    async session({ session, token, user }: { session: Session; token: JWT; user: User }) {
-      if (!token?.sub) {
-        return session;
-      }
+    async session({ session, token }) {
+      if (!token?.sub) return session;
 
-      const dbUser = await getUserById(token.sub);
-
-      if (!dbUser) {
-        throw new Error(`User with ID ${user.id} not found`);
-      }
-
-      session.user.id = dbUser.id;
-      session.user.role = dbUser.role;
-      session.accessToken = jwt.sign(
-        {
-          email: token.email,
-          "https://hasura.io/jwt/claims": dbUser.hasuraClaims,
-          sub: user?.id || token.sub,
-        },
-        privateConfig.auth.nextAuthSecret,
-        {
-          algorithm: "HS256",
-          expiresIn: "1h",
-          issuer: UrlHelper.getBaseUrl(isDevelopment ? "preview" : undefined), // Use Preview as issuer in development for Hasura JWT
-        },
-      );
+      session.user.id = token.sub;
+      session.user.role = token.role as UserRole;
+      session.accessToken = token.accessToken as string;
 
       return session;
     },
   },
+  // Only override options, let NextAuth control the name for cookie chunking
   cookies: isProduction
     ? {
         sessionToken: {
-          name: `__Secure-next-auth.session-token`,
           options: {
             domain: `.${UrlHelper.getHostname()}`,
             httpOnly: true,

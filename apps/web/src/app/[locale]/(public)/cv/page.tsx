@@ -5,7 +5,7 @@ import { Locale } from "~/types";
 const type = "cv";
 const id = "me";
 
-export default async function AboutCookiesPage() {
+export default async function CurriculumVitaePage() {
   const data = await contentManager.getContentById(type, id, Locale.EN);
 
   return (
