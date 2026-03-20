@@ -244,7 +244,7 @@ export const NonUS = () => {
             <AccordionItem key={key} icon={category.icon} title={category.title}>
               <Table
                 columns={COLUMNS}
-                dataSource={data[key].items}
+                dataSource={data[key as keyof typeof data].items}
                 emptyStateBodyMessage={i18n(
                   "No events added yet. Click the button above to add the first one and start managing your events!",
                 )}
