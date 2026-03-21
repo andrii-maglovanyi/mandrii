@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { MixpanelTracker, PostCard } from "~/components/layout";
-import { EventsPoster } from "~/features/Events/EventsPoster";
+// import { EventsPoster } from "~/features/Events/EventsPoster";
 import { VenuesBanner } from "~/features/Venues/VenuesBanner";
 import { useI18n } from "~/i18n/useI18n";
 import { ContentData, contentManager } from "~/lib/mdx/reader";
@@ -57,7 +57,10 @@ const PostColumn = ({
   posts: ContentData[];
   type: string;
 }) => (
-  <div className={`flex flex-col gap-4 md:w-1/2`}>
+  <div className={`
+    flex flex-col gap-4
+    md:w-1/2
+  `}>
     {posts.map(({ content, id, meta }, index) => (
       <PostCard
         content={content}
@@ -85,7 +88,10 @@ const HomePageLayout = ({ locale, posts }: HomePageLayoutProps) => {
     <>
       <header className="mb-12 text-center">
         <h1
-          className={`from-primary to-secondary mx-auto w-fit bg-gradient-to-r bg-clip-text text-4xl font-bold text-transparent`}
+          className={`
+            mx-auto w-fit bg-gradient-to-r from-primary to-secondary
+            bg-clip-text text-4xl font-bold text-transparent
+          `}
         >
           {i18n("Hi, friends!")} 👋
         </h1>
@@ -94,7 +100,10 @@ const HomePageLayout = ({ locale, posts }: HomePageLayoutProps) => {
       {/* <EventsPoster locale={locale} /> */}
 
       {hasContent ? (
-        <main className={`my-12 flex flex-col gap-6 md:flex-row`}>
+        <main className={`
+          my-12 flex flex-col gap-6
+          md:flex-row
+        `}>
           {leftColumn.length > 0 && <PostColumn isLeftColumn locale={locale} posts={leftColumn} type={CONTENT_TYPE} />}
 
           {rightColumn.length > 0 && <PostColumn locale={locale} posts={rightColumn} type={CONTENT_TYPE} />}
