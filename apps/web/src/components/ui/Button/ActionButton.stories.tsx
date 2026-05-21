@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/nextjs";
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Cloud, Moon, Sun } from "lucide-react"; // Or any icon library you're using
 import React from "react";
 

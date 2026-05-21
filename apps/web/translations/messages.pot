@@ -345,9 +345,6 @@ msgstr ""
 msgid "Unable to find your location. Please try searching!"
 msgstr ""
 
-msgid "Map is not available yet. Please wait until it loads"
-msgstr ""
-
 msgid "Could not get place details."
 msgstr ""
 
@@ -850,6 +847,336 @@ msgid "Edit your event details below.<br/>You can update all fields except the s
 msgstr ""
 
 msgid "Start adding your event by entering its title and type.<br/>The slug is auto-generated from the title and can only be edited during the first creation."
+msgstr ""
+
+msgid "Products are not available at the moment"
+msgstr ""
+
+msgid "Sold out"
+msgstr ""
+
+msgid "Search products by name..."
+msgstr ""
+
+msgid "Failed to load products"
+msgstr ""
+
+msgid "There was a problem fetching the catalog."
+msgstr ""
+
+msgid "Try again"
+msgstr ""
+
+msgid "No products found"
+msgstr ""
+
+msgid "Product is not available at the moment"
+msgstr ""
+
+msgid "The product you're looking for isn't available yet"
+msgstr ""
+
+msgid "Product not found"
+msgstr ""
+
+msgid "This item is priced in {currency}, but your cart contains {cartCurrency} items. Please complete or clear your current cart first."
+msgstr ""
+
+msgid "{name} added to cart"
+msgstr ""
+
+msgid "Added!"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Shop"
+msgstr ""
+
+msgid "Price includes all applicable taxes"
+msgstr ""
+
+msgid "Age group"
+msgstr ""
+
+msgid "Gender"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Color"
+msgstr ""
+
+msgid "Out of stock for selected options"
+msgstr ""
+
+msgid "In stock"
+msgstr ""
+
+msgid "Out of stock"
+msgstr ""
+
+msgid "Select options"
+msgstr ""
+
+msgid "Add to cart"
+msgstr ""
+
+msgid "View bag"
+msgstr ""
+
+msgid "Shipping info"
+msgstr ""
+
+msgid "You'll receive an email confirmation once your order is paid and ready to ship."
+msgstr ""
+
+msgid "Need a custom option? Drop me a note via the contact form and mention the product slug:"
+msgstr ""
+
+msgid "Returns policy"
+msgstr ""
+
+msgid "Failed to load order details"
+msgstr ""
+
+msgid "Continue shopping"
+msgstr ""
+
+msgid "Loading order..."
+msgstr ""
+
+msgid "Your payment could not be processed. Please try again or contact support."
+msgstr ""
+
+msgid "Payment failed"
+msgstr ""
+
+msgid "Loading..."
+msgstr ""
+
+msgid "Your payment is still being verified. This can take a few minutes. We'll send you a confirmation email once your order is confirmed - no need to wait on this page."
+msgstr ""
+
+msgid "Your payment is being processed. We'll send you a confirmation email once complete."
+msgstr ""
+
+msgid "Still processing..."
+msgstr ""
+
+msgid "Payment processing"
+msgstr ""
+
+msgid "Additional authentication is required. Please complete the payment."
+msgstr ""
+
+msgid "Action required"
+msgstr ""
+
+msgid "Your order has been confirmed! We'll send you an email with the details."
+msgstr ""
+
+msgid "Payment successful!"
+msgstr ""
+
+msgid "Order details"
+msgstr ""
+
+msgid "Order ID"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Subtotal"
+msgstr ""
+
+msgid "Shipping"
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+msgid "Please enter a valid email address."
+msgstr ""
+
+msgid "Security verification not ready. Please try again."
+msgstr ""
+
+msgid "Some items in your cart have issues. Please review and try again."
+msgstr ""
+
+msgid "Invalid checkout data. Please refresh and try again."
+msgstr ""
+
+msgid "Too many requests. Please wait a moment and try again."
+msgstr ""
+
+msgid "Failed to initiate checkout. Please try again."
+msgstr ""
+
+msgid "Connection error. Please check your internet and try again."
+msgstr ""
+
+msgid "An unexpected error occurred. Please try again."
+msgstr ""
+
+msgid "Add something from the shop to start checkout"
+msgstr ""
+
+msgid "Your bag is empty"
+msgstr ""
+
+msgid "Bag"
+msgstr ""
+
+msgid "Checkout"
+msgstr ""
+
+msgid "Order summary:"
+msgstr ""
+
+msgid "Edit bag"
+msgstr ""
+
+msgid "Qty"
+msgstr ""
+
+msgid "Shipping destination"
+msgstr ""
+
+msgid "United Kingdom"
+msgstr ""
+
+msgid "European Union"
+msgstr ""
+
+msgid "Rest of World"
+msgstr ""
+
+msgid "item"
+msgstr ""
+
+msgid "items"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+msgid "Add {amount} more for free UK shipping"
+msgstr ""
+
+msgid "Contact information"
+msgstr ""
+
+msgid "Email address"
+msgstr ""
+
+msgid "I'll send your order confirmation to this address."
+msgstr ""
+
+msgid "Cart issues detected"
+msgstr ""
+
+msgid "Continue"
+msgstr ""
+
+msgid "Payment system is not configured. Please contact support."
+msgstr ""
+
+msgid "Payment failed. Please try again."
+msgstr ""
+
+msgid "Or pay another way"
+msgstr ""
+
+msgid "Shipping address"
+msgstr ""
+
+msgid "Payment"
+msgstr ""
+
+msgid "Processing..."
+msgstr ""
+
+msgid "Pay {amount}"
+msgstr ""
+
+msgid "Your payment is securely processed by Stripe."
+msgstr ""
+
+msgid "Your cart is empty"
+msgstr ""
+
+msgid "Cart"
+msgstr ""
+
+msgid "Your Cart"
+msgstr ""
+
+msgid "Some items were removed from your cart because they had a different currency. Only items in the same currency can be checked out together."
+msgstr ""
+
+msgid "Dismiss"
+msgstr ""
+
+msgid "each"
+msgstr ""
+
+msgid "Max stock"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Order summary"
+msgstr ""
+
+msgid "Calculated at checkout"
+msgstr ""
+
+msgid "Proceed to checkout"
+msgstr ""
+
+msgid "Clear cart"
+msgstr ""
+
+msgid "Only {count} left"
+msgstr ""
+
+msgid "UK: £{cost}"
+msgstr ""
+
+msgid "Royal Mail delivery, 3-5 working days."
+msgstr ""
+
+msgid "Free shipping on orders over £{thresholdLabel}"
+msgstr ""
+
+msgid "EU: £{cost} flat rate"
+msgstr ""
+
+msgid "Tracked post, 5-7 working days."
+msgstr ""
+
+msgid "Rest of World: £{cost} flat rate"
+msgstr ""
+
+msgid "7-14 working days depending on destination."
+msgstr ""
+
+msgid "out of stock"
+msgstr ""
+
+msgid "Service/Product"
+msgstr ""
+
+msgid "Common US"
+msgstr ""
+
+msgid "Recommended Alternatives"
 msgstr ""
 
 msgid "British National (Overseas) status"
@@ -1527,6 +1854,216 @@ msgstr ""
 msgid "Start verification"
 msgstr ""
 
+msgid "UK Buy vs Rent Calculator"
+msgstr ""
+
+msgid "Compare buying and renting scenarios based on your UK property details"
+msgstr ""
+
+msgid "Stamp Duty Land Tax (SDLT)"
+msgstr ""
+
+msgid "A tax paid when buying property in England and Northern Ireland. First-time buyers get relief: 0% up to £300k, then 5% on the portion between £300k–£500k. Above £500k (the \"cliff-edge\"), relief ends and standard rates apply: tiered from 0% on the first £125k to 12% above £1.5m. This creates a discontinuity where a £500,001 property pays ~£15k (3%) while a £500,000 property pays only £10k (2%), reflecting the policy's aim to support buyers up to that threshold."
+msgstr ""
+
+msgid "Loan-to-Value (LTV)"
+msgstr ""
+
+msgid "The ratio of your mortgage to the property value. Lower LTV means a larger deposit and typically better mortgage rates."
+msgstr ""
+
+msgid "Mortgage rate"
+msgstr ""
+
+msgid "The annual interest rate on your loan. Based on current UK market rates; your actual rate depends on your credit profile and deposit size."
+msgstr ""
+
+msgid "Equity"
+msgstr ""
+
+msgid "The portion of your property you own outright. It increases as you pay down your mortgage and as property value appreciates."
+msgstr ""
+
+msgid "Property appreciation"
+msgstr ""
+
+msgid "The expected annual percentage increase in your property's value. Historical UK average is around 2.5-3% per year, but varies by region."
+msgstr ""
+
+msgid "Rental yield"
+msgstr ""
+
+msgid "In a renting scenario, this is modeled as returning savings into investments at a modest rate (typically 2-3% annually)."
+msgstr ""
+
+msgid "Maintenance & repairs"
+msgstr ""
+
+msgid "Annual costs for homeownership. Common guidance is 0.5-1% of property value per year, covering boiler repairs, roof work, etc."
+msgstr ""
+
+msgid "Home insurance"
+msgstr ""
+
+msgid "Buildings insurance is typically required by your mortgage lender. Costs vary by location, property value, and claims history."
+msgstr ""
+
+msgid "Selling fees"
+msgstr ""
+
+msgid "Estate agent fees (typically 1-2%) and legal fees when you sell your property. Modeled at 1% by default."
+msgstr ""
+
+msgid "After {years} years..."
+msgstr ""
+
+msgid "{item} is better by **{amount}**"
+msgstr ""
+
+msgid "Buying"
+msgstr ""
+
+msgid "Renting"
+msgstr ""
+
+msgid "{years}-Year Buying Insights"
+msgstr ""
+
+msgid "Deposit"
+msgstr ""
+
+msgid "Stamp Duty"
+msgstr ""
+
+msgid "Mortgage payments"
+msgstr ""
+
+msgid "Equity value"
+msgstr ""
+
+msgid "Initial buying costs"
+msgstr ""
+
+msgid "Repairs & maintenance"
+msgstr ""
+
+msgid "Net gain/loss"
+msgstr ""
+
+msgid "{years}-Year Renting Insights"
+msgstr ""
+
+msgid "Savings from not buying"
+msgstr ""
+
+msgid "Return on initial savings"
+msgstr ""
+
+msgid "Return on ongoing savings"
+msgstr ""
+
+msgid "Rent paid"
+msgstr ""
+
+msgid "Monthly mortgage payment"
+msgstr ""
+
+msgid "Property value (£)"
+msgstr ""
+
+msgid "Deposit (£)"
+msgstr ""
+
+msgid "LTV {ltv}% · Deposit {deposit}%"
+msgstr ""
+
+msgid "Below 5% min deposit"
+msgstr ""
+
+msgid "No mortgage needed"
+msgstr ""
+
+msgid "Mortgage rate (%)"
+msgstr ""
+
+msgid "Mortgage term (years)"
+msgstr ""
+
+msgid "First time buyer?"
+msgstr ""
+
+msgid "Stamp duty"
+msgstr ""
+
+msgid "Property appreciation (%)"
+msgstr ""
+
+msgid "Initial buying costs (£)"
+msgstr ""
+
+msgid "Initial repair costs (£)"
+msgstr ""
+
+msgid "Sale fees (%)"
+msgstr ""
+
+msgid "Annual maintenance (%)"
+msgstr ""
+
+msgid "Annual home insurance (£)"
+msgstr ""
+
+msgid "Return on savings (%)"
+msgstr ""
+
+msgid "Monthly rent (£)"
+msgstr ""
+
+msgid "Expected rent increase (%)"
+msgstr ""
+
+msgid "Living"
+msgstr ""
+
+msgid "Years in property"
+msgstr ""
+
+msgid "Year {label}"
+msgstr ""
+
+msgid "in profit"
+msgstr ""
+
+msgid "Difference: {difference}"
+msgstr ""
+
+msgid "Buying ahead"
+msgstr ""
+
+msgid "Renting ahead"
+msgstr ""
+
+msgid "Renting cost vs Buying cost over years"
+msgstr ""
+
+msgid "Buying cheaper from year {crossoverYear}"
+msgstr ""
+
+msgid "yr"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "Year {crossoverYear}"
+msgstr ""
+
+msgid "Now (yr {years})"
+msgstr ""
+
+msgid "Net cumulative position - below zero means that path is in overall profit (equity / returns exceed all costs paid)"
+msgstr ""
+
 msgid "Light mode"
 msgstr ""
 
@@ -1695,6 +2232,9 @@ msgstr ""
 msgid "Send message"
 msgstr ""
 
+msgid "Shopping bag"
+msgstr ""
+
 msgid "My profile"
 msgstr ""
 
@@ -1708,9 +2248,6 @@ msgid "You can do so much more if you have a profile"
 msgstr ""
 
 msgid "You can add new venues and so much more to come"
-msgstr ""
-
-msgid "Email address"
 msgstr ""
 
 msgid "Sign in with email"
@@ -1746,6 +2283,27 @@ msgstr ""
 msgid "A message from {name}<{email}>"
 msgstr ""
 
+msgid "Product not found or unavailable"
+msgstr ""
+
+msgid "Currency mismatch: expected {expectedCurrency}, got {actualCurrency}"
+msgstr ""
+
+msgid "Selected variant not available"
+msgstr ""
+
+msgid "Product price not configured"
+msgstr ""
+
+msgid "Only {stock} available"
+msgstr ""
+
+msgid "Cart validation failed"
+msgstr ""
+
+msgid "No valid items in cart"
+msgstr ""
+
 msgid "Slug is already taken"
 msgstr ""
 
@@ -1756,9 +2314,6 @@ msgid "Hi, friends!"
 msgstr ""
 
 msgid "No posts available"
-msgstr ""
-
-msgid "Home"
 msgstr ""
 
 msgid "Discover venues"
@@ -1836,28 +2391,25 @@ msgstr ""
 msgid "ILR calculator"
 msgstr ""
 
+msgid "Check buy vs rent scenarios and financial outcomes."
+msgstr ""
+
+msgid "Buy vs Rent calculator"
+msgstr ""
+
 msgid "Helpful tools for living abroad"
 msgstr ""
 
 msgid "Check timelines, fees and options quickly. Start with the ILR calculator below."
 msgstr ""
 
-msgid "Coming soon"
-msgstr ""
-
-msgid "More helpers on the way"
-msgstr ""
-
-msgid "I'm planning more checklists and calculators. Tell me what you need most!"
-msgstr ""
-
-msgid "Back to guides"
-msgstr ""
-
 msgid "Estimate your earliest ILR application date and indicative fees based on the Home Office consultation proposals."
 msgstr ""
 
 msgid "See your earliest ILR date and estimated fees"
+msgstr ""
+
+msgid "Compare the financial outcomes of buying versus renting a property in the UK, based on your personal circumstances and market assumptions."
 msgstr ""
 
 msgid "Explore events"

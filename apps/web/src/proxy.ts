@@ -1,9 +1,9 @@
-import { stackMiddlewares } from "~/middlewares/stackHandler";
-import { withContentSecurityPolicy } from "~/middlewares/withContentSecurityPolicy";
+import { stackMiddlewares } from "~/proxies/stackHandler";
+import { withContentSecurityPolicy } from "~/proxies/withContentSecurityPolicy";
 
-import { withAdmin } from "./middlewares/withAdmin";
-import { withLanguage } from "./middlewares/withLanguage";
-import { withRef } from "./middlewares/withRef";
+import { withAdmin } from "./proxies/withAdmin";
+import { withLanguage } from "./proxies/withLanguage";
+import { withRef } from "./proxies/withRef";
 
 const middlewares = [withAdmin, withRef, withLanguage, withContentSecurityPolicy];
 

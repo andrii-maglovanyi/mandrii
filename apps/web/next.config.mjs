@@ -67,13 +67,17 @@ const nextConfig = {
 
 export default withSentryConfig(withNextIntl(nextConfig), {
   authToken: process.env.SENTRY_AUTH_TOKEN,
-  automaticVercelMonitors: true,
-  disableLogger: true,
+  webpack: {
+    automaticVercelMonitors: true,
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    reactComponentAnnotation: {
+      enabled: true,
+    },
+  },
   org: "mandrii",
   project: "mandrii",
-  reactComponentAnnotation: {
-    enabled: true,
-  },
   silent: !process.env.CI,
   widenClientFileUpload: true,
 });

@@ -13,8 +13,12 @@ import { useDrawMarkers } from "./useDrawMarkers";
 export interface GoogleMapRef {
   getMap: () => google.maps.Map | null;
 }
+
 type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;
 type GoogleMapInstance = google.maps.Map;
+type Polyline = google.maps.Polyline;
+
+const libraries = ["marker", "places"] as Libraries;
 
 interface PinMapProps {
   colorScheme: "DARK" | "LIGHT";
@@ -31,11 +35,7 @@ interface PinMapProps {
   zoom?: number;
 }
 
-type Polyline = google.maps.Polyline;
-
 const MAP_STYLES = { height: "100%", width: "100%" };
-
-const libraries: Libraries = ["marker", "places"];
 
 export const PinMap = ({
   colorScheme,
@@ -70,6 +70,7 @@ export const PinMap = ({
   );
 
   const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
     googleMapsApiKey: publicConfig.maps.apiKey,
     libraries,
   });
@@ -91,7 +92,7 @@ export const PinMap = ({
   useEffect(() => {
     if (!userLocation || !showMe || !isLoaded) return;
 
-    let advancedMarker: google.maps.marker.AdvancedMarkerElement | null = null;
+    let advancedMarker: AdvancedMarkerElement | null = null;
 
     const timeout = setTimeout(() => {
       advancedMarker = new google.maps.marker.AdvancedMarkerElement({
@@ -123,6 +124,7 @@ export const PinMap = ({
       }
 
       dashedCircleRef.current = createDashedCirclePolyline(map, userLocation, distance, COLOR_STYLES[colorScheme].bg);
+
       if (dashedCircleRef.current) {
         const path = dashedCircleRef.current.getPath();
         const bounds = new google.maps.LatLngBounds();

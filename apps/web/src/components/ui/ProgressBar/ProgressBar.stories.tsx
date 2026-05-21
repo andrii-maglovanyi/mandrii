@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/nextjs";
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useEffect, useState } from "react";
 
 import { ProgressBar, ProgressBarProps } from "./ProgressBar";

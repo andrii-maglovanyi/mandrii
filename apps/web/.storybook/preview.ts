@@ -1,6 +1,6 @@
 import "../src/app/globals.css";
 
-import type { Preview } from "@storybook/nextjs";
+import type { Preview } from "@storybook/nextjs-vite";
 
 import { withThemeByClassName } from "@storybook/addon-themes";
 
@@ -16,7 +16,7 @@ const preview: Preview = {
   ],
 
   parameters: {
-    backgrounds: { disable: true },
+    backgrounds: { disabled: true },
     controls: {
       matchers: {
         color: /(background|color)$/i,

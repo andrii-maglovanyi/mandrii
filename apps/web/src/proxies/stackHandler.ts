@@ -9,5 +9,5 @@ export function stackMiddlewares(middlewareFactories: MiddlewareFactory[]): Midd
     return NextResponse.next();
   };
 
-  return middlewareFactories.reduceRight<MiddlewareHandler>((next, middleware) => middleware(next), initialHandler);
+  return middlewareFactories.reduceRight<MiddlewareHandler>((next, proxy) => proxy(next), initialHandler);
 }

@@ -26,11 +26,10 @@ import { MapListCard } from "../VenueCard/MapListCard";
 import { MapMobileCard } from "../VenueCard/MapMobileCard";
 import { GoogleMapRef, PinMap } from "./PinMap";
 
-type AutocompleteService = google.maps.places.AutocompleteService | null;
-
 type AutocompleteToken = google.maps.places.AutocompleteSessionToken | null;
 type Location = google.maps.LatLngLiteral | undefined;
-type Suggestion = google.maps.places.AutocompletePrediction;
+type Suggestion = google.maps.places.AutocompleteSuggestion;
+
 interface VenuesProps {
   slug?: string;
 }
@@ -111,7 +110,6 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
 
   const mapRef = useRef<GoogleMapRef | null>(null);
   const sessionTokenRef = useRef<AutocompleteToken>(null);
-  const mapServiceRef = useRef<AutocompleteService>(null);
 
   const isMobile = useMediaQuery({
     query: "(max-width: 768px)",
@@ -186,47 +184,35 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
     }
   };
 
-  const fetchPlaceDetails = (placeId: string) => {
-    const mapInstance = mapRef.current?.getMap();
-    if (!mapInstance) {
-      setSuggestions([]);
-      throw new Error(i18n("Map is not available yet. Please wait until it loads"));
+  const fetchPlaceDetails = async (placeId: string) => {
+    const place = new google.maps.places.Place({
+      id: placeId,
+      requestedLanguage: locale,
+    });
+
+    try {
+      await place.fetchFields({ fields: ["location"] });
+    } catch (e) {
+      console.error(e);
+      throw new Error(i18n("Could not get place details."));
     }
 
-    const service = new google.maps.places.PlacesService(mapInstance);
-
-    return new Promise<google.maps.places.PlaceResult>((resolve, reject) => {
-      service.getDetails(
-        {
-          fields: ["geometry"],
-          placeId,
-          sessionToken: sessionTokenRef.current ?? undefined,
-        },
-        (place, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK && place) {
-            resolve(place);
-          } else {
-            console.error(status);
-            reject(new Error(i18n("Could not get place details.")));
-          }
-        },
-      );
-    });
+    return place;
   };
 
   const handleSelectSuggestion = async (id: string) => {
     setSuggestions([]);
 
     try {
-      const { geometry } = await fetchPlaceDetails(id);
-      const { lat, lng } = geometry?.location ?? {};
+      const place = await fetchPlaceDetails(id);
+      const location = place.location;
 
-      if (lat && lng) {
-        const coords = { lat: lat(), lng: lng() };
+      if (location) {
+        const coords = { lat: location.lat(), lng: location.lng() };
 
         sendToMixpanel("Selected Suggested Venue", {
           ...coords,
-          name: suggestions.find(({ place_id }) => place_id === id)?.description,
+          name: suggestions.find((s) => s.placePrediction?.placeId === id)?.placePrediction?.text.text,
         });
 
         setUserLocation(coords);
@@ -245,12 +231,6 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
       }
     }
   };
-
-  useEffect(() => {
-    if (isReady) {
-      mapServiceRef.current = new google.maps.places.AutocompleteService();
-    }
-  }, [isReady]);
 
   useEffect(() => {
     const { variables } = getVenuesFilter({
@@ -279,32 +259,30 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
   }, [slug, data]);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      if (!mapServiceRef.current || !searchTerm) {
+    const handler = setTimeout(async () => {
+      if (!isReady || !searchTerm) {
         setSuggestions([]);
         return;
       }
 
       if (searchTerm.length > 2) {
-        const request: google.maps.places.AutocompletionRequest = {
-          componentRestrictions: { country: Object.keys(constants.whitelisted_countries) },
-          input: searchTerm,
-          sessionToken: sessionTokenRef.current ?? undefined,
-          types: ["geocode"],
-        };
+        try {
+          const res = await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+            input: searchTerm,
+            includedRegionCodes: Object.keys(constants.whitelisted_countries),
+            sessionToken: sessionTokenRef.current ?? undefined,
+          });
 
-        mapServiceRef.current.getPlacePredictions(request, (result, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK && result?.length) {
-            setSuggestions(result);
-          } else {
-            setSuggestions([]);
-          }
-        });
+          setSuggestions(res?.suggestions ?? []);
+        } catch (e) {
+          console.error(e);
+          setSuggestions([]);
+        }
       }
     }, 400);
 
     return () => clearTimeout(handler);
-  }, [searchTerm]);
+  }, [searchTerm, isReady]);
 
   const venueCards: Array<React.ReactNode> = [];
   let selectedCard: React.ReactNode = <></>;
@@ -333,19 +311,13 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
   }
 
   return (
-    <div className="z-10 flex h-full grow flex-col bg-surface">
+    <div className="bg-surface z-10 flex h-full grow flex-col">
       <div className="flex grow flex-row">
         <div className="flex grow flex-col">
           <div className="mx-auto mt-4 w-full max-w-(--breakpoint-xl) p-4">
             <div className="shrink-0 space-y-4">
-              <div className={`
-                flex flex-col gap-x-2
-                md:flex-row
-              `}>
-                <div className={`
-                  mb-4 flex-2
-                  md:mb-0
-                `}>
+              <div className={`flex flex-col gap-x-2 md:flex-row`}>
+                <div className={`mb-4 flex-2 md:mb-0`}>
                   <Input
                     disabled={!isReady}
                     onChange={(e) => {
@@ -356,10 +328,12 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
                     onFocus={handleFocus}
                     onSelectSuggestion={handleSelectSuggestion}
                     placeholder={i18n("Search street, city, or region...")}
-                    suggestions={suggestions.map(({ description, place_id }) => ({
-                      label: description,
-                      value: place_id,
-                    }))}
+                    suggestions={suggestions
+                      .filter((s) => s.placePrediction !== null)
+                      .map((s) => ({
+                        label: s.placePrediction!.text.text,
+                        value: s.placePrediction!.placeId,
+                      }))}
                     type="search"
                   />
                 </div>
@@ -398,30 +372,19 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
                     <LocateFixed className="mr-2" size={18} /> {i18n("Find me")}
                   </Button>
                 </div>
-                <RichText as="div" className={clsx(`
-                  text-sm
-                  sm:text-base
-                `, isReady ? `visible` : `hidden`)}>
+                <RichText as="div" className={clsx(`text-sm sm:text-base`, isReady ? `visible` : `hidden`)}>
                   {i18n("Showing **{count}** of **{total}**", { count, total })}
                 </RichText>
               </div>
             </div>
           </div>
 
-          <div className={clsx("mx-auto h-full w-1/2 flex-col justify-center", showMap ? `
-            hidden
-          ` : `flex`)}>
+          <div className={clsx("mx-auto h-full w-1/2 flex-col justify-center", showMap ? `hidden` : `flex`)}>
             <ProgressBar isLoading={!isReady} onLoaded={() => setShowMap(true)} />
           </div>
 
-          <div className={clsx(`
-            h-full grid-cols-1 gap-2
-            md:grid-cols-2
-          `, showMap ? `grid` : `hidden`)}>
-            <div className={`
-              hidden
-              md:block
-            `}>
+          <div className={clsx(`h-full grid-cols-1 gap-2 md:grid-cols-2`, showMap ? `grid` : `hidden`)}>
+            <div className={`hidden md:block`}>
               {!(venueCards?.length || loading) ? (
                 <div className="flex h-full w-full items-center justify-center">
                   <EmptyState
@@ -431,10 +394,7 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
                   />
                 </div>
               ) : (
-                <div className={`
-                  -mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
-                  pt-0.5
-                `}>
+                <div className={`-mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3 pt-0.5`}>
                   {venueCards}
                 </div>
               )}
@@ -473,9 +433,7 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
               />
 
               <div className="absolute top-0 left-0 mt-3 ml-3">
-                <p className={`
-                  rounded-md bg-on-surface/70 px-3 py-1 text-sm text-surface
-                `}>
+                <p className={`bg-on-surface/70 text-surface rounded-md px-3 py-1 text-sm`}>
                   {venueCards.length
                     ? `${i18n("Showing {number} results", { number: venueCards.length })}`
                     : i18n("Nothing found")}
