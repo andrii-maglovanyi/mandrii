@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { pmt, remainingBalance, stampDuty, calculate, buildChartData, gbp } from "./formulas";
+import {
+  pmt,
+  remainingBalance,
+  stampDuty,
+  calculate,
+  buildChartData,
+  gbp,
+} from "./formulas";
 import type { CalculatorInputs } from "./types";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -20,9 +27,15 @@ const BASE: CalculatorInputs = {
   saleFeesPct: 1,
   maintenancePct: 1,
   annualHomeInsurance: 500,
+  mortgageArrangementFee: 1_000,
+  remortgagingFrequencyYears: 5,
+  averageRemortgagingCost: 500,
+  serviceCharge: 0,
+  groundRent: 0,
   returnOnSavings: 2.5,
   monthlyRent: 2_200,
   rentIncrease: 3,
+  tenancyDeposit: 0,
   years: 7,
 };
 
@@ -179,13 +192,17 @@ describe("calculate — buying", () => {
     expect(result.totalInsurance).toBe(3_500);
   });
 
-  it("buying net matches spreadsheet (-£129,839.15)", () => {
-    expect(r2(result.buyingNet)).toBe(-129_839.15);
+  it("buying net matches spreadsheet (-£131,339.15)", () => {
+    expect(r2(result.buyingNet)).toBe(-131_339.15);
   });
 
   it("caps mortgage payments at mortgage term (not years)", () => {
     const longStay = calculate({ ...BASE, years: 35, mortgageTerm: 30 });
-    const monthly = pmt(BASE.mortgageRate, BASE.mortgageTerm, BASE.propertyValue - BASE.deposit);
+    const monthly = pmt(
+      BASE.mortgageRate,
+      BASE.mortgageTerm,
+      BASE.propertyValue - BASE.deposit,
+    );
     expect(r2(longStay.totalMortgagePayments)).toBe(r2(monthly * 12 * 30));
   });
 });
@@ -219,10 +236,10 @@ describe("calculate — renting", () => {
 // ── calculate — summary ───────────────────────────────────────────────────────
 
 describe("calculate — summary", () => {
-  it("buying is better after 7 years by ~£59,034", () => {
+  it("buying is better after 7 years by ~£57,534", () => {
     const { buyingNet, rentingNet } = calculate(BASE);
     expect(buyingNet).toBeGreaterThan(rentingNet);
-    expect(Math.round(Math.abs(rentingNet - buyingNet))).toBe(59_034);
+    expect(Math.round(Math.abs(rentingNet - buyingNet))).toBe(57_534);
   });
 
   it("renting wins when rent is very low relative to mortgage", () => {
@@ -276,8 +293,8 @@ describe("buildChartData", () => {
     data.forEach((d, i) => expect(d.year).toBe(i + 1));
   });
 
-  it("buying at year 7 matches spreadsheet col I (£129,839)", () => {
-    expect(data[6].buying).toBe(129_839);
+  it("buying at year 7 matches spreadsheet col I (£131,339)", () => {
+    expect(data[6].buying).toBe(131_339);
   });
 
   it("renting at year 7 matches spreadsheet col N (£188,873)", () => {

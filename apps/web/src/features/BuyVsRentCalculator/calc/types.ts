@@ -11,9 +11,15 @@ export type CalculatorInputs = {
   readonly saleFeesPct: number;
   readonly maintenancePct: number;
   readonly annualHomeInsurance: number;
+  readonly mortgageArrangementFee: number;
+  readonly remortgagingFrequencyYears: number;
+  readonly averageRemortgagingCost: number;
+  readonly serviceCharge: number;
+  readonly groundRent: number;
   readonly returnOnSavings: number;
   readonly monthlyRent: number;
   readonly rentIncrease: number;
+  readonly tenancyDeposit: number;
   readonly years: number;
 };
 
@@ -27,6 +33,10 @@ type BuyingMetrics = {
   readonly maintenance: number;
   readonly totalInsurance: number;
   readonly sellingFees: number;
+  readonly mortgageArrangementFee: number;
+  readonly totalRemortgagingCosts: number;
+  readonly totalServiceCharges: number;
+  readonly totalGroundRent: number;
   readonly buyingNet: number;
   readonly monthlyMortgage: number;
 };
@@ -40,7 +50,6 @@ type RentingMetrics = {
 };
 
 type SummaryMetrics = {
-  readonly difference: number;
   readonly years: number;
 };
 
@@ -55,4 +64,6 @@ export type ChartDataPoint = {
 };
 
 /** Curried setter for a single input field — set("key")(value) */
-export type InputSetter = <K extends keyof CalculatorInputs>(key: K) => (value: CalculatorInputs[K]) => void;
+export type InputSetter = <K extends keyof CalculatorInputs>(
+  key: K,
+) => (value: CalculatorInputs[K]) => void;

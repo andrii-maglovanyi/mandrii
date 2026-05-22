@@ -1,6 +1,10 @@
 // ── Mortgage helpers ──────────────────────────────────────────────────────────
 
-import type { CalculationResult, ChartDataPoint, CalculatorInputs } from "./types";
+import type {
+  CalculationResult,
+  ChartDataPoint,
+  CalculatorInputs,
+} from "./types";
 
 /** Monthly PMT (fixed-rate mortgage payment) */
 export function pmt(annualRate: number, termYears: number, principal: number) {
@@ -12,13 +16,19 @@ export function pmt(annualRate: number, termYears: number, principal: number) {
 }
 
 /** Remaining mortgage balance after `paymentsMade` months */
-export function remainingBalance(annualRate: number, termYears: number, principal: number, paymentsMade: number) {
+export function remainingBalance(
+  annualRate: number,
+  termYears: number,
+  principal: number,
+  paymentsMade: number,
+) {
   if (principal <= 0 || termYears <= 0) return 0;
   const r = annualRate / 100 / 12;
   if (r === 0) return principal * (1 - paymentsMade / (termYears * 12));
   return (
     principal * Math.pow(1 + r, paymentsMade) -
-    pmt(annualRate, termYears, principal) * ((Math.pow(1 + r, paymentsMade) - 1) / r)
+    pmt(annualRate, termYears, principal) *
+      ((Math.pow(1 + r, paymentsMade) - 1) / r)
   );
 }
 
@@ -79,7 +89,11 @@ function fvLump(pv: number, annualRate: number, years: number) {
 }
 
 /** Total rent paid over N years with annual increases */
-function totalRentPaid(monthlyRent: number, annualIncrease: number, years: number) {
+function totalRentPaid(
+  monthlyRent: number,
+  annualIncrease: number,
+  years: number,
+) {
   let total = 0;
   let rent = monthlyRent;
   for (let y = 0; y < years; y++) {
@@ -111,8 +125,17 @@ function totalMaintenanceCosts(
 
 /**
  * Cumulative return on ongoing savings — matches Parameters col S.
- * When mortgage > rent, the renter invests the annual surplus at the start of
- * each year and it compounds for the full year. Returns only the gain.
+ *
+ * Models the case where the renter invests the annual surplus (mortgage - rent)
+ * at the start of each year, compounding at the savings rate.
+ *
+ * NOTE: This only captures surplus when mortgage > rent. If rent exceeds the
+ * mortgage payment, that extra rent cost is already reflected as a higher
+ * `rentPaid` figure in the renting total — the model does not additionally
+ * credit the buyer for a "surplus" in that scenario, keeping both sides
+ * comparable. This matches the original spreadsheet behaviour.
+ *
+ * Returns only the investment gain (balance minus total deposited).
  */
 function returnOnOngoingSavings(
   monthlyRent: number,
@@ -139,6 +162,11 @@ function returnOnOngoingSavings(
 /**
  * Produces all figures shown in the results panel.
  * Formulas match the original spreadsheet exactly.
+ *
+ * NOTE: equity is calculated at `years - 1` (matching spreadsheet XLOOKUP(C23-1, ...)),
+ * reflecting the property value and remaining mortgage at the start of the final year
+ * rather than the end. This means a 10-year plan uses 9 years of appreciation and
+ * mortgage paydown — consistent with the spreadsheet but worth bearing in mind.
  */
 export function calculate(inputs: CalculatorInputs): CalculationResult {
   const safe = (n: number, fallback = 0) => (Number.isFinite(n) ? n : fallback);
@@ -153,9 +181,18 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
   const saleFeesPct = safe(inputs.saleFeesPct, 0);
   const maintenancePct = safe(inputs.maintenancePct, 0);
   const annualHomeInsurance = safe(inputs.annualHomeInsurance, 0);
+  const mortgageArrangementFee = safe(inputs.mortgageArrangementFee, 0);
+  const remortgagingFrequencyYears = Math.max(
+    1,
+    safe(inputs.remortgagingFrequencyYears, 5),
+  );
+  const averageRemortgagingCost = safe(inputs.averageRemortgagingCost, 0);
+  const serviceCharge = safe(inputs.serviceCharge, 0);
+  const groundRent = safe(inputs.groundRent, 0);
   const returnOnSavings = safe(inputs.returnOnSavings, 0);
   const monthlyRent = safe(inputs.monthlyRent, 0);
   const rentIncrease = safe(inputs.rentIncrease, 0);
+  const tenancyDeposit = safe(inputs.tenancyDeposit, 0);
   const years = Math.max(1, safe(inputs.years, 1));
   const { firstTimeBuyer } = inputs;
 
@@ -165,12 +202,31 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
   const totalMortgagePayments = monthlyMortgage * 12 * mortgagePayingYears;
   const sd = stampDuty(propertyValue, firstTimeBuyer);
 
+  // Remortgaging costs: how many times will you remortgage?
+  // Use (years - 1) so that selling at exactly a deal boundary (e.g. year 5 on a
+  // 5-year fix) doesn't count a remortgage — you wouldn't switch deals just to sell.
+  // This is consistent with the chart, which fires remortgaging at yr = freq+1, 2*freq+1...
+  const remortgagingEvents = Math.floor(
+    (years - 1) / remortgagingFrequencyYears,
+  );
+  const totalRemortgagingCosts = remortgagingEvents * averageRemortgagingCost;
+
+  // Leasehold costs: service charge + ground rent paid annually
+  const totalServiceCharges = serviceCharge * years;
+  const totalGroundRent = groundRent * years;
+
   // Uses years-1 to match spreadsheet XLOOKUP(C23-1, ...) — equity is
   // calculated at the start of the final year, not end, to reflect
   // the point-in-time value when you'd sell.
   const equityYears = years - 1;
-  const futurePropertyValue = propertyValue * Math.pow(1 + propertyAppreciation / 100, equityYears);
-  const balanceRemaining = remainingBalance(mortgageRate, mortgageTerm, loanAmount, equityYears * 12);
+  const futurePropertyValue =
+    propertyValue * Math.pow(1 + propertyAppreciation / 100, equityYears);
+  const balanceRemaining = remainingBalance(
+    mortgageRate,
+    mortgageTerm,
+    loanAmount,
+    equityYears * 12,
+  );
   const equity = futurePropertyValue - balanceRemaining;
   const sellingFees = futurePropertyValue * (saleFeesPct / 100);
   const maintenance = totalMaintenanceCosts(
@@ -183,20 +239,46 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
   const totalInsurance = annualHomeInsurance * years;
 
   const buyingNet =
-    -deposit - sd - totalMortgagePayments + equity - initialBuyingCosts - maintenance - totalInsurance - sellingFees;
+    -deposit -
+    sd -
+    totalMortgagePayments +
+    equity -
+    initialBuyingCosts -
+    maintenance -
+    totalInsurance -
+    sellingFees -
+    mortgageArrangementFee -
+    totalRemortgagingCosts -
+    totalServiceCharges -
+    totalGroundRent;
 
   // Renting
   // "Savings from not buying" = deposit + SD + buying costs + repair costs + 1yr insurance
-  const initialSavings = deposit + sd + initialBuyingCosts + initialRepairCosts + annualHomeInsurance;
+  // Note: tenancyDeposit is NOT included in initial savings since it's not actually spent, just frozen
+  const initialSavings =
+    deposit +
+    sd +
+    initialBuyingCosts +
+    initialRepairCosts +
+    annualHomeInsurance;
   // Investment base excludes home insurance (matches col K in spreadsheet)
-  const initialSavingsBase = deposit + sd + initialBuyingCosts + initialRepairCosts;
-  const returnOnInitialSavings = fvLump(initialSavingsBase, returnOnSavings, years) - initialSavingsBase;
-  const ongoingSavings = returnOnOngoingSavings(monthlyRent, rentIncrease, monthlyMortgage, returnOnSavings, years);
+  // Also excludes tenancyDeposit since it's frozen in a deposit scheme and not available for investment
+  const initialSavingsBase =
+    deposit + sd + initialBuyingCosts + initialRepairCosts - tenancyDeposit;
+  const returnOnInitialSavings =
+    fvLump(initialSavingsBase, returnOnSavings, years) - initialSavingsBase;
+  const ongoingSavings = returnOnOngoingSavings(
+    monthlyRent,
+    rentIncrease,
+    monthlyMortgage,
+    returnOnSavings,
+    years,
+  );
   const rentPaid = totalRentPaid(monthlyRent, rentIncrease, years);
   // Net = SUM(K27:K29) in spreadsheet — initialSavings is informational only
-  const rentingNet = returnOnInitialSavings + ongoingSavings - rentPaid;
-
-  const difference = rentingNet - buyingNet;
+  // Note: tenancyDeposit is returned at end of tenancy, so it's added back to rentingNet
+  const rentingNet =
+    returnOnInitialSavings + ongoingSavings - rentPaid + tenancyDeposit;
 
   return {
     // Buying
@@ -208,6 +290,10 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
     maintenance,
     totalInsurance,
     sellingFees,
+    mortgageArrangementFee,
+    totalRemortgagingCosts,
+    totalServiceCharges,
+    totalGroundRent,
     buyingNet,
     monthlyMortgage,
     // Renting
@@ -217,7 +303,6 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
     rentPaid,
     rentingNet,
     // Summary
-    difference,
     years,
   };
 }
@@ -229,7 +314,9 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
  * Buying = col I, Renting = col N from the Parameters sheet.
  * Always computes 40 years so the chart can show any view range.
  */
-export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoint[] {
+export function buildChartData(
+  inputs: CalculatorInputs,
+): readonly ChartDataPoint[] {
   const safe = (n: number, fallback = 0) => (Number.isFinite(n) ? n : fallback);
 
   const propertyValue = safe(inputs.propertyValue);
@@ -242,9 +329,19 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
   const saleFeesPct = safe(inputs.saleFeesPct, 0);
   const maintenancePct = safe(inputs.maintenancePct, 0);
   const annualHomeInsurance = safe(inputs.annualHomeInsurance, 0);
+  const mortgageArrangementFee = safe(inputs.mortgageArrangementFee, 0);
+  const remortgagingFrequencyYears = Math.max(
+    1,
+    safe(inputs.remortgagingFrequencyYears, 5),
+  );
+  const averageRemortgagingCost = safe(inputs.averageRemortgagingCost, 0);
+  const serviceCharge = safe(inputs.serviceCharge, 0);
+  const groundRent = safe(inputs.groundRent, 0);
   const returnOnSavings = safe(inputs.returnOnSavings, 0);
   const monthlyRent = safe(inputs.monthlyRent, 0);
   const rentIncrease = safe(inputs.rentIncrease, 0);
+  const tenancyDeposit = safe(inputs.tenancyDeposit, 0);
+  const userYears = Math.max(1, safe(inputs.years, 1));
   const { firstTimeBuyer } = inputs;
 
   const loanAmount = Math.max(0, propertyValue - deposit);
@@ -252,7 +349,13 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
   const monthlyMortgagePayment = pmt(mortgageRate, mortgageTerm, loanAmount);
   const annualMortgage = monthlyMortgagePayment * 12;
   const sd = stampDuty(propertyValue, firstTimeBuyer);
-  const upfront = deposit + sd + initialBuyingCosts + initialRepairCosts;
+  // Upfront costs for buying
+  const upfront =
+    deposit +
+    sd +
+    initialBuyingCosts +
+    initialRepairCosts +
+    mortgageArrangementFee;
 
   const MAX_YEARS = 40;
   const data: ChartDataPoint[] = [];
@@ -263,22 +366,53 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
   let ongoingBalance = 0;
   let ongoingDeposited = 0;
   let rent = monthlyRent;
-  let investmentBase = upfront;
+  // Investment base matches calculate()'s initialSavingsBase (col K in spreadsheet):
+  // deposit + SD + buying costs + repairs — excludes mortgageArrangementFee and tenancyDeposit.
+  let investmentBase =
+    deposit + sd + initialBuyingCosts + initialRepairCosts - tenancyDeposit;
 
   // Buying state
   let cumMortgage = 0;
   let cumMaint = 0;
+  let cumRemortgagingCosts = 0;
   let propVal = propertyValue;
 
   for (let yr = 1; yr <= MAX_YEARS; yr++) {
     // Buying (col I)
-    const pvN = propertyValue * Math.pow(1 + propertyAppreciation / 100, yr - 1);
-    const balN = remainingBalance(mortgageRate, mortgageTerm, loanAmount, (yr - 1) * 12);
+    const pvN =
+      propertyValue * Math.pow(1 + propertyAppreciation / 100, yr - 1);
+    const balN = remainingBalance(
+      mortgageRate,
+      mortgageTerm,
+      loanAmount,
+      (yr - 1) * 12,
+    );
     const equityN = pvN - balN;
     const sellingFeesN = pvN * (saleFeesPct / 100);
+    // yr - 1 < mortgageTerm: mortgage payments only accrue while within the term.
+    // At yr=1 we add year 1's payments (yr-1=0 < term), stopping once the term ends.
     cumMortgage += yr - 1 < mortgageTerm ? annualMortgage : 0;
     cumMaint += propVal * (maintenancePct / 100);
-    const totalBuying = upfront + cumMortgage + cumMaint + annualHomeInsurance * yr + sellingFeesN - equityN;
+
+    // Remortgaging costs: add when it's time to remortgage (every remortgagingFrequencyYears)
+    if (yr > 1 && (yr - 1) % remortgagingFrequencyYears === 0) {
+      cumRemortgagingCosts += averageRemortgagingCost;
+    }
+
+    // Leasehold costs: service charge + ground rent (annual)
+    const cumServiceCharges = serviceCharge * yr;
+    const cumGroundRent = groundRent * yr;
+
+    const totalBuying =
+      upfront +
+      cumMortgage +
+      cumMaint +
+      annualHomeInsurance * yr +
+      sellingFeesN -
+      equityN +
+      cumRemortgagingCosts +
+      cumServiceCharges +
+      cumGroundRent;
 
     // Renting (col N)
     cumRent += rent * 12;
@@ -289,9 +423,22 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
     const surplus = Math.max(0, (monthlyMortgagePayment - rent) * 12);
     ongoingBalance = (ongoingBalance + surplus) * (1 + returnOnSavings / 100);
     ongoingDeposited += surplus;
-    const totalRenting = cumRent - cumInvestmentProfit - (ongoingBalance - ongoingDeposited);
 
-    data.push({ year: yr, buying: Math.round(totalBuying), renting: Math.round(totalRenting) });
+    // Tenancy deposit is returned at the user's chosen move-out year, reducing
+    // the net cost of renting. Subtract it (deposit return = benefit to renter).
+    const depositReturn = yr === userYears ? tenancyDeposit : 0;
+
+    const totalRenting =
+      cumRent -
+      cumInvestmentProfit -
+      (ongoingBalance - ongoingDeposited) -
+      depositReturn;
+
+    data.push({
+      year: yr,
+      buying: Math.round(totalBuying),
+      renting: Math.round(totalRenting),
+    });
 
     rent *= 1 + rentIncrease / 100;
     propVal *= 1 + propertyAppreciation / 100;

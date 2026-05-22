@@ -1890,10 +1890,10 @@ msgstr ""
 msgid "The expected annual percentage increase in your property's value. Historical UK average is around 2.5-3% per year, but varies by region."
 msgstr ""
 
-msgid "Rental yield"
+msgid "Return on savings"
 msgstr ""
 
-msgid "In a renting scenario, this is modeled as returning savings into investments at a modest rate (typically 2-3% annually)."
+msgid "The assumed annual return on money invested instead of spent on buying. The modelled investment base is: deposit + stamp duty + initial buying costs + repair budget (minus tenancy deposit, which is locked until you move out). The calculator defaults to 4% — roughly in line with UK cash ISA or cautious equity returns."
 msgstr ""
 
 msgid "Maintenance & repairs"
@@ -1911,7 +1911,31 @@ msgstr ""
 msgid "Selling fees"
 msgstr ""
 
-msgid "Estate agent fees (typically 1-2%) and legal fees when you sell your property. Modeled at 1% by default."
+msgid "Estate agent commission (typically 1-2%) on the future sale price, plus VAT. Solicitor conveyancing fees at sale (typically £1,000-£2,000) are not separately modelled — increase your Sale fees % slightly to account for them (e.g. on a £500k property a £1,500 solicitor fee ≈ +0.3%)."
+msgstr ""
+
+msgid "Mortgage arrangement fee"
+msgstr ""
+
+msgid "A one-off fee charged by the lender to set up your mortgage, typically £0-£2,000. Some deals have no fee but offer a slightly higher rate instead — compare total cost before choosing."
+msgstr ""
+
+msgid "Remortgaging"
+msgstr ""
+
+msgid "UK fixed-rate mortgage deals typically last 2-5 years. When your deal ends you must remortgage (switch to a new deal) or revert to the lender's standard variable rate, which is usually much higher. Each remortgage may incur broker and bank fees."
+msgstr ""
+
+msgid "Service charge & ground rent"
+msgstr ""
+
+msgid "Leasehold-specific costs. Service charge covers shared building maintenance (lifts, cleaning, communal repairs) and can vary year to year. Ground rent is an annual payment to the freeholder — but note: the Leasehold Reform (Ground Rent) Act 2022 banned ground rent on new residential leases from 30 April 2022, so ground rent only applies on existing pre-2022 leases. The Leasehold and Freehold Reform Act 2024 additionally bans the grant of new long leases of houses (new-build houses must be sold freehold) and gives existing leaseholders stronger service charge transparency rights."
+msgstr ""
+
+msgid "Tenancy deposit"
+msgstr ""
+
+msgid "UK law caps tenancy deposits at 5 weeks' rent (Tenant Fees Act 2019). The deposit is held in a government-approved scheme and returned when you leave (assuming no damage). While held, it is unavailable for investment — the calculator models this as a reduction in your investable capital. Under the Renters' Rights Act 2025 (Royal Assent October 2025), all private tenancies in England are now rolling periodic — tenants can leave with 2 months' notice, with no mandatory fixed term."
 msgstr ""
 
 msgid "After {years} years..."
@@ -1932,22 +1956,70 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
+msgid "The upfront cash you put in. It becomes part of your equity immediately, but it's capital you no longer have available to invest."
+msgstr ""
+
 msgid "Stamp Duty"
+msgstr ""
+
+msgid "A one-off UK government tax paid on purchase. First-time buyers get relief on properties up to £500,000."
 msgstr ""
 
 msgid "Mortgage payments"
 msgstr ""
 
+msgid "Total capital and interest payments made to the bank over your chosen period. Includes only years within the mortgage term."
+msgstr ""
+
 msgid "Equity value"
+msgstr ""
+
+msgid "What you'd receive when selling: the projected property value minus any remaining mortgage balance. Calculated at the start of your final year."
 msgstr ""
 
 msgid "Initial buying costs"
 msgstr ""
 
+msgid "One-off costs at purchase: solicitor's fees, surveys, and other legal and administrative expenses."
+msgstr ""
+
 msgid "Repairs & maintenance"
 msgstr ""
 
+msgid "Estimated upkeep costs each year (as a % of property value, growing with appreciation), plus any initial renovation spend."
+msgstr ""
+
+msgid "Buildings insurance paid each year. Usually a mortgage requirement."
+msgstr ""
+
+msgid "Estate agent commission on the projected future sale price."
+msgstr ""
+
+msgid "One-time fee charged by the bank to set up your mortgage."
+msgstr ""
+
+msgid "Remortgaging costs"
+msgstr ""
+
+msgid "Broker and bank fees each time you switch to a new mortgage deal over your ownership period."
+msgstr ""
+
+msgid "Service charges"
+msgstr ""
+
+msgid "Annual leasehold charge covering shared building maintenance, cleaning, and communal repairs."
+msgstr ""
+
+msgid "Ground rent"
+msgstr ""
+
+msgid "Annual payment to the freeholder for use of the land your property sits on."
+msgstr ""
+
 msgid "Net gain/loss"
+msgstr ""
+
+msgid "Everything added together: equity gained minus all costs paid. A negative number means buying cost you more than you got back — but you also had a home to live in."
 msgstr ""
 
 msgid "{years}-Year Renting Insights"
@@ -1956,13 +2028,28 @@ msgstr ""
 msgid "Savings from not buying"
 msgstr ""
 
+msgid "Capital you keep by not buying: deposit, stamp duty, buying costs, repair budget, and first year's insurance. Shown for reference — the actual investment base used for return calculations excludes both insurance and the mortgage arrangement fee."
+msgstr ""
+
 msgid "Return on initial savings"
+msgstr ""
+
+msgid "Investment growth on that initial pot over the full period, compounded annually at your chosen savings return rate."
 msgstr ""
 
 msgid "Return on ongoing savings"
 msgstr ""
 
+msgid "If your mortgage payment would be higher than your rent, the difference is invested each year and compounds. Only applies when mortgage > rent."
+msgstr ""
+
 msgid "Rent paid"
+msgstr ""
+
+msgid "Total rent paid over the period, rising by your expected annual rent increase each year."
+msgstr ""
+
+msgid "Investment returns minus rent paid, plus your tenancy deposit returned. A negative number means renting cost you more than your investments returned."
 msgstr ""
 
 msgid "Monthly mortgage payment"
@@ -1971,7 +2058,13 @@ msgstr ""
 msgid "Property value (£)"
 msgstr ""
 
+msgid "The total price of the property you plan to buy."
+msgstr ""
+
 msgid "Deposit (£)"
+msgstr ""
+
+msgid "The amount of your own funds (deposit) that you pay upfront. The remainder is covered by the mortgage."
 msgstr ""
 
 msgid "LTV {ltv}% · Deposit {deposit}%"
@@ -1986,10 +2079,19 @@ msgstr ""
 msgid "Mortgage rate (%)"
 msgstr ""
 
+msgid "The interest rate charged by the bank for the mortgage."
+msgstr ""
+
 msgid "Mortgage term (years)"
 msgstr ""
 
+msgid "The period over which you must repay the loan to the bank in full (usually 25–35 years)."
+msgstr ""
+
 msgid "First time buyer?"
+msgstr ""
+
+msgid "A special status for those buying property for the first time. Ticking this box automatically applies preferential Stamp Duty rates."
 msgstr ""
 
 msgid "Stamp duty"
@@ -1998,34 +2100,112 @@ msgstr ""
 msgid "Property appreciation (%)"
 msgstr ""
 
+msgid "A forecast of the percentage by which your property's market value is expected to increase each year."
+msgstr ""
+
 msgid "Initial buying costs (£)"
+msgstr ""
+
+msgid "One-off associated costs, e.g. legal fees, property valuation, and paperwork."
 msgstr ""
 
 msgid "Initial repair costs (£)"
 msgstr ""
 
+msgid "The amount you plan to spend on renovations immediately after purchase."
+msgstr ""
+
 msgid "Sale fees (%)"
+msgstr ""
+
+msgid "The percentage of the property's value paid to the estate agent when you sell."
 msgstr ""
 
 msgid "Annual maintenance (%)"
 msgstr ""
 
+msgid "Estimated annual costs for routine repairs and upkeep, calculated as a percentage of the property's total value."
+msgstr ""
+
 msgid "Annual home insurance (£)"
+msgstr ""
+
+msgid "The cost of your buildings insurance policy, usually a mandatory requirement for a mortgage."
+msgstr ""
+
+msgid "Mortgage arrangement fee (£)"
+msgstr ""
+
+msgid "One-time upfront fee charged by the bank to set up the mortgage."
+msgstr ""
+
+msgid "Remortgage frequency (years)"
+msgstr ""
+
+msgid "How often (in years) you expect to switch to a new mortgage deal."
+msgstr ""
+
+msgid "Average remortgage cost (£)"
+msgstr ""
+
+msgid "Total cost per remortgage event, including broker and bank fees."
+msgstr ""
+
+msgid "Annual service charge (£)"
+msgstr ""
+
+msgid "For leasehold properties: covers maintenance, cleaning, and repairs of shared areas such as lifts and lobbies."
+msgstr ""
+
+msgid "Annual ground rent (£)"
+msgstr ""
+
+msgid "For leasehold properties: annual payment to the freeholder. Note: ground rent was banned on new residential leases from 30 April 2022 — this only applies if you are buying an existing pre-2022 lease."
 msgstr ""
 
 msgid "Return on savings (%)"
 msgstr ""
 
+msgid "The annual percentage return you could earn by investing all the capital saved by not buying (deposit, stamp duty, buying costs, repairs, and arrangement fee)."
+msgstr ""
+
 msgid "Monthly rent (£)"
 msgstr ""
 
+msgid "Your current or expected monthly rent payment."
+msgstr ""
+
 msgid "Expected rent increase (%)"
+msgstr ""
+
+msgid "The annual percentage by which you expect your rent to rise over time. Under the Renters' Rights Act 2025, landlords can only raise rent once per year, to market rate."
+msgstr ""
+
+msgid "Tenancy deposit (£)"
+msgstr ""
+
+msgid "Typically 5 weeks of rent, held in a deposit scheme. This capital is unavailable for investment until you move out."
 msgstr ""
 
 msgid "Living"
 msgstr ""
 
 msgid "Years in property"
+msgstr ""
+
+msgid "How long you plan to stay in the property. Longer horizons tend to favour buying; shorter ones often favour renting."
+msgstr ""
+
+msgid "Hide hints"
+msgstr ""
+
+msgid "Show hints"
+msgstr ""
+
+msgid "Fewer options"
+msgstr ""
+
+msgid "More options"
 msgstr ""
 
 msgid "Year {label}"
