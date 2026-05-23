@@ -27,9 +27,9 @@ type WithAdvanced = {
 };
 
 function getLtvClass(ltv: number): string {
-  if (ltv > 95) return "bg-red-50 text-red-700";
-  if (ltv > 80) return "bg-amber-50 text-amber-700";
-  return "bg-blue-50 text-blue-700";
+  if (ltv > 95) return "bg-red-50 text-red-700 dark:bg-red-700/30 dark:text-red-300";
+  if (ltv > 80) return "bg-amber-50 dark:bg-amber-700/30 text-amber-700 dark:text-amber-300";
+  return "bg-blue-50 text-blue-700 dark:bg-blue-700/30 dark:text-blue-300";
 }
 
 /** Renders a hint paragraph only when showHints is true */

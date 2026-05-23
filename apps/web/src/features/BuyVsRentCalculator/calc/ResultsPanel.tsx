@@ -13,37 +13,23 @@ type ResultRowProps = {
   readonly showHints?: boolean;
 };
 
-function ResultRow({
-  label,
-  value,
-  highlight = false,
-  explanation,
-  showHints = false,
-}: ResultRowProps) {
+function ResultRow({ label, value, highlight = false, explanation, showHints = false }: ResultRowProps) {
   return (
     <div
       className={
         highlight
-          ? "mt-1.5 flex flex-col rounded-md bg-slate-100 px-2 py-3 text-[0.95rem] font-bold"
+          ? "bg-neutral-disabled/20 mt-1.5 flex flex-col rounded-md px-2 py-3 text-[0.95rem] font-bold"
           : "flex flex-col rounded py-2 text-[0.85rem] transition-colors hover:bg-slate-100"
       }
     >
       <div className="flex w-full items-center justify-between gap-2">
-        <span
-          className={`min-w-0 flex-1 ${highlight ? "text-on-surface" : "text-neutral"}`}
-        >
-          {label}
-        </span>
-        <span
-          className={`shrink-0 font-semibold tabular-nums ${value < 0 ? "text-danger" : "text-success"}`}
-        >
+        <span className={`min-w-0 flex-1 ${highlight ? "text-on-surface" : "text-neutral"}`}>{label}</span>
+        <span className={`shrink-0 font-semibold tabular-nums ${value < 0 ? "text-danger" : "text-success"}`}>
           {gbp(value)}
         </span>
       </div>
       {showHints && explanation && (
-        <p className="text-neutral-disabled mt-0.5 w-full text-xs leading-snug">
-          {explanation}
-        </p>
+        <p className="text-neutral-disabled mt-0.5 w-full text-xs leading-snug">{explanation}</p>
       )}
     </div>
   );
@@ -57,11 +43,7 @@ type SummaryBannerProps = {
   readonly years: number;
 };
 
-const SummaryBanner = ({
-  buyingNet,
-  rentingNet,
-  years,
-}: SummaryBannerProps) => {
+const SummaryBanner = ({ buyingNet, rentingNet, years }: SummaryBannerProps) => {
   const i18n = useI18n();
 
   const buyingBetter = buyingNet > rentingNet;
@@ -71,15 +53,13 @@ const SummaryBanner = ({
     <div
       className={`flex items-center gap-3 rounded-xl px-4 py-4 text-white shadow-lg sm:gap-[18px] sm:px-7 sm:py-6 ${
         buyingBetter
-          ? "bg-gradient-to-br from-blue-700 to-blue-500"
-          : "bg-gradient-to-br from-emerald-800 to-emerald-500"
+          ? "to-primary from-primary/70 bg-linear-to-br"
+          : "bg-linear-to-br from-emerald-700/70 to-emerald-500"
       }`}
     >
       <div className="shrink-0 text-[2.8rem]">{buyingBetter ? "🏠" : "🏦"}</div>
       <div className="min-w-0">
-        <div className="text-[0.95rem] opacity-90">
-          {i18n("After {years} years...", { years })}
-        </div>
+        <div className="text-[0.95rem] opacity-90">{i18n("After {years} years...", { years })}</div>
         <RichText className="dark text-xl text-white">
           {i18n("{item} is better by **{amount}**", {
             item: buyingBetter ? i18n("Buying") : i18n("Renting"),
@@ -120,7 +100,7 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
 
   return (
     <div className="border-neutral-disabled bg-surface/70 flex flex-col gap-y-1 rounded-xl border px-4 py-3 shadow-sm md:px-5 md:py-4">
-      <h3 className="mb-4 border-b-2 border-blue-200 pb-2.5 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-blue-600">
+      <h3 className="dark:border- text-primary border-primary/20 mb-4 border-b-2 pb-2.5 text-[0.9rem] font-bold tracking-[0.08em] uppercase">
         {i18n("{years}-Year Buying Insights", { years })}
       </h3>
 
@@ -176,26 +156,20 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
         label={i18n("Home insurance")}
         value={-totalInsurance}
         showHints={showHints}
-        explanation={i18n(
-          "Buildings insurance paid each year. Usually a mortgage requirement.",
-        )}
+        explanation={i18n("Buildings insurance paid each year. Usually a mortgage requirement.")}
       />
       <ResultRow
         label={i18n("Selling fees")}
         value={-sellingFees}
         showHints={showHints}
-        explanation={i18n(
-          "Estate agent commission on the projected future sale price.",
-        )}
+        explanation={i18n("Estate agent commission on the projected future sale price.")}
       />
       {mortgageArrangementFee > 0 && (
         <ResultRow
           label={i18n("Mortgage arrangement fee")}
           value={-mortgageArrangementFee}
           showHints={showHints}
-          explanation={i18n(
-            "One-time fee charged by the bank to set up your mortgage.",
-          )}
+          explanation={i18n("One-time fee charged by the bank to set up your mortgage.")}
         />
       )}
       {totalRemortgagingCosts > 0 && (
@@ -223,9 +197,7 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
           label={i18n("Ground rent")}
           value={-totalGroundRent}
           showHints={showHints}
-          explanation={i18n(
-            "Annual payment to the freeholder for use of the land your property sits on.",
-          )}
+          explanation={i18n("Annual payment to the freeholder for use of the land your property sits on.")}
         />
       )}
 
@@ -254,18 +226,11 @@ type RentingBreakdownProps = {
 const RentingBreakdown = ({ result, showHints }: RentingBreakdownProps) => {
   const i18n = useI18n();
 
-  const {
-    years,
-    initialSavings,
-    returnOnInitialSavings,
-    ongoingSavings,
-    rentPaid,
-    rentingNet,
-  } = result;
+  const { years, initialSavings, returnOnInitialSavings, ongoingSavings, rentPaid, rentingNet } = result;
 
   return (
     <div className="border-neutral-disabled bg-surface/70 flex flex-col gap-y-1 rounded-xl border px-4 py-3 shadow-sm md:px-5 md:py-4">
-      <h3 className="mb-4 border-b-2 border-emerald-200 pb-2.5 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-emerald-600">
+      <h3 className="mb-4 border-b-2 border-emerald-600/20 pb-2.5 text-[0.9rem] font-bold tracking-[0.08em] text-emerald-600 uppercase">
         {i18n("{years}-Year Renting Insights", { years })}
       </h3>
 
@@ -297,9 +262,7 @@ const RentingBreakdown = ({ result, showHints }: RentingBreakdownProps) => {
         label={i18n("Rent paid")}
         value={-rentPaid}
         showHints={showHints}
-        explanation={i18n(
-          "Total rent paid over the period, rising by your expected annual rent increase each year.",
-        )}
+        explanation={i18n("Total rent paid over the period, rising by your expected annual rent increase each year.")}
       />
 
       <div className="border-neutral-disabled mt-2 border-t pt-2">
@@ -325,20 +288,12 @@ type ResultsPanelProps = {
   readonly children: React.ReactNode;
 };
 
-export default function ResultsPanel({
-  result,
-  showHints,
-  children,
-}: ResultsPanelProps) {
+export default function ResultsPanel({ result, showHints, children }: ResultsPanelProps) {
   const i18n = useI18n();
 
   return (
     <div className="flex flex-col gap-y-6 md:gap-y-8">
-      <SummaryBanner
-        buyingNet={result.buyingNet}
-        rentingNet={result.rentingNet}
-        years={result.years}
-      />
+      <SummaryBanner buyingNet={result.buyingNet} rentingNet={result.rentingNet} years={result.years} />
 
       <div className="border-neutral-disabled bg-surface/70 flex flex-wrap items-center justify-between gap-2 rounded-xl border px-4 py-3 shadow-sm md:px-5 md:py-4">
         <span className="text-neutral">{i18n("Monthly mortgage payment")}</span>

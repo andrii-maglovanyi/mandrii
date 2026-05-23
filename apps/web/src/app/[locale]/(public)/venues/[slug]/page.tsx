@@ -1,4 +1,4 @@
-import { VenueView } from "~/features/Venues";
+import { VenueViewServer } from "~/features/Venues/VenueView/VenueViewServer";
 
 interface VenuePageProps {
   params: Promise<{
@@ -8,11 +8,11 @@ interface VenuePageProps {
 }
 
 export default async function VenuePage({ params }: VenuePageProps) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
 
   return (
     <div className="flex h-full grow flex-col">
-      <VenueView slug={slug} />
+      <VenueViewServer locale={locale} slug={slug} />
     </div>
   );
 }
