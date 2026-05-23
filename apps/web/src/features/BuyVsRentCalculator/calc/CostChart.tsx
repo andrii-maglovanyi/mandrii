@@ -24,7 +24,7 @@ type ChartTooltipProps = {
 
 const BUYING_COLOR = "var(--color-primary)";
 const RENTING_COLOR = "var(--color-success, #10b981)";
-const VIEW_OPTIONS = [10, 20, 30, 40];
+const DEFAULT_VIEW_OPTIONS = [10, 20, 30, 40];
 
 function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
   const i18n = useI18n();
@@ -65,16 +65,22 @@ type CostChartProps = {
 
 export default function CostChart({ data, years }: CostChartProps) {
   const i18n = useI18n();
-  const [viewYears, setViewYears] = useState(40);
+  const [viewYears, setViewYears] = useState(10);
+
+  // Calculate VIEW_OPTIONS dynamically: if years > 40, distribute evenly to years
+  const VIEW_OPTIONS =
+    years > 40 ? Array.from({ length: 4 }, (_, i) => Math.round(((i + 1) * years) / 4)) : DEFAULT_VIEW_OPTIONS;
 
   useEffect(() => {
-    if (years > viewYears) {
-      const next = VIEW_OPTIONS.find((o) => o >= years) ?? years;
-      setViewYears(next);
+    // Ensure we always show at least the full years range, but respect available data
+    const maxAvailable = data.length;
+    const targetYears = Math.min(years, maxAvailable);
+    if (viewYears < targetYears) {
+      setViewYears(targetYears);
     }
-  }, [years, viewYears]); // fix: viewYears was missing from deps
+  }, [years, data.length]);
 
-  const effectiveView = Math.max(viewYears, years);
+  const effectiveView = viewYears;
   const visibleData = data.slice(0, effectiveView);
 
   const crossover = visibleData.find(
@@ -92,7 +98,7 @@ export default function CostChart({ data, years }: CostChartProps) {
         <h3 className="text-neutral text-[0.85rem] font-bold tracking-wide uppercase">
           {i18n("Renting cost vs Buying cost over years")}
         </h3>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           {crossoverYear && (
             <span
               className={`rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[0.75rem] font-semibold whitespace-nowrap text-amber-800`}
@@ -122,7 +128,7 @@ export default function CostChart({ data, years }: CostChartProps) {
       <ResponsiveContainer width="100%" height={340}>
         <LineChart
           data={visibleData}
-          margin={{ top: 10, right: 20, left: 10, bottom: 5 }}
+          margin={{ top: 20, right: 0, left: 0, bottom: 5 }}
           style={{ cursor: "crosshair" }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="var(--color-neutral-disabled)" vertical={false} />
@@ -146,7 +152,7 @@ export default function CostChart({ data, years }: CostChartProps) {
             tickLine={false}
             axisLine={false}
             tick={{ fontSize: 11, fill: "var(--color-neutral)" }}
-            width={60}
+            width={40}
             domain={[minVal * 1.05, maxVal * 1.05]}
           />
 

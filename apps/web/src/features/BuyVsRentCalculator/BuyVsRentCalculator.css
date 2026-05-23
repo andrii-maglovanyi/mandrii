@@ -1,2 +1,123 @@
-/* Styles migrated to Tailwind utility classes. This file is intentionally empty. */
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* BUY VS RENT CALCULATOR - Component Scoped Styles                             */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── LTV Badge ─────────────────────────────────────────────────────────────── */
+.ltv-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ltv-ok {
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  color: var(--color-primary-hover);
+}
+
+.ltv-warn {
+  background: color-mix(in srgb, var(--color-secondary) 20%, transparent);
+  color: var(--color-primary);
+}
+
+.ltv-danger {
+  background: color-mix(in srgb, var(--color-danger) 12%, transparent);
+  color: var(--color-danger);
+}
+
+/* ── Summary Banner ────────────────────────────────────────────────────────── */
+.summary-banner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-radius: 12px;
+  padding: 24px 28px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.buying-better {
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+}
+
+.renting-better {
+  background: linear-gradient(135deg, #065f46, #10b981);
+}
+
+.summary-icon {
+  font-size: 2.8rem;
+}
+
+.summary-title {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* ── Result Columns ────────────────────────────────────────────────────────── */
+.col-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid;
+}
+
+.buying-title {
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.renting-title {
+  color: #059669;
+  border-color: #a7f3d0;
+}
+
+/* ── Result Rows ───────────────────────────────────────────────────────────── */
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.result-row:hover {
+  background: var(--color-surface-tint, #f1f5f9);
+  padding: 8px 6px;
+}
+
+.result-row.highlight {
+  margin-top: 6px;
+  padding: 12px 8px;
+  background: var(--color-surface-tint, #f1f5f9);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: 6px;
+}
+
+.result-label {
+  color: var(--color-neutral, #475569);
+}
+
+.result-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.positive {
+  color: var(--color-success, #059669);
+}
+
+.negative {
+  color: var(--color-danger, #dc2626);
+}
+
+.result-row.highlight .result-label {
+  color: var(--color-on-surface, #1e293b);
 }
