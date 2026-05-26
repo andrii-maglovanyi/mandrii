@@ -64,6 +64,4 @@ export type CalculationResult = BuyingMetrics & RentingMetrics & SummaryMetrics;
 export type { ChartDataPoint, RentingMetrics, SummaryMetrics };
 
 /** Curried setter for German calculator inputs — set("key")(value) */
-export type InputSetter = <K extends keyof CalculatorInputs>(
-  key: K,
-) => (value: CalculatorInputs[K]) => void;
+export type InputSetter = <K extends keyof CalculatorInputs>(key: K) => (value: CalculatorInputs[K]) => void;

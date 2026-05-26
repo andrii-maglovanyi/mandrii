@@ -4,18 +4,16 @@ import { BuyVsRentCalculator } from "~/features";
 import { getI18n } from "~/i18n/getI18n";
 import { Locale } from "~/types";
 
-interface GuidesBuyVsRentCalculatorPageProps {
-  params: Promise<{ locale: Locale; country?: string }>;
+interface GuidesBuyVsRentCalculatorCountryPageProps {
+  params: Promise<{ locale: Locale; country: string }>;
 }
 
-export default async function ToolsPage({ params }: GuidesBuyVsRentCalculatorPageProps) {
+export default async function BuyVsRentCalculatorCountryPage({ params }: GuidesBuyVsRentCalculatorCountryPageProps) {
   const { locale, country } = await params;
   const i18n = await getI18n({ locale });
 
   // Map country parameter to calculator country ("gb" | "de")
-  // Support: /buy-vs-rent-calculator (default gb)
-  //          /buy-vs-rent-calculator/de (explicit de)
-  //          /buy-vs-rent-calculator-germany would need separate route
+  // Support: /buy-vs-rent-calculator/de (explicit de)
   const calculatorCountry: "gb" | "de" = country === "de" ? "de" : "gb";
 
   return (
@@ -32,7 +30,7 @@ export default async function ToolsPage({ params }: GuidesBuyVsRentCalculatorPag
           <h1 className={`text-on-surface text-3xl font-extrabold md:text-5xl`}>{i18n("Buy vs Rent calculator")}</h1>
           <p className={`text-neutral text-sm md:text-base`}>
             {i18n(
-              "Compare the financial outcomes of buying versus renting a property in the UK, based on your personal circumstances and market assumptions.",
+              "Compare the financial outcomes of buying versus renting a property, based on your personal circumstances and market assumptions.",
             )}
           </p>
         </div>
