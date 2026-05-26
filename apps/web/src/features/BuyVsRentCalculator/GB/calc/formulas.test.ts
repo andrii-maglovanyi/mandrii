@@ -1,13 +1,7 @@
 import { describe, it, expect } from "vitest";
-import {
-  pmt,
-  remainingBalance,
-  stampDuty,
-  calculate,
-  buildChartData,
-  gbp,
-} from "./formulas";
+import { stampDuty, calculate, buildChartData, gbp } from "./formulas";
 import type { CalculatorInputs } from "./types";
+import { pmt, remainingBalance } from "../../utils/helpers";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -198,11 +192,7 @@ describe("calculate — buying", () => {
 
   it("caps mortgage payments at mortgage term (not years)", () => {
     const longStay = calculate({ ...BASE, years: 35, mortgageTerm: 30 });
-    const monthly = pmt(
-      BASE.mortgageRate,
-      BASE.mortgageTerm,
-      BASE.propertyValue - BASE.deposit,
-    );
+    const monthly = pmt(BASE.mortgageRate, BASE.mortgageTerm, BASE.propertyValue - BASE.deposit);
     expect(r2(longStay.totalMortgagePayments)).toBe(r2(monthly * 12 * 30));
   });
 });

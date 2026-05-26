@@ -1,5 +1,13 @@
-import { pmt, remainingBalance } from "../../utils/generic-formulas";
-import type { CalculationResult, ChartDataPoint, CalculatorInputs } from "./types";
+import { pmt, remainingBalance } from "../../utils/helpers";
+import {
+  fvLump,
+  totalRentPaid,
+  totalMaintenanceCosts,
+  returnOnOngoingSavings,
+  safe,
+  type ChartDataPoint,
+} from "../../common";
+import type { CalculationResult, CalculatorInputs } from "./types";
 
 // ── Stamp Duty ────────────────────────────────────────────────────────────────
 
@@ -50,78 +58,6 @@ export function stampDuty(propertyValue: number, firstTimeBuyer: boolean) {
   return tax;
 }
 
-// ── Core calculations ─────────────────────────────────────────────────────────
-
-/** Future value of a lump sum invested at annual rate for n years */
-function fvLump(pv: number, annualRate: number, years: number) {
-  return pv * Math.pow(1 + annualRate / 100, years);
-}
-
-/** Total rent paid over N years with annual increases */
-function totalRentPaid(monthlyRent: number, annualIncrease: number, years: number) {
-  let total = 0;
-  let rent = monthlyRent;
-  for (let y = 0; y < years; y++) {
-    total += rent * 12;
-    rent *= 1 + annualIncrease / 100;
-  }
-  return total;
-}
-
-/**
- * Repairs & maintenance = initialRepairCosts + maintenancePct% * SUM(propertyValue each year)
- * Matches spreadsheet: -(E12 + E14 * SUM(Parameters!C year 1..N))
- */
-function totalMaintenanceCosts(
-  propertyValue: number,
-  annualAppreciation: number,
-  maintenancePct: number,
-  initialRepairCosts: number,
-  years: number,
-) {
-  let total = 0;
-  let val = propertyValue;
-  for (let y = 0; y < years; y++) {
-    total += val * (maintenancePct / 100);
-    val *= 1 + annualAppreciation / 100;
-  }
-  return total + initialRepairCosts;
-}
-
-/**
- * Cumulative return on ongoing savings — matches Parameters col S.
- *
- * Models the case where the renter invests the annual surplus (mortgage - rent)
- * at the start of each year, compounding at the savings rate.
- *
- * NOTE: This only captures surplus when mortgage > rent. If rent exceeds the
- * mortgage payment, that extra rent cost is already reflected as a higher
- * `rentPaid` figure in the renting total — the model does not additionally
- * credit the buyer for a "surplus" in that scenario, keeping both sides
- * comparable. This matches the original spreadsheet behaviour.
- *
- * Returns only the investment gain (balance minus total deposited).
- */
-function returnOnOngoingSavings(
-  monthlyRent: number,
-  annualRentIncrease: number,
-  monthlyMortgage: number,
-  annualSavingsRate: number,
-  years: number,
-) {
-  const annualRate = annualSavingsRate / 100;
-  let balance = 0;
-  let totalDeposited = 0;
-  let rent = monthlyRent;
-  for (let y = 0; y < years; y++) {
-    const annualSurplus = Math.max(0, (monthlyMortgage - rent) * 12);
-    balance = (balance + annualSurplus) * (1 + annualRate);
-    totalDeposited += annualSurplus;
-    rent *= 1 + annualRentIncrease / 100;
-  }
-  return balance - totalDeposited;
-}
-
 // ── Summary calculation ───────────────────────────────────────────────────────
 
 /**
@@ -134,8 +70,6 @@ function returnOnOngoingSavings(
  * mortgage paydown — consistent with the spreadsheet but worth bearing in mind.
  */
 export function calculate(inputs: CalculatorInputs): CalculationResult {
-  const safe = (n: number, fallback = 0) => (Number.isFinite(n) ? n : fallback);
-
   const propertyValue = safe(inputs.propertyValue);
   const deposit = safe(inputs.deposit, 0);
   const mortgageRate = safe(inputs.mortgageRate, 0);

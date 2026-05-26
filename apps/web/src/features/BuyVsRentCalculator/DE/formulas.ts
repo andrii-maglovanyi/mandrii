@@ -1,7 +1,15 @@
 // ── Mortgage helpers ──────────────────────────────────────────────────────────
 
 import { pmt, remainingBalance } from "../utils/helpers";
-import type { CalculationResult, ChartDataPoint, CalculatorInputs, Bundesland } from "./types";
+import {
+  fvLump,
+  totalRentPaid,
+  totalMaintenanceCosts,
+  returnOnOngoingSavings,
+  safe,
+  type ChartDataPoint,
+} from "../common";
+import type { CalculationResult, CalculatorInputs, Bundesland } from "./types";
 
 // ── Real Estate Transfer Tax ──────────────────────────────────────────────────
 
@@ -51,76 +59,6 @@ export function transferTaxRate(stateGroup: Bundesland): number {
   return rates[stateGroup] ?? 0.05;
 }
 
-// ── Core calculation helpers ──────────────────────────────────────────────────
-
-/** Future value of a lump sum invested at annual rate for n years */
-function fvLump(pv: number, annualRate: number, years: number) {
-  return pv * Math.pow(1 + annualRate / 100, years);
-}
-
-/** Total rent paid over N years with annual increases */
-function totalRentPaid(monthlyRent: number, annualIncrease: number, years: number) {
-  let total = 0;
-  let rent = monthlyRent;
-  for (let y = 0; y < years; y++) {
-    total += rent * 12;
-    rent *= 1 + annualIncrease / 100;
-  }
-  return total;
-}
-
-/**
- * Repairs & maintenance:
- *   initialRepairCosts + annualMaintenancePct% × SUM(propertyValue each year)
- *
- * German note: maintenance costs tend to be higher for pre-war Altbau
- * (old-stock) apartments and lower for Neubau. The 1% default is a reasonable
- * mid-point across stock types.
- */
-function totalMaintenanceCosts(
-  propertyValue: number,
-  annualAppreciation: number,
-  maintenancePct: number,
-  initialRepairCosts: number,
-  years: number,
-) {
-  let total = 0;
-  let val = propertyValue;
-  for (let y = 0; y < years; y++) {
-    total += val * (maintenancePct / 100);
-    val *= 1 + annualAppreciation / 100;
-  }
-  return total + initialRepairCosts;
-}
-
-/**
- * Cumulative return on ongoing savings.
- *
- * Models the scenario where the renter invests the annual surplus
- * (monthly mortgage − monthly rent) × 12, compounded at the savings rate.
- * Only applies when the mortgage payment exceeds rent. Returns only the
- * investment gain (accumulated balance minus total deposited).
- */
-function returnOnOngoingSavings(
-  monthlyRent: number,
-  annualRentIncrease: number,
-  monthlyMortgage: number,
-  annualSavingsRate: number,
-  years: number,
-) {
-  const annualRate = annualSavingsRate / 100;
-  let balance = 0;
-  let totalDeposited = 0;
-  let rent = monthlyRent;
-  for (let y = 0; y < years; y++) {
-    const annualSurplus = Math.max(0, (monthlyMortgage - rent) * 12);
-    balance = (balance + annualSurplus) * (1 + annualRate);
-    totalDeposited += annualSurplus;
-    rent *= 1 + annualRentIncrease / 100;
-  }
-  return balance - totalDeposited;
-}
-
 // ── Summary calculation ───────────────────────────────────────────────────────
 
 /**
@@ -168,8 +106,6 @@ function returnOnOngoingSavings(
  *    savings base but added back to rentingNet on exit.
  */
 export function calculate(inputs: CalculatorInputs): CalculationResult {
-  const safe = (n: number, fallback = 0) => (Number.isFinite(n) ? n : fallback);
-
   const propertyValue = safe(inputs.propertyValue);
   const deposit = safe(inputs.deposit);
   const mortgageRate = safe(inputs.mortgageRate);
@@ -300,8 +236,6 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
  * Renting = cumulative net cost of renting (positive = net spend, negative = net gain)
  */
 export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoint[] {
-  const safe = (n: number, fallback = 0) => (Number.isFinite(n) ? n : fallback);
-
   const propertyValue = safe(inputs.propertyValue);
   const deposit = safe(inputs.deposit);
   const mortgageRate = safe(inputs.mortgageRate);

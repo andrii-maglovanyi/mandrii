@@ -1,3 +1,5 @@
+import { ChartDataPoint, RentingMetrics, SummaryMetrics } from "../../common";
+
 /** User input parameters for the calculator */
 export type CalculatorInputs = {
   readonly propertyValue: number;
@@ -41,29 +43,13 @@ type BuyingMetrics = {
   readonly monthlyMortgage: number;
 };
 
-type RentingMetrics = {
-  readonly initialSavings: number;
-  readonly returnOnInitialSavings: number;
-  readonly ongoingSavings: number;
-  readonly rentPaid: number;
-  readonly rentingNet: number;
-};
-
-type SummaryMetrics = {
-  readonly years: number;
-};
-
 /** Complete calculation result combining all buying, renting and summary metrics */
 export type CalculationResult = BuyingMetrics & RentingMetrics & SummaryMetrics;
 
-/** Single data point for the year-by-year cost comparison chart */
-export type ChartDataPoint = {
-  readonly year: number;
-  readonly buying: number;
-  readonly renting: number;
-};
+// Re-export common types for convenience
+export type { ChartDataPoint, RentingMetrics, SummaryMetrics };
 
-/** Curried setter for a single input field — set("key")(value) */
+/** Curried setter for GB calculator inputs — set("key")(value) */
 export type InputSetter = <K extends keyof CalculatorInputs>(
   key: K,
 ) => (value: CalculatorInputs[K]) => void;
