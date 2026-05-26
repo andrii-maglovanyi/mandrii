@@ -1,26 +1,5 @@
-// ── Mortgage helpers ──────────────────────────────────────────────────────────
-
+import { pmt, remainingBalance } from "../../utils/generic-formulas";
 import type { CalculationResult, ChartDataPoint, CalculatorInputs } from "./types";
-
-/** Monthly PMT (fixed-rate mortgage payment) */
-export function pmt(annualRate: number, termYears: number, principal: number) {
-  if (principal <= 0 || termYears <= 0) return 0;
-  const r = annualRate / 100 / 12;
-  const n = termYears * 12;
-  if (r === 0) return principal / n;
-  return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-}
-
-/** Remaining mortgage balance after `paymentsMade` months */
-export function remainingBalance(annualRate: number, termYears: number, principal: number, paymentsMade: number) {
-  if (principal <= 0 || termYears <= 0) return 0;
-  const r = annualRate / 100 / 12;
-  if (r === 0) return principal * (1 - paymentsMade / (termYears * 12));
-  return (
-    principal * Math.pow(1 + r, paymentsMade) -
-    pmt(annualRate, termYears, principal) * ((Math.pow(1 + r, paymentsMade) - 1) / r)
-  );
-}
 
 // ── Stamp Duty ────────────────────────────────────────────────────────────────
 

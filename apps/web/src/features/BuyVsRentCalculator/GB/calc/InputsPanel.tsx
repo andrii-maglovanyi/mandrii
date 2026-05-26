@@ -4,7 +4,8 @@ import { stampDuty, gbp } from "./formulas";
 import type { CalculatorInputs, InputSetter } from "./types";
 import { Checkbox, Input } from "~/components/ui";
 import { ThumbsUp, TriangleAlert, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
-import { safeFloat, safeInt } from "./parse";
+import { safeFloat, safeInt } from "../../utils/parse";
+import { getLtvClass } from "../../utils/helpers";
 
 type InputsPanelProps = {
   readonly inputs: CalculatorInputs;
@@ -26,12 +27,6 @@ type WithAdvanced = {
   readonly showAdvanced: boolean;
 };
 
-function getLtvClass(ltv: number): string {
-  if (ltv > 95) return "bg-red-50 text-red-700 dark:bg-red-700/30 dark:text-red-300";
-  if (ltv > 80) return "bg-amber-50 dark:bg-amber-700/30 text-amber-700 dark:text-amber-300";
-  return "bg-blue-50 text-blue-700 dark:bg-blue-700/30 dark:text-blue-300";
-}
-
 /** Renders a hint paragraph only when showHints is true */
 function Hint({ text, showHints }: { text: string; showHints: boolean }) {
   if (!showHints) return null;
@@ -45,7 +40,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
   const i18n = useI18n();
 
   const sd = stampDuty(propertyValue, firstTimeBuyer);
-  const ltvClass = getLtvClass(ltv);
+  const ltvClass = getLtvClass(ltv, { risk: 95, normal: 80 });
 
   const noMortgage = deposit >= propertyValue;
   const belowMinDeposit = depositPct < 5 && !noMortgage;

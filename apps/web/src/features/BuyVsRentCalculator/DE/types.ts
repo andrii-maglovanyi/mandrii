@@ -1,0 +1,81 @@
+/** User input parameters for the German calculator */
+export type CalculatorInputs = {
+  readonly propertyValue: number;
+  readonly deposit: number;
+  readonly mortgageRate: number;
+  readonly mortgageTerm: number;
+  readonly stateGroup: Bundesland;
+  readonly propertyAppreciation: number;
+  readonly notaryAndLandRegistryCosts: number;
+  readonly initialRepairCosts: number;
+  readonly buyerAgentFeePct: number;
+  readonly saleFeesPct: number;
+  readonly maintenancePct: number;
+  readonly annualHomeInsurance: number;
+  readonly fixedRatePeriodYears: number;
+  readonly refinancingCost: number;
+  readonly annualCondoFee: number;
+  readonly annualPropertyTax: number;
+  readonly returnOnSavings: number;
+  readonly monthlyRent: number;
+  readonly rentIncrease: number;
+  readonly rentalDeposit: number;
+  readonly years: number;
+};
+
+/**
+ * Bundesland (German federal state group) determines the Grunderwerbsteuer
+ * (property transfer tax) rate. Rates as of 2025 — set by each state independently.
+ */
+export type Bundesland =
+  | "BY_SN" // Bavaria & Saxony:                                              3.5%
+  | "HH" // Hamburg:                                                       4.0%
+  | "BW_HE" // Baden-Württemberg & Hesse:                                     5.0%
+  | "BE_HB_MV_NI_ST" // Berlin, Bremen, Mecklenburg-Vorpommern, Lower Saxony, Saxony-Anhalt: 5.5%
+  | "RP_TH" // Rhineland-Palatinate & Thuringia:                              6.0%
+  | "BB_NW_SH_SL"; // Brandenburg, NRW, Schleswig-Holstein, Saarland:               6.5%
+
+// Composition types — not exported; use CalculationResult directly
+type BuyingMetrics = {
+  readonly deposit: number;
+  readonly transferTaxAmount: number; // Grunderwerbsteuer
+  readonly buyerAgentFee: number; // Maklerprovision (buyer's share)
+  readonly notaryAndLandRegistryCosts: number;
+  readonly totalMortgagePayments: number;
+  readonly equity: number;
+  readonly initialRepairCosts: number;
+  readonly maintenance: number;
+  readonly totalInsurance: number;
+  readonly sellingFees: number;
+  readonly totalRefinancingCosts: number; // Anschlussfinanzierung
+  readonly totalCondoFees: number; // Hausgeld
+  readonly totalPropertyTax: number; // Grundsteuer
+  readonly buyingNet: number;
+  readonly monthlyMortgage: number;
+  readonly loanAmount: number;
+};
+
+type RentingMetrics = {
+  readonly initialSavings: number;
+  readonly returnOnInitialSavings: number;
+  readonly ongoingSavings: number;
+  readonly rentPaid: number;
+  readonly rentingNet: number;
+};
+
+type SummaryMetrics = {
+  readonly years: number;
+};
+
+/** Complete calculation result combining all buying, renting and summary metrics */
+export type CalculationResult = BuyingMetrics & RentingMetrics & SummaryMetrics;
+
+/** Single data point for the year-by-year cost comparison chart */
+export type ChartDataPoint = {
+  readonly year: number;
+  readonly buying: number;
+  readonly renting: number;
+};
+
+/** Curried setter for a single input field — set("key")(value) */
+export type InputSetter = <K extends keyof CalculatorInputs>(key: K) => (value: CalculatorInputs[K]) => void;
