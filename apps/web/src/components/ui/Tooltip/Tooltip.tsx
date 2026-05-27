@@ -166,11 +166,7 @@ export const Tooltip = ({ children, className = "", delay = 0, label, position =
   const tooltipContent = isVisible
     ? createPortal(
         <div
-          className={`
-            pointer-events-none fixed z-9999 rounded-md bg-neutral-hover px-2
-            py-1 text-xs whitespace-nowrap text-surface opacity-100 shadow
-            transition-opacity duration-200
-          `}
+          className={`bg-neutral-hover text-surface pointer-events-none fixed z-9999 rounded-md px-2 py-1 text-xs whitespace-nowrap opacity-100 shadow transition-opacity duration-200`}
           role="tooltip"
           style={{
             left: `${tooltipPosition.left}px`,
@@ -179,7 +175,7 @@ export const Tooltip = ({ children, className = "", delay = 0, label, position =
           }}
         >
           {label}
-          <div className="absolute h-2 w-2 rotate-45 bg-neutral-hover" style={config.arrow} />
+          <div className="bg-neutral-hover absolute h-2 w-2 rotate-45" style={config.arrow} />
         </div>,
         document.body,
       )
@@ -188,11 +184,7 @@ export const Tooltip = ({ children, className = "", delay = 0, label, position =
   return (
     <>
       <div
-        className={`
-          group/tooltip pointer-events-auto relative flex w-fit items-center
-          justify-center
-          ${className}
-        `}
+        className={`group/tooltip pointer-events-auto relative flex w-fit items-center justify-center ${className} `}
         onClick={toggleTooltip}
         onMouseEnter={showTooltip}
         onMouseLeave={hideTooltip}

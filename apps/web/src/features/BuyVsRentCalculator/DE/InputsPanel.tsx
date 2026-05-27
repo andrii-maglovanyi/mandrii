@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "~/i18n/useI18n";
 import { transferTax, eur, stateGroupLabel, STATE_GROUP_OPTIONS } from "./formulas";
 import type { Bundesland, CalculatorInputs, InputSetter } from "./types";
-import { Checkbox, Input, Select } from "~/components/ui";
-import { ThumbsUp, TriangleAlert, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Input, Select } from "~/components/ui";
+import { ThumbsUp, TriangleAlert, HelpCircle, ChevronDown, ChevronUp, Flag } from "lucide-react";
 import { safeFloat, safeInt } from "../utils/parse";
 import { getLtvClass } from "../utils/helpers";
 
@@ -13,6 +14,7 @@ type InputsPanelProps = {
   readonly set: InputSetter;
   readonly showHints: boolean;
   readonly onToggleHints: () => void;
+  readonly onFeedback?: () => void;
 };
 
 type InternalInputProps = {
@@ -131,7 +133,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           />
           <Hint
             showHints={showHints}
-            text="The annual nominal interest rate (Sollzinssatz) on your loan. 10-year fixed rates (Zinsbindung) are currently around 3.3–3.7% in Germany (Dr. Klein / Bundesbank, 2025–2026)."
+            text="The annual nominal interest rate (Sollzinssatz) on your loan. 10-year fixed rates (Zinsbindung) are currently around 3.2–3.6% in Germany (Dr. Klein / Bundesbank, 2025–2026)."
           />
         </div>
 
@@ -187,7 +189,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
 
       {/* Advanced fields */}
       {showAdvanced && (
-        <div className="bg-primary/10 -mx-4 rounded-2xl p-4">
+        <div className="bg-primary/10 mx-0 rounded-2xl px-4 py-4 md:-mx-4">
           {/* Row 3: Appreciation + Notary costs + Repair costs */}
           <div className="grid gap-x-5 gap-y-3 pb-4 md:grid-cols-3">
             <div className="flex flex-col gap-1">
@@ -256,7 +258,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="Costs when you eventually sell: notary, land registry update, and any agent commission on the sale. Typically 2–4% of the sale price."
+                text="Costs when you eventually sell. The seller pays their half of the Maklerprovision (typically 3.57% incl. VAT) plus notary costs for the sale contract. Total is typically 3.5–4.5% of the sale price."
               />
             </div>
 
@@ -412,7 +414,7 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
         </div>
 
         {showAdvanced && (
-          <div className="bg-primary/10 -mx-4 rounded-2xl p-4">
+          <div className="bg-primary/10 mx-0 rounded-2xl px-4 py-4 md:-mx-4">
             <div className="flex flex-col gap-1">
               {/* Rental deposit (Mietkaution) */}
               <Input
@@ -465,12 +467,16 @@ function ControlsBar({
   onToggleHints,
   showAdvanced,
   onToggleAdvanced,
+  onFeedback,
 }: {
   showHints: boolean;
   onToggleHints: () => void;
   showAdvanced: boolean;
   onToggleAdvanced: () => void;
+  onFeedback?: () => void;
 }) {
+  const i18n = useI18n();
+
   const pillClass = (active: boolean) =>
     [
       "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
@@ -483,18 +489,25 @@ function ControlsBar({
     <div className="mb-4 flex flex-wrap items-center justify-center gap-2 md:justify-end">
       <button type="button" onClick={onToggleHints} className={pillClass(showHints)} aria-pressed={showHints}>
         <HelpCircle size={14} strokeWidth={2.5} />
-        {showHints ? "Hide hints" : "Show hints"}
+        {showHints ? i18n("Hide hints") : i18n("Show hints")}
       </button>
 
       <button type="button" onClick={onToggleAdvanced} className={pillClass(showAdvanced)} aria-pressed={showAdvanced}>
         {showAdvanced ? <ChevronUp size={14} strokeWidth={2.5} /> : <ChevronDown size={14} strokeWidth={2.5} />}
-        {showAdvanced ? "Fewer options" : "More options"}
+        {showAdvanced ? i18n("Fewer options") : i18n("More options")}
       </button>
+
+      {onFeedback && (
+        <button type="button" onClick={onFeedback} className={pillClass(false)}>
+          <Flag size={14} strokeWidth={2.5} />
+          {i18n("Found an issue?")}
+        </button>
+      )}
     </div>
   );
 }
 
-export default function InputsPanel({ inputs, set, showHints, onToggleHints }: InputsPanelProps) {
+export default function InputsPanel({ inputs, set, showHints, onToggleHints, onFeedback }: InputsPanelProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   return (
@@ -504,6 +517,7 @@ export default function InputsPanel({ inputs, set, showHints, onToggleHints }: I
         onToggleHints={onToggleHints}
         showAdvanced={showAdvanced}
         onToggleAdvanced={() => setShowAdvanced((v) => !v)}
+        onFeedback={onFeedback}
       />
       <BuyingInputs inputs={inputs} set={set} showHints={showHints} showAdvanced={showAdvanced} />
       <RentingInputs inputs={inputs} set={set} showHints={showHints} showAdvanced={showAdvanced} />

@@ -93,7 +93,7 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
     maintenance,
     totalInsurance,
     sellingFees,
-    refinancingCost,
+    totalRefinancingCosts,
     totalCondoFees,
     totalPropertyTax,
     buyingNet,
@@ -177,10 +177,10 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
         showHints={showHints}
         explanation={i18n("Estate agent commission on the projected future sale price.")}
       />
-      {refinancingCost > 0 && (
+      {totalRefinancingCosts > 0 && (
         <ResultRow
           label={i18n("Refinancing costs")}
-          value={-refinancingCost}
+          value={-totalRefinancingCosts}
           showHints={showHints}
           explanation={i18n("Broker and bank fees for refinancing when your fixed-rate period ends.")}
         />

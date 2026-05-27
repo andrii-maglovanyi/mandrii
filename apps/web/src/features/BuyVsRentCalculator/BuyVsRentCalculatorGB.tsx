@@ -7,6 +7,7 @@ import { calculate, buildChartData } from "./GB/calc/formulas";
 import InputsPanel from "./GB/calc/InputsPanel";
 import ResultsPanel from "./GB/calc/ResultsPanel";
 import CostChart from "./GB/calc/CostChart";
+import { FeedbackModal } from "./FeedbackModal";
 import type { CalculatorInputs, InputSetter } from "./GB/calc/types";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
@@ -42,6 +43,7 @@ export const BuyVsRentCalculatorGB = () => {
   const chartData = useMemo(() => buildChartData(inputs), [inputs]);
   const i18n = useI18n();
   const [showHints, setShowHints] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
   useEffect(() => {
     sendToMixpanel("Computed Buy vs Rent Outcome", {
@@ -98,7 +100,13 @@ export const BuyVsRentCalculatorGB = () => {
       </div>
 
       <div className={`space-y-6 pt-4 md:px-12 md:py-8`}>
-        <InputsPanel inputs={inputs} set={set} showHints={showHints} onToggleHints={() => setShowHints((v) => !v)} />
+        <InputsPanel
+          inputs={inputs}
+          set={set}
+          showHints={showHints}
+          onToggleHints={() => setShowHints((v) => !v)}
+          onFeedback={() => setShowFeedbackModal(true)}
+        />
 
         <Separator align="center" text={i18n("Results ↓")} variant="full" />
 
@@ -110,6 +118,12 @@ export const BuyVsRentCalculatorGB = () => {
           <p className="text-neutral mb-2 font-semibold uppercase">{i18n("Glossary")}</p>
         </div>
       </div>
+
+      <FeedbackModal
+        isOpen={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+        featureName={i18n("UK Buy vs Rent Calculator")}
+      />
     </Card>
   );
 };

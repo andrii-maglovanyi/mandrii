@@ -5,6 +5,8 @@ import { BuyVsRentCalculatorGB } from "./BuyVsRentCalculatorGB";
 import { BuyVsRentCalculatorDE } from "./BuyVsRentCalculatorDE";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { useI18n } from "~/i18n/useI18n";
+import { getFlagComponent } from "~/lib/icons/flags";
+import { Button } from "~/components/ui";
 
 type Country = "gb" | "de";
 
@@ -27,32 +29,31 @@ export const BuyVsRentCalculator = ({ initialCountry = "gb" }: BuyVsRentCalculat
     }
   };
 
+  const CountryFlagGB = getFlagComponent("uk");
+  const CountryFlagDE = getFlagComponent("de");
+
   return (
     <div className="space-y-6">
       {/* Country Selector */}
       <div className="flex justify-center gap-3">
-        <button
+        <Button
           onClick={() => handleCountryChange("gb")}
-          className={`flex items-center gap-2 rounded-lg px-4 py-2 font-semibold transition-all ${
-            country === "gb"
-              ? "bg-primary text-surface shadow-md"
-              : "bg-surface-light text-on-surface hover:bg-surface-lighter border-primary/20 border-2"
-          }`}
+          className="gap-2"
+          color={country === "gb" ? "primary" : "neutral"}
+          variant={country === "gb" ? "outlined" : "ghost"}
         >
-          <span className="text-lg">🇬🇧</span>
+          {CountryFlagGB ? <CountryFlagGB className="h-4 w-5 rounded-sm" /> : <span className="text-lg">🇬🇧</span>}
           {i18n("UK")}
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => handleCountryChange("de")}
-          className={`flex items-center gap-2 rounded-lg px-4 py-2 font-semibold transition-all ${
-            country === "de"
-              ? "bg-primary text-surface shadow-md"
-              : "bg-surface-light text-on-surface hover:bg-surface-lighter border-primary/20 border-2"
-          }`}
+          className="gap-2"
+          color={country === "de" ? "primary" : "neutral"}
+          variant={country === "de" ? "outlined" : "ghost"}
         >
-          <span className="text-lg">🇩🇪</span>
+          {CountryFlagDE ? <CountryFlagDE className="h-4 w-5 rounded-sm" /> : <span className="text-lg">🇩🇪</span>}
           {i18n("Germany")}
-        </button>
+        </Button>
       </div>
 
       {/* Calculator Components */}

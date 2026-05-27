@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import React from "react";
 
 import { AnimatedEllipsis } from "../AnimatedEllipsis/AnimatedEllipsis";
 import { sizeClasses } from "../styles";
