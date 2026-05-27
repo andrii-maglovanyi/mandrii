@@ -1,40 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Home } from "lucide-react";
 import { Card, Separator, UnionJack } from "~/components/ui";
-import { calculate, buildChartData } from "./GB/calc/formulas";
-import InputsPanel from "./GB/calc/InputsPanel";
-import ResultsPanel from "./GB/calc/ResultsPanel";
-import CostChart from "./GB/calc/CostChart";
+import { calculate, buildChartData } from "./GB/formulas";
+import InputsPanel from "./GB/InputsPanel";
+import ResultsPanel from "./GB/ResultsPanel";
+import CostChart from "./GB/CostChart";
 import { FeedbackModal } from "./FeedbackModal";
-import type { CalculatorInputs, InputSetter } from "./GB/calc/types";
+import { Glossary } from "./GB/Glossary";
+import { DEFAULT_INPUTS_GB } from "./GB/defaults";
+import type { CalculatorInputs, InputSetter } from "./GB/types";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
 
-export const DEFAULT_INPUTS_GB: CalculatorInputs = {
-  propertyValue: 500_000,
-  deposit: 50_000,
-  mortgageRate: 4.5,
-  mortgageTerm: 30,
-  firstTimeBuyer: true,
-  propertyAppreciation: 2.5,
-  initialBuyingCosts: 5_000,
-  initialRepairCosts: 5_000,
-  saleFeesPct: 1,
-  maintenancePct: 1,
-  annualHomeInsurance: 500,
-  mortgageArrangementFee: 1_000,
-  remortgagingFrequencyYears: 5,
-  averageRemortgagingCost: 500,
-  serviceCharge: 0,
-  groundRent: 0,
-  returnOnSavings: 4.0,
-  monthlyRent: 2_200,
-  rentIncrease: 3,
-  tenancyDeposit: Math.round(((2_200 * 12) / 52) * 5),
-  years: 7,
-};
+export { DEFAULT_INPUTS_GB } from "./GB/defaults";
 
 export const BuyVsRentCalculatorGB = () => {
   const [inputs, setInputs] = useState<CalculatorInputs>(DEFAULT_INPUTS_GB);
@@ -45,13 +25,21 @@ export const BuyVsRentCalculatorGB = () => {
   const [showHints, setShowHints] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
-    sendToMixpanel("Computed Buy vs Rent Outcome", {
-      computeResult: result,
-      currentInputs: inputs,
-      source: "buy_vs_rent_calculator_gb",
-    });
-  }, [result]);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      sendToMixpanel("Computed Buy vs Rent Outcome", {
+        computeResult: result,
+        currentInputs: inputs,
+        source: "buy_vs_rent_calculator_gb",
+      });
+    }, 1000);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputs]);
 
   return (
     <Card
@@ -59,21 +47,13 @@ export const BuyVsRentCalculatorGB = () => {
     >
       <div className={`relative z-10 overflow-hidden rounded-3xl px-2 py-6 sm:py-9 md:rounded-none md:px-8 md:py-12`}>
         <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className={`pointer-events-none absolute inset-0 -z-10 overflow-hidden`}>
-            <UnionJack
-              className={`absolute top-1/2 left-0 h-[140%] w-[70%] -translate-y-1/2 transform opacity-15`}
-              style={{
-                maskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
-                WebkitMaskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
-              }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(90deg, transparent 55%, var(--color-surface) 100%)",
-              }}
-            />
-          </div>
+          <UnionJack
+            className={`absolute top-1/2 left-0 h-[140%] w-[70%] -translate-y-1/2 transform opacity-15`}
+            style={{
+              maskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
+              WebkitMaskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
+            }}
+          />
           <div
             className="absolute inset-0"
             style={{
@@ -115,7 +95,8 @@ export const BuyVsRentCalculatorGB = () => {
         </ResultsPanel>
 
         <div className="py-5">
-          <p className="text-neutral mb-2 font-semibold uppercase">{i18n("Glossary")}</p>
+          <p className="text-neutral mb-4 font-semibold uppercase">{i18n("Glossary")}</p>
+          <Glossary />
         </div>
       </div>
 

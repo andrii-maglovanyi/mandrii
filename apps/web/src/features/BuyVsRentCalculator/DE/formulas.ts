@@ -14,6 +14,30 @@ import type { CalculationResult, CalculatorInputs, Bundesland } from "./types";
 // ── Real Estate Transfer Tax ──────────────────────────────────────────────────
 
 /**
+ * Grunderwerbsteuer (GrESt) rates by Bundesland as of 2025.
+ * A single source of truth used by both transferTax() and transferTaxRate().
+ *
+ * Changes vs. previous version:
+ *   - Berlin moved from BE_HB_MV_NI_ST (5.5%) to BE_RP_TH (6.0%) — Berlin has
+ *     been at 6.0% since 1 January 2014.
+ *   - Bremen raised its rate from 5.0% to 5.5% on 1 July 2025 (Senate decree
+ *     of 3 Dec 2024; Bremische Bürgerschaft resolution). Bremen now sits in
+ *     HB_MV_NI_ST at 5.5% without Berlin.
+ *   - The former BE_HB_MV_NI_ST group is therefore split into two:
+ *       HB_MV_NI_ST  — Bremen, Mecklenburg-Vorpommern, Lower Saxony,
+ *                       Saxony-Anhalt — 5.5%
+ *       BE_RP_TH     — Berlin, Rhineland-Palatinate, Thuringia — 6.0%
+ */
+const TRANSFER_TAX_RATES: Record<Bundesland, number> = {
+  BY_SN: 0.035, // Bavaria (Bayern) & Saxony (Sachsen)
+  HH: 0.04, // Hamburg
+  BW_HE: 0.05, // Baden-Württemberg & Hesse (Hessen)
+  HB_MV_NI_ST: 0.055, // Bremen, Mecklenburg-Vorpommern, Lower Saxony, Saxony-Anhalt
+  BE_RP_TH: 0.06, // Berlin, Rhineland-Palatinate (Rheinland-Pfalz), Thuringia (Thüringen)
+  BB_NW_SH_SL: 0.065, // Brandenburg, North Rhine-Westphalia, Schleswig-Holstein, Saarland
+};
+
+/**
  * Grunderwerbsteuer (GrESt) — German Real Estate Transfer Tax
  * https://www.bundesfinanzministerium.de/
  *
@@ -21,13 +45,14 @@ import type { CalculationResult, CalculatorInputs, Bundesland } from "./types";
  * with NO threshold bands, NO first-time buyer relief, and NO exemptions for
  * residential buyers. The rate is set by each Bundesland independently.
  *
- * Rates as of 2025:
+ * Rates as of July 2025:
  *   Bavaria (Bayern) & Saxony (Sachsen):                          3.5%
  *   Hamburg:                                                       4.0%
  *   Baden-Württemberg & Hesse (Hessen):                           5.0%
- *   Berlin, Bremen, Mecklenburg-Vorpommern,
+ *   Bremen, Mecklenburg-Vorpommern,
  *     Lower Saxony (Niedersachsen), Saxony-Anhalt (Sachsen-Anhalt): 5.5%
- *   Rhineland-Palatinate (Rheinland-Pfalz) & Thuringia (Thüringen): 6.0%
+ *   Berlin, Rhineland-Palatinate (Rheinland-Pfalz),
+ *     Thuringia (Thüringen):                                       6.0%
  *   Brandenburg, North Rhine-Westphalia (NRW),
  *     Schleswig-Holstein, Saarland:                               6.5%
  *
@@ -35,28 +60,12 @@ import type { CalculationResult, CalculatorInputs, Bundesland } from "./types";
  * There is no cliff-edge phenomenon equivalent to UK SDLT because there are no bands.
  */
 export function transferTax(propertyValue: number, stateGroup: Bundesland): number {
-  const rates: Record<Bundesland, number> = {
-    BY_SN: 0.035,
-    HH: 0.04,
-    BW_HE: 0.05,
-    BE_HB_MV_NI_ST: 0.055,
-    RP_TH: 0.06,
-    BB_NW_SH_SL: 0.065,
-  };
-  return propertyValue * (rates[stateGroup] ?? 0.05);
+  return propertyValue * (TRANSFER_TAX_RATES[stateGroup] ?? 0.05);
 }
 
 /** Return the transfer tax (Grunderwerbsteuer) rate (0–1) for a given state group (Bundesland) */
 export function transferTaxRate(stateGroup: Bundesland): number {
-  const rates: Record<Bundesland, number> = {
-    BY_SN: 0.035,
-    HH: 0.04,
-    BW_HE: 0.05,
-    BE_HB_MV_NI_ST: 0.055,
-    RP_TH: 0.06,
-    BB_NW_SH_SL: 0.065,
-  };
-  return rates[stateGroup] ?? 0.05;
+  return TRANSFER_TAX_RATES[stateGroup] ?? 0.05;
 }
 
 // ── Summary calculation ───────────────────────────────────────────────────────
@@ -96,9 +105,8 @@ export function transferTaxRate(stateGroup: Bundesland): number {
  * 5. NO FIRST-TIME BUYER RELIEF: Unlike UK SDLT, German GrESt applies at the
  *    full flat rate on the full purchase price with no threshold or relief.
  *
- * 6. EQUITY: Same convention as the UK version — calculated at years−1 to
- *    reflect the start-of-final-year value (i.e., when you would arrange to
- *    sell), consistent with the chart data.
+ * 6. EQUITY: Calculated at end of the full holding period (years), consistent
+ *    with expense calculations over the same period and with the PL version.
  *
  * 7. RENTAL DEPOSIT (Mietkaution): Legally capped at 3 months' cold rent
  *    (§551 BGB). The deposit is held in a separate account during the tenancy
@@ -145,8 +153,9 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
   const totalCondoFees = annualCondoFee * years;
   const totalPropertyTax = annualPropertyTax * years;
 
-  // Equity at start of final year (years − 1 convention — see note 6 above)
-  const equityYears = years - 1;
+  // Equity at end of full holding period (years of appreciation and mortgage paydown).
+  // Using full `years` is consistent with expense calculations and the PL version.
+  const equityYears = years;
   const futurePropertyValue = propertyValue * Math.pow(1 + propertyAppreciation / 100, equityYears);
   const balanceRemaining = remainingBalance(mortgageRate, mortgageTerm, loanAmount, equityYears * 12);
   const equity = futurePropertyValue - balanceRemaining;
@@ -288,8 +297,9 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
 
   for (let yr = 1; yr <= MAX_YEARS; yr++) {
     // ── Buying ──────────────────────────────────────────────────────────────
-    const pvN = propertyValue * Math.pow(1 + propertyAppreciation / 100, yr - 1);
-    const balN = remainingBalance(mortgageRate, mortgageTerm, loanAmount, (yr - 1) * 12);
+    // Use full yr (end-of-year) for equity — consistent with calculate() using equityYears = years.
+    const pvN = propertyValue * Math.pow(1 + propertyAppreciation / 100, yr);
+    const balN = remainingBalance(mortgageRate, mortgageTerm, loanAmount, yr * 12);
     const equityN = pvN - balN;
     const sellingFeesN = pvN * (saleFeesPct / 100);
 
@@ -372,12 +382,12 @@ export function stateGroupLabel(stateGroup: Bundesland): string {
     BY_SN: "Bavaria & Saxony — 3.5%",
     HH: "Hamburg — 4.0%",
     BW_HE: "Baden-Württemberg & Hesse — 5.0%",
-    BE_HB_MV_NI_ST: "Berlin, Bremen, Meck.-Vorpommern, Lower Saxony, Saxony-Anhalt — 5.5%",
-    RP_TH: "Rhineland-Palatinate & Thuringia — 6.0%",
+    HB_MV_NI_ST: "Bremen, Meck.-Vorpommern, Lower Saxony, Saxony-Anhalt — 5.5%",
+    BE_RP_TH: "Berlin, Rhineland-Palatinate & Thuringia — 6.0%",
     BB_NW_SH_SL: "Brandenburg, NRW, Schleswig-Holstein, Saarland — 6.5%",
   };
   return labels[stateGroup];
 }
 
 // German state group options (Bundesländer) for the transfer tax rate selector
-export const STATE_GROUP_OPTIONS: Bundesland[] = ["BY_SN", "HH", "BW_HE", "BE_HB_MV_NI_ST", "RP_TH", "BB_NW_SH_SL"];
+export const STATE_GROUP_OPTIONS: Bundesland[] = ["BY_SN", "HH", "BW_HE", "HB_MV_NI_ST", "BE_RP_TH", "BB_NW_SH_SL"];

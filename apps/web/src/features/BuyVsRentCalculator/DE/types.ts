@@ -33,8 +33,8 @@ export type Bundesland =
   | "BY_SN" // Bavaria & Saxony:                                              3.5%
   | "HH" // Hamburg:                                                       4.0%
   | "BW_HE" // Baden-Württemberg & Hesse:                                     5.0%
-  | "BE_HB_MV_NI_ST" // Berlin, Bremen, Mecklenburg-Vorpommern, Lower Saxony, Saxony-Anhalt: 5.5%
-  | "RP_TH" // Rhineland-Palatinate & Thuringia:                              6.0%
+  | "HB_MV_NI_ST" // Bremen, Mecklenburg-Vorpommern, Lower Saxony, Saxony-Anhalt: 5.5%
+  | "BE_RP_TH" // Berlin, Rhineland-Palatinate & Thuringia:                              6.0%
   | "BB_NW_SH_SL"; // Brandenburg, NRW, Schleswig-Holstein, Saarland:               6.5%
 
 // Composition types — not exported; use CalculationResult directly

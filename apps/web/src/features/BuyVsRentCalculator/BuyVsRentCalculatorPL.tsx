@@ -3,22 +3,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Home } from "lucide-react";
 import { Card, Separator } from "~/components/ui";
-import { calculate, buildChartData } from "./DE/formulas";
-import InputsPanel from "./DE/InputsPanel";
-import ResultsPanel from "./DE/ResultsPanel";
-import CostChart from "./DE/CostChart";
-import { Glossary } from "./DE/Glossary";
+import { calculate, buildChartData } from "./PL/formulas";
+import InputsPanel from "./PL/InputsPanel";
+import ResultsPanel from "./PL/ResultsPanel";
+import CostChart from "./PL/CostChart";
+import { Glossary } from "./PL/Glossary";
 import { FeedbackModal } from "./FeedbackModal";
-import { DEFAULT_INPUTS_DE } from "./DE/defaults";
-import type { CalculatorInputs, InputSetter } from "./DE/types";
+import { DEFAULT_INPUTS_PL } from "./PL/defaults";
+import type { CalculatorInputs, InputSetter } from "./PL/types";
 import { useI18n } from "~/i18n/useI18n";
 import { sendToMixpanel } from "~/lib/mixpanel";
-import { GermanFlag } from "~/components/ui/HeroFlag/GermanFlag";
+import { PolishFlag } from "~/components/ui/HeroFlag/PolishFlag";
 
-export { DEFAULT_INPUTS_DE } from "./DE/defaults";
+export { DEFAULT_INPUTS_PL } from "./PL/defaults";
 
-export const BuyVsRentCalculatorDE = () => {
-  const [inputs, setInputs] = useState<CalculatorInputs>(DEFAULT_INPUTS_DE);
+export const BuyVsRentCalculatorPL = () => {
+  const [inputs, setInputs] = useState<CalculatorInputs>(DEFAULT_INPUTS_PL);
   const set: InputSetter = (key) => (val) => setInputs((prev) => ({ ...prev, [key]: val }));
   const result = useMemo(() => calculate(inputs), [inputs]);
   const chartData = useMemo(() => buildChartData(inputs), [inputs]);
@@ -33,7 +33,7 @@ export const BuyVsRentCalculatorDE = () => {
       sendToMixpanel("Computed Buy vs Rent Outcome", {
         computeResult: result,
         currentInputs: inputs,
-        source: "buy_vs_rent_calculator_de",
+        source: "buy_vs_rent_calculator_pl",
       });
     }, 1000);
     return () => {
@@ -48,7 +48,7 @@ export const BuyVsRentCalculatorDE = () => {
     >
       <div className={`relative z-10 overflow-hidden rounded-3xl px-2 py-6 sm:py-9 md:rounded-none md:px-8 md:py-12`}>
         <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <GermanFlag
+          <PolishFlag
             className={`absolute top-1/2 left-0 h-[140%] w-[70%] -translate-y-1/2 transform opacity-15`}
             style={{
               maskImage: "linear-gradient(90deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
@@ -71,10 +71,10 @@ export const BuyVsRentCalculatorDE = () => {
           </div>
           <div className="space-y-2">
             <h1 className={`text-on-surface text-xl font-bold md:text-2xl lg:text-3xl`}>
-              {i18n("German Buy vs Rent Calculator")}
+              {i18n("Polish Buy vs Rent Calculator")}
             </h1>
             <p className="text-neutral max-w-4xl">
-              {i18n("Compare buying and renting scenarios based on your German property details")}
+              {i18n("Compare buying and renting scenarios based on your Polish property details")}
             </p>
           </div>
         </div>
@@ -104,7 +104,7 @@ export const BuyVsRentCalculatorDE = () => {
       <FeedbackModal
         isOpen={showFeedbackModal}
         onClose={() => setShowFeedbackModal(false)}
-        featureName={i18n("German Buy vs Rent Calculator")}
+        featureName={i18n("Polish Buy vs Rent Calculator")}
       />
     </Card>
   );

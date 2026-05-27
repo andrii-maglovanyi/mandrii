@@ -12,21 +12,21 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { gbp } from "./formulas";
-import type { ChartDataPoint } from "./types";
+import type { ChartDataPoint } from "../common";
 import { useI18n } from "~/i18n/useI18n";
 
 type ChartTooltipProps = {
   readonly active?: boolean;
   readonly payload?: Array<{ name: string; value: number; color: string }>;
   readonly label?: number;
+  readonly formatCurrency: (value: number) => string;
 };
 
 const BUYING_COLOR = "var(--color-primary)";
 const RENTING_COLOR = "var(--color-success, #10b981)";
 const DEFAULT_VIEW_OPTIONS = [10, 20, 30, 40];
 
-function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
+function ChartTooltip({ active, payload, label, formatCurrency }: ChartTooltipProps) {
   const i18n = useI18n();
 
   if (!active || !payload?.length) return null;
@@ -41,7 +41,7 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
           <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: color }} />
           <span className="text-surface/80 flex-1">{name}</span>
           <span className="font-bold tabular-nums" style={{ color }}>
-            {gbp(value)}
+            {formatCurrency(value)}
             {value < 0 && <span className="ml-0.5 text-[0.7rem] opacity-80">({i18n("in profit")})</span>}
           </span>
         </div>
@@ -49,7 +49,7 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
       {payload.length === 2 && (
         <div className="border-surface/20 text-surface/60 mt-1.5 border-t pt-1.5 text-[0.75rem]">
           {i18n("Difference: {difference}", {
-            difference: gbp(Math.abs(payload[0].value - payload[1].value)),
+            difference: formatCurrency(Math.abs(payload[0].value - payload[1].value)),
           })}{" "}
           ({payload[0].value < payload[1].value ? i18n("Buying ahead") : i18n("Renting ahead")})
         </div>
@@ -61,9 +61,12 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
 type CostChartProps = {
   readonly data: readonly ChartDataPoint[];
   readonly years: number;
+  readonly formatCurrency: (value: number) => string;
+  /** Symbol shown on Y-axis tick labels, e.g. "£" or "€" */
+  readonly currencySymbol: string;
 };
 
-export default function CostChart({ data, years }: CostChartProps) {
+export default function CostChart({ data, years, formatCurrency, currencySymbol }: CostChartProps) {
   const i18n = useI18n();
   const [viewYears, setViewYears] = useState(10);
 
@@ -72,12 +75,20 @@ export default function CostChart({ data, years }: CostChartProps) {
     years > 40 ? Array.from({ length: 4 }, (_, i) => Math.round(((i + 1) * years) / 4)) : DEFAULT_VIEW_OPTIONS;
 
   useEffect(() => {
-    // Ensure we always show at least the full years range, but respect available data
+    // Clamp viewYears so it always shows at least the user's chosen horizon,
+    // but also shrinks back down if the user reduces years below the current view.
     const maxAvailable = data.length;
     const targetYears = Math.min(years, maxAvailable);
-    if (viewYears < targetYears) {
-      setViewYears(targetYears);
-    }
+    setViewYears((prev) => {
+      if (prev < targetYears) return targetYears;
+      // If the user reduced years below the current view, snap back to the
+      // nearest available VIEW_OPTION that fits (or just years itself).
+      const fittingOptions = DEFAULT_VIEW_OPTIONS.filter((o) => o >= targetYears);
+      if (fittingOptions.length > 0 && prev > fittingOptions[0] && years <= fittingOptions[0]) {
+        return fittingOptions[0];
+      }
+      return prev;
+    });
   }, [years, data.length]);
 
   const effectiveView = viewYears;
@@ -100,22 +111,21 @@ export default function CostChart({ data, years }: CostChartProps) {
         </h3>
         <div className="flex flex-wrap items-center justify-center gap-2">
           {crossoverYear && (
-            <span
-              className={`rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[0.75rem] font-semibold whitespace-nowrap text-amber-800`}
-            >
+            <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[0.75rem] font-semibold whitespace-nowrap text-amber-800">
               🏠 {i18n("Buying cheaper from year {crossoverYear}", { crossoverYear })}
             </span>
           )}
 
-          <div className={`border-neutral-disabled flex shrink-0 overflow-hidden rounded-md border`}>
+          <div className="border-neutral-disabled flex shrink-0 overflow-hidden rounded-md border">
             {VIEW_OPTIONS.map((opt) => (
               <button
                 key={opt}
+                type="button"
                 className={`[&+button]:border-neutral-disabled cursor-pointer border-none px-2.5 py-1 text-[0.75rem] font-semibold transition-colors duration-150 [&+button]:border-l ${
                   effectiveView === opt
                     ? "bg-on-surface text-surface"
                     : "bg-surface text-neutral hover:bg-neutral/10 hover:text-on-surface"
-                } `}
+                }`}
                 onClick={() => setViewYears(opt)}
               >
                 {opt} {i18n("yr")}
@@ -148,7 +158,11 @@ export default function CostChart({ data, years }: CostChartProps) {
             height={36}
           />
           <YAxis
-            tickFormatter={(v) => (v < 0 ? `-£${Math.abs(v / 1000).toFixed(0)}k` : `£${(v / 1000).toFixed(0)}k`)}
+            tickFormatter={(v) =>
+              v < 0
+                ? `-${currencySymbol}${Math.abs(v / 1000).toFixed(0)}k`
+                : `${currencySymbol}${(v / 1000).toFixed(0)}k`
+            }
             tickLine={false}
             axisLine={false}
             tick={{ fontSize: 11, fill: "var(--color-neutral)" }}
@@ -156,7 +170,7 @@ export default function CostChart({ data, years }: CostChartProps) {
             domain={[minVal * 1.05, maxVal * 1.05]}
           />
 
-          <Tooltip content={<ChartTooltip />} />
+          <Tooltip content={<ChartTooltip formatCurrency={formatCurrency} />} />
           <Legend
             iconType="circle"
             iconSize={8}

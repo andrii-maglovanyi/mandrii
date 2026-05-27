@@ -1,7 +1,7 @@
 "use client";
 
 import SharedCostChart from "../shared/CostChart";
-import { eur } from "./formulas";
+import { pln } from "./formulas";
 import type { ChartDataPoint } from "../common";
 
 type CostChartProps = {
@@ -10,5 +10,5 @@ type CostChartProps = {
 };
 
 export default function CostChart({ data, years }: CostChartProps) {
-  return <SharedCostChart data={data} years={years} formatCurrency={eur} currencySymbol="€" />;
+  return <SharedCostChart data={data} years={years} formatCurrency={pln} currencySymbol="zł" />;
 }

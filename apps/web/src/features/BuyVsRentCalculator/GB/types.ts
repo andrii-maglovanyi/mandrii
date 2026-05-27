@@ -1,4 +1,4 @@
-import { ChartDataPoint, RentingMetrics, SummaryMetrics } from "../../common";
+import { ChartDataPoint, RentingMetrics, SummaryMetrics } from "../common";
 
 /** User input parameters for the calculator */
 export type CalculatorInputs = {

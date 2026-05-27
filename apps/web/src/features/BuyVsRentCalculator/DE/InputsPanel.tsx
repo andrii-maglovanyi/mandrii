@@ -5,9 +5,11 @@ import { useI18n } from "~/i18n/useI18n";
 import { transferTax, eur, stateGroupLabel, STATE_GROUP_OPTIONS } from "./formulas";
 import type { Bundesland, CalculatorInputs, InputSetter } from "./types";
 import { Input, Select } from "~/components/ui";
-import { ThumbsUp, TriangleAlert, HelpCircle, ChevronDown, ChevronUp, Flag } from "lucide-react";
+import { ThumbsUp, TriangleAlert } from "lucide-react";
 import { safeFloat, safeInt } from "../utils/parse";
 import { getLtvClass } from "../utils/helpers";
+import { ControlsBar } from "../shared/ControlsBar";
+import { Hint } from "../shared/Hint";
 
 type InputsPanelProps = {
   readonly inputs: CalculatorInputs;
@@ -30,21 +32,16 @@ type WithAdvanced = {
   readonly showAdvanced: boolean;
 };
 
-/** Renders a hint paragraph only when showHints is true */
-function Hint({ text, showHints }: { text: string; showHints: boolean }) {
-  if (!showHints) return null;
-  return <span className="text-neutral/80 text-xs">{text}</span>;
-}
-
 const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputProps & WithHints & WithAdvanced) => {
   const { propertyValue, deposit, stateGroup } = inputs;
   const ltv = propertyValue > 0 ? ((propertyValue - deposit) / propertyValue) * 100 : 0;
   const depositPct = 100 - ltv;
   const ltvClass = getLtvClass(ltv, { risk: 80, normal: 60 });
+  const i18n = useI18n();
 
   // Transfer tax (Grunderwerbsteuer) and acquisition cost summary
   const transferTaxAmount = transferTax(propertyValue, stateGroup);
-  const transferTaxRate = transferTaxAmount / propertyValue;
+  const transferTaxRate = propertyValue > 0 ? transferTaxAmount / propertyValue : 0;
   const buyerAgentFee = propertyValue * (inputs.buyerAgentFeePct / 100);
   const totalAcquisitionCosts = transferTaxAmount + buyerAgentFee + inputs.notaryAndLandRegistryCosts;
   const totalAcquisitionCostsPct = propertyValue > 0 ? (totalAcquisitionCosts / propertyValue) * 100 : 0;
@@ -54,14 +51,14 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
 
   return (
     <>
-      <h2 className="text-on-surface mb-2 text-xl font-semibold md:text-2xl">Buying</h2>
+      <h2 className="text-on-surface mb-2 text-xl font-semibold md:text-2xl">{i18n("Buying")}</h2>
 
       {/* Row 1: Property value + Deposit */}
       <div className="grid gap-x-4 gap-y-3 pb-2 md:grid-cols-2">
         <div className="flex flex-col gap-1">
           <Input
             min={0}
-            label="Property value (€)"
+            label={i18n("Property value (€)")}
             step={5000}
             type="number"
             value={inputs.propertyValue}
@@ -69,14 +66,16 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           />
           <Hint
             showHints={showHints}
-            text="The total purchase price of the property as stated in the notarial sales contract (Kaufvertrag)."
+            text={i18n(
+              "The total purchase price of the property as stated in the notarial sales contract (Kaufvertrag).",
+            )}
           />
         </div>
 
         <div className="flex flex-col gap-1">
           <Input
             min={0}
-            label="Equity / Down payment (€)"
+            label={i18n("Equity / Down payment (€)")}
             step={5000}
             type="number"
             value={inputs.deposit}
@@ -84,7 +83,9 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           />
           <Hint
             showHints={showHints}
-            text="Your own funds (Eigenkapital). German banks typically require at least the full Kaufnebenkosten (10–15%) plus 10–20% of the purchase price from your own capital."
+            text={i18n(
+              "Your own funds (Eigenkapital). German banks typically require at least the full Kaufnebenkosten (10–15%) plus 10–20% of the purchase price from your own capital.",
+            )}
           />
         </div>
 
@@ -94,24 +95,27 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <span
                 className={`inline-flex items-center rounded-md px-2.5 py-1 text-[0.8rem] font-semibold ${ltvClass}`}
               >
-                {`LTV (Beleihungsauslauf) ${Math.max(0, ltv).toFixed(1)}% · Equity ${Math.min(100, depositPct).toFixed(1)}%`}
+                {i18n("LTV (Beleihungsauslauf) {ltv}% · Equity {deposit}%", {
+                  ltv: Math.max(0, ltv).toFixed(1),
+                  deposit: Math.min(100, depositPct).toFixed(1),
+                })}
               </span>
               {belowMinDeposit && (
                 <span className="text-danger flex items-center gap-1.5 text-sm font-medium">
                   <TriangleAlert size={14} strokeWidth={3} />
-                  Below 20% equity — expect rate surcharges
+                  {i18n("Below 20% equity — expect rate surcharges")}
                 </span>
               )}
               {ltv > 60 && ltv <= 80 && !belowMinDeposit && (
                 <span className="text-warning flex items-center gap-1.5 text-sm font-medium">
                   <TriangleAlert size={14} strokeWidth={3} />
-                  Above 60% LTV — moderate rate band
+                  {i18n("Above 60% LTV — moderate rate band")}
                 </span>
               )}
               {noMortgage && (
                 <span className="text-primary flex items-center gap-1.5 text-sm font-medium">
                   <ThumbsUp size={14} strokeWidth={3} />
-                  No mortgage needed
+                  {i18n("No mortgage needed")}
                 </span>
               )}
             </div>
@@ -125,7 +129,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           <Input
             min={0}
             disabled={noMortgage}
-            label="Mortgage rate / Sollzins (%)"
+            label={i18n("Mortgage rate / Sollzins (%)")}
             step={0.05}
             type="number"
             value={inputs.mortgageRate}
@@ -133,7 +137,9 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           />
           <Hint
             showHints={showHints}
-            text="The annual nominal interest rate (Sollzinssatz) on your loan. 10-year fixed rates (Zinsbindung) are currently around 3.2–3.6% in Germany (Dr. Klein / Bundesbank, 2025–2026)."
+            text={i18n(
+              "The annual nominal interest rate (Sollzinssatz) on your loan. 10-year fixed rates (Zinsbindung) were approximately 3.2–3.6% in Germany in 2025–2026 (indicative market range; verify current rates before decisions).",
+            )}
           />
         </div>
 
@@ -142,7 +148,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
             min={5}
             max={40}
             disabled={noMortgage}
-            label="Mortgage term / Gesamtlaufzeit (years)"
+            label={i18n("Mortgage term / Gesamtlaufzeit (years)")}
             step={1}
             type="number"
             value={inputs.mortgageTerm}
@@ -150,14 +156,16 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           />
           <Hint
             showHints={showHints}
-            text="Full repayment term until the loan is paid off (Volltilgung). Typically 25–35 years in Germany."
+            text={i18n(
+              "Full repayment term until the loan is paid off (Volltilgung). Typically 25–35 years in Germany.",
+            )}
           />
         </div>
 
         <div className="flex flex-col gap-1">
           {/* Federal state (Bundesland) — determines the transfer tax rate */}
           <Select
-            label="Federal state / Bundesland"
+            label={i18n("Federal state / Bundesland")}
             value={inputs.stateGroup}
             onChange={(e) => set("stateGroup")(e.target.value as Bundesland)}
             options={STATE_GROUP_OPTIONS.map((sg) => ({
@@ -167,21 +175,23 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           />
           <Hint
             showHints={showHints}
-            text="Determines the Grunderwerbsteuer rate. Unlike UK Stamp Duty, GrESt is a flat percentage of the full purchase price with no thresholds and no first-time buyer relief."
+            text={i18n(
+              "Determines the Grunderwerbsteuer rate. Unlike UK Stamp Duty, GrESt is a flat percentage of the full purchase price with no thresholds and no first-time buyer relief.",
+            )}
           />
         </div>
 
         {/* Acquisition costs (Kaufnebenkosten) summary row */}
         <div className="col-span-full mt-1 flex flex-wrap items-center gap-4">
           <span className="text-neutral flex items-center gap-1.5 text-sm">
-            Transfer tax (GrESt):
+            {i18n("Transfer tax (GrESt)")}:
             <strong className="text-on-surface font-semibold">{eur(transferTaxAmount)}</strong>
             <span className="text-neutral/60 text-xs">({(transferTaxRate * 100).toFixed(1)}%)</span>
           </span>
           <span className="text-neutral flex items-center gap-1.5 text-sm">
-            Total acquisition costs (Kaufnebenkosten):
+            {i18n("Total acquisition costs (Kaufnebenkosten)")}:
             <strong className="text-on-surface font-semibold">
-              ~{totalAcquisitionCostsPct.toFixed(1)}% of purchase price
+              ~{totalAcquisitionCostsPct.toFixed(1)}% {i18n("of purchase price")}
             </strong>
           </span>
         </div>
@@ -194,7 +204,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           <div className="grid gap-x-5 gap-y-3 pb-4 md:grid-cols-3">
             <div className="flex flex-col gap-1">
               <Input
-                label="Property appreciation (% p.a.)"
+                label={i18n("Property appreciation (% p.a.)")}
                 step={0.1}
                 type="number"
                 value={inputs.propertyAppreciation}
@@ -202,13 +212,15 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="Expected annual price growth. Destatis reported +3.2% nationally in 2025. Major cities (Munich, Frankfurt, Hamburg) have historically averaged 3–5% p.a."
+                text={i18n(
+                  "Expected annual price growth. German residential prices have varied significantly by region; major cities (Munich, Frankfurt, Hamburg) have historically averaged 3–5% p.a. Enter your own estimate — this is a forward-looking assumption, not a guaranteed rate.",
+                )}
               />
             </div>
 
             <div className="flex flex-col gap-1">
               <Input
-                label="Notary & land registry costs (€)"
+                label={i18n("Notary & land registry costs (€)")}
                 step={500}
                 type="number"
                 value={inputs.notaryAndLandRegistryCosts}
@@ -216,19 +228,24 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="Mandatory in Germany: the notary (Notar) certifies the purchase contract and the land registry (Grundbuch) records ownership. Together ~1.5–2% of the purchase price."
+                text={i18n(
+                  "Mandatory in Germany: the notary (Notar) certifies the purchase contract and the land registry (Grundbuch) records ownership. Together ~1.5–2% of the purchase price.",
+                )}
               />
             </div>
 
             <div className="flex flex-col gap-1">
               <Input
-                label="Initial renovation costs (€)"
+                label={i18n("Initial renovation costs (€)")}
                 step={500}
                 type="number"
                 value={inputs.initialRepairCosts}
                 onChange={(e) => set("initialRepairCosts")(safeFloat(e.target.value))}
               />
-              <Hint showHints={showHints} text="One-off renovation or fitting-out costs immediately after purchase." />
+              <Hint
+                showHints={showHints}
+                text={i18n("One-off renovation or fitting-out costs immediately after purchase.")}
+              />
             </div>
           </div>
 
@@ -236,7 +253,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           <div className="grid gap-x-4 gap-y-3 pb-4 md:grid-cols-3">
             <div className="flex flex-col gap-1">
               <Input
-                label="Buyer's agent fee / Maklerprovision (%)"
+                label={i18n("Buyer's agent fee / Maklerprovision (%)")}
                 step={0.01}
                 type="number"
                 value={inputs.buyerAgentFeePct}
@@ -244,13 +261,15 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="Since the Maklergesetz of December 2020 (§§ 656a–656d BGB), buyer and seller must share the agent's commission equally. The total commission is typically 3.57–7.14% (incl. VAT); the buyer pays half. Enter only the buyer's share here (typically 1.785–3.57%)."
+                text={i18n(
+                  "Since the Maklergesetz of December 2020 (§§ 656a–656d BGB), buyer and seller must share the agent's commission equally. The total commission is typically 3.57–7.14% (incl. VAT); the buyer pays half. Enter only the buyer's share here (typically 1.785–3.57%).",
+                )}
               />
             </div>
 
             <div className="flex flex-col gap-1">
               <Input
-                label="Selling costs at exit (% of sale price)"
+                label={i18n("Selling costs at exit (% of sale price)")}
                 step={0.1}
                 type="number"
                 value={inputs.saleFeesPct}
@@ -258,13 +277,15 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="Costs when you eventually sell. The seller pays their half of the Maklerprovision (typically 3.57% incl. VAT) plus notary costs for the sale contract. Total is typically 3.5–4.5% of the sale price."
+                text={i18n(
+                  "Costs when you eventually sell. The seller pays their half of the Maklerprovision (typically 3.57% incl. VAT) plus notary costs for the sale contract. Total is typically 3.5–4.5% of the sale price.",
+                )}
               />
             </div>
 
             <div className="flex flex-col gap-1">
               <Input
-                label="Annual maintenance (% of property value)"
+                label={i18n("Annual maintenance (% of property value)")}
                 step={0.1}
                 type="number"
                 value={inputs.maintenancePct}
@@ -272,7 +293,9 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="Annual upkeep costs as a % of property value, growing with appreciation. Rule of thumb: 0.5–1% for Neubau (new-build), up to 1.5% for Altbau (pre-war stock)."
+                text={i18n(
+                  "Annual upkeep costs as a % of property value, growing with appreciation. Rule of thumb: 0.5–1% for Neubau (new-build), up to 1.5% for Altbau (pre-war stock).",
+                )}
               />
             </div>
           </div>
@@ -281,7 +304,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           <div className="grid gap-x-4 gap-y-3 pb-4 md:grid-cols-3">
             <div className="flex flex-col gap-1">
               <Input
-                label="Buildings insurance / Wohngebäudeversicherung (€/yr)"
+                label={i18n("Buildings insurance / Wohngebäudeversicherung (€/yr)")}
                 step={50}
                 type="number"
                 value={inputs.annualHomeInsurance}
@@ -289,7 +312,9 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="Annual buildings insurance premium, required by lenders. For condominiums (Eigentumswohnungen), this is often included in the Hausgeld — adjust accordingly."
+                text={i18n(
+                  "Annual buildings insurance premium, required by lenders. For condominiums (Eigentumswohnungen), this is often included in the Hausgeld — adjust accordingly.",
+                )}
               />
             </div>
 
@@ -299,7 +324,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
                 min={5}
                 max={30}
                 disabled={noMortgage}
-                label="Fixed-rate period / Zinsbindung (years)"
+                label={i18n("Fixed-rate period / Zinsbindung (years)")}
                 step={1}
                 type="number"
                 value={inputs.fixedRatePeriodYears}
@@ -307,7 +332,9 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="Unlike UK mortgages, German mortgages fix the rate only for the Zinsbindung period (typically 10–15 years), not the full term. When this expires, you must arrange Anschlussfinanzierung at whatever rates prevail at that time."
+                text={i18n(
+                  "Unlike UK mortgages, German mortgages fix the rate only for the Zinsbindung period (typically 10–15 years), not the full term. When this expires, you must arrange Anschlussfinanzierung at whatever rates prevail at that time.",
+                )}
               />
             </div>
 
@@ -315,7 +342,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               {/* Refinancing cost (Anschlussfinanzierung) */}
               <Input
                 disabled={noMortgage}
-                label="Refinancing cost / Anschlussfinanzierung (€)"
+                label={i18n("Refinancing cost / Anschlussfinanzierung (€)")}
                 step={100}
                 type="number"
                 value={inputs.refinancingCost}
@@ -323,7 +350,9 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="One-off cost each time you arrange a new fixed-rate deal: broker fee, notarial land charge amendment (Grundschuldänderung), and any bank processing fees. Typically €500–€2,000."
+                text={i18n(
+                  "One-off cost each time you arrange a new fixed-rate deal: broker fee, notarial land charge amendment (Grundschuldänderung), and any bank processing fees. Typically €500–€2,000.",
+                )}
               />
             </div>
           </div>
@@ -333,7 +362,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
             <div className="flex flex-col gap-1">
               {/* Annual condo fee (Hausgeld / WEG) */}
               <Input
-                label="Annual condo fee / Hausgeld (€)"
+                label={i18n("Annual condo fee / Hausgeld (€)")}
                 step={100}
                 type="number"
                 value={inputs.annualCondoFee}
@@ -341,14 +370,16 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="For Eigentumswohnungen (condominiums): annual Hausgeld paid to the Wohnungseigentümergemeinschaft (WEG), covering shared building maintenance, administration, and the Instandhaltungsrücklage (reserve fund). Typically €24–€48/m²/year. Set to 0 for houses."
+                text={i18n(
+                  "For Eigentumswohnungen (condominiums): annual Hausgeld paid to the Wohnungseigentümergemeinschaft (WEG), covering shared building maintenance, administration, and the Instandhaltungsrücklage (reserve fund). Typically €24–€48/m²/year. Set to 0 for houses.",
+                )}
               />
             </div>
 
             <div className="flex flex-col gap-1">
               {/* Annual property tax (Grundsteuer) */}
               <Input
-                label="Annual property tax / Grundsteuer (€)"
+                label={i18n("Annual property tax / Grundsteuer (€)")}
                 step={50}
                 type="number"
                 value={inputs.annualPropertyTax}
@@ -356,7 +387,9 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               />
               <Hint
                 showHints={showHints}
-                text="Annual municipal property tax, reformed from January 2025. Calculated as Grundsteuerwert × Steuermesszahl × local Hebesatz. Typically €400–€1,500/year depending on municipality and property size."
+                text={i18n(
+                  "Annual municipal property tax, reformed from January 2025. Calculated as Grundsteuerwert × Steuermesszahl × local Hebesatz. Typically €400–€1,500/year depending on municipality and property size.",
+                )}
               />
             </div>
           </div>
@@ -367,13 +400,15 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
 };
 
 const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputProps & WithHints & WithAdvanced) => {
+  const i18n = useI18n();
+
   return (
     <>
-      <h2 className="text-on-surface mb-2 text-xl font-semibold md:text-2xl">Renting</h2>
+      <h2 className="text-on-surface mb-2 text-xl font-semibold md:text-2xl">{i18n("Renting")}</h2>
       <div className="grid gap-x-8 gap-y-3 pb-4 md:grid-cols-2">
         <div className="flex flex-col gap-1">
           <Input
-            label="Return on savings (% p.a.)"
+            label={i18n("Return on savings (% p.a.)")}
             step={0.1}
             type="number"
             value={inputs.returnOnSavings}
@@ -381,13 +416,15 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
           />
           <Hint
             showHints={showHints}
-            text="Annual return on the capital you keep by not buying (equity, GrESt, Kaufnebenkosten). German Tagesgeld (instant-access savings): ~3–3.5%; broad equity ETF (long-run): ~5–7%. Defaults to 3.5%."
+            text={i18n(
+              "Annual return on the capital you keep by not buying (equity, GrESt, Kaufnebenkosten). German Tagesgeld (instant-access savings): ~3–3.5%; broad equity ETF (long-run): ~5–7%. Defaults to 3.5%.",
+            )}
           />
         </div>
 
         <div className="flex flex-col gap-1">
           <Input
-            label="Monthly cold rent / Kaltmiete (€)"
+            label={i18n("Monthly cold rent / Kaltmiete (€)")}
             step={50}
             type="number"
             value={inputs.monthlyRent}
@@ -395,13 +432,15 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
           />
           <Hint
             showHints={showHints}
-            text="Monthly rent excluding utilities and service charges (Kaltmiete). The Mietpreisbremse (§556d BGB) limits new tenancy rents to 10% above the local reference rent (Mietspiegel) in designated tight-market areas."
+            text={i18n(
+              "Monthly rent excluding utilities and service charges (Kaltmiete). The Mietpreisbremse (§556d BGB) limits new tenancy rents to 10% above the local reference rent (Mietspiegel) in designated tight-market areas.",
+            )}
           />
         </div>
 
         <div className="flex flex-col gap-1">
           <Input
-            label="Expected rent increase (% p.a.)"
+            label={i18n("Expected rent increase (% p.a.)")}
             step={0.1}
             type="number"
             value={inputs.rentIncrease}
@@ -409,7 +448,9 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
           />
           <Hint
             showHints={showHints}
-            text="The Kappungsgrenze (§558 BGB) caps increases in existing tenancies at 20% over 3 years (15% in areas with an angespannter Wohnungsmarkt). Destatis reported ~3.5% annual rent growth in 2025. New tenancy rents are additionally restricted by the Mietpreisbremse."
+            text={i18n(
+              "The Kappungsgrenze (§558 BGB) caps increases in existing tenancies at 20% over 3 years (15% in areas with an angespannter Wohnungsmarkt). Destatis reported ~3.5% annual rent growth in 2025. New tenancy rents are additionally restricted by the Mietpreisbremse.",
+            )}
           />
         </div>
 
@@ -418,7 +459,7 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
             <div className="flex flex-col gap-1">
               {/* Rental deposit (Mietkaution) */}
               <Input
-                label="Rental deposit / Mietkaution (€)"
+                label={i18n("Rental deposit / Mietkaution (€)")}
                 step={100}
                 type="number"
                 value={inputs.rentalDeposit}
@@ -426,7 +467,9 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
               />
               <Hint
                 showHints={showHints}
-                text="Legally capped at 3 months' cold rent (§551 BGB). The deposit is held in a separate account (Mietkautionskonto) and returned on move-out. This capital cannot be invested during the tenancy."
+                text={i18n(
+                  "Legally capped at 3 months' cold rent (§551 BGB). The deposit is held in a separate account (Mietkautionskonto) and returned on move-out. This capital cannot be invested during the tenancy.",
+                )}
               />
             </div>
           </div>
@@ -437,13 +480,15 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
 };
 
 const LivingInputs = ({ inputs, set, showHints }: InternalInputProps & WithHints) => {
+  const i18n = useI18n();
+
   return (
     <>
-      <h2 className="text-on-surface mb-2 text-xl font-semibold md:text-2xl">Time horizon</h2>
+      <h2 className="text-on-surface mb-2 text-xl font-semibold md:text-2xl">{i18n("Time horizon")}</h2>
       <div className="pb-4">
         <div className="flex flex-col gap-1">
           <Input
-            label="Years in property"
+            label={i18n("Years in property")}
             step={1}
             min={1}
             max={50}
@@ -453,59 +498,15 @@ const LivingInputs = ({ inputs, set, showHints }: InternalInputProps & WithHints
           />
           <Hint
             showHints={showHints}
-            text="How long you plan to stay. Because German Kaufnebenkosten are very high (typically 10–15% of the purchase price), buying rarely makes financial sense for stays shorter than 7–10 years."
+            text={i18n(
+              "How long you plan to stay. Because German Kaufnebenkosten are very high (typically 10–15% of the purchase price), buying rarely makes financial sense for stays shorter than 7–10 years.",
+            )}
           />
         </div>
       </div>
     </>
   );
 };
-
-/** Toggle button strip — hints on the left, advanced on the right */
-function ControlsBar({
-  showHints,
-  onToggleHints,
-  showAdvanced,
-  onToggleAdvanced,
-  onFeedback,
-}: {
-  showHints: boolean;
-  onToggleHints: () => void;
-  showAdvanced: boolean;
-  onToggleAdvanced: () => void;
-  onFeedback?: () => void;
-}) {
-  const i18n = useI18n();
-
-  const pillClass = (active: boolean) =>
-    [
-      "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
-      active
-        ? "border-primary text-primary bg-primary/10 hover:bg-primary/20"
-        : "border-neutral/30 text-neutral hover:border-neutral/60",
-    ].join(" ");
-
-  return (
-    <div className="mb-4 flex flex-wrap items-center justify-center gap-2 md:justify-end">
-      <button type="button" onClick={onToggleHints} className={pillClass(showHints)} aria-pressed={showHints}>
-        <HelpCircle size={14} strokeWidth={2.5} />
-        {showHints ? i18n("Hide hints") : i18n("Show hints")}
-      </button>
-
-      <button type="button" onClick={onToggleAdvanced} className={pillClass(showAdvanced)} aria-pressed={showAdvanced}>
-        {showAdvanced ? <ChevronUp size={14} strokeWidth={2.5} /> : <ChevronDown size={14} strokeWidth={2.5} />}
-        {showAdvanced ? i18n("Fewer options") : i18n("More options")}
-      </button>
-
-      {onFeedback && (
-        <button type="button" onClick={onFeedback} className={pillClass(false)}>
-          <Flag size={14} strokeWidth={2.5} />
-          {i18n("Found an issue?")}
-        </button>
-      )}
-    </div>
-  );
-}
 
 export default function InputsPanel({ inputs, set, showHints, onToggleHints, onFeedback }: InputsPanelProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);

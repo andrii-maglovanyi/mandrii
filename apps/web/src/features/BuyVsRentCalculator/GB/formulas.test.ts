@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { stampDuty, calculate, buildChartData, gbp } from "./formulas";
 import type { CalculatorInputs } from "./types";
-import { pmt, remainingBalance } from "../../utils/helpers";
+import { pmt, remainingBalance } from "../utils/helpers";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -170,16 +170,12 @@ describe("calculate — buying", () => {
     expect(r2(result.totalMortgagePayments)).toBe(191_527.05);
   });
 
-  it("equity value matches spreadsheet (now calculated at year 7)", () => {
-    // Updated: equity now uses full 7 years of appreciation (was year 6)
-    // Expecting higher equity value due to greater property appreciation
-    expect(result.equity).toBeGreaterThan(178_723.52);
+  it("equity value matches spreadsheet (£178,723.52)", () => {
+    expect(r2(result.equity)).toBe(178_723.52);
   });
 
-  it("selling fees = 1% of property value at year 7 (£5,943.43)", () => {
-    // Fixed: now correctly uses year 7 appreciation
-    // 500,000 × 1.025^7 = 594,342.87 → selling fee = £5,943.43
-    expect(r2(result.sellingFees)).toBe(5_943.43);
+  it("selling fees matches spreadsheet (£5,798.47)", () => {
+    expect(r2(result.sellingFees)).toBe(5_798.47);
   });
 
   it("repairs & maintenance matches spreadsheet (£42,737.15)", () => {
@@ -190,10 +186,8 @@ describe("calculate — buying", () => {
     expect(result.totalInsurance).toBe(3_500);
   });
 
-  it("buying net is improved with full year 7 appreciation (was year 6)", () => {
-    // Updated: buyingNet now uses full 7 years of appreciation
-    // Expecting higher buyingNet (less negative) due to greater property equity
-    expect(result.buyingNet).toBeGreaterThan(-131_339.15);
+  it("buying net matches spreadsheet (-£131,339.15)", () => {
+    expect(r2(result.buyingNet)).toBe(-131_339.15);
   });
 
   it("caps mortgage payments at mortgage term (not years)", () => {
@@ -224,7 +218,7 @@ describe("calculate — renting", () => {
     expect(Math.round(result.rentPaid)).toBe(202_289);
   });
 
-  it("renting net matches spreadsheet at year 7 (-£188,872.68)", () => {
+  it("renting net matches spreadsheet (-£188,872.68)", () => {
     expect(r2(result.rentingNet)).toBe(-188_872.68);
   });
 });
@@ -232,13 +226,10 @@ describe("calculate — renting", () => {
 // ── calculate — summary ───────────────────────────────────────────────────────
 
 describe("calculate — summary", () => {
-  it("buying advantage improves with full year 7 appreciation (was year 6)", () => {
+  it("buying is better after 7 years by ~£57,534", () => {
     const { buyingNet, rentingNet } = calculate(BASE);
-    // Fixed: buyingNet now uses full year 7 appreciation instead of year 6
-    // The buying advantage should be larger than before
     expect(buyingNet).toBeGreaterThan(rentingNet);
-    // Old difference was ~£57,534; should be larger now
-    expect(Math.abs(rentingNet - buyingNet)).toBeGreaterThan(57_534);
+    expect(Math.round(Math.abs(rentingNet - buyingNet))).toBe(57_534);
   });
 
   it("renting wins when rent is very low relative to mortgage", () => {

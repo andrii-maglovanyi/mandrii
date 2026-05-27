@@ -1,4 +1,4 @@
-import { pmt, remainingBalance } from "../../utils/helpers";
+import { pmt, remainingBalance } from "../utils/helpers";
 import {
   fvLump,
   totalRentPaid,
@@ -6,7 +6,7 @@ import {
   returnOnOngoingSavings,
   safe,
   type ChartDataPoint,
-} from "../../common";
+} from "../common";
 import type { CalculationResult, CalculatorInputs } from "./types";
 
 // ── Stamp Duty ────────────────────────────────────────────────────────────────
@@ -62,12 +62,11 @@ export function stampDuty(propertyValue: number, firstTimeBuyer: boolean) {
 
 /**
  * Produces all figures shown in the results panel.
- * Formulas match the original spreadsheet exactly.
  *
- * NOTE: equity is calculated at `years - 1` (matching spreadsheet XLOOKUP(C23-1, ...)),
- * reflecting the property value and remaining mortgage at the start of the final year
- * rather than the end. This means a 10-year plan uses 9 years of appreciation and
- * mortgage paydown — consistent with the spreadsheet but worth bearing in mind.
+ * NOTE: equity is calculated at the end of the full holding period (`years`),
+ * reflecting the property value and remaining mortgage when you actually sell.
+ * This is consistent with expense calculations over the same period and with
+ * the DE and PL versions.
  */
 export function calculate(inputs: CalculatorInputs): CalculationResult {
   const propertyValue = safe(inputs.propertyValue);
@@ -109,8 +108,8 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
   const totalServiceCharges = serviceCharge * years;
   const totalGroundRent = groundRent * years;
 
-  // Equity is calculated at the end of the holding period (full years of appreciation)
-  // to ensure consistency with expense calculations over the same period.
+  // Equity at end of full holding period (years of appreciation and mortgage paydown).
+  // Using full `years` is consistent with expense calculations and with DE/PL versions.
   const equityYears = years;
   const futurePropertyValue = propertyValue * Math.pow(1 + propertyAppreciation / 100, equityYears);
   const balanceRemaining = remainingBalance(mortgageRate, mortgageTerm, loanAmount, equityYears * 12);
@@ -149,7 +148,6 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
   const returnOnInitialSavings = fvLump(initialSavingsBase, returnOnSavings, years) - initialSavingsBase;
   const ongoingSavings = returnOnOngoingSavings(monthlyRent, rentIncrease, monthlyMortgage, returnOnSavings, years);
   const rentPaid = totalRentPaid(monthlyRent, rentIncrease, years);
-  // Net = SUM(K27:K29) in spreadsheet — initialSavings is informational only
   // Note: tenancyDeposit is returned at end of tenancy, so it's added back to rentingNet
   const rentingNet = returnOnInitialSavings + ongoingSavings - rentPaid + tenancyDeposit;
 
@@ -188,8 +186,6 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
  * Always computes 40 years so the chart can show any view range.
  */
 export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoint[] {
-  const safe = (n: number, fallback = 0) => (Number.isFinite(n) ? n : fallback);
-
   const propertyValue = safe(inputs.propertyValue);
   const deposit = safe(inputs.deposit, 0);
   const mortgageRate = safe(inputs.mortgageRate, 0);
@@ -240,7 +236,7 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
   let propVal = propertyValue;
 
   for (let yr = 1; yr <= MAX_YEARS; yr++) {
-    // Buying (col I)
+    // Buying — use full yr (end-of-year) for equity, consistent with calculate().
     const pvN = propertyValue * Math.pow(1 + propertyAppreciation / 100, yr);
     const balN = remainingBalance(mortgageRate, mortgageTerm, loanAmount, yr * 12);
     const equityN = pvN - balN;

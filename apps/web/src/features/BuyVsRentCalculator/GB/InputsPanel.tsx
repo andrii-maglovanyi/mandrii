@@ -1,11 +1,15 @@
+"use client";
+
 import { useState } from "react";
 import { useI18n } from "~/i18n/useI18n";
 import { stampDuty, gbp } from "./formulas";
 import type { CalculatorInputs, InputSetter } from "./types";
 import { Checkbox, Input } from "~/components/ui";
-import { ThumbsUp, TriangleAlert, HelpCircle, ChevronDown, ChevronUp, Flag } from "lucide-react";
-import { safeFloat, safeInt } from "../../utils/parse";
-import { getLtvClass } from "../../utils/helpers";
+import { ThumbsUp, TriangleAlert } from "lucide-react";
+import { safeFloat, safeInt } from "../utils/parse";
+import { getLtvClass } from "../utils/helpers";
+import { ControlsBar } from "../shared/ControlsBar";
+import { Hint } from "../shared/Hint";
 
 type InputsPanelProps = {
   readonly inputs: CalculatorInputs;
@@ -27,12 +31,6 @@ type WithHints = {
 type WithAdvanced = {
   readonly showAdvanced: boolean;
 };
-
-/** Renders a hint paragraph only when showHints is true */
-function Hint({ text, showHints }: { text: string; showHints: boolean }) {
-  if (!showHints) return null;
-  return <span className="text-neutral/80 text-xs">{text}</span>;
-}
 
 const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputProps & WithHints & WithAdvanced) => {
   const { propertyValue, deposit, firstTimeBuyer } = inputs;
@@ -366,7 +364,7 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
           <Hint
             showHints={showHints}
             text={i18n(
-              "The annual percentage return you could earn by investing all the capital saved by not buying (deposit, stamp duty, buying costs, repairs, and arrangement fee).",
+              "The annual percentage return you could earn by investing all the capital saved by not buying (deposit, stamp duty, buying costs, and repairs).",
             )}
           />
         </div>
@@ -393,7 +391,7 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
           <Hint
             showHints={showHints}
             text={i18n(
-              "The annual percentage by which you expect your rent to rise over time. Under the Renters' Rights Act 2025, landlords can only raise rent once per year, to market rate.",
+              "The annual percentage by which you expect your rent to rise over time. Under the Renters' Rights Act 2025 (Royal Assent 27 Oct 2025, England only), landlords must use the statutory section 13 process and can raise rent at most once per year to the local market rate. Tenants can challenge any increase at the First-tier Tribunal.",
             )}
           />
         </div>
@@ -434,7 +432,7 @@ const LivingInputs = ({ inputs, set, showHints }: InternalInputProps & WithHints
             label={i18n("Years in property")}
             step={1}
             min={1}
-            max={40}
+            max={50}
             type="number"
             value={inputs.years}
             onChange={(e) => set("years")(safeInt(e.target.value))}
@@ -450,52 +448,6 @@ const LivingInputs = ({ inputs, set, showHints }: InternalInputProps & WithHints
     </>
   );
 };
-
-/** Toggle button strip — hints on the left, advanced on the right */
-function ControlsBar({
-  showHints,
-  onToggleHints,
-  showAdvanced,
-  onToggleAdvanced,
-  onFeedback,
-}: {
-  showHints: boolean;
-  onToggleHints: () => void;
-  showAdvanced: boolean;
-  onToggleAdvanced: () => void;
-  onFeedback?: () => void;
-}) {
-  const i18n = useI18n();
-
-  const pillClass = (active: boolean) =>
-    [
-      "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
-      active
-        ? "border-primary text-primary bg-primary/10 hover:bg-primary/20"
-        : "border-neutral/30 text-neutral hover:border-neutral/60",
-    ].join(" ");
-
-  return (
-    <div className="mb-4 flex flex-wrap items-center justify-center gap-2 md:justify-end">
-      <button type="button" onClick={onToggleHints} className={pillClass(showHints)} aria-pressed={showHints}>
-        <HelpCircle size={14} strokeWidth={2.5} />
-        {showHints ? i18n("Hide hints") : i18n("Show hints")}
-      </button>
-
-      <button type="button" onClick={onToggleAdvanced} className={pillClass(showAdvanced)} aria-pressed={showAdvanced}>
-        {showAdvanced ? <ChevronUp size={14} strokeWidth={2.5} /> : <ChevronDown size={14} strokeWidth={2.5} />}
-        {showAdvanced ? i18n("Fewer options") : i18n("More options")}
-      </button>
-
-      {onFeedback && (
-        <button type="button" onClick={onFeedback} className={pillClass(false)}>
-          <Flag size={14} strokeWidth={2.5} />
-          {i18n("Found an issue?")}
-        </button>
-      )}
-    </div>
-  );
-}
 
 export default function InputsPanel({ inputs, set, showHints, onToggleHints, onFeedback }: InputsPanelProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
