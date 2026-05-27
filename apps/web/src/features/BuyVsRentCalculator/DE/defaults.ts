@@ -18,7 +18,7 @@ export const DEFAULT_INPUTS_DE: CalculatorInputs = {
   deposit: 80_000,
   mortgageRate: 3.6,
   mortgageTerm: 30,
-  stateGroup: "BE_HB_MV_NI_ST", // Berlin (5.5% Grunderwerbsteuer)
+  stateGroup: "HB_MV_NI_ST", // Berlin (5.5% Grunderwerbsteuer)
   propertyAppreciation: 3.0,
   notaryAndLandRegistryCosts: 8_000,
   initialRepairCosts: 4_000,
