@@ -122,19 +122,19 @@ describe("stampDuty", () => {
       expect(stampDuty(125_000, false)).toBe(0);
     });
 
-    it("2% on portion £125k–£250k", () => {
+    it("2% on portion £125k-£250k", () => {
       // £250k: 0 + (125k * 2%) = £2,500
       expect(stampDuty(250_000, false)).toBe(2_500);
     });
 
-    it("5% on portion £250k–£925k", () => {
+    it("5% on portion £250k-£925k", () => {
       // £295k: 0 + 2500 + (45k * 5%) = £4,750 (GOV.UK example)
       expect(stampDuty(295_000, false)).toBe(4_750);
       // £500k: 0 + 2500 + (250k * 5%) = £15,000
       expect(stampDuty(500_000, false)).toBe(15_000);
     });
 
-    it("10% on portion £925k–£1.5m", () => {
+    it("10% on portion £925k-£1.5m", () => {
       // £1m: 0 + 2500 + 33750 + (75k * 10%) = £43,750
       expect(stampDuty(1_000_000, false)).toBe(43_750);
     });
@@ -153,9 +153,9 @@ describe("stampDuty", () => {
   });
 });
 
-// ── calculate — buying figures ────────────────────────────────────────────────
+// ── calculate - buying figures ────────────────────────────────────────────────
 
-describe("calculate — buying", () => {
+describe("calculate - buying", () => {
   const result = calculate(BASE);
 
   it("stamp duty matches spreadsheet (FTB £500k → £10,000)", () => {
@@ -197,9 +197,9 @@ describe("calculate — buying", () => {
   });
 });
 
-// ── calculate — renting figures ───────────────────────────────────────────────
+// ── calculate - renting figures ───────────────────────────────────────────────
 
-describe("calculate — renting", () => {
+describe("calculate - renting", () => {
   const result = calculate(BASE);
 
   it("savings from not buying matches spreadsheet (£70,500)", () => {
@@ -223,9 +223,9 @@ describe("calculate — renting", () => {
   });
 });
 
-// ── calculate — summary ───────────────────────────────────────────────────────
+// ── calculate - summary ───────────────────────────────────────────────────────
 
-describe("calculate — summary", () => {
+describe("calculate - summary", () => {
   it("buying is better after 7 years by ~£57,534", () => {
     const { buyingNet, rentingNet } = calculate(BASE);
     expect(buyingNet).toBeGreaterThan(rentingNet);

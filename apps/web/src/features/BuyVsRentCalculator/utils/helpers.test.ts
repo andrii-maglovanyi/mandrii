@@ -100,13 +100,13 @@ describe("remainingBalance", () => {
   });
 
   it("handles zero interest rate", () => {
-    // £120,000 over 10 years, 0% — linear reduction
+    // £120,000 over 10 years, 0% - linear reduction
     // After 1 year (12 payments): 120000 - 12 × 1000 = 108000
     expect(r2(remainingBalance(0, 10, 120_000, 12))).toBe(108_000);
   });
 
-  it("never returns negative — clamped to 0 beyond mortgage term", () => {
-    // 30-year mortgage — asking for balance after 40 years should be 0, not negative
+  it("never returns negative - clamped to 0 beyond mortgage term", () => {
+    // 30-year mortgage - asking for balance after 40 years should be 0, not negative
     expect(remainingBalance(4.5, 30, 300_000, 40 * 12)).toBe(0);
     expect(remainingBalance(4.5, 30, 300_000, 35 * 12)).toBe(0);
   });

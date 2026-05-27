@@ -154,7 +154,7 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
           highlight
           showHints={showHints}
           explanation={i18n(
-            "Everything added together: equity gained minus all costs paid. A negative number means buying cost you more than you got back — but you also had a home to live in.",
+            "Everything added together: equity gained minus all costs paid. A negative number means buying cost you more than you got back - but you also had a home to live in.",
           )}
           formatCurrency={gbp}
         />

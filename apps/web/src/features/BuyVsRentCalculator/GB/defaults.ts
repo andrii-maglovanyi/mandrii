@@ -5,10 +5,10 @@ import type { CalculatorInputs } from "./types";
  *
  * NOTE: These defaults represent an illustrative scenario for a higher-value
  * urban market (e.g. London / South East). They are NOT national UK averages.
- * - propertyValue: 500,000 — typical London/South East flat or starter home
- * - monthlyRent: 2,200 — in line with London outer-borough rents (not UK-typical)
- * - mortgageRate: 4.5% — indicative 2yr/5yr fixed rate (mid-2025; verify current rates)
- * - returnOnSavings: 4.0% — indicative cash ISA / easy-access rate; varies by product
+ * - propertyValue: 500,000 - typical London/South East flat or starter home
+ * - monthlyRent: 2,200 - in line with London outer-borough rents (not UK-typical)
+ * - mortgageRate: 4.5% - indicative 2yr/5yr fixed rate (mid-2025; verify current rates)
+ * - returnOnSavings: 4.0% - indicative cash ISA / easy-access rate; varies by product
  * Users should adjust these to their own circumstances.
  */
 export const DEFAULT_INPUTS_GB: CalculatorInputs = {

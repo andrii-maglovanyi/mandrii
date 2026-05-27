@@ -15,15 +15,13 @@ export const pmt = (annualRate: number, termYears: number, principal: number) =>
 
 // Remaining mortgage balance after "paymentsMade" months.
 // Clamped to [0, principal]: once the loan is fully repaid (paymentsMade >= termYears*12)
-// the balance is zero, never negative — a negative raw value would overstate equity.
+// the balance is zero, never negative - a negative raw value would overstate equity.
 export const remainingBalance = (annualRate: number, termYears: number, principal: number, paymentsMade: number) => {
   if (principal <= 0 || termYears <= 0) return 0;
   const maxPayments = termYears * 12;
   const n = Math.min(paymentsMade, maxPayments);
   const r = annualRate / 100 / 12;
   if (r === 0) return Math.max(0, principal * (1 - n / maxPayments));
-  const raw =
-    principal * Math.pow(1 + r, n) -
-    pmt(annualRate, termYears, principal) * ((Math.pow(1 + r, n) - 1) / r);
+  const raw = principal * Math.pow(1 + r, n) - pmt(annualRate, termYears, principal) * ((Math.pow(1 + r, n) - 1) / r);
   return Math.max(0, raw);
 };

@@ -68,9 +68,9 @@ describe("pccTax", () => {
   });
 });
 
-// ── calculate — buying figures ────────────────────────────────────────────────
+// ── calculate - buying figures ────────────────────────────────────────────────
 
-describe("calculate — buying", () => {
+describe("calculate - buying", () => {
   const result = calculate(BASE);
 
   it("PCC is 2% of property value for secondary market non-FTB", () => {
@@ -179,9 +179,9 @@ describe("calculate — buying", () => {
   });
 });
 
-// ── calculate — renting figures ───────────────────────────────────────────────
+// ── calculate - renting figures ───────────────────────────────────────────────
 
-describe("calculate — renting", () => {
+describe("calculate - renting", () => {
   const result = calculate(BASE);
 
   it("initialSavings includes deposit + PCC + agent + notary + repairs + 1yr insurance", () => {
@@ -191,7 +191,7 @@ describe("calculate — renting", () => {
     expect(r2(result.initialSavings)).toBe(r2(expected));
   });
 
-  it("initialSavingsBase excludes rentalDeposit (kaucja — not investable)", () => {
+  it("initialSavingsBase excludes rentalDeposit (kaucja - not investable)", () => {
     const withDeposit = calculate(BASE);
     const withoutDeposit = calculate({ ...BASE, rentalDeposit: 0 });
     expect(withoutDeposit.returnOnInitialSavings).toBeGreaterThan(withDeposit.returnOnInitialSavings);
@@ -205,7 +205,7 @@ describe("calculate — renting", () => {
     expect(result.rentPaid).toBeGreaterThan(2_820 * 12 * 10);
   });
 
-  it("rentalDeposit (kaucja) is returned at end — added back to rentingNet", () => {
+  it("rentalDeposit (kaucja) is returned at end - added back to rentingNet", () => {
     const withDeposit = calculate(BASE);
     const noDeposit = calculate({ ...BASE, rentalDeposit: 0 });
     // The deposit return raises rentingNet by depositAmount minus the forgone investment return
@@ -217,9 +217,9 @@ describe("calculate — renting", () => {
   });
 });
 
-// ── calculate — summary ───────────────────────────────────────────────────────
+// ── calculate - summary ───────────────────────────────────────────────────────
 
-describe("calculate — summary", () => {
+describe("calculate - summary", () => {
   it("higher property appreciation improves buying net", () => {
     const low = calculate({ ...BASE, propertyAppreciation: 1 });
     const high = calculate({ ...BASE, propertyAppreciation: 8 });
@@ -247,7 +247,7 @@ describe("calculate — summary", () => {
   it("primary market (no PCC) gives same buying net as FTB on secondary market", () => {
     const primaryMarket = calculate({ ...BASE, isPrimaryMarket: true });
     const ftb = calculate({ ...BASE, isFirstTimeBuyer: true });
-    // Both have pccTaxAmount = 0, so only differ if other inputs differ — here they don't
+    // Both have pccTaxAmount = 0, so only differ if other inputs differ - here they don't
     expect(r2(primaryMarket.buyingNet)).toBe(r2(ftb.buyingNet));
   });
 
@@ -298,7 +298,7 @@ describe("buildChartData", () => {
   });
 
   it("no refinancing cost events for variable-rate mortgage in chart", () => {
-    // With isFixedRate=false, cumRefinancing stays at 0 — buying costs should match
+    // With isFixedRate=false, cumRefinancing stays at 0 - buying costs should match
     // the same inputs with refinancingCost=0 exactly
     const variableData = buildChartData({ ...BASE, isFixedRate: false });
     const zeroRefData = buildChartData({ ...BASE, isFixedRate: false, refinancingCost: 0 });

@@ -12,20 +12,20 @@ import type { CalculationResult, CalculatorInputs } from "./types";
 // ── Stamp Duty ────────────────────────────────────────────────────────────────
 
 /**
- * UK Stamp Duty Land Tax (SDLT) — rates from April 2025
+ * UK Stamp Duty Land Tax (SDLT) - rates from April 2025
  * https://www.gov.uk/stamp-duty-land-tax/residential-property-rates
  *
  * Standard rates:
  *   0%  on first £125,000
- *   2%  on £125,001–£250,000
- *   5%  on £250,001–£925,000
- *   10% on £925,001–£1,500,000
+ *   2%  on £125,001-£250,000
+ *   5%  on £250,001-£925,000
+ *   10% on £925,001-£1,500,000
  *   12% above £1,500,000
  *
  * First-time buyer relief:
  *   0%  up to £300,000
- *   5%  on £300,001–£500,000
- *   No relief above £500,000 — standard rates apply
+ *   5%  on £300,001-£500,000
+ *   No relief above £500,000 - standard rates apply
  *
  * NOTE: FTB relief is a government program designed to help buyers afford homes
  * up to £500k. Above £500k, the property is deemed outside the assistance bracket,
@@ -99,7 +99,7 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
 
   // Remortgaging costs: how many times will you remortgage?
   // Use (years - 1) so that selling at exactly a deal boundary (e.g. year 5 on a
-  // 5-year fix) doesn't count a remortgage — you wouldn't switch deals just to sell.
+  // 5-year fix) doesn't count a remortgage - you wouldn't switch deals just to sell.
   // This is consistent with the chart, which fires remortgaging at yr = freq+1, 2*freq+1...
   const remortgagingEvents = Math.floor((years - 1) / remortgagingFrequencyYears);
   const totalRemortgagingCosts = remortgagingEvents * averageRemortgagingCost;
@@ -209,7 +209,7 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
   const { firstTimeBuyer } = inputs;
 
   const loanAmount = Math.max(0, propertyValue - deposit);
-  // Computed once — reused for surplus calculation inside the loop
+  // Computed once - reused for surplus calculation inside the loop
   const monthlyMortgagePayment = pmt(mortgageRate, mortgageTerm, loanAmount);
   const annualMortgage = monthlyMortgagePayment * 12;
   const sd = stampDuty(propertyValue, firstTimeBuyer);
@@ -226,7 +226,7 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
   let ongoingDeposited = 0;
   let rent = monthlyRent;
   // Investment base matches calculate()'s initialSavingsBase (col K in spreadsheet):
-  // deposit + SD + buying costs + repairs — excludes mortgageArrangementFee and tenancyDeposit.
+  // deposit + SD + buying costs + repairs - excludes mortgageArrangementFee and tenancyDeposit.
   let investmentBase = deposit + sd + initialBuyingCosts + initialRepairCosts - tenancyDeposit;
 
   // Buying state
@@ -236,7 +236,7 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
   let propVal = propertyValue;
 
   for (let yr = 1; yr <= MAX_YEARS; yr++) {
-    // Buying — use full yr (end-of-year) for equity, consistent with calculate().
+    // Buying - use full yr (end-of-year) for equity, consistent with calculate().
     const pvN = propertyValue * Math.pow(1 + propertyAppreciation / 100, yr);
     const balN = remainingBalance(mortgageRate, mortgageTerm, loanAmount, yr * 12);
     const equityN = pvN - balN;
@@ -271,7 +271,7 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
     const annualProfit = investmentBase * (returnOnSavings / 100);
     cumInvestmentProfit += annualProfit;
     investmentBase += annualProfit;
-    // Reuse monthlyMortgagePayment — same value as pmt(...) would return
+    // Reuse monthlyMortgagePayment - same value as pmt(...) would return
     const surplus = Math.max(0, (monthlyMortgagePayment - rent) * 12);
     ongoingBalance = (ongoingBalance + surplus) * (1 + returnOnSavings / 100);
     ongoingDeposited += surplus;

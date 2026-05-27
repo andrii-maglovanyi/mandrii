@@ -27,7 +27,7 @@ export type CalculatorInputs = {
 
 /**
  * Bundesland (German federal state group) determines the Grunderwerbsteuer
- * (property transfer tax) rate. Rates as of 2025 — set by each state independently.
+ * (property transfer tax) rate. Rates as of 2025 - set by each state independently.
  */
 export type Bundesland =
   | "BY_SN" // Bavaria & Saxony:                                              3.5%
@@ -37,7 +37,7 @@ export type Bundesland =
   | "BE_RP_TH" // Berlin, Rhineland-Palatinate & Thuringia:                              6.0%
   | "BB_NW_SH_SL"; // Brandenburg, NRW, Schleswig-Holstein, Saarland:               6.5%
 
-// Composition types — not exported; use CalculationResult directly
+// Composition types - not exported; use CalculationResult directly
 type BuyingMetrics = {
   readonly deposit: number;
   readonly transferTaxAmount: number; // Grunderwerbsteuer
@@ -63,5 +63,5 @@ export type CalculationResult = BuyingMetrics & RentingMetrics & SummaryMetrics;
 // Re-export common types for convenience
 export type { ChartDataPoint, RentingMetrics, SummaryMetrics };
 
-/** Curried setter for German calculator inputs — set("key")(value) */
+/** Curried setter for German calculator inputs - set("key")(value) */
 export type InputSetter = <K extends keyof CalculatorInputs>(key: K) => (value: CalculatorInputs[K]) => void;

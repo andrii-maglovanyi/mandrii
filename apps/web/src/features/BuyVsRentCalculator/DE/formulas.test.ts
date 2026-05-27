@@ -36,23 +36,23 @@ const BASE: CalculatorInputs = {
 // ── transferTax ───────────────────────────────────────────────────────────────
 
 describe("transferTax", () => {
-  it("Bavaria & Saxony (BY_SN) — 3.5%", () => {
+  it("Bavaria & Saxony (BY_SN) - 3.5%", () => {
     expect(transferTax(400_000, "BY_SN")).toBe(14_000);
   });
 
-  it("Hamburg (HH) — 4.0%", () => {
+  it("Hamburg (HH) - 4.0%", () => {
     expect(transferTax(400_000, "HH")).toBe(16_000);
   });
 
-  it("Baden-Württemberg & Hesse (BW_HE) — 5.0%", () => {
+  it("Baden-Württemberg & Hesse (BW_HE) - 5.0%", () => {
     expect(transferTax(400_000, "BW_HE")).toBe(20_000);
   });
 
-  it("Berlin etc. (BE_RP_TH) — 6.0%", () => {
+  it("Berlin etc. (BE_RP_TH) - 6.0%", () => {
     expect(transferTax(400_000, "BE_RP_TH")).toBe(24_000);
   });
 
-  it("Brandenburg, NRW, etc. (BB_NW_SH_SL) — 6.5%", () => {
+  it("Brandenburg, NRW, etc. (BB_NW_SH_SL) - 6.5%", () => {
     expect(transferTax(400_000, "BB_NW_SH_SL")).toBe(26_000);
   });
 
@@ -65,7 +65,7 @@ describe("transferTax", () => {
   });
 
   it("no cliff-edge (flat rate applies to full price)", () => {
-    // Unlike UK SDLT, GrESt = rate × full price — result is exactly rate × value
+    // Unlike UK SDLT, GrESt = rate × full price - result is exactly rate × value
     const rate = transferTaxRate("HB_MV_NI_ST");
     expect(transferTax(500_001, "HB_MV_NI_ST")).toBeCloseTo(500_001 * rate, 2);
   });
@@ -91,9 +91,9 @@ describe("transferTaxRate", () => {
   });
 });
 
-// ── calculate — buying figures ─────────────────────────────────────────────────
+// ── calculate - buying figures ─────────────────────────────────────────────────
 
-describe("calculate — buying", () => {
+describe("calculate - buying", () => {
   const result = calculate(BASE);
 
   it("transfer tax is 5.5% of property value", () => {
@@ -174,9 +174,9 @@ describe("calculate — buying", () => {
   });
 });
 
-// ── calculate — renting figures ────────────────────────────────────────────────
+// ── calculate - renting figures ────────────────────────────────────────────────
 
-describe("calculate — renting", () => {
+describe("calculate - renting", () => {
   const result = calculate(BASE);
 
   it("initialSavings includes deposit + transferTax + agent + notary + repairs + 1yr insurance", () => {
@@ -214,9 +214,9 @@ describe("calculate — renting", () => {
   });
 });
 
-// ── calculate — summary ────────────────────────────────────────────────────────
+// ── calculate - summary ────────────────────────────────────────────────────────
 
-describe("calculate — summary", () => {
+describe("calculate - summary", () => {
   it("higher property appreciation improves buying net", () => {
     const low = calculate({ ...BASE, propertyAppreciation: 1 });
     const high = calculate({ ...BASE, propertyAppreciation: 8 });
@@ -280,7 +280,7 @@ describe("buildChartData", () => {
 
   it("year 10 buying matches calculate() buyingNet magnitude (within rounding)", () => {
     const result = calculate(BASE);
-    // chart buying is positive (cost), result buyingNet is negative (loss) — they should match in abs
+    // chart buying is positive (cost), result buyingNet is negative (loss) - they should match in abs
     expect(Math.abs(data[9].buying - Math.abs(result.buyingNet))).toBeLessThan(2);
   });
 
@@ -290,7 +290,7 @@ describe("buildChartData", () => {
 
   it("buying cost falls after mortgage is paid off", () => {
     const data40 = buildChartData({ ...BASE, mortgageTerm: 25, years: 10 });
-    // year 35 vs year 28 — once mortgage term ends, cost trajectory changes
+    // year 35 vs year 28 - once mortgage term ends, cost trajectory changes
     expect(data40[35].buying).toBeLessThan(data40[27].buying);
   });
 

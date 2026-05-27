@@ -10,7 +10,7 @@ export type ChartDataPoint = {
   readonly renting: number;
 };
 
-/** Renting-related calculation metrics — common structure across both calculators */
+/** Renting-related calculation metrics - common structure across both calculators */
 export type RentingMetrics = {
   readonly initialSavings: number;
   readonly returnOnInitialSavings: number;
@@ -19,10 +19,10 @@ export type RentingMetrics = {
   readonly rentingNet: number;
 };
 
-/** Summary metrics — common structure across both calculators */
+/** Summary metrics - common structure across both calculators */
 export type SummaryMetrics = {
   readonly years: number;
 };
 
-/** Curried setter for a single input field — set("key")(value) */
+/** Curried setter for a single input field - set("key")(value) */
 export type InputSetter<T> = <K extends keyof T>(key: K) => (value: T[K]) => void;

@@ -8,7 +8,7 @@ export const Glossary = () => {
       <li>
         <span className="text-on-surface font-semibold">{i18n("Stamp Duty Land Tax (SDLT)")}</span> -{" "}
         {i18n(
-          "A property purchase tax in England and Northern Ireland. First-time buyers pay 0% up to £300k, and 5% between £300k–£500k. Important: if the price goes even £1 over £500k, this special discount disappears completely, and standard rates apply from £125k. This is why a £500,001 property triggers a much higher tax (~£15k) than a £500,000 one (£10k).",
+          "A property purchase tax in England and Northern Ireland. First-time buyers pay 0% up to £300k, and 5% between £300k-£500k. Important: if the price goes even £1 over £500k, this special discount disappears completely, and standard rates apply from £125k. This is why a £500,001 property triggers a much higher tax (~£15k) than a £500,000 one (£10k).",
         )}
       </li>
       <li>

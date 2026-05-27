@@ -18,15 +18,15 @@ import type { CalculationResult, CalculatorInputs, Bundesland } from "./types";
  * A single source of truth used by both transferTax() and transferTaxRate().
  *
  * Changes vs. previous version:
- *   - Berlin moved from BE_HB_MV_NI_ST (5.5%) to BE_RP_TH (6.0%) — Berlin has
+ *   - Berlin moved from BE_HB_MV_NI_ST (5.5%) to BE_RP_TH (6.0%) - Berlin has
  *     been at 6.0% since 1 January 2014.
  *   - Bremen raised its rate from 5.0% to 5.5% on 1 July 2025 (Senate decree
  *     of 3 Dec 2024; Bremische Bürgerschaft resolution). Bremen now sits in
  *     HB_MV_NI_ST at 5.5% without Berlin.
  *   - The former BE_HB_MV_NI_ST group is therefore split into two:
- *       HB_MV_NI_ST  — Bremen, Mecklenburg-Vorpommern, Lower Saxony,
- *                       Saxony-Anhalt — 5.5%
- *       BE_RP_TH     — Berlin, Rhineland-Palatinate, Thuringia — 6.0%
+ *       HB_MV_NI_ST  - Bremen, Mecklenburg-Vorpommern, Lower Saxony,
+ *                       Saxony-Anhalt - 5.5%
+ *       BE_RP_TH     - Berlin, Rhineland-Palatinate, Thuringia - 6.0%
  */
 const TRANSFER_TAX_RATES: Record<Bundesland, number> = {
   BY_SN: 0.035, // Bavaria (Bayern) & Saxony (Sachsen)
@@ -38,7 +38,7 @@ const TRANSFER_TAX_RATES: Record<Bundesland, number> = {
 };
 
 /**
- * Grunderwerbsteuer (GrESt) — German Real Estate Transfer Tax
+ * Grunderwerbsteuer (GrESt) - German Real Estate Transfer Tax
  * https://www.bundesfinanzministerium.de/
  *
  * Unlike UK Stamp Duty, GrESt is a flat percentage of the full purchase price
@@ -63,7 +63,7 @@ export function transferTax(propertyValue: number, stateGroup: Bundesland): numb
   return propertyValue * (TRANSFER_TAX_RATES[stateGroup] ?? 0.05);
 }
 
-/** Return the transfer tax (Grunderwerbsteuer) rate (0–1) for a given state group (Bundesland) */
+/** Return the transfer tax (Grunderwerbsteuer) rate (0-1) for a given state group (Bundesland) */
 export function transferTaxRate(stateGroup: Bundesland): number {
   return TRANSFER_TAX_RATES[stateGroup] ?? 0.05;
 }
@@ -76,19 +76,19 @@ export function transferTaxRate(stateGroup: Bundesland): number {
  * Key German-specific differences vs. the UK version:
  *
  * 1. ACQUISITION COSTS (Kaufnebenkosten): Germany's upfront costs are
- *    significantly higher than the UK — typically 10–15% of the purchase price:
- *      • Grunderwerbsteuer (3.5–6.5%) — state-level transfer tax, no reliefs
- *      • Notary & Land Registry (Notar & Grundbuch): ~1.5–2% — mandatory for
+ *    significantly higher than the UK - typically 10-15% of the purchase price:
+ *      • Grunderwerbsteuer (3.5-6.5%) - state-level transfer tax, no reliefs
+ *      • Notary & Land Registry (Notar & Grundbuch): ~1.5-2% - mandatory for
  *        all property transfers; the notary certifies the contract (Kaufvertrag)
  *        and the entry in the land register (Grundbuch).
- *      • Maklerprovision (buyer's share): ~1.785–3.57% — since the
- *        Maklergesetz of December 2020 (§§ 656a–656d BGB), buyer and seller
+ *      • Maklerprovision (buyer's share): ~1.785-3.57% - since the
+ *        Maklergesetz of December 2020 (§§ 656a-656d BGB), buyer and seller
  *        must split the commission equally. Only the buyer's half is modelled
  *        here as a buying cost.
  *
  * 2. FIXED-RATE PERIOD / REFINANCING (Zinsbindung / Anschlussfinanzierung):
  *    German mortgages fix the interest rate for a Zinsbindung period (typically
- *    10–15 years), not the full term. When the fixed period ends, the borrower
+ *    10-15 years), not the full term. When the fixed period ends, the borrower
  *    must refinance at market rates (Anschlussfinanzierung). This model charges
  *    a one-off fee at each fixed-rate boundary within the holding period.
  *
@@ -192,7 +192,7 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
     deposit + transferTaxAmount + buyerAgentFee + notaryAndLandRegistryCosts + initialRepairCosts + annualHomeInsurance;
 
   // Investment base: the capital that is actually available to invest.
-  // Excludes rentalDeposit (Mietkaution — legally locked in deposit scheme, not investable).
+  // Excludes rentalDeposit (Mietkaution - legally locked in deposit scheme, not investable).
   // Excludes the first year's insurance (that cost is incurred by the buyer
   // as an informational line only).
   const initialSavingsBase =
@@ -202,7 +202,7 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
   const ongoingSavings = returnOnOngoingSavings(monthlyRent, rentIncrease, monthlyMortgage, returnOnSavings, years);
   const rentPaid = totalRentPaid(monthlyRent, rentIncrease, years);
 
-  // Rental deposit (Mietkaution) is returned at end of tenancy — added back to net position.
+  // Rental deposit (Mietkaution) is returned at end of tenancy - added back to net position.
   const rentingNet = returnOnInitialSavings + ongoingSavings - rentPaid + rentalDeposit;
 
   return {
@@ -285,7 +285,7 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
   let ongoingBalance = 0;
   let ongoingDeposited = 0;
   let rent = monthlyRent;
-  // Investment base: same as calculate() — excludes rentalDeposit (Mietkaution)
+  // Investment base: same as calculate() - excludes rentalDeposit (Mietkaution)
   let investmentBase =
     deposit + transferTaxAmount + buyerAgentFee + notaryAndLandRegistryCosts + initialRepairCosts - rentalDeposit;
 
@@ -297,7 +297,7 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
 
   for (let yr = 1; yr <= MAX_YEARS; yr++) {
     // ── Buying ──────────────────────────────────────────────────────────────
-    // Use full yr (end-of-year) for equity — consistent with calculate() using equityYears = years.
+    // Use full yr (end-of-year) for equity - consistent with calculate() using equityYears = years.
     const pvN = propertyValue * Math.pow(1 + propertyAppreciation / 100, yr);
     const balN = remainingBalance(mortgageRate, mortgageTerm, loanAmount, yr * 12);
     const equityN = pvN - balN;
@@ -379,12 +379,12 @@ export function eur(value: number) {
  */
 export function stateGroupLabel(stateGroup: Bundesland): string {
   const labels: Record<Bundesland, string> = {
-    BY_SN: "Bavaria & Saxony — 3.5%",
-    HH: "Hamburg — 4.0%",
-    BW_HE: "Baden-Württemberg & Hesse — 5.0%",
-    HB_MV_NI_ST: "Bremen, Meck.-Vorpommern, Lower Saxony, Saxony-Anhalt — 5.5%",
-    BE_RP_TH: "Berlin, Rhineland-Palatinate & Thuringia — 6.0%",
-    BB_NW_SH_SL: "Brandenburg, NRW, Schleswig-Holstein, Saarland — 6.5%",
+    BY_SN: "Bavaria & Saxony - 3.5%",
+    HH: "Hamburg - 4.0%",
+    BW_HE: "Baden-Württemberg & Hesse - 5.0%",
+    HB_MV_NI_ST: "Bremen, Meck.-Vorpommern, Lower Saxony, Saxony-Anhalt - 5.5%",
+    BE_RP_TH: "Berlin, Rhineland-Palatinate & Thuringia - 6.0%",
+    BB_NW_SH_SL: "Brandenburg, NRW, Schleswig-Holstein, Saarland - 6.5%",
   };
   return labels[stateGroup];
 }

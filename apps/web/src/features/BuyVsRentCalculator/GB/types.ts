@@ -25,7 +25,7 @@ export type CalculatorInputs = {
   readonly years: number;
 };
 
-// Composition types — not exported; use CalculationResult directly
+// Composition types - not exported; use CalculationResult directly
 type BuyingMetrics = {
   readonly deposit: number;
   readonly stampDuty: number;
@@ -49,5 +49,5 @@ export type CalculationResult = BuyingMetrics & RentingMetrics & SummaryMetrics;
 // Re-export common types for convenience
 export type { ChartDataPoint, RentingMetrics, SummaryMetrics };
 
-/** Curried setter for GB calculator inputs — set("key")(value) */
+/** Curried setter for GB calculator inputs - set("key")(value) */
 export type InputSetter = <K extends keyof CalculatorInputs>(key: K) => (value: CalculatorInputs[K]) => void;

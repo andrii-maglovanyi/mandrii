@@ -26,7 +26,7 @@ const COUNTRIES = [
 
 // ── All countries: finite outputs ─────────────────────────────────────────────
 
-describe.each(COUNTRIES)("$name — outputs are always finite for default inputs", ({ calculate, defaults }) => {
+describe.each(COUNTRIES)("$name - outputs are always finite for default inputs", ({ calculate, defaults }) => {
   const result = calculate(defaults as never);
 
   it("buyingNet is finite", () => expect(Number.isFinite(result.buyingNet)).toBe(true));
@@ -38,7 +38,7 @@ describe.each(COUNTRIES)("$name — outputs are always finite for default inputs
 
 // ── All countries: equity never goes negative beyond mortgage term ─────────────
 
-describe.each(COUNTRIES)("$name — equity non-negative beyond mortgage term", ({ calculate, defaults }) => {
+describe.each(COUNTRIES)("$name - equity non-negative beyond mortgage term", ({ calculate, defaults }) => {
   it("equity >= 0 when years >> mortgageTerm", () => {
     const result = calculate({ ...defaults, years: 40, mortgageTerm: 25 } as never);
     expect(result.equity).toBeGreaterThanOrEqual(0);
@@ -54,33 +54,36 @@ describe.each(COUNTRIES)("$name — equity non-negative beyond mortgage term", (
 
 // ── All countries: chart consistency with calculate() ────────────────────────
 
-describe.each(COUNTRIES)("$name — chart year N is consistent with calculate() at year N", ({ calculate, buildChartData, defaults }) => {
-  it("chart buying at user's year matches calculate() buyingNet magnitude (within £/€/zł 2)", () => {
-    const inputs = { ...defaults } as never;
-    const result = calculate(inputs);
-    const data = buildChartData(inputs);
-    const horizon = (defaults as { years: number }).years;
-    const chartPoint = data[horizon - 1];
-    expect(Math.abs(chartPoint.buying - Math.abs(result.buyingNet))).toBeLessThan(2);
-  });
-
-  it("chart returns at least 40 data points", () => {
-    const data = buildChartData({ ...defaults } as never);
-    expect(data.length).toBeGreaterThanOrEqual(40);
-  });
-
-  it("chart values are all finite", () => {
-    const data = buildChartData({ ...defaults } as never);
-    data.forEach((d) => {
-      expect(Number.isFinite(d.buying)).toBe(true);
-      expect(Number.isFinite(d.renting)).toBe(true);
+describe.each(COUNTRIES)(
+  "$name - chart year N is consistent with calculate() at year N",
+  ({ calculate, buildChartData, defaults }) => {
+    it("chart buying at user's year matches calculate() buyingNet magnitude (within £/€/zł 2)", () => {
+      const inputs = { ...defaults } as never;
+      const result = calculate(inputs);
+      const data = buildChartData(inputs);
+      const horizon = (defaults as { years: number }).years;
+      const chartPoint = data[horizon - 1];
+      expect(Math.abs(chartPoint.buying - Math.abs(result.buyingNet))).toBeLessThan(2);
     });
-  });
-});
+
+    it("chart returns at least 40 data points", () => {
+      const data = buildChartData({ ...defaults } as never);
+      expect(data.length).toBeGreaterThanOrEqual(40);
+    });
+
+    it("chart values are all finite", () => {
+      const data = buildChartData({ ...defaults } as never);
+      data.forEach((d) => {
+        expect(Number.isFinite(d.buying)).toBe(true);
+        expect(Number.isFinite(d.renting)).toBe(true);
+      });
+    });
+  },
+);
 
 // ── All countries: economic direction invariants ──────────────────────────────
 
-describe.each(COUNTRIES)("$name — economic direction invariants", ({ calculate, defaults }) => {
+describe.each(COUNTRIES)("$name - economic direction invariants", ({ calculate, defaults }) => {
   it("higher appreciation → better buyingNet", () => {
     const low = calculate({ ...defaults, propertyAppreciation: 1 } as never);
     const high = calculate({ ...defaults, propertyAppreciation: 8 } as never);

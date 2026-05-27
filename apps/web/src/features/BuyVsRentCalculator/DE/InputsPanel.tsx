@@ -84,7 +84,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           <Hint
             showHints={showHints}
             text={i18n(
-              "Your own funds (Eigenkapital). German banks typically require at least the full Kaufnebenkosten (10–15%) plus 10–20% of the purchase price from your own capital.",
+              "Your own funds (Eigenkapital). German banks typically require at least the full Kaufnebenkosten (10-15%) plus 10-20% of the purchase price from your own capital.",
             )}
           />
         </div>
@@ -103,13 +103,13 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               {belowMinDeposit && (
                 <span className="text-danger flex items-center gap-1.5 text-sm font-medium">
                   <TriangleAlert size={14} strokeWidth={3} />
-                  {i18n("Below 20% equity — expect rate surcharges")}
+                  {i18n("Below 20% equity - expect rate surcharges")}
                 </span>
               )}
               {ltv > 60 && ltv <= 80 && !belowMinDeposit && (
                 <span className="text-warning flex items-center gap-1.5 text-sm font-medium">
                   <TriangleAlert size={14} strokeWidth={3} />
-                  {i18n("Above 60% LTV — moderate rate band")}
+                  {i18n("Above 60% LTV - moderate rate band")}
                 </span>
               )}
               {noMortgage && (
@@ -138,7 +138,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           <Hint
             showHints={showHints}
             text={i18n(
-              "The annual nominal interest rate (Sollzinssatz) on your loan. 10-year fixed rates (Zinsbindung) were approximately 3.2–3.6% in Germany in 2025–2026 (indicative market range; verify current rates before decisions).",
+              "The annual nominal interest rate (Sollzinssatz) on your loan. 10-year fixed rates (Zinsbindung) were approximately 3.2-3.6% in Germany in 2025-2026 (indicative market range; verify current rates before decisions).",
             )}
           />
         </div>
@@ -157,13 +157,13 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           <Hint
             showHints={showHints}
             text={i18n(
-              "Full repayment term until the loan is paid off (Volltilgung). Typically 25–35 years in Germany.",
+              "Full repayment term until the loan is paid off (Volltilgung). Typically 25-35 years in Germany.",
             )}
           />
         </div>
 
         <div className="flex flex-col gap-1">
-          {/* Federal state (Bundesland) — determines the transfer tax rate */}
+          {/* Federal state (Bundesland) - determines the transfer tax rate */}
           <Select
             label={i18n("Federal state / Bundesland")}
             value={inputs.stateGroup}
@@ -213,7 +213,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "Expected annual price growth. German residential prices have varied significantly by region; major cities (Munich, Frankfurt, Hamburg) have historically averaged 3–5% p.a. Enter your own estimate — this is a forward-looking assumption, not a guaranteed rate.",
+                  "Expected annual price growth. German residential prices have varied significantly by region; major cities (Munich, Frankfurt, Hamburg) have historically averaged 3-5% p.a. Enter your own estimate - this is a forward-looking assumption, not a guaranteed rate.",
                 )}
               />
             </div>
@@ -229,7 +229,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "Mandatory in Germany: the notary (Notar) certifies the purchase contract and the land registry (Grundbuch) records ownership. Together ~1.5–2% of the purchase price.",
+                  "Mandatory in Germany: the notary (Notar) certifies the purchase contract and the land registry (Grundbuch) records ownership. Together ~1.5-2% of the purchase price.",
                 )}
               />
             </div>
@@ -262,7 +262,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "Since the Maklergesetz of December 2020 (§§ 656a–656d BGB), buyer and seller must share the agent's commission equally. The total commission is typically 3.57–7.14% (incl. VAT); the buyer pays half. Enter only the buyer's share here (typically 1.785–3.57%).",
+                  "Since the Maklergesetz of December 2020 (§§ 656a-656d BGB), buyer and seller must share the agent's commission equally. The total commission is typically 3.57-7.14% (incl. VAT); the buyer pays half. Enter only the buyer's share here (typically 1.785-3.57%).",
                 )}
               />
             </div>
@@ -278,7 +278,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "Costs when you eventually sell. The seller pays their half of the Maklerprovision (typically 3.57% incl. VAT) plus notary costs for the sale contract. Total is typically 3.5–4.5% of the sale price.",
+                  "Costs when you eventually sell. The seller pays their half of the Maklerprovision (typically 3.57% incl. VAT) plus notary costs for the sale contract. Total is typically 3.5-4.5% of the sale price.",
                 )}
               />
             </div>
@@ -294,7 +294,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "Annual upkeep costs as a % of property value, growing with appreciation. Rule of thumb: 0.5–1% for Neubau (new-build), up to 1.5% for Altbau (pre-war stock).",
+                  "Annual upkeep costs as a % of property value, growing with appreciation. Rule of thumb: 0.5-1% for Neubau (new-build), up to 1.5% for Altbau (pre-war stock).",
                 )}
               />
             </div>
@@ -313,7 +313,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "Annual buildings insurance premium, required by lenders. For condominiums (Eigentumswohnungen), this is often included in the Hausgeld — adjust accordingly.",
+                  "Annual buildings insurance premium, required by lenders. For condominiums (Eigentumswohnungen), this is often included in the Hausgeld - adjust accordingly.",
                 )}
               />
             </div>
@@ -333,7 +333,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "Unlike UK mortgages, German mortgages fix the rate only for the Zinsbindung period (typically 10–15 years), not the full term. When this expires, you must arrange Anschlussfinanzierung at whatever rates prevail at that time.",
+                  "German mortgages fix the rate only for the Zinsbindung period (typically 10-15 years), not the full term. When this expires, you must arrange Anschlussfinanzierung at whatever rates prevail at that time.",
                 )}
               />
             </div>
@@ -351,7 +351,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "One-off cost each time you arrange a new fixed-rate deal: broker fee, notarial land charge amendment (Grundschuldänderung), and any bank processing fees. Typically €500–€2,000.",
+                  "One-off cost each time you arrange a new fixed-rate deal: broker fee, notarial land charge amendment (Grundschuldänderung), and any bank processing fees. Typically €500-€2,000.",
                 )}
               />
             </div>
@@ -371,7 +371,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "For Eigentumswohnungen (condominiums): annual Hausgeld paid to the Wohnungseigentümergemeinschaft (WEG), covering shared building maintenance, administration, and the Instandhaltungsrücklage (reserve fund). Typically €24–€48/m²/year. Set to 0 for houses.",
+                  "For Eigentumswohnungen (condominiums): annual Hausgeld paid to the Wohnungseigentümergemeinschaft (WEG), covering shared building maintenance, administration, and the Instandhaltungsrücklage (reserve fund). Typically €24-€48/m²/year. Set to 0 for houses.",
                 )}
               />
             </div>
@@ -388,7 +388,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "Annual municipal property tax, reformed from January 2025. Calculated as Grundsteuerwert × Steuermesszahl × local Hebesatz. Typically €400–€1,500/year depending on municipality and property size.",
+                  "Annual municipal property tax, reformed from January 2025. Calculated as Grundsteuerwert × Steuermesszahl × local Hebesatz. Typically €400-€1,500/year depending on municipality and property size.",
                 )}
               />
             </div>
@@ -417,7 +417,7 @@ const RentingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPr
           <Hint
             showHints={showHints}
             text={i18n(
-              "Annual return on the capital you keep by not buying (equity, GrESt, Kaufnebenkosten). German Tagesgeld (instant-access savings): ~3–3.5%; broad equity ETF (long-run): ~5–7%. Defaults to 3.5%.",
+              "Annual return on the capital you keep by not buying (equity, GrESt, Kaufnebenkosten). German Tagesgeld (instant-access savings): ~3-3.5%; broad equity ETF (long-run): ~5-7%. Defaults to 3.5%.",
             )}
           />
         </div>
@@ -499,7 +499,7 @@ const LivingInputs = ({ inputs, set, showHints }: InternalInputProps & WithHints
           <Hint
             showHints={showHints}
             text={i18n(
-              "How long you plan to stay. Because German Kaufnebenkosten are very high (typically 10–15% of the purchase price), buying rarely makes financial sense for stays shorter than 7–10 years.",
+              "How long you plan to stay. Because German Kaufnebenkosten are very high (typically 10-15% of the purchase price), buying rarely makes financial sense for stays shorter than 7-10 years.",
             )}
           />
         </div>

@@ -53,7 +53,7 @@ export function totalMaintenanceCosts(
  *
  * NOTE: This only captures surplus when mortgage > rent. If rent exceeds the
  * mortgage payment, that extra rent cost is already reflected as a higher
- * `rentPaid` figure in the renting total — the model does not additionally
+ * `rentPaid` figure in the renting total - the model does not additionally
  * credit the buyer for a "surplus" in that scenario, keeping both sides comparable.
  */
 export function returnOnOngoingSavings(
@@ -77,7 +77,7 @@ export function returnOnOngoingSavings(
 }
 
 /**
- * Safe number coercion utility — converts values to numbers with fallback.
+ * Safe number coercion utility - converts values to numbers with fallback.
  * Used in both GB and DE calculator functions.
  */
 export function safe(n: number, fallback = 0): number {

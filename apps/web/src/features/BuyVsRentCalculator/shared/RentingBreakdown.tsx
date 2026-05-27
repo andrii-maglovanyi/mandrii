@@ -9,7 +9,7 @@ type RentingBreakdownProps = {
 };
 
 /**
- * Renting cost breakdown — identical structure across all country calculators.
+ * Renting cost breakdown - identical structure across all country calculators.
  * Shows initial savings, investment returns, rent paid, and net gain/loss.
  */
 export const RentingBreakdown = ({ result, showHints, formatCurrency }: RentingBreakdownProps) => {
@@ -28,7 +28,7 @@ export const RentingBreakdown = ({ result, showHints, formatCurrency }: RentingB
         value={initialSavings}
         showHints={showHints}
         explanation={i18n(
-          "Capital you keep by not buying: deposit, taxes, buying costs, repair budget, and first year's insurance. Shown for reference — the actual investment base used for return calculations may exclude certain items.",
+          "Capital you keep by not buying: deposit, taxes, buying costs, repair budget, and first year's insurance. Shown for reference - the actual investment base used for return calculations may exclude certain items.",
         )}
         formatCurrency={formatCurrency}
       />

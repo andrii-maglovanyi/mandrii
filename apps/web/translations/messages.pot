@@ -165,6 +165,9 @@ msgstr ""
 msgid "I will verify your ownership before granting access to enhanced features"
 msgstr ""
 
+msgid "Venue is not available at the moment. Please try again later."
+msgstr ""
+
 msgid "The venue you're looking for doesn't exist or has been removed"
 msgstr ""
 
@@ -1854,88 +1857,34 @@ msgstr ""
 msgid "Start verification"
 msgstr ""
 
+msgid "Found an issue or have feedback?"
+msgstr ""
+
+msgid "Polish Buy vs Rent Calculator"
+msgstr ""
+
+msgid "Compare buying and renting scenarios based on your Polish property details"
+msgstr ""
+
 msgid "UK Buy vs Rent Calculator"
 msgstr ""
 
 msgid "Compare buying and renting scenarios based on your UK property details"
 msgstr ""
 
-msgid "Stamp Duty Land Tax (SDLT)"
+msgid "German Buy vs Rent Calculator"
 msgstr ""
 
-msgid "A property purchase tax in England and Northern Ireland. First-time buyers pay 0% up to £300k, and 5% between £300k–£500k. Important: if the price goes even £1 over £500k, this special discount disappears completely, and standard rates apply from £125k. This is why a £500,001 property triggers a much higher tax (~£15k) than a £500,000 one (£10k)."
+msgid "Compare buying and renting scenarios based on your German property details"
 msgstr ""
 
-msgid "Loan-to-Value (LTV)"
+msgid "UK"
 msgstr ""
 
-msgid "The size of your mortgage compared to the property's value. A lower LTV means you have a larger deposit, which usually unlocks better mortgage rates."
+msgid "Germany"
 msgstr ""
 
-msgid "Mortgage rate"
-msgstr ""
-
-msgid "The annual interest rate on your loan. Based on current UK market trends; your exact rate depends on your credit profile and deposit size."
-msgstr ""
-
-msgid "Equity"
-msgstr ""
-
-msgid "The portion of the property you actually own debt-free. It grows as you pay off your mortgage and as the property's value increases."
-msgstr ""
-
-msgid "Property appreciation"
-msgstr ""
-
-msgid "How much your property's value grows each year. The UK historical average is around 2.5-3%, though this varies by region."
-msgstr ""
-
-msgid "Return on savings"
-msgstr ""
-
-msgid "The estimated annual return if you invested your money instead of buying. The calculator assumes you invest your potential deposit, stamp duty, buying fees, and repair budget (minus your locked tenancy deposit). Defaults to 4% - close to a standard UK cash ISA or low-risk investment."
-msgstr ""
-
-msgid "Maintenance & repairs"
-msgstr ""
-
-msgid "The yearly cost of looking after your home. A good rule of thumb is 0.5-1% of the property's value annually to cover ongoing maintenance like boiler or roof repairs."
-msgstr ""
-
-msgid "Home insurance"
-msgstr ""
-
-msgid "Buildings insurance, which your mortgage lender will typically require you to have. Costs depend on your property and location."
-msgstr ""
-
-msgid "Selling fees"
-msgstr ""
-
-msgid "The costs of selling your home in the future. This includes estate agent commissions (typically 1-2%) and solicitor fees. Hint: increase this percentage slightly to budget for the solicitor."
-msgstr ""
-
-msgid "Mortgage arrangement fee"
-msgstr ""
-
-msgid "A one-off fee charged by the bank to set up your mortgage, typically up to £2,000. Some deals have no fee but charge a slightly higher interest rate instead."
-msgstr ""
-
-msgid "Remortgaging"
-msgstr ""
-
-msgid "UK mortgages usually have a fixed rate for only 2-5 years. When that deal ends, you must switch to a new one (remortgage) to avoid being moved to the bank's much more expensive standard variable rate."
-msgstr ""
-
-msgid "Service charge & ground rent"
-msgstr ""
-
-msgid "Costs specific to 'leasehold' properties (like most flats). Service charges cover shared building maintenance (lifts, cleaning), while ground rent is an annual fee paid to the landowner (though banned on most newer leases)."
-msgstr ""
-
-msgid "Tenancy deposit"
-msgstr ""
-
-msgid "The money you provide when renting (capped by law at 5 weeks' rent). It is held securely and returned when you move out. The calculator accounts for the fact that this money cannot be invested while you are renting."
+msgid "Poland"
 msgstr ""
 
 msgid "After {years} years..."
@@ -1950,7 +1899,451 @@ msgstr ""
 msgid "Renting"
 msgstr ""
 
+msgid "{years}-Year Renting Insights"
+msgstr ""
+
+msgid "Savings from not buying"
+msgstr ""
+
+msgid "Capital you keep by not buying: deposit, taxes, buying costs, repair budget, and first year's insurance. Shown for reference - the actual investment base used for return calculations may exclude certain items."
+msgstr ""
+
+msgid "Return on initial savings"
+msgstr ""
+
+msgid "Investment growth on that initial pot over the full period, compounded annually at your chosen savings return rate."
+msgstr ""
+
+msgid "Return on ongoing savings"
+msgstr ""
+
+msgid "If your mortgage payment would be higher than your rent, the difference is invested each year and compounds. Only applies when mortgage > rent."
+msgstr ""
+
+msgid "Rent paid"
+msgstr ""
+
+msgid "Total rent paid over the period, rising by your expected annual rent increase each year."
+msgstr ""
+
+msgid "Net gain/loss"
+msgstr ""
+
+msgid "Investment returns minus rent paid, plus your deposit returned. A negative number means renting cost you more than your investments returned."
+msgstr ""
+
+msgid "Year {label}"
+msgstr ""
+
+msgid "in profit"
+msgstr ""
+
+msgid "Difference: {difference}"
+msgstr ""
+
+msgid "Buying ahead"
+msgstr ""
+
+msgid "Renting ahead"
+msgstr ""
+
+msgid "Renting cost vs Buying cost over years"
+msgstr ""
+
+msgid "Buying cheaper from year {crossoverYear}"
+msgstr ""
+
+msgid "yr"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "Year {crossoverYear}"
+msgstr ""
+
+msgid "Now (yr {years})"
+msgstr ""
+
+msgid "Net cumulative position - below zero means that path is in overall profit (equity / returns exceed all costs paid)"
+msgstr ""
+
+msgid "Hide hints"
+msgstr ""
+
+msgid "Show hints"
+msgstr ""
+
+msgid "Fewer options"
+msgstr ""
+
+msgid "More options"
+msgstr ""
+
+msgid "Found an issue?"
+msgstr ""
+
 msgid "{years}-Year Buying Insights"
+msgstr ""
+
+msgid "Down payment (wkład własny)"
+msgstr ""
+
+msgid "The upfront cash you put in. It becomes part of your equity immediately, but is capital you can no longer invest."
+msgstr ""
+
+msgid "PCC tax (podatek od czynności cywilnoprawnych)"
+msgstr ""
+
+msgid "2% civil-law transactions tax on secondary market purchases. Exempt for first-time buyers (since Aug 2023) and primary market (developer) purchases."
+msgstr ""
+
+msgid "Notary & court costs (taksa notarialna)"
+msgstr ""
+
+msgid "Mandatory notarisation of the purchase contract, plus land register (KW) entry fee. Scales with the property price; typically 3,000-6,000 zł."
+msgstr ""
+
+msgid "Buyer's agent fee (prowizja pośrednika)"
+msgstr ""
+
+msgid "Commission paid to the buyer's real estate agent. Negotiable; typically 1.5-3% of the purchase price. Not required if the agent is seller-only."
+msgstr ""
+
+msgid "Mortgage payments"
+msgstr ""
+
+msgid "Total capital and interest payments made over your chosen period. Includes only years within the mortgage term."
+msgstr ""
+
+msgid "Equity value"
+msgstr ""
+
+msgid "Projected property value minus remaining mortgage balance at the start of your final year - what you'd receive when selling."
+msgstr ""
+
+msgid "Repairs & maintenance"
+msgstr ""
+
+msgid "Estimated upkeep inside the flat each year (% of property value, growing with appreciation) plus initial renovation spend (stan deweloperski fit-out)."
+msgstr ""
+
+msgid "Home insurance (ubezpieczenie mieszkania)"
+msgstr ""
+
+msgid "Private home insurance for contents and liability, required by most lenders. Building insurance is typically included in the czynsz administracyjny."
+msgstr ""
+
+msgid "Building admin fees (czynsz administracyjny)"
+msgstr ""
+
+msgid "Monthly charges to the wspólnota / spółdzielnia: mandatory renovation fund (fundusz remontowy), building insurance, common area maintenance and administration."
+msgstr ""
+
+msgid "Property tax (podatek od nieruchomości)"
+msgstr ""
+
+msgid "Annual municipal area-based property tax. Max 1.19 zł/m²/year for residential property (2025 statutory maximum). Very low compared to DE/GB value-based taxes."
+msgstr ""
+
+msgid "Selling fees"
+msgstr ""
+
+msgid "Costs on future sale: agent commission (~2%) plus notary for the sale contract (~0.5%), applied to the projected future sale price."
+msgstr ""
+
+msgid "Refinancing costs"
+msgstr ""
+
+msgid "Bank processing fee and mortgage hypothek amendment costs each time your fixed-rate period ends and you negotiate a new rate."
+msgstr ""
+
+msgid "Everything added together: equity gained minus all costs paid. A negative number means buying cost you more than you got back - but you had a home to live in."
+msgstr ""
+
+msgid "Monthly mortgage payment (rata kredytu)"
+msgstr ""
+
+msgid "Property value (zł)"
+msgstr ""
+
+msgid "The agreed purchase price (cena zakupu). National avg ~10,000-14,000 zł/m² in major cities (Numbeo, 2026). Warsaw city centre: ~14,000-23,000 zł/m²."
+msgstr ""
+
+msgid "Market type"
+msgstr ""
+
+msgid "Secondary market (rynek wtórny) - PCC applies"
+msgstr ""
+
+msgid "Primary market / Developer (rynek pierwotny) - VAT, no PCC"
+msgstr ""
+
+msgid "Primary market means buying from a developer (deweloper). The price includes 8% VAT (for flats ≤150 m²) and is exempt from PCC. Secondary market (resale) attracts 2% PCC unless you are a first-time buyer."
+msgstr ""
+
+msgid "First-time buyer? (Pierwsze mieszkanie)"
+msgstr ""
+
+msgid "No - standard PCC applies"
+msgstr ""
+
+msgid "Yes - exempt from PCC (Art. 9 pkt 17 u.p.c.c., since Aug 2023)"
+msgstr ""
+
+msgid "Since 31 August 2023, people who have NEVER owned any residential property are exempt from the 2% PCC on their first purchase. All co-buyers must qualify. Applies to secondary market only."
+msgstr ""
+
+msgid "Down payment / Wkład własny (zł)"
+msgstr ""
+
+msgid "Your own funds (wkład własny). KNF (Polish financial regulator) recommends minimum 20%. With 10-20%, most banks require mortgage insurance (ubezpieczenie niskiego wkładu własnego). Below 10% is rarely accepted."
+msgstr ""
+
+msgid "LTV {ltv}% · Wkład własny {deposit}%"
+msgstr ""
+
+msgid "Below 10% - most banks will not lend"
+msgstr ""
+
+msgid "Below 20% - ubezpieczenie niskiego wkładu likely required"
+msgstr ""
+
+msgid "No mortgage needed"
+msgstr ""
+
+msgid "Mortgage rate (% p.a.)"
+msgstr ""
+
+msgid "Variable rate = WIBOR 3M (~4.5% in May 2026, after NBP cut to 3.75%) + bank margin (~2-2.5%) ≈ 6.5-7.0%. Fixed 5yr: ~6.5-7.5%. National average (Numbeo, May 2026): 6.87%. After the NBP rate cutting cycle completes, variable rates may fall to ~6%."
+msgstr ""
+
+msgid "Mortgage term (years)"
+msgstr ""
+
+msgid "Full repayment term. Typical in Poland: 25-35 years. Maximum allowed by KNF recommendation: 35 years. Longer terms reduce monthly payments but increase total interest paid."
+msgstr ""
+
+msgid "Rate type"
+msgstr ""
+
+msgid "Variable (WIBOR + margin) - dominant in Poland"
+msgstr ""
+
+msgid "Fixed rate (5yr, then variable)"
+msgstr ""
+
+msgid "Variable-rate (zmienne oprocentowanie) is the dominant Polish product, linked to WIBOR 3M/6M. Fixed-rate (stałe oprocentowanie na 5 lat) is available and offers payment certainty for the fixed period, then reverts to variable."
+msgstr ""
+
+msgid "PCC tax"
+msgstr ""
+
+msgid "PCC exempt - first-time buyer"
+msgstr ""
+
+msgid "PCC exempt - primary market (VAT included in price)"
+msgstr ""
+
+msgid "Total acquisition costs"
+msgstr ""
+
+msgid "of purchase price"
+msgstr ""
+
+msgid "Property appreciation (% p.a.)"
+msgstr ""
+
+msgid "Expected annual price growth. GUS data shows ~4% nationally in 2024-2025. Warsaw and Kraków historically average 5-8% p.a. Smaller cities: 3-5%."
+msgstr ""
+
+msgid "Notary & court costs / Taksa notarialna (zł)"
+msgstr ""
+
+msgid "All property sales in Poland must be notarised. Includes: taksa notarialna (sliding scale, max ~4,920 zł for 600k property), court fee for land register entry (wpis do KW, ~200 zł), and PCC on the notarial act (~23 zł). Typically 3,000-6,000 zł all-in."
+msgstr ""
+
+msgid "Initial renovation / Stan deweloperski (zł)"
+msgstr ""
+
+msgid "New-build flats in Poland are typically sold in 'developer state' (stan deweloperski) - bare walls, no flooring, kitchen or bathroom. Full fit-out costs 1,000-2,500 zł/m². For a 60 m² flat expect 60,000-150,000 zł. Resale (rynek wtórny) is usually lower."
+msgstr ""
+
+msgid "Buyer's agent fee / Prowizja pośrednika (%)"
+msgstr ""
+
+msgid "There is no law requiring equal splitting of commission. Buyer's commission is negotiable: typically 1.5-3% + VAT. Some agents are seller-only (prowizja tylko od sprzedającego); in that case set to 0%."
+msgstr ""
+
+msgid "Selling costs at exit (% of sale price)"
+msgstr ""
+
+msgid "When you sell: agent commission (~2%) + notary for the sale contract (~0.5%). Total typically 2-3.5% of the sale price."
+msgstr ""
+
+msgid "Annual maintenance (% of property value)"
+msgstr ""
+
+msgid "Ongoing upkeep costs inside your flat (appliances, internal repairs). Set separately from the czynsz administracyjny. Rule of thumb: 0.5-0.8% p.a. The wspólnota/spółdzielnia fundusz remontowy covers the building exterior and communal areas."
+msgstr ""
+
+msgid "Home insurance / Ubezpieczenie mieszkania (zł/yr)"
+msgstr ""
+
+msgid "Private home insurance (contents, liability, fire etc.) - required by mortgage lender for structural cover. The building insurance is often included in czynsz administracyjny. Typically 400-1,000 zł/year."
+msgstr ""
+
+msgid "Building admin fee / Czynsz administracyjny (zł/yr)"
+msgstr ""
+
+msgid "Monthly charges to your wspólnota mieszkaniowa or spółdzielnia: covers fundusz remontowy (mandatory building renovation fund), building insurance, common area maintenance, lift, cleaning, and administration. Typically 300-800 zł/month (3,600-9,600 zł/year). Houses set to 0."
+msgstr ""
+
+msgid "Annual property tax / Podatek od nieruchomości (zł/yr)"
+msgstr ""
+
+msgid "Poland's property tax is area-based, not value-based. The maximum rate for 2025 is 1.19 zł/m²/year for residential property. For a 60 m² flat: ≤72 zł/year. The actual rate is set by your gmina (municipality) within the statutory maximum."
+msgstr ""
+
+msgid "Fixed-rate period (years)"
+msgstr ""
+
+msgid "Standard fixed period in Poland is 5 years (stałe oprocentowanie na 5 lat). After the fixed period, the loan reverts to WIBOR + margin. Some banks offer 7-10 year fixed products."
+msgstr ""
+
+msgid "Refinancing cost (zł)"
+msgstr ""
+
+msgid "One-off cost when the fixed period ends and you negotiate a new rate or switch lender: bank processing fee (~0-500 zł) and mortgage hypothek amendment (zmiana hipoteki, ~200 PLN). Typically 500-1,000 zł."
+msgstr ""
+
+msgid "Return on savings (% p.a.)"
+msgstr ""
+
+msgid "Annual return on capital kept by not buying (wkład własny, PCC, notary costs). Polish savings accounts (Konto Oszczędnościowe): ~5-6% in early 2026, expected to fall toward 4-4.5% as NBP cuts continue. Broad equity ETF: ~6-7% long-run."
+msgstr ""
+
+msgid "Monthly rent / Czynsz najmu (zł)"
+msgstr ""
+
+msgid "Monthly rent (czynsz najmu), excluding utilities and building charges (opłaty eksploatacyjne). National average for a 1-bed flat: ~2,820 zł/month in major cities (Numbeo, May 2026). Warsaw 1-bed: 2,000-4,500 zł/month."
+msgstr ""
+
+msgid "Expected rent increase (% p.a.)"
+msgstr ""
+
+msgid "Polish rents grew ~7% in 2024 and are easing toward ~4% in 2025-2026. Fixed-term tenancies can include a CPI indexation clause. There is no rent cap equivalent to the German Mietpreisbremse in Poland."
+msgstr ""
+
+msgid "Rental deposit / Kaucja (zł)"
+msgstr ""
+
+msgid "Under Art. 6 ustawy o ochronie praw lokatorów, the deposit (kaucja) is capped at 6 months' rent. Market norm: 2-3 months. The deposit is held directly by the landlord - there is no statutory third-party deposit protection scheme in Poland."
+msgstr ""
+
+msgid "Time horizon"
+msgstr ""
+
+msgid "Years in property"
+msgstr ""
+
+msgid "How long you plan to stay. Polish transaction costs (PCC, notary, agent, renovation) typically total 5-10% of the property value. Buying rarely makes financial sense for stays shorter than 5-7 years in most Polish cities."
+msgstr ""
+
+msgid "PCC - Podatek od czynności cywilnoprawnych (Civil-Law Transactions Tax)"
+msgstr ""
+
+msgid "A 2% tax on the purchase price of residential property on the secondary market (resale). It is NOT applicable when buying from a developer (primary market, where 8% VAT applies instead). Since 31 August 2023 (Dz.U. 2023 poz. 1205), first-time buyers who have never owned any residential property anywhere are fully exempt. All co-buyers must individually qualify for the exemption to apply."
+msgstr ""
+
+msgid "Rynek pierwotny / Rynek wtórny (Primary / Secondary market)"
+msgstr ""
+
+msgid "Rynek pierwotny means buying directly from a developer (deweloper), typically a newly-built or off-plan property. The price already includes 8% VAT (for dwellings ≤150 m²; 23% for larger). No PCC applies. Rynek wtórny is a resale purchase from a private seller, subject to 2% PCC (unless FTB-exempt). Most new builds are delivered in stan deweloperski."
+msgstr ""
+
+msgid "Stan deweloperski (Developer finish state)"
+msgstr ""
+
+msgid "The standard finish state for new-build flats in Poland. The flat is handed over with structural walls, plastered, with electrical/plumbing roughed in, but with no flooring, tiles, kitchen, bathroom fittings, or paint. Buyers must budget for complete fit-out: typically 1,000-2,500 zł/m² depending on standard. For a 60 m² flat, expect 60,000-150,000 zł of additional spend before you can move in."
+msgstr ""
+
+msgid "Taksa notarialna (Notary fee)"
+msgstr ""
+
+msgid "All property purchases in Poland must be formalised by a notary (notariusz) in a notarial deed (akt notarialny). The notary fee (taksa) is regulated by the Minister of Justice on a sliding scale based on the transaction value. For a 600,000 zł property the maximum is ~4,920 zł. Additional costs: land register entry (wpis do KW) ~200 zł, PCC on the notarial act ~23 zł, mortgage hypothek registration ~200 zł. Total typically 3,000-6,000 zł."
+msgstr ""
+
+msgid "Księga wieczysta (Land register)"
+msgstr ""
+
+msgid "Poland's official electronic property register, maintained by district courts (sąd rejonowy). Every property has a KW number. Checking the KW is essential before buying - it reveals ownership, mortgages (hipoteka), easements, and other encumbrances. Ownership transfer (przeniesienie własności) must be registered in the KW after the notarial deed."
+msgstr ""
+
+msgid "WIBOR (Warsaw Interbank Offered Rate)"
+msgstr ""
+
+msgid "The benchmark interest rate used to price most Polish variable-rate mortgages (kredyty hipoteczne ze zmiennym oprocentowaniem). The NBP reference rate was cut to 3.75% in April 2026, and WIBOR 3M was approximately 4.5% at that time. The total mortgage rate = WIBOR 3M or 6M + bank margin (~2-2.5%). WIBOR is being phased out in favour of WIRON (Warsaw Interest Rate Overnight) under the NBP reform programme."
+msgstr ""
+
+msgid "Wkład własny (Down payment / Equity contribution)"
+msgstr ""
+
+msgid "Your own funds contributed to the purchase. The KNF (Komisja Nadzoru Finansowego - Polish financial regulator) recommends a minimum 20% wkład własny. Banks may accept 10%, but below 20% typically requires mandatory mortgage insurance (ubezpieczenie niskiego wkładu własnego), which adds to the effective borrowing cost. Below 10% is rarely accepted by any lender."
+msgstr ""
+
+msgid "LTV / Wskaźnik LtV"
+msgstr ""
+
+msgid "Loan-to-Value: the mortgage amount as a percentage of the property's value. Polish banks apply tiered pricing: ≤60% LTV gets the best rates; 60-80% is acceptable but with slightly worse margins; above 80% typically requires mortgage insurance. The KNF recommendation (Rekomendacja S) sets the maximum LTV for variable-rate mortgages."
+msgstr ""
+
+msgid "Stałe / Zmienne oprocentowanie (Fixed / Variable rate)"
+msgstr ""
+
+msgid "Variable-rate mortgages (zmienne oprocentowanie) - linked to WIBOR 3M/6M + margin - are the dominant Polish product, representing ~85% of new mortgages. Fixed-rate products (stałe oprocentowanie) fix the rate for 5 years, then revert to variable. Since 2023, banks are required to offer at least a 5-year fixed option alongside variable-rate mortgages (KNF Rekomendacja S amendment)."
+msgstr ""
+
+msgid "Czynsz administracyjny / Wspólnota mieszkaniowa"
+msgstr ""
+
+msgid "Monthly charges paid by flat owners to their housing association (wspólnota mieszkaniowa - for individually owned units) or housing co-operative (spółdzielnia mieszkaniowa). Covers: fundusz remontowy (mandatory building renovation fund - legally required under the Act on the Ownership of Premises), building insurance, common area electricity/cleaning/maintenance, lift, and administration fees. Typically 300-800 zł/month. Houses do not have this cost."
+msgstr ""
+
+msgid "Fundusz remontowy (Building renovation fund)"
+msgstr ""
+
+msgid "A mandatory contribution to a collective fund for major building repairs (roof, facade, lifts, common pipes). Governed by the ustawa o własności lokali (Act on the Ownership of Premises). The rate is set by the wspólnota (typically 1-5 zł/m²/month). The fund is used for large works like roof replacement, building insulation, or lift modernisation - costs that in a house would fall entirely on the owner."
+msgstr ""
+
+msgid "Podatek od nieruchomości (Property tax)"
+msgstr ""
+
+msgid "Poland's annual property tax is assessed on floor area (m²), not on property value. The maximum rate for residential buildings in 2025 is 1.19 zł/m²/year (set by the Minister of Finance). The actual rate is set by each gmina (municipality) within this maximum. For a 60 m² flat, the maximum annual tax is just ~71 zł - making this cost almost negligible."
+msgstr ""
+
+msgid "Prowizja pośrednika (Agent commission)"
+msgstr ""
+
+msgid "Commission is negotiable and market convention varies. Sellers typically pay 1.5-3% to their agent. Buyers may be charged 1.5-3% by the buyer's agent, or 0% if the agent represents only the seller. Always clarify the commission structure before engaging an agent."
+msgstr ""
+
+msgid "Kaucja (Rental deposit)"
+msgstr ""
+
+msgid "Under Art. 6 ustawy o ochronie praw lokatorów (Dz.U. 2001 Nr 71 poz. 733), the landlord may require a deposit of up to 6 months' rent (hard legal cap). Market norm is 2-3 months. There is no statutory requirement for the landlord to hold the deposit in a separate protected account. The funds are typically held by the landlord directly and returned at lease end."
+msgstr ""
+
+msgid "Czynsz najmu (Rent)"
+msgstr ""
+
+msgid "The monthly rental payment (czynsz najmu) excludes utilities and building charges (opłaty eksploatacyjne / czynsz administracyjny). In practice, total housing costs for renters include: czynsz najmu + opłaty (water, heating, building charges) + electricity. National average for a 1-bed flat: ~2,820 zł/month czynsz najmu in major cities (Numbeo, May 2026). Polish rental law (ustawa o ochronie praw lokatorów) provides moderate tenant protections but no statutory rent cap."
+msgstr ""
+
+msgid "Return on savings (zwrot z oszczędności)"
+msgstr ""
+
+msgid "The estimated annual return if you invest the capital saved by not buying - your wkład własny, PCC, notary costs, and renovation budget. Polish savings accounts (Konto Oszczędnościowe) offered 5-6% in early 2026, expected to decline toward 4-4.5% as the NBP rate-cutting cycle continues. A broadly diversified global equity ETF has historically returned ~6-7% per year over the long run. The calculator defaults to 4.5%."
 msgstr ""
 
 msgid "Deposit"
@@ -1965,13 +2358,7 @@ msgstr ""
 msgid "A one-off UK government tax paid on purchase. First-time buyers get relief on properties up to £500,000."
 msgstr ""
 
-msgid "Mortgage payments"
-msgstr ""
-
 msgid "Total capital and interest payments made to the bank over your chosen period. Includes only years within the mortgage term."
-msgstr ""
-
-msgid "Equity value"
 msgstr ""
 
 msgid "What you'd receive when selling: the projected property value minus any remaining mortgage balance. Calculated at the start of your final year."
@@ -1983,16 +2370,19 @@ msgstr ""
 msgid "One-off costs at purchase: solicitor's fees, surveys, and other legal and administrative expenses."
 msgstr ""
 
-msgid "Repairs & maintenance"
+msgid "Estimated upkeep costs each year (as a % of property value, growing with appreciation), plus any initial renovation spend."
 msgstr ""
 
-msgid "Estimated upkeep costs each year (as a % of property value, growing with appreciation), plus any initial renovation spend."
+msgid "Home insurance"
 msgstr ""
 
 msgid "Buildings insurance paid each year. Usually a mortgage requirement."
 msgstr ""
 
 msgid "Estate agent commission on the projected future sale price."
+msgstr ""
+
+msgid "Mortgage arrangement fee"
 msgstr ""
 
 msgid "One-time fee charged by the bank to set up your mortgage."
@@ -2016,40 +2406,7 @@ msgstr ""
 msgid "Annual payment to the freeholder for use of the land your property sits on."
 msgstr ""
 
-msgid "Net gain/loss"
-msgstr ""
-
-msgid "Everything added together: equity gained minus all costs paid. A negative number means buying cost you more than you got back — but you also had a home to live in."
-msgstr ""
-
-msgid "{years}-Year Renting Insights"
-msgstr ""
-
-msgid "Savings from not buying"
-msgstr ""
-
-msgid "Capital you keep by not buying: deposit, stamp duty, buying costs, repair budget, and first year's insurance. Shown for reference — the actual investment base used for return calculations excludes both insurance and the mortgage arrangement fee."
-msgstr ""
-
-msgid "Return on initial savings"
-msgstr ""
-
-msgid "Investment growth on that initial pot over the full period, compounded annually at your chosen savings return rate."
-msgstr ""
-
-msgid "Return on ongoing savings"
-msgstr ""
-
-msgid "If your mortgage payment would be higher than your rent, the difference is invested each year and compounds. Only applies when mortgage > rent."
-msgstr ""
-
-msgid "Rent paid"
-msgstr ""
-
-msgid "Total rent paid over the period, rising by your expected annual rent increase each year."
-msgstr ""
-
-msgid "Investment returns minus rent paid, plus your tenancy deposit returned. A negative number means renting cost you more than your investments returned."
+msgid "Everything added together: equity gained minus all costs paid. A negative number means buying cost you more than you got back - but you also had a home to live in."
 msgstr ""
 
 msgid "Monthly mortgage payment"
@@ -2073,19 +2430,13 @@ msgstr ""
 msgid "Below 5% min deposit"
 msgstr ""
 
-msgid "No mortgage needed"
-msgstr ""
-
 msgid "Mortgage rate (%)"
 msgstr ""
 
 msgid "The interest rate charged by the bank for the mortgage."
 msgstr ""
 
-msgid "Mortgage term (years)"
-msgstr ""
-
-msgid "The period over which you must repay the loan to the bank in full (usually 25–35 years)."
+msgid "The period over which you must repay the loan to the bank in full (usually 25-35 years)."
 msgstr ""
 
 msgid "First time buyer?"
@@ -2160,13 +2511,13 @@ msgstr ""
 msgid "Annual ground rent (£)"
 msgstr ""
 
-msgid "For leasehold properties: annual payment to the freeholder. Note: ground rent was banned on new residential leases from 30 April 2022 — this only applies if you are buying an existing pre-2022 lease."
+msgid "For leasehold properties: annual payment to the freeholder. Note: ground rent was banned on new residential leases from 30 April 2022 - this only applies if you are buying an existing pre-2022 lease."
 msgstr ""
 
 msgid "Return on savings (%)"
 msgstr ""
 
-msgid "The annual percentage return you could earn by investing all the capital saved by not buying (deposit, stamp duty, buying costs, repairs, and arrangement fee)."
+msgid "The annual percentage return you could earn by investing all the capital saved by not buying (deposit, stamp duty, buying costs, and repairs)."
 msgstr ""
 
 msgid "Monthly rent (£)"
@@ -2178,7 +2529,7 @@ msgstr ""
 msgid "Expected rent increase (%)"
 msgstr ""
 
-msgid "The annual percentage by which you expect your rent to rise over time. Under the Renters' Rights Act 2025, landlords can only raise rent once per year, to market rate."
+msgid "The annual percentage by which you expect your rent to rise over time. Under the Renters' Rights Act 2025 (Royal Assent 27 Oct 2025, England only), landlords must use the statutory section 13 process and can raise rent at most once per year to the local market rate. Tenants can challenge any increase at the First-tier Tribunal."
 msgstr ""
 
 msgid "Tenancy deposit (£)"
@@ -2190,58 +2541,322 @@ msgstr ""
 msgid "Living"
 msgstr ""
 
-msgid "Years in property"
-msgstr ""
-
 msgid "How long you plan to stay in the property. Longer horizons tend to favour buying; shorter ones often favour renting."
 msgstr ""
 
-msgid "Hide hints"
+msgid "Stamp Duty Land Tax (SDLT)"
 msgstr ""
 
-msgid "Show hints"
+msgid "A property purchase tax in England and Northern Ireland. First-time buyers pay 0% up to £300k, and 5% between £300k-£500k. Important: if the price goes even £1 over £500k, this special discount disappears completely, and standard rates apply from £125k. This is why a £500,001 property triggers a much higher tax (~£15k) than a £500,000 one (£10k)."
 msgstr ""
 
-msgid "Fewer options"
+msgid "Loan-to-Value (LTV)"
 msgstr ""
 
-msgid "More options"
+msgid "The size of your mortgage compared to the property's value. A lower LTV means you have a larger deposit, which usually unlocks better mortgage rates."
 msgstr ""
 
-msgid "Year {label}"
+msgid "Mortgage rate"
 msgstr ""
 
-msgid "in profit"
+msgid "The annual interest rate on your loan. Based on current UK market trends; your exact rate depends on your credit profile and deposit size."
 msgstr ""
 
-msgid "Difference: {difference}"
+msgid "Equity"
 msgstr ""
 
-msgid "Buying ahead"
+msgid "The portion of the property you actually own debt-free. It grows as you pay off your mortgage and as the property's value increases."
 msgstr ""
 
-msgid "Renting ahead"
+msgid "Property appreciation"
 msgstr ""
 
-msgid "Renting cost vs Buying cost over years"
+msgid "How much your property's value grows each year. The UK historical average is around 2.5-3%, though this varies by region."
 msgstr ""
 
-msgid "Buying cheaper from year {crossoverYear}"
+msgid "Return on savings"
 msgstr ""
 
-msgid "yr"
+msgid "The estimated annual return if you invested your money instead of buying. The calculator assumes you invest your potential deposit, stamp duty, buying fees, and repair budget (minus your locked tenancy deposit). Defaults to 4% - close to a standard UK cash ISA or low-risk investment."
 msgstr ""
 
-msgid "Year"
+msgid "Maintenance & repairs"
 msgstr ""
 
-msgid "Year {crossoverYear}"
+msgid "The yearly cost of looking after your home. A good rule of thumb is 0.5-1% of the property's value annually to cover ongoing maintenance like boiler or roof repairs."
 msgstr ""
 
-msgid "Now (yr {years})"
+msgid "Buildings insurance, which your mortgage lender will typically require you to have. Costs depend on your property and location."
 msgstr ""
 
-msgid "Net cumulative position - below zero means that path is in overall profit (equity / returns exceed all costs paid)"
+msgid "The costs of selling your home in the future. This includes estate agent commissions (typically 1-2%) and solicitor fees. Hint: increase this percentage slightly to budget for the solicitor."
+msgstr ""
+
+msgid "A one-off fee charged by the bank to set up your mortgage, typically up to £2,000. Some deals have no fee but charge a slightly higher interest rate instead."
+msgstr ""
+
+msgid "Remortgaging"
+msgstr ""
+
+msgid "UK mortgages usually have a fixed rate for only 2-5 years. When that deal ends, you must switch to a new one (remortgage) to avoid being moved to the bank's much more expensive standard variable rate."
+msgstr ""
+
+msgid "Service charge & ground rent"
+msgstr ""
+
+msgid "Costs specific to 'leasehold' properties (like most flats). Service charges cover shared building maintenance (lifts, cleaning), while ground rent is an annual fee paid to the landowner (though banned on most newer leases)."
+msgstr ""
+
+msgid "Tenancy deposit"
+msgstr ""
+
+msgid "The money you provide when renting (capped by law at 5 weeks' rent). It is held securely and returned when you move out. The calculator accounts for the fact that this money cannot be invested while you are renting."
+msgstr ""
+
+msgid "Transfer tax (Grunderwerbsteuer)"
+msgstr ""
+
+msgid "State transfer tax on property acquisition, ranging from 3.5% to 6.5% depending on the federal state (Bundesland)."
+msgstr ""
+
+msgid "Buyer's agent fee (Maklerprovision)"
+msgstr ""
+
+msgid "Commission paid to the real estate agent for facilitating the purchase."
+msgstr ""
+
+msgid "Notary & land registry costs"
+msgstr ""
+
+msgid "Fees for notary services and land registry entry (Grundbuch) - typically 1-2% of property value."
+msgstr ""
+
+msgid "Refinancing costs (Anschlussfinanzierung)"
+msgstr ""
+
+msgid "Broker and bank fees for refinancing when your fixed-rate period ends."
+msgstr ""
+
+msgid "Condo fees (Hausgeld)"
+msgstr ""
+
+msgid "Annual charge covering shared building maintenance, utilities, and communal repairs."
+msgstr ""
+
+msgid "Property tax (Grundsteuer)"
+msgstr ""
+
+msgid "Annual municipal property tax, varies by location."
+msgstr ""
+
+msgid "Property value (€)"
+msgstr ""
+
+msgid "The total purchase price of the property as stated in the notarial sales contract (Kaufvertrag)."
+msgstr ""
+
+msgid "Equity / Down payment (€)"
+msgstr ""
+
+msgid "Your own funds (Eigenkapital). German banks typically require at least the full Kaufnebenkosten (10-15%) plus 10-20% of the purchase price from your own capital."
+msgstr ""
+
+msgid "LTV (Beleihungsauslauf) {ltv}% · Equity {deposit}%"
+msgstr ""
+
+msgid "Below 20% equity - expect rate surcharges"
+msgstr ""
+
+msgid "Above 60% LTV - moderate rate band"
+msgstr ""
+
+msgid "Mortgage rate / Sollzins (%)"
+msgstr ""
+
+msgid "The annual nominal interest rate (Sollzinssatz) on your loan. 10-year fixed rates (Zinsbindung) were approximately 3.2-3.6% in Germany in 2025-2026 (indicative market range; verify current rates before decisions)."
+msgstr ""
+
+msgid "Mortgage term / Gesamtlaufzeit (years)"
+msgstr ""
+
+msgid "Full repayment term until the loan is paid off (Volltilgung). Typically 25-35 years in Germany."
+msgstr ""
+
+msgid "Federal state / Bundesland"
+msgstr ""
+
+msgid "Determines the Grunderwerbsteuer rate. Unlike UK Stamp Duty, GrESt is a flat percentage of the full purchase price with no thresholds and no first-time buyer relief."
+msgstr ""
+
+msgid "Transfer tax (GrESt)"
+msgstr ""
+
+msgid "Total acquisition costs (Kaufnebenkosten)"
+msgstr ""
+
+msgid "Expected annual price growth. German residential prices have varied significantly by region; major cities (Munich, Frankfurt, Hamburg) have historically averaged 3-5% p.a. Enter your own estimate - this is a forward-looking assumption, not a guaranteed rate."
+msgstr ""
+
+msgid "Notary & land registry costs (€)"
+msgstr ""
+
+msgid "Mandatory in Germany: the notary (Notar) certifies the purchase contract and the land registry (Grundbuch) records ownership. Together ~1.5-2% of the purchase price."
+msgstr ""
+
+msgid "Initial renovation costs (€)"
+msgstr ""
+
+msgid "One-off renovation or fitting-out costs immediately after purchase."
+msgstr ""
+
+msgid "Buyer's agent fee / Maklerprovision (%)"
+msgstr ""
+
+msgid "Since the Maklergesetz of December 2020 (§§ 656a-656d BGB), buyer and seller must share the agent's commission equally. The total commission is typically 3.57-7.14% (incl. VAT); the buyer pays half. Enter only the buyer's share here (typically 1.785-3.57%)."
+msgstr ""
+
+msgid "Costs when you eventually sell. The seller pays their half of the Maklerprovision (typically 3.57% incl. VAT) plus notary costs for the sale contract. Total is typically 3.5-4.5% of the sale price."
+msgstr ""
+
+msgid "Annual upkeep costs as a % of property value, growing with appreciation. Rule of thumb: 0.5-1% for Neubau (new-build), up to 1.5% for Altbau (pre-war stock)."
+msgstr ""
+
+msgid "Buildings insurance / Wohngebäudeversicherung (€/yr)"
+msgstr ""
+
+msgid "Annual buildings insurance premium, required by lenders. For condominiums (Eigentumswohnungen), this is often included in the Hausgeld - adjust accordingly."
+msgstr ""
+
+msgid "Fixed-rate period / Zinsbindung (years)"
+msgstr ""
+
+msgid "German mortgages fix the rate only for the Zinsbindung period (typically 10-15 years), not the full term. When this expires, you must arrange Anschlussfinanzierung at whatever rates prevail at that time."
+msgstr ""
+
+msgid "Refinancing cost / Anschlussfinanzierung (€)"
+msgstr ""
+
+msgid "One-off cost each time you arrange a new fixed-rate deal: broker fee, notarial land charge amendment (Grundschuldänderung), and any bank processing fees. Typically €500-€2,000."
+msgstr ""
+
+msgid "Annual condo fee / Hausgeld (€)"
+msgstr ""
+
+msgid "For Eigentumswohnungen (condominiums): annual Hausgeld paid to the Wohnungseigentümergemeinschaft (WEG), covering shared building maintenance, administration, and the Instandhaltungsrücklage (reserve fund). Typically €24-€48/m²/year. Set to 0 for houses."
+msgstr ""
+
+msgid "Annual property tax / Grundsteuer (€)"
+msgstr ""
+
+msgid "Annual municipal property tax, reformed from January 2025. Calculated as Grundsteuerwert × Steuermesszahl × local Hebesatz. Typically €400-€1,500/year depending on municipality and property size."
+msgstr ""
+
+msgid "Annual return on the capital you keep by not buying (equity, GrESt, Kaufnebenkosten). German Tagesgeld (instant-access savings): ~3-3.5%; broad equity ETF (long-run): ~5-7%. Defaults to 3.5%."
+msgstr ""
+
+msgid "Monthly cold rent / Kaltmiete (€)"
+msgstr ""
+
+msgid "Monthly rent excluding utilities and service charges (Kaltmiete). The Mietpreisbremse (§556d BGB) limits new tenancy rents to 10% above the local reference rent (Mietspiegel) in designated tight-market areas."
+msgstr ""
+
+msgid "The Kappungsgrenze (§558 BGB) caps increases in existing tenancies at 20% over 3 years (15% in areas with an angespannter Wohnungsmarkt). Destatis reported ~3.5% annual rent growth in 2025. New tenancy rents are additionally restricted by the Mietpreisbremse."
+msgstr ""
+
+msgid "Rental deposit / Mietkaution (€)"
+msgstr ""
+
+msgid "Legally capped at 3 months' cold rent (§551 BGB). The deposit is held in a separate account (Mietkautionskonto) and returned on move-out. This capital cannot be invested during the tenancy."
+msgstr ""
+
+msgid "How long you plan to stay. Because German Kaufnebenkosten are very high (typically 10-15% of the purchase price), buying rarely makes financial sense for stays shorter than 7-10 years."
+msgstr ""
+
+msgid "Grunderwerbsteuer (Transfer Tax)"
+msgstr ""
+
+msgid "Germany's property purchase tax, set independently by each federal state (Bundesland). It is a flat percentage of the full purchase price with no bands, no threshold relief, and no first-time buyer discount. Rates range from 3.5% (Bavaria & Saxony) to 6.5% (Brandenburg, NRW, Schleswig-Holstein, Saarland)."
+msgstr ""
+
+msgid "Kaufnebenkosten (Acquisition costs)"
+msgstr ""
+
+msgid "The total upfront costs on top of the purchase price: Grunderwerbsteuer (3.5-6.5%), notary & land registry fees (~1.5-2%), and the buyer's share of the agent commission (~1.785-3.57%). Combined, these typically amount to 10-15% of the purchase price. This is why buying in Germany rarely makes financial sense for stays shorter than 7-10 years."
+msgstr ""
+
+msgid "Notar & Grundbuch (Notary & Land Registry)"
+msgstr ""
+
+msgid "In Germany, every property sale must be certified by a notary (Notar) who draws up the purchase contract (Kaufvertrag). The transfer of ownership is then recorded in the land register (Grundbuch), maintained by the local court. Both fees are regulated by law and together amount to roughly 1.5-2% of the purchase price."
+msgstr ""
+
+msgid "Maklerprovision (Agent commission)"
+msgstr ""
+
+msgid "Since the Maklergesetz of December 2020 (§§ 656a-656d BGB), the total agent commission must be split equally between buyer and seller. The combined commission is typically 3.57-7.14% (inclusive of 19% VAT); the buyer's share is usually 1.785-3.57%. If the seller instructs the agent, they pay at least half."
+msgstr ""
+
+msgid "Zinsbindung (Fixed-rate period)"
+msgstr ""
+
+msgid "German mortgages fix the interest rate for the entire Zinsbindung period - most commonly 10 or 15 years. The monthly payment is fixed for this whole period, giving more long-term certainty. 10-year fixed rates were approximately 3.2-3.6% in 2025-2026 (indicative market range; verify current rates)."
+msgstr ""
+
+msgid "Anschlussfinanzierung (Refinancing)"
+msgstr ""
+
+msgid "When the Zinsbindung period ends, the outstanding loan balance must be refinanced at whatever interest rates prevail at that time. This is a key risk in Germany: if rates have risen, your monthly payments may increase substantially. Arrangement costs (broker fee, any notarial land charge amendment, bank processing fees) are typically €500-€2,000 per refinancing event."
+msgstr ""
+
+msgid "Beleihungsauslauf (Loan-to-Value / LTV)"
+msgstr ""
+
+msgid "The mortgage amount as a percentage of the property's value. German banks apply strict lending tiers: rates are typically most favourable at or below 60% LTV, moderate between 60-80%, and significantly higher (or unavailable) above 80%. A deposit of at least 20% plus the full Kaufnebenkosten is the standard minimum requirement."
+msgstr ""
+
+msgid "Eigenkapital (Down payment / Equity)"
+msgstr ""
+
+msgid "Your own funds contributed to the purchase. German lenders generally require at least enough Eigenkapital to cover the full Kaufnebenkosten (10-15%) plus 10-20% of the purchase price - meaning a minimum of ~20-35% of the total purchase price from your own savings."
+msgstr ""
+
+msgid "Hausgeld & WEG (Condo fee)"
+msgstr ""
+
+msgid "Owners of condominiums (Eigentumswohnungen) pay a monthly Hausgeld to the Wohnungseigentümergemeinschaft (WEG - the owners' association). This covers shared building maintenance, administration, building insurance, and contributions to the Instandhaltungsrücklage (mandatory reserve fund for future major repairs). Typically €24-€48 per m² per year. Houses do not have this cost."
+msgstr ""
+
+msgid "Grundsteuer (Property tax)"
+msgstr ""
+
+msgid "Germany's annual municipal property tax, substantially reformed from January 2025. It is calculated as: assessed property value (Grundsteuerwert) × federal multiplier (Steuermesszahl) × local municipal rate (Hebesatz). The Hebesatz varies enormously between municipalities. Typical annual amounts range from €400 to €1,500+ depending on location and property size."
+msgstr ""
+
+msgid "Kaltmiete (Cold rent)"
+msgstr ""
+
+msgid "The base monthly rent excluding utilities, heating, and service charges. The total amount you pay including these additional costs is called Warmmiete. The Mietpreisbremse (§556d BGB) limits new tenancy rents to a maximum of 10% above the local reference rent (Mietspiegel) in officially designated tight-market areas."
+msgstr ""
+
+msgid "Mietpreisbremse & Kappungsgrenze (Rent controls)"
+msgstr ""
+
+msgid "Two separate legal protections for tenants. The Mietpreisbremse caps the rent on new tenancies at 10% above the local Mietspiegel reference rent in designated areas. The Kappungsgrenze (§558 BGB) caps increases within an existing tenancy at 20% over any three-year period (reduced to 15% in areas with an officially declared tight housing market - angespannter Wohnungsmarkt)."
+msgstr ""
+
+msgid "Mietkaution (Rental deposit)"
+msgstr ""
+
+msgid "By law (§551 BGB), a landlord may not demand more than 3 months' cold rent as a deposit. The deposit must be held in a separate, interest-bearing account (Mietkautionskonto) and returned to the tenant after moving out, subject to any legitimate deductions. Because this money is locked away and cannot be invested, the calculator excludes it from your investable savings while you rent."
+msgstr ""
+
+msgid "The estimated annual return if you invested the capital you save by not buying - your deposit, Grunderwerbsteuer, Kaufnebenkosten, and renovation budget. German Tagesgeld (instant-access savings accounts) paid around 3-3.5% in 2025; a broad equity ETF has historically returned 5-7% per year over the long run. The calculator defaults to 3.5%."
+msgstr ""
+
+msgid "Wohngebäudeversicherung (Buildings insurance)"
+msgstr ""
+
+msgid "Mandatory buildings insurance covering damage to the structure from fire, water, storm, and similar risks. Required by all mortgage lenders. For Eigentumswohnungen, this is commonly included within the Hausgeld paid to the WEG - if so, set this field to zero to avoid double-counting."
 msgstr ""
 
 msgid "Light mode"
@@ -2590,6 +3205,9 @@ msgid "See your earliest ILR date and estimated fees"
 msgstr ""
 
 msgid "Compare the financial outcomes of buying versus renting a property in the UK, based on your personal circumstances and market assumptions."
+msgstr ""
+
+msgid "Compare the financial outcomes of buying versus renting a property, based on your personal circumstances and market assumptions."
 msgstr ""
 
 msgid "Explore events"

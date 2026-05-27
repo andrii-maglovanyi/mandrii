@@ -134,7 +134,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
           />
           <Hint
             showHints={showHints}
-            text={i18n("The period over which you must repay the loan to the bank in full (usually 25–35 years).")}
+            text={i18n("The period over which you must repay the loan to the bank in full (usually 25-35 years).")}
           />
         </div>
 
@@ -335,7 +335,7 @@ const BuyingInputs = ({ inputs, set, showHints, showAdvanced }: InternalInputPro
               <Hint
                 showHints={showHints}
                 text={i18n(
-                  "For leasehold properties: annual payment to the freeholder. Note: ground rent was banned on new residential leases from 30 April 2022 — this only applies if you are buying an existing pre-2022 lease.",
+                  "For leasehold properties: annual payment to the freeholder. Note: ground rent was banned on new residential leases from 30 April 2022 - this only applies if you are buying an existing pre-2022 lease.",
                 )}
               />
             </div>

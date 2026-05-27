@@ -63,7 +63,7 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
         value={-notaryCosts}
         showHints={showHints}
         explanation={i18n(
-          "Mandatory notarisation of the purchase contract, plus land register (KW) entry fee. Scales with the property price; typically 3,000–6,000 zł.",
+          "Mandatory notarisation of the purchase contract, plus land register (KW) entry fee. Scales with the property price; typically 3,000-6,000 zł.",
         )}
         formatCurrency={pln}
       />
@@ -73,7 +73,7 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
           value={-agentFee}
           showHints={showHints}
           explanation={i18n(
-            "Commission paid to the buyer's real estate agent. Negotiable; typically 1.5–3% of the purchase price. Not required if the agent is seller-only.",
+            "Commission paid to the buyer's real estate agent. Negotiable; typically 1.5-3% of the purchase price. Not required if the agent is seller-only.",
           )}
           formatCurrency={pln}
         />
@@ -92,7 +92,7 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
         value={equity}
         showHints={showHints}
         explanation={i18n(
-          "Projected property value minus remaining mortgage balance at the start of your final year — what you'd receive when selling.",
+          "Projected property value minus remaining mortgage balance at the start of your final year - what you'd receive when selling.",
         )}
         formatCurrency={pln}
       />
@@ -162,7 +162,7 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
           highlight
           showHints={showHints}
           explanation={i18n(
-            "Everything added together: equity gained minus all costs paid. A negative number means buying cost you more than you got back — but you had a home to live in.",
+            "Everything added together: equity gained minus all costs paid. A negative number means buying cost you more than you got back - but you had a home to live in.",
           )}
           formatCurrency={pln}
         />
