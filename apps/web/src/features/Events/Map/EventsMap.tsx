@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { LayoutDashboard, LocateFixed, MapPinOff, Plus } from "lucide-react";
+import { LayoutDashboard, LocateFixed, LogIn, MapPinOff, Plus } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -420,9 +420,24 @@ export const EventsMap = () => {
               </div>
 
               <div className="absolute top-0 right-0 mt-3 mr-3">
-                <Button className="gap-2" color="primary" onClick={handleAddEvent} size="sm" variant="filled">
-                  <Plus size={16} />
-                  {i18n("Add event")}
+                <Button
+                  className="border-on-surface text-on-surface! animate-[gradientShift_5s_ease_infinite] gap-2 rounded-2xl! border-2 bg-[linear-gradient(270deg,#f9556d,#9670f7,#4d94f8,#20c997)] bg-size-[300%_300%] p-5 font-bold shadow-xl"
+                  color="primary"
+                  onClick={handleAddEvent}
+                  size="sm"
+                  variant="filled"
+                >
+                  {isAuthenticated ? (
+                    <>
+                      <Plus size={16} strokeWidth={4} />
+                      {i18n("Add event")}
+                    </>
+                  ) : (
+                    <>
+                      <LogIn size={16} strokeWidth={4} />
+                      {i18n("Sign in to add venue")}
+                    </>
+                  )}
                 </Button>
               </div>
 

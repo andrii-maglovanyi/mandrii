@@ -39,28 +39,26 @@ export default function VenuesPage() {
   return (
     <div className="container mx-auto">
       <Breadcrumbs items={[{ title: i18n("Home"), url: `/` }]} />
-      <div className={`
-        mb-12 flex flex-col items-start justify-between gap-4
-        sm:flex-row sm:items-center
-      `}>
+      <div className={`mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center`}>
         <h1
-          className={`
-            bg-gradient-to-r from-primary to-secondary bg-clip-text text-3xl
-            font-extrabold text-transparent
-            md:text-5xl
-          `}
+          className={`from-primary to-secondary bg-gradient-to-r bg-clip-text text-3xl font-extrabold text-transparent md:text-5xl`}
         >
           {i18n("Discover venues")}
         </h1>
-        <Button className="ml-auto gap-2" color="primary" onClick={handleAddVenue} variant="filled">
+        <Button
+          className="border-on-surface text-on-surface! ml-0 animate-[gradientShift_5s_ease_infinite] gap-2 rounded-2xl! border-2 bg-[linear-gradient(270deg,#f9556d,#9670f7,#4d94f8,#20c997)] bg-size-[300%_300%] p-5 font-bold shadow-xl"
+          color="primary"
+          onClick={handleAddVenue}
+          variant="filled"
+        >
           {isAuthenticated ? (
             <>
-              <Plus size={20} />
-              {i18n("Add new venue")}
+              <Plus size={20} strokeWidth={4} />
+              {i18n("Add venue")}
             </>
           ) : (
             <>
-              <LogIn size={20} />
+              <LogIn size={20} strokeWidth={4} />
               {i18n("Sign in to add venue")}
             </>
           )}
