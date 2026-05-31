@@ -1173,6 +1173,270 @@ msgstr ""
 msgid "out of stock"
 msgstr ""
 
+msgid "Who does this affect?"
+msgstr ""
+
+msgid "These changes only affect you if you are a tenant in the private rented sector with an assured or assured shorthold tenancy. If you live in social housing or you are a lodger, the new rules will not usually apply to you."
+msgstr ""
+
+msgid "These rules have been introduced by law. Your landlord cannot put anything into a tenancy agreement to change or disapply them. The new rules apply to your tenancy automatically, even if your landlord does not update your tenancy agreement."
+msgstr ""
+
+msgid "This document is only a summary of the changes. The new rules may change or impact your tenancy in a way not described below."
+msgstr ""
+
+msgid "If you do not have a written tenancy agreement or any written record of the tenancy's terms, then your landlord must provide you with certain written information on or before 31 May 2026."
+msgstr ""
+
+msgid "If your landlord has already served a notice seeking possession"
+msgstr ""
+
+msgid "The changes explained in this document may not apply to your tenancy on 1 May 2026 if your landlord serves a notice seeking possession under section 8 or section 21 of the Housing Act 1988 before 1 May 2026."
+msgstr ""
+
+msgid "If this happens, your landlord may still be able to take you to court to end your tenancy under the previous rules. You should seek advice if this happens to you."
+msgstr ""
+
+msgid "Your right to rent"
+msgstr ""
+
+msgid "Before you can legally rent a home in England, your landlord is required by law to check that you have the right to rent. This applies to all tenants, but is especially important if you are not a British or Irish citizen."
+msgstr ""
+
+msgid "The easiest way to prove your right to rent is through the government's online share code service. You generate a share code using your identity document at gov.uk/view-right-to-rent and give it to your landlord so they can verify your status online."
+msgstr ""
+
+msgid "If your permission to stay in the UK is time-limited — for example, you are on a visa — your landlord must carry out a follow-up check before your leave expires. They cannot use a routine follow-up check as a reason to end your tenancy while your status remains valid."
+msgstr ""
+
+msgid "If your immigration status changes and you no longer have the right to rent in England, your landlord may apply to court to end your tenancy under Ground 7B. If your immigration status is uncertain, seek advice from an immigration adviser as soon as possible."
+msgstr ""
+
+msgid "A landlord cannot refuse to rent to you based on your nationality alone — that is unlawful discrimination under the Equality Act 2010. If you believe you were refused a tenancy because of your nationality rather than your actual immigration status, you can seek advice from the Equality Advisory Support Service (EASS)."
+msgstr ""
+
+msgid "Changes to fixed-term tenancies"
+msgstr ""
+
+msgid "You might have a fixed term tenancy. For example, your tenancy agreement may say the tenancy would last for 12 months."
+msgstr ""
+
+msgid "After 1 May 2026, it will not be possible for assured tenancy agreements to have a fixed term or a set end date. All tenancies will automatically become rolling tenancies from 1 May 2026 (sometimes known as 'periodic tenancies')."
+msgstr ""
+
+msgid "Your tenancy will continue on a rolling basis. This will usually be monthly, unless your tenancy agreement sets out a shorter period, for example weekly or fortnightly. If your tenancy had an end date, it will no longer apply."
+msgstr ""
+
+msgid "Your tenancy will continue until:"
+msgstr ""
+
+msgid "You and your landlord decide together to end the tenancy"
+msgstr ""
+
+msgid "You end your tenancy by giving notice"
+msgstr ""
+
+msgid "Your landlord ends it, if they have a valid legal reason"
+msgstr ""
+
+msgid "Change to the name of Assured Shorthold Tenancies"
+msgstr ""
+
+msgid "Your tenancy agreement might call your tenancy an 'Assured Shorthold Tenancy'. This is the name of the private rented tenancy system until 1 May 2026."
+msgstr ""
+
+msgid "Assured Shorthold Tenancies will be abolished on 1 May 2026. Any tenancy previously called an Assured Shorthold Tenancy will automatically become an Assured Periodic Tenancy instead. Your tenancy will not end because of this change."
+msgstr ""
+
+msgid "Rent increases"
+msgstr ""
+
+msgid "Your tenancy agreement may contain rent review clauses. These are terms in the agreement that allow the landlord to increase the rent."
+msgstr ""
+
+msgid "Rent review clauses cannot be used for new rent increases after 1 May 2026. If you have a rent review clause in your current tenancy agreement, it will not apply after this date."
+msgstr ""
+
+msgid "Landlords must instead use the process in section 13 of the Housing Act 1988 for increasing the rent. They will need to give you written notice of the proposed rent increase at least 2 months before that increase would take effect, using a form called Form 4A."
+msgstr ""
+
+msgid "Under the new rules, your landlord:"
+msgstr ""
+
+msgid "Can only increase the rent once per year"
+msgstr ""
+
+msgid "Must give you at least 2 months' written notice using Form 4A"
+msgstr ""
+
+msgid "Cannot increase rent above the open market rate"
+msgstr ""
+
+msgid "If you think a proposed rent increase is above market rate, you can challenge it at the First-tier Tribunal."
+msgstr ""
+
+msgid "If your landlord wants to end your tenancy"
+msgstr ""
+
+msgid "Your tenancy agreement may say that your landlord can evict you without a reason. This was known as a section 21 eviction."
+msgstr ""
+
+msgid "Your landlord cannot give you a section 21 notice on or after 1 May 2026, even if your tenancy agreement says they can."
+msgstr ""
+
+msgid "Instead, your landlord will need a legal reason to evict you. These reasons are called grounds for possession. Below is a brief summary of some of the main grounds. You can find full details of these and other grounds on GOV.UK."
+msgstr ""
+
+msgid "Valid grounds your landlord may use include:"
+msgstr ""
+
+msgid "You have not paid your rent on time"
+msgstr ""
+
+msgid "You, others living with you, or visitors commit antisocial behaviour in or near the property"
+msgstr ""
+
+msgid "You or others living with you do not care for the property properly"
+msgstr ""
+
+msgid "The tenancy was connected to your employment, or was for temporary or supported accommodation"
+msgstr ""
+
+msgid "For the first 12 months of a tenancy, your landlord cannot evict you because:"
+msgstr ""
+
+msgid "They intend to sell the property"
+msgstr ""
+
+msgid "They or a family member want to move into the property"
+msgstr ""
+
+msgid "Your landlord must give you a section 8 notice using one or more grounds for possession, stating the date by which you are asked to leave and the required notice period for each ground."
+msgstr ""
+
+msgid "If you have not left by the end of the notice period, your landlord will need to apply to court for a possession order. At court, your landlord must provide evidence that they have a valid reason to evict you. You will have the opportunity to explain why you think your landlord does not have a legal reason to evict you, or why eviction is not reasonable under certain grounds."
+msgstr ""
+
+msgid "You can access free legal advice through the Housing Loss Prevention Advice Service before going to court and on the day of the court hearing."
+msgstr ""
+
+msgid "If you want to end your tenancy"
+msgstr ""
+
+msgid "You will be able to end the tenancy at any point by giving your landlord notice. You will need to give your landlord at least 2 months' notice."
+msgstr ""
+
+msgid "The notice must:"
+msgstr ""
+
+msgid "Be given in writing, for example by letter or email"
+msgstr ""
+
+msgid "End on a day when rent is due, or the day before rent is due"
+msgstr ""
+
+msgid "You can agree a shorter notice period with your landlord in writing, as long as any other tenants named on the tenancy agreement also agree."
+msgstr ""
+
+msgid "Your tenancy deposit"
+msgstr ""
+
+msgid "If you pay a tenancy deposit, your landlord must protect it in one of three government-approved schemes within 30 days of receiving it: the Deposit Protection Service (DPS), MyDeposits, or the Tenancy Deposit Scheme (TDS)."
+msgstr ""
+
+msgid "Your landlord must also give you written information — called 'prescribed information' — about which scheme holds your deposit, how to get it back at the end of the tenancy, and what to do if there is a dispute."
+msgstr ""
+
+msgid "Key rules about deposits:"
+msgstr ""
+
+msgid "The maximum deposit is 5 weeks' rent (or 6 weeks if your annual rent is £50,000 or more)"
+msgstr ""
+
+msgid "Your landlord must return your deposit within 10 days of you both agreeing the final amount"
+msgstr ""
+
+msgid "If there is a dispute, the deposit scheme offers a free resolution service — you do not need to go to court"
+msgstr ""
+
+msgid "If your landlord does not protect your deposit in an approved scheme, you can apply to court for a penalty of up to 3 times the deposit amount. An unprotected deposit may also prevent your landlord from serving a valid eviction notice."
+msgstr ""
+
+msgid "You can check whether your deposit is protected at any time by searching the DPS, MyDeposits, or TDS websites, or by asking your landlord to show you the prescribed information."
+msgstr ""
+
+msgid "Landlord register and ombudsman"
+msgstr ""
+
+msgid "The Renters' Rights Act introduces a new national Private Rented Sector Database. All landlords in England must register their properties on this database before renting them out."
+msgstr ""
+
+msgid "As a tenant, you will be able to check whether your landlord is registered. Renting from an unregistered landlord is a warning sign — it may mean the landlord is not meeting their legal obligations."
+msgstr ""
+
+msgid "All private landlords must also join a new mandatory ombudsman scheme. If you have a complaint about your landlord that you cannot resolve directly — for example, about repairs not being done, deposit disputes, or poor property management — you can take it to the ombudsman for free."
+msgstr ""
+
+msgid "Using the ombudsman is free for tenants and does not require you to go to court. The ombudsman can require your landlord to take action and award you compensation of up to £25,000."
+msgstr ""
+
+msgid "These requirements are being introduced in phases. If you are unsure whether your landlord is registered or has joined the ombudsman scheme, visit gov.uk or contact Citizens Advice for guidance."
+msgstr ""
+
+msgid "Keeping a pet"
+msgstr ""
+
+msgid "From 1 May 2026, you have the right to request to keep a pet. Your landlord cannot unreasonably refuse your request."
+msgstr ""
+
+msgid "If your landlord refuses:"
+msgstr ""
+
+msgid "They must inform you in writing"
+msgstr ""
+
+msgid "They should tell you the reason why"
+msgstr ""
+
+msgid "They must consider each request on a case-by-case basis"
+msgstr ""
+
+msgid "You can challenge their decision in court"
+msgstr ""
+
+msgid "If you are a student renting privately"
+msgstr ""
+
+msgid "If you are a full-time student, your landlord may be able to evict you using possession ground 4A at the end of the academic year, with 4 months' notice ending between 1 June and 30 September."
+msgstr ""
+
+msgid "Your landlord can only use ground 4A if they have previously given you written notice that they may use it — by 31 May 2026 in most cases. This information sheet does not count as that written notice."
+msgstr ""
+
+msgid "If your landlord wants to evict you at the end of the 2025/26 academic year, they can serve notice between 1 May and 30 July 2026 (inclusive), with at least 2 months' notice."
+msgstr ""
+
+msgid "Renters' Rights Act 2025"
+msgstr ""
+
+msgid "From 1 May 2026, the Renters' Rights Act 2025 will give tenants new rights and introduce new rules for private landlords. This information sheet explains how the new rules may affect your current tenancy."
+msgstr ""
+
+msgid "Need more help?"
+msgstr ""
+
+msgid "These resources provide free guidance and advice on your rights as a private tenant in England:"
+msgstr ""
+
+msgid "GOV.UK — official guidance on private renting, forms and legislation"
+msgstr ""
+
+msgid "Shelter — free housing advice and legal support for renters"
+msgstr ""
+
+msgid "Citizens Advice — help with tenancy rights, deposits and disputes"
+msgstr ""
+
 msgid "Service/Product"
 msgstr ""
 
@@ -1711,6 +1975,9 @@ msgid "No events found"
 msgstr ""
 
 msgid "Add event"
+msgstr ""
+
+msgid "Sign in to add event"
 msgstr ""
 
 msgid "The event you're looking for doesn't exist or has been removed"
@@ -3210,10 +3477,16 @@ msgstr ""
 msgid "Compare the financial outcomes of buying versus renting a property, based on your personal circumstances and market assumptions."
 msgstr ""
 
-msgid "Explore events"
+msgid "Renters' Rights Act"
 msgstr ""
 
-msgid "Sign in to add event"
+msgid "Renting in the UK"
+msgstr ""
+
+msgid "Understand your new rights and protections as a private tenant from 1 May 2026"
+msgstr ""
+
+msgid "Explore events"
 msgstr ""
 
 msgid "Explore Ukrainian events and gatherings around the world"

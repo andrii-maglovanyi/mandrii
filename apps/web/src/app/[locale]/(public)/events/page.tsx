@@ -1,40 +1,19 @@
 "use client";
 
-import { LogIn, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
-
 import { MixpanelTracker } from "~/components/layout";
-import { SignInForm } from "~/components/layout/Auth/SignInForm";
-import { Breadcrumbs, Button } from "~/components/ui";
-import { useDialog } from "~/contexts/DialogContext";
+import { Breadcrumbs } from "~/components/ui";
 import { EventsCatalog } from "~/features/Events";
-import { useUser } from "~/hooks/useUser";
+import { AddEntityButton, useAddEntity } from "~/features/shared/AddEntityButton";
 import { useI18n } from "~/i18n/useI18n";
-import { sendToMixpanel } from "~/lib/mixpanel";
 
 export default function EventsPage() {
   const i18n = useI18n();
-  const router = useRouter();
-  const { data: session } = useUser();
-  const { openCustomDialog } = useDialog();
 
-  const isAuthenticated = !!session;
-
-  const handleAddEvent = useCallback(() => {
-    sendToMixpanel("Clicked Add Event", {
-      authenticated: isAuthenticated,
-      source: "events_page",
-    });
-
-    if (isAuthenticated) {
-      router.push("/user-directory/events");
-    } else {
-      openCustomDialog({
-        children: <SignInForm callbackUrl="/user-directory/events" />,
-      });
-    }
-  }, [isAuthenticated, router, openCustomDialog]);
+  const { handleAdd: handleAddEvent, isAuthenticated } = useAddEntity({
+    mixpanelEvent: "Clicked Add Event",
+    mixpanelSource: "events_page",
+    route: "/user-directory/events",
+  });
 
   return (
     <div className="container mx-auto">
@@ -45,24 +24,13 @@ export default function EventsPage() {
         >
           {i18n("Explore events")}
         </h1>
-        <Button
-          className="border-on-surface text-on-surface! ml-auto animate-[gradientShift_5s_ease_infinite] gap-2 rounded-2xl! border-2 bg-[linear-gradient(270deg,#f9556d,#9670f7,#4d94f8,#20c997)] bg-size-[300%_300%] p-5 font-bold shadow-xl"
-          color="primary"
+        <AddEntityButton
+          className="ml-auto"
+          isAuthenticated={isAuthenticated}
+          label={i18n("Add event")}
           onClick={handleAddEvent}
-          variant="filled"
-        >
-          {isAuthenticated ? (
-            <>
-              <Plus size={20} strokeWidth={4} />
-              {i18n("Add event")}
-            </>
-          ) : (
-            <>
-              <LogIn size={20} strokeWidth={4} />
-              {i18n("Sign in to add event")}
-            </>
-          )}
-        </Button>
+          signInLabel={i18n("Sign in to add event")}
+        />
       </div>
 
       <div className="container mx-auto">
