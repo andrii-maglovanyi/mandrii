@@ -1,4 +1,4 @@
--- Some databases received the messaging columns without the complete
+-- Some Preview databases received the messaging columns without the complete
 -- original Telegram migration. Make the linking and webhook invariants explicit.
 CREATE TABLE IF NOT EXISTS public.telegram_link_tokens (
   token text PRIMARY KEY,

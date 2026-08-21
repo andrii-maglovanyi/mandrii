@@ -1,0 +1,24 @@
+table:
+  name: message_reactions
+  schema: public
+object_relationships:
+  - name: message
+    using:
+      foreign_key_constraint_on: message_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - message_id
+        - user_id
+        - emoji
+        - created_at
+      filter:
+        message:
+          conversation:
+            _or:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - venue:
+                  owner_id:
+                    _eq: X-Hasura-User-Id

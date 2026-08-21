@@ -7,15 +7,26 @@ import { useSearchParams } from "next/navigation";
 
 import { ActionButton, Button, RichText, Separator, Textarea, Tooltip } from "~/components/ui";
 import { PushNotifications } from "~/components/layout/PushNotifications/PushNotifications";
+import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { MESSAGE_REACTION_EMOJIS } from "~/lib/messaging/constants";
 import { getSenderColour, getSenderInitials } from "~/lib/messaging/sender";
+import {
+  useConversationMessagingEventsSubscription,
+  useVenueMessagingEventsSubscription,
+} from "~/types/graphql.generated";
+import { UUID } from "~/types/uuid";
 
 import { Conversation, ConversationMessage } from "./types";
 import { clsx } from "clsx";
 import { MetadataSection } from "../Venues/VenueView/MetadataDisplay";
 
 type MessagingRole = "OWNER" | "USER";
+type MessagingUpdateDetail = {
+  conversationIds: string[];
+  source: "conversation" | "venue";
+  venueId: string;
+};
 
 type MessagePage = {
   hasMore: boolean;
@@ -36,7 +47,7 @@ interface VenueMessagingProps {
   hasOwner: boolean;
   initialRole: MessagingRole | null;
   initialTelegramLinked: boolean | null;
-  venueId: string;
+  venueId: UUID;
   venueName: string;
 }
 
@@ -47,6 +58,7 @@ export const VenueMessaging = ({
   venueId,
   venueName,
 }: VenueMessagingProps) => {
+  const { isAuthenticated } = useUser();
   const i18n = useI18n();
   const locale = useLocale();
   const requestedConversationId = useSearchParams().get("conversation");
@@ -73,12 +85,49 @@ export const VenueMessaging = ({
   const scrollRestoreRef = useRef<null | { height: number; top: number }>(null);
   const lastReadSyncRef = useRef("");
   const longPressTimerRef = useRef<number | null>(null);
+  const { data: messagingEvents } = useVenueMessagingEventsSubscription({
+    skip: !hasOwner || !isAuthenticated,
+    variables: { venueId },
+  });
+  const { data: conversationMessagingEvents } = useConversationMessagingEventsSubscription({
+    skip: !hasOwner || !isAuthenticated || !selectedConversationId,
+    variables: { conversationId: selectedConversationId ? (selectedConversationId as UUID) : venueId },
+  });
 
   useEffect(() => {
-    if (!hasOwner) {
+    if (!messagingEvents) return;
+
+    const conversationIds = new Set<string>();
+    messagingEvents.messages.forEach((message) => conversationIds.add(message.conversation_id));
+    if (conversationIds.size === 0) return;
+
+    window.dispatchEvent(
+      new CustomEvent<MessagingUpdateDetail>("venue-messaging-update", {
+        detail: { conversationIds: [...conversationIds], source: "venue", venueId },
+      }),
+    );
+  }, [messagingEvents, venueId]);
+
+  useEffect(() => {
+    if (!conversationMessagingEvents || !selectedConversationId) return;
+    if (!conversationMessagingEvents.messages.some((message) => message.conversation_id === selectedConversationId)) {
+      return;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent<MessagingUpdateDetail>("venue-messaging-update", {
+        detail: { conversationIds: [selectedConversationId], source: "conversation", venueId },
+      }),
+    );
+  }, [conversationMessagingEvents, selectedConversationId, venueId]);
+
+  useEffect(() => {
+    if (!hasOwner || !isAuthenticated) {
       setRole(null);
       setTelegramLinked(null);
       setConversations([]);
+      setSelectedConversationId(null);
+      setMessages([]);
       return;
     }
     let isCurrent = true;
@@ -113,12 +162,21 @@ export const VenueMessaging = ({
       }
     };
     void load();
-    const interval = window.setInterval(load, 5_000);
+    const onMessagingUpdate = (event: Event) => {
+      const detail = (event as CustomEvent<MessagingUpdateDetail>).detail;
+      if (detail?.venueId === venueId) void load();
+    };
+    const onVisibilityChange = () => {
+      if (!document.hidden) void load();
+    };
+    window.addEventListener("venue-messaging-update", onMessagingUpdate);
+    document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
       isCurrent = false;
-      window.clearInterval(interval);
+      window.removeEventListener("venue-messaging-update", onMessagingUpdate);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [hasOwner, requestedConversationId, venueId]);
+  }, [hasOwner, isAuthenticated, requestedConversationId, venueId]);
 
   useEffect(() => {
     if (!selectedConversationId) {
@@ -157,10 +215,19 @@ export const VenueMessaging = ({
       }
     };
     void load();
-    const interval = window.setInterval(load, 3_000);
+    const onMessagingUpdate = (event: Event) => {
+      const detail = (event as CustomEvent<MessagingUpdateDetail>).detail;
+      if (detail?.source === "conversation" && detail.conversationIds.includes(selectedConversationId)) void load();
+    };
+    const onVisibilityChange = () => {
+      if (!document.hidden) void load();
+    };
+    window.addEventListener("venue-messaging-update", onMessagingUpdate);
+    document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
       isCurrent = false;
-      window.clearInterval(interval);
+      window.removeEventListener("venue-messaging-update", onMessagingUpdate);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, [selectedConversationId]);
 
@@ -200,7 +267,7 @@ export const VenueMessaging = ({
     [],
   );
 
-  if (!role) return null;
+  if (!isAuthenticated || !role) return null;
 
   const selectedConversation = conversations.find((conversation) => conversation.id === selectedConversationId);
   const senderName = (senderType: ConversationMessage["sender_type"]) =>
@@ -232,8 +299,12 @@ export const VenueMessaging = ({
     });
   };
   const refreshConversations = async () => {
-    const response = await fetch(`/api/conversations?venueId=${encodeURIComponent(venueId)}`);
-    if (response.ok) setConversations(((await response.json()) as { conversations: Conversation[] }).conversations);
+    try {
+      const response = await fetch(`/api/conversations?venueId=${encodeURIComponent(venueId)}`);
+      if (response.ok) setConversations(((await response.json()) as { conversations: Conversation[] }).conversations);
+    } catch {
+      // The live subscription will reconcile this supplementary list refresh.
+    }
   };
   const toggleReaction = async (messageId: string, emoji: string) => {
     if (!selectedConversationId) return;
@@ -291,9 +362,13 @@ export const VenueMessaging = ({
       if (!response.ok) throw new Error(data.error || i18n("Unable to send the message"));
       if (!isOwner && data.conversationId) {
         setSelectedConversationId(data.conversationId);
-        const messagesResponse = await fetch(`/api/conversations/${data.conversationId}/messages`);
-        if (messagesResponse.ok) {
-          setMessages(((await messagesResponse.json()) as { messages: ConversationMessage[] }).messages);
+        try {
+          const messagesResponse = await fetch(`/api/conversations/${data.conversationId}/messages`);
+          if (messagesResponse.ok) {
+            setMessages(((await messagesResponse.json()) as { messages: ConversationMessage[] }).messages);
+          }
+        } catch {
+          // The message was accepted. A live update or the normal selected-conversation load will display it.
         }
       }
       if (isOwner && data.message) {
@@ -385,7 +460,7 @@ export const VenueMessaging = ({
 
       {role === "OWNER" && telegramLinked === false && (
         <div className="bg-primary/10 flex items-center justify-between rounded-xl px-4 py-2">
-          <p>{i18n("Link Telegram to receive customer messages")}</p>
+          <p>{i18n("Receive messages in Telegram")}</p>
           <div className="flex items-center space-x-2">
             {messageError && <p className="text-sm text-red-600">{messageError}</p>}
             <Button onClick={linkTelegram} size="sm" color="primary">

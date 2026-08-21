@@ -4001,6 +4001,8 @@ export type Message_Reactions = {
   __typename?: 'message_reactions';
   created_at: Scalars['timestamptz']['output'];
   emoji: Scalars['String']['output'];
+  /** An object relationship */
+  message: Messages;
   message_id: Scalars['uuid']['output'];
   user_id: Scalars['uuid']['output'];
 };
@@ -4010,6 +4012,17 @@ export type Message_Reactions_Aggregate = {
   __typename?: 'message_reactions_aggregate';
   aggregate?: Maybe<Message_Reactions_Aggregate_Fields>;
   nodes: Array<Message_Reactions>;
+};
+
+export type Message_Reactions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Message_Reactions_Aggregate_Bool_Exp_Count>;
+};
+
+export type Message_Reactions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Message_Reactions_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Message_Reactions_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "message_reactions" */
@@ -4027,6 +4040,20 @@ export type Message_Reactions_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "message_reactions" */
+export type Message_Reactions_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Message_Reactions_Max_Order_By>;
+  min?: InputMaybe<Message_Reactions_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "message_reactions" */
+export type Message_Reactions_Arr_Rel_Insert_Input = {
+  data: Array<Message_Reactions_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Message_Reactions_On_Conflict>;
+};
+
 /** Boolean expression to filter rows from the table "message_reactions". All fields are combined with a logical 'AND'. */
 export type Message_Reactions_Bool_Exp = {
   _and?: InputMaybe<Array<Message_Reactions_Bool_Exp>>;
@@ -4034,6 +4061,7 @@ export type Message_Reactions_Bool_Exp = {
   _or?: InputMaybe<Array<Message_Reactions_Bool_Exp>>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   emoji?: InputMaybe<String_Comparison_Exp>;
+  message?: InputMaybe<Messages_Bool_Exp>;
   message_id?: InputMaybe<Uuid_Comparison_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
@@ -4048,6 +4076,7 @@ export enum Message_Reactions_Constraint {
 export type Message_Reactions_Insert_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   emoji?: InputMaybe<Scalars['String']['input']>;
+  message?: InputMaybe<Messages_Obj_Rel_Insert_Input>;
   message_id?: InputMaybe<Scalars['uuid']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -4061,6 +4090,14 @@ export type Message_Reactions_Max_Fields = {
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
+/** order by max() on columns of table "message_reactions" */
+export type Message_Reactions_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  emoji?: InputMaybe<Order_By>;
+  message_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Message_Reactions_Min_Fields = {
   __typename?: 'message_reactions_min_fields';
@@ -4068,6 +4105,14 @@ export type Message_Reactions_Min_Fields = {
   emoji?: Maybe<Scalars['String']['output']>;
   message_id?: Maybe<Scalars['uuid']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "message_reactions" */
+export type Message_Reactions_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  emoji?: InputMaybe<Order_By>;
+  message_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "message_reactions" */
@@ -4090,6 +4135,7 @@ export type Message_Reactions_On_Conflict = {
 export type Message_Reactions_Order_By = {
   created_at?: InputMaybe<Order_By>;
   emoji?: InputMaybe<Order_By>;
+  message?: InputMaybe<Messages_Order_By>;
   message_id?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
@@ -4165,11 +4211,35 @@ export type Messages = {
   conversation_id: Scalars['uuid']['output'];
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id: Scalars['uuid']['output'];
+  /** An array relationship */
+  reactions: Array<Message_Reactions>;
+  /** An aggregate relationship */
+  reactions_aggregate: Message_Reactions_Aggregate;
   reply_to_message_id?: Maybe<Scalars['uuid']['output']>;
   sender_type: Scalars['String']['output'];
   telegram_chat_id?: Maybe<Scalars['bigint']['output']>;
   telegram_delivered_at?: Maybe<Scalars['timestamptz']['output']>;
   telegram_message_id?: Maybe<Scalars['bigint']['output']>;
+};
+
+
+/** columns and relationships of "messages" */
+export type MessagesReactionsArgs = {
+  distinct_on?: InputMaybe<Array<Message_Reactions_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Message_Reactions_Order_By>>;
+  where?: InputMaybe<Message_Reactions_Bool_Exp>;
+};
+
+
+/** columns and relationships of "messages" */
+export type MessagesReactions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Message_Reactions_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Message_Reactions_Order_By>>;
+  where?: InputMaybe<Message_Reactions_Bool_Exp>;
 };
 
 /** aggregated selection of "messages" */
@@ -4258,6 +4328,8 @@ export type Messages_Bool_Exp = {
   conversation_id?: InputMaybe<Uuid_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  reactions?: InputMaybe<Message_Reactions_Bool_Exp>;
+  reactions_aggregate?: InputMaybe<Message_Reactions_Aggregate_Bool_Exp>;
   reply_to_message_id?: InputMaybe<Uuid_Comparison_Exp>;
   sender_type?: InputMaybe<String_Comparison_Exp>;
   telegram_chat_id?: InputMaybe<Bigint_Comparison_Exp>;
@@ -4268,7 +4340,9 @@ export type Messages_Bool_Exp = {
 /** unique or primary key constraints on table "messages" */
 export enum Messages_Constraint {
   /** unique or primary key constraint on columns "id" */
-  MessagesPkey = 'messages_pkey'
+  MessagesPkey = 'messages_pkey',
+  /** unique or primary key constraint on columns "telegram_chat_id", "telegram_message_id" */
+  MessagesTelegramUpdateIdx = 'messages_telegram_update_idx'
 }
 
 /** input type for incrementing numeric columns in table "messages" */
@@ -4284,6 +4358,7 @@ export type Messages_Insert_Input = {
   conversation_id?: InputMaybe<Scalars['uuid']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  reactions?: InputMaybe<Message_Reactions_Arr_Rel_Insert_Input>;
   reply_to_message_id?: InputMaybe<Scalars['uuid']['input']>;
   sender_type?: InputMaybe<Scalars['String']['input']>;
   telegram_chat_id?: InputMaybe<Scalars['bigint']['input']>;
@@ -4354,6 +4429,13 @@ export type Messages_Mutation_Response = {
   returning: Array<Messages>;
 };
 
+/** input type for inserting object relation for remote table "messages" */
+export type Messages_Obj_Rel_Insert_Input = {
+  data: Messages_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Messages_On_Conflict>;
+};
+
 /** on_conflict condition type for table "messages" */
 export type Messages_On_Conflict = {
   constraint: Messages_Constraint;
@@ -4368,6 +4450,7 @@ export type Messages_Order_By = {
   conversation_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  reactions_aggregate?: InputMaybe<Message_Reactions_Aggregate_Order_By>;
   reply_to_message_id?: InputMaybe<Order_By>;
   sender_type?: InputMaybe<Order_By>;
   telegram_chat_id?: InputMaybe<Order_By>;
@@ -4657,10 +4740,6 @@ export type Mutation_Root = {
   delete_provider_type?: Maybe<Provider_Type_Mutation_Response>;
   /** delete single row from the table: "provider_type" */
   delete_provider_type_by_pk?: Maybe<Provider_Type>;
-  /** delete data from the table: "push_subscriptions" */
-  delete_push_subscriptions?: Maybe<Push_Subscriptions_Mutation_Response>;
-  /** delete single row from the table: "push_subscriptions" */
-  delete_push_subscriptions_by_pk?: Maybe<Push_Subscriptions>;
   /** delete data from the table: "sessions" */
   delete_sessions?: Maybe<Sessions_Mutation_Response>;
   /** delete single row from the table: "sessions" */
@@ -4813,10 +4892,6 @@ export type Mutation_Root = {
   insert_provider_type?: Maybe<Provider_Type_Mutation_Response>;
   /** insert a single row into the table: "provider_type" */
   insert_provider_type_one?: Maybe<Provider_Type>;
-  /** insert data into the table: "push_subscriptions" */
-  insert_push_subscriptions?: Maybe<Push_Subscriptions_Mutation_Response>;
-  /** insert a single row into the table: "push_subscriptions" */
-  insert_push_subscriptions_one?: Maybe<Push_Subscriptions>;
   /** insert data into the table: "sessions" */
   insert_sessions?: Maybe<Sessions_Mutation_Response>;
   /** insert a single row into the table: "sessions" */
@@ -5017,12 +5092,6 @@ export type Mutation_Root = {
   update_provider_type_by_pk?: Maybe<Provider_Type>;
   /** update multiples rows of table: "provider_type" */
   update_provider_type_many?: Maybe<Array<Maybe<Provider_Type_Mutation_Response>>>;
-  /** update data of the table: "push_subscriptions" */
-  update_push_subscriptions?: Maybe<Push_Subscriptions_Mutation_Response>;
-  /** update single row of the table: "push_subscriptions" */
-  update_push_subscriptions_by_pk?: Maybe<Push_Subscriptions>;
-  /** update multiples rows of table: "push_subscriptions" */
-  update_push_subscriptions_many?: Maybe<Array<Maybe<Push_Subscriptions_Mutation_Response>>>;
   /** update data of the table: "sessions" */
   update_sessions?: Maybe<Sessions_Mutation_Response>;
   /** update single row of the table: "sessions" */
@@ -5398,18 +5467,6 @@ export type Mutation_RootDelete_Provider_TypeArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Provider_Type_By_PkArgs = {
   value: Scalars['String']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Push_SubscriptionsArgs = {
-  where: Push_Subscriptions_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Push_Subscriptions_By_PkArgs = {
-  endpoint: Scalars['String']['input'];
 };
 
 
@@ -5914,20 +5971,6 @@ export type Mutation_RootInsert_Provider_TypeArgs = {
 export type Mutation_RootInsert_Provider_Type_OneArgs = {
   object: Provider_Type_Insert_Input;
   on_conflict?: InputMaybe<Provider_Type_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Push_SubscriptionsArgs = {
-  objects: Array<Push_Subscriptions_Insert_Input>;
-  on_conflict?: InputMaybe<Push_Subscriptions_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Push_Subscriptions_OneArgs = {
-  object: Push_Subscriptions_Insert_Input;
-  on_conflict?: InputMaybe<Push_Subscriptions_On_Conflict>;
 };
 
 
@@ -6640,26 +6683,6 @@ export type Mutation_RootUpdate_Provider_Type_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Provider_Type_ManyArgs = {
   updates: Array<Provider_Type_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Push_SubscriptionsArgs = {
-  _set?: InputMaybe<Push_Subscriptions_Set_Input>;
-  where: Push_Subscriptions_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Push_Subscriptions_By_PkArgs = {
-  _set?: InputMaybe<Push_Subscriptions_Set_Input>;
-  pk_columns: Push_Subscriptions_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Push_Subscriptions_ManyArgs = {
-  updates: Array<Push_Subscriptions_Updates>;
 };
 
 
@@ -9716,193 +9739,6 @@ export type Provider_Type_Updates = {
   where: Provider_Type_Bool_Exp;
 };
 
-/** columns and relationships of "push_subscriptions" */
-export type Push_Subscriptions = {
-  __typename?: 'push_subscriptions';
-  auth: Scalars['String']['output'];
-  created_at: Scalars['timestamptz']['output'];
-  endpoint: Scalars['String']['output'];
-  p256dh: Scalars['String']['output'];
-  updated_at: Scalars['timestamptz']['output'];
-  /** An object relationship */
-  user: Users;
-  user_id: Scalars['uuid']['output'];
-};
-
-/** aggregated selection of "push_subscriptions" */
-export type Push_Subscriptions_Aggregate = {
-  __typename?: 'push_subscriptions_aggregate';
-  aggregate?: Maybe<Push_Subscriptions_Aggregate_Fields>;
-  nodes: Array<Push_Subscriptions>;
-};
-
-/** aggregate fields of "push_subscriptions" */
-export type Push_Subscriptions_Aggregate_Fields = {
-  __typename?: 'push_subscriptions_aggregate_fields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<Push_Subscriptions_Max_Fields>;
-  min?: Maybe<Push_Subscriptions_Min_Fields>;
-};
-
-
-/** aggregate fields of "push_subscriptions" */
-export type Push_Subscriptions_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Push_Subscriptions_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** Boolean expression to filter rows from the table "push_subscriptions". All fields are combined with a logical 'AND'. */
-export type Push_Subscriptions_Bool_Exp = {
-  _and?: InputMaybe<Array<Push_Subscriptions_Bool_Exp>>;
-  _not?: InputMaybe<Push_Subscriptions_Bool_Exp>;
-  _or?: InputMaybe<Array<Push_Subscriptions_Bool_Exp>>;
-  auth?: InputMaybe<String_Comparison_Exp>;
-  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  endpoint?: InputMaybe<String_Comparison_Exp>;
-  p256dh?: InputMaybe<String_Comparison_Exp>;
-  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-  user_id?: InputMaybe<Uuid_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "push_subscriptions" */
-export enum Push_Subscriptions_Constraint {
-  /** unique or primary key constraint on columns "endpoint" */
-  PushSubscriptionsPkey = 'push_subscriptions_pkey'
-}
-
-/** input type for inserting data into table "push_subscriptions" */
-export type Push_Subscriptions_Insert_Input = {
-  auth?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  endpoint?: InputMaybe<Scalars['String']['input']>;
-  p256dh?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-  user_id?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** aggregate max on columns */
-export type Push_Subscriptions_Max_Fields = {
-  __typename?: 'push_subscriptions_max_fields';
-  auth?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['timestamptz']['output']>;
-  endpoint?: Maybe<Scalars['String']['output']>;
-  p256dh?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['timestamptz']['output']>;
-  user_id?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** aggregate min on columns */
-export type Push_Subscriptions_Min_Fields = {
-  __typename?: 'push_subscriptions_min_fields';
-  auth?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['timestamptz']['output']>;
-  endpoint?: Maybe<Scalars['String']['output']>;
-  p256dh?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['timestamptz']['output']>;
-  user_id?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** response of any mutation on the table "push_subscriptions" */
-export type Push_Subscriptions_Mutation_Response = {
-  __typename?: 'push_subscriptions_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Push_Subscriptions>;
-};
-
-/** on_conflict condition type for table "push_subscriptions" */
-export type Push_Subscriptions_On_Conflict = {
-  constraint: Push_Subscriptions_Constraint;
-  update_columns?: Array<Push_Subscriptions_Update_Column>;
-  where?: InputMaybe<Push_Subscriptions_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "push_subscriptions". */
-export type Push_Subscriptions_Order_By = {
-  auth?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  endpoint?: InputMaybe<Order_By>;
-  p256dh?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: push_subscriptions */
-export type Push_Subscriptions_Pk_Columns_Input = {
-  endpoint: Scalars['String']['input'];
-};
-
-/** select columns of table "push_subscriptions" */
-export enum Push_Subscriptions_Select_Column {
-  /** column name */
-  Auth = 'auth',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Endpoint = 'endpoint',
-  /** column name */
-  P256dh = 'p256dh',
-  /** column name */
-  UpdatedAt = 'updated_at',
-  /** column name */
-  UserId = 'user_id'
-}
-
-/** input type for updating data in table "push_subscriptions" */
-export type Push_Subscriptions_Set_Input = {
-  auth?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  endpoint?: InputMaybe<Scalars['String']['input']>;
-  p256dh?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  user_id?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** Streaming cursor of the table "push_subscriptions" */
-export type Push_Subscriptions_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Push_Subscriptions_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Push_Subscriptions_Stream_Cursor_Value_Input = {
-  auth?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  endpoint?: InputMaybe<Scalars['String']['input']>;
-  p256dh?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  user_id?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** update columns of table "push_subscriptions" */
-export enum Push_Subscriptions_Update_Column {
-  /** column name */
-  Auth = 'auth',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Endpoint = 'endpoint',
-  /** column name */
-  P256dh = 'p256dh',
-  /** column name */
-  UpdatedAt = 'updated_at',
-  /** column name */
-  UserId = 'user_id'
-}
-
-export type Push_Subscriptions_Updates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Push_Subscriptions_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Push_Subscriptions_Bool_Exp;
-};
-
 export type Query_Root = {
   __typename?: 'query_root';
   /** An array relationship */
@@ -10049,12 +9885,6 @@ export type Query_Root = {
   provider_type_aggregate: Provider_Type_Aggregate;
   /** fetch data from the table: "provider_type" using primary key columns */
   provider_type_by_pk?: Maybe<Provider_Type>;
-  /** fetch data from the table: "push_subscriptions" */
-  push_subscriptions: Array<Push_Subscriptions>;
-  /** fetch aggregated fields from the table: "push_subscriptions" */
-  push_subscriptions_aggregate: Push_Subscriptions_Aggregate;
-  /** fetch data from the table: "push_subscriptions" using primary key columns */
-  push_subscriptions_by_pk?: Maybe<Push_Subscriptions>;
   /** An array relationship */
   sessions: Array<Sessions>;
   /** An aggregate relationship */
@@ -10694,29 +10524,6 @@ export type Query_RootProvider_Type_AggregateArgs = {
 
 export type Query_RootProvider_Type_By_PkArgs = {
   value: Scalars['String']['input'];
-};
-
-
-export type Query_RootPush_SubscriptionsArgs = {
-  distinct_on?: InputMaybe<Array<Push_Subscriptions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Push_Subscriptions_Order_By>>;
-  where?: InputMaybe<Push_Subscriptions_Bool_Exp>;
-};
-
-
-export type Query_RootPush_Subscriptions_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Push_Subscriptions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Push_Subscriptions_Order_By>>;
-  where?: InputMaybe<Push_Subscriptions_Bool_Exp>;
-};
-
-
-export type Query_RootPush_Subscriptions_By_PkArgs = {
-  endpoint: Scalars['String']['input'];
 };
 
 
@@ -11450,14 +11257,6 @@ export type Subscription_Root = {
   provider_type_by_pk?: Maybe<Provider_Type>;
   /** fetch data from the table in a streaming manner: "provider_type" */
   provider_type_stream: Array<Provider_Type>;
-  /** fetch data from the table: "push_subscriptions" */
-  push_subscriptions: Array<Push_Subscriptions>;
-  /** fetch aggregated fields from the table: "push_subscriptions" */
-  push_subscriptions_aggregate: Push_Subscriptions_Aggregate;
-  /** fetch data from the table: "push_subscriptions" using primary key columns */
-  push_subscriptions_by_pk?: Maybe<Push_Subscriptions>;
-  /** fetch data from the table in a streaming manner: "push_subscriptions" */
-  push_subscriptions_stream: Array<Push_Subscriptions>;
   /** An array relationship */
   sessions: Array<Sessions>;
   /** An aggregate relationship */
@@ -12293,36 +12092,6 @@ export type Subscription_RootProvider_Type_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Provider_Type_Stream_Cursor_Input>>;
   where?: InputMaybe<Provider_Type_Bool_Exp>;
-};
-
-
-export type Subscription_RootPush_SubscriptionsArgs = {
-  distinct_on?: InputMaybe<Array<Push_Subscriptions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Push_Subscriptions_Order_By>>;
-  where?: InputMaybe<Push_Subscriptions_Bool_Exp>;
-};
-
-
-export type Subscription_RootPush_Subscriptions_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Push_Subscriptions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Push_Subscriptions_Order_By>>;
-  where?: InputMaybe<Push_Subscriptions_Bool_Exp>;
-};
-
-
-export type Subscription_RootPush_Subscriptions_By_PkArgs = {
-  endpoint: Scalars['String']['input'];
-};
-
-
-export type Subscription_RootPush_Subscriptions_StreamArgs = {
-  batch_size: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<Push_Subscriptions_Stream_Cursor_Input>>;
-  where?: InputMaybe<Push_Subscriptions_Bool_Exp>;
 };
 
 
@@ -17198,6 +16967,25 @@ export type GetUserProfileQueryVariables = Exact<{
 
 export type GetUserProfileQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', id: UUID, name?: string | null, email: string, role: User_Role_Enum, status: User_Status_Enum, image?: string | null, points: number, venues_created: number, events_created: number, level: number } | null };
 
+export type VenueMessagingEventsSubscriptionVariables = Exact<{
+  venueId: Scalars['uuid']['input'];
+}>;
+
+
+export type VenueMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', id: UUID, conversation_id: UUID }> };
+
+export type ConversationMessagingEventsSubscriptionVariables = Exact<{
+  conversationId: Scalars['uuid']['input'];
+}>;
+
+
+export type ConversationMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', id: UUID, conversation_id: UUID, reactions: Array<{ __typename?: 'message_reactions', created_at: Timestamp, emoji: string }> }> };
+
+export type MessagingUnreadEventsSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MessagingUnreadEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', id: UUID }> };
+
 export type VenueViewChainFieldsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json };
 
 export type VenueViewChainWithVenuesFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
@@ -17903,6 +17691,109 @@ export type GetUserProfileQueryHookResult = ReturnType<typeof useGetUserProfileQ
 export type GetUserProfileLazyQueryHookResult = ReturnType<typeof useGetUserProfileLazyQuery>;
 export type GetUserProfileSuspenseQueryHookResult = ReturnType<typeof useGetUserProfileSuspenseQuery>;
 export type GetUserProfileQueryResult = Apollo.QueryResult<GetUserProfileQuery, GetUserProfileQueryVariables>;
+export const VenueMessagingEventsDocument = gql`
+    subscription VenueMessagingEvents($venueId: uuid!) {
+  messages(
+    limit: 1
+    order_by: [{created_at: desc}, {id: desc}]
+    where: {conversation: {venue_id: {_eq: $venueId}}}
+  ) {
+    id
+    conversation_id
+  }
+}
+    `;
+
+/**
+ * __useVenueMessagingEventsSubscription__
+ *
+ * To run a query within a React component, call `useVenueMessagingEventsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useVenueMessagingEventsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVenueMessagingEventsSubscription({
+ *   variables: {
+ *      venueId: // value for 'venueId'
+ *   },
+ * });
+ */
+export function useVenueMessagingEventsSubscription(baseOptions: Apollo.SubscriptionHookOptions<VenueMessagingEventsSubscription, VenueMessagingEventsSubscriptionVariables> & ({ variables: VenueMessagingEventsSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<VenueMessagingEventsSubscription, VenueMessagingEventsSubscriptionVariables>(VenueMessagingEventsDocument, options);
+      }
+export type VenueMessagingEventsSubscriptionHookResult = ReturnType<typeof useVenueMessagingEventsSubscription>;
+export type VenueMessagingEventsSubscriptionResult = Apollo.SubscriptionResult<VenueMessagingEventsSubscription>;
+export const ConversationMessagingEventsDocument = gql`
+    subscription ConversationMessagingEvents($conversationId: uuid!) {
+  messages(
+    limit: 50
+    order_by: [{created_at: desc}, {id: desc}]
+    where: {conversation_id: {_eq: $conversationId}}
+  ) {
+    id
+    conversation_id
+    reactions(order_by: [{created_at: desc}]) {
+      created_at
+      emoji
+    }
+  }
+}
+    `;
+
+/**
+ * __useConversationMessagingEventsSubscription__
+ *
+ * To run a query within a React component, call `useConversationMessagingEventsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useConversationMessagingEventsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useConversationMessagingEventsSubscription({
+ *   variables: {
+ *      conversationId: // value for 'conversationId'
+ *   },
+ * });
+ */
+export function useConversationMessagingEventsSubscription(baseOptions: Apollo.SubscriptionHookOptions<ConversationMessagingEventsSubscription, ConversationMessagingEventsSubscriptionVariables> & ({ variables: ConversationMessagingEventsSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<ConversationMessagingEventsSubscription, ConversationMessagingEventsSubscriptionVariables>(ConversationMessagingEventsDocument, options);
+      }
+export type ConversationMessagingEventsSubscriptionHookResult = ReturnType<typeof useConversationMessagingEventsSubscription>;
+export type ConversationMessagingEventsSubscriptionResult = Apollo.SubscriptionResult<ConversationMessagingEventsSubscription>;
+export const MessagingUnreadEventsDocument = gql`
+    subscription MessagingUnreadEvents {
+  messages(limit: 1, order_by: [{created_at: desc}, {id: desc}]) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useMessagingUnreadEventsSubscription__
+ *
+ * To run a query within a React component, call `useMessagingUnreadEventsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useMessagingUnreadEventsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessagingUnreadEventsSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMessagingUnreadEventsSubscription(baseOptions?: Apollo.SubscriptionHookOptions<MessagingUnreadEventsSubscription, MessagingUnreadEventsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<MessagingUnreadEventsSubscription, MessagingUnreadEventsSubscriptionVariables>(MessagingUnreadEventsDocument, options);
+      }
+export type MessagingUnreadEventsSubscriptionHookResult = ReturnType<typeof useMessagingUnreadEventsSubscription>;
+export type MessagingUnreadEventsSubscriptionResult = Apollo.SubscriptionResult<MessagingUnreadEventsSubscription>;
 export const GetVenueViewBySlugDocument = gql`
     query GetVenueViewBySlug($where: venues_bool_exp!) {
   venues(where: $where, limit: 1) {

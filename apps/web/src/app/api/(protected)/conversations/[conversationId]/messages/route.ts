@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { after } from "next/server";
 
 import {
   BadRequestError,
@@ -58,7 +59,7 @@ async function getConversationForUser(conversationId: string, userId: string) {
 export const GET = (req: Request, { params }: { params: Promise<{ conversationId: string }> }) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
-    await rateLimiters.general.check(session.user.id);
+    await rateLimiters.messagingRead.check(session.user.id);
     const { conversationId } = await params;
     const conversation = await getConversationForUser(conversationId, session.user.id);
     const url = new URL(req.url);
@@ -169,10 +170,12 @@ export const POST = (req: Request, { params }: { params: Promise<{ conversationI
       VALUES (${conversationId}, 'VENUE', ${body}, ${replyToMessageId ?? null}) RETURNING id, body, sender_type, created_at, reply_to_message_id
     `;
 
-    await sendMessagePushNotification(conversationId, conversation.user_id, session.user.name || "Venue").catch(
-      (error) => {
-        console.error("Web Push notification failed:", error);
-      },
+    after(() =>
+      sendMessagePushNotification(conversationId, conversation.user_id, session.user.name || "Venue").catch(
+        (error) => {
+          console.error("Web Push notification failed:", error);
+        },
+      ),
     );
 
     return Response.json({ message }, { status: 201 });

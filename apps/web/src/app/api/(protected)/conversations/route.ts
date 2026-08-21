@@ -30,7 +30,7 @@ const getMessagingVenue = async (venueId: string) => {
 export const GET = (req: Request) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
-    await rateLimiters.general.check(session.user.id);
+    await rateLimiters.messagingRead.check(session.user.id);
     const venueId = new URL(req.url).searchParams.get("venueId");
     if (!venueId || !z.uuid().safeParse(venueId).success) throw new BadRequestError("A valid venue ID is required");
 

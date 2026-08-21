@@ -17,7 +17,7 @@ const schema = z.object({ venueId: z.uuid() });
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
-    await rateLimiters.general.check(session.user.id);
+    await rateLimiters.telegramLink.check(session.user.id);
     const { venueId } = await validateRequest(req, schema);
 
     if (privateConfig.telegram.botUsername === "__UNSET__" || privateConfig.telegram.token === "__UNSET__") {

@@ -266,6 +266,26 @@ export const rateLimiters = {
   }),
 
   /**
+   * Telegram-link rate limiter: token creation is a write operation, so it
+   * must not share the chat polling allowance used by the same account.
+   */
+  telegramLink: createRateLimiter({
+    maxRequests: 10,
+    prefix: "telegram-link",
+    windowMs: 60 * 1000,
+  }),
+
+  /**
+   * Chat-read rate limiter: the messaging UI refreshes its read models every
+   * few seconds, so it must have an allowance separate from write actions.
+   */
+  messagingRead: createRateLimiter({
+    maxRequests: 240,
+    prefix: "messaging-read",
+    windowMs: 60 * 1000,
+  }),
+
+  /**
    * Webhook rate limiter: 100 requests per minute per IP.
    * Higher limit as webhooks come from Stripe's servers.
    */
