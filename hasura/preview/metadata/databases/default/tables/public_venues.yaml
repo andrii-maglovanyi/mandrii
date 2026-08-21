@@ -71,6 +71,13 @@ object_relationships:
     using:
       foreign_key_constraint_on: status
 array_relationships:
+  - name: conversations
+    using:
+      foreign_key_constraint_on:
+        column: venue_id
+        table:
+          name: conversations
+          schema: public
   - name: events
     using:
       foreign_key_constraint_on:

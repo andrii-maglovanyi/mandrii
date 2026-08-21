@@ -2,12 +2,30 @@ table:
   name: users
   schema: public
 object_relationships:
+  - name: owned_venues
+    using:
+      manual_configuration:
+        column_mapping:
+          id: owner_id
+        insertion_order: null
+        remote_table:
+          name: venues
+          schema: public
   - name: user_role
     using:
       foreign_key_constraint_on: role
   - name: user_status
     using:
       foreign_key_constraint_on: status
+  - name: venues
+    using:
+      manual_configuration:
+        column_mapping:
+          id: user_id
+        insertion_order: null
+        remote_table:
+          name: venues
+          schema: public
 array_relationships:
   - name: accounts
     using:

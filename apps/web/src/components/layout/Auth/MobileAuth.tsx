@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Separator } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
+import { useUnreadMessages } from "~/hooks/useUnreadMessages";
 import { useI18n } from "~/i18n/useI18n";
 
 import { SignInForm } from "./SignInForm";
@@ -14,6 +15,7 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
   const i18n = useI18n();
 
   const { data: profileData, isAuthenticated, isLoading } = useUser();
+  const unreadMessages = useUnreadMessages(isAuthenticated);
   const { openCustomDialog } = useDialog();
 
   const handleSignIn = async (e: React.MouseEvent) => {
@@ -43,7 +45,7 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
 
         {children}
         <Separator className="mb-6" variant="margin" />
-        <UserMenu />
+        <UserMenu unreadMessages={unreadMessages} />
       </>
     );
   }

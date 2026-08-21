@@ -2,7 +2,7 @@
 
 import { useApolloClient } from "@apollo/client";
 import { format } from "date-fns";
-import { Archive, Bug, CheckCircle2, Search, XCircle } from "lucide-react";
+import { Archive, Bug, CheckCircle2, Search, XCircle, Eye } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
@@ -17,6 +17,7 @@ import { DayOfWeek, Locale, UUID, Venue_Status_Enum } from "~/types";
 
 import { VenueStatus } from "../VenueStatus";
 import { VenueForm } from "./VenueForm";
+import { Link } from "~/i18n/navigation";
 
 interface VenueProps {
   slug?: string;
@@ -241,15 +242,23 @@ export const EditVenue = ({ slug }: VenueProps) => {
   return (
     <div className="flex flex-col">
       {data && (
-        <div className={`
-          flex cursor-default items-center justify-end space-x-3 text-sm
-          text-neutral-disabled
-        `}>
+        <div className={`text-neutral-disabled flex cursor-default items-center justify-end space-x-3 text-sm`}>
           <Tooltip label={i18n("Created on")}>
             {format(new Date(data.created_at), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
           </Tooltip>
           <span>&bull;</span>
           <VenueStatus status={data.status!} />
+          {data.id ? (
+            <Tooltip label={i18n("View venue in a new tab")}>
+              <Link
+                className={`hover:bg-primary/10 inline-flex items-center gap-2 rounded-lg p-2`}
+                href={`/venues/${data.slug}`}
+                target="_blank"
+              >
+                <Eye />
+              </Link>
+            </Tooltip>
+          ) : null}
           {isAdmin && (
             <VenueStatusActions
               i18n={i18n}
@@ -261,7 +270,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
           )}
         </div>
       )}
-      <RichText as="div" className="mb-6 text-sm text-neutral">
+      <RichText as="div" className="text-neutral mb-6 text-sm">
         {slug
           ? i18n(
               "Edit your venue details below.<br/>You can update all fields except the slug, which is locked after the first creation.",

@@ -33,30 +33,12 @@ export const VenueStatus = ({ expanded, status }: VenueStatusProps) => {
   return (
     <div
       className={clsx(
-        `
-          flex w-min cursor-default items-center justify-center text-xs
-          font-medium uppercase
-        `,
-        status === Venue_Status_Enum.Active && `
-          bg-green-600/75 text-surface
-          dark:bg-green-400/75
-        `,
-        status === Venue_Status_Enum.Rejected && `
-          bg-red-600/75 text-surface
-          dark:bg-red-400/75
-        `,
-        status === Venue_Status_Enum.Archived && `
-          bg-gray-600/75 text-surface
-          dark:bg-gray-400/75
-        `,
-        status === Venue_Status_Enum.Hidden && `
-          bg-slate-600/25 text-surface
-          dark:bg-slate-500/25
-        `,
-        status === Venue_Status_Enum.Pending && `
-          bg-blue-600/75 text-surface
-          dark:bg-blue-400/75
-        `,
+        `flex w-min cursor-default items-center justify-center text-xs font-medium uppercase`,
+        status === Venue_Status_Enum.Active && `text-surface bg-green-600/75 dark:bg-green-400/75`,
+        status === Venue_Status_Enum.Rejected && `text-surface bg-red-600/75 dark:bg-red-400/75`,
+        status === Venue_Status_Enum.Archived && `text-surface bg-gray-600/75 dark:bg-gray-400/75`,
+        status === Venue_Status_Enum.Hidden && `text-surface bg-slate-600/25 dark:bg-slate-500/25`,
+        status === Venue_Status_Enum.Pending && `text-surface bg-blue-600/75 dark:bg-blue-400/75`,
         expanded ? `rounded-md px-3 py-1.5` : `rounded-full p-2`,
       )}
     >

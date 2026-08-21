@@ -8,8 +8,8 @@ import { privateConfig } from "../config/private";
 import { constants } from "../constants";
 
 const app = new App({
-  signingSecret: process.env.NEXT_PRIVATE_SLACK_SIGNING_SECRET,
-  token: process.env.NEXT_PRIVATE_SLACK_BOT_TOKEN,
+  signingSecret: privateConfig.slack.signingSecret,
+  token: privateConfig.slack.botToken,
 });
 
 const getMedia = ({ images, title_en, title_uk }: Partial<Events>) => {

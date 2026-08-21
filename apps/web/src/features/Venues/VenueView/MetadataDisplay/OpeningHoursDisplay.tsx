@@ -7,12 +7,15 @@ import { formatTime } from "~/lib/utils";
 import { GetPublicVenuesQuery, Locale } from "~/types";
 
 import { MetadataSection } from "./MetadataSection";
+import { clsx } from "clsx";
+import { Tooltip } from "~/components/ui";
 
 interface OpeningHoursDisplayProps {
   schedules?: GetPublicVenuesQuery["venues"][number]["venue_schedules"];
+  isArchived: boolean;
 }
 
-export const OpeningHoursDisplay = ({ schedules }: OpeningHoursDisplayProps) => {
+export const OpeningHoursDisplay = ({ schedules, isArchived }: OpeningHoursDisplayProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
 
@@ -30,22 +33,29 @@ export const OpeningHoursDisplay = ({ schedules }: OpeningHoursDisplayProps) => 
 
         return (
           <div
-            className={`
-              -mx-4 flex items-start justify-between px-4 py-2 text-sm
-              hover:bg-on-surface/5
-              ${isToday ? `bg-primary/10 font-semibold` : ""}
-            `}
+            className={clsx(
+              "hover:bg-on-surface/5 -mx-4 flex cursor-default items-start justify-between px-4 py-2 text-sm",
+              isToday && "bg-primary/10 font-semibold",
+            )}
             key={day.full.en}
           >
-            <span className={`
-              font-medium
-              ${isToday ? "text-primary" : `text-neutral`}
-            `}>{day.full[locale]}</span>
+            <span className={`font-medium ${isToday ? "text-primary" : `text-neutral`} `}>{day.full[locale]}</span>
             <div className="flex flex-col items-end gap-0.5">
               {daySchedules.length ? (
                 daySchedules.map(({ close_time, open_time }, idx) => (
-                  <span className={isToday ? "text-primary" : "text-on-surface"} key={idx}>
-                    {formatTime(open_time)} - {formatTime(close_time)}
+                  <span
+                    className={clsx(isToday ? "text-primary" : "text-on-surface", isArchived && "line-through")}
+                    key={idx}
+                  >
+                    {isArchived ? (
+                      <Tooltip label={i18n("This venue is archived")}>
+                        {formatTime(open_time)} - {formatTime(close_time)}
+                      </Tooltip>
+                    ) : (
+                      <>
+                        {formatTime(open_time)} - {formatTime(close_time)}
+                      </>
+                    )}
                   </span>
                 ))
               ) : (

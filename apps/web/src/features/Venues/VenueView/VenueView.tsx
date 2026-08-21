@@ -5,10 +5,11 @@ import { BookMarked, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, TabPane, Tabs } from "~/components/ui";
 import { EventsMasonryCard } from "~/features/Events/EventCard/EventsMasonryCard";
+import { VenueMessaging } from "~/features/Messaging/VenueMessaging";
 import { VenueStatus } from "~/features/UserDirectory/Venues/VenueStatus";
 import { useEvents } from "~/hooks/useEvents";
 import { useVenues } from "~/hooks/useVenues";
@@ -17,7 +18,7 @@ import { constants } from "~/lib/constants";
 import {
   FilterParams,
   GetPublicEventsQuery,
-  GetUserVenuesQuery,
+  GetPublicVenuesQuery,
   Locale,
   SortDirections,
   Venue_Category_Enum,
@@ -38,11 +39,19 @@ import {
 
 interface VenueViewProps {
   initialEvents?: GetPublicEventsQuery["events"] | null;
-  initialVenue?: (GetUserVenuesQuery["venues"] & { postcode?: string | null })[0] | null;
+  initialMessagingRole?: "OWNER" | "USER" | null;
+  initialTelegramLinked?: boolean | null;
+  initialVenue?: GetPublicVenuesQuery["venues"][number] | null;
   slug: string;
 }
 
-export const VenueView = ({ initialEvents = null, initialVenue = undefined, slug }: VenueViewProps) => {
+export const VenueView = ({
+  initialEvents = null,
+  initialMessagingRole = null,
+  initialTelegramLinked = null,
+  initialVenue = undefined,
+  slug,
+}: VenueViewProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const { useGetVenue } = useVenues();
@@ -98,13 +107,19 @@ export const VenueView = ({ initialEvents = null, initialVenue = undefined, slug
   const images = (venue.images || []).filter(Boolean).map((img) => normalizeUrl(img)!) as string[];
   const logoUrl = normalizeUrl(venue.logo ?? undefined);
 
+  const isArchived = venue.status === Venue_Status_Enum.Archived;
+  const isPending = venue.status === Venue_Status_Enum.Pending;
   return (
     <div className="flex flex-col">
       {/* Hero section. Edge to edge image carousel */}
       <div className={`relative w-full pb-2 md:pb-4`}>
         <div className="relative mx-auto max-w-5xl">
-          {/* Pending status badge for no-image state */}
-          {venue.status === Venue_Status_Enum.Pending && (
+          {isArchived && (
+            <div className="absolute top-4 right-4 z-10 max-w-5xl">
+              <VenueStatus expanded status={venue.status} />
+            </div>
+          )}
+          {isPending && (
             <div className="absolute top-4 right-4 z-10 max-w-5xl">
               <VenueStatus expanded status={venue.status} />
             </div>
@@ -130,6 +145,7 @@ export const VenueView = ({ initialEvents = null, initialVenue = undefined, slug
             <div className="min-w-0">
               <h1
                 className={clsx(
+                  isArchived && "line-through",
                   images.length ? "text-neutral-0" : "text-on-surface",
                   `mb-3 text-3xl leading-tight font-black tracking-tight drop-shadow-2xl md:text-5xl lg:text-6xl`,
                 )}
@@ -225,7 +241,7 @@ export const VenueView = ({ initialEvents = null, initialVenue = undefined, slug
                   <section
                     className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
                   >
-                    <OpeningHoursDisplay schedules={venue.venue_schedules} />
+                    <OpeningHoursDisplay schedules={venue.venue_schedules} isArchived={isArchived} />{" "}
                   </section>
                 ) : null}
                 {venue.chain && (
@@ -239,7 +255,7 @@ export const VenueView = ({ initialEvents = null, initialVenue = undefined, slug
             </div>
           </TabPane>
 
-          {upcomingEvents.length > 0 && (
+          {upcomingEvents.length > 0 && !isArchived && (
             <TabPane tab={i18n("Events")}>
               <div className="space-y-6">
                 {upcomingEvents.length > 0 && (
@@ -261,6 +277,18 @@ export const VenueView = ({ initialEvents = null, initialVenue = undefined, slug
                   </div>
                 )}
               </div>
+            </TabPane>
+          )}
+
+          {initialMessagingRole !== null && (
+            <TabPane tab={i18n("Messaging")}>
+              <VenueMessaging
+                hasOwner={Boolean(venue.owner_id)}
+                initialRole={initialMessagingRole}
+                initialTelegramLinked={initialTelegramLinked}
+                venueId={venue.id}
+                venueName={venue.name}
+              />
             </TabPane>
           )}
         </Tabs>

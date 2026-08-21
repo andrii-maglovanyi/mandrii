@@ -4,6 +4,10 @@ import { isDevelopment } from "./lib/config/env";
 
 export async function register() {
   if (isDevelopment) {
+    if (process.env.NEXT_RUNTIME === "nodejs") {
+      await import("./lib/telegram/bot");
+    }
+
     return;
   }
 

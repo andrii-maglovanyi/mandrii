@@ -83,9 +83,12 @@ vi.mock("@stripe/react-stripe-js", () => ({
 
 describe("CheckoutForm", () => {
   const defaultProps = {
+    addressKey: 0,
     currency: "GBP",
     email: "test@example.com",
+    onCountryChange: vi.fn(),
     orderId: "order-123",
+    shippingDestination: "GB",
     totalMinor: 5000,
   };
 

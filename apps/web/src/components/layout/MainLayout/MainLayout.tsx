@@ -9,6 +9,7 @@ import { envName } from "~/lib/config/env";
 
 import CookieConsentBanner from "../CookieConsentBanner/CookieConsentBanner";
 import { Footer } from "../Footer/Footer";
+import { MessageToast } from "../MessageToast/MessageToast";
 import { DesktopLayout } from "./Desktop/DesktopLayout";
 import { MobileLayout } from "./Mobile/MobileLayout";
 
@@ -42,6 +43,7 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
         </DesktopLayout>
       )}
       <CookieConsentBanner />
+      <MessageToast />
       {!pathname.includes("/map") && <Footer />}
     </div>
   );

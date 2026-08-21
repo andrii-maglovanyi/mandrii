@@ -6,6 +6,9 @@ interface PrivateConfig {
   auth: {
     nextAuthSecret: string;
   };
+  db: {
+    connectionString: string;
+  };
   email: {
     authorEmail: string;
     resendApiKey: string;
@@ -31,6 +34,15 @@ interface PrivateConfig {
     secretKey: string;
     webhookSecret: string;
   };
+  telegram: {
+    botUsername: string;
+    token: string;
+    webhookSecret: string;
+  };
+  webPush: {
+    privateKey: string;
+    subject: string;
+  };
 }
 
 export function getEnvVar(name: string, required: boolean = process.env.UNSET_CONFIG !== "true") {
@@ -50,6 +62,9 @@ export const privateConfig: PrivateConfig = {
   },
   auth: {
     nextAuthSecret: getEnvVar("NEXTAUTH_SECRET"),
+  },
+  db: {
+    connectionString: getEnvVar("NEON_CONNECTION_STRING"),
   },
   email: {
     authorEmail: getEnvVar("AUTHOR_EMAIL"),
@@ -75,5 +90,14 @@ export const privateConfig: PrivateConfig = {
   stripe: {
     secretKey: getEnvVar("NEXT_PRIVATE_STRIPE_SECRET_KEY"),
     webhookSecret: getEnvVar("NEXT_PRIVATE_STRIPE_WEBHOOK_SECRET", false),
+  },
+  telegram: {
+    botUsername: getEnvVar("TELEGRAM_BOT_USERNAME", false),
+    token: getEnvVar("TELEGRAM_BOT_TOKEN"),
+    webhookSecret: getEnvVar("TELEGRAM_WEBHOOK_SECRET", false),
+  },
+  webPush: {
+    privateKey: getEnvVar("WEB_PUSH_VAPID_PRIVATE_KEY", false),
+    subject: getEnvVar("WEB_PUSH_VAPID_SUBJECT", false),
   },
 };

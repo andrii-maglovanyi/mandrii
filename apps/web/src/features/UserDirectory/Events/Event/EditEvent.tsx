@@ -2,7 +2,7 @@
 
 import { useApolloClient } from "@apollo/client";
 import { format } from "date-fns";
-import { Archive, Bug, CheckCircle2, Search, XCircle } from "lucide-react";
+import { Archive, Bug, CheckCircle2, Eye, Search, XCircle } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -16,6 +16,7 @@ import { Event_Status_Enum, Locale } from "~/types";
 
 import { EventStatus } from "../EventStatus";
 import { EventForm } from "./EventForm";
+import { Link } from "~/i18n/navigation";
 
 interface EventProps {
   slug?: string;
@@ -106,15 +107,23 @@ export const EditEvent = ({ slug }: EventProps) => {
     return (
       <>
         {data && meta ? (
-          <div className={`
-            flex cursor-default items-center justify-end space-x-3 text-sm
-            text-neutral-disabled
-          `}>
+          <div className={`text-neutral-disabled flex cursor-default items-center justify-end space-x-3 text-sm`}>
             <Tooltip label={i18n("Created on")}>
               {format(new Date(meta.createdAt), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
             </Tooltip>
             <span>&bull;</span>
             <EventStatus status={meta.status} />
+            {data.id ? (
+              <Tooltip label={i18n("View event in a new tab")}>
+                <Link
+                  className={`hover:bg-primary/10 inline-flex items-center gap-2 rounded-lg p-2`}
+                  href={`/events/${data.slug}`}
+                  target="_blank"
+                >
+                  <Eye />
+                </Link>
+              </Tooltip>
+            ) : null}
             {profileData?.role === "admin" && (
               <div className="flex items-center gap-2">
                 |
@@ -177,7 +186,7 @@ export const EditEvent = ({ slug }: EventProps) => {
             )}
           </div>
         ) : null}
-        <RichText as="div" className="mb-6 text-sm text-neutral">
+        <RichText as="div" className="text-neutral mb-6 text-sm">
           {slug
             ? i18n(
                 "Edit your event details below.<br/>You can update all fields except the slug, which is locked after the first creation.",

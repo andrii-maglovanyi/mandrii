@@ -1,5 +1,5 @@
 import { hasOperatingHours } from "~/lib/utils";
-import { GetPublicVenuesQuery } from "~/types";
+import { GetPublicVenuesQuery, Venue_Status_Enum } from "~/types";
 
 import { OpeningHoursDisplay } from "./OpeningHoursDisplay";
 
@@ -12,7 +12,7 @@ export const VenueMetadataDisplay = ({ venue }: VenueMetadataDisplayProps) => {
 
   return (
     <div className="space-y-6">
-      <OpeningHoursDisplay schedules={venue.venue_schedules} />
+      <OpeningHoursDisplay isArchived={venue.status === Venue_Status_Enum.Archived} schedules={venue.venue_schedules} />
     </div>
   );
 };

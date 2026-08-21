@@ -2,11 +2,13 @@ import { gql } from "@apollo/client";
 import { Alert } from "~/components/ui";
 import { EVENT_FIELDS_FRAGMENT, GET_PUBLIC_EVENTS } from "~/graphql/events";
 import { getServerClient } from "~/lib/apollo/server-client";
+import { auth } from "~/lib/auth";
+import sql from "~/lib/db/db";
 import {
   GetPublicEventsQuery,
   GetPublicEventsQueryVariables,
-  GetUserVenuesQuery,
-  GetUserVenuesQueryVariables,
+  GetVenueViewBySlugQuery,
+  GetVenueViewBySlugQueryVariables,
   Order_By,
 } from "~/types/graphql.generated";
 
@@ -14,7 +16,7 @@ import { VenueView } from "./VenueView";
 import { getI18n } from "~/i18n/getI18n";
 
 const CHAIN_FRAGMENT = gql`
-  fragment ChainFields on chains {
+  fragment VenueViewChainFields on chains {
     id
     name
     slug
@@ -31,8 +33,8 @@ const CHAIN_FRAGMENT = gql`
 
 const CHAIN_WITH_VENUES_FRAGMENT = gql`
   ${CHAIN_FRAGMENT}
-  fragment ChainWithVenues on chains {
-    ...ChainFields
+  fragment VenueViewChainWithVenues on chains {
+    ...VenueViewChainFields
     venues {
       id
       name
@@ -50,15 +52,38 @@ const CHAIN_WITH_VENUES_FRAGMENT = gql`
 
 const CHAIN_WITH_CHAINS_FRAGMENT = gql`
   ${CHAIN_FRAGMENT}
-  fragment ChainWithChains on chains {
-    ...ChainFields
+  fragment VenueViewChainWithChains on chains {
+    ...VenueViewChainFields
+    chains {
+      id
+      name
+      slug
+      country
+      venues {
+        id
+        name
+        slug
+        city
+        country
+      }
+      venues_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    chains_aggregate {
+      aggregate {
+        count
+      }
+    }
   }
 `;
 
 const VENUE_FIELDS_FRAGMENT = gql`
   ${CHAIN_WITH_VENUES_FRAGMENT}
   ${CHAIN_WITH_CHAINS_FRAGMENT}
-  fragment VenueFields on venues {
+  fragment VenueViewFields on venues {
     id
     name
     address
@@ -122,9 +147,9 @@ const VENUE_FIELDS_FRAGMENT = gql`
       }
     }
     chain {
-      ...ChainWithVenues
+      ...VenueViewChainWithVenues
       chain {
-        ...ChainWithChains
+        ...VenueViewChainWithChains
       }
     }
   }
@@ -132,9 +157,9 @@ const VENUE_FIELDS_FRAGMENT = gql`
 
 const GET_VENUE_BY_SLUG = gql`
   ${VENUE_FIELDS_FRAGMENT}
-  query GetUserVenues($where: venues_bool_exp!) {
+  query GetVenueViewBySlug($where: venues_bool_exp!) {
     venues(where: $where, limit: 1) {
-      ...VenueFields
+      ...VenueViewFields
       postcode
       created_at
     }
@@ -153,7 +178,7 @@ export async function VenueViewServer({ slug, locale }: VenueViewServerProps) {
     const client = await getServerClient();
 
     // Fetch venue data
-    const { data: venueData } = await client.query<GetUserVenuesQuery, GetUserVenuesQueryVariables>({
+    const { data: venueData } = await client.query<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>({
       query: GET_VENUE_BY_SLUG,
       variables: {
         where: {
@@ -187,7 +212,23 @@ export async function VenueViewServer({ slug, locale }: VenueViewServerProps) {
 
     const events = eventsData?.events ?? [];
 
-    return <VenueView initialEvents={events} initialVenue={venue} slug={slug} />;
+    const session = await auth();
+    const sessionUserId = session?.user?.id;
+    const [messagingVenue] = await sql<{ owner_id: null | string; telegram_chat_id: null | string }[]>`
+      SELECT owner_id, telegram_chat_id FROM venues WHERE id = ${venue.id}
+    `;
+    const initialMessagingRole =
+      sessionUserId && messagingVenue?.owner_id ? (messagingVenue.owner_id === sessionUserId ? "OWNER" : "USER") : null;
+
+    return (
+      <VenueView
+        initialEvents={events}
+        initialMessagingRole={initialMessagingRole}
+        initialTelegramLinked={initialMessagingRole === "OWNER" ? Boolean(messagingVenue?.telegram_chat_id) : null}
+        initialVenue={venue}
+        slug={slug}
+      />
+    );
   } catch (error) {
     console.error("Error fetching venue data:", error);
 
