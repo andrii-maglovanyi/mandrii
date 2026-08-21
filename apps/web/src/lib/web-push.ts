@@ -1,6 +1,7 @@
 import webpush from "web-push";
 
 import { privateConfig } from "~/lib/config/private";
+import { publicConfig } from "~/lib/config/public";
 import sql from "~/lib/db/db";
 
 type PushSubscription = {
@@ -11,19 +12,22 @@ type PushSubscription = {
 
 export function isWebPushConfigured() {
   return !(
-    !process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY ||
+    publicConfig.webPush.vapidPublicKey === "__UNSET__" ||
     privateConfig.webPush.privateKey === "__UNSET__" ||
     privateConfig.webPush.subject === "__UNSET__"
   );
 }
 
 function configureWebPush() {
-  const publicKey = process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY;
-  if (!isWebPushConfigured() || !publicKey) {
+  if (!isWebPushConfigured()) {
     throw new Error("Web Push is not configured");
   }
 
-  webpush.setVapidDetails(privateConfig.webPush.subject, publicKey, privateConfig.webPush.privateKey);
+  webpush.setVapidDetails(
+    privateConfig.webPush.subject,
+    publicConfig.webPush.vapidPublicKey,
+    privateConfig.webPush.privateKey,
+  );
 }
 
 async function getSubscriptions(recipientUserId: string) {

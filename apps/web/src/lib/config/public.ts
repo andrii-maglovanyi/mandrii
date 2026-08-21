@@ -23,6 +23,9 @@ interface PublicConfig {
   stripe: {
     publishableKey: string;
   };
+  webPush: {
+    vapidPublicKey: string;
+  };
 }
 
 export const publicConfig: PublicConfig = {
@@ -51,5 +54,8 @@ export const publicConfig: PublicConfig = {
   },
   stripe: {
     publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "__UNSET__",
+  },
+  webPush: {
+    vapidPublicKey: process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY || "__UNSET__",
   },
 };

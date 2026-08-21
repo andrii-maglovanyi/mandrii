@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
+import { publicConfig } from "~/lib/config/public";
 
 function urlBase64ToUint8Array(value: string) {
   const padding = "=".repeat((4 - (value.length % 4)) % 4);
@@ -31,8 +32,13 @@ export const PushNotifications = () => {
     let isCurrent = true;
 
     const restoreSubscription = async () => {
-      const publicKey = process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY;
-      if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window) || !publicKey) {
+      const publicKey = publicConfig.webPush.vapidPublicKey;
+      if (
+        !("serviceWorker" in navigator) ||
+        !("PushManager" in window) ||
+        !("Notification" in window) ||
+        publicKey === "__UNSET__"
+      ) {
         if (isCurrent) setStatus("unsupported");
         return;
       }
@@ -77,8 +83,13 @@ export const PushNotifications = () => {
   }, []);
 
   const enable = async () => {
-    const publicKey = process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY;
-    if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window) || !publicKey) {
+    const publicKey = publicConfig.webPush.vapidPublicKey;
+    if (
+      !("serviceWorker" in navigator) ||
+      !("PushManager" in window) ||
+      !("Notification" in window) ||
+      publicKey === "__UNSET__"
+    ) {
       setStatus("unsupported");
       return;
     }

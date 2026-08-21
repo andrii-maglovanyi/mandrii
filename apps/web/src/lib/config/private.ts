@@ -55,6 +55,8 @@ export function getEnvVar(name: string, required: boolean = process.env.UNSET_CO
   return value || "__UNSET__";
 }
 
+const authorEmail = getEnvVar("AUTHOR_EMAIL");
+
 export const privateConfig: PrivateConfig = {
   analytics: {
     mixpanelToken: getEnvVar("MIXPANEL_TOKEN", false),
@@ -67,7 +69,7 @@ export const privateConfig: PrivateConfig = {
     connectionString: getEnvVar("NEON_CONNECTION_STRING"),
   },
   email: {
-    authorEmail: getEnvVar("AUTHOR_EMAIL"),
+    authorEmail,
     resendApiKey: getEnvVar("RESEND_API_KEY"),
   },
   hasura: {
@@ -98,6 +100,6 @@ export const privateConfig: PrivateConfig = {
   },
   webPush: {
     privateKey: getEnvVar("WEB_PUSH_VAPID_PRIVATE_KEY", false),
-    subject: getEnvVar("WEB_PUSH_VAPID_SUBJECT", false),
+    subject: authorEmail === "__UNSET__" ? "__UNSET__" : `mailto:${authorEmail}`,
   },
 };
