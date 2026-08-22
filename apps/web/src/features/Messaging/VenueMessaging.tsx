@@ -298,25 +298,33 @@ export const VenueMessaging = ({
     setShowJumpToLatest(false);
     let isCurrent = true;
     let isInitialLoad = true;
+    let activeRequest: AbortController | null = null;
     setIsLoadingMessages(true);
     const load = async () => {
       const isInitialRequest = isInitialLoad;
+      const abortController = new AbortController();
+      const requestTimeout = window.setTimeout(() => abortController.abort(), 15_000);
+      activeRequest = abortController;
       if (document.hidden) {
+        window.clearTimeout(requestTimeout);
         if (isInitialRequest && isCurrent) setIsLoadingMessages(false);
         return;
       }
       try {
         const response = await fetch(`/api/conversations/${selectedConversationId}/messages?limit=50`, {
           cache: "no-store",
+          signal: abortController.signal,
         });
         if (!response.ok) return;
         const data = (await response.json()) as MessagePage;
         if (!isCurrent) return;
-        setMessages((current) => (isInitialLoad ? data.messages : mergeMessages(current, data.messages)));
-        if (isInitialLoad) {
+        if (isInitialRequest) {
+          setMessages(data.messages);
           setNextMessageCursor(data.nextCursor);
           setHasOlderMessages(data.hasMore);
           isInitialLoad = false;
+        } else {
+          setMessages((current) => mergeMessages(current, data.messages));
         }
         const lastMessageId = data.messages.at(-1)?.id ?? "";
         const readSyncKey = `${selectedConversationId}:${data.messages.length}:${lastMessageId}`;
@@ -325,8 +333,15 @@ export const VenueMessaging = ({
           window.dispatchEvent(new Event("messages-read"));
         }
       } catch {
-        if (isCurrent) setMessages([]);
+        if (isCurrent && abortController.signal.aborted) {
+          setMessageError(i18n("Messages are taking too long to load. Please try again."));
+        } else if (isCurrent) {
+          setMessages([]);
+          setMessageError(i18n("Unable to load messages"));
+        }
       } finally {
+        window.clearTimeout(requestTimeout);
+        if (activeRequest === abortController) activeRequest = null;
         if (isInitialRequest && isCurrent) setIsLoadingMessages(false);
       }
     };
@@ -342,6 +357,7 @@ export const VenueMessaging = ({
     document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
       isCurrent = false;
+      activeRequest?.abort();
       window.removeEventListener("venue-messaging-update", onMessagingUpdate);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
