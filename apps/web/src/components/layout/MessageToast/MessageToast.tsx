@@ -3,16 +3,11 @@
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useUser } from "~/hooks/useUser";
+import { MESSAGING_UNREAD_UPDATED_EVENT, UnreadMessagingUpdate } from "~/hooks/useUnreadMessages";
 import { useI18n } from "~/i18n/useI18n";
-import { useMessagingUnreadEventsSubscription } from "~/types/graphql.generated";
-
-type UnreadResponse = {
-  latest: null | { conversation_id: string; sender_name: string; venue_slug: string };
-  unreadCount: number;
-};
 
 const AUTO_DISMISS_MS = 8_000;
 
@@ -30,48 +25,26 @@ export const MessageToast = () => {
   const i18n = useI18n();
   const locale = useLocale();
   const router = useRouter();
-  const previousUnreadRef = useRef<number | null>(null);
   const dismissTimerRef = useRef<number | null>(null);
-  const unreadRequestIdRef = useRef(0);
 
-  const [message, setMessage] = useState<UnreadResponse["latest"]>(null);
+  const [message, setMessage] = useState<UnreadMessagingUpdate["latest"]>(null);
   const [visible, setVisible] = useState(false); // drives enter/exit transform
   const [paused, setPaused] = useState(false); // hover pauses auto-dismiss + progress bar
-  const loadUnread = useCallback(async () => {
-    const requestId = ++unreadRequestIdRef.current;
-    try {
-      const response = await fetch("/api/conversations/unread", { cache: "no-store" });
-      if (!response.ok) return;
-      const data = (await response.json()) as UnreadResponse;
-      if (requestId !== unreadRequestIdRef.current) return;
-      if (previousUnreadRef.current !== null && data.unreadCount > previousUnreadRef.current && data.latest) {
-        setMessage(data.latest);
-      }
-      previousUnreadRef.current = data.unreadCount;
-    } catch {
-      // The toast is supplementary; a transient error should stay invisible.
-    }
-  }, []);
-  const { data: unreadEvents } = useMessagingUnreadEventsSubscription({
-    skip: !isAuthenticated,
-  });
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    void loadUnread();
-  }, [isAuthenticated, loadUnread]);
 
   useEffect(() => {
     if (isAuthenticated) return;
-    unreadRequestIdRef.current++;
-    previousUnreadRef.current = null;
     setMessage(null);
     setVisible(false);
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (unreadEvents) void loadUnread();
-  }, [loadUnread, unreadEvents]);
+    const showUnreadMessage = (event: Event) => {
+      const update = (event as CustomEvent<UnreadMessagingUpdate>).detail;
+      if (update.latest) setMessage(update.latest);
+    };
+    window.addEventListener(MESSAGING_UNREAD_UPDATED_EVENT, showUnreadMessage);
+    return () => window.removeEventListener(MESSAGING_UNREAD_UPDATED_EVENT, showUnreadMessage);
+  }, []);
 
   // Mount transition: flip to visible on the next frame so the initial
   // translate/opacity state actually renders before transitioning.

@@ -6,7 +6,7 @@ import { enGB } from "date-fns/locale";
 import { ArrowUpRight, Calendar, Globe, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 
-import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, TabPane, Tabs } from "~/components/ui";
+import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, SectionCard, TabPane, Tabs } from "~/components/ui";
 import { useEvents } from "~/hooks/useEvents";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -264,10 +264,7 @@ export const EventView = ({ slug }: EventViewProps) => {
 
               {/* Info Cards - Right side (1/3) */}
               <div className="flex flex-col gap-4">
-                <section
-                  className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
-                >
-                  <h3 className="mt-2 text-lg font-semibold">{i18n("Details")}</h3>
+                <SectionCard title={i18n("Details")}>
                   <CardMetadata
                     event={event}
                     expanded
@@ -276,24 +273,18 @@ export const EventView = ({ slug }: EventViewProps) => {
                     formatTime={formatTime}
                     locale={locale}
                   />
-                </section>
+                </SectionCard>
 
                 {(event.capacity || event.language || event.age_restriction || event.accessibility_info) && (
-                  <section
-                    className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
-                  >
-                    <h3 className="mt-2 text-lg font-semibold">{i18n("Additional information")}</h3>
+                  <SectionCard title={i18n("Additional information")}>
                     <AdditionalInfo event={event} expanded locale={locale} />
-                  </section>
+                  </SectionCard>
                 )}
 
                 {event.organizer_name && (
-                  <section
-                    className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
-                  >
-                    <h3 className="mt-2 text-lg font-semibold">{i18n("Organizer")}</h3>
+                  <SectionCard title={i18n("Organizer")}>
                     <OrganizerInfo event={event} expanded locale={locale} />
-                  </section>
+                  </SectionCard>
                 )}
               </div>
             </div>

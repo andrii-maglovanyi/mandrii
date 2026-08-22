@@ -5,7 +5,16 @@ import { Check, MessageCircle } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useSearchParams } from "next/navigation";
 
-import { ActionButton, Button, RichText, Separator, Textarea, Tooltip } from "~/components/ui";
+import {
+  ActionButton,
+  AnimatedEllipsis,
+  Button,
+  RichText,
+  SectionCard,
+  Separator,
+  Textarea,
+  Tooltip,
+} from "~/components/ui";
 import { PushNotifications } from "~/components/layout/PushNotifications/PushNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
@@ -19,7 +28,6 @@ import { UUID } from "~/types/uuid";
 
 import { Conversation, ConversationMessage } from "./types";
 import { clsx } from "clsx";
-import { MetadataSection } from "../Venues/VenueView/MetadataDisplay";
 
 type MessagingRole = "OWNER" | "USER";
 type MessagingUpdateDetail = {
@@ -41,6 +49,14 @@ function mergeMessages(...messageLists: ConversationMessage[][]) {
     (left, right) =>
       new Date(left.created_at).getTime() - new Date(right.created_at).getTime() || left.id.localeCompare(right.id),
   );
+}
+
+function sortConversations(conversations: Conversation[]) {
+  return [...conversations].sort((left, right) => {
+    const leftActivity = Date.parse(left.last_message_at ?? left.created_at);
+    const rightActivity = Date.parse(right.last_message_at ?? right.created_at);
+    return rightActivity - leftActivity || right.id.localeCompare(left.id);
+  });
 }
 
 interface VenueMessagingProps {
@@ -69,6 +85,8 @@ export const VenueMessaging = ({
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [nextMessageCursor, setNextMessageCursor] = useState<null | string>(null);
   const [hasOlderMessages, setHasOlderMessages] = useState(false);
+  const [isLoadingConversations, setIsLoadingConversations] = useState(Boolean(initialRole));
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isLoadingOlderMessages, setIsLoadingOlderMessages] = useState(false);
   const [messageBody, setMessageBody] = useState("");
   const [replyToMessage, setReplyToMessage] = useState<ConversationMessage | null>(null);
@@ -85,6 +103,8 @@ export const VenueMessaging = ({
   const scrollRestoreRef = useRef<null | { height: number; top: number }>(null);
   const lastReadSyncRef = useRef("");
   const longPressTimerRef = useRef<number | null>(null);
+  const lastConversationEventRef = useRef<string | null>(null);
+  const lastVenueEventRef = useRef<string | null>(null);
   const { data: messagingEvents } = useVenueMessagingEventsSubscription({
     skip: !hasOwner || !isAuthenticated,
     variables: { venueId },
@@ -99,6 +119,13 @@ export const VenueMessaging = ({
 
     const conversationIds = new Set<string>();
     messagingEvents.messages.forEach((message) => conversationIds.add(message.conversation_id));
+    const signature = `${venueId}:${messagingEvents.messages.map((message) => `${message.conversation_id}:${message.id}`).join("|")}`;
+    if (lastVenueEventRef.current === null || !lastVenueEventRef.current.startsWith(`${venueId}:`)) {
+      lastVenueEventRef.current = signature;
+      return;
+    }
+    if (lastVenueEventRef.current === signature) return;
+    lastVenueEventRef.current = signature;
     if (conversationIds.size === 0) return;
 
     window.dispatchEvent(
@@ -110,9 +137,27 @@ export const VenueMessaging = ({
 
   useEffect(() => {
     if (!conversationMessagingEvents || !selectedConversationId) return;
-    if (!conversationMessagingEvents.messages.some((message) => message.conversation_id === selectedConversationId)) {
+    const belongsToSelectedConversation =
+      conversationMessagingEvents.messages.length === 0 ||
+      conversationMessagingEvents.messages.some((message) => message.conversation_id === selectedConversationId);
+    if (!belongsToSelectedConversation) {
       return;
     }
+    const signature = `${selectedConversationId}:${conversationMessagingEvents.messages
+      .map(
+        (message) =>
+          `${message.id}:${message.reactions.map((reaction) => `${reaction.emoji}:${reaction.created_at}`).join(",")}`,
+      )
+      .join("|")}`;
+    if (
+      lastConversationEventRef.current === null ||
+      !lastConversationEventRef.current.startsWith(`${selectedConversationId}:`)
+    ) {
+      lastConversationEventRef.current = signature;
+      return;
+    }
+    if (lastConversationEventRef.current === signature) return;
+    lastConversationEventRef.current = signature;
 
     window.dispatchEvent(
       new CustomEvent<MessagingUpdateDetail>("venue-messaging-update", {
@@ -128,11 +173,19 @@ export const VenueMessaging = ({
       setConversations([]);
       setSelectedConversationId(null);
       setMessages([]);
+      setIsLoadingConversations(false);
+      setIsLoadingMessages(false);
       return;
     }
     let isCurrent = true;
+    let hasLoadedInitially = false;
     const load = async () => {
-      if (document.hidden) return;
+      const isInitialLoad = !hasLoadedInitially;
+      if (isInitialLoad) setIsLoadingConversations(true);
+      if (document.hidden) {
+        if (isInitialLoad && isCurrent) setIsLoadingConversations(false);
+        return;
+      }
       try {
         const response = await fetch(`/api/conversations?venueId=${encodeURIComponent(venueId)}`, {
           cache: "no-store",
@@ -149,7 +202,8 @@ export const VenueMessaging = ({
         if (!isCurrent) return;
         setRole(data.role);
         setTelegramLinked(data.telegramLinked);
-        setConversations(data.conversations);
+        setConversations(sortConversations(data.conversations));
+        if (isInitialLoad) setIsLoadingMessages(data.conversations.length > 0);
         setSelectedConversationId(
           (current) =>
             current ||
@@ -159,6 +213,13 @@ export const VenueMessaging = ({
         );
       } catch {
         // Messaging remains unavailable when the session cannot be loaded.
+      } finally {
+        if (isInitialLoad && isCurrent) {
+          hasLoadedInitially = true;
+          window.requestAnimationFrame(() => {
+            if (isCurrent) setIsLoadingConversations(false);
+          });
+        }
       }
     };
     void load();
@@ -183,14 +244,20 @@ export const VenueMessaging = ({
       setMessages([]);
       setNextMessageCursor(null);
       setHasOlderMessages(false);
+      setIsLoadingMessages(false);
       return;
     }
     shouldStickToLatestRef.current = true;
     setShowJumpToLatest(false);
     let isCurrent = true;
     let isInitialLoad = true;
+    setIsLoadingMessages(true);
     const load = async () => {
-      if (document.hidden) return;
+      const isInitialRequest = isInitialLoad;
+      if (document.hidden) {
+        if (isInitialRequest && isCurrent) setIsLoadingMessages(false);
+        return;
+      }
       try {
         const response = await fetch(`/api/conversations/${selectedConversationId}/messages?limit=50`, {
           cache: "no-store",
@@ -212,6 +279,14 @@ export const VenueMessaging = ({
         }
       } catch {
         if (isCurrent) setMessages([]);
+      } finally {
+        if (isInitialRequest && isCurrent) {
+          window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+              if (isCurrent) setIsLoadingMessages(false);
+            });
+          });
+        }
       }
     };
     void load();
@@ -280,6 +355,23 @@ export const VenueMessaging = ({
       minute: "2-digit",
     }).format(date);
   };
+  const formatConversationTimestamp = (timestamp: null | string) => {
+    if (!timestamp) return null;
+
+    const date = new Date(timestamp);
+    const today = new Date();
+    const calendarDay = (value: Date) => Date.UTC(value.getFullYear(), value.getMonth(), value.getDate());
+    const daysAgo = Math.floor((calendarDay(today) - calendarDay(date)) / 86_400_000);
+    const dateLocale = locale === "uk" ? "uk-UA" : "en-GB";
+
+    if (daysAgo === 0) {
+      return new Intl.DateTimeFormat(dateLocale, { hour: "2-digit", minute: "2-digit" }).format(date);
+    }
+    if (daysAgo > 0 && daysAgo < 7) {
+      return new Intl.DateTimeFormat(dateLocale, { weekday: "short" }).format(date);
+    }
+    return new Intl.DateTimeFormat(dateLocale, { day: "numeric", month: "2-digit", year: "2-digit" }).format(date);
+  };
   const formatDay = (timestamp: string) =>
     new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : "en-GB", {
       day: "numeric",
@@ -301,7 +393,11 @@ export const VenueMessaging = ({
   const refreshConversations = async () => {
     try {
       const response = await fetch(`/api/conversations?venueId=${encodeURIComponent(venueId)}`);
-      if (response.ok) setConversations(((await response.json()) as { conversations: Conversation[] }).conversations);
+      if (response.ok) {
+        setConversations(
+          sortConversations(((await response.json()) as { conversations: Conversation[] }).conversations),
+        );
+      }
     } catch {
       // The live subscription will reconcile this supplementary list refresh.
     }
@@ -473,39 +569,70 @@ export const VenueMessaging = ({
         className={`grid gap-4 overflow-hidden ${role === "OWNER" ? "h-200 grid-rows-[12rem_minmax(0,1fr)] md:grid-cols-[16rem_1fr] md:grid-rows-1" : "h-128"}`}
       >
         {role === "OWNER" && (
-          <aside
-            className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
+          <SectionCard
+            as="aside"
+            className="min-h-0 overflow-y-auto"
+            title={
+              <span className="flex items-center gap-2">
+                <MessageCircle size={20} />
+                {i18n("Conversations")}
+              </span>
+            }
+            titleClassName="mt-0 mb-3"
           >
-            <MetadataSection icon={MessageCircle} title={i18n("Conversations")}>
-              {conversations.length ? (
-                conversations.map((conversation) => (
+            {isLoadingConversations ? (
+              <div aria-live="polite" className="flex min-h-20 items-center justify-center">
+                <AnimatedEllipsis size="md" />
+              </div>
+            ) : conversations.length ? (
+              conversations.map((conversation) => {
+                const name = conversation.user_name ?? i18n("Customer");
+                const senderColour = getSenderColour(name);
+                const lastMessageTime = formatConversationTimestamp(conversation.last_message_at);
+
+                return (
                   <button
                     className={clsx(
-                      "hover:bg-on-surface/5 -mx-4 flex w-full items-start justify-between px-4 py-2 text-sm",
+                      "hover:bg-on-surface/5 -mx-4 flex w-[calc(100%+2rem)] items-center gap-3 px-4 py-2 text-left text-sm",
                       selectedConversationId === conversation.id && "bg-primary/10",
                     )}
-                    // className={`w-full text-left text-sm ${selectedConversationId === conversation.id ? "bg-primary/10" : "hover:bg-surface-tint"}`}
                     key={conversation.id}
                     onClick={() => setSelectedConversationId(conversation.id)}
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="font-medium">{conversation.user_name || i18n("Customer")}</p>
-                      {Number(conversation.unread_count) > 0 && (
-                        <span
-                          aria-label={i18n("Unread messages")}
-                          className="bg-primary text-on-primary flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs font-semibold"
-                        >
-                          {Number(conversation.unread_count) > 99 ? "99+" : conversation.unread_count}
-                        </span>
-                      )}
+                    <div
+                      aria-hidden="true"
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold tracking-tight text-white ${senderColour.avatarClassName}`}
+                    >
+                      {getSenderInitials(name)}
+                    </div>
+                    <div className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                      <p className="truncate font-medium">{name}</p>
+                      <div className="flex shrink-0 items-center gap-2">
+                        {lastMessageTime && (
+                          <time
+                            className="text-on-surface/60 text-xs"
+                            dateTime={conversation.last_message_at ?? undefined}
+                          >
+                            {lastMessageTime}
+                          </time>
+                        )}
+                        {Number(conversation.unread_count) > 0 && (
+                          <span
+                            aria-label={i18n("Unread messages")}
+                            className="bg-secondary text-on-surface flex min-h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs"
+                          >
+                            {Number(conversation.unread_count) > 99 ? "99+" : conversation.unread_count}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </button>
-                ))
-              ) : (
-                <p className="text-on-surface/70 text-sm">{i18n("No conversations yet")}</p>
-              )}
-            </MetadataSection>
-          </aside>
+                );
+              })
+            ) : (
+              <p className="text-on-surface/70 text-sm">{i18n("No conversations yet")}</p>
+            )}
+          </SectionCard>
         )}
         <section className="relative flex min-h-0 flex-col overflow-hidden">
           <div
@@ -519,118 +646,126 @@ export const VenueMessaging = ({
             }}
             ref={messageListRef}
           >
-            {isLoadingOlderMessages && (
-              <p aria-live="polite" className="text-on-surface/60 text-center text-xs">
-                {i18n("Loading older messages")}
-              </p>
-            )}
-            {selectedConversationId ? (
-              messages.map((message, index) => {
-                const isVenueMessage = message.sender_type === "VENUE";
-                const name = senderName(message.sender_type);
-                const senderColour = getSenderColour(name);
-                const isNewDay =
-                  index === 0 ||
-                  new Date(messages[index - 1]?.created_at ?? "").toDateString() !==
-                    new Date(message.created_at).toDateString();
-                const followsSameSender = index > 0 && messages[index - 1]?.sender_type === message.sender_type;
-                const showSender = !followsSameSender || isNewDay;
-                return (
-                  <Fragment key={message.id}>
-                    {isNewDay && <Separator className="py-1" text={formatDay(message.created_at)} />}
-                    <div
-                      className={`flex max-w-[92%] gap-3 ${isVenueMessage ? "flex-row-reverse self-end" : "self-start"} ${followsSameSender ? "-mt-2" : ""}`}
-                    >
-                      {showSender ? (
-                        <div
-                          aria-hidden="true"
-                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight text-white ${isVenueMessage ? "bg-primary" : senderColour.avatarClassName}`}
-                        >
-                          {getSenderInitials(name)}
-                        </div>
-                      ) : (
-                        <div aria-hidden="true" className="w-10 shrink-0" />
-                      )}
-                      <div className={`flex min-w-0 flex-col ${isVenueMessage ? "items-end" : "items-start"}`}>
-                        {showSender && (
-                          <p
-                            className={`mb-1 px-1 text-base font-semibold ${isVenueMessage ? "text-primary text-right" : senderColour.textClassName}`}
-                          >
-                            {name}
-                          </p>
-                        )}
-                        <div
-                          className={`bg-surface-tint before:bg-surface-tint relative rounded-xl px-4 py-2 before:absolute before:bottom-0 before:h-4 before:w-4 before:content-[''] ${isVenueMessage ? "rounded-br-sm before:-right-2 before:[clip-path:polygon(0_0,0_100%,100%_100%)]" : "rounded-bl-sm before:-left-2 before:[clip-path:polygon(100%_0,100%_100%,0_100%)]"}`}
-                          onContextMenu={(event) => {
-                            event.preventDefault();
-                            openActions(message, event.currentTarget);
-                          }}
-                          onPointerCancel={clearLongPress}
-                          onPointerDown={(event) => {
-                            if (event.pointerType === "touch") {
-                              const element = event.currentTarget;
-                              longPressTimerRef.current = window.setTimeout(() => {
-                                openActions(message, element);
-                                longPressTimerRef.current = null;
-                              }, 500);
-                            }
-                          }}
-                          onPointerMove={clearLongPress}
-                          onPointerUp={clearLongPress}
-                        >
-                          {message.reply_to_body && (
-                            <div className="border-primary bg-primary/8 text-on-surface/70 mb-2 max-w-full rounded-xl border-l-4 px-3 py-2 text-sm">
-                              <p className="text-primary font-semibold">
-                                ↩{" "}
-                                {message.reply_to_sender_type === "VENUE"
-                                  ? venueName || i18n("Venue")
-                                  : selectedConversation?.user_name || i18n("Customer")}
-                              </p>
-                              <p className="mt-0.5 truncate">{message.reply_to_body}</p>
-                            </div>
-                          )}
-                          <p className="text-base leading-6 wrap-break-word whitespace-pre-wrap">{message.body}</p>
-
-                          <div className="text-on-surface/60 mt-1 flex min-w-24 justify-between text-xs">
-                            {message.sender_type === "USER" && message.telegram_delivered_at && (
-                              <Tooltip label={i18n("Delivered to Telegram")}>
-                                <Check className="stroke-success mt-1" size={10} />
-                              </Tooltip>
-                            )}
-                            <time className="ml-auto text-right" dateTime={message.created_at}>
-                              {formatTimestamp(message.created_at)}
-                            </time>
-                          </div>
-
-                          {message.reactions?.length ? (
-                            <div className="mt-2 flex flex-wrap gap-2">
-                              {message.reactions.map((reaction) => (
-                                <button
-                                  aria-label={
-                                    reaction.reacted
-                                      ? i18n("Your reaction")
-                                      : i18n("Reaction from the other participant")
-                                  }
-                                  className={`rounded-full px-3 py-1.5 text-lg leading-none transition-colors ${reaction.reacted ? "bg-primary/15 hover:bg-primary/30" : "bg-on-surface/10 hover:bg-on-surface/20"}`}
-                                  key={reaction.emoji}
-                                  onClick={() => void toggleReaction(message.id, reaction.emoji)}
-                                  type="button"
-                                >
-                                  {reaction.emoji}
-                                </button>
-                              ))}
-                            </div>
-                          ) : null}
-                        </div>
-                      </div>
-                    </div>
-                  </Fragment>
-                );
-              })
+            {isLoadingConversations || isLoadingMessages ? (
+              <div aria-live="polite" className="flex min-h-32 flex-1 items-center justify-center">
+                <AnimatedEllipsis size="md" />
+              </div>
             ) : (
-              <p className="text-on-surface/70 text-sm">
-                {role === "OWNER" ? i18n("Select a conversation") : i18n("Start a conversation")}
-              </p>
+              <>
+                {isLoadingOlderMessages && (
+                  <p aria-live="polite" className="text-on-surface/60 text-center text-xs">
+                    {i18n("Loading older messages")}
+                  </p>
+                )}
+                {selectedConversationId ? (
+                  messages.map((message, index) => {
+                    const isVenueMessage = message.sender_type === "VENUE";
+                    const name = senderName(message.sender_type);
+                    const senderColour = getSenderColour(name);
+                    const isNewDay =
+                      index === 0 ||
+                      new Date(messages[index - 1]?.created_at ?? "").toDateString() !==
+                        new Date(message.created_at).toDateString();
+                    const followsSameSender = index > 0 && messages[index - 1]?.sender_type === message.sender_type;
+                    const showSender = !followsSameSender || isNewDay;
+                    return (
+                      <Fragment key={message.id}>
+                        {isNewDay && <Separator className="py-1" text={formatDay(message.created_at)} />}
+                        <div
+                          className={`flex max-w-[92%] gap-3 ${isVenueMessage ? "flex-row-reverse self-end" : "self-start"} ${followsSameSender ? "-mt-2" : ""}`}
+                        >
+                          {showSender ? (
+                            <div
+                              aria-hidden="true"
+                              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight text-white ${isVenueMessage ? "bg-primary" : senderColour.avatarClassName}`}
+                            >
+                              {getSenderInitials(name)}
+                            </div>
+                          ) : (
+                            <div aria-hidden="true" className="w-10 shrink-0" />
+                          )}
+                          <div className={`flex min-w-0 flex-col ${isVenueMessage ? "items-end" : "items-start"}`}>
+                            {showSender && (
+                              <p
+                                className={`mb-1 px-1 text-base font-semibold ${isVenueMessage ? "text-primary text-right" : senderColour.textClassName}`}
+                              >
+                                {name}
+                              </p>
+                            )}
+                            <div
+                              className={`bg-surface-tint before:bg-surface-tint relative rounded-xl px-4 py-2 before:absolute before:bottom-0 before:h-4 before:w-4 before:content-[''] ${isVenueMessage ? "rounded-br-sm before:-right-2 before:[clip-path:polygon(0_0,0_100%,100%_100%)]" : "rounded-bl-sm before:-left-2 before:[clip-path:polygon(100%_0,100%_100%,0_100%)]"}`}
+                              onContextMenu={(event) => {
+                                event.preventDefault();
+                                openActions(message, event.currentTarget);
+                              }}
+                              onPointerCancel={clearLongPress}
+                              onPointerDown={(event) => {
+                                if (event.pointerType === "touch") {
+                                  const element = event.currentTarget;
+                                  longPressTimerRef.current = window.setTimeout(() => {
+                                    openActions(message, element);
+                                    longPressTimerRef.current = null;
+                                  }, 500);
+                                }
+                              }}
+                              onPointerMove={clearLongPress}
+                              onPointerUp={clearLongPress}
+                            >
+                              {message.reply_to_body && (
+                                <div className="border-primary bg-primary/8 text-on-surface/70 mb-2 max-w-full rounded-xl border-l-4 px-3 py-2 text-sm">
+                                  <p className="text-primary font-semibold">
+                                    ↩{" "}
+                                    {message.reply_to_sender_type === "VENUE"
+                                      ? venueName || i18n("Venue")
+                                      : selectedConversation?.user_name || i18n("Customer")}
+                                  </p>
+                                  <p className="mt-0.5 truncate">{message.reply_to_body}</p>
+                                </div>
+                              )}
+                              <p className="text-base leading-6 wrap-break-word whitespace-pre-wrap">{message.body}</p>
+
+                              <div className="text-on-surface/60 mt-1 flex min-w-24 justify-between text-xs">
+                                {message.sender_type === "USER" && message.telegram_delivered_at && (
+                                  <Tooltip label={i18n("Delivered to Telegram")}>
+                                    <Check className="stroke-success mt-1" size={10} />
+                                  </Tooltip>
+                                )}
+                                <time className="ml-auto text-right" dateTime={message.created_at}>
+                                  {formatTimestamp(message.created_at)}
+                                </time>
+                              </div>
+
+                              {message.reactions?.length ? (
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                  {message.reactions.map((reaction) => (
+                                    <button
+                                      aria-label={
+                                        reaction.reacted
+                                          ? i18n("Your reaction")
+                                          : i18n("Reaction from the other participant")
+                                      }
+                                      className={`rounded-full px-3 py-1.5 text-lg leading-none transition-colors ${reaction.reacted ? "bg-primary/15 hover:bg-primary/30" : "bg-on-surface/10 hover:bg-on-surface/20"}`}
+                                      key={reaction.emoji}
+                                      onClick={() => void toggleReaction(message.id, reaction.emoji)}
+                                      type="button"
+                                    >
+                                      {reaction.emoji}
+                                    </button>
+                                  ))}
+                                </div>
+                              ) : null}
+                            </div>
+                          </div>
+                        </div>
+                      </Fragment>
+                    );
+                  })
+                ) : (
+                  <p className="text-on-surface/70 text-sm">
+                    {role === "OWNER" ? i18n("Select a conversation") : i18n("Start a conversation")}
+                  </p>
+                )}
+              </>
             )}
           </div>
           {showJumpToLatest && selectedConversationId && (
@@ -653,7 +788,7 @@ export const VenueMessaging = ({
                 {MESSAGE_REACTION_EMOJIS.map((emoji) => (
                   <button
                     aria-label={emoji}
-                    className="hover:bg-surface-tint rounded-full px-1.5 py-1 text-2xl transition-transform hover:scale-125"
+                    className="hover:bg-surface-tint h-10 w-10 rounded-full px-1.5 py-1 text-2xl transition-transform hover:scale-125"
                     key={emoji}
                     onClick={() => {
                       const messageId = reactionPicker.message.id;

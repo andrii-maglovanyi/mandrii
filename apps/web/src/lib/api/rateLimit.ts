@@ -21,6 +21,7 @@
 import { kv } from "@vercel/kv";
 import { headers } from "next/headers";
 
+import { envName } from "../config/env";
 import { RateLimitError } from "./errors";
 
 interface RateLimitConfig {
@@ -36,6 +37,8 @@ interface RequestRecord {
   count: number;
   resetAt: number;
 }
+
+const rateLimitNamespace = `mandrii:${envName}`;
 
 /**
  * Creates a rate limiter instance with the specified configuration.
@@ -70,7 +73,7 @@ export function createRateLimiter(config: RateLimitConfig) {
    * Check rate limit using Redis (Vercel KV).
    */
   async function checkRedis(key: string): Promise<void> {
-    const redisKey = `ratelimit:${prefix}:${key}`;
+    const redisKey = `ratelimit:${rateLimitNamespace}:${prefix}:${key}`;
 
     try {
       // Use Redis INCR with TTL for atomic rate limiting
@@ -83,9 +86,15 @@ export function createRateLimiter(config: RateLimitConfig) {
         return;
       }
 
+      // A legacy/manual key without an expiry would otherwise block this
+      // identifier forever. Reset it as a new fixed window.
+      const ttl = await kv.ttl(redisKey);
+      if (ttl <= 0) {
+        await kv.set(redisKey, 1, { ex: windowSeconds });
+        return;
+      }
+
       if (currentCount >= maxRequests) {
-        // Get TTL to calculate retry-after
-        const ttl = await kv.ttl(redisKey);
         throw new RateLimitError(`Too many requests. Please try again in ${ttl > 0 ? ttl : windowSeconds} seconds.`);
       }
 
@@ -157,7 +166,7 @@ export function createRateLimiter(config: RateLimitConfig) {
       const now = Date.now();
 
       if (isKvAvailable()) {
-        const redisKey = `ratelimit:${prefix}:${key}`;
+        const redisKey = `ratelimit:${rateLimitNamespace}:${prefix}:${key}`;
         try {
           const currentCount = await kv.get<number>(redisKey);
           const ttl = await kv.ttl(redisKey);
@@ -276,22 +285,12 @@ export const rateLimiters = {
   }),
 
   /**
-   * Chat-read rate limiter: the messaging UI refreshes its read models every
-   * few seconds, so it must have an allowance separate from write actions.
+   * Chat-read rate limiter: initial loads, pagination, and live-update
+   * reconciliation need headroom without sharing the write-action bucket.
    */
   messagingRead: createRateLimiter({
-    maxRequests: 240,
+    maxRequests: 120,
     prefix: "messaging-read",
-    windowMs: 60 * 1000,
-  }),
-
-  /**
-   * Webhook rate limiter: 100 requests per minute per IP.
-   * Higher limit as webhooks come from Stripe's servers.
-   */
-  webhook: createRateLimiter({
-    maxRequests: 100,
-    prefix: "webhook",
     windowMs: 60 * 1000,
   }),
 };

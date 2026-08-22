@@ -51,21 +51,23 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
   return (
     <div className="lg:hidden">
       <header className={`relative z-50 flex h-16 items-center justify-between px-4 shadow-md`}>
-        {envName !== "production" && <CartButton />}
-
         <span className="absolute left-1/2 -translate-x-1/2 transform">
           <Logo />
         </span>
 
-        <ActionButton
-          aria-controls="mobile-menu"
-          aria-expanded={isOpen}
-          aria-label={isOpen ? i18n("Close menu") : i18n("Open menu")}
-          data-testid="mobile-menu-toggle"
-          icon={<AnimatedIconSwap isOpen={isOpen} />}
-          onClick={() => setIsOpen((prev) => !prev)}
-          variant="ghost"
-        />
+        <>
+          <ActionButton
+            aria-controls="mobile-menu"
+            aria-expanded={isOpen}
+            aria-label={isOpen ? i18n("Close menu") : i18n("Open menu")}
+            data-testid="mobile-menu-toggle"
+            tooltipPosition="bottom-start"
+            icon={<AnimatedIconSwap isOpen={isOpen} />}
+            onClick={() => setIsOpen((prev) => !prev)}
+            variant="ghost"
+          />
+          {envName !== "production" && <CartButton />}
+        </>
       </header>
 
       <div

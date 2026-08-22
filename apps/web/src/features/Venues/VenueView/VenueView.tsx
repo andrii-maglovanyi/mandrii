@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
-import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, TabPane, Tabs } from "~/components/ui";
+import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, SectionCard, TabPane, Tabs } from "~/components/ui";
 import { EventsMasonryCard } from "~/features/Events/EventCard/EventsMasonryCard";
 import { VenueMessaging } from "~/features/Messaging/VenueMessaging";
 import { VenueStatus } from "~/features/UserDirectory/Venues/VenueStatus";
@@ -231,25 +231,18 @@ export const VenueView = ({
 
               {/* Info cards. Right side (1/3) */}
               <div className="flex flex-col gap-4">
-                <section
-                  className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
-                >
-                  <h3 className="mt-2 text-lg font-semibold">{i18n("Details")}</h3>
+                <SectionCard title={i18n("Details")}>
                   <CardMetadata expanded variant="list" venue={venue} />
-                </section>
+                </SectionCard>
                 {venue.venue_schedules?.length ? (
-                  <section
-                    className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
-                  >
+                  <SectionCard>
                     <OpeningHoursDisplay schedules={venue.venue_schedules} isArchived={isArchived} />{" "}
-                  </section>
+                  </SectionCard>
                 ) : null}
                 {venue.chain && (
-                  <section
-                    className={`group/card border-primary/0 bg-surface-tint/50 hover:border-primary/20 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg lg:text-base`}
-                  >
+                  <SectionCard>
                     <ChainMetadata venue={venue} />
-                  </section>
+                  </SectionCard>
                 )}
               </div>
             </div>
@@ -281,7 +274,7 @@ export const VenueView = ({
           )}
 
           {initialMessagingRole !== null && (
-            <TabPane tab={i18n("Messaging")}>
+            <TabPane tab={i18n("Chat")}>
               <VenueMessaging
                 hasOwner={Boolean(venue.owner_id)}
                 initialRole={initialMessagingRole}
