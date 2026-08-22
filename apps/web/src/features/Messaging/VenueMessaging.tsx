@@ -7,7 +7,9 @@ import {
   Check,
   ChevronRight,
   Copy,
+  LayoutList,
   Maximize2,
+  MessageCircle,
   MessagesSquare,
   Minimize2,
   Reply,
@@ -786,7 +788,7 @@ export const VenueMessaging = ({
       </div>
     );
   };
-  const renderConversationButton = (className: string, size: "md" | "sm" = "md") => {
+  const renderConversationButton = (className: string) => {
     if (role !== "OWNER") return null;
 
     return (
@@ -794,16 +796,15 @@ export const VenueMessaging = ({
         aria-controls="venue-conversations-menu"
         aria-expanded={isConversationMenuOpen}
         className={className}
-        color="neutral"
+        color="primary"
         onClick={() => setIsConversationMenuOpen(true)}
-        size={size}
-        variant="outlined"
+        variant="ghost"
       >
         <span className="flex items-center gap-2">
-          <MessagesSquare size={18} />
+          <MessagesSquare size={20} />
           {i18n("Conversations")}
+          <ChevronRight aria-hidden="true" size={18} />
         </span>
-        <ChevronRight aria-hidden="true" size={18} />
       </Button>
     );
   };
@@ -881,11 +882,11 @@ export const VenueMessaging = ({
         {isExpanded && (
           <header className="mb-3 flex shrink-0 items-center justify-between">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
-              <MessagesSquare size={20} />
+              <MessageCircle size={20} />
               {i18n("Messages")}
             </h2>
             <div className="flex items-center gap-2">
-              {renderConversationButton("md:hidden", "sm")}
+              {renderConversationButton("md:hidden")}
               <PushNotifications />
               {renderArchiveButton()}
               <ActionButton
@@ -898,16 +899,18 @@ export const VenueMessaging = ({
           </header>
         )}
         {!isExpanded && (
-          <header className="mb-3 flex items-center justify-end gap-2">
-            {renderConversationButton("flex-1 justify-between md:hidden")}
-            <PushNotifications />
-            {renderArchiveButton()}
-            <ActionButton
-              aria-label={i18n("Expand chat")}
-              icon={<Maximize2 />}
-              onClick={() => setIsExpanded(true)}
-              variant="ghost"
-            />
+          <header className="mb-3 flex items-center justify-between gap-2">
+            <div>{renderConversationButton("flex-1 justify-between md:hidden")}</div>
+            <div className="flex gap-2">
+              <PushNotifications />
+              {renderArchiveButton()}
+              <ActionButton
+                aria-label={i18n("Expand chat")}
+                icon={<Maximize2 />}
+                onClick={() => setIsExpanded(true)}
+                variant="ghost"
+              />
+            </div>
           </header>
         )}
         {role === "OWNER" && (
@@ -1155,7 +1158,12 @@ export const VenueMessaging = ({
                                             ? i18n("Your reaction")
                                             : i18n("Reaction from the other participant")
                                         }
-                                        className={`rounded-full px-3 py-1.5 text-lg leading-none transition-colors ${reaction.reacted ? "bg-primary/15 hover:bg-primary/30" : "bg-on-surface/10 hover:bg-on-surface/20"}`}
+                                        className={clsx(
+                                          "rounded-full px-3 py-1.5 text-lg leading-none transition-colors",
+                                          reaction.reacted
+                                            ? "bg-secondary/50 hover:bg-secondary/75"
+                                            : "bg-on-surface/10 hover:bg-on-surface/20",
+                                        )}
                                         key={reaction.emoji}
                                         onClick={() => void toggleReaction(message.id, reaction.emoji)}
                                         onPointerUp={(event) => event.stopPropagation()}
@@ -1266,7 +1274,7 @@ export const VenueMessaging = ({
                   </button>
                 </div>
               )}
-              <div className="flex items-end gap-2">
+              <div className="flex-col items-end gap-2">
                 <div className="min-w-0 flex-1">
                   <Textarea
                     disabled={role === "OWNER" && !selectedConversationId}
@@ -1277,14 +1285,16 @@ export const VenueMessaging = ({
                     value={messageBody}
                   />
                 </div>
-                <Button
-                  busy={isSendingMessage}
-                  className="mb-5"
-                  disabled={!messageBody.trim() || (role === "OWNER" && !selectedConversationId)}
-                  onClick={sendMessage}
-                >
-                  {i18n("Send")}
-                </Button>
+                <div className="-mt-3 flex justify-end">
+                  <Button
+                    busy={isSendingMessage}
+                    className="mb-5"
+                    disabled={!messageBody.trim() || (role === "OWNER" && !selectedConversationId)}
+                    onClick={sendMessage}
+                  >
+                    {i18n("Send")}
+                  </Button>
+                </div>
               </div>
               <div className="flex-col text-right">
                 {messageError && <p className="mt-1 text-sm text-red-600">{messageError}</p>}
