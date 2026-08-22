@@ -61,6 +61,7 @@
     --color-primary-hover: var(--color-ukraine-blue-600);
     --color-primary-disabled: var(--color-ukraine-blue-300);
     --color-secondary: var(--color-ukraine-yellow-500);
+    --color-secondary-hover: var(--color-ukraine-yellow-400);
     --color-surface: var(--color-white);
     --color-surface-tint: var(--color-neutral-50);
     --color-on-surface: var(--color-neutral-900);
@@ -74,6 +75,7 @@
     --color-primary-hover: var(--color-ukraine-yellow-400);
     --color-primary-disabled: var(--color-ukraine-yellow-700);
     --color-secondary: var(--color-ukraine-blue-500);
+    --color-secondary-hover: var(--color-ukraine-blue-600);
     --color-surface: var(--color-neutral-900);
     --color-surface-tint: var(--color-neutral-800);
     --color-on-surface: var(--color-white);

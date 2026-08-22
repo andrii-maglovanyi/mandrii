@@ -30,6 +30,7 @@ export const POST = (req: Request, { params }: { params: Promise<{ conversationI
       JOIN conversations c ON c.id = m.conversation_id
       JOIN venues v ON v.id = c.venue_id
       WHERE m.id = ${messageId} AND c.id = ${conversationId}
+        AND m.deleted_at IS NULL
         AND v.owner_id IS NOT NULL
         AND (c.user_id = ${session.user.id} OR v.owner_id = ${session.user.id})
     `;

@@ -1,8 +1,9 @@
 "use client";
 
+import { Bell, BellOff } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { Button } from "~/components/ui";
+import { ActionButton } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
 
@@ -57,12 +58,11 @@ export const PushNotifications = () => {
         if (existingSubscription && !hasMatchingApplicationServerKey(existingSubscription, publicKey)) {
           await existingSubscription.unsubscribe();
         }
-        const subscription =
-          (await registration.pushManager.getSubscription()) ??
-          (await registration.pushManager.subscribe({
-            applicationServerKey: urlBase64ToUint8Array(publicKey) as BufferSource,
-            userVisibleOnly: true,
-          }));
+        const subscription = await registration.pushManager.getSubscription();
+        if (!subscription) {
+          if (isCurrent) setStatus("idle");
+          return;
+        }
 
         const response = await fetch("/api/push/subscribe", {
           body: JSON.stringify({ subscription }),
@@ -94,6 +94,7 @@ export const PushNotifications = () => {
       return;
     }
 
+    setStatus("checking");
     try {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") {
@@ -129,21 +130,68 @@ export const PushNotifications = () => {
     }
   };
 
-  if (status === "checking") return null;
-  if (status === "subscribed")
-    return <p className="text-on-surface/70 text-sm">{i18n("Notifications are enabled for this device.")}</p>;
-  if (status === "blocked")
+  const disable = async () => {
+    if (!("serviceWorker" in navigator)) {
+      setStatus("unsupported");
+      return;
+    }
+
+    setStatus("checking");
+    try {
+      const registration = await navigator.serviceWorker.getRegistration("/");
+      const subscription = await registration?.pushManager.getSubscription();
+      if (!subscription) {
+        setStatus("idle");
+        return;
+      }
+
+      await subscription.unsubscribe();
+      const response = await fetch("/api/push/unsubscribe", {
+        body: JSON.stringify({ endpoint: subscription.endpoint }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      setStatus(response.ok ? "idle" : "error");
+    } catch (error) {
+      console.error("Unable to disable push notifications:", error);
+      setStatus("error");
+    }
+  };
+
+  if (status === "unsupported") return null;
+
+  if (status === "checking") {
+    return <ActionButton aria-label={i18n("Checking notification settings")} busy icon={<Bell />} variant="ghost" />;
+  }
+  if (status === "subscribed") {
     return (
-      <p className="text-danger text-sm">{i18n("Notifications are blocked. Enable them in your browser settings.")}</p>
+      <ActionButton
+        aria-label={i18n("Disable message notifications")}
+        icon={<BellOff />}
+        onClick={() => void disable()}
+        variant="ghost"
+      />
     );
-  if (status === "unsupported")
-    return <p className="text-on-surface/70 text-sm">{i18n("Notifications are not supported on this device.")}</p>;
-  if (status === "error")
-    return <p className="text-danger text-sm">{i18n("Unable to enable notifications. Please try again.")}</p>;
+  }
+  if (status === "blocked") {
+    return (
+      <ActionButton
+        aria-label={i18n("Notifications are blocked in browser settings")}
+        disabled
+        icon={<BellOff />}
+        variant="ghost"
+      />
+    );
+  }
 
   return (
-    <Button onClick={() => void enable()} variant="outlined">
-      {i18n("Enable message notifications")}
-    </Button>
+    <ActionButton
+      aria-label={
+        status === "error" ? i18n("Retry enabling message notifications") : i18n("Enable message notifications")
+      }
+      icon={<Bell />}
+      onClick={() => void enable()}
+      variant="ghost"
+    />
   );
 };

@@ -24,6 +24,7 @@ select_permissions:
         - telegram_message_id
         - telegram_chat_id
         - telegram_delivered_at
+        - deleted_at
         - created_at
         - sender_type
         - body

@@ -10,6 +10,7 @@ import {
   withErrorHandling,
 } from "~/lib/api";
 import sql from "~/lib/db/db";
+import { getConversationForUser } from "~/lib/messaging/conversation-access";
 import { sendMessagePushNotification } from "~/lib/web-push";
 
 export const dynamic = "force-dynamic";
@@ -42,20 +43,6 @@ function encodeMessageCursor(message: { created_at: string; id: string }) {
   return Buffer.from(JSON.stringify({ createdAt: message.created_at, id: message.id })).toString("base64url");
 }
 
-async function getConversationForUser(conversationId: string, userId: string) {
-  if (!z.uuid().safeParse(conversationId).success) {
-    throw new BadRequestError("A valid conversation ID is required");
-  }
-  const [conversation] = await sql<{ id: string; is_owner: boolean; user_id: string; venue_id: string }[]>`
-    SELECT c.id, c.venue_id, c.user_id, (v.owner_id = ${userId}) AS is_owner
-    FROM conversations c JOIN venues v ON v.id = c.venue_id
-    WHERE c.id = ${conversationId} AND v.owner_id IS NOT NULL
-      AND (c.user_id = ${userId} OR v.owner_id = ${userId})
-  `;
-  if (!conversation) throw new ForbiddenError("You do not have access to this conversation");
-  return conversation;
-}
-
 export const GET = (req: Request, { params }: { params: Promise<{ conversationId: string }> }) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
@@ -78,6 +65,7 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
             SELECT 1 FROM messages m
             WHERE m.conversation_id = c.id
               AND m.sender_type = 'USER'
+              AND m.deleted_at IS NULL
               AND m.created_at > COALESCE(c.owner_last_read_at, c.created_at)
           )
       `;
@@ -90,6 +78,7 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
             SELECT 1 FROM messages m
             WHERE m.conversation_id = c.id
               AND m.sender_type = 'VENUE'
+              AND m.deleted_at IS NULL
               AND m.created_at > COALESCE(c.user_last_read_at, c.created_at)
           )
       `;
@@ -99,16 +88,22 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
       Array<{
         body: string;
         created_at: string;
+        deleted_at: null | string;
         id: string;
         reply_to_body: null | string;
+        reply_to_deleted: boolean;
         reply_to_message_id: null | string;
         reply_to_sender_type: null | "USER" | "VENUE";
         sender_type: "USER" | "VENUE";
         telegram_delivered_at: null | string;
       }>
     >`
-      SELECT m.id, m.body, m.sender_type, m.created_at, m.reply_to_message_id, m.telegram_delivered_at,
-             parent.body AS reply_to_body, parent.sender_type AS reply_to_sender_type
+      SELECT m.id,
+             CASE WHEN m.deleted_at IS NULL THEN m.body ELSE '' END AS body,
+             m.sender_type, m.created_at, m.deleted_at, m.reply_to_message_id, m.telegram_delivered_at,
+             CASE WHEN parent.deleted_at IS NULL THEN parent.body ELSE NULL END AS reply_to_body,
+             (parent.deleted_at IS NOT NULL) AS reply_to_deleted,
+             parent.sender_type AS reply_to_sender_type
       FROM messages m LEFT JOIN messages parent ON parent.id = m.reply_to_message_id
       WHERE m.conversation_id = ${conversationId}
         ${cursor ? sql`AND (m.created_at, m.id) < (${cursor.createdAt}, ${cursor.id})` : sql``}
@@ -159,7 +154,8 @@ export const POST = (req: Request, { params }: { params: Promise<{ conversationI
 
     if (replyToMessageId) {
       const [replyToMessage] = await sql<{ id: string }[]>`
-        SELECT id FROM messages WHERE id = ${replyToMessageId} AND conversation_id = ${conversationId}
+        SELECT id FROM messages
+        WHERE id = ${replyToMessageId} AND conversation_id = ${conversationId} AND deleted_at IS NULL
       `;
       if (!replyToMessage)
         throw new BadRequestError("The message being replied to does not belong to this conversation");
@@ -170,12 +166,16 @@ export const POST = (req: Request, { params }: { params: Promise<{ conversationI
       VALUES (${conversationId}, 'VENUE', ${body}, ${replyToMessageId ?? null}) RETURNING id, body, sender_type, created_at, reply_to_message_id
     `;
 
+    await sql`
+      UPDATE conversations
+      SET owner_archived_at = NULL, user_archived_at = NULL
+      WHERE id = ${conversationId}
+    `;
+
     after(() =>
-      sendMessagePushNotification(conversationId, conversation.user_id, session.user.name || "Venue").catch(
-        (error) => {
-          console.error("Web Push notification failed:", error);
-        },
-      ),
+      sendMessagePushNotification(conversationId, conversation.user_id, session.user.name || "Venue").catch((error) => {
+        console.error("Web Push notification failed:", error);
+      }),
     );
 
     return Response.json({ message }, { status: 201 });

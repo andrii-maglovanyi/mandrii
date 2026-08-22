@@ -102,6 +102,7 @@ export async function sendUserMessageToVenue(
         SELECT conversation_id, sender_type, created_at, telegram_message_id
         FROM messages
         WHERE telegram_chat_id = ${conversation.telegram_chat_id}
+          AND deleted_at IS NULL
         ORDER BY created_at DESC, id DESC
         LIMIT 1
       `
@@ -113,11 +114,17 @@ export async function sendUserMessageToVenue(
     RETURNING id
   `;
 
+  await sql`
+    UPDATE conversations
+    SET owner_archived_at = NULL, user_archived_at = NULL
+    WHERE id = ${conversationId}
+  `;
+
   if (conversation.telegram_chat_id) {
     try {
       const [replyToMessage] = replyToMessageId
         ? await sql<{ body: string; telegram_message_id: null | number }[]>`
-          SELECT body, telegram_message_id FROM messages WHERE id = ${replyToMessageId}
+          SELECT body, telegram_message_id FROM messages WHERE id = ${replyToMessageId} AND deleted_at IS NULL
         `
         : [];
       const quotedReply = replyToMessage ? `↩ ${replyToMessage.body}\n\n` : "";
@@ -174,6 +181,7 @@ bot.on("message:text", async (ctx) => {
       SELECT m.conversation_id, c.user_id
       FROM messages m JOIN conversations c ON c.id = m.conversation_id
       WHERE m.telegram_chat_id = ${ctx.chat.id} AND m.telegram_message_id = ${originalTelegramMessageId}
+        AND m.deleted_at IS NULL
     `;
 
     if (originalMessage) {
@@ -187,6 +195,11 @@ bot.on("message:text", async (ctx) => {
       `;
 
       if (message) {
+        await sql`
+          UPDATE conversations
+          SET owner_archived_at = NULL, user_archived_at = NULL
+          WHERE id = ${originalMessage.conversation_id}
+        `;
         await sendMessagePushNotification(originalMessage.conversation_id, originalMessage.user_id, "Venue").catch(
           (error) => {
             console.error("Web Push notification failed:", error);

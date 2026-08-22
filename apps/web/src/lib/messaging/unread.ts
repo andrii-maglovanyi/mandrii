@@ -22,6 +22,7 @@ export async function getUnreadMessagingState(userId: string) {
       JOIN venues v ON v.id = c.venue_id
       LEFT JOIN users u ON u.id = c.user_id
       WHERE v.owner_id = ${userId} AND m.sender_type = 'USER'
+        AND m.deleted_at IS NULL
         AND m.created_at > COALESCE(c.owner_last_read_at, c.created_at)
 
       UNION ALL
@@ -32,6 +33,7 @@ export async function getUnreadMessagingState(userId: string) {
       JOIN venues v ON v.id = c.venue_id
       WHERE c.user_id = ${userId} AND v.owner_id IS NOT NULL AND v.owner_id IS DISTINCT FROM ${userId}
         AND m.sender_type = 'VENUE'
+        AND m.deleted_at IS NULL
         AND m.created_at > COALESCE(c.user_last_read_at, c.created_at)
     )
     SELECT

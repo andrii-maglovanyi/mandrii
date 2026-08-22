@@ -12,6 +12,7 @@ export const VENUE_MESSAGING_EVENTS_SUBSCRIPTION = gql`
       order_by: [{ created_at: desc }, { id: desc }]
       where: { conversation: { venue_id: { _eq: $venueId } } }
     ) {
+      deleted_at
       id
       conversation_id
     }
@@ -19,22 +20,35 @@ export const VENUE_MESSAGING_EVENTS_SUBSCRIPTION = gql`
 `;
 
 /**
- * Reactions do not modify their parent message row. Watch the active page of
- * a conversation separately so both participants see a reaction immediately.
+ * Watches updates to the messages presently rendered in the active chat. New
+ * messages are detected by the lightweight venue stream above; this bounded
+ * query avoids subscribing to a venue's complete message history.
  */
 export const CONVERSATION_MESSAGING_EVENTS_SUBSCRIPTION = gql`
-  subscription ConversationMessagingEvents($conversationId: uuid!) {
-    messages(
-      limit: 50
-      order_by: [{ created_at: desc }, { id: desc }]
-      where: { conversation_id: { _eq: $conversationId } }
-    ) {
+  subscription ConversationMessagingEvents($messageIds: [uuid!]!) {
+    messages(order_by: [{ created_at: desc }, { id: desc }], where: { id: { _in: $messageIds } }) {
+      deleted_at
       id
       conversation_id
-      reactions(order_by: [{ created_at: desc }]) {
-        created_at
-        emoji
-      }
+    }
+  }
+`;
+
+/**
+ * Watch reactions for the messages currently loaded in the conversation. This
+ * is intentionally bounded by the client page, rather than subscribing to a
+ * venue's entire reaction history.
+ */
+export const CONVERSATION_REACTION_EVENTS_SUBSCRIPTION = gql`
+  subscription ConversationReactionEvents($messageIds: [uuid!]!) {
+    message_reactions(
+      order_by: [{ message_id: asc }, { emoji: asc }, { user_id: asc }]
+      where: { message_id: { _in: $messageIds } }
+    ) {
+      created_at
+      emoji
+      message_id
+      user_id
     }
   }
 `;

@@ -38,13 +38,15 @@ export const GET = (req: Request) =>
     const owner = venue.owner_id === session.user.id;
     const conversations = owner
       ? await sql`
-          SELECT c.id, c.created_at, u.name AS user_name,
+          SELECT c.id, c.created_at, c.owner_archived_at AS archived_at, u.name AS user_name,
+                 CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
+                 (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
                  latest_message.created_at AS last_message_at,
                  unread_messages.unread_count
           FROM conversations c
           JOIN users u ON u.id = c.user_id
           LEFT JOIN LATERAL (
-            SELECT m.created_at
+            SELECT m.body, m.created_at, m.deleted_at
             FROM messages m
             WHERE m.conversation_id = c.id
             ORDER BY m.created_at DESC, m.id DESC
@@ -55,19 +57,22 @@ export const GET = (req: Request) =>
             FROM messages m
             WHERE m.conversation_id = c.id
               AND m.sender_type = 'USER'
+              AND m.deleted_at IS NULL
               AND m.created_at > COALESCE(c.owner_last_read_at, c.created_at)
           ) AS unread_messages
           WHERE c.venue_id = ${venueId}
-          ORDER BY latest_message.created_at DESC NULLS LAST, c.created_at DESC
+          ORDER BY (c.owner_archived_at IS NOT NULL), latest_message.created_at DESC NULLS LAST, c.created_at DESC
         `
       : await sql`
-          SELECT c.id, c.created_at, u.name AS user_name,
+          SELECT c.id, c.created_at, c.user_archived_at AS archived_at, u.name AS user_name,
+                 CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
+                 (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
                  latest_message.created_at AS last_message_at,
                  unread_messages.unread_count
           FROM conversations c
           JOIN users u ON u.id = c.user_id
           LEFT JOIN LATERAL (
-            SELECT m.created_at
+            SELECT m.body, m.created_at, m.deleted_at
             FROM messages m
             WHERE m.conversation_id = c.id
             ORDER BY m.created_at DESC, m.id DESC
@@ -78,10 +83,11 @@ export const GET = (req: Request) =>
             FROM messages m
             WHERE m.conversation_id = c.id
               AND m.sender_type = 'VENUE'
+              AND m.deleted_at IS NULL
               AND m.created_at > COALESCE(c.user_last_read_at, c.created_at)
           ) AS unread_messages
           WHERE c.venue_id = ${venueId} AND c.user_id = ${session.user.id}
-          ORDER BY latest_message.created_at DESC NULLS LAST, c.created_at DESC
+          ORDER BY (c.user_archived_at IS NOT NULL), latest_message.created_at DESC NULLS LAST, c.created_at DESC
         `;
 
     return Response.json({
@@ -121,7 +127,8 @@ export const POST = (req: Request) =>
 
     if (replyToMessageId) {
       const [replyToMessage] = await sql<{ id: string }[]>`
-        SELECT id FROM messages WHERE id = ${replyToMessageId} AND conversation_id = ${conversation.id}
+        SELECT id FROM messages
+        WHERE id = ${replyToMessageId} AND conversation_id = ${conversation.id} AND deleted_at IS NULL
       `;
       if (!replyToMessage)
         throw new BadRequestError("The message being replied to does not belong to this conversation");

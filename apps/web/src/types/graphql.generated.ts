@@ -4210,6 +4210,8 @@ export type Messages = {
   conversation: Conversations;
   conversation_id: Scalars['uuid']['output'];
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  deleted_at?: Maybe<Scalars['timestamptz']['output']>;
+  deleted_by_user_id?: Maybe<Scalars['uuid']['output']>;
   id: Scalars['uuid']['output'];
   /** An array relationship */
   reactions: Array<Message_Reactions>;
@@ -4327,6 +4329,8 @@ export type Messages_Bool_Exp = {
   conversation?: InputMaybe<Conversations_Bool_Exp>;
   conversation_id?: InputMaybe<Uuid_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deleted_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deleted_by_user_id?: InputMaybe<Uuid_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   reactions?: InputMaybe<Message_Reactions_Bool_Exp>;
   reactions_aggregate?: InputMaybe<Message_Reactions_Aggregate_Bool_Exp>;
@@ -4357,6 +4361,8 @@ export type Messages_Insert_Input = {
   conversation?: InputMaybe<Conversations_Obj_Rel_Insert_Input>;
   conversation_id?: InputMaybe<Scalars['uuid']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted_by_user_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   reactions?: InputMaybe<Message_Reactions_Arr_Rel_Insert_Input>;
   reply_to_message_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -4372,6 +4378,8 @@ export type Messages_Max_Fields = {
   body?: Maybe<Scalars['String']['output']>;
   conversation_id?: Maybe<Scalars['uuid']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  deleted_at?: Maybe<Scalars['timestamptz']['output']>;
+  deleted_by_user_id?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   reply_to_message_id?: Maybe<Scalars['uuid']['output']>;
   sender_type?: Maybe<Scalars['String']['output']>;
@@ -4385,6 +4393,8 @@ export type Messages_Max_Order_By = {
   body?: InputMaybe<Order_By>;
   conversation_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
+  deleted_at?: InputMaybe<Order_By>;
+  deleted_by_user_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   reply_to_message_id?: InputMaybe<Order_By>;
   sender_type?: InputMaybe<Order_By>;
@@ -4399,6 +4409,8 @@ export type Messages_Min_Fields = {
   body?: Maybe<Scalars['String']['output']>;
   conversation_id?: Maybe<Scalars['uuid']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  deleted_at?: Maybe<Scalars['timestamptz']['output']>;
+  deleted_by_user_id?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   reply_to_message_id?: Maybe<Scalars['uuid']['output']>;
   sender_type?: Maybe<Scalars['String']['output']>;
@@ -4412,6 +4424,8 @@ export type Messages_Min_Order_By = {
   body?: InputMaybe<Order_By>;
   conversation_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
+  deleted_at?: InputMaybe<Order_By>;
+  deleted_by_user_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   reply_to_message_id?: InputMaybe<Order_By>;
   sender_type?: InputMaybe<Order_By>;
@@ -4449,6 +4463,8 @@ export type Messages_Order_By = {
   conversation?: InputMaybe<Conversations_Order_By>;
   conversation_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
+  deleted_at?: InputMaybe<Order_By>;
+  deleted_by_user_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   reactions_aggregate?: InputMaybe<Message_Reactions_Aggregate_Order_By>;
   reply_to_message_id?: InputMaybe<Order_By>;
@@ -4472,6 +4488,10 @@ export enum Messages_Select_Column {
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
+  DeletedAt = 'deleted_at',
+  /** column name */
+  DeletedByUserId = 'deleted_by_user_id',
+  /** column name */
   Id = 'id',
   /** column name */
   ReplyToMessageId = 'reply_to_message_id',
@@ -4490,6 +4510,8 @@ export type Messages_Set_Input = {
   body?: InputMaybe<Scalars['String']['input']>;
   conversation_id?: InputMaybe<Scalars['uuid']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted_by_user_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   reply_to_message_id?: InputMaybe<Scalars['uuid']['input']>;
   sender_type?: InputMaybe<Scalars['String']['input']>;
@@ -4550,6 +4572,8 @@ export type Messages_Stream_Cursor_Value_Input = {
   body?: InputMaybe<Scalars['String']['input']>;
   conversation_id?: InputMaybe<Scalars['uuid']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted_by_user_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   reply_to_message_id?: InputMaybe<Scalars['uuid']['input']>;
   sender_type?: InputMaybe<Scalars['String']['input']>;
@@ -4579,6 +4603,10 @@ export enum Messages_Update_Column {
   ConversationId = 'conversation_id',
   /** column name */
   CreatedAt = 'created_at',
+  /** column name */
+  DeletedAt = 'deleted_at',
+  /** column name */
+  DeletedByUserId = 'deleted_by_user_id',
   /** column name */
   Id = 'id',
   /** column name */
@@ -16972,14 +17000,21 @@ export type VenueMessagingEventsSubscriptionVariables = Exact<{
 }>;
 
 
-export type VenueMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', id: UUID, conversation_id: UUID }> };
+export type VenueMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', deleted_at?: Timestamp | null, id: UUID, conversation_id: UUID }> };
 
 export type ConversationMessagingEventsSubscriptionVariables = Exact<{
-  conversationId: Scalars['uuid']['input'];
+  messageIds: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
 }>;
 
 
-export type ConversationMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', id: UUID, conversation_id: UUID, reactions: Array<{ __typename?: 'message_reactions', created_at: Timestamp, emoji: string }> }> };
+export type ConversationMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', deleted_at?: Timestamp | null, id: UUID, conversation_id: UUID }> };
+
+export type ConversationReactionEventsSubscriptionVariables = Exact<{
+  messageIds: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
+}>;
+
+
+export type ConversationReactionEventsSubscription = { __typename?: 'subscription_root', message_reactions: Array<{ __typename?: 'message_reactions', created_at: Timestamp, emoji: string, message_id: UUID, user_id: UUID }> };
 
 export type MessagingUnreadEventsSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -17698,6 +17733,7 @@ export const VenueMessagingEventsDocument = gql`
     order_by: [{created_at: desc}, {id: desc}]
     where: {conversation: {venue_id: {_eq: $venueId}}}
   ) {
+    deleted_at
     id
     conversation_id
   }
@@ -17727,18 +17763,14 @@ export function useVenueMessagingEventsSubscription(baseOptions: Apollo.Subscrip
 export type VenueMessagingEventsSubscriptionHookResult = ReturnType<typeof useVenueMessagingEventsSubscription>;
 export type VenueMessagingEventsSubscriptionResult = Apollo.SubscriptionResult<VenueMessagingEventsSubscription>;
 export const ConversationMessagingEventsDocument = gql`
-    subscription ConversationMessagingEvents($conversationId: uuid!) {
+    subscription ConversationMessagingEvents($messageIds: [uuid!]!) {
   messages(
-    limit: 50
     order_by: [{created_at: desc}, {id: desc}]
-    where: {conversation_id: {_eq: $conversationId}}
+    where: {id: {_in: $messageIds}}
   ) {
+    deleted_at
     id
     conversation_id
-    reactions(order_by: [{created_at: desc}]) {
-      created_at
-      emoji
-    }
   }
 }
     `;
@@ -17755,7 +17787,7 @@ export const ConversationMessagingEventsDocument = gql`
  * @example
  * const { data, loading, error } = useConversationMessagingEventsSubscription({
  *   variables: {
- *      conversationId: // value for 'conversationId'
+ *      messageIds: // value for 'messageIds'
  *   },
  * });
  */
@@ -17765,6 +17797,42 @@ export function useConversationMessagingEventsSubscription(baseOptions: Apollo.S
       }
 export type ConversationMessagingEventsSubscriptionHookResult = ReturnType<typeof useConversationMessagingEventsSubscription>;
 export type ConversationMessagingEventsSubscriptionResult = Apollo.SubscriptionResult<ConversationMessagingEventsSubscription>;
+export const ConversationReactionEventsDocument = gql`
+    subscription ConversationReactionEvents($messageIds: [uuid!]!) {
+  message_reactions(
+    order_by: [{message_id: asc}, {emoji: asc}, {user_id: asc}]
+    where: {message_id: {_in: $messageIds}}
+  ) {
+    created_at
+    emoji
+    message_id
+    user_id
+  }
+}
+    `;
+
+/**
+ * __useConversationReactionEventsSubscription__
+ *
+ * To run a query within a React component, call `useConversationReactionEventsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useConversationReactionEventsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useConversationReactionEventsSubscription({
+ *   variables: {
+ *      messageIds: // value for 'messageIds'
+ *   },
+ * });
+ */
+export function useConversationReactionEventsSubscription(baseOptions: Apollo.SubscriptionHookOptions<ConversationReactionEventsSubscription, ConversationReactionEventsSubscriptionVariables> & ({ variables: ConversationReactionEventsSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<ConversationReactionEventsSubscription, ConversationReactionEventsSubscriptionVariables>(ConversationReactionEventsDocument, options);
+      }
+export type ConversationReactionEventsSubscriptionHookResult = ReturnType<typeof useConversationReactionEventsSubscription>;
+export type ConversationReactionEventsSubscriptionResult = Apollo.SubscriptionResult<ConversationReactionEventsSubscription>;
 export const MessagingUnreadEventsDocument = gql`
     subscription MessagingUnreadEvents {
   messages(limit: 1, order_by: [{created_at: desc}, {id: desc}]) {

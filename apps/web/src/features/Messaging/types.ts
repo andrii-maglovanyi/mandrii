@@ -1,6 +1,9 @@
 export type Conversation = {
+  archived_at: null | string;
   created_at: string;
   id: string;
+  last_message_deleted?: boolean;
+  last_message_body: null | string;
   last_message_at: null | string;
   unread_count: number | string;
   user_name: null | string;
@@ -9,8 +12,10 @@ export type Conversation = {
 export type ConversationMessage = {
   body: string;
   created_at: string;
+  deleted_at?: null | string;
   id: string;
   reply_to_body?: null | string;
+  reply_to_deleted?: boolean;
   reply_to_message_id?: null | string;
   reply_to_sender_type?: null | "USER" | "VENUE";
   reactions?: Array<{ count: number | string; emoji: string; reacted: boolean }>;
