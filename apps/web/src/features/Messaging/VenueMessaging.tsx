@@ -141,7 +141,8 @@ export const VenueMessaging = ({
 
     composer.style.height = "auto";
     const maxHeight = Math.min(240, window.innerHeight * 0.35);
-    composer.style.height = `${Math.min(composer.scrollHeight, maxHeight)}px`;
+    const minimumHeight = 72;
+    composer.style.height = `${Math.max(minimumHeight, Math.min(composer.scrollHeight, maxHeight))}px`;
     composer.style.overflowY = composer.scrollHeight > maxHeight ? "auto" : "hidden";
   }, []);
   const { data: messagingEvents } = useVenueMessagingEventsSubscription({
@@ -408,7 +409,9 @@ export const VenueMessaging = ({
 
   useLayoutEffect(() => {
     resizeComposer();
-  }, [isUserLoading, messageBody, resizeComposer, role]);
+    const frame = window.requestAnimationFrame(resizeComposer);
+    return () => window.cancelAnimationFrame(frame);
+  }, [isLoadingMessages, isUserLoading, messageBody, resizeComposer, role]);
 
   useEffect(() => {
     window.addEventListener("resize", resizeComposer);
@@ -779,6 +782,12 @@ export const VenueMessaging = ({
     }
   };
   const selectConversation = (conversationId: string) => {
+    if (conversationId !== selectedConversationId) {
+      setMessages([]);
+      setNextMessageCursor(null);
+      setHasOlderMessages(false);
+      setIsLoadingMessages(true);
+    }
     setSelectedConversationId(conversationId);
     setIsConversationMenuOpen(false);
   };
@@ -1080,7 +1089,7 @@ export const VenueMessaging = ({
               }}
               ref={messageListRef}
             >
-              {isLoadingMessages || (!selectedConversationId && isLoadingConversations) ? (
+              {messages.length === 0 && (isLoadingMessages || (!selectedConversationId && isLoadingConversations)) ? (
                 <div aria-live="polite" className="flex min-h-32 flex-1 items-center justify-center">
                   <AnimatedEllipsis size="md" />
                 </div>
@@ -1390,7 +1399,7 @@ export const VenueMessaging = ({
               <div className="flex-col items-end gap-2">
                 <div className="min-w-0 flex-1">
                   <Textarea
-                    className="resize-none"
+                    className="min-h-[4.5rem] resize-none"
                     disabled={role === "OWNER" && !selectedConversationId}
                     maxChars={4096}
                     onChange={(event) => setMessageBody(event.target.value)}

@@ -3,7 +3,7 @@ import sql from "../db/db";
 
 import { privateConfig } from "../config/private";
 import { sendMessagePushNotification } from "../web-push";
-import { getSenderColour, getSenderInitials } from "~/lib/messaging/sender";
+import { getSenderColour } from "~/lib/messaging/sender";
 
 export const bot = new Bot(privateConfig.telegram.token);
 
@@ -19,7 +19,7 @@ export function formatUserTelegramMessage({
   userName: string;
 }) {
   const quotedReply = replyBody ? `↩ ${replyBody}\n\n` : "";
-  const senderLabel = `${getSenderColour(userName).emoji} ${getSenderInitials(userName)} · ${userName}`;
+  const senderLabel = `${getSenderColour(userName).emoji} ${userName}`;
   return isConsecutiveCustomerMessage ? `${quotedReply}${body}` : `${senderLabel}\n\n${quotedReply}${body}`;
 }
 
@@ -217,11 +217,14 @@ bot.on("message:text", async (ctx) => {
           SET owner_archived_at = NULL, user_archived_at = NULL
           WHERE id = ${originalMessage.conversation_id}
         `;
-        await sendMessagePushNotification(originalMessage.conversation_id, originalMessage.user_id, "Venue", replyText).catch(
-          (error) => {
-            console.error("Web Push notification failed:", error);
-          },
-        );
+        await sendMessagePushNotification(
+          originalMessage.conversation_id,
+          originalMessage.user_id,
+          "Venue",
+          replyText,
+        ).catch((error) => {
+          console.error("Web Push notification failed:", error);
+        });
       }
     }
   } catch (error) {

@@ -39,6 +39,22 @@ interface RequestRecord {
 }
 
 const rateLimitNamespace = `mandrii:${envName}`;
+const KV_OPERATION_TIMEOUT_MS = 2_000;
+
+async function withKvTimeout<T>(operation: Promise<T>): Promise<T> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => reject(new Error("Vercel KV rate-limit operation timed out")), KV_OPERATION_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+}
 
 /**
  * Creates a rate limiter instance with the specified configuration.
@@ -78,19 +94,19 @@ export function createRateLimiter(config: RateLimitConfig) {
     try {
       // Use Redis INCR with TTL for atomic rate limiting
       // Get current count
-      const currentCount = await kv.get<number>(redisKey);
+      const currentCount = await withKvTimeout(kv.get<number>(redisKey));
 
       if (currentCount === null) {
         // First request - set count to 1 with TTL
-        await kv.set(redisKey, 1, { ex: windowSeconds });
+        await withKvTimeout(kv.set(redisKey, 1, { ex: windowSeconds }));
         return;
       }
 
       // A legacy/manual key without an expiry would otherwise block this
       // identifier forever. Reset it as a new fixed window.
-      const ttl = await kv.ttl(redisKey);
+      const ttl = await withKvTimeout(kv.ttl(redisKey));
       if (ttl <= 0) {
-        await kv.set(redisKey, 1, { ex: windowSeconds });
+        await withKvTimeout(kv.set(redisKey, 1, { ex: windowSeconds }));
         return;
       }
 
@@ -99,7 +115,7 @@ export function createRateLimiter(config: RateLimitConfig) {
       }
 
       // Increment count (keeping existing TTL)
-      await kv.incr(redisKey);
+      await withKvTimeout(kv.incr(redisKey));
     } catch (error) {
       // If it's already a RateLimitError, rethrow
       if (error instanceof RateLimitError) {
@@ -168,8 +184,8 @@ export function createRateLimiter(config: RateLimitConfig) {
       if (isKvAvailable()) {
         const redisKey = `ratelimit:${rateLimitNamespace}:${prefix}:${key}`;
         try {
-          const currentCount = await kv.get<number>(redisKey);
-          const ttl = await kv.ttl(redisKey);
+          const currentCount = await withKvTimeout(kv.get<number>(redisKey));
+          const ttl = await withKvTimeout(kv.ttl(redisKey));
 
           if (currentCount === null || ttl <= 0) {
             return {
