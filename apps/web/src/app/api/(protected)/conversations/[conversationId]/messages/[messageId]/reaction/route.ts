@@ -16,7 +16,7 @@ const schema = z.object({ emoji: z.enum(MESSAGE_REACTION_EMOJIS) });
 export const POST = (req: Request, { params }: { params: Promise<{ conversationId: string; messageId: string }> }) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
-    await rateLimiters.general.check(session.user.id);
+    await rateLimiters.messagingAction.check(session.user.id);
     const { conversationId, messageId } = await params;
     if (!z.uuid().safeParse(conversationId).success) {
       throw new BadRequestError("A valid conversation ID is required");

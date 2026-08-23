@@ -11,7 +11,7 @@ const archiveSchema = z.object({ archived: z.boolean() });
 export const PATCH = (req: Request, { params }: { params: Promise<{ conversationId: string }> }) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
-    await rateLimiters.general.check(session.user.id);
+    await rateLimiters.messagingAction.check(session.user.id);
     const { conversationId } = await params;
     const { archived } = await validateRequest(req, archiveSchema);
     const conversation = await getConversationForUser(conversationId, session.user.id);

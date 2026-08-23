@@ -98,6 +98,7 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
         reply_to_sender_type: null | "USER" | "VENUE";
         sender_type: "USER" | "VENUE";
         sent_from_telegram: boolean;
+        telegram_delivery_status: null | "CANCELLED" | "DELIVERED" | "FAILED" | "PENDING" | "PROCESSING";
         telegram_delivered_at: null | string;
         telegram_message_id: null | number;
       }>
@@ -106,6 +107,7 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
              CASE WHEN m.deleted_at IS NULL THEN m.body ELSE '' END AS body,
              m.sender_type, m.created_at, m.deleted_at, m.edited_at, m.reply_to_message_id,
              m.telegram_delivered_at, m.telegram_message_id,
+             delivery.status AS telegram_delivery_status,
              (m.sender_type = 'VENUE'
                AND m.telegram_message_id IS NOT NULL
                AND m.telegram_delivered_at IS NULL
@@ -117,7 +119,9 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
              CASE WHEN parent.deleted_at IS NULL THEN parent.body ELSE NULL END AS reply_to_body,
              (parent.deleted_at IS NOT NULL) AS reply_to_deleted,
              parent.sender_type AS reply_to_sender_type
-      FROM messages m LEFT JOIN messages parent ON parent.id = m.reply_to_message_id
+      FROM messages m
+      LEFT JOIN messages parent ON parent.id = m.reply_to_message_id
+      LEFT JOIN telegram_message_deliveries delivery ON delivery.message_id = m.id
       WHERE m.conversation_id = ${conversationId}
         ${cursor ? sql`AND (m.created_at, m.id) < (${cursor.createdAt}, ${cursor.id})` : sql``}
       ORDER BY m.created_at DESC, m.id DESC
@@ -143,12 +147,10 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
         reactionsByMessageId.set(reaction.message_id, [reaction]);
       }
     });
-    const messages = newestFirstMessages
-      .reverse()
-      .map(({ telegram_message_id: _telegramMessageId, ...message }) => ({
-        ...message,
-        reactions: reactionsByMessageId.get(message.id) ?? [],
-      }));
+    const messages = newestFirstMessages.reverse().map(({ telegram_message_id: _telegramMessageId, ...message }) => ({
+      ...message,
+      reactions: reactionsByMessageId.get(message.id) ?? [],
+    }));
     const oldestMessage = messages[0];
 
     return Response.json({
@@ -161,7 +163,7 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
 export const POST = (req: Request, { params }: { params: Promise<{ conversationId: string }> }) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
-    await rateLimiters.general.check(session.user.id);
+    await rateLimiters.messagingAction.check(session.user.id);
     const { conversationId } = await params;
     const { body, replyToMessageId } = await validateRequest(req, messageSchema);
     const conversation = await getConversationForUser(conversationId, session.user.id);
@@ -189,9 +191,11 @@ export const POST = (req: Request, { params }: { params: Promise<{ conversationI
     `;
 
     after(() =>
-      sendMessagePushNotification(conversationId, conversation.user_id, session.user.name || "Venue", body).catch((error) => {
-        console.error("Web Push notification failed:", error);
-      }),
+      sendMessagePushNotification(conversationId, conversation.user_id, session.user.name || "Venue", body).catch(
+        (error) => {
+          console.error("Web Push notification failed:", error);
+        },
+      ),
     );
 
     return Response.json({ message }, { status: 201 });

@@ -7,6 +7,8 @@ export type Conversation = {
   last_message_at: null | string;
   unread_count: number | string;
   user_name: null | string;
+  venue_id?: string;
+  venue_slug?: string;
 };
 
 export type ConversationMessage = {
@@ -24,4 +26,5 @@ export type ConversationMessage = {
   sent_from_telegram?: boolean;
   sender_type: "USER" | "VENUE";
   telegram_delivered_at?: null | string;
+  telegram_delivery_status?: null | "CANCELLED" | "DELIVERED" | "FAILED" | "PENDING" | "PROCESSING";
 };

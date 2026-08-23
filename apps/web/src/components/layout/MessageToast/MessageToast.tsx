@@ -77,7 +77,7 @@ export const MessageToast = () => {
     <div
       aria-atomic="true"
       aria-live="polite"
-      className={`fixed top-20 right-4 z-50 w-80 transition-all duration-200 ease-out motion-reduce:transition-none ${
+      className={`fixed top-20 right-4 left-4 z-50 w-auto transition-all duration-200 ease-out motion-reduce:transition-none sm:left-auto sm:w-80 ${
         visible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"
       }`}
       onMouseEnter={() => setPaused(true)}
@@ -87,7 +87,7 @@ export const MessageToast = () => {
       <div className="bg-surface/95 group relative overflow-hidden rounded-2xl border border-neutral-200 shadow-lg shadow-neutral-900/5 backdrop-blur-sm transition-shadow duration-200 hover:shadow-xl">
         <button
           aria-label={i18n("Close")}
-          className="absolute top-2 right-2 rounded-full p-1 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
+          className="absolute top-2 right-2 flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
           onClick={handleClose}
           type="button"
         >
@@ -97,7 +97,11 @@ export const MessageToast = () => {
         <button
           className="flex w-full items-start gap-3 p-4 pr-9 text-left"
           onClick={() => {
-            router.push(`/${locale}/venues/${message.venue_slug}?conversation=${message.conversation_id}#Messaging`);
+            router.push(
+              message.recipient_role === "USER"
+                ? `/${locale}/messages?conversation=${message.conversation_id}`
+                : `/${locale}/venues/${message.venue_slug}?conversation=${message.conversation_id}#Messaging`,
+            );
             handleClose();
           }}
           type="button"

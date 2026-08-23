@@ -6,52 +6,44 @@ import {
   ArchiveRestore,
   Check,
   ChevronRight,
-  Copy,
   Maximize2,
   MessageCircle,
   MessagesSquare,
   Minimize2,
   Pencil,
-  Reply,
-  Send,
-  Trash2,
+  RefreshCw,
   X,
 } from "lucide-react";
 import { useLocale } from "next-intl";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
-import {
-  ActionButton,
-  AnimatedEllipsis,
-  Button,
-  RichText,
-  SectionCard,
-  Separator,
-  Textarea,
-  Tooltip,
-} from "~/components/ui";
+import { ActionButton, AnimatedEllipsis, Button, RichText, SectionCard, Separator, Tooltip } from "~/components/ui";
 import { PushNotifications } from "~/components/layout/PushNotifications/PushNotifications";
 import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
-import { MESSAGE_REACTION_EMOJIS } from "~/lib/messaging/constants";
 import { getSenderColour, getSenderInitials } from "~/lib/messaging/sender";
 import {
   useConversationMessagingEventsSubscription,
   useConversationReactionEventsSubscription,
+  useMessagingUnreadEventsSubscription,
   useVenueMessagingEventsSubscription,
 } from "~/types/graphql.generated";
 import { UUID } from "~/types/uuid";
 
 import { Conversation, ConversationMessage } from "./types";
+import { ConversationList } from "./components/ConversationList";
+import { MessageActionsMenu, type MessageActionsMenuState } from "./components/MessageActionsMenu";
+import { MessageComposer } from "./components/MessageComposer";
+import { TelegramLinkPanel } from "./components/TelegramLinkPanel";
 import { clsx } from "clsx";
-import Image from "next/image";
 
 type MessagingRole = "OWNER" | "USER";
 type MessagingUpdateDetail = {
   conversationIds: string[];
-  source: "conversation" | "venue";
-  venueId: string;
+  source: "conversation" | "inbox" | "venue";
+  venueId?: string;
 };
 
 type MessagePage = {
@@ -59,6 +51,8 @@ type MessagePage = {
   messages: ConversationMessage[];
   nextCursor: null | string;
 };
+
+const TELEGRAM_LOGO = "/static/telegram.svg";
 
 function mergeMessages(...messageLists: ConversationMessage[][]) {
   const messagesById = new Map<string, ConversationMessage>();
@@ -82,22 +76,22 @@ function sortConversations(conversations: Conversation[]) {
 
 interface VenueMessagingProps {
   hasOwner: boolean;
+  inbox?: boolean;
   initialRole: MessagingRole | null;
   initialTelegramLinked: boolean | null;
-  venueId: UUID;
-  venueName: string;
+  venueId?: UUID;
+  venueName?: string;
 }
-
-const TELEGRAM_LOGO = "/static/telegram.svg";
 
 export const VenueMessaging = ({
   hasOwner,
+  inbox = false,
   initialRole,
   initialTelegramLinked,
   venueId,
   venueName,
 }: VenueMessagingProps) => {
-  const { isAuthenticated, isLoading: isUserLoading } = useUser();
+  const { data: currentUser, isAuthenticated, isLoading: isUserLoading } = useUser();
   const i18n = useI18n();
   const { openConfirmDialog } = useDialog();
   const locale = useLocale();
@@ -120,14 +114,10 @@ export const VenueMessaging = ({
   const [messageError, setMessageError] = useState("");
   const [isArchivingConversation, setIsArchivingConversation] = useState(false);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [retryingTelegramMessageId, setRetryingTelegramMessageId] = useState<string | null>(null);
   const [isUnlinkingTelegram, setIsUnlinkingTelegram] = useState(false);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
-  const [reactionPicker, setReactionPicker] = useState<{
-    actionsTop: number;
-    emojisTop: number;
-    message: ConversationMessage;
-    x: number;
-  } | null>(null);
+  const [reactionPicker, setReactionPicker] = useState<MessageActionsMenuState | null>(null);
   const messageListRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const shouldStickToLatestRef = useRef(true);
@@ -138,6 +128,7 @@ export const VenueMessaging = ({
   const lastConversationEventRef = useRef<string | null>(null);
   const lastReactionEventRef = useRef<string | null>(null);
   const lastVenueEventRef = useRef<string | null>(null);
+  const lastInboxEventRef = useRef<string | null>(null);
   const resizeComposer = useCallback(() => {
     const composer = composerRef.current;
     if (!composer) return;
@@ -149,8 +140,11 @@ export const VenueMessaging = ({
     composer.style.overflowY = composer.scrollHeight > maxHeight ? "auto" : "hidden";
   }, []);
   const { data: messagingEvents } = useVenueMessagingEventsSubscription({
-    skip: !hasOwner || !isAuthenticated,
-    variables: { venueId },
+    skip: inbox || !hasOwner || !isAuthenticated,
+    variables: { venueId: venueId! },
+  });
+  const { data: inboxEvents } = useMessagingUnreadEventsSubscription({
+    skip: !inbox || !isAuthenticated,
   });
   const { data: conversationMessagingEvents } = useConversationMessagingEventsSubscription({
     skip: !hasOwner || !isAuthenticated || !selectedConversationId || messages.length === 0,
@@ -167,7 +161,10 @@ export const VenueMessaging = ({
     const conversationIds = new Set<string>();
     messagingEvents.messages.forEach((message) => conversationIds.add(message.conversation_id));
     const signature = `${venueId}:${messagingEvents.messages
-      .map((message) => `${message.conversation_id}:${message.id}:${message.deleted_at ?? ""}:${message.body}`)
+      .map(
+        (message) =>
+          `${message.conversation_id}:${message.id}:${message.deleted_at ?? ""}:${message.telegram_delivered_at ?? ""}:${message.body}`,
+      )
       .join("|")}`;
     if (lastVenueEventRef.current === null || !lastVenueEventRef.current.startsWith(`${venueId}:`)) {
       lastVenueEventRef.current = signature;
@@ -185,9 +182,32 @@ export const VenueMessaging = ({
   }, [messagingEvents, venueId]);
 
   useEffect(() => {
+    if (!inboxEvents) return;
+
+    const signature = inboxEvents.messages
+      .map((message) => `${message.id}:${message.deleted_at ?? ""}:${message.edited_at ?? ""}:${message.body}`)
+      .join("|");
+    if (lastInboxEventRef.current === null) {
+      lastInboxEventRef.current = signature;
+      return;
+    }
+    if (lastInboxEventRef.current === signature) return;
+    lastInboxEventRef.current = signature;
+
+    window.dispatchEvent(
+      new CustomEvent<MessagingUpdateDetail>("venue-messaging-update", {
+        detail: { conversationIds: [], source: "inbox" },
+      }),
+    );
+  }, [inboxEvents]);
+
+  useEffect(() => {
     if (!conversationMessagingEvents || !selectedConversationId) return;
     const signature = `${selectedConversationId}:${conversationMessagingEvents.messages
-      .map((message) => `${message.conversation_id}:${message.id}:${message.deleted_at ?? ""}:${message.body}`)
+      .map(
+        (message) =>
+          `${message.conversation_id}:${message.id}:${message.deleted_at ?? ""}:${message.telegram_delivered_at ?? ""}:${message.body}`,
+      )
       .join("|")}`;
     if (
       lastConversationEventRef.current === null ||
@@ -230,7 +250,7 @@ export const VenueMessaging = ({
   }, [reactionEvents, selectedConversationId, venueId]);
 
   useEffect(() => {
-    if (!hasOwner || (!isAuthenticated && !isUserLoading)) {
+    if ((!hasOwner && !inbox) || (!isAuthenticated && !isUserLoading)) {
       setRole(null);
       setTelegramLinked(null);
       setConversations([]);
@@ -255,10 +275,13 @@ export const VenueMessaging = ({
       const requestTimeout = window.setTimeout(() => abortController.abort(), 15_000);
       activeRequest = abortController;
       try {
-        const response = await fetch(`/api/conversations?venueId=${encodeURIComponent(venueId)}`, {
-          cache: "no-store",
-          signal: abortController.signal,
-        });
+        const response = await fetch(
+          inbox ? "/api/conversations?inbox=true" : `/api/conversations?venueId=${encodeURIComponent(venueId ?? "")}`,
+          {
+            cache: "no-store",
+            signal: abortController.signal,
+          },
+        );
         if (!response.ok) {
           const data = (await response.json().catch(() => null)) as { error?: string } | null;
           if (response.status === 403 && isCurrent) setRole(null);
@@ -302,7 +325,7 @@ export const VenueMessaging = ({
     void load();
     const onMessagingUpdate = (event: Event) => {
       const detail = (event as CustomEvent<MessagingUpdateDetail>).detail;
-      if (detail?.venueId === venueId) void load();
+      if ((inbox && detail?.source === "inbox") || detail?.venueId === venueId) void load();
     };
     const onVisibilityChange = () => {
       if (!document.hidden) void load();
@@ -315,7 +338,7 @@ export const VenueMessaging = ({
       window.removeEventListener("venue-messaging-update", onMessagingUpdate);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [hasOwner, isAuthenticated, isUserLoading, requestedConversationId, venueId]);
+  }, [hasOwner, inbox, isAuthenticated, isUserLoading, requestedConversationId, venueId]);
 
   useEffect(() => {
     if (!selectedConversationId) {
@@ -346,7 +369,11 @@ export const VenueMessaging = ({
           cache: "no-store",
           signal: abortController.signal,
         });
-        if (!response.ok) return;
+        if (!response.ok) {
+          const data = (await response.json().catch(() => null)) as { error?: string } | null;
+          if (isCurrent) setMessageError(data?.error || i18n("Unable to load messages"));
+          return;
+        }
         const data = (await response.json()) as MessagePage;
         if (!isCurrent) return;
         if (isInitialRequest) {
@@ -361,6 +388,11 @@ export const VenueMessaging = ({
         const readSyncKey = `${selectedConversationId}:${data.messages.length}:${lastMessageId}`;
         if (lastReadSyncRef.current !== readSyncKey) {
           lastReadSyncRef.current = readSyncKey;
+          setConversations((current) =>
+            current.map((conversation) =>
+              conversation.id === selectedConversationId ? { ...conversation, unread_count: 0 } : conversation,
+            ),
+          );
           window.dispatchEvent(new Event("messages-read"));
         }
       } catch {
@@ -488,8 +520,13 @@ export const VenueMessaging = ({
   if (!isAuthenticated || !role) return null;
 
   const selectedConversation = conversations.find((conversation) => conversation.id === selectedConversationId);
-  const senderName = (senderType: ConversationMessage["sender_type"]) =>
-    senderType === "VENUE" ? venueName || i18n("Venue") : selectedConversation?.user_name || i18n("Customer");
+  const activeVenueId = inbox ? selectedConversation?.venue_id : venueId;
+  const activeVenueName = inbox ? selectedConversation?.user_name : venueName;
+  const senderName = (senderType: ConversationMessage["sender_type"]) => {
+    if (senderType === "VENUE") return activeVenueName || i18n("Venue");
+    if (inbox) return currentUser?.name || i18n("You");
+    return selectedConversation?.user_name || i18n("Customer");
+  };
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : "en-GB", {
@@ -497,23 +534,6 @@ export const VenueMessaging = ({
       hour: "2-digit",
       minute: "2-digit",
     }).format(date);
-  };
-  const formatConversationTimestamp = (timestamp: null | string) => {
-    if (!timestamp) return null;
-
-    const date = new Date(timestamp);
-    const today = new Date();
-    const calendarDay = (value: Date) => Date.UTC(value.getFullYear(), value.getMonth(), value.getDate());
-    const daysAgo = Math.floor((calendarDay(today) - calendarDay(date)) / 86_400_000);
-    const dateLocale = locale === "uk" ? "uk-UA" : "en-GB";
-
-    if (daysAgo === 0) {
-      return new Intl.DateTimeFormat(dateLocale, { hour: "2-digit", minute: "2-digit" }).format(date);
-    }
-    if (daysAgo > 0 && daysAgo < 7) {
-      return new Intl.DateTimeFormat(dateLocale, { weekday: "short" }).format(date);
-    }
-    return new Intl.DateTimeFormat(dateLocale, { day: "numeric", month: "2-digit", year: "2-digit" }).format(date);
   };
   const formatDay = (timestamp: string) =>
     new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : "en-GB", {
@@ -528,6 +548,7 @@ export const VenueMessaging = ({
     const rect = element.getBoundingClientRect();
     const gap = 12;
     const emojiPickerHeight = 56;
+    const emojiPickerWidth = 304;
     const actionMenuHeight = 96 + (canEditMessage(message) ? 48 : 0) + (canDeleteMessage(message) ? 48 : 0);
     const viewportPadding = 8;
     const canFitAbove = rect.top - gap - emojiPickerHeight >= viewportPadding;
@@ -567,7 +588,7 @@ export const VenueMessaging = ({
       actionsTop,
       emojisTop,
       message,
-      x: Math.max(8, Math.min(rect.left, window.innerWidth - 280)),
+      x: Math.max(viewportPadding, Math.min(rect.left, window.innerWidth - emojiPickerWidth - viewportPadding)),
     });
   };
   const copyMessage = async (body: string) => {
@@ -621,7 +642,9 @@ export const VenueMessaging = ({
   };
   const refreshConversations = async () => {
     try {
-      const response = await fetch(`/api/conversations?venueId=${encodeURIComponent(venueId)}`);
+      const response = await fetch(
+        inbox ? "/api/conversations?inbox=true" : `/api/conversations?venueId=${encodeURIComponent(venueId ?? "")}`,
+      );
       if (response.ok) {
         setConversations(
           sortConversations(((await response.json()) as { conversations: Conversation[] }).conversations),
@@ -682,13 +705,14 @@ export const VenueMessaging = ({
         return;
       }
       const isOwner = role === "OWNER";
+      if (!isOwner && !activeVenueId) throw new Error(i18n("Select a conversation"));
       const response = await fetch(
         isOwner ? `/api/conversations/${selectedConversationId}/messages` : "/api/conversations",
         {
           body: JSON.stringify(
             isOwner
               ? { body, replyToMessageId: replyToMessage?.id }
-              : { body, replyToMessageId: replyToMessage?.id, venueId },
+              : { body, replyToMessageId: replyToMessage?.id, venueId: activeVenueId },
           ),
           headers: { "Content-Type": "application/json" },
           method: "POST",
@@ -735,6 +759,7 @@ export const VenueMessaging = ({
     }
   };
   const linkTelegram = async () => {
+    if (!venueId) return;
     setMessageError("");
     try {
       const response = await fetch("/api/telegram/link", {
@@ -750,6 +775,7 @@ export const VenueMessaging = ({
     }
   };
   const unlinkTelegram = async () => {
+    if (!venueId) return;
     const confirmed = await openConfirmDialog({
       message: i18n(
         "Telegram will stop receiving new customer messages. Your existing web conversations will remain available.",
@@ -780,6 +806,31 @@ export const VenueMessaging = ({
     if (!list) return;
     shouldStickToLatestRef.current = true;
     list.scrollTo({ behavior: "smooth", top: list.scrollHeight });
+  };
+  const retryTelegramDelivery = async (messageId: string) => {
+    if (!selectedConversationId) return;
+
+    setRetryingTelegramMessageId(messageId);
+    setMessageError("");
+    try {
+      const response = await fetch(
+        `/api/conversations/${selectedConversationId}/messages/${messageId}/telegram-retry`,
+        {
+          method: "POST",
+        },
+      );
+      const data = (await response.json()) as { error?: string };
+      if (!response.ok) throw new Error(data.error || i18n("Unable to retry Telegram delivery"));
+      setMessages((current) =>
+        current.map((message) =>
+          message.id === messageId ? { ...message, telegram_delivery_status: "PENDING" } : message,
+        ),
+      );
+    } catch (error) {
+      setMessageError(error instanceof Error ? error.message : i18n("Unable to retry Telegram delivery"));
+    } finally {
+      setRetryingTelegramMessageId(null);
+    }
   };
 
   const loadOlderMessages = async () => {
@@ -820,97 +871,14 @@ export const VenueMessaging = ({
     setSelectedConversationId(conversationId);
     setIsConversationMenuOpen(false);
   };
-  const renderConversationList = () => {
-    if (isLoadingConversations) {
-      return (
-        <div aria-live="polite" className="flex min-h-20 items-center justify-center">
-          <AnimatedEllipsis size="md" />
-        </div>
-      );
-    }
-    if (!conversations.length) return <p className="text-on-surface/70 text-sm">{i18n("No conversations yet")}</p>;
-
-    const renderConversationRows = (conversationItems: Conversation[]) =>
-      conversationItems.map((conversation) => {
-        const name = conversation.user_name ?? i18n("Customer");
-        const senderColour = getSenderColour(name);
-        const lastMessageTime = formatConversationTimestamp(conversation.last_message_at);
-        const isArchived = Boolean(conversation.archived_at);
-
-        return (
-          <button
-            className={clsx(
-              "hover:bg-on-surface/5 flex w-full items-center gap-3 px-4 py-2 text-left text-sm",
-              selectedConversationId === conversation.id && "bg-primary/10",
-              isArchived && "opacity-70",
-            )}
-            key={conversation.id}
-            onClick={() => selectConversation(conversation.id)}
-          >
-            <div
-              aria-hidden="true"
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold tracking-tight text-white ${senderColour.avatarClassName}`}
-            >
-              {getSenderInitials(name)}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex min-w-0 items-center gap-2">
-                  <p className="truncate font-medium">{name}</p>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  {lastMessageTime && (
-                    <time className="text-on-surface/60 text-xs" dateTime={conversation.last_message_at ?? undefined}>
-                      {lastMessageTime}
-                    </time>
-                  )}
-                  {Number(conversation.unread_count) > 0 && (
-                    <span
-                      aria-label={i18n("Unread messages")}
-                      className="bg-secondary text-on-surface flex min-h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs"
-                    >
-                      {Number(conversation.unread_count) > 99 ? "99+" : conversation.unread_count}
-                    </span>
-                  )}
-                </div>
-              </div>
-              {conversation.last_message_deleted ? (
-                <p className="text-on-surface/50 mt-0.5 truncate text-xs italic">{i18n("Deleted message")}</p>
-              ) : conversation.last_message_body ? (
-                <p className="text-on-surface/60 mt-0.5 truncate text-xs">{conversation.last_message_body}</p>
-              ) : null}
-            </div>
-          </button>
-        );
-      });
-
-    const activeConversations = conversations.filter((conversation) => !conversation.archived_at);
-    const archivedConversations = conversations.filter((conversation) => conversation.archived_at);
-
-    return (
-      <div className="-mx-4 mt-4 mb-2 flex flex-col">
-        {activeConversations.length > 0 && (
-          <section>
-            <Separator align="left" text={i18n("Active")} />
-            {renderConversationRows(activeConversations)}
-          </section>
-        )}
-        {archivedConversations.length > 0 && (
-          <section>
-            <Separator align="left" text={i18n("Archived")} />
-            {renderConversationRows(archivedConversations)}
-          </section>
-        )}
-      </div>
-    );
-  };
   const renderConversationButton = (className: string) => {
-    if (role !== "OWNER") return null;
+    if (role !== "OWNER" && !inbox) return null;
 
     return (
       <Button
-        aria-controls="venue-conversations-menu"
+        aria-controls="messaging-conversations-menu"
         aria-expanded={isConversationMenuOpen}
+        aria-label={i18n("Open conversations")}
         className={className}
         color="primary"
         onClick={() => setIsConversationMenuOpen(true)}
@@ -919,7 +887,7 @@ export const VenueMessaging = ({
         <span className="flex items-center gap-2">
           <MessagesSquare size={20} />
           {i18n("Conversations")}
-          <ChevronRight aria-hidden="true" size={18} />
+          <ChevronRight aria-hidden="true" className="hidden sm:block" size={18} />
         </span>
       </Button>
     );
@@ -978,51 +946,36 @@ export const VenueMessaging = ({
                 "Manage customer enquiries in one place. Reply here, or reply to the forwarded message in Telegram - both appear in the same conversation.",
               )
             : i18n("Manage customer enquiries here. Link Telegram to also receive and reply to messages there.")
-          : i18n(
-              "Send a private message to this venue. Only you and the venue owner can see this conversation. They can reply here or through Telegram.",
-            )}
+          : inbox
+            ? i18n("Manage your private conversations with venues in one place.")
+            : i18n(
+                "Send a private message to this venue. Only you and the venue owner can see this conversation. They can reply here or through Telegram.",
+              )}
       </RichText>
 
-      {role === "OWNER" && telegramLinked === false && (
-        <div className="bg-primary/10 flex items-center justify-between rounded-xl px-4 py-2">
-          <div className="flex space-x-2">
-            <Image alt="Telegram" width={22} height={22} src={TELEGRAM_LOGO} />
-            <p>{i18n("Receive messages in Telegram")}</p>
-          </div>
-          <div className="flex items-center space-x-2">
-            {messageError && <p className="text-sm text-red-600">{messageError}</p>}
-            <Button onClick={linkTelegram} size="sm" color="primary">
-              {i18n("Link")}
-            </Button>
-          </div>
-        </div>
+      {role === "OWNER" && telegramLinked !== null && (
+        <TelegramLinkPanel
+          error={messageError}
+          isLinked={telegramLinked}
+          isUnlinking={isUnlinkingTelegram}
+          onLink={() => void linkTelegram()}
+          onUnlink={() => void unlinkTelegram()}
+        />
       )}
-      {role === "OWNER" && telegramLinked === true && (
-        <div className="bg-primary/10 flex items-center justify-between rounded-xl px-4 py-2">
-          <div className="flex space-x-2">
-            <Image alt="Telegram" width={22} height={22} src={TELEGRAM_LOGO} />
-            <p>{i18n("Telegram is linked and receiving customer messages")}</p>
-          </div>
-          <Button
-            busy={isUnlinkingTelegram}
-            color="danger"
-            onClick={() => void unlinkTelegram()}
-            size="sm"
-            variant="outlined"
-          >
-            {i18n("Unlink")}
-          </Button>
-        </div>
-      )}
-      <div className={clsx(isExpanded && "bg-surface fixed inset-0 z-50 flex h-dvh flex-col p-3 md:p-6")}>
+      <div
+        className={clsx(
+          isExpanded &&
+            "bg-surface fixed inset-0 z-50 flex h-dvh flex-col p-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] md:p-6",
+        )}
+      >
         {isExpanded && (
           <header className="mb-3 flex shrink-0 items-center justify-between">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
               <MessageCircle size={20} />
               {i18n("Messages")}
             </h2>
-            <div className="flex items-center gap-2">
-              {renderConversationButton("md:hidden")}
+            <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+              {renderConversationButton("min-w-0 px-2 md:hidden")}
               <PushNotifications />
               {renderArchiveButton()}
               <ActionButton
@@ -1036,8 +989,8 @@ export const VenueMessaging = ({
         )}
         {!isExpanded && (
           <header className="mb-3 flex items-center justify-between gap-2">
-            <div>{renderConversationButton("flex-1 justify-between md:hidden")}</div>
-            <div className="flex gap-2">
+            <div className="min-w-0 flex-1">{renderConversationButton("w-full justify-between px-2 md:hidden")}</div>
+            <div className="flex shrink-0 gap-1.5 sm:gap-2">
               <PushNotifications />
               {renderArchiveButton()}
               <ActionButton
@@ -1049,7 +1002,7 @@ export const VenueMessaging = ({
             </div>
           </header>
         )}
-        {role === "OWNER" && (
+        {(role === "OWNER" || inbox) && (
           <>
             <div
               aria-hidden={!isConversationMenuOpen}
@@ -1072,10 +1025,10 @@ export const VenueMessaging = ({
                 aria-label={i18n("Conversations")}
                 aria-modal="true"
                 className={clsx(
-                  "bg-surface absolute inset-y-0 left-0 flex w-[min(22rem,calc(100%-3rem))] flex-col shadow-xl transition-transform duration-300",
+                  "bg-surface absolute inset-y-0 left-0 flex w-[min(22rem,calc(100%-2.5rem))] flex-col shadow-xl transition-transform duration-300",
                   isConversationMenuOpen ? "translate-x-0" : "-translate-x-full",
                 )}
-                id="venue-conversations-menu"
+                id="messaging-conversations-menu"
                 role="dialog"
               >
                 <header className="border-neutral/10 flex items-center justify-between border-b p-4">
@@ -1091,7 +1044,14 @@ export const VenueMessaging = ({
                     variant="ghost"
                   />
                 </header>
-                <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">{renderConversationList()}</div>
+                <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
+                  <ConversationList
+                    conversations={conversations}
+                    isLoading={isLoadingConversations}
+                    onSelect={selectConversation}
+                    selectedConversationId={selectedConversationId}
+                  />
+                </div>
               </aside>
             </div>
           </>
@@ -1099,12 +1059,12 @@ export const VenueMessaging = ({
         <div
           className={clsx(
             "grid gap-4 overflow-hidden",
-            isExpanded ? "min-h-0 flex-1" : "h-128",
-            role === "OWNER" && "md:grid-cols-3 md:gap-8",
-            role === "OWNER" && !isExpanded && "md:h-200",
+            isExpanded ? "min-h-0 flex-1" : "h-[min(40rem,calc(100dvh-11rem))] min-h-80",
+            (role === "OWNER" || inbox) && "md:grid-cols-3 md:gap-8",
+            (role === "OWNER" || inbox) && !isExpanded && "md:h-200",
           )}
         >
-          {role === "OWNER" && (
+          {(role === "OWNER" || inbox) && (
             <SectionCard
               as="aside"
               className="hidden min-h-0 overflow-y-auto md:col-span-1 md:block"
@@ -1115,11 +1075,19 @@ export const VenueMessaging = ({
                 </span>
               }
             >
-              {renderConversationList()}
+              <ConversationList
+                conversations={conversations}
+                isLoading={isLoadingConversations}
+                onSelect={selectConversation}
+                selectedConversationId={selectedConversationId}
+              />
             </SectionCard>
           )}
           <section
-            className={clsx("relative flex min-h-0 flex-col overflow-hidden", role === "OWNER" && "md:col-span-2")}
+            className={clsx(
+              "relative flex min-h-0 flex-col overflow-hidden",
+              (role === "OWNER" || inbox) && "md:col-span-2",
+            )}
           >
             <div
               className={clsx(
@@ -1260,10 +1228,7 @@ export const VenueMessaging = ({
                                 {(message.reply_to_body || message.reply_to_deleted) && (
                                   <div className="border-primary bg-primary/8 text-on-surface/70 mb-2 max-w-full rounded-xl border-l-4 px-3 py-2 text-sm">
                                     <p className="text-primary font-semibold">
-                                      ↩{" "}
-                                      {message.reply_to_sender_type === "VENUE"
-                                        ? venueName || i18n("Venue")
-                                        : selectedConversation?.user_name || i18n("Customer")}
+                                      ↩ {senderName(message.reply_to_sender_type ?? "USER")}
                                     </p>
                                     <p className="mt-0.5 truncate">
                                       {message.reply_to_deleted ? i18n("Deleted message") : message.reply_to_body}
@@ -1278,6 +1243,28 @@ export const VenueMessaging = ({
                                   {message.sender_type === "USER" && message.telegram_delivered_at && (
                                     <Tooltip label={i18n("Delivered to Telegram")}>
                                       <Check className="stroke-success mt-1" size={10} />
+                                    </Tooltip>
+                                  )}
+                                  {message.sender_type === "USER" &&
+                                    ["PENDING", "PROCESSING"].includes(message.telegram_delivery_status ?? "") && (
+                                      <Tooltip label={i18n("Sending to Telegram")}>
+                                        <AnimatedEllipsis el="." size="sm" />
+                                      </Tooltip>
+                                    )}
+                                  {message.sender_type === "USER" && message.telegram_delivery_status === "FAILED" && (
+                                    <Tooltip label={i18n("Retry Telegram delivery")}>
+                                      <button
+                                        aria-label={i18n("Retry Telegram delivery")}
+                                        className="text-danger hover:text-danger-hover"
+                                        disabled={retryingTelegramMessageId === message.id}
+                                        onClick={() => void retryTelegramDelivery(message.id)}
+                                        type="button"
+                                      >
+                                        <RefreshCw
+                                          className={retryingTelegramMessageId === message.id ? "animate-spin" : ""}
+                                          size={12}
+                                        />
+                                      </button>
                                     </Tooltip>
                                   )}
                                   {message.sent_from_telegram && (
@@ -1361,134 +1348,37 @@ export const VenueMessaging = ({
               />
             )}
             {reactionPicker && (
-              <>
-                <div
-                  data-message-actions
-                  className="bg-surface fixed z-50 flex items-center gap-1 rounded-full p-2 shadow-xl ring-1 ring-neutral-200"
-                  style={{ left: reactionPicker.x, top: reactionPicker.emojisTop }}
-                >
-                  {MESSAGE_REACTION_EMOJIS.map((emoji) => (
-                    <button
-                      aria-label={emoji}
-                      className="hover:bg-surface-tint h-10 w-10 rounded-full px-1.5 py-1 text-2xl transition-transform hover:scale-125"
-                      key={emoji}
-                      onClick={() => {
-                        const messageId = reactionPicker.message.id;
-                        setReactionPicker(null);
-                        void toggleReaction(messageId, emoji);
-                      }}
-                      type="button"
-                    >
-                      {emoji}
-                    </button>
-                  ))}
-                </div>
-                <div
-                  data-message-actions
-                  className="bg-surface fixed z-50 overflow-hidden rounded-xl shadow-xl ring-1 ring-neutral-200"
-                  style={{ left: reactionPicker.x, top: reactionPicker.actionsTop }}
-                >
-                  <button
-                    className="hover:bg-surface-tint flex w-full items-center gap-2 px-4 py-3 text-sm font-medium"
-                    onClick={() => {
-                      setReplyToMessage(reactionPicker.message);
-                      setReactionPicker(null);
-                    }}
-                    type="button"
-                  >
-                    <Reply size={18} />
-                    {i18n("Reply")}
-                  </button>
-                  <button
-                    className="border-neutral/10 hover:bg-surface-tint flex w-full items-center gap-2 border-t px-4 py-3 text-sm font-medium"
-                    onClick={() => void copyMessage(reactionPicker.message.body)}
-                    type="button"
-                  >
-                    <Copy size={18} />
-                    {i18n("Copy")}
-                  </button>
-                  {canEditMessage(reactionPicker.message) && (
-                    <button
-                      className="border-neutral/10 hover:bg-surface-tint flex w-full items-center gap-2 border-t px-4 py-3 text-sm font-medium"
-                      onClick={() => startEditingMessage(reactionPicker.message)}
-                      type="button"
-                    >
-                      <Pencil size={18} />
-                      {i18n("Edit")}
-                    </button>
-                  )}
-                  {canDeleteMessage(reactionPicker.message) && (
-                    <button
-                      className="border-neutral/10 text-danger hover:bg-danger/10 flex w-full items-center gap-2 border-t px-4 py-3 text-sm font-medium"
-                      onClick={() => void deleteMessage(reactionPicker.message)}
-                      type="button"
-                    >
-                      <Trash2 size={18} />
-                      {i18n("Delete")}
-                    </button>
-                  )}
-                </div>
-              </>
+              <MessageActionsMenu
+                canDelete={canDeleteMessage(reactionPicker.message)}
+                canEdit={canEditMessage(reactionPicker.message)}
+                menu={reactionPicker}
+                onClose={() => setReactionPicker(null)}
+                onCopy={(body) => void copyMessage(body)}
+                onDelete={(message) => void deleteMessage(message)}
+                onEdit={startEditingMessage}
+                onReply={(message) => {
+                  setReplyToMessage(message);
+                  setReactionPicker(null);
+                }}
+                onToggleReaction={(messageId, emoji) => void toggleReaction(messageId, emoji)}
+              />
             )}
-            <div className="p-3">
-              {messageBeingEdited && (
-                <div className="border-primary bg-primary/8 mb-2 flex items-center justify-between rounded-lg border-l-4 px-3 py-2 text-xs">
-                  <span className="truncate">{i18n("Editing message")}</span>
-                  <button
-                    aria-label={i18n("Cancel editing")}
-                    className="ml-3 text-base"
-                    onClick={() => {
-                      setMessageBeingEdited(null);
-                      setMessageBody("");
-                    }}
-                    type="button"
-                  >
-                    ×
-                  </button>
-                </div>
-              )}
-              {replyToMessage && (
-                <div className="border-primary bg-primary/8 mb-2 flex items-center justify-between rounded-lg border-l-4 px-3 py-2 text-xs">
-                  <span className="truncate">
-                    {i18n("Replying to")}: {replyToMessage.body}
-                  </span>
-                  <button
-                    aria-label={i18n("Cancel reply")}
-                    className="ml-3 text-base"
-                    onClick={() => setReplyToMessage(null)}
-                    type="button"
-                  >
-                    ×
-                  </button>
-                </div>
-              )}
-              <div className="flex-col items-end gap-2">
-                <div className="min-w-0 flex-1">
-                  <Textarea
-                    className="min-h-18 resize-none"
-                    disabled={role === "OWNER" && !selectedConversationId}
-                    maxChars={4096}
-                    onChange={(event) => setMessageBody(event.target.value)}
-                    placeholder={i18n("Write a message")}
-                    ref={composerRef}
-                    rows={2}
-                    value={messageBody}
-                  />
-                </div>
-                <div className="-mt-3 flex justify-end">
-                  <Button
-                    busy={isSendingMessage}
-                    disabled={!messageBody.trim() || (role === "OWNER" && !selectedConversationId)}
-                    onClick={sendMessage}
-                  >
-                    {messageBeingEdited ? i18n("Save") : i18n("Send")}
-                  </Button>
-                </div>
-              </div>
-              <div className="flex-col text-right">
-                {messageError && <p className="mt-1 text-sm text-red-600">{messageError}</p>}
-              </div>
-            </div>
+            <MessageComposer
+              disabled={!selectedConversationId && (role === "OWNER" || inbox)}
+              error={messageError}
+              isSending={isSendingMessage}
+              messageBeingEdited={messageBeingEdited}
+              messageBody={messageBody}
+              onCancelEdit={() => {
+                setMessageBeingEdited(null);
+                setMessageBody("");
+              }}
+              onCancelReply={() => setReplyToMessage(null)}
+              onChange={setMessageBody}
+              onSend={() => void sendMessage()}
+              replyToMessage={replyToMessage}
+              textareaRef={composerRef}
+            />
           </section>
         </div>
       </div>

@@ -31,7 +31,42 @@ export const GET = (req: Request) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
     await rateLimiters.messagingRead.check(session.user.id);
-    const venueId = new URL(req.url).searchParams.get("venueId");
+    const url = new URL(req.url);
+    const venueId = url.searchParams.get("venueId");
+    const inbox = url.searchParams.get("inbox") === "true";
+    if (inbox) {
+      const conversations = await sql`
+        SELECT c.id, c.created_at, c.user_archived_at AS archived_at,
+               v.id AS venue_id, v.name AS user_name, v.slug AS venue_slug,
+               CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
+               (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
+               latest_message.created_at AS last_message_at,
+               unread_messages.unread_count
+        FROM conversations c
+        JOIN venues v ON v.id = c.venue_id
+        LEFT JOIN LATERAL (
+          SELECT m.body, m.created_at, m.deleted_at
+          FROM messages m
+          WHERE m.conversation_id = c.id
+          ORDER BY m.created_at DESC, m.id DESC
+          LIMIT 1
+        ) AS latest_message ON TRUE
+        CROSS JOIN LATERAL (
+          SELECT COUNT(*) AS unread_count
+          FROM messages m
+          WHERE m.conversation_id = c.id
+            AND m.sender_type = 'VENUE'
+            AND m.deleted_at IS NULL
+            AND m.created_at > COALESCE(c.user_last_read_at, c.created_at)
+        ) AS unread_messages
+        WHERE c.user_id = ${session.user.id}
+          AND v.owner_id IS NOT NULL
+          AND v.owner_id IS DISTINCT FROM ${session.user.id}
+        ORDER BY (c.user_archived_at IS NOT NULL), latest_message.created_at DESC NULLS LAST, c.created_at DESC
+      `;
+
+      return Response.json({ conversations, role: "USER", telegramLinked: false });
+    }
     if (!venueId || !z.uuid().safeParse(venueId).success) throw new BadRequestError("A valid venue ID is required");
 
     const venue = await getMessagingVenue(venueId);
@@ -100,7 +135,7 @@ export const GET = (req: Request) =>
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
-    await rateLimiters.general.check(session.user.id);
+    await rateLimiters.messagingAction.check(session.user.id);
     const { body, replyToMessageId, venueId } = await validateRequest(req, startConversationSchema);
 
     const venue = await getMessagingVenue(venueId);

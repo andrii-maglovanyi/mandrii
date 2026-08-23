@@ -12,7 +12,7 @@ const editMessageSchema = z.object({ body: z.string().trim().min(1).max(4096) })
 export const PATCH = (req: Request, { params }: { params: Promise<{ conversationId: string; messageId: string }> }) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
-    await rateLimiters.general.check(session.user.id);
+    await rateLimiters.messagingAction.check(session.user.id);
     const { conversationId, messageId } = await params;
     const { body } = editMessageSchema.parse(await req.json());
 
@@ -60,7 +60,12 @@ export const PATCH = (req: Request, { params }: { params: Promise<{ conversation
 
     if (message.telegram_chat_id && message.telegram_message_id && message.telegram_delivered_at) {
       const [previousMessage] = await sql<
-        Array<{ conversation_id: string; created_at: string; sender_type: "USER" | "VENUE"; telegram_message_id: null | number }>
+        Array<{
+          conversation_id: string;
+          created_at: string;
+          sender_type: "USER" | "VENUE";
+          telegram_message_id: null | number;
+        }>
       >`
         SELECT conversation_id, created_at, sender_type, telegram_message_id
         FROM messages
@@ -100,7 +105,7 @@ export const PATCH = (req: Request, { params }: { params: Promise<{ conversation
 export const DELETE = (req: Request, { params }: { params: Promise<{ conversationId: string; messageId: string }> }) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
-    await rateLimiters.general.check(session.user.id);
+    await rateLimiters.messagingAction.check(session.user.id);
     const { conversationId, messageId } = await params;
 
     if (!z.uuid().safeParse(conversationId).success) {
@@ -114,7 +119,12 @@ export const DELETE = (req: Request, { params }: { params: Promise<{ conversatio
 
     const senderType = conversation.is_owner ? "VENUE" : "USER";
     const [messageToDelete] = await sql<
-      Array<{ id: string; telegram_chat_id: null | number; telegram_delivered_at: null | string; telegram_message_id: null | number }>
+      Array<{
+        id: string;
+        telegram_chat_id: null | number;
+        telegram_delivered_at: null | string;
+        telegram_message_id: null | number;
+      }>
     >`
       SELECT id, telegram_chat_id, telegram_message_id, telegram_delivered_at
       FROM messages

@@ -48,7 +48,10 @@ async function withKvTimeout<T>(operation: Promise<T>): Promise<T> {
     return await Promise.race([
       operation,
       new Promise<never>((_, reject) => {
-        timeout = setTimeout(() => reject(new Error("Vercel KV rate-limit operation timed out")), KV_OPERATION_TIMEOUT_MS);
+        timeout = setTimeout(
+          () => reject(new Error("Vercel KV rate-limit operation timed out")),
+          KV_OPERATION_TIMEOUT_MS,
+        );
       }),
     ]);
   } finally {
@@ -307,6 +310,17 @@ export const rateLimiters = {
   messagingRead: createRateLimiter({
     maxRequests: 120,
     prefix: "messaging-read",
+    windowMs: 60 * 1000,
+  }),
+
+  /**
+   * Chat actions have their own bucket so a user's normal application traffic
+   * cannot make an otherwise valid message, reaction, edit, or archive action
+   * appear rate-limited.
+   */
+  messagingAction: createRateLimiter({
+    maxRequests: 60,
+    prefix: "messaging-action",
     windowMs: 60 * 1000,
   }),
 };

@@ -6,6 +6,9 @@ interface PrivateConfig {
   auth: {
     nextAuthSecret: string;
   };
+  cron: {
+    secret: string;
+  };
   db: {
     connectionString: string;
   };
@@ -64,6 +67,9 @@ export const privateConfig: PrivateConfig = {
   },
   auth: {
     nextAuthSecret: getEnvVar("NEXTAUTH_SECRET"),
+  },
+  cron: {
+    secret: getEnvVar("CRON_SECRET", false),
   },
   db: {
     connectionString: getEnvVar("NEON_CONNECTION_STRING"),

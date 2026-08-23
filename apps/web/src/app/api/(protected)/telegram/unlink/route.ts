@@ -18,9 +18,17 @@ export const POST = (req: Request) =>
         WHERE id = ${venueId} AND owner_id = ${session.user.id}
       ), unlinked_venue AS (
         UPDATE venues
-        SET telegram_chat_id = NULL
+        SET telegram_chat_id = NULL, telegram_user_id = NULL
         WHERE id IN (SELECT id FROM owned_venue)
         RETURNING id
+      ), cancelled_deliveries AS (
+        UPDATE telegram_message_deliveries delivery
+        SET status = 'CANCELLED', locked_at = NULL
+        FROM messages m
+        JOIN conversations c ON c.id = m.conversation_id
+        WHERE delivery.message_id = m.id
+          AND c.venue_id IN (SELECT id FROM unlinked_venue)
+          AND delivery.status IN ('PENDING', 'PROCESSING')
       ), invalidated_tokens AS (
         UPDATE telegram_link_tokens
         SET used_at = NOW()

@@ -1,4 +1,5 @@
 import { timingSafeEqual } from "crypto";
+import { captureException } from "@sentry/nextjs";
 import { webhookCallback } from "grammy";
 
 import { privateConfig } from "~/lib/config/private";
@@ -31,6 +32,7 @@ export const POST = async (req: Request) => {
     return await handleWebhook(req);
   } catch (error) {
     console.error("Telegram webhook processing failed:", error);
+    captureException(error, { tags: { integration: "telegram", operation: "webhook" } });
     return new Response("Unable to process Telegram update", { status: 500 });
   }
 };

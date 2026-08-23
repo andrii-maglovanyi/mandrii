@@ -7,7 +7,7 @@ import { useMessagingUnreadEventsSubscription } from "~/types/graphql.generated"
 export const MESSAGING_UNREAD_UPDATED_EVENT = "messaging-unread-updated";
 
 export type UnreadMessagingUpdate = {
-  latest: null | { conversation_id: string; sender_name: string; venue_slug: string };
+  latest: null | { conversation_id: string; recipient_role: "OWNER" | "USER"; sender_name: string; venue_slug: string };
   unreadCount: number;
 };
 
@@ -16,6 +16,7 @@ export const useUnreadMessages = (enabled = true) => {
   const isActiveRef = useRef(false);
   const previousUnreadCountRef = useRef<number | null>(null);
   const requestIdRef = useRef(0);
+  const refreshTimerRef = useRef<number | null>(null);
   const subscriptionReadyRef = useRef(false);
   const loadUnreadCount = useCallback(async () => {
     const requestId = ++requestIdRef.current;
@@ -24,7 +25,11 @@ export const useUnreadMessages = (enabled = true) => {
       if (!response.ok) return;
       const data = (await response.json()) as UnreadMessagingUpdate;
       if (isActiveRef.current && requestId === requestIdRef.current) {
-        if (previousUnreadCountRef.current !== null && data.unreadCount > previousUnreadCountRef.current && data.latest) {
+        if (
+          previousUnreadCountRef.current !== null &&
+          data.unreadCount > previousUnreadCountRef.current &&
+          data.latest
+        ) {
           window.dispatchEvent(
             new CustomEvent<UnreadMessagingUpdate>(MESSAGING_UNREAD_UPDATED_EVENT, { detail: data }),
           );
@@ -36,6 +41,16 @@ export const useUnreadMessages = (enabled = true) => {
       // The counter is supplementary; a transient request failure should remain invisible.
     }
   }, []);
+  const scheduleUnreadRefresh = useCallback(
+    (delay = 250) => {
+      if (refreshTimerRef.current) window.clearTimeout(refreshTimerRef.current);
+      refreshTimerRef.current = window.setTimeout(() => {
+        refreshTimerRef.current = null;
+        void loadUnreadCount();
+      }, delay);
+    },
+    [loadUnreadCount],
+  );
   const { data: unreadEvents } = useMessagingUnreadEventsSubscription({
     skip: !enabled,
   });
@@ -54,7 +69,7 @@ export const useUnreadMessages = (enabled = true) => {
     previousUnreadCountRef.current = null;
     subscriptionReadyRef.current = false;
     const fallbackTimer = window.setTimeout(() => {
-      if (!subscriptionReadyRef.current) void loadUnreadCount();
+      if (!subscriptionReadyRef.current) scheduleUnreadRefresh(0);
     }, 1_500);
     window.addEventListener("messages-read", loadUnreadCount);
     return () => {
@@ -62,16 +77,17 @@ export const useUnreadMessages = (enabled = true) => {
       requestIdRef.current++;
       previousUnreadCountRef.current = null;
       subscriptionReadyRef.current = false;
+      if (refreshTimerRef.current) window.clearTimeout(refreshTimerRef.current);
       window.clearTimeout(fallbackTimer);
       window.removeEventListener("messages-read", loadUnreadCount);
     };
-  }, [enabled, loadUnreadCount]);
+  }, [enabled, loadUnreadCount, scheduleUnreadRefresh]);
 
   useEffect(() => {
     if (!enabled || !unreadEvents) return;
     subscriptionReadyRef.current = true;
-    void loadUnreadCount();
-  }, [enabled, loadUnreadCount, unreadEvents]);
+    scheduleUnreadRefresh();
+  }, [enabled, scheduleUnreadRefresh, unreadEvents]);
 
   return unreadCount;
 };
