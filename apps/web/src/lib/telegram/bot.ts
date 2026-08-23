@@ -176,7 +176,7 @@ export async function sendUserMessageToVenue(
     }
   }
 
-  await sendMessagePushNotification(conversationId, conversation.owner_id, userName).catch((error) => {
+  await sendMessagePushNotification(conversationId, conversation.owner_id, userName, userText).catch((error) => {
     console.error("Web Push notification failed:", error);
   });
   return { success: true };
@@ -217,7 +217,7 @@ bot.on("message:text", async (ctx) => {
           SET owner_archived_at = NULL, user_archived_at = NULL
           WHERE id = ${originalMessage.conversation_id}
         `;
-        await sendMessagePushNotification(originalMessage.conversation_id, originalMessage.user_id, "Venue").catch(
+        await sendMessagePushNotification(originalMessage.conversation_id, originalMessage.user_id, "Venue", replyText).catch(
           (error) => {
             console.error("Web Push notification failed:", error);
           },

@@ -189,7 +189,7 @@ export const POST = (req: Request, { params }: { params: Promise<{ conversationI
     `;
 
     after(() =>
-      sendMessagePushNotification(conversationId, conversation.user_id, session.user.name || "Venue").catch((error) => {
+      sendMessagePushNotification(conversationId, conversation.user_id, session.user.name || "Venue", body).catch((error) => {
         console.error("Web Push notification failed:", error);
       }),
     );

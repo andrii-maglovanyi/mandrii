@@ -55,7 +55,20 @@ async function sendPushNotifications(subscriptions: PushSubscription[], payload:
   );
 }
 
-export async function sendMessagePushNotification(conversationId: string, recipientUserId: string, senderName: string) {
+function toPushMessagePreview(messageBody: string) {
+  const normalizedBody = messageBody.replace(/\s+/g, " ").trim();
+  if (!normalizedBody) return "Open Mandrii to view the conversation.";
+
+  const maximumLength = 140;
+  return normalizedBody.length > maximumLength ? `${normalizedBody.slice(0, maximumLength - 1)}…` : normalizedBody;
+}
+
+export async function sendMessagePushNotification(
+  conversationId: string,
+  recipientUserId: string,
+  senderName: string,
+  messageBody: string,
+) {
   try {
     configureWebPush();
   } catch (error) {
@@ -70,7 +83,7 @@ export async function sendMessagePushNotification(conversationId: string, recipi
 
   const subscriptions = await getSubscriptions(recipientUserId);
   const payload = JSON.stringify({
-    body: "Open Mandrii to view the conversation.",
+    body: toPushMessagePreview(messageBody),
     title: `💬 ${senderName}:`,
     url: `/en/venues/${conversation.slug}?conversation=${conversationId}#Messaging`,
   });
