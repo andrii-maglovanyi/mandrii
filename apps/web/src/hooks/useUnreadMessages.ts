@@ -7,7 +7,13 @@ import { useMessagingUnreadEventsSubscription } from "~/types/graphql.generated"
 export const MESSAGING_UNREAD_UPDATED_EVENT = "messaging-unread-updated";
 
 export type UnreadMessagingUpdate = {
-  latest: null | { conversation_id: string; recipient_role: "OWNER" | "USER"; sender_name: string; venue_slug: string };
+  latest: null | {
+    body: string;
+    conversation_id: string;
+    recipient_role: "OWNER" | "USER";
+    sender_name: string;
+    venue_slug: string;
+  };
   unreadCount: number;
 };
 

@@ -1,6 +1,7 @@
 import sql from "~/lib/db/db";
 
 export type LatestUnreadConversation = {
+  body: string;
   conversation_id: string;
   recipient_role: "OWNER" | "USER";
   sender_name: string;
@@ -11,6 +12,7 @@ export async function getUnreadMessagingState(userId: string) {
   const [result] = await sql<
     Array<{
       latest_conversation_id: null | string;
+      latest_body: null | string;
       latest_recipient_role: null | "OWNER" | "USER";
       latest_sender_name: null | string;
       latest_venue_slug: null | string;
@@ -18,7 +20,7 @@ export async function getUnreadMessagingState(userId: string) {
     }>
   >`
     WITH unread_messages AS MATERIALIZED (
-      SELECT m.id, c.id AS conversation_id, 'OWNER'::text AS recipient_role,
+      SELECT m.id, m.body, c.id AS conversation_id, 'OWNER'::text AS recipient_role,
              COALESCE(u.name, 'Customer') AS sender_name, v.slug AS venue_slug, m.created_at
       FROM messages m
       JOIN conversations c ON c.id = m.conversation_id
@@ -30,7 +32,7 @@ export async function getUnreadMessagingState(userId: string) {
 
       UNION ALL
 
-      SELECT m.id, c.id AS conversation_id, 'USER'::text AS recipient_role,
+      SELECT m.id, m.body, c.id AS conversation_id, 'USER'::text AS recipient_role,
              v.name AS sender_name, v.slug AS venue_slug, m.created_at
       FROM messages m
       JOIN conversations c ON c.id = m.conversation_id
@@ -43,6 +45,7 @@ export async function getUnreadMessagingState(userId: string) {
     SELECT
       COUNT(*) AS unread_count,
       (SELECT conversation_id FROM unread_messages ORDER BY created_at DESC, id DESC LIMIT 1) AS latest_conversation_id,
+      (SELECT body FROM unread_messages ORDER BY created_at DESC, id DESC LIMIT 1) AS latest_body,
       (SELECT recipient_role FROM unread_messages ORDER BY created_at DESC, id DESC LIMIT 1) AS latest_recipient_role,
       (SELECT sender_name FROM unread_messages ORDER BY created_at DESC, id DESC LIMIT 1) AS latest_sender_name,
       (SELECT venue_slug FROM unread_messages ORDER BY created_at DESC, id DESC LIMIT 1) AS latest_venue_slug
@@ -51,6 +54,7 @@ export async function getUnreadMessagingState(userId: string) {
 
   const latest = result?.latest_conversation_id
     ? {
+        body: result.latest_body || "",
         conversation_id: result.latest_conversation_id,
         recipient_role: result.latest_recipient_role === "OWNER" ? "OWNER" : "USER",
         sender_name: result.latest_sender_name || "Venue",

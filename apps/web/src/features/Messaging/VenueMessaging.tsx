@@ -118,6 +118,7 @@ export const VenueMessaging = ({
   const [isUnlinkingTelegram, setIsUnlinkingTelegram] = useState(false);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
   const [reactionPicker, setReactionPicker] = useState<MessageActionsMenuState | null>(null);
+  const selectedConversationIdRef = useRef<null | string>(null);
   const messageListRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const shouldStickToLatestRef = useRef(true);
@@ -129,6 +130,21 @@ export const VenueMessaging = ({
   const lastReactionEventRef = useRef<string | null>(null);
   const lastVenueEventRef = useRef<string | null>(null);
   const lastInboxEventRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    selectedConversationIdRef.current = selectedConversationId;
+  }, [selectedConversationId]);
+
+  useEffect(() => {
+    if (!selectedConversationId) return;
+
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("conversation") === selectedConversationId) return;
+
+    url.searchParams.set("conversation", selectedConversationId);
+    if (!inbox) url.hash = "Messaging";
+    window.history.replaceState(window.history.state, "", url);
+  }, [inbox, selectedConversationId]);
   const resizeComposer = useCallback(() => {
     const composer = composerRef.current;
     if (!composer) return;
@@ -255,6 +271,7 @@ export const VenueMessaging = ({
       setTelegramLinked(null);
       setConversations([]);
       setSelectedConversationId(null);
+      selectedConversationIdRef.current = null;
       setMessages([]);
       setIsLoadingConversations(false);
       setIsLoadingMessages(false);
@@ -296,15 +313,19 @@ export const VenueMessaging = ({
         if (!isCurrent) return;
         setRole(data.role);
         setTelegramLinked(data.telegramLinked);
-        setConversations(sortConversations(data.conversations));
-        if (isInitialLoad) setIsLoadingMessages(data.conversations.length > 0);
-        setSelectedConversationId(
-          (current) =>
-            current ||
-            data.conversations.find((conversation) => conversation.id === requestedConversationId)?.id ||
-            data.conversations[0]?.id ||
-            null,
+        const nextConversationId =
+          selectedConversationIdRef.current ||
+          data.conversations.find((conversation) => conversation.id === requestedConversationId)?.id ||
+          data.conversations[0]?.id ||
+          null;
+        selectedConversationIdRef.current = nextConversationId;
+        setConversations(
+          sortConversations(data.conversations).map((conversation) =>
+            conversation.id === nextConversationId ? { ...conversation, unread_count: 0 } : conversation,
+          ),
         );
+        if (isInitialLoad) setIsLoadingMessages(data.conversations.length > 0);
+        setSelectedConversationId(nextConversationId);
       } catch {
         if (isCurrent && abortController.signal.aborted) {
           setMessageError(i18n("Messages are taking too long to load. Please try again."));
@@ -393,7 +414,11 @@ export const VenueMessaging = ({
               conversation.id === selectedConversationId ? { ...conversation, unread_count: 0 } : conversation,
             ),
           );
-          window.dispatchEvent(new Event("messages-read"));
+          window.dispatchEvent(
+            new CustomEvent<{ conversationId: string }>("messages-read", {
+              detail: { conversationId: selectedConversationId },
+            }),
+          );
         }
       } catch {
         if (isCurrent && abortController.signal.aborted) {
@@ -646,8 +671,11 @@ export const VenueMessaging = ({
         inbox ? "/api/conversations?inbox=true" : `/api/conversations?venueId=${encodeURIComponent(venueId ?? "")}`,
       );
       if (response.ok) {
+        const data = (await response.json()) as { conversations: Conversation[] };
         setConversations(
-          sortConversations(((await response.json()) as { conversations: Conversation[] }).conversations),
+          sortConversations(data.conversations).map((conversation) =>
+            conversation.id === selectedConversationIdRef.current ? { ...conversation, unread_count: 0 } : conversation,
+          ),
         );
       }
     } catch {
@@ -862,6 +890,7 @@ export const VenueMessaging = ({
     }
   };
   const selectConversation = (conversationId: string) => {
+    selectedConversationIdRef.current = conversationId;
     if (conversationId !== selectedConversationId) {
       setMessages([]);
       setNextMessageCursor(null);

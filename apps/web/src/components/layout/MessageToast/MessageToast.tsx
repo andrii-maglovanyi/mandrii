@@ -20,6 +20,10 @@ function initialsFor(name: string) {
     .join("");
 }
 
+function isOpenConversation(conversationId: string) {
+  return new URL(window.location.href).searchParams.get("conversation") === conversationId;
+}
+
 export const MessageToast = () => {
   const { isAuthenticated } = useUser();
   const i18n = useI18n();
@@ -40,11 +44,20 @@ export const MessageToast = () => {
   useEffect(() => {
     const showUnreadMessage = (event: Event) => {
       const update = (event as CustomEvent<UnreadMessagingUpdate>).detail;
-      if (update.latest) setMessage(update.latest);
+      if (update.latest && !isOpenConversation(update.latest.conversation_id)) setMessage(update.latest);
     };
     window.addEventListener(MESSAGING_UNREAD_UPDATED_EVENT, showUnreadMessage);
     return () => window.removeEventListener(MESSAGING_UNREAD_UPDATED_EVENT, showUnreadMessage);
   }, []);
+
+  useEffect(() => {
+    const closeReadConversation = (event: Event) => {
+      const conversationId = (event as CustomEvent<{ conversationId?: string }>).detail?.conversationId;
+      if (conversationId && message?.conversation_id === conversationId) handleClose();
+    };
+    window.addEventListener("messages-read", closeReadConversation);
+    return () => window.removeEventListener("messages-read", closeReadConversation);
+  }, [message]);
 
   // Mount transition: flip to visible on the next frame so the initial
   // translate/opacity state actually renders before transitioning.
@@ -115,9 +128,8 @@ export const MessageToast = () => {
               <span className="bg-primary h-1.5 w-1.5 rounded-full" />
               {i18n("New message")}
             </span>
-            <span className="mt-1 block truncate text-sm font-medium text-neutral-900">
-              {i18n("{name} sent you a message", { name: message.sender_name })}
-            </span>
+            <span className="mt-1 block truncate text-sm font-semibold text-neutral-900">{message.sender_name}</span>
+            <span className="mt-0.5 block truncate text-sm text-neutral-600">{message.body}</span>
           </span>
         </button>
 
