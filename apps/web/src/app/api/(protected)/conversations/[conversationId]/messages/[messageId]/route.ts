@@ -113,13 +113,42 @@ export const DELETE = (req: Request, { params }: { params: Promise<{ conversatio
     const conversation = await getConversationForUser(conversationId, session.user.id);
 
     const senderType = conversation.is_owner ? "VENUE" : "USER";
+    const [messageToDelete] = await sql<
+      Array<{ id: string; telegram_chat_id: null | number; telegram_delivered_at: null | string; telegram_message_id: null | number }>
+    >`
+      SELECT id, telegram_chat_id, telegram_message_id, telegram_delivered_at
+      FROM messages
+      WHERE id = ${messageId}
+        AND conversation_id = ${conversationId}
+        AND sender_type = ${senderType}
+        AND deleted_at IS NULL
+    `;
+    if (!messageToDelete) {
+      throw new ForbiddenError("You can only delete your own active messages");
+    }
+
+    // A bot can only delete its own Telegram messages. These are the copies
+    // forwarded from the web, identified by a successful delivery timestamp.
+    // If Telegram has already removed a copy, that is equivalent to success.
+    if (
+      messageToDelete.telegram_chat_id != null &&
+      messageToDelete.telegram_message_id != null &&
+      messageToDelete.telegram_delivered_at != null
+    ) {
+      try {
+        await bot.api.deleteMessage(messageToDelete.telegram_chat_id, messageToDelete.telegram_message_id);
+      } catch (error: any) {
+        const description = String(error?.description ?? error?.message ?? "").toLowerCase();
+        const alreadyDeleted = description.includes("message to delete not found");
+        if (!alreadyDeleted) throw error;
+      }
+    }
+
     const [message] = await sql<Array<{ deleted_at: string; id: string }>>`
       WITH deleted_message AS (
         UPDATE messages
         SET deleted_at = NOW(), deleted_by_user_id = ${session.user.id}
-        WHERE id = ${messageId}
-          AND conversation_id = ${conversationId}
-          AND sender_type = ${senderType}
+        WHERE id = ${messageToDelete.id}
           AND deleted_at IS NULL
         RETURNING id, deleted_at
       ), deleted_reactions AS (
@@ -129,9 +158,7 @@ export const DELETE = (req: Request, { params }: { params: Promise<{ conversatio
       )
       SELECT id, deleted_at FROM deleted_message
     `;
-    if (!message) {
-      throw new ForbiddenError("You can only delete your own active messages");
-    }
+    if (!message) throw new ForbiddenError("This message has already been deleted");
 
     return Response.json({ message });
   });

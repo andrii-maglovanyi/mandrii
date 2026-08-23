@@ -194,8 +194,8 @@ bot.on("message:text", async (ctx) => {
 
   try {
     // 1. Find which conversation this reply belongs to using the original message_id
-    const [originalMessage] = await sql<{ conversation_id: string; user_id: string }[]>`
-      SELECT m.conversation_id, c.user_id
+    const [originalMessage] = await sql<{ conversation_id: string; id: string; user_id: string }[]>`
+      SELECT m.id, m.conversation_id, c.user_id
       FROM messages m JOIN conversations c ON c.id = m.conversation_id
       WHERE m.telegram_chat_id = ${ctx.chat.id} AND m.telegram_message_id = ${originalTelegramMessageId}
         AND m.deleted_at IS NULL
@@ -203,8 +203,15 @@ bot.on("message:text", async (ctx) => {
 
     if (originalMessage) {
       const [message] = await sql`
-        INSERT INTO messages (conversation_id, sender_type, body, telegram_chat_id, telegram_message_id)
-        VALUES (${originalMessage.conversation_id}, 'VENUE', ${replyText}, ${ctx.chat.id}, ${ctx.message.message_id})
+        INSERT INTO messages (conversation_id, sender_type, body, reply_to_message_id, telegram_chat_id, telegram_message_id)
+        VALUES (
+          ${originalMessage.conversation_id},
+          'VENUE',
+          ${replyText},
+          ${originalMessage.id},
+          ${ctx.chat.id},
+          ${ctx.message.message_id}
+        )
         ON CONFLICT (telegram_chat_id, telegram_message_id)
           WHERE telegram_chat_id IS NOT NULL AND telegram_message_id IS NOT NULL
           DO NOTHING
@@ -230,6 +237,26 @@ bot.on("message:text", async (ctx) => {
   } catch (error) {
     console.error("Routing error:", error);
     await ctx.reply("Failed to route message back to the user.");
+  }
+});
+
+// Telegram emits edits as a distinct update type. Only update messages that
+// were originally written by the venue in Telegram; bot-sent customer
+// forwards remain the source of truth for web-originated customer messages.
+bot.on("edited_message:text", async (ctx) => {
+  try {
+    await sql`
+      UPDATE messages
+      SET body = ${ctx.editedMessage.text}, edited_at = NOW(), edited_by_user_id = NULL
+      WHERE telegram_chat_id = ${ctx.chat.id}
+        AND telegram_message_id = ${ctx.editedMessage.message_id}
+        AND sender_type = 'VENUE'
+        AND telegram_delivered_at IS NULL
+        AND deleted_at IS NULL
+        AND body IS DISTINCT FROM ${ctx.editedMessage.text}
+    `;
+  } catch (error) {
+    console.error("Telegram message edit routing failed:", error);
   }
 });
 

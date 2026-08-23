@@ -13,7 +13,7 @@
     "lint:js": "eslint .",
     "lint:css": "stylelint '**/*.css'",
     "start": "next start",
-    "telegram:webhook:set": "dotenv -e .env.local -- node ./scripts/set-telegram-webhook.mjs",
+    "telegram:webhook:set": "node --env-file=.env.local ./scripts/set-telegram-webhook.mjs",
     "test:unit": "vitest --project=unit",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",

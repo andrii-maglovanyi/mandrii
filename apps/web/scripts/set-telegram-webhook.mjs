@@ -13,7 +13,7 @@ if (url.protocol !== "https:") {
 
 const response = await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
   body: JSON.stringify({
-    allowed_updates: ["message"],
+    allowed_updates: ["message", "edited_message"],
     drop_pending_updates: false,
     secret_token: secretToken,
     url: url.toString(),
