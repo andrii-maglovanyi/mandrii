@@ -1166,7 +1166,7 @@ export const VenueMessaging = ({
                             {showSender ? (
                               <div
                                 aria-hidden="true"
-                                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight text-white ${isOwnMessage ? "bg-primary" : senderColour.avatarClassName}`}
+                                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight text-white ${senderColour.avatarClassName}`}
                               >
                                 {getSenderInitials(name)}
                               </div>
@@ -1176,7 +1176,7 @@ export const VenueMessaging = ({
                             <div className={`flex min-w-0 flex-col ${isOwnMessage ? "items-end" : "items-start"}`}>
                               {showSender && (
                                 <p
-                                  className={`mb-1 px-1 text-base font-semibold ${isOwnMessage ? "text-primary text-right" : senderColour.textClassName}`}
+                                  className={`mb-1 px-1 text-base font-semibold ${senderColour.textClassName} ${isOwnMessage ? "text-right" : ""}`}
                                 >
                                   {name}
                                 </p>
@@ -1253,27 +1253,41 @@ export const VenueMessaging = ({
 
                                 {message.reactions?.length ? (
                                   <div className="mt-2 flex flex-wrap gap-2">
-                                    {message.reactions.map((reaction) => (
-                                      <button
-                                        aria-label={
-                                          reaction.reacted
-                                            ? i18n("Your reaction")
-                                            : i18n("Reaction from the other participant")
-                                        }
-                                        className={clsx(
-                                          "rounded-full px-3 py-1.5 text-lg leading-none transition-colors",
-                                          reaction.reacted
-                                            ? "bg-secondary/50 hover:bg-secondary/75"
-                                            : "bg-on-surface/10 hover:bg-on-surface/20",
-                                        )}
-                                        key={reaction.emoji}
-                                        onClick={() => void toggleReaction(message.id, reaction.emoji)}
-                                        onPointerUp={(event) => event.stopPropagation()}
-                                        type="button"
-                                      >
-                                        {reaction.emoji}
-                                      </button>
-                                    ))}
+                                    {message.reactions.map((reaction) => {
+                                      const reactionCount = Number(reaction.count);
+
+                                      return (
+                                        <button
+                                          aria-label={
+                                            reactionCount > 1
+                                              ? reaction.reacted
+                                                ? i18n("Your reaction and {count} other", { count: reactionCount - 1 })
+                                                : i18n("{count} reactions", { count: reactionCount })
+                                              : reaction.reacted
+                                                ? i18n("Your reaction")
+                                                : i18n("Reaction from the other participant")
+                                          }
+                                          aria-pressed={reaction.reacted}
+                                          className={clsx(
+                                            "inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-lg leading-none transition-colors",
+                                            reaction.reacted
+                                              ? "bg-secondary/50 hover:bg-secondary/75"
+                                              : "bg-on-surface/10 hover:bg-on-surface/20",
+                                          )}
+                                          key={reaction.emoji}
+                                          onClick={() => void toggleReaction(message.id, reaction.emoji)}
+                                          onPointerUp={(event) => event.stopPropagation()}
+                                          type="button"
+                                        >
+                                          <span>{reaction.emoji}</span>
+                                          {reactionCount > 1 && (
+                                            <span className="text-on-surface/70 text-sm font-semibold">
+                                              {reactionCount}
+                                            </span>
+                                          )}
+                                        </button>
+                                      );
+                                    })}
                                   </div>
                                 ) : null}
                               </div>
@@ -1405,7 +1419,7 @@ export const VenueMessaging = ({
               <div className="flex-col items-end gap-2">
                 <div className="min-w-0 flex-1">
                   <Textarea
-                    className="min-h-[4.5rem] resize-none"
+                    className="min-h-18 resize-none"
                     disabled={role === "OWNER" && !selectedConversationId}
                     maxChars={4096}
                     onChange={(event) => setMessageBody(event.target.value)}
@@ -1418,7 +1432,6 @@ export const VenueMessaging = ({
                 <div className="-mt-3 flex justify-end">
                   <Button
                     busy={isSendingMessage}
-                    className="mb-5"
                     disabled={!messageBody.trim() || (role === "OWNER" && !selectedConversationId)}
                     onClick={sendMessage}
                   >
