@@ -1,9 +1,8 @@
 import { gql } from "@apollo/client";
 
 /**
- * A lightweight invalidation stream. Message bodies and reactions continue to
- * come from the protected REST endpoints, which keep pagination and response
- * shaping in one place.
+ * A lightweight invalidation stream. Reactions and full message shaping stay
+ * in the protected REST endpoints, which keep pagination in one place.
  */
 export const VENUE_MESSAGING_EVENTS_SUBSCRIPTION = gql`
   subscription VenueMessagingEvents($venueId: uuid!) {
@@ -12,6 +11,7 @@ export const VENUE_MESSAGING_EVENTS_SUBSCRIPTION = gql`
       order_by: [{ created_at: desc }, { id: desc }]
       where: { conversation: { venue_id: { _eq: $venueId } } }
     ) {
+      body
       deleted_at
       id
       conversation_id
@@ -27,6 +27,7 @@ export const VENUE_MESSAGING_EVENTS_SUBSCRIPTION = gql`
 export const CONVERSATION_MESSAGING_EVENTS_SUBSCRIPTION = gql`
   subscription ConversationMessagingEvents($messageIds: [uuid!]!) {
     messages(order_by: [{ created_at: desc }, { id: desc }], where: { id: { _in: $messageIds } }) {
+      body
       deleted_at
       id
       conversation_id

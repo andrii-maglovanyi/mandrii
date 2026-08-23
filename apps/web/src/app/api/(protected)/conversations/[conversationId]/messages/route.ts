@@ -89,18 +89,31 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
         body: string;
         created_at: string;
         deleted_at: null | string;
+        edited_at: null | string;
+        editable: boolean;
         id: string;
         reply_to_body: null | string;
         reply_to_deleted: boolean;
         reply_to_message_id: null | string;
         reply_to_sender_type: null | "USER" | "VENUE";
         sender_type: "USER" | "VENUE";
+        sent_from_telegram: boolean;
         telegram_delivered_at: null | string;
+        telegram_message_id: null | number;
       }>
     >`
       SELECT m.id,
              CASE WHEN m.deleted_at IS NULL THEN m.body ELSE '' END AS body,
-             m.sender_type, m.created_at, m.deleted_at, m.reply_to_message_id, m.telegram_delivered_at,
+             m.sender_type, m.created_at, m.deleted_at, m.edited_at, m.reply_to_message_id,
+             m.telegram_delivered_at, m.telegram_message_id,
+             (m.sender_type = 'VENUE'
+               AND m.telegram_message_id IS NOT NULL
+               AND m.telegram_delivered_at IS NULL
+             ) AS sent_from_telegram,
+             (m.deleted_at IS NULL
+               AND m.sender_type = ${conversation.is_owner ? "VENUE" : "USER"}
+               AND NOT (m.telegram_message_id IS NOT NULL AND m.telegram_delivered_at IS NULL)
+             ) AS editable,
              CASE WHEN parent.deleted_at IS NULL THEN parent.body ELSE NULL END AS reply_to_body,
              (parent.deleted_at IS NOT NULL) AS reply_to_deleted,
              parent.sender_type AS reply_to_sender_type
@@ -132,7 +145,10 @@ export const GET = (req: Request, { params }: { params: Promise<{ conversationId
     });
     const messages = newestFirstMessages
       .reverse()
-      .map((message) => ({ ...message, reactions: reactionsByMessageId.get(message.id) ?? [] }));
+      .map(({ telegram_message_id: _telegramMessageId, ...message }) => ({
+        ...message,
+        reactions: reactionsByMessageId.get(message.id) ?? [],
+      }));
     const oldestMessage = messages[0];
 
     return Response.json({

@@ -7,6 +7,22 @@ import { getSenderColour, getSenderInitials } from "~/lib/messaging/sender";
 
 export const bot = new Bot(privateConfig.telegram.token);
 
+export function formatUserTelegramMessage({
+  body,
+  isConsecutiveCustomerMessage,
+  replyBody,
+  userName,
+}: {
+  body: string;
+  isConsecutiveCustomerMessage: boolean;
+  replyBody?: null | string;
+  userName: string;
+}) {
+  const quotedReply = replyBody ? `↩ ${replyBody}\n\n` : "";
+  const senderLabel = `${getSenderColour(userName).emoji} ${getSenderInitials(userName)} · ${userName}`;
+  return isConsecutiveCustomerMessage ? `${quotedReply}${body}` : `${senderLabel}\n\n${quotedReply}${body}`;
+}
+
 // Local polling uses the same bot token as the deployed webhook. It must be
 // explicitly enabled so running the app locally can never disconnect production.
 if (process.env.NODE_ENV === "development" && process.env.TELEGRAM_LOCAL_POLLING === "true") {
@@ -127,16 +143,17 @@ export async function sendUserMessageToVenue(
           SELECT body, telegram_message_id FROM messages WHERE id = ${replyToMessageId} AND deleted_at IS NULL
         `
         : [];
-      const quotedReply = replyToMessage ? `↩ ${replyToMessage.body}\n\n` : "";
-      const senderLabel = `${getSenderColour(userName).emoji} ${getSenderInitials(userName)} · ${userName}`;
       const isConsecutiveCustomerMessage =
         previousMessage?.sender_type === "USER" &&
         previousMessage.conversation_id === conversationId &&
         previousMessage.telegram_message_id != null &&
         Date.now() - new Date(previousMessage.created_at).getTime() < 5 * 60 * 1_000;
-      const formattedMessage = isConsecutiveCustomerMessage
-        ? `${quotedReply}${userText}`
-        : `${senderLabel}\n\n${quotedReply}${userText}`;
+      const formattedMessage = formatUserTelegramMessage({
+        body: userText,
+        isConsecutiveCustomerMessage,
+        replyBody: replyToMessage?.body,
+        userName,
+      });
       const telegramResponse = await bot.api.sendMessage(conversation.telegram_chat_id, formattedMessage, {
         reply_parameters: replyToMessage?.telegram_message_id
           ? { message_id: replyToMessage.telegram_message_id }

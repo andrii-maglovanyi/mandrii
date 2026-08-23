@@ -1,18 +1,19 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Archive,
   ArchiveRestore,
   Check,
   ChevronRight,
   Copy,
-  LayoutList,
   Maximize2,
   MessageCircle,
   MessagesSquare,
   Minimize2,
+  Pencil,
   Reply,
+  Send,
   Trash2,
   X,
 } from "lucide-react";
@@ -43,6 +44,7 @@ import { UUID } from "~/types/uuid";
 
 import { Conversation, ConversationMessage } from "./types";
 import { clsx } from "clsx";
+import Image from "next/image";
 
 type MessagingRole = "OWNER" | "USER";
 type MessagingUpdateDetail = {
@@ -85,6 +87,8 @@ interface VenueMessagingProps {
   venueName: string;
 }
 
+const TELEGRAM_LOGO = "/static/telegram.svg";
+
 export const VenueMessaging = ({
   hasOwner,
   initialRole,
@@ -110,6 +114,7 @@ export const VenueMessaging = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [messageBody, setMessageBody] = useState("");
   const [replyToMessage, setReplyToMessage] = useState<ConversationMessage | null>(null);
+  const [messageBeingEdited, setMessageBeingEdited] = useState<ConversationMessage | null>(null);
   const [messageError, setMessageError] = useState("");
   const [isArchivingConversation, setIsArchivingConversation] = useState(false);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
@@ -121,6 +126,7 @@ export const VenueMessaging = ({
     x: number;
   } | null>(null);
   const messageListRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<HTMLTextAreaElement>(null);
   const shouldStickToLatestRef = useRef(true);
   const scrollRestoreRef = useRef<null | { height: number; top: number }>(null);
   const lastReadSyncRef = useRef("");
@@ -129,6 +135,15 @@ export const VenueMessaging = ({
   const lastConversationEventRef = useRef<string | null>(null);
   const lastReactionEventRef = useRef<string | null>(null);
   const lastVenueEventRef = useRef<string | null>(null);
+  const resizeComposer = useCallback(() => {
+    const composer = composerRef.current;
+    if (!composer) return;
+
+    composer.style.height = "auto";
+    const maxHeight = Math.min(240, window.innerHeight * 0.35);
+    composer.style.height = `${Math.min(composer.scrollHeight, maxHeight)}px`;
+    composer.style.overflowY = composer.scrollHeight > maxHeight ? "auto" : "hidden";
+  }, []);
   const { data: messagingEvents } = useVenueMessagingEventsSubscription({
     skip: !hasOwner || !isAuthenticated,
     variables: { venueId },
@@ -148,7 +163,7 @@ export const VenueMessaging = ({
     const conversationIds = new Set<string>();
     messagingEvents.messages.forEach((message) => conversationIds.add(message.conversation_id));
     const signature = `${venueId}:${messagingEvents.messages
-      .map((message) => `${message.conversation_id}:${message.id}:${message.deleted_at ?? ""}`)
+      .map((message) => `${message.conversation_id}:${message.id}:${message.deleted_at ?? ""}:${message.body}`)
       .join("|")}`;
     if (lastVenueEventRef.current === null || !lastVenueEventRef.current.startsWith(`${venueId}:`)) {
       lastVenueEventRef.current = signature;
@@ -168,7 +183,7 @@ export const VenueMessaging = ({
   useEffect(() => {
     if (!conversationMessagingEvents || !selectedConversationId) return;
     const signature = `${selectedConversationId}:${conversationMessagingEvents.messages
-      .map((message) => `${message.conversation_id}:${message.id}:${message.deleted_at ?? ""}`)
+      .map((message) => `${message.conversation_id}:${message.id}:${message.deleted_at ?? ""}:${message.body}`)
       .join("|")}`;
     if (
       lastConversationEventRef.current === null ||
@@ -224,6 +239,7 @@ export const VenueMessaging = ({
     if (!isAuthenticated) return;
     let isCurrent = true;
     let hasLoadedInitially = false;
+    let activeRequest: AbortController | null = null;
     const load = async () => {
       const isInitialLoad = !hasLoadedInitially;
       if (isInitialLoad) setIsLoadingConversations(true);
@@ -231,9 +247,13 @@ export const VenueMessaging = ({
         if (isInitialLoad && isCurrent) setIsLoadingConversations(false);
         return;
       }
+      const abortController = new AbortController();
+      const requestTimeout = window.setTimeout(() => abortController.abort(), 15_000);
+      activeRequest = abortController;
       try {
         const response = await fetch(`/api/conversations?venueId=${encodeURIComponent(venueId)}`, {
           cache: "no-store",
+          signal: abortController.signal,
         });
         if (!response.ok) {
           const data = (await response.json().catch(() => null)) as { error?: string } | null;
@@ -259,8 +279,14 @@ export const VenueMessaging = ({
             null,
         );
       } catch {
-        // Messaging remains unavailable when the session cannot be loaded.
+        if (isCurrent && abortController.signal.aborted) {
+          setMessageError(i18n("Messages are taking too long to load. Please try again."));
+        } else if (isCurrent) {
+          setMessageError(i18n("Unable to load messages"));
+        }
       } finally {
+        window.clearTimeout(requestTimeout);
+        if (activeRequest === abortController) activeRequest = null;
         if (isInitialLoad && isCurrent) {
           hasLoadedInitially = true;
           window.requestAnimationFrame(() => {
@@ -281,6 +307,7 @@ export const VenueMessaging = ({
     document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
       isCurrent = false;
+      activeRequest?.abort();
       window.removeEventListener("venue-messaging-update", onMessagingUpdate);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
@@ -378,6 +405,15 @@ export const VenueMessaging = ({
       setShowJumpToLatest(false);
     }
   }, [isLoadingMessages, messages, selectedConversationId]);
+
+  useLayoutEffect(() => {
+    resizeComposer();
+  }, [isUserLoading, messageBody, resizeComposer, role]);
+
+  useEffect(() => {
+    window.addEventListener("resize", resizeComposer);
+    return () => window.removeEventListener("resize", resizeComposer);
+  }, [resizeComposer]);
 
   useEffect(() => {
     if (!reactionPicker) return;
@@ -481,11 +517,12 @@ export const VenueMessaging = ({
     }).format(new Date(timestamp));
   const canDeleteMessage = (message: ConversationMessage) =>
     (role === "OWNER" && message.sender_type === "VENUE") || (role === "USER" && message.sender_type === "USER");
+  const canEditMessage = (message: ConversationMessage) => canDeleteMessage(message) && message.editable !== false;
   const openActions = (message: ConversationMessage, element: HTMLElement) => {
     const rect = element.getBoundingClientRect();
     const gap = 12;
     const emojiPickerHeight = 56;
-    const actionMenuHeight = canDeleteMessage(message) ? 144 : 96;
+    const actionMenuHeight = 96 + (canEditMessage(message) ? 48 : 0) + (canDeleteMessage(message) ? 48 : 0);
     const viewportPadding = 8;
     const canFitAbove = rect.top - gap - emojiPickerHeight >= viewportPadding;
     const canFitBelow = rect.bottom + gap + actionMenuHeight <= window.innerHeight - viewportPadding;
@@ -536,6 +573,14 @@ export const VenueMessaging = ({
       setReactionPicker(null);
     }
   };
+  const startEditingMessage = (message: ConversationMessage) => {
+    if (!canEditMessage(message)) return;
+    setMessageBody(message.body);
+    setReplyToMessage(null);
+    setMessageBeingEdited(message);
+    setReactionPicker(null);
+    window.requestAnimationFrame(() => composerRef.current?.focus());
+  };
   const deleteMessage = async (message: ConversationMessage) => {
     if (!selectedConversationId || !canDeleteMessage(message)) return;
     if (!window.confirm(i18n("Delete this message?"))) return;
@@ -562,6 +607,7 @@ export const VenueMessaging = ({
         ),
       );
       setReplyToMessage((current) => (current?.id === message.id ? null : current));
+      setMessageBeingEdited((current) => (current?.id === message.id ? null : current));
       await refreshConversations();
     } catch (error) {
       setMessageError(error instanceof Error ? error.message : i18n("Unable to delete the message"));
@@ -614,6 +660,21 @@ export const VenueMessaging = ({
     setIsSendingMessage(true);
     setMessageError("");
     try {
+      if (messageBeingEdited && selectedConversationId) {
+        const response = await fetch(`/api/conversations/${selectedConversationId}/messages/${messageBeingEdited.id}`, {
+          body: JSON.stringify({ body }),
+          headers: { "Content-Type": "application/json" },
+          method: "PATCH",
+        });
+        const data = (await response.json()) as { error?: string; message?: ConversationMessage };
+        if (!response.ok || !data.message) throw new Error(data.error || i18n("Unable to edit the message"));
+        setMessages((current) =>
+          current.map((message) => (message.id === data.message?.id ? { ...message, ...data.message } : message)),
+        );
+        setMessageBody("");
+        setMessageBeingEdited(null);
+        return;
+      }
       const isOwner = role === "OWNER";
       const response = await fetch(
         isOwner ? `/api/conversations/${selectedConversationId}/messages` : "/api/conversations",
@@ -654,6 +715,7 @@ export const VenueMessaging = ({
           reply_to_sender_type: replyToMessage?.sender_type ?? null,
           sender_type: data.message.sender_type ?? "VENUE",
           telegram_delivered_at: data.message.telegram_delivered_at ?? null,
+          editable: true,
         };
         setMessages((current) => [...current, message]);
       }
@@ -885,11 +947,14 @@ export const VenueMessaging = ({
 
       {role === "OWNER" && telegramLinked === false && (
         <div className="bg-primary/10 flex items-center justify-between rounded-xl px-4 py-2">
-          <p>{i18n("Receive messages in Telegram")}</p>
+          <div className="flex space-x-2">
+            <Image alt="Telegram" width={22} height={22} src={TELEGRAM_LOGO} />
+            <p>{i18n("Receive messages in Telegram")}</p>
+          </div>
           <div className="flex items-center space-x-2">
             {messageError && <p className="text-sm text-red-600">{messageError}</p>}
             <Button onClick={linkTelegram} size="sm" color="primary">
-              {i18n("Link Telegram")}
+              {i18n("Link")}
             </Button>
           </div>
         </div>
@@ -1015,7 +1080,7 @@ export const VenueMessaging = ({
               }}
               ref={messageListRef}
             >
-              {isLoadingConversations || isLoadingMessages ? (
+              {isLoadingMessages || (!selectedConversationId && isLoadingConversations) ? (
                 <div aria-live="polite" className="flex min-h-32 flex-1 items-center justify-center">
                   <AnimatedEllipsis size="md" />
                 </div>
@@ -1154,13 +1219,19 @@ export const VenueMessaging = ({
                                   {message.body}
                                 </p>
 
-                                <div className="text-on-surface/60 mt-1 flex min-w-24 justify-between text-xs">
+                                <div className="text-on-surface/60 mt-1 flex min-w-28 justify-between text-xs">
                                   {message.sender_type === "USER" && message.telegram_delivered_at && (
                                     <Tooltip label={i18n("Delivered to Telegram")}>
                                       <Check className="stroke-success mt-1" size={10} />
                                     </Tooltip>
                                   )}
+                                  {message.sent_from_telegram && (
+                                    <Tooltip label={i18n("Sent from Telegram")}>
+                                      <Image alt="Telegram" width={14} height={14} src={TELEGRAM_LOGO} />
+                                    </Tooltip>
+                                  )}
                                   <time className="ml-auto text-right" dateTime={message.created_at}>
+                                    {message.edited_at && <span className="mr-1">{i18n("Edited")}</span>}
                                     {formatTimestamp(message.created_at)}
                                   </time>
                                 </div>
@@ -1261,6 +1332,16 @@ export const VenueMessaging = ({
                     <Copy size={18} />
                     {i18n("Copy")}
                   </button>
+                  {canEditMessage(reactionPicker.message) && (
+                    <button
+                      className="border-neutral/10 hover:bg-surface-tint flex w-full items-center gap-2 border-t px-4 py-3 text-sm font-medium"
+                      onClick={() => startEditingMessage(reactionPicker.message)}
+                      type="button"
+                    >
+                      <Pencil size={18} />
+                      {i18n("Edit")}
+                    </button>
+                  )}
                   {canDeleteMessage(reactionPicker.message) && (
                     <button
                       className="border-neutral/10 text-danger hover:bg-danger/10 flex w-full items-center gap-2 border-t px-4 py-3 text-sm font-medium"
@@ -1275,6 +1356,22 @@ export const VenueMessaging = ({
               </>
             )}
             <div className="p-3">
+              {messageBeingEdited && (
+                <div className="border-primary bg-primary/8 mb-2 flex items-center justify-between rounded-lg border-l-4 px-3 py-2 text-xs">
+                  <span className="truncate">{i18n("Editing message")}</span>
+                  <button
+                    aria-label={i18n("Cancel editing")}
+                    className="ml-3 text-base"
+                    onClick={() => {
+                      setMessageBeingEdited(null);
+                      setMessageBody("");
+                    }}
+                    type="button"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
               {replyToMessage && (
                 <div className="border-primary bg-primary/8 mb-2 flex items-center justify-between rounded-lg border-l-4 px-3 py-2 text-xs">
                   <span className="truncate">
@@ -1293,10 +1390,12 @@ export const VenueMessaging = ({
               <div className="flex-col items-end gap-2">
                 <div className="min-w-0 flex-1">
                   <Textarea
+                    className="resize-none"
                     disabled={role === "OWNER" && !selectedConversationId}
                     maxChars={4096}
                     onChange={(event) => setMessageBody(event.target.value)}
                     placeholder={i18n("Write a message")}
+                    ref={composerRef}
                     rows={2}
                     value={messageBody}
                   />
@@ -1308,7 +1407,7 @@ export const VenueMessaging = ({
                     disabled={!messageBody.trim() || (role === "OWNER" && !selectedConversationId)}
                     onClick={sendMessage}
                   >
-                    {i18n("Send")}
+                    {messageBeingEdited ? i18n("Save") : i18n("Send")}
                   </Button>
                 </div>
               </div>

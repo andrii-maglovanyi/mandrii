@@ -1789,10 +1789,12 @@ export type Conversations = {
   messages: Array<Messages>;
   /** An aggregate relationship */
   messages_aggregate: Messages_Aggregate;
+  owner_archived_at?: Maybe<Scalars['timestamptz']['output']>;
   owner_last_read_at?: Maybe<Scalars['timestamptz']['output']>;
   telegram_thread_id?: Maybe<Scalars['bigint']['output']>;
   /** An object relationship */
   user: Users;
+  user_archived_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id: Scalars['uuid']['output'];
   user_last_read_at?: Maybe<Scalars['timestamptz']['output']>;
   /** An object relationship */
@@ -1903,9 +1905,11 @@ export type Conversations_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   messages?: InputMaybe<Messages_Bool_Exp>;
   messages_aggregate?: InputMaybe<Messages_Aggregate_Bool_Exp>;
+  owner_archived_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   owner_last_read_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   telegram_thread_id?: InputMaybe<Bigint_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
+  user_archived_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
   user_last_read_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   venue?: InputMaybe<Venues_Bool_Exp>;
@@ -1930,9 +1934,11 @@ export type Conversations_Insert_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   messages?: InputMaybe<Messages_Arr_Rel_Insert_Input>;
+  owner_archived_at?: InputMaybe<Scalars['timestamptz']['input']>;
   owner_last_read_at?: InputMaybe<Scalars['timestamptz']['input']>;
   telegram_thread_id?: InputMaybe<Scalars['bigint']['input']>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_archived_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
   user_last_read_at?: InputMaybe<Scalars['timestamptz']['input']>;
   venue?: InputMaybe<Venues_Obj_Rel_Insert_Input>;
@@ -1944,8 +1950,10 @@ export type Conversations_Max_Fields = {
   __typename?: 'conversations_max_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  owner_archived_at?: Maybe<Scalars['timestamptz']['output']>;
   owner_last_read_at?: Maybe<Scalars['timestamptz']['output']>;
   telegram_thread_id?: Maybe<Scalars['bigint']['output']>;
+  user_archived_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
   user_last_read_at?: Maybe<Scalars['timestamptz']['output']>;
   venue_id?: Maybe<Scalars['uuid']['output']>;
@@ -1955,8 +1963,10 @@ export type Conversations_Max_Fields = {
 export type Conversations_Max_Order_By = {
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  owner_archived_at?: InputMaybe<Order_By>;
   owner_last_read_at?: InputMaybe<Order_By>;
   telegram_thread_id?: InputMaybe<Order_By>;
+  user_archived_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
   user_last_read_at?: InputMaybe<Order_By>;
   venue_id?: InputMaybe<Order_By>;
@@ -1967,8 +1977,10 @@ export type Conversations_Min_Fields = {
   __typename?: 'conversations_min_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  owner_archived_at?: Maybe<Scalars['timestamptz']['output']>;
   owner_last_read_at?: Maybe<Scalars['timestamptz']['output']>;
   telegram_thread_id?: Maybe<Scalars['bigint']['output']>;
+  user_archived_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
   user_last_read_at?: Maybe<Scalars['timestamptz']['output']>;
   venue_id?: Maybe<Scalars['uuid']['output']>;
@@ -1978,8 +1990,10 @@ export type Conversations_Min_Fields = {
 export type Conversations_Min_Order_By = {
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  owner_archived_at?: InputMaybe<Order_By>;
   owner_last_read_at?: InputMaybe<Order_By>;
   telegram_thread_id?: InputMaybe<Order_By>;
+  user_archived_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
   user_last_read_at?: InputMaybe<Order_By>;
   venue_id?: InputMaybe<Order_By>;
@@ -2013,9 +2027,11 @@ export type Conversations_Order_By = {
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   messages_aggregate?: InputMaybe<Messages_Aggregate_Order_By>;
+  owner_archived_at?: InputMaybe<Order_By>;
   owner_last_read_at?: InputMaybe<Order_By>;
   telegram_thread_id?: InputMaybe<Order_By>;
   user?: InputMaybe<Users_Order_By>;
+  user_archived_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
   user_last_read_at?: InputMaybe<Order_By>;
   venue?: InputMaybe<Venues_Order_By>;
@@ -2034,9 +2050,13 @@ export enum Conversations_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  OwnerArchivedAt = 'owner_archived_at',
+  /** column name */
   OwnerLastReadAt = 'owner_last_read_at',
   /** column name */
   TelegramThreadId = 'telegram_thread_id',
+  /** column name */
+  UserArchivedAt = 'user_archived_at',
   /** column name */
   UserId = 'user_id',
   /** column name */
@@ -2049,8 +2069,10 @@ export enum Conversations_Select_Column {
 export type Conversations_Set_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  owner_archived_at?: InputMaybe<Scalars['timestamptz']['input']>;
   owner_last_read_at?: InputMaybe<Scalars['timestamptz']['input']>;
   telegram_thread_id?: InputMaybe<Scalars['bigint']['input']>;
+  user_archived_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
   user_last_read_at?: InputMaybe<Scalars['timestamptz']['input']>;
   venue_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -2101,8 +2123,10 @@ export type Conversations_Stream_Cursor_Input = {
 export type Conversations_Stream_Cursor_Value_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  owner_archived_at?: InputMaybe<Scalars['timestamptz']['input']>;
   owner_last_read_at?: InputMaybe<Scalars['timestamptz']['input']>;
   telegram_thread_id?: InputMaybe<Scalars['bigint']['input']>;
+  user_archived_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
   user_last_read_at?: InputMaybe<Scalars['timestamptz']['input']>;
   venue_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -2126,9 +2150,13 @@ export enum Conversations_Update_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  OwnerArchivedAt = 'owner_archived_at',
+  /** column name */
   OwnerLastReadAt = 'owner_last_read_at',
   /** column name */
   TelegramThreadId = 'telegram_thread_id',
+  /** column name */
+  UserArchivedAt = 'user_archived_at',
   /** column name */
   UserId = 'user_id',
   /** column name */
@@ -17000,14 +17028,14 @@ export type VenueMessagingEventsSubscriptionVariables = Exact<{
 }>;
 
 
-export type VenueMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', deleted_at?: Timestamp | null, id: UUID, conversation_id: UUID }> };
+export type VenueMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', body: string, deleted_at?: Timestamp | null, id: UUID, conversation_id: UUID }> };
 
 export type ConversationMessagingEventsSubscriptionVariables = Exact<{
   messageIds: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
 }>;
 
 
-export type ConversationMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', deleted_at?: Timestamp | null, id: UUID, conversation_id: UUID }> };
+export type ConversationMessagingEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', body: string, deleted_at?: Timestamp | null, id: UUID, conversation_id: UUID }> };
 
 export type ConversationReactionEventsSubscriptionVariables = Exact<{
   messageIds: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
@@ -17733,6 +17761,7 @@ export const VenueMessagingEventsDocument = gql`
     order_by: [{created_at: desc}, {id: desc}]
     where: {conversation: {venue_id: {_eq: $venueId}}}
   ) {
+    body
     deleted_at
     id
     conversation_id
@@ -17768,6 +17797,7 @@ export const ConversationMessagingEventsDocument = gql`
     order_by: [{created_at: desc}, {id: desc}]
     where: {id: {_in: $messageIds}}
   ) {
+    body
     deleted_at
     id
     conversation_id
