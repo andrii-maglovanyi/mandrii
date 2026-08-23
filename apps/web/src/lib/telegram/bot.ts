@@ -82,9 +82,16 @@ bot.command("unlink", async (ctx) => {
   const chatId = ctx.chat.id;
 
   await sql`
-    UPDATE venues
-    SET telegram_chat_id = NULL
-    WHERE telegram_chat_id = ${chatId}
+    WITH unlinked_venues AS (
+      UPDATE venues
+      SET telegram_chat_id = NULL
+      WHERE telegram_chat_id = ${chatId}
+      RETURNING id
+    )
+    UPDATE telegram_link_tokens
+    SET used_at = NOW()
+    WHERE venue_id IN (SELECT id FROM unlinked_venues)
+      AND used_at IS NULL
   `;
 
   await ctx.reply("Your venue has been unlinked. You will no longer receive customer messages.");

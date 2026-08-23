@@ -31,6 +31,7 @@ import {
   Tooltip,
 } from "~/components/ui";
 import { PushNotifications } from "~/components/layout/PushNotifications/PushNotifications";
+import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { MESSAGE_REACTION_EMOJIS } from "~/lib/messaging/constants";
@@ -98,6 +99,7 @@ export const VenueMessaging = ({
 }: VenueMessagingProps) => {
   const { isAuthenticated, isLoading: isUserLoading } = useUser();
   const i18n = useI18n();
+  const { openConfirmDialog } = useDialog();
   const locale = useLocale();
   const requestedConversationId = useSearchParams().get("conversation");
   const [role, setRole] = useState<MessagingRole | null>(initialRole);
@@ -118,6 +120,7 @@ export const VenueMessaging = ({
   const [messageError, setMessageError] = useState("");
   const [isArchivingConversation, setIsArchivingConversation] = useState(false);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [isUnlinkingTelegram, setIsUnlinkingTelegram] = useState(false);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
   const [reactionPicker, setReactionPicker] = useState<{
     actionsTop: number;
@@ -746,6 +749,32 @@ export const VenueMessaging = ({
       setMessageError(error instanceof Error ? error.message : i18n("Unable to create a Telegram link"));
     }
   };
+  const unlinkTelegram = async () => {
+    const confirmed = await openConfirmDialog({
+      message: i18n(
+        "Telegram will stop receiving new customer messages. Your existing web conversations will remain available.",
+      ),
+      title: i18n("Unlink Telegram?"),
+    });
+    if (!confirmed) return;
+
+    setIsUnlinkingTelegram(true);
+    setMessageError("");
+    try {
+      const response = await fetch("/api/telegram/unlink", {
+        body: JSON.stringify({ venueId }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const data = (await response.json()) as { error?: string; telegramLinked?: boolean };
+      if (!response.ok) throw new Error(data.error || i18n("Unable to unlink Telegram"));
+      setTelegramLinked(data.telegramLinked ?? false);
+    } catch (error) {
+      setMessageError(error instanceof Error ? error.message : i18n("Unable to unlink Telegram"));
+    } finally {
+      setIsUnlinkingTelegram(false);
+    }
+  };
   const scrollToLatest = () => {
     const list = messageListRef.current;
     if (!list) return;
@@ -966,6 +995,23 @@ export const VenueMessaging = ({
               {i18n("Link")}
             </Button>
           </div>
+        </div>
+      )}
+      {role === "OWNER" && telegramLinked === true && (
+        <div className="bg-primary/10 flex items-center justify-between rounded-xl px-4 py-2">
+          <div className="flex space-x-2">
+            <Image alt="Telegram" width={22} height={22} src={TELEGRAM_LOGO} />
+            <p>{i18n("Telegram is linked and receiving customer messages")}</p>
+          </div>
+          <Button
+            busy={isUnlinkingTelegram}
+            color="danger"
+            onClick={() => void unlinkTelegram()}
+            size="sm"
+            variant="outlined"
+          >
+            {i18n("Unlink")}
+          </Button>
         </div>
       )}
       <div className={clsx(isExpanded && "bg-surface fixed inset-0 z-50 flex h-dvh flex-col p-3 md:p-6")}>
