@@ -1240,7 +1240,13 @@ export const VenueMessaging = ({
                                     </Tooltip>
                                   )}
                                   <time className="ml-auto text-right" dateTime={message.created_at}>
-                                    {message.edited_at && <span className="mr-1">{i18n("Edited")}</span>}
+                                    {message.edited_at && (
+                                      <span className="mr-1">
+                                        <Tooltip label={i18n("Edited")}>
+                                          <Pencil />
+                                        </Tooltip>
+                                      </span>
+                                    )}
                                     {formatTimestamp(message.created_at)}
                                   </time>
                                 </div>
