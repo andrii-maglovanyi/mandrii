@@ -16506,6 +16506,7 @@ export type MessagingUnreadEventsSubscription = {
   messages: Array<{
     __typename?: "messages";
     body: string;
+    conversation_id: UUID;
     deleted_at?: Timestamp | null;
     edited_at?: Timestamp | null;
     id: UUID;
@@ -18763,6 +18764,7 @@ export const MessagingUnreadEventsDocument = gql`
   subscription MessagingUnreadEvents {
     messages(limit: 1, order_by: [{ created_at: desc }, { id: desc }]) {
       body
+      conversation_id
       deleted_at
       edited_at
       id

@@ -35,7 +35,7 @@ export const MessageComposer = ({
   const i18n = useI18n();
 
   return (
-    <div className="border-neutral/10 bg-surface/95 shrink-0 border-t p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm">
+    <div className="shrink-0 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm">
       {messageBeingEdited && (
         <div className="border-primary bg-primary/8 mb-2 flex items-center justify-between rounded-lg border-l-4 px-3 py-2 text-xs">
           <span className="truncate">{i18n("Editing message")}</span>

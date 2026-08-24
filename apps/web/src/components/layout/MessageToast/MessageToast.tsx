@@ -113,7 +113,7 @@ export const MessageToast = () => {
             router.push(
               message.recipient_role === "USER"
                 ? `/${locale}/messages?conversation=${message.conversation_id}`
-                : `/${locale}/venues/${message.venue_slug}?conversation=${message.conversation_id}#Messaging`,
+                : `/${locale}/venues/${message.venue_slug}?conversation=${message.conversation_id}#Chat`,
             );
             handleClose();
           }}

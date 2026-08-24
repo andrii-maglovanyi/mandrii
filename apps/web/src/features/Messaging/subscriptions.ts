@@ -63,6 +63,7 @@ export const MESSAGING_UNREAD_EVENTS_SUBSCRIPTION = gql`
   subscription MessagingUnreadEvents {
     messages(limit: 1, order_by: [{ created_at: desc }, { id: desc }]) {
       body
+      conversation_id
       deleted_at
       edited_at
       id

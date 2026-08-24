@@ -85,7 +85,7 @@ export async function sendMessagePushNotification(
   const payload = JSON.stringify({
     body: toPushMessagePreview(messageBody),
     title: `💬 ${senderName}:`,
-    url: `/en/venues/${conversation.slug}?conversation=${conversationId}#Messaging`,
+    url: `/en/venues/${conversation.slug}?conversation=${conversationId}#Chat`,
   });
 
   await sendPushNotifications(subscriptions, payload);

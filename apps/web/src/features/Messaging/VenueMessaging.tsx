@@ -212,7 +212,7 @@ export const VenueMessaging = ({
 
     window.dispatchEvent(
       new CustomEvent<MessagingUpdateDetail>("venue-messaging-update", {
-        detail: { conversationIds: [], source: "inbox" },
+        detail: { conversationIds: inboxEvents.messages.map((message) => message.conversation_id), source: "inbox" },
       }),
     );
   }, [inboxEvents]);
@@ -1301,14 +1301,14 @@ export const VenueMessaging = ({
                                       <Image alt="Telegram" width={14} height={14} src={TELEGRAM_LOGO} />
                                     </Tooltip>
                                   )}
+                                  {message.edited_at && (
+                                    <span className="mr-1">
+                                      <Tooltip label={i18n("Edited")}>
+                                        <Pencil size={12} />
+                                      </Tooltip>
+                                    </span>
+                                  )}
                                   <time className="ml-auto text-right" dateTime={message.created_at}>
-                                    {message.edited_at && (
-                                      <span className="mr-1">
-                                        <Tooltip label={i18n("Edited")}>
-                                          <Pencil />
-                                        </Tooltip>
-                                      </span>
-                                    )}
                                     {formatTimestamp(message.created_at)}
                                   </time>
                                 </div>
