@@ -4,7 +4,8 @@ import { Lock } from "lucide-react";
 import { useState } from "react";
 
 import { Avatar, FormFooter, ImagePreview } from "~/components/layout";
-import { Button, FilePicker, Input, LocationAutocomplete, Textarea, Tooltip } from "~/components/ui";
+import { Button, FilePicker, Input, LocationAutocomplete, MDEditor, RichText, Tooltip } from "~/components/ui";
+import { useTheme } from "~/contexts/ThemeContext";
 import { OnFormSubmitHandler, useForm } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { getUserSchema } from "~/lib/validation/user";
@@ -18,6 +19,7 @@ interface UserFormProps {
 
 export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
   const i18n = useI18n();
+  const { isDark } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
 
   const { getFieldProps, hasChanges, isFormValid, resetForm, setValues, useFormSubmit, useImagePreviews, values } =
@@ -87,18 +89,19 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
             </div>
             {!isEditing && values.city && <p className="text-neutral mt-3 text-sm">{values.city}</p>}
             {!isEditing && values.bio && (
-              <p className="text-on-surface mt-4 max-w-prose text-sm whitespace-pre-wrap">{values.bio}</p>
+              <RichText className="text-on-surface mt-4 max-w-prose text-sm">{values.bio}</RichText>
             )}
           </div>
         </div>
 
         {isEditing && (
           <div className="mt-8 flex flex-col gap-5">
-            <Textarea
-              className="min-h-32"
+            <MDEditor
+              height={180}
+              isDark={isDark}
               label={i18n("About you")}
               maxChars={500}
-              placeholder={i18n("Tell the community a little about yourself")}
+              placeholder={i18n("Tell the community a little about yourself. Markdown formatting is supported.")}
               {...getFieldProps("bio")}
             />
             <LocationAutocomplete

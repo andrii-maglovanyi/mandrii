@@ -130,7 +130,13 @@ array_relationships:
 insert_permissions:
   - role: user
     permission:
-      check: {}
+      check:
+        user:
+          _and:
+            - id:
+                _eq: X-Hasura-User-Id
+            - status:
+                _eq: active
       columns:
         - address
         - area
@@ -245,7 +251,11 @@ update_permissions:
         - social_links
         - website
       filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+        _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              status:
+                _eq: active
       check: null
     comment: ""

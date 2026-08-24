@@ -13,7 +13,7 @@ import { useNotifications, useUser, useVenues } from "~/hooks";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { toDateLocale } from "~/lib/utils";
-import { DayOfWeek, Locale, UUID, Venue_Status_Enum } from "~/types";
+import { DayOfWeek, Locale, Venue_Status_Enum } from "~/types";
 
 import { VenueStatus } from "../VenueStatus";
 import { VenueForm } from "./VenueForm";
@@ -40,19 +40,16 @@ interface ConfirmDialogConfig {
 
 const VenueStatusActions = ({
   i18n,
+  canReject,
   openConfirmDialog,
   status,
   updateVenueStatus,
-  venueId,
 }: {
+  canReject: boolean;
   i18n: (key: string) => string;
   openConfirmDialog: (config: ConfirmDialogConfig) => void;
   status: Venue_Status_Enum;
-  updateVenueStatus: (
-    id: UUID,
-    status: Venue_Status_Enum,
-  ) => Promise<{ data: unknown; error: unknown; loading: boolean }>;
-  venueId: UUID;
+  updateVenueStatus: (status: Venue_Status_Enum) => Promise<void>;
 }) => {
   const actions = [
     {
@@ -63,14 +60,18 @@ const VenueStatusActions = ({
       message: i18n("Are you sure you want to publish this venue?"),
       targetStatus: Venue_Status_Enum.Active,
     },
-    {
-      color: "danger" as const,
-      disabled: status === Venue_Status_Enum.Rejected,
-      icon: <XCircle />,
-      label: i18n("Reject venue"),
-      message: i18n("Are you sure you want to reject this venue?"),
-      targetStatus: Venue_Status_Enum.Rejected,
-    },
+    ...(canReject
+      ? [
+          {
+            color: "danger" as const,
+            disabled: status === Venue_Status_Enum.Rejected,
+            icon: <XCircle />,
+            label: i18n("Reject venue"),
+            message: i18n("Are you sure you want to reject this venue?"),
+            targetStatus: Venue_Status_Enum.Rejected,
+          },
+        ]
+      : []),
     {
       color: "neutral" as const,
       disabled: status === Venue_Status_Enum.Archived,
@@ -95,9 +96,7 @@ const VenueStatusActions = ({
             onClick={() => {
               openConfirmDialog({
                 message: action.message,
-                onConfirm: async () => {
-                  void updateVenueStatus(venueId, action.targetStatus);
-                },
+                onConfirm: () => updateVenueStatus(action.targetStatus),
                 title: action.label,
               });
             }}
@@ -114,7 +113,7 @@ const VenueStatusActions = ({
 
 export const EditVenue = ({ slug }: VenueProps) => {
   const client = useApolloClient();
-  const { showSuccess } = useNotifications();
+  const { showError, showSuccess } = useNotifications();
   const locale = useLocale() as Locale;
   const i18n = useI18n();
   const router = useRouter();
@@ -203,6 +202,21 @@ export const EditVenue = ({ slug }: VenueProps) => {
     };
   }, [data]);
 
+  const handleVenueStatusChange = useCallback(
+    async (status: Venue_Status_Enum) => {
+      if (!data?.id) return;
+
+      try {
+        await updateVenueStatus(data.id, status);
+        await client.refetchQueries({ include: ["GetAdminVenues", "GetPublicVenues", "GetUserVenues"] });
+        showSuccess(i18n("Venue status updated successfully"));
+      } catch (error) {
+        showError(error instanceof Error ? error.message : i18n("Unable to update venue status"));
+      }
+    },
+    [client, data?.id, i18n, showError, showSuccess, updateVenueStatus],
+  );
+
   if (loading) {
     return (
       <div className="flex flex-col">
@@ -238,6 +252,8 @@ export const EditVenue = ({ slug }: VenueProps) => {
   }
 
   const isAdmin = profileData?.role === "admin";
+  const isVerifiedOwner = profileData?.is_verified_contributor === true && profileData.id === data?.user_id;
+  const canManageStatus = isAdmin || isVerifiedOwner;
 
   return (
     <div className="flex flex-col">
@@ -259,13 +275,13 @@ export const EditVenue = ({ slug }: VenueProps) => {
               </Link>
             </Tooltip>
           ) : null}
-          {isAdmin && (
+          {canManageStatus && (
             <VenueStatusActions
+              canReject={isAdmin}
               i18n={i18n}
               openConfirmDialog={openConfirmDialog}
               status={data.status!}
-              updateVenueStatus={updateVenueStatus}
-              venueId={data.id}
+              updateVenueStatus={handleVenueStatusChange}
             />
           )}
         </div>

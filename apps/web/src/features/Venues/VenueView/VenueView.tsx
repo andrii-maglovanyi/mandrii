@@ -3,7 +3,6 @@
 import clsx from "clsx";
 import { BookMarked, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
@@ -114,7 +113,6 @@ export const VenueView = ({
   };
 
   const images = (venue.images || []).filter(Boolean).map((img) => normalizeUrl(img)!) as string[];
-  const logoUrl = normalizeUrl(venue.logo ?? undefined);
 
   const isArchived = venue.status === Venue_Status_Enum.Archived;
   const showStatus = venue.status !== Venue_Status_Enum.Active;
@@ -180,20 +178,7 @@ export const VenueView = ({
           </div>
         </div>
 
-        {/* Logo overlapping image and content */}
-        {logoUrl && (
-          <div className={`absolute right-0 bottom-0 left-0 px-4 md:px-8`}>
-            <div className="mx-auto max-w-5xl">
-              <div
-                className={`border-surface bg-surface relative h-24 w-24 overflow-hidden rounded-3xl border-4 shadow-2xl md:h-32 md:w-32`}
-              >
-                <Image alt={`${venue.name} logo`} className="object-cover" fill src={logoUrl} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className={clsx(logoUrl && `pl-32 md:pl-44 lg:pl-40 xl:pl-36`, `mx-auto mt-2 w-full max-w-5xl px-4`)}>
+        <div className="mx-auto mt-2 w-full max-w-5xl px-4">
           <CardHeader hideUntilHover={false} venue={venue} />
         </div>
       </div>

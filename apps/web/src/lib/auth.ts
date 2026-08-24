@@ -4,7 +4,8 @@ import NextAuth, { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 
-import { UserRole } from "~/types/next-auth";
+import { User_Status_Enum } from "~/types/graphql.generated";
+import { UserRole, UserStatus } from "~/types/next-auth";
 
 import { sendVerificationRequest } from "./authSendRequest";
 import { isDevelopment, isProduction } from "./config/env";
@@ -26,6 +27,7 @@ const getUserById = async (id: string) => {
           users(where: {id: {_eq: $id}}, limit: 1) {
             id
             role
+            status
           }
         }
       `,
@@ -55,11 +57,13 @@ const getUserById = async (id: string) => {
   }
 
   const role: UserRole = user.role === "admin" ? "admin" : "user";
+  const status: UserStatus = user.status === User_Status_Enum.Active ? "active" : "inactive";
 
   return {
     hasuraClaims: getHasuraClaims({ id: user.id, role }),
     id: user.id,
     role,
+    status,
   };
 };
 
@@ -82,6 +86,7 @@ const authOptions: NextAuthConfig = {
 
       if (dbUser) {
         token.role = dbUser.role;
+        token.status = dbUser.status;
         token.hasuraClaims = dbUser.hasuraClaims;
       }
 
@@ -94,6 +99,7 @@ const authOptions: NextAuthConfig = {
         // Reuse dbUser if already fetched this cycle, otherwise fetch fresh
         const freshUser = dbUser ?? (await getUserById(userId));
         token.role = freshUser.role;
+        token.status = freshUser.status;
         token.hasuraClaims = freshUser.hasuraClaims;
 
         if (!token.hasuraClaims) {
@@ -123,6 +129,7 @@ const authOptions: NextAuthConfig = {
 
       session.user.id = token.sub;
       session.user.role = token.role as UserRole;
+      session.user.status = token.status as UserStatus;
       session.accessToken = token.accessToken as string;
 
       return session;

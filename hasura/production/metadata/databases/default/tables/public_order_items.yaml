@@ -16,8 +16,12 @@ insert_permissions:
     permission:
       check:
         order:
-          user_id:
-            _eq: X-Hasura-User-Id
+          _and:
+            - user_id:
+                _eq: X-Hasura-User-Id
+            - user:
+                status:
+                  _eq: active
       columns:
         - order_id
         - product_id

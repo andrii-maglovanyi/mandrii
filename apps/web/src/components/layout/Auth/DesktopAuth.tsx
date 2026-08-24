@@ -5,6 +5,7 @@ import { ActionButton } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
+import { isInactiveAccount } from "~/lib/auth/account-status";
 import { UserSession } from "~/types/user";
 import { useUnreadMessages } from "~/hooks/useUnreadMessages";
 
@@ -20,7 +21,8 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
   const [open, setOpen] = useState(false);
   const [render, setRender] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const unreadMessages = useUnreadMessages();
+  const inactive = isInactiveAccount(profileData.status);
+  const unreadMessages = useUnreadMessages(!inactive);
   const i18n = useI18n();
 
   useEffect(() => {
@@ -60,9 +62,9 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
         <menu
           className={`bg-surface-tint text-on-surface absolute right-0 z-40 mt-2 w-max origin-top-right transform space-y-4 rounded-md p-4 shadow-lg transition duration-200 ease-out dark:shadow-neutral-500/10 ${open ? `scale-100 opacity-100` : `scale-95 opacity-0`} `}
         >
-          <UserProfileCard profile={profileData} />
+          <UserProfileCard inactive={inactive} profile={profileData} />
 
-          <UserMenu onNavigate={() => setOpen(false)} unreadMessages={unreadMessages} />
+          <UserMenu inactive={inactive} onNavigate={() => setOpen(false)} unreadMessages={unreadMessages} />
         </menu>
       )}
     </div>
@@ -82,7 +84,7 @@ export function DesktopAuth() {
     });
   };
 
-  if (isAuthenticated) {
+  if (isAuthenticated && !isLoading) {
     return <ProfileMenu profileData={profileData} />;
   }
 

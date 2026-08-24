@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { cloneElement, isValidElement, ReactNode, useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 export type Position = "bottom-end" | "bottom-start" | "bottom" | "left" | "right" | "top-end" | "top-start" | "top";
@@ -83,6 +83,7 @@ const POSITION_CONFIGS = {
 export const Tooltip = ({ children, className = "", delay = 0, label, position = "top" }: TooltipProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ left: 0, top: 0 });
+  const tooltipId = useId();
   const triggerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout>(null);
   const isMountedRef = useRef(true);
@@ -91,13 +92,20 @@ export const Tooltip = ({ children, className = "", delay = 0, label, position =
     if (!triggerRef.current) return;
 
     const rect = triggerRef.current.getBoundingClientRect();
+    const dialog = triggerRef.current.closest("dialog");
     const scroll = {
       x: window.scrollX,
       y: window.scrollY,
     };
 
     const config = POSITION_CONFIGS[position];
-    const coords = config.getCoords(rect, scroll);
+    const coords = config.getCoords(rect, dialog ? { x: 0, y: 0 } : scroll);
+
+    if (dialog) {
+      const dialogRect = dialog.getBoundingClientRect();
+      coords.left -= dialogRect.left;
+      coords.top -= dialogRect.top;
+    }
 
     if (isMountedRef.current) {
       setTooltipPosition(coords);
@@ -162,11 +170,13 @@ export const Tooltip = ({ children, className = "", delay = 0, label, position =
   }, []);
 
   const config = POSITION_CONFIGS[position];
+  const dialog = triggerRef.current?.closest("dialog");
 
   const tooltipContent = isVisible
     ? createPortal(
         <div
-          className={`bg-neutral-hover text-surface pointer-events-none fixed z-9999 rounded-md px-2 py-1 text-xs whitespace-nowrap opacity-100 shadow transition-opacity duration-200`}
+          className={`bg-neutral-hover text-surface pointer-events-none ${dialog ? "absolute" : "fixed"} z-9999 rounded-md px-2 py-1 text-xs whitespace-nowrap opacity-100 shadow transition-opacity duration-200`}
+          id={tooltipId}
           role="tooltip"
           style={{
             left: `${tooltipPosition.left}px`,
@@ -177,20 +187,26 @@ export const Tooltip = ({ children, className = "", delay = 0, label, position =
           {label}
           <div className="bg-neutral-hover absolute h-2 w-2 rotate-45" style={config.arrow} />
         </div>,
-        document.body,
+        dialog || document.body,
       )
     : null;
+
+  const trigger = isValidElement<{ "aria-describedby"?: string }>(children)
+    ? cloneElement(children, { "aria-describedby": isVisible ? tooltipId : undefined })
+    : children;
 
   return (
     <>
       <div
         className={`group/tooltip pointer-events-auto relative flex w-fit items-center justify-center ${className} `}
         onClick={toggleTooltip}
+        onFocus={showTooltip}
+        onBlur={hideTooltip}
         onMouseEnter={showTooltip}
         onMouseLeave={hideTooltip}
         ref={triggerRef}
       >
-        {children}
+        {trigger}
       </div>
       {tooltipContent}
     </>

@@ -31,7 +31,13 @@ array_relationships:
 insert_permissions:
   - role: user
     permission:
-      check: {}
+      check:
+        user:
+          _and:
+            - id:
+                _eq: X-Hasura-User-Id
+            - status:
+                _eq: active
       columns:
         - accessibility_info
         - age_restriction
@@ -212,7 +218,11 @@ update_permissions:
         - type
         - venue_id
       filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+        _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              status:
+                _eq: active
       check: null
     comment: ""

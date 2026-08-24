@@ -6,6 +6,7 @@ import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
 import { useUnreadMessages } from "~/hooks/useUnreadMessages";
 import { useI18n } from "~/i18n/useI18n";
+import { isInactiveAccount } from "~/lib/auth/account-status";
 
 import { SignInForm } from "./SignInForm";
 import { UserMenu } from "./UserMenu";
@@ -15,7 +16,8 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
   const i18n = useI18n();
 
   const { data: profileData, isAuthenticated, isLoading } = useUser();
-  const unreadMessages = useUnreadMessages(isAuthenticated);
+  const inactive = isInactiveAccount(profileData?.status);
+  const unreadMessages = useUnreadMessages(isAuthenticated && !inactive);
   const { openCustomDialog } = useDialog();
 
   const handleSignIn = async (e: React.MouseEvent) => {
@@ -41,11 +43,11 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
   if (isAuthenticated) {
     return (
       <>
-        <UserProfileCard profile={profileData!} />
+        <UserProfileCard inactive={inactive} profile={profileData!} />
 
         {children}
         <Separator className="mb-6" variant="margin" />
-        <UserMenu unreadMessages={unreadMessages} />
+        <UserMenu inactive={inactive} unreadMessages={unreadMessages} />
       </>
     );
   }

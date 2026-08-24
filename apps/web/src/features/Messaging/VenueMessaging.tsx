@@ -23,7 +23,7 @@ import { PushNotifications } from "~/components/layout/PushNotifications/PushNot
 import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
-import { getSenderColour, getSenderInitials } from "~/lib/messaging/sender";
+import { getSenderColour } from "~/lib/messaging/sender";
 import { UserProfilePreview } from "~/features/UserProfile/UserProfilePreview";
 import {
   useConversationMessagingEventsSubscription,
@@ -37,7 +37,9 @@ import { Conversation, ConversationMessage } from "./types";
 import { ConversationList } from "./components/ConversationList";
 import { MessageActionsMenu, type MessageActionsMenuState } from "./components/MessageActionsMenu";
 import { MessageComposer } from "./components/MessageComposer";
+import { ParticipantAvatar } from "./components/ParticipantAvatar";
 import { TelegramLinkPanel } from "./components/TelegramLinkPanel";
+import { VenuePreview } from "./components/VenuePreview";
 import { clsx } from "clsx";
 
 type MessagingRole = "OWNER" | "USER";
@@ -561,6 +563,41 @@ export const VenueMessaging = ({
       title: i18n("Profile"),
     });
   };
+  const openVenuePreview = () => {
+    if (!selectedConversation?.venue_slug) return;
+
+    void openCustomDialog({
+      children: (
+        <VenuePreview
+          category={selectedConversation.venue_category}
+          city={selectedConversation.venue_city}
+          country={selectedConversation.venue_country}
+          image={selectedConversation.avatar_image}
+          name={activeVenueName || i18n("Venue")}
+          slug={selectedConversation.venue_slug}
+        />
+      ),
+      title: i18n("Venue"),
+    });
+  };
+  const openCounterpart = () => {
+    if (activeRole === "USER" && selectedConversation?.venue_slug) {
+      openVenuePreview();
+      return;
+    }
+
+    if (selectedConversation?.profile_user_id) {
+      openUserProfilePreview(selectedConversation.profile_user_id, selectedConversation.user_name || i18n("Customer"));
+    }
+  };
+  const canOpenCounterpart =
+    activeRole === "USER"
+      ? inbox && Boolean(selectedConversation?.venue_slug)
+      : Boolean(selectedConversation?.profile_user_id);
+  const counterpartLabel =
+    activeRole === "USER"
+      ? i18n("View venue {name}", { name: activeVenueName || i18n("Venue") })
+      : i18n("View profile for {name}", { name: selectedConversation?.user_name || i18n("Customer") });
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : "en-GB", {
@@ -1046,7 +1083,7 @@ export const VenueMessaging = ({
             <div
               aria-hidden={!isConversationMenuOpen}
               className={clsx(
-                "fixed inset-0 z-[60] md:hidden",
+                "fixed inset-0 z-60 md:hidden",
                 isConversationMenuOpen ? "pointer-events-auto" : "pointer-events-none",
               )}
             >
@@ -1165,18 +1202,29 @@ export const VenueMessaging = ({
                           : "bg-surface-tint before:bg-surface-tint";
                       const name = senderName(message.sender_type);
                       const senderColour = getSenderColour(name);
-                      const profileUserId = selectedConversation?.profile_user_id;
+                      const avatarImage = selectedConversation?.avatar_image;
                       const isNewDay =
                         index === 0 ||
                         new Date(messages[index - 1]?.created_at ?? "").toDateString() !==
                           new Date(message.created_at).toDateString();
                       const previousMessage = messages[index - 1];
+                      const nextMessage = messages[index + 1];
                       const followsSameSender =
                         !message.deleted_at &&
                         !previousMessage?.deleted_at &&
                         index > 0 &&
-                        previousMessage?.sender_type === message.sender_type;
+                        previousMessage?.sender_type === message.sender_type &&
+                        new Date(previousMessage.created_at).toDateString() ===
+                          new Date(message.created_at).toDateString();
+                      const isFollowedBySameSender =
+                        !message.deleted_at &&
+                        !nextMessage?.deleted_at &&
+                        nextMessage?.sender_type === message.sender_type &&
+                        new Date(nextMessage.created_at).toDateString() === new Date(message.created_at).toDateString();
                       const showSender = !followsSameSender || isNewDay;
+                      const showSenderName = showSender && !(activeRole === "USER" && message.sender_type === "VENUE");
+                      const isLastInSenderGroup = !isFollowedBySameSender;
+                      const hideVenueAvatar = !inbox && activeRole === "USER" && message.sender_type === "VENUE";
 
                       if (message.deleted_at) {
                         return (
@@ -1215,38 +1263,33 @@ export const VenueMessaging = ({
                         >
                           {isNewDay && <Separator className="py-1" text={formatDay(message.created_at)} />}
                           <div
-                            className={`flex max-w-[92%] gap-3 ${isOwnMessage ? "flex-row-reverse self-end" : "self-start"} ${followsSameSender ? "-mt-2" : ""}`}
+                            className={`flex max-w-[92%] items-end gap-3 ${isOwnMessage ? "flex-row-reverse self-end" : "self-start"} ${followsSameSender ? "-mt-2" : ""}`}
                           >
-                            {!isOwnMessage && showSender && profileUserId ? (
+                            {!isOwnMessage && !hideVenueAvatar && isLastInSenderGroup && canOpenCounterpart ? (
                               <button
-                                aria-label={i18n("View profile for {name}", { name })}
-                                className={`focus-visible:outline-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight text-white transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 ${senderColour.avatarClassName}`}
-                                onClick={() => openUserProfilePreview(profileUserId, name)}
+                                aria-label={counterpartLabel}
+                                className="focus-visible:outline-primary shrink-0 self-end rounded-full transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2"
+                                onClick={openCounterpart}
                                 type="button"
                               >
-                                {getSenderInitials(name)}
+                                <ParticipantAvatar image={avatarImage} name={name} />
                               </button>
-                            ) : !isOwnMessage && showSender ? (
-                              <div
-                                aria-hidden="true"
-                                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight text-white ${senderColour.avatarClassName}`}
-                              >
-                                {getSenderInitials(name)}
-                              </div>
-                            ) : !isOwnMessage ? (
+                            ) : !isOwnMessage && !hideVenueAvatar && isLastInSenderGroup ? (
+                              <ParticipantAvatar className="self-end" image={avatarImage} name={name} />
+                            ) : !isOwnMessage && !hideVenueAvatar ? (
                               <div aria-hidden="true" className="w-10 shrink-0" />
                             ) : null}
                             <div className={`flex min-w-0 flex-col ${isOwnMessage ? "items-end" : "items-start"}`}>
-                              {!isOwnMessage && showSender && profileUserId ? (
+                              {!isOwnMessage && showSenderName && canOpenCounterpart ? (
                                 <button
-                                  aria-label={i18n("View profile for {name}", { name })}
+                                  aria-label={counterpartLabel}
                                   className={`focus-visible:outline-primary mb-1 px-1 text-base font-semibold transition-opacity hover:opacity-75 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 ${senderColour.textClassName} ${isOwnMessage ? "text-right" : ""}`}
-                                  onClick={() => openUserProfilePreview(profileUserId, name)}
+                                  onClick={openCounterpart}
                                   type="button"
                                 >
                                   {name}
                                 </button>
-                              ) : !isOwnMessage && showSender ? (
+                              ) : !isOwnMessage && showSenderName ? (
                                 <p
                                   className={`mb-1 px-1 text-base font-semibold ${senderColour.textClassName} ${isOwnMessage ? "text-right" : ""}`}
                                 >
@@ -1254,7 +1297,13 @@ export const VenueMessaging = ({
                                 </p>
                               ) : null}
                               <div
-                                className={`${bubbleColour} relative touch-manipulation rounded-xl px-4 py-2 select-none before:absolute before:bottom-0 before:h-4 before:w-4 before:content-[''] ${isOwnMessage ? "rounded-br-sm before:-right-2 before:[clip-path:polygon(0_0,0_100%,100%_100%)]" : "rounded-bl-sm before:-left-2 before:[clip-path:polygon(100%_0,100%_100%,0_100%)]"}`}
+                                className={`${bubbleColour} relative touch-manipulation rounded-xl px-4 py-2 select-none ${isLastInSenderGroup ? "before:absolute before:bottom-0 before:h-4 before:w-4 before:content-['']" : ""} ${
+                                  isLastInSenderGroup
+                                    ? isOwnMessage
+                                      ? "rounded-br-sm before:-right-2 before:[clip-path:polygon(0_0,0_100%,100%_100%)]"
+                                      : "rounded-bl-sm before:-left-2 before:[clip-path:polygon(100%_0,100%_100%,0_100%)]"
+                                    : ""
+                                }`}
                                 onContextMenu={(event) => {
                                   event.preventDefault();
                                   openActions(message, event.currentTarget);

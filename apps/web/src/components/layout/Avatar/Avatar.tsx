@@ -3,6 +3,7 @@ import { User } from "lucide-react";
 import Image from "next/image";
 
 import { useI18n } from "~/i18n/useI18n";
+import { getPublicMediaUrl } from "~/lib/media";
 type AvatarProfile = {
   image?: null | string;
   name?: null | string;
@@ -17,15 +18,16 @@ interface AvatarProps {
 export const Avatar = ({ avatarSize = 48, className, profile }: AvatarProps) => {
   const i18n = useI18n();
   const { image, name } = profile ?? {};
+  const imageUrl = getPublicMediaUrl(image);
 
   return (
     <div className={className}>
-      {image ? (
+      {imageUrl ? (
         <div
           className={`border-primary relative overflow-hidden rounded-full border`}
           style={{ height: avatarSize, width: avatarSize }}
         >
-          <Image alt={name ?? i18n("Someone")} className="object-cover" fill src={image} />
+          <Image alt={name ?? i18n("Someone")} className="object-cover" fill src={imageUrl} />
         </div>
       ) : (
         <div

@@ -20,8 +20,12 @@ insert_permissions:
   - role: user
     permission:
       check:
-        user_id:
-          _eq: X-Hasura-User-Id
+        _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              status:
+                _eq: active
       columns:
         - user_id
         - email
@@ -43,8 +47,12 @@ select_permissions:
         - created_at
         - updated_at
       filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+        _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              status:
+                _eq: active
       allow_aggregations: true
 update_permissions:
   - role: user
@@ -52,8 +60,12 @@ update_permissions:
       columns:
         - status
       filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+        _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              status:
+                _eq: active
       check:
         status:
           _in:

@@ -10,7 +10,6 @@ import {
 } from "~/lib/api";
 import { envName } from "~/lib/config/env";
 import { privateConfig } from "~/lib/config/private";
-import { UserModel } from "~/lib/models";
 import { saveVenue } from "~/lib/models/venue";
 import { upsertVenueAccommodationDetails } from "~/lib/models/venue-accomodation-details";
 import { upsertVenueBeautySalonDetails } from "~/lib/models/venue-beauty-salon-details";
@@ -135,7 +134,7 @@ export const POST = (req: Request) =>
 
     const prefix = [envName, "venues", slug].join("/");
 
-    venueData.logo = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? "";
+    venueData.logo = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? null;
     venueData.images = await processImages(images ?? [], [prefix, "images"].join("/"));
 
     const venueId = await saveVenue(venueData, session, Boolean(is_owner));
@@ -222,15 +221,6 @@ export const POST = (req: Request) =>
 
       if (!affectedRows) {
         throw new InternalServerError("Failed to upsert venue schedules");
-      }
-    }
-
-    if (!venueData.id) {
-      try {
-        const userModel = new UserModel(session);
-        await userModel.incrementVenueCreation();
-      } catch (error) {
-        console.error("Failed to increment venue creation count:", error);
       }
     }
 

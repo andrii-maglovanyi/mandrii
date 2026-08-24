@@ -2,8 +2,9 @@ import { getI18n } from "~/i18n/getI18n";
 import { Locale, UserSession } from "~/types";
 
 import { auth } from "../auth";
+import { isActiveAccount } from "../auth/account-status";
 import { UserModel } from "../models/user";
-import { UnauthorizedError } from "./errors";
+import { ForbiddenError, UnauthorizedError } from "./errors";
 
 export type AuthenticatedSession = {
   accessToken: string;
@@ -42,6 +43,10 @@ const getUserContext = async () => {
 
   if (!user) {
     throw new UnauthorizedError("User not found");
+  }
+
+  if (!isActiveAccount(user)) {
+    throw new ForbiddenError("Your account is inactive. Please contact an administrator.");
   }
 
   return { accessToken, user } as AuthenticatedSession;

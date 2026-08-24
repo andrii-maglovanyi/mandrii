@@ -71,18 +71,13 @@ select_permissions:
         - bio
         - city
         - email
-        - events_created
         - id
         - image
         - is_verified_contributor
-        - level
         - name
         - points
-        - reviews_created
         - role
         - status
-        - thank_you_count
-        - venues_created
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -96,7 +91,10 @@ update_permissions:
         - image
         - name
       filter:
-        id:
-          _eq: X-Hasura-User-Id
+        _and:
+          - id:
+              _eq: X-Hasura-User-Id
+          - status:
+              _eq: active
       check: null
     comment: ""

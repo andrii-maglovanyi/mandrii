@@ -39,7 +39,8 @@ export const GET = (req: Request) =>
         SELECT * FROM (
           SELECT c.id, c.created_at, c.owner_archived_at AS archived_at,
                  c.user_id AS profile_user_id, c.venue_id, v.name AS venue_name, v.slug AS venue_slug,
-                 u.name AS user_name, 'OWNER'::text AS role,
+                 NULL::text AS venue_category, NULL::text AS venue_city, NULL::text AS venue_country,
+                 u.name AS user_name, u.image AS avatar_image, 'OWNER'::text AS role,
                  CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
                  (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
                  latest_message.created_at AS last_message_at,
@@ -68,13 +69,23 @@ export const GET = (req: Request) =>
 
           SELECT c.id, c.created_at, c.user_archived_at AS archived_at,
                  v.owner_id AS profile_user_id, c.venue_id, v.name AS venue_name, v.slug AS venue_slug,
-                 v.name AS user_name, 'USER'::text AS role,
+                 v.category AS venue_category, v.city AS venue_city, v.country AS venue_country,
+                 v.name AS user_name,
+                 COALESCE(
+                   NULLIF(BTRIM(v.logo), ''),
+                   NULLIF(BTRIM(venue_chain.logo), ''),
+                   NULLIF(BTRIM(parent_chain.logo), ''),
+                   NULLIF(BTRIM(v.images[1]), '')
+                 ) AS avatar_image,
+                 'USER'::text AS role,
                  CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
                  (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
                  latest_message.created_at AS last_message_at,
                  unread_messages.unread_count
           FROM conversations c
           JOIN venues v ON v.id = c.venue_id
+          LEFT JOIN chains venue_chain ON venue_chain.id = v.chain_id
+          LEFT JOIN chains parent_chain ON parent_chain.id = venue_chain.chain_id
           LEFT JOIN LATERAL (
             SELECT m.body, m.created_at, m.deleted_at
             FROM messages m
@@ -105,7 +116,8 @@ export const GET = (req: Request) =>
     const owner = venue.owner_id === session.user.id;
     const conversations = owner
       ? await sql`
-          SELECT c.id, c.created_at, c.owner_archived_at AS archived_at, c.user_id AS profile_user_id, u.name AS user_name,
+          SELECT c.id, c.created_at, c.owner_archived_at AS archived_at, c.user_id AS profile_user_id,
+                 u.name AS user_name, u.image AS avatar_image,
                  CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
                  (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
                  latest_message.created_at AS last_message_at,
@@ -131,13 +143,23 @@ export const GET = (req: Request) =>
           ORDER BY (c.owner_archived_at IS NOT NULL), latest_message.created_at DESC NULLS LAST, c.created_at DESC
         `
       : await sql`
-          SELECT c.id, c.created_at, c.user_archived_at AS archived_at, ${venue.owner_id} AS profile_user_id, u.name AS user_name,
-                 CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
+          SELECT c.id, c.created_at, c.user_archived_at AS archived_at, ${venue.owner_id} AS profile_user_id,
+                 v.name AS user_name, v.slug AS venue_slug,
+                 v.category AS venue_category, v.city AS venue_city, v.country AS venue_country,
+                 COALESCE(
+                   NULLIF(BTRIM(v.logo), ''),
+                   NULLIF(BTRIM(venue_chain.logo), ''),
+                   NULLIF(BTRIM(parent_chain.logo), ''),
+                   NULLIF(BTRIM(v.images[1]), '')
+                 ) AS avatar_image,
+          CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
                  (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
                  latest_message.created_at AS last_message_at,
                  unread_messages.unread_count
           FROM conversations c
-          JOIN users u ON u.id = c.user_id
+          JOIN venues v ON v.id = c.venue_id
+          LEFT JOIN chains venue_chain ON venue_chain.id = v.chain_id
+          LEFT JOIN chains parent_chain ON parent_chain.id = venue_chain.chain_id
           LEFT JOIN LATERAL (
             SELECT m.body, m.created_at, m.deleted_at
             FROM messages m

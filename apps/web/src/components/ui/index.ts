@@ -19,6 +19,7 @@ export { Notification } from "./Notification/Notification";
 export { Pagination } from "./Pagination/Pagination";
 export { ProgressBar } from "./ProgressBar/ProgressBar";
 export { RichText } from "./RichText/RichText";
+export { SegmentedNavigation, type SegmentedNavigationItem } from "./SegmentedNavigation/SegmentedNavigation";
 export { SectionCard } from "./SectionCard/SectionCard";
 export { Select } from "./Select/Select";
 export { Separator } from "./Separator/Separator";

@@ -7,19 +7,18 @@ import Image from "next/image";
 import { Badge, type BadgeVariant, SectionCard } from "~/components/ui";
 import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
-import { constants } from "~/lib/constants";
 import { getEffectiveEventStatus } from "~/lib/events/status";
-import { UrlHelper } from "~/lib/url-helper";
+import { getPublicMediaUrl } from "~/lib/media";
 import { Event_Status_Enum } from "~/types";
 
 export type PublicEventContribution = {
-  city: null | string;
-  country: null | string;
+  city?: null | string;
+  country?: null | string;
   created_at: string;
-  end_date: null | string;
+  end_date?: null | string;
   is_online: boolean;
   is_recurring: boolean;
-  images: null | string[];
+  images?: null | string[];
   slug: string;
   start_date: string;
   status: Event_Status_Enum;
@@ -28,11 +27,11 @@ export type PublicEventContribution = {
 };
 
 export type PublicVenueContribution = {
-  city: null | string;
-  country: null | string;
+  city?: null | string;
+  country?: null | string;
   created_at: string;
-  images: null | string[];
-  logo: null | string;
+  images?: null | string[];
+  logo?: null | string;
   name: string;
   slug: string;
 };
@@ -42,12 +41,7 @@ type PublicContributionsProps = {
   venues: PublicVenueContribution[];
 };
 
-const locationLabel = (city: null | string, country: null | string) => [city, country].filter(Boolean).join(", ");
-const mediaUrl = (path: null | string | undefined) => {
-  if (!path) return null;
-  return UrlHelper.isAbsoluteUrl(path) ? path : `${constants.vercelBlobStorageUrl}/${path}`;
-};
-
+const locationLabel = (city?: null | string, country?: null | string) => [city, country].filter(Boolean).join(", ");
 const getEventStatusPresentation = (status: Event_Status_Enum, i18n: (key: string) => string) => {
   if (status === Event_Status_Enum.Completed) {
     return { label: i18n("Completed"), variant: "info" as BadgeVariant };
@@ -84,7 +78,7 @@ export const PublicContributions = ({ events, venues }: PublicContributionsProps
             <div className="-mx-4 mt-4 mb-2 flex flex-col">
               {venues.map((venue) => {
                 const location = locationLabel(venue.city, venue.country);
-                const logoUrl = mediaUrl(venue.logo || venue.images?.[0]);
+                const logoUrl = getPublicMediaUrl(venue.logo || venue.images?.[0]);
                 return (
                   <Link
                     className="group/info hover:bg-on-surface/5 focus-visible:bg-on-surface/5 flex min-h-16 w-full items-center gap-3 px-4 py-2 transition-colors hover:no-underline"
@@ -132,7 +126,7 @@ export const PublicContributions = ({ events, venues }: PublicContributionsProps
               {events.map((event) => {
                 const title = locale === "uk" ? event.title_uk : event.title_en;
                 const location = event.is_online ? i18n("Online") : locationLabel(event.city, event.country);
-                const imageUrl = mediaUrl(event.images?.[0]);
+                const imageUrl = getPublicMediaUrl(event.images?.[0]);
                 const status = getEffectiveEventStatus(event);
                 const statusPresentation = getEventStatusPresentation(status, i18n);
                 return (

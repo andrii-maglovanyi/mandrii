@@ -3,9 +3,8 @@ import { BadRequestError, NotFoundError, UnauthorizedError } from "~/lib/api/err
 import { executeGraphQLQuery } from "~/lib/graphql/client";
 import { Users } from "~/types";
 
-import { constants } from "../constants";
 import { privateConfig } from "../config/private";
-import { UrlHelper } from "../url-helper";
+import { getPublicMediaUrl } from "../media";
 
 const USER_FIELDS = `
   id
@@ -17,8 +16,7 @@ const USER_FIELDS = `
   role
   status
   points
-  events_created
-  venues_created
+  is_verified_contributor
 `;
 
 const GET_USER_BY_ID_QUERY = `
@@ -40,9 +38,8 @@ const GET_PUBLIC_USER_BY_ID_QUERY = `
       last_seen_at
       joined_at
       points
-      events_created
-      venues_created
       is_verified_contributor
+      role
     }
   }
 `;
@@ -50,26 +47,30 @@ const GET_PUBLIC_USER_BY_ID_QUERY = `
 export type PublicUser = {
   bio: null | string;
   city: null | string;
-  events_created: number;
   id: string;
   image: null | string;
   is_verified_contributor: boolean;
+  isAdmin: boolean;
   joined_at: null | string;
   last_seen_at: null | string;
   name: null | string;
   points: number;
-  venues_created: number;
 };
 
-export type UserUpdate = Partial<Users> & {
+type PublicUserRecord = Omit<PublicUser, "isAdmin"> & {
+  role: string;
+};
+
+export type UserUpdate = {
   bio?: null | string;
   city?: null | string;
+  id: string;
+  image?: null | string;
+  name?: string;
 };
 
 export function getPublicUserImageUrl(image: null | string) {
-  if (!image || UrlHelper.isAbsoluteUrl(image)) return image;
-
-  return `${constants.vercelBlobStorageUrl}/${image}`;
+  return getPublicMediaUrl(image);
 }
 
 const UPDATE_USER_MUTATION = `
@@ -87,17 +88,6 @@ export class UserModel {
     this.session = session;
   }
 
-  async addPoints(pointsToAdd: number): Promise<Users> {
-    if (!this.session) {
-      throw new UnauthorizedError("Session is required");
-    }
-
-    return await this.updateAsAdmin({
-      id: this.session.user.id,
-      points: (this.session.user.points ?? 0) + pointsToAdd,
-    });
-  }
-
   async findById(id: string): Promise<null | Users> {
     const result = await executeGraphQLQuery<{ users_by_pk: null | Users }>(
       GET_USER_BY_ID_QUERY,
@@ -109,37 +99,16 @@ export class UserModel {
   }
 
   async findPublicById(id: string): Promise<null | PublicUser> {
-    const result = await executeGraphQLQuery<{ users_by_pk: null | PublicUser }>(
+    const result = await executeGraphQLQuery<{ users_by_pk: null | PublicUserRecord }>(
       GET_PUBLIC_USER_BY_ID_QUERY,
       { id },
       this.getAuthHeaders(true),
     );
 
-    return result.users_by_pk;
-  }
+    if (!result.users_by_pk) return null;
 
-  async incrementEventCreation(): Promise<Users> {
-    if (!this.session) {
-      throw new UnauthorizedError("Session is required");
-    }
-
-    return await this.updateAsAdmin({
-      events_created: (this.session.user.events_created ?? 0) + 1,
-      id: this.session.user.id,
-      points: (this.session.user.points ?? 0) + privateConfig.rewards.pointsPerEventCreation,
-    });
-  }
-
-  async incrementVenueCreation(): Promise<Users> {
-    if (!this.session) {
-      throw new UnauthorizedError("Session is required");
-    }
-
-    return await this.updateAsAdmin({
-      id: this.session.user.id,
-      points: (this.session.user.points ?? 0) + privateConfig.rewards.pointsPerVenueCreation,
-      venues_created: (this.session.user.venues_created ?? 0) + 1,
-    });
+    const { role, ...profile } = result.users_by_pk;
+    return { ...profile, isAdmin: role === "admin" };
   }
 
   async update(variables: UserUpdate): Promise<Users> {
@@ -181,34 +150,5 @@ export class UserModel {
     }
 
     return { Authorization: `Bearer ${this.session.accessToken}` };
-  }
-
-  private async updateAsAdmin(variables: UserUpdate): Promise<Users> {
-    const { id, ...updateFields } = variables;
-
-    if (!id) {
-      throw new BadRequestError("User ID is required for updates");
-    }
-
-    const cleanedFields = Object.fromEntries(Object.entries(updateFields).filter(([, v]) => v !== undefined));
-
-    if (Object.keys(cleanedFields).length === 0) {
-      throw new BadRequestError("No fields to update");
-    }
-
-    const result = await executeGraphQLQuery<{ update_users_by_pk: null | Users }>(
-      UPDATE_USER_MUTATION,
-      {
-        _set: cleanedFields,
-        id,
-      },
-      this.getAuthHeaders(true),
-    );
-
-    if (!result.update_users_by_pk) {
-      throw new NotFoundError("User not found");
-    }
-
-    return result.update_users_by_pk;
   }
 }

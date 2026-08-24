@@ -24,7 +24,7 @@ interface EventProps {
 
 export const EditEvent = ({ slug }: EventProps) => {
   const client = useApolloClient();
-  const { showSuccess } = useNotifications();
+  const { showError, showSuccess } = useNotifications();
   const locale = useLocale() as Locale;
   const i18n = useI18n();
   const router = useRouter();
@@ -77,6 +77,21 @@ export const EditEvent = ({ slug }: EventProps) => {
     [locale],
   );
 
+  const handleEventStatusChange = useCallback(
+    async (status: Event_Status_Enum) => {
+      if (!data?.id) return;
+
+      try {
+        await updateEventStatus(data.id, status);
+        await client.refetchQueries({ include: ["GetPublicEvents", "GetUserEvents"] });
+        showSuccess(i18n("Event status updated successfully"));
+      } catch (error) {
+        showError(error instanceof Error ? error.message : i18n("Unable to update event status"));
+      }
+    },
+    [client, data?.id, i18n, showError, showSuccess, updateEventStatus],
+  );
+
   const renderLayout = () => {
     if (loading) {
       return <AnimatedEllipsis centered size="md" />;
@@ -124,7 +139,8 @@ export const EditEvent = ({ slug }: EventProps) => {
                 </Link>
               </Tooltip>
             ) : null}
-            {profileData?.role === "admin" && (
+            {(profileData?.role === "admin" ||
+              (profileData?.is_verified_contributor === true && profileData.id === data.user_id)) && (
               <div className="flex items-center gap-2">
                 |
                 <ActionButton
@@ -135,9 +151,7 @@ export const EditEvent = ({ slug }: EventProps) => {
                   onClick={() => {
                     openConfirmDialog({
                       message: i18n("Are you sure you want to publish this event?"),
-                      onConfirm: () => {
-                        updateEventStatus(data.id, Event_Status_Enum.Active);
-                      },
+                      onConfirm: () => handleEventStatusChange(Event_Status_Enum.Active),
                       title: i18n("Publish event"),
                     });
                   }}
@@ -153,9 +167,7 @@ export const EditEvent = ({ slug }: EventProps) => {
                   onClick={() => {
                     openConfirmDialog({
                       message: i18n("Are you sure you want to cancel this event?"),
-                      onConfirm: () => {
-                        updateEventStatus(data.id, Event_Status_Enum.Cancelled);
-                      },
+                      onConfirm: () => handleEventStatusChange(Event_Status_Enum.Cancelled),
                       title: i18n("Cancel event"),
                     });
                   }}
@@ -172,9 +184,7 @@ export const EditEvent = ({ slug }: EventProps) => {
                   onClick={() => {
                     openConfirmDialog({
                       message: i18n("Are you sure you want to archive this event?"),
-                      onConfirm: () => {
-                        updateEventStatus(data.id, Event_Status_Enum.Archived);
-                      },
+                      onConfirm: () => handleEventStatusChange(Event_Status_Enum.Archived),
                       title: i18n("Archive event"),
                     });
                   }}

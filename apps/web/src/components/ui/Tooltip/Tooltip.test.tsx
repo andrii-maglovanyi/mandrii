@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
@@ -14,9 +14,7 @@ describe("Tooltip", () => {
 
     expect(screen.getByText("Hover me")).toBeInTheDocument();
 
-    const tooltip = screen.getByRole("tooltip");
-    expect(tooltip).toHaveTextContent("Tooltip text");
-    expect(tooltip).toHaveClass("opacity-0");
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
   });
 
   it("shows tooltip on hover", async () => {
@@ -31,22 +29,39 @@ describe("Tooltip", () => {
 
     const tooltip = screen.getByRole("tooltip");
 
-    // becomes visible (Tailwind uses opacity transitions)
-    expect(tooltip).toHaveClass("group-hover:opacity-100");
+    expect(tooltip).toHaveClass("opacity-100");
     expect(tooltip).toHaveTextContent("Tooltip text");
   });
 
-  it("has correct aria-describedby link", () => {
+  it("has correct aria-describedby link", async () => {
+    const user = userEvent.setup();
     render(
       <Tooltip label="Tooltip text">
-        <span>Hover me</span>
+        <button>Hover me</button>
       </Tooltip>,
     );
 
+    const target = screen.getByRole("button", { name: "Hover me" });
+    await user.tab();
+
     const tooltip = screen.getByRole("tooltip");
-    const target = screen.getByTestId(/target-*/);
     const id = target.getAttribute("aria-describedby");
 
     expect(tooltip.id).toBe(id);
+  });
+
+  it("portals a tooltip into its dialog so it remains above the native backdrop", async () => {
+    const user = userEvent.setup();
+    render(
+      <dialog open>
+        <Tooltip label="Close modal" position="left">
+          <button>Close</button>
+        </Tooltip>
+      </dialog>,
+    );
+
+    await user.hover(screen.getByRole("button", { name: "Close" }));
+
+    expect(within(screen.getByRole("dialog")).getByRole("tooltip", { name: "Close modal" })).toBeInTheDocument();
   });
 });

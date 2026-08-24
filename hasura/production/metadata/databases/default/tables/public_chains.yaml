@@ -11,6 +11,15 @@ object_relationships:
         remote_table:
           name: chains
           schema: public
+  - name: user
+    using:
+      manual_configuration:
+        column_mapping:
+          user_id: id
+        insertion_order: null
+        remote_table:
+          name: users
+          schema: public
 array_relationships:
   - name: chains
     using:
@@ -33,7 +42,13 @@ array_relationships:
 insert_permissions:
   - role: user
     permission:
-      check: {}
+      check:
+        _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              status:
+                _eq: active
       columns:
         - chain_id
         - city
@@ -46,6 +61,7 @@ insert_permissions:
         - phone_numbers
         - slug
         - social_links
+        - user_id
         - website
     comment: ""
 select_permissions:
@@ -141,7 +157,11 @@ update_permissions:
         - social_links
         - website
       filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+        _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              status:
+                _eq: active
       check: null
     comment: ""

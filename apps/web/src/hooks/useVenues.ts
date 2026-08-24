@@ -1,4 +1,4 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import { useCallback, useMemo } from "react";
 
@@ -273,16 +273,6 @@ const GET_ADMIN_VENUES = gql`
   }
 `;
 
-export const UPDATE_VENUE_STATUS = gql`
-  mutation UpdateVenueStatus($id: uuid!, $status: venue_status_enum!) {
-    update_venues_by_pk(pk_columns: { id: $id }, _set: { status: $status }) {
-      id
-      status
-      updated_at
-    }
-  }
-`;
-
 const getChainFallback = <T>(
   venueValue: null | T | undefined,
   chainValue: null | T | undefined,
@@ -345,21 +335,20 @@ const getVenueData = <T extends Partial<GetAdminVenuesQuery["venues"][number]>>(
 };
 
 export const useVenues = () => {
-  const [updateStatus, { error, loading }] = useMutation(UPDATE_VENUE_STATUS, {
-    awaitRefetchQueries: true,
-    refetchQueries: ["GetAdminVenues"],
-  });
+  const updateVenueStatus = useCallback(async (id: UUID, status: Venue_Status_Enum) => {
+    const response = await fetch("/api/content/status", {
+      body: JSON.stringify({ id, status, type: "venue" }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+    const result = (await response.json()) as { content?: { id: UUID; status: Venue_Status_Enum }; error?: string };
 
-  const updateVenueStatus = useCallback(
-    async (id: UUID, status: Venue_Status_Enum) => {
-      const { data } = await updateStatus({
-        variables: { id, status },
-      });
+    if (!response.ok || !result.content) {
+      throw new Error(result.error ?? "Unable to update venue status");
+    }
 
-      return { data, error, loading };
-    },
-    [updateStatus, loading, error],
-  );
+    return result.content;
+  }, []);
 
   const useAdminVenues = (params: APIParams) => {
     const result = useGraphApi<GetAdminVenuesQuery["venues"]>(GET_ADMIN_VENUES, params);

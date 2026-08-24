@@ -13,8 +13,12 @@ insert_permissions:
     permission:
       check:
         event:
-          user_id:
-            _eq: X-Hasura-User-Id
+          _and:
+            - user_id:
+                _eq: X-Hasura-User-Id
+            - user:
+                status:
+                  _eq: active
       columns:
         - event_id
         - tag_id
@@ -24,6 +28,10 @@ delete_permissions:
     permission:
       filter:
         event:
-          user_id:
-            _eq: X-Hasura-User-Id
+          _and:
+            - user_id:
+                _eq: X-Hasura-User-Id
+            - user:
+                status:
+                  _eq: active
     comment: ""

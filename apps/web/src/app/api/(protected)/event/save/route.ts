@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { getApiContext, InternalServerError, validateRequest, ValidationError, withErrorHandling } from "~/lib/api";
 import { envName } from "~/lib/config/env";
 import { saveEvent } from "~/lib/models/event";
-import { UserModel } from "~/lib/models/user";
 import { sendSlackNotification } from "~/lib/slack/event";
 import { processImages } from "~/lib/utils/images";
 import { constructSlug } from "~/lib/utils/slug";
@@ -132,16 +131,6 @@ export const POST = (req: Request) =>
 
     if (!eventId) {
       throw new InternalServerError("Failed to save event - no ID returned");
-    }
-
-    // Non-critical operation - don't fail the request if this errors
-    if (!eventData.id) {
-      try {
-        const userModel = new UserModel(session);
-        await userModel.incrementEventCreation();
-      } catch (error) {
-        console.error("Failed to increment event creation count (non-critical):", error);
-      }
     }
 
     sendSlackNotification(session.user, eventData).catch((error) => {

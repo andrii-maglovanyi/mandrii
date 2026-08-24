@@ -16,7 +16,7 @@ type RootLayoutProps = Readonly<{
 }>;
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const session = await requireAuth();
+  const session = await requireAuth(undefined, "/en/account-inactive");
 
   if (session.user.role !== "admin") {
     return redirect("/");

@@ -3,9 +3,8 @@ import { useLocale } from "next-intl";
 
 import { AnimatedEllipsis, Separator } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
-import { getSenderColour, getSenderInitials } from "~/lib/messaging/sender";
-
 import type { Conversation } from "../types";
+import { ParticipantAvatar } from "./ParticipantAvatar";
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -49,7 +48,6 @@ export const ConversationList = ({
   const renderRows = (conversationItems: Conversation[]) =>
     conversationItems.map((conversation) => {
       const name = conversation.user_name ?? i18n("Customer");
-      const senderColour = getSenderColour(name);
       const lastMessageTime = formatConversationTimestamp(conversation.last_message_at, locale);
       const isArchived = Boolean(conversation.archived_at);
 
@@ -64,12 +62,7 @@ export const ConversationList = ({
           onClick={() => onSelect(conversation.id)}
           type="button"
         >
-          <div
-            aria-hidden="true"
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold tracking-tight text-white ${senderColour.avatarClassName}`}
-          >
-            {getSenderInitials(name)}
-          </div>
+          <ParticipantAvatar image={conversation.avatar_image} name={name} size="sm" />
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-2">
               <p className="truncate font-medium">{name}</p>

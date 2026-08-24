@@ -1,5 +1,6 @@
 export type Conversation = {
   archived_at: null | string;
+  avatar_image?: null | string;
   created_at: string;
   id: string;
   last_message_deleted?: boolean;
@@ -10,6 +11,9 @@ export type Conversation = {
   unread_count: number | string;
   user_name: null | string;
   venue_id?: string;
+  venue_category?: null | string;
+  venue_city?: null | string;
+  venue_country?: null | string;
   venue_name?: string;
   venue_slug?: string;
 };

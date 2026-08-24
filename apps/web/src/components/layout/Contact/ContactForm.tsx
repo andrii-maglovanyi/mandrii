@@ -18,26 +18,31 @@ const Contact = ({ message = "" }: { message?: string }) => {
   const i18n = useI18n();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { data: profileData } = useUser();
+  const profileEmail = profileData?.email ?? "";
+  const profileName = profileData?.name ?? "";
 
   const { getFieldProps, isFormValid, setFieldErrorsFromServer, setValues, validateForm, values } = useForm({
     initialValues: {
-      email: profileData?.email ?? "",
+      email: profileEmail,
       message,
-      name: profileData?.name ?? "",
+      name: profileName,
     },
     schema: getContactFormSchema(i18n),
   });
 
   useEffect(() => {
-    const { email, name } = profileData ?? {};
-    if (name && email) {
-      setValues((prev) => ({
-        ...prev,
-        email,
-        name,
-      }));
-    }
-  }, [profileData, setValues]);
+    if (!profileName || !profileEmail) return;
+
+    setValues((previous) => {
+      if (previous.email === profileEmail && previous.name === profileName) return previous;
+
+      return {
+        ...previous,
+        email: profileEmail,
+        name: profileName,
+      };
+    });
+  }, [profileEmail, profileName, setValues]);
 
   const locale = useLocale();
   const [status, setStatus] = useState<Status>("idle");

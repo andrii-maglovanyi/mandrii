@@ -5,6 +5,7 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { createContext, ReactNode, useContext, useEffect, useRef } from "react";
 
 import { Users } from "~/types";
+import { User_Status_Enum } from "~/types/graphql.generated";
 
 const GET_USER_PROFILE = gql`
   query GetUserProfile($id: uuid!) {
@@ -18,9 +19,7 @@ const GET_USER_PROFILE = gql`
       status
       image
       points
-      venues_created
-      events_created
-      level
+      is_verified_contributor
     }
   }
 `;
@@ -112,7 +111,9 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={value}>
-      <LastSeenTracker isAuthenticated={status === "authenticated"} />
+      <LastSeenTracker
+        isAuthenticated={status === "authenticated" && data?.users_by_pk?.status === User_Status_Enum.Active}
+      />
       {children}
     </AuthContext.Provider>
   );

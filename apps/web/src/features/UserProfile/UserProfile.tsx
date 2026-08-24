@@ -2,6 +2,7 @@
 
 import { Eye, UserSearch } from "lucide-react";
 import { useLocale } from "next-intl";
+import { useEffect, useState } from "react";
 
 import { EmptyState } from "~/components/ui";
 import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
@@ -9,16 +10,53 @@ import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { Link } from "~/i18n/navigation";
+import { type CommunityContributionStats } from "~/lib/gamification/community";
+import { useGetOwnUserRecentContributionsQuery } from "~/types/graphql.generated";
 import { Locale } from "~/types";
 
-import { UserForm } from "./UserForm";
 import { CommunityImpact } from "./CommunityImpact";
+import { PublicContributions } from "./PublicContributions";
+import { UserForm } from "./UserForm";
+
+type ContributionCounts = Pick<CommunityContributionStats, "activeDays" | "events" | "venues">;
+
+type LoadedContributionCounts = ContributionCounts & {
+  userId: string;
+};
 
 export const UserProfile = () => {
   const { data, isLoading, refetchProfile, update } = useUser();
   const { showSuccess } = useNotifications();
   const locale = useLocale() as Locale;
   const i18n = useI18n();
+  const [contributionStats, setContributionStats] = useState<LoadedContributionCounts | null>(null);
+  const { data: recentContributions, loading: recentContributionsLoading } = useGetOwnUserRecentContributionsQuery({
+    skip: !data?.id,
+    variables: { id: data?.id! },
+  });
+
+  useEffect(() => {
+    if (!data?.id) return;
+
+    const abortController = new AbortController();
+
+    const loadContributionStats = async () => {
+      try {
+        const response = await fetch("/api/user/contribution-stats", { signal: abortController.signal });
+        if (!response.ok) throw new Error("Unable to load contribution stats");
+
+        const stats = (await response.json()) as ContributionCounts;
+        setContributionStats({ ...stats, userId: data.id });
+      } catch {
+        if (!abortController.signal.aborted) {
+          setContributionStats({ activeDays: 0, events: 0, userId: data.id, venues: 0 });
+        }
+      }
+    };
+
+    void loadContributionStats();
+    return () => abortController.abort();
+  }, [data?.id]);
 
   if (isLoading) {
     return <AnimatedEllipsis centered size="md" />;
@@ -32,6 +70,10 @@ export const UserProfile = () => {
         icon={<UserSearch size={50} />}
       />
     );
+  }
+
+  if (!contributionStats || contributionStats.userId !== data.id || recentContributionsLoading) {
+    return <AnimatedEllipsis centered size="md" />;
   }
 
   const submitProfile = async (body: FormData) => {
@@ -75,7 +117,16 @@ export const UserProfile = () => {
         <UserForm onSubmit={submitProfile} onSuccess={onProfileSaved} profile={data} />
       </div>
 
-      <CommunityImpact eventsCreated={data.events_created} points={data.points} venuesCreated={data.venues_created} />
+      <PublicContributions events={recentContributions?.events ?? []} venues={recentContributions?.venues ?? []} />
+
+      <CommunityImpact
+        activeDays={contributionStats.activeDays}
+        eventsCreated={contributionStats.events}
+        isVerified={Boolean(data.is_verified_contributor)}
+        points={data.points}
+        showLeaderboardLink={data.role !== "admin"}
+        venuesCreated={contributionStats.venues}
+      />
     </div>
   );
 };

@@ -8,7 +8,14 @@ object_relationships:
 insert_permissions:
   - role: user
     permission:
-      check: {}
+      check:
+        venue:
+          _and:
+            - user_id:
+                _eq: X-Hasura-User-Id
+            - user:
+                status:
+                  _eq: active
       columns:
         - amenities
         - bathrooms
@@ -76,8 +83,12 @@ update_permissions:
         - minimum_stay_nights
       filter:
         venue:
-          user_id:
-            _eq: X-Hasura-User-Id
+          _and:
+            - user_id:
+                _eq: X-Hasura-User-Id
+            - user:
+                status:
+                  _eq: active
       check: null
     comment: ""
 delete_permissions:
@@ -85,6 +96,10 @@ delete_permissions:
     permission:
       filter:
         venue:
-          user_id:
-            _eq: X-Hasura-User-Id
+          _and:
+            - user_id:
+                _eq: X-Hasura-User-Id
+            - user:
+                status:
+                  _eq: active
     comment: ""

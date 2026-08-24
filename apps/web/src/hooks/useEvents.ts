@@ -1,4 +1,4 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import { useCallback, useMemo } from "react";
 
@@ -23,32 +23,21 @@ const GET_USER_EVENTS = gql`
   }
 `;
 
-const UPDATE_EVENT_STATUS = gql`
-  mutation UpdateEventStatus($id: uuid!, $status: event_status_enum!) {
-    update_events_by_pk(pk_columns: { id: $id }, _set: { status: $status }) {
-      id
-      status
-      updated_at
-    }
-  }
-`;
-
 export const useEvents = () => {
-  const [updateStatus, { error, loading }] = useMutation(UPDATE_EVENT_STATUS, {
-    awaitRefetchQueries: true,
-    refetchQueries: ["GetUserEvents"],
-  });
+  const updateEventStatus = useCallback(async (id: UUID, status: Event_Status_Enum) => {
+    const response = await fetch("/api/content/status", {
+      body: JSON.stringify({ id, status, type: "event" }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+    const result = (await response.json()) as { content?: { id: UUID; status: Event_Status_Enum }; error?: string };
 
-  const updateEventStatus = useCallback(
-    async (id: UUID, status: Event_Status_Enum) => {
-      const { data } = await updateStatus({
-        variables: { id, status },
-      });
+    if (!response.ok || !result.content) {
+      throw new Error(result.error ?? "Unable to update event status");
+    }
 
-      return { data, error, loading };
-    },
-    [updateStatus, loading, error],
-  );
+    return result.content;
+  }, []);
 
   const usePublicEvents = (params: APIParams) => {
     const mergedParams = useMemo(
