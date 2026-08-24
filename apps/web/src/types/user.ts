@@ -11,6 +11,8 @@ import { GetUserProfileQuery } from "./graphql.generated";
  * - 'role' uses NextAuth's UserRole type instead of GraphQL's User_Role_Enum
  */
 export type UserSession = {
+  bio?: null | string;
+  city?: null | string;
   email: string;
   id: UUID;
   image: null | string;

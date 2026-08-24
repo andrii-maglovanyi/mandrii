@@ -68,6 +68,7 @@ select_permissions:
   - role: user
     permission:
       columns:
+        - bio
         - city
         - email
         - events_created
@@ -90,6 +91,8 @@ update_permissions:
   - role: user
     permission:
       columns:
+        - bio
+        - city
         - image
         - name
       filter:

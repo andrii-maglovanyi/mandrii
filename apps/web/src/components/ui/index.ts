@@ -1,6 +1,7 @@
 export { AccordionItem, MultipleAccordion, SingleAccordion } from "./Accordion";
 export { Alert } from "./Alert/Alert";
 export { AnimatedEllipsis } from "./AnimatedEllipsis/AnimatedEllipsis";
+export { Badge, type BadgeVariant } from "./Badge/Badge";
 export { Breadcrumbs } from "./Breadcrumbs/Breadcrumbs";
 export { ActionButton } from "./Button/ActionButton";
 export { Button } from "./Button/Button";
@@ -11,6 +12,7 @@ export { FallbackImage } from "./FallbackImage/FallbackImage";
 export { FilePicker } from "./FilePicker/FilePicker";
 export { ImageCarousel } from "./ImageCarousel/ImageCarousel";
 export { Input } from "./Input/Input";
+export { LocationAutocomplete } from "./LocationAutocomplete/LocationAutocomplete";
 export { MDEditor } from "./MDEditor/MDEditor";
 export { MetadataRow } from "./MetadataRow/MetadataRow";
 export { Notification } from "./Notification/Notification";

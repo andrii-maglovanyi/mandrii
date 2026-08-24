@@ -7,7 +7,16 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
-import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, SectionCard, TabPane, Tabs } from "~/components/ui";
+import {
+  AnimatedEllipsis,
+  Button,
+  EmptyState,
+  ImageCarousel,
+  RichText,
+  SectionCard,
+  TabPane,
+  Tabs,
+} from "~/components/ui";
 import { EventsMasonryCard } from "~/features/Events/EventCard/EventsMasonryCard";
 import { VenueMessaging } from "~/features/Messaging/VenueMessaging";
 import { VenueStatus } from "~/features/UserDirectory/Venues/VenueStatus";
@@ -108,23 +117,16 @@ export const VenueView = ({
   const logoUrl = normalizeUrl(venue.logo ?? undefined);
 
   const isArchived = venue.status === Venue_Status_Enum.Archived;
-  const isPending = venue.status === Venue_Status_Enum.Pending;
+  const showStatus = venue.status !== Venue_Status_Enum.Active;
   return (
     <div className="flex flex-col">
       {/* Hero section. Edge to edge image carousel */}
       <div className={`relative w-full pb-2 md:pb-4`}>
-        <div className="relative mx-auto max-w-5xl">
-          {isArchived && (
-            <div className="absolute top-4 right-4 z-10 max-w-5xl">
-              <VenueStatus expanded status={venue.status} />
-            </div>
-          )}
-          {isPending && (
-            <div className="absolute top-4 right-4 z-10 max-w-5xl">
-              <VenueStatus expanded status={venue.status} />
-            </div>
-          )}
-        </div>
+        {showStatus && (
+          <div className="absolute top-4 right-4 z-10">
+            <VenueStatus expanded status={venue.status} />
+          </div>
+        )}
         {images.length ? (
           <div className={`relative aspect-video w-full md:aspect-21/9`}>
             <ImageCarousel autoPlay images={images} showDots />

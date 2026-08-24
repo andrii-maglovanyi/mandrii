@@ -6,10 +6,20 @@ import { enGB } from "date-fns/locale";
 import { ArrowUpRight, Calendar, Globe, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 
-import { AnimatedEllipsis, Button, EmptyState, ImageCarousel, RichText, SectionCard, TabPane, Tabs } from "~/components/ui";
+import {
+  AnimatedEllipsis,
+  Button,
+  EmptyState,
+  ImageCarousel,
+  RichText,
+  SectionCard,
+  TabPane,
+  Tabs,
+} from "~/components/ui";
 import { useEvents } from "~/hooks/useEvents";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
+import { getEffectiveEventStatus } from "~/lib/events/status";
 import { toDateLocale } from "~/lib/utils/locale";
 import { Event_Status_Enum, Locale } from "~/types";
 
@@ -134,24 +144,18 @@ export const EventView = ({ slug }: EventViewProps) => {
   };
 
   const isArchived = event.status === Event_Status_Enum.Archived;
-  const isPending = event.status === Event_Status_Enum.Pending;
+  const effectiveStatus = getEffectiveEventStatus(event);
+  const showStatus = effectiveStatus !== Event_Status_Enum.Active;
 
   return (
     <div className="flex flex-col">
       {/* Hero section. Edge to edge image carousel */}
       <div className={`relative w-full pb-2 md:pb-4`}>
-        <div className="relative mx-auto max-w-5xl">
-          {isArchived && (
-            <div className="absolute top-4 right-4 z-10 max-w-5xl">
-              <EventStatus expanded status={event.status} />
-            </div>
-          )}
-          {isPending && (
-            <div className="absolute top-4 right-4 z-10 max-w-5xl">
-              <EventStatus expanded status={event.status} />
-            </div>
-          )}
-        </div>
+        {showStatus && (
+          <div className="absolute top-4 right-4 z-10">
+            <EventStatus expanded status={effectiveStatus} />
+          </div>
+        )}
         {images.length ? (
           <div className={`relative aspect-video w-full md:aspect-21/9`}>
             <ImageCarousel images={images} showDots />

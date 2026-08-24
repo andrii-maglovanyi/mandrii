@@ -36,33 +36,65 @@ export const GET = (req: Request) =>
     const inbox = url.searchParams.get("inbox") === "true";
     if (inbox) {
       const conversations = await sql`
-        SELECT c.id, c.created_at, c.user_archived_at AS archived_at,
-               v.id AS venue_id, v.name AS user_name, v.slug AS venue_slug,
-               CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
-               (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
-               latest_message.created_at AS last_message_at,
-               unread_messages.unread_count
-        FROM conversations c
-        JOIN venues v ON v.id = c.venue_id
-        LEFT JOIN LATERAL (
-          SELECT m.body, m.created_at, m.deleted_at
-          FROM messages m
-          WHERE m.conversation_id = c.id
-          ORDER BY m.created_at DESC, m.id DESC
-          LIMIT 1
-        ) AS latest_message ON TRUE
-        CROSS JOIN LATERAL (
-          SELECT COUNT(*) AS unread_count
-          FROM messages m
-          WHERE m.conversation_id = c.id
-            AND m.sender_type = 'VENUE'
-            AND m.deleted_at IS NULL
-            AND m.created_at > COALESCE(c.user_last_read_at, c.created_at)
-        ) AS unread_messages
-        WHERE c.user_id = ${session.user.id}
-          AND v.owner_id IS NOT NULL
-          AND v.owner_id IS DISTINCT FROM ${session.user.id}
-        ORDER BY (c.user_archived_at IS NOT NULL), latest_message.created_at DESC NULLS LAST, c.created_at DESC
+        SELECT * FROM (
+          SELECT c.id, c.created_at, c.owner_archived_at AS archived_at,
+                 c.user_id AS profile_user_id, c.venue_id, v.name AS venue_name, v.slug AS venue_slug,
+                 u.name AS user_name, 'OWNER'::text AS role,
+                 CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
+                 (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
+                 latest_message.created_at AS last_message_at,
+                 unread_messages.unread_count
+          FROM conversations c
+          JOIN venues v ON v.id = c.venue_id
+          JOIN users u ON u.id = c.user_id
+          LEFT JOIN LATERAL (
+            SELECT m.body, m.created_at, m.deleted_at
+            FROM messages m
+            WHERE m.conversation_id = c.id
+            ORDER BY m.created_at DESC, m.id DESC
+            LIMIT 1
+          ) AS latest_message ON TRUE
+          CROSS JOIN LATERAL (
+            SELECT COUNT(*) AS unread_count
+            FROM messages m
+            WHERE m.conversation_id = c.id
+              AND m.sender_type = 'USER'
+              AND m.deleted_at IS NULL
+              AND m.created_at > COALESCE(c.owner_last_read_at, c.created_at)
+          ) AS unread_messages
+          WHERE v.owner_id = ${session.user.id}
+
+          UNION ALL
+
+          SELECT c.id, c.created_at, c.user_archived_at AS archived_at,
+                 v.owner_id AS profile_user_id, c.venue_id, v.name AS venue_name, v.slug AS venue_slug,
+                 v.name AS user_name, 'USER'::text AS role,
+                 CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
+                 (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
+                 latest_message.created_at AS last_message_at,
+                 unread_messages.unread_count
+          FROM conversations c
+          JOIN venues v ON v.id = c.venue_id
+          LEFT JOIN LATERAL (
+            SELECT m.body, m.created_at, m.deleted_at
+            FROM messages m
+            WHERE m.conversation_id = c.id
+            ORDER BY m.created_at DESC, m.id DESC
+            LIMIT 1
+          ) AS latest_message ON TRUE
+          CROSS JOIN LATERAL (
+            SELECT COUNT(*) AS unread_count
+            FROM messages m
+            WHERE m.conversation_id = c.id
+              AND m.sender_type = 'VENUE'
+              AND m.deleted_at IS NULL
+              AND m.created_at > COALESCE(c.user_last_read_at, c.created_at)
+          ) AS unread_messages
+          WHERE c.user_id = ${session.user.id}
+            AND v.owner_id IS NOT NULL
+            AND v.owner_id IS DISTINCT FROM ${session.user.id}
+        ) AS inbox_conversations
+        ORDER BY (archived_at IS NOT NULL), last_message_at DESC NULLS LAST, created_at DESC
       `;
 
       return Response.json({ conversations, role: "USER", telegramLinked: false });
@@ -73,7 +105,7 @@ export const GET = (req: Request) =>
     const owner = venue.owner_id === session.user.id;
     const conversations = owner
       ? await sql`
-          SELECT c.id, c.created_at, c.owner_archived_at AS archived_at, u.name AS user_name,
+          SELECT c.id, c.created_at, c.owner_archived_at AS archived_at, c.user_id AS profile_user_id, u.name AS user_name,
                  CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
                  (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
                  latest_message.created_at AS last_message_at,
@@ -99,7 +131,7 @@ export const GET = (req: Request) =>
           ORDER BY (c.owner_archived_at IS NOT NULL), latest_message.created_at DESC NULLS LAST, c.created_at DESC
         `
       : await sql`
-          SELECT c.id, c.created_at, c.user_archived_at AS archived_at, u.name AS user_name,
+          SELECT c.id, c.created_at, c.user_archived_at AS archived_at, ${venue.owner_id} AS profile_user_id, u.name AS user_name,
                  CASE WHEN latest_message.deleted_at IS NULL THEN latest_message.body ELSE NULL END AS last_message_body,
                  (latest_message.deleted_at IS NOT NULL) AS last_message_deleted,
                  latest_message.created_at AS last_message_at,

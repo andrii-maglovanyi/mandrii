@@ -2,7 +2,7 @@
 
 import { gql, useQuery } from "@apollo/client";
 import { SessionProvider, useSession } from "next-auth/react";
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useEffect, useRef } from "react";
 
 import { Users } from "~/types";
 
@@ -11,6 +11,8 @@ const GET_USER_PROFILE = gql`
     users_by_pk(id: $id) {
       id
       name
+      bio
+      city
       email
       role
       status
@@ -34,6 +36,44 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 type AuthProviderProps = Readonly<{
   children: React.ReactNode;
 }>;
+
+const LAST_SEEN_UPDATE_INTERVAL_MS = 5 * 60 * 1000;
+
+const LastSeenTracker = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+  const lastTrackedAt = useRef(0);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const trackLastSeen = () => {
+      if (document.visibilityState === "hidden" || Date.now() - lastTrackedAt.current < LAST_SEEN_UPDATE_INTERVAL_MS) {
+        return;
+      }
+
+      lastTrackedAt.current = Date.now();
+      void fetch("/api/user/last-seen", { keepalive: true, method: "POST" });
+    };
+
+    const trackWhenVisible = () => {
+      if (document.visibilityState === "visible") trackLastSeen();
+    };
+
+    trackLastSeen();
+    document.addEventListener("visibilitychange", trackWhenVisible);
+    window.addEventListener("focus", trackLastSeen);
+    window.addEventListener("keydown", trackLastSeen);
+    window.addEventListener("pointerdown", trackLastSeen);
+
+    return () => {
+      document.removeEventListener("visibilitychange", trackWhenVisible);
+      window.removeEventListener("focus", trackLastSeen);
+      window.removeEventListener("keydown", trackLastSeen);
+      window.removeEventListener("pointerdown", trackLastSeen);
+    };
+  }, [isAuthenticated]);
+
+  return null;
+};
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   return (
@@ -70,5 +110,10 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
     refetchProfile,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      <LastSeenTracker isAuthenticated={status === "authenticated"} />
+      {children}
+    </AuthContext.Provider>
+  );
 }

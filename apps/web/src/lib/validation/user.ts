@@ -2,8 +2,13 @@ import { z } from "zod";
 
 import { Scalars } from "~/types";
 
+const optionalText = (max: number, message: string) =>
+  z.preprocess((value) => (value === "" ? null : value), z.string().trim().max(max, { message }).optional().nullable());
+
 export const getUserSchema = (i18n: (key: string) => string) =>
   z.object({
+    bio: optionalText(500, i18n("Bio must be 500 characters or fewer")),
+    city: optionalText(120, i18n("City must be 120 characters or fewer")),
     id: z.uuid({ message: i18n("Invalid user ID") }).transform((v) => v as Scalars["uuid"]["output"]),
     image: z.preprocess((val) => (val === "" ? null : val), z.instanceof(File).optional().nullable()),
     name: z.string().min(1, { message: i18n("Name is required") }),

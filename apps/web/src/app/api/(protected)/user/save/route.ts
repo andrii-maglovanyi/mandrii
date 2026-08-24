@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 
 import { getApiContext, InternalServerError, validateRequest, withErrorHandling } from "~/lib/api";
 import { envName } from "~/lib/config/env";
-import { UserModel } from "~/lib/models";
+import { UserModel, type UserUpdate } from "~/lib/models";
 import { processImages } from "~/lib/utils/images";
 import { getUserSchema } from "~/lib/validation/user";
-import { Users } from "~/types";
 
 export const POST = (req: Request) =>
   withErrorHandling(async () => {
@@ -15,7 +14,7 @@ export const POST = (req: Request) =>
 
     const { image, name, ...data } = await validateRequest(req, schema);
 
-    const profileData: Partial<Users> = {
+    const profileData: UserUpdate = {
       ...data,
       name: name.trim(),
     };

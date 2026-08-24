@@ -3,11 +3,15 @@ import { BadRequestError, NotFoundError, UnauthorizedError } from "~/lib/api/err
 import { executeGraphQLQuery } from "~/lib/graphql/client";
 import { Users } from "~/types";
 
+import { constants } from "../constants";
 import { privateConfig } from "../config/private";
+import { UrlHelper } from "../url-helper";
 
 const USER_FIELDS = `
   id
   name
+  bio
+  city
   email
   image
   role
@@ -24,6 +28,49 @@ const GET_USER_BY_ID_QUERY = `
     }
   }
 `;
+
+const GET_PUBLIC_USER_BY_ID_QUERY = `
+  query GetPublicUserById($id: uuid!) {
+    users_by_pk(id: $id) {
+      id
+      name
+      bio
+      city
+      image
+      last_seen_at
+      joined_at
+      points
+      events_created
+      venues_created
+      is_verified_contributor
+    }
+  }
+`;
+
+export type PublicUser = {
+  bio: null | string;
+  city: null | string;
+  events_created: number;
+  id: string;
+  image: null | string;
+  is_verified_contributor: boolean;
+  joined_at: null | string;
+  last_seen_at: null | string;
+  name: null | string;
+  points: number;
+  venues_created: number;
+};
+
+export type UserUpdate = Partial<Users> & {
+  bio?: null | string;
+  city?: null | string;
+};
+
+export function getPublicUserImageUrl(image: null | string) {
+  if (!image || UrlHelper.isAbsoluteUrl(image)) return image;
+
+  return `${constants.vercelBlobStorageUrl}/${image}`;
+}
 
 const UPDATE_USER_MUTATION = `
   mutation UpdateUser($id: uuid!, $_set: users_set_input!) {
@@ -61,6 +108,16 @@ export class UserModel {
     return result.users_by_pk;
   }
 
+  async findPublicById(id: string): Promise<null | PublicUser> {
+    const result = await executeGraphQLQuery<{ users_by_pk: null | PublicUser }>(
+      GET_PUBLIC_USER_BY_ID_QUERY,
+      { id },
+      this.getAuthHeaders(true),
+    );
+
+    return result.users_by_pk;
+  }
+
   async incrementEventCreation(): Promise<Users> {
     if (!this.session) {
       throw new UnauthorizedError("Session is required");
@@ -85,7 +142,7 @@ export class UserModel {
     });
   }
 
-  async update(variables: Partial<Users>): Promise<Users> {
+  async update(variables: UserUpdate): Promise<Users> {
     const { id, ...updateFields } = variables;
 
     if (!id) {
@@ -126,7 +183,7 @@ export class UserModel {
     return { Authorization: `Bearer ${this.session.accessToken}` };
   }
 
-  private async updateAsAdmin(variables: Partial<Users>): Promise<Users> {
+  private async updateAsAdmin(variables: UserUpdate): Promise<Users> {
     const { id, ...updateFields } = variables;
 
     if (!id) {

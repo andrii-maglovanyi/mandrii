@@ -24,6 +24,7 @@ import { useDialog } from "~/contexts/DialogContext";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { getSenderColour, getSenderInitials } from "~/lib/messaging/sender";
+import { UserProfilePreview } from "~/features/UserProfile/UserProfilePreview";
 import {
   useConversationMessagingEventsSubscription,
   useConversationReactionEventsSubscription,
@@ -93,7 +94,7 @@ export const VenueMessaging = ({
 }: VenueMessagingProps) => {
   const { data: currentUser, isAuthenticated, isLoading: isUserLoading } = useUser();
   const i18n = useI18n();
-  const { openConfirmDialog } = useDialog();
+  const { openConfirmDialog, openCustomDialog } = useDialog();
   const locale = useLocale();
   const requestedConversationId = useSearchParams().get("conversation");
   const [role, setRole] = useState<MessagingRole | null>(initialRole);
@@ -545,12 +546,20 @@ export const VenueMessaging = ({
   if (!isAuthenticated || !role) return null;
 
   const selectedConversation = conversations.find((conversation) => conversation.id === selectedConversationId);
+  const activeRole = inbox ? (selectedConversation?.role ?? "USER") : role;
   const activeVenueId = inbox ? selectedConversation?.venue_id : venueId;
-  const activeVenueName = inbox ? selectedConversation?.user_name : venueName;
+  const activeVenueName = inbox ? selectedConversation?.venue_name : venueName;
   const senderName = (senderType: ConversationMessage["sender_type"]) => {
     if (senderType === "VENUE") return activeVenueName || i18n("Venue");
+    if (activeRole === "OWNER") return selectedConversation?.user_name || i18n("Customer");
     if (inbox) return currentUser?.name || i18n("You");
     return selectedConversation?.user_name || i18n("Customer");
+  };
+  const openUserProfilePreview = (userId: string, name: string) => {
+    void openCustomDialog({
+      children: <UserProfilePreview fallbackName={name} userId={userId} />,
+      title: i18n("Profile"),
+    });
   };
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -567,7 +576,8 @@ export const VenueMessaging = ({
       year: "numeric",
     }).format(new Date(timestamp));
   const canDeleteMessage = (message: ConversationMessage) =>
-    (role === "OWNER" && message.sender_type === "VENUE") || (role === "USER" && message.sender_type === "USER");
+    (activeRole === "OWNER" && message.sender_type === "VENUE") ||
+    (activeRole === "USER" && message.sender_type === "USER");
   const canEditMessage = (message: ConversationMessage) => canDeleteMessage(message) && message.editable !== false;
   const openActions = (message: ConversationMessage, element: HTMLElement) => {
     const rect = element.getBoundingClientRect();
@@ -732,7 +742,7 @@ export const VenueMessaging = ({
         setMessageBeingEdited(null);
         return;
       }
-      const isOwner = role === "OWNER";
+      const isOwner = activeRole === "OWNER";
       if (!isOwner && !activeVenueId) throw new Error(i18n("Select a conversation"));
       const response = await fetch(
         isOwner ? `/api/conversations/${selectedConversationId}/messages` : "/api/conversations",
@@ -969,20 +979,20 @@ export const VenueMessaging = ({
   return (
     <div className="space-y-4">
       <RichText as="div" className="text-neutral mb-6 text-sm">
-        {role === "OWNER"
+        {!inbox && role === "OWNER"
           ? telegramLinked
             ? i18n(
                 "Manage customer enquiries in one place. Reply here, or reply to the forwarded message in Telegram - both appear in the same conversation.",
               )
             : i18n("Manage customer enquiries here. Link Telegram to also receive and reply to messages there.")
           : inbox
-            ? i18n("Manage your private conversations with venues in one place.")
+            ? i18n("Manage your private conversations and customer enquiries in one place.")
             : i18n(
                 "Send a private message to this venue. Only you and the venue owner can see this conversation. They can reply here or through Telegram.",
               )}
       </RichText>
 
-      {role === "OWNER" && telegramLinked !== null && (
+      {!inbox && role === "OWNER" && telegramLinked !== null && (
         <TelegramLinkPanel
           error={messageError}
           isLinked={telegramLinked}
@@ -1147,14 +1157,15 @@ export const VenueMessaging = ({
                     messages.map((message, index) => {
                       const isActionMessage = reactionPicker?.message.id === message.id;
                       const isOwnMessage =
-                        (role === "OWNER" && message.sender_type === "VENUE") ||
-                        (role === "USER" && message.sender_type === "USER");
+                        (activeRole === "OWNER" && message.sender_type === "VENUE") ||
+                        (activeRole === "USER" && message.sender_type === "USER");
                       const bubbleColour =
                         message.sender_type === "VENUE"
                           ? "bg-secondary-hover before:bg-secondary-hover"
                           : "bg-surface-tint before:bg-surface-tint";
                       const name = senderName(message.sender_type);
                       const senderColour = getSenderColour(name);
+                      const profileUserId = selectedConversation?.profile_user_id;
                       const isNewDay =
                         index === 0 ||
                         new Date(messages[index - 1]?.created_at ?? "").toDateString() !==
@@ -1206,24 +1217,42 @@ export const VenueMessaging = ({
                           <div
                             className={`flex max-w-[92%] gap-3 ${isOwnMessage ? "flex-row-reverse self-end" : "self-start"} ${followsSameSender ? "-mt-2" : ""}`}
                           >
-                            {showSender ? (
+                            {!isOwnMessage && showSender && profileUserId ? (
+                              <button
+                                aria-label={i18n("View profile for {name}", { name })}
+                                className={`focus-visible:outline-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight text-white transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 ${senderColour.avatarClassName}`}
+                                onClick={() => openUserProfilePreview(profileUserId, name)}
+                                type="button"
+                              >
+                                {getSenderInitials(name)}
+                              </button>
+                            ) : !isOwnMessage && showSender ? (
                               <div
                                 aria-hidden="true"
                                 className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight text-white ${senderColour.avatarClassName}`}
                               >
                                 {getSenderInitials(name)}
                               </div>
-                            ) : (
+                            ) : !isOwnMessage ? (
                               <div aria-hidden="true" className="w-10 shrink-0" />
-                            )}
+                            ) : null}
                             <div className={`flex min-w-0 flex-col ${isOwnMessage ? "items-end" : "items-start"}`}>
-                              {showSender && (
+                              {!isOwnMessage && showSender && profileUserId ? (
+                                <button
+                                  aria-label={i18n("View profile for {name}", { name })}
+                                  className={`focus-visible:outline-primary mb-1 px-1 text-base font-semibold transition-opacity hover:opacity-75 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 ${senderColour.textClassName} ${isOwnMessage ? "text-right" : ""}`}
+                                  onClick={() => openUserProfilePreview(profileUserId, name)}
+                                  type="button"
+                                >
+                                  {name}
+                                </button>
+                              ) : !isOwnMessage && showSender ? (
                                 <p
                                   className={`mb-1 px-1 text-base font-semibold ${senderColour.textClassName} ${isOwnMessage ? "text-right" : ""}`}
                                 >
                                   {name}
                                 </p>
-                              )}
+                              ) : null}
                               <div
                                 className={`${bubbleColour} relative touch-manipulation rounded-xl px-4 py-2 select-none before:absolute before:bottom-0 before:h-4 before:w-4 before:content-[''] ${isOwnMessage ? "rounded-br-sm before:-right-2 before:[clip-path:polygon(0_0,0_100%,100%_100%)]" : "rounded-bl-sm before:-left-2 before:[clip-path:polygon(100%_0,100%_100%,0_100%)]"}`}
                                 onContextMenu={(event) => {
@@ -1360,7 +1389,7 @@ export const VenueMessaging = ({
                     })
                   ) : (
                     <p className="text-on-surface/70 text-sm">
-                      {role === "OWNER" ? i18n("Select a conversation") : i18n("Start a conversation")}
+                      {inbox || activeRole === "OWNER" ? i18n("Select a conversation") : i18n("Start a conversation")}
                     </p>
                   )}
                 </>

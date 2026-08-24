@@ -1,7 +1,6 @@
-import clsx from "clsx";
 import { Archive, CalendarCheck, CalendarClock, CalendarX, CheckCircle2, Clock, FileText } from "lucide-react";
 
-import { Tooltip } from "~/components/ui";
+import { Badge, Tooltip, type BadgeVariant } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { Event_Status_Enum } from "~/types";
 
@@ -13,76 +12,46 @@ interface EventStatusProps {
 export const EventStatus = ({ expanded, status }: EventStatusProps) => {
   const i18n = useI18n();
 
-  let icon = <Clock className="stroke-surface" size={18} />;
+  let Icon = Clock;
   let label = i18n("Pending");
+  let variant: BadgeVariant = "warning";
 
   if (status === Event_Status_Enum.Active) {
     label = i18n("Active");
-    icon = <CheckCircle2 className="stroke-surface" size={18} />;
+    Icon = CheckCircle2;
+    variant = "success";
   } else if (status === Event_Status_Enum.Draft) {
     label = i18n("Draft");
-    icon = <FileText className="stroke-surface" size={18} />;
+    Icon = FileText;
+    variant = "neutral";
   } else if (status === Event_Status_Enum.Cancelled) {
     label = i18n("Cancelled");
-    icon = <CalendarX className="stroke-surface" size={18} />;
+    Icon = CalendarX;
+    variant = "danger";
   } else if (status === Event_Status_Enum.Completed) {
     label = i18n("Completed");
-    icon = <CalendarCheck className="stroke-surface" size={18} />;
+    Icon = CalendarCheck;
+    variant = "info";
   } else if (status === Event_Status_Enum.Postponed) {
     label = i18n("Postponed");
-    icon = <CalendarClock className="stroke-surface" size={18} />;
+    Icon = CalendarClock;
+    variant = "warning";
   } else if (status === Event_Status_Enum.Archived) {
     label = i18n("Archived");
-    icon = <Archive className="stroke-surface" size={18} />;
+    Icon = Archive;
+    variant = "neutral";
   }
 
+  if (expanded)
+    return (
+      <Badge icon={<Icon size={18} />} size="md" variant={variant}>
+        {label}
+      </Badge>
+    );
+
   return (
-    <div
-      className={clsx(
-        `
-          flex w-min cursor-default items-center justify-center text-xs
-          font-medium uppercase
-        `,
-        status === Event_Status_Enum.Active && `
-          bg-green-600/75 text-surface
-          dark:bg-green-400/75
-        `,
-        status === Event_Status_Enum.Draft && `
-          bg-gray-600/75 text-surface
-          dark:bg-gray-400/75
-        `,
-        status === Event_Status_Enum.Cancelled && `
-          bg-red-600/75 text-surface
-          dark:bg-red-400/75
-        `,
-        status === Event_Status_Enum.Completed && `
-          bg-blue-600/75 text-surface
-          dark:bg-blue-400/75
-        `,
-        status === Event_Status_Enum.Postponed && `
-          bg-orange-600/75 text-surface
-          dark:bg-orange-400/75
-        `,
-        status === Event_Status_Enum.Archived && `
-          bg-slate-600/75 text-surface
-          dark:bg-slate-400/75
-        `,
-        status === Event_Status_Enum.Pending && `
-          bg-yellow-600/75 text-surface
-          dark:bg-yellow-400/75
-        `,
-        expanded ? `rounded-md px-3 py-1.5` : `rounded-full p-2`,
-      )}
-    >
-      {expanded ? (
-        <div className="flex items-center">
-          {icon} <span className="ml-1">{label}</span>
-        </div>
-      ) : (
-        <div className={`flex grow justify-center align-middle`}>
-          <Tooltip label={label}>{icon}</Tooltip>
-        </div>
-      )}
-    </div>
+    <Tooltip label={label}>
+      <Badge aria-label={label} icon={<Icon size={18} />} iconOnly variant={variant} />
+    </Tooltip>
   );
 };

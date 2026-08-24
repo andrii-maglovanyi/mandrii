@@ -5,9 +5,12 @@ export type Conversation = {
   last_message_deleted?: boolean;
   last_message_body: null | string;
   last_message_at: null | string;
+  profile_user_id?: string;
+  role?: "OWNER" | "USER";
   unread_count: number | string;
   user_name: null | string;
   venue_id?: string;
+  venue_name?: string;
   venue_slug?: string;
 };
 

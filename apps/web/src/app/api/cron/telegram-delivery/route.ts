@@ -1,26 +1,11 @@
-import { timingSafeEqual } from "crypto";
-
-import { privateConfig } from "~/lib/config/private";
+import { getCronAuthorizationError } from "~/lib/cron/authorization";
 import { deliverPendingTelegramMessages } from "~/lib/telegram/bot";
 
 export const dynamic = "force-dynamic";
 
-function hasValidCronSecret(authorization: null | string, expectedSecret: string) {
-  const receivedSecret = authorization?.replace(/^Bearer\s+/i, "");
-  if (!receivedSecret) return false;
-
-  const received = Buffer.from(receivedSecret);
-  const expected = Buffer.from(expectedSecret);
-  return received.length === expected.length && timingSafeEqual(received, expected);
-}
-
 export const GET = async (req: Request) => {
-  if (privateConfig.cron.secret === "__UNSET__") {
-    return new Response("Cron secret is not configured", { status: 503 });
-  }
-  if (!hasValidCronSecret(req.headers.get("authorization"), privateConfig.cron.secret)) {
-    return new Response("Unauthorized", { status: 401 });
-  }
+  const authorizationError = getCronAuthorizationError(req.headers.get("authorization"));
+  if (authorizationError) return authorizationError;
 
   try {
     const processed = await deliverPendingTelegramMessages();

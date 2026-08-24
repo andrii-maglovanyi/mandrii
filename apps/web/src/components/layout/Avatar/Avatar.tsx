@@ -3,12 +3,15 @@ import { User } from "lucide-react";
 import Image from "next/image";
 
 import { useI18n } from "~/i18n/useI18n";
-import { UserSession } from "~/types/user";
+type AvatarProfile = {
+  image?: null | string;
+  name?: null | string;
+};
 
 interface AvatarProps {
   avatarSize?: number;
   className?: string;
-  profile?: UserSession;
+  profile?: AvatarProfile;
 }
 
 export const Avatar = ({ avatarSize = 48, className, profile }: AvatarProps) => {
@@ -19,19 +22,14 @@ export const Avatar = ({ avatarSize = 48, className, profile }: AvatarProps) => 
     <div className={className}>
       {image ? (
         <div
-          className={`
-            relative overflow-hidden rounded-full border border-primary
-          `}
+          className={`border-primary relative overflow-hidden rounded-full border`}
           style={{ height: avatarSize, width: avatarSize }}
         >
           <Image alt={name ?? i18n("Someone")} className="object-cover" fill src={image} />
         </div>
       ) : (
         <div
-          className={clsx(`
-            flex items-center justify-center rounded-full bg-surface
-            text-neutral-500
-          `)}
+          className={clsx(`bg-surface flex items-center justify-center rounded-full text-neutral-500`)}
           style={{ height: avatarSize, width: avatarSize }}
         >
           <User size={avatarSize / 2} />
