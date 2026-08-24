@@ -33,7 +33,7 @@ export const CommunityImpact = ({
 
   return (
     <section>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h2
           className={`from-primary to-secondary bg-linear-to-r bg-clip-text text-xl font-bold text-transparent md:text-2xl`}
         >

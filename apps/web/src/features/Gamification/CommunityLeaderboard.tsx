@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Crown, Star, Trophy } from "lucide-react";
+import { ArrowUpRight, Star, Trophy } from "lucide-react";
 
 import { Avatar } from "~/components/layout";
 import { EmptyState } from "~/components/ui";
@@ -76,27 +76,20 @@ export const CommunityLeaderboard = ({
         {entries.map((entry) => (
           <li key={entry.id}>
             <Link
-              className={`group/leaderboard hover:bg-surface-tint/60 focus-visible:bg-surface-tint/60 flex min-h-24 items-center gap-3 px-2 py-3 transition-colors hover:no-underline sm:min-h-28 sm:gap-6 sm:px-4 sm:py-4 ${
+              className={`group/leaderboard hover:bg-surface-tint/60 focus-visible:bg-surface-tint/60 flex min-h-20 items-center gap-2 px-3 py-2.5 transition-colors hover:no-underline sm:min-h-28 sm:gap-6 sm:px-4 sm:py-4 ${
                 entry.id === currentUserId ? "bg-primary/10" : ""
               }`}
               href={`/users/${entry.id}`}
             >
-              <span className="w-9 shrink-0 sm:w-16">
+              <span className="w-7 shrink-0 sm:w-16">
                 <span
                   aria-label={i18n("Rank {rank}", { rank: entry.rank })}
-                  className={`block text-center text-3xl leading-none font-extrabold tabular-nums sm:text-5xl ${rankClassNames[entry.rank] ?? "text-neutral"}`}
+                  className={`block text-center text-2xl leading-none font-extrabold tabular-nums sm:text-5xl ${rankClassNames[entry.rank] ?? "text-neutral"}`}
                 >
                   {entry.rank}
                 </span>
               </span>
-              <span className="relative shrink-0">
-                {entry.rank === 1 && (
-                  <Crown
-                    aria-label={i18n("First place")}
-                    className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 text-amber-600"
-                    size={22}
-                  />
-                )}
+              <span className="relative flex h-12 shrink-0 items-center justify-center">
                 <Avatar avatarSize={48} profile={entry} />
               </span>
               <span className="min-w-0 flex-1">

@@ -1,4 +1,4 @@
-import { LogOut, MessageCircle, StretchHorizontal, User } from "lucide-react";
+import { LogOut, MessageCircle, StretchHorizontal } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -29,9 +29,6 @@ export const UserMenu = ({ inactive = false, onNavigate = () => {}, unreadMessag
     <>
       {!inactive && (
         <>
-          <Link href="/user-profile" onClick={onNavigate}>
-            <User className="mr-2" /> {i18n("My profile")}
-          </Link>
           <Link href="/messages" onClick={onNavigate}>
             <MessageCircle className="mr-2" /> {i18n("Messages")}
             {unreadMessages > 0 && (
