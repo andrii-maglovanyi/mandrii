@@ -21,6 +21,7 @@ export type MDEditorProps = {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
+  preview?: "edit" | "live" | "preview";
   ref?: Ref<HTMLDivElement>;
   required?: boolean;
   showErrorMessage?: boolean;
@@ -43,6 +44,7 @@ export const MDEditor = forwardRef<HTMLDivElement, Readonly<MDEditorProps>>(
       onBlur,
       onChange,
       placeholder,
+      preview = "live",
       required = false,
       showErrorMessage = false,
       value = "",
@@ -75,7 +77,7 @@ export const MDEditor = forwardRef<HTMLDivElement, Readonly<MDEditorProps>>(
     return (
       <div className="flex flex-col gap-1">
         {label && (
-          <label className="text-sm font-medium text-on-surface" htmlFor={editorId}>
+          <label className="text-on-surface text-sm font-medium" htmlFor={editorId}>
             {label}
             {required && <span className="ml-0.5 text-red-500">*</span>}
           </label>
@@ -93,6 +95,7 @@ export const MDEditor = forwardRef<HTMLDivElement, Readonly<MDEditorProps>>(
             height={height}
             onBlur={onBlur}
             onChange={handleMDChange}
+            preview={preview}
             textareaProps={{
               disabled,
               name,

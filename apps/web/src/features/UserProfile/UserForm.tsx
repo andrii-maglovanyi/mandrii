@@ -2,6 +2,7 @@
 
 import { Lock } from "lucide-react";
 import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 import { Avatar, FormFooter, ImagePreview } from "~/components/layout";
 import { Button, FilePicker, Input, LocationAutocomplete, MDEditor, RichText, Tooltip } from "~/components/ui";
@@ -21,6 +22,7 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
   const i18n = useI18n();
   const { isDark } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   const { getFieldProps, hasChanges, isFormValid, resetForm, setValues, useFormSubmit, useImagePreviews, values } =
     useForm({
@@ -102,6 +104,7 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
               label={i18n("About you")}
               maxChars={500}
               placeholder={i18n("Tell the community a little about yourself. Markdown formatting is supported.")}
+              preview={isMobile ? "edit" : "live"}
               {...getFieldProps("bio")}
             />
             <LocationAutocomplete
