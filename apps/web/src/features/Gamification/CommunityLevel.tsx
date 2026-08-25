@@ -51,24 +51,24 @@ export const CommunityLevelProgress = ({ points }: CommunityLevelBadgeProps) => 
     : null;
 
   return (
-    <div className="border-primary/20 bg-surface-tint/50 rounded-xl border p-4 sm:p-5">
+    <div className="from-secondary/15 to-primary/15 rounded-3xl bg-linear-to-br p-4 shadow-md sm:p-5">
       <div className="flex items-center gap-3">
         <div className="bg-primary text-surface flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:h-11 sm:w-11">
           <Icon aria-hidden size={22} />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
             <div>
-              <p className="text-neutral text-xs font-medium">{i18n("Community level")}</p>
-              <p className="text-lg font-semibold sm:text-xl">{i18n(level.name)}</p>
+              <p className="text-neutral text-sm font-medium">{i18n("Level")}</p>
+              <p className="text-xl font-semibold sm:text-2xl">{i18n(level.name)}</p>
             </div>
             {nextLevel ? (
-              <p className="text-primary shrink-0 text-sm font-semibold tabular-nums sm:text-base">
+              <p className="text-primary shrink-0 text-xl font-semibold tabular-nums sm:text-2xl">
                 {currentPoints}
                 <span className="text-neutral"> / {nextLevel.minPoints}</span> {i18n("points")}
               </p>
             ) : (
-              <p className="text-primary shrink-0 text-sm font-semibold tabular-nums sm:text-base">
+              <p className="text-primary shrink-0 text-xl font-semibold tabular-nums sm:text-2xl">
                 {currentPoints} {i18n("points")}
               </p>
             )}
@@ -90,14 +90,14 @@ export const CommunityLevelProgress = ({ points }: CommunityLevelBadgeProps) => 
               style={{ width: `${percentage}%` }}
             />
           </div>
-          <p className="text-neutral mt-2 text-sm">
+          <p className="mt-6 text-sm">
             {i18n("{points} points to {level}", {
               level: i18n(nextLevel.name),
               points: pointsToNextLevel,
             })}
           </p>
           {contributionGoal && venueLabel && eventLabel && (
-            <p className="text-neutral mt-1 text-sm">
+            <p className="mt-1 text-sm">
               {i18n("Add {venues} or {events} to reach {level}", {
                 events: eventLabel,
                 level: i18n(contributionGoal.nextLevel.name),
@@ -107,9 +107,7 @@ export const CommunityLevelProgress = ({ points }: CommunityLevelBadgeProps) => 
           )}
         </div>
       ) : (
-        <p className="text-neutral mt-3 pl-13 text-sm sm:pl-14">
-          {i18n("You have reached the highest community level")}
-        </p>
+        <p className="mt-3 pl-13 sm:pl-14">{i18n("You have reached the highest community level")}</p>
       )}
     </div>
   );

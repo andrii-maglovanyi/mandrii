@@ -99,7 +99,7 @@ export default async function LeaderboardPage({ params, searchParams }: Readonly
       <section className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="from-primary to-secondary bg-linear-to-r bg-clip-text text-3xl font-extrabold text-transparent md:text-5xl">
-            {i18n("Community leaderboard")}
+            {i18n("Leaderboard")}
           </h1>
           <p className="text-neutral mt-3 max-w-3xl">
             {i18n("Celebrating people who strengthen the Ukrainian community by adding useful places and events.")}

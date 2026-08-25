@@ -33,24 +33,26 @@ export const CommunityImpact = ({
 
   return (
     <section>
-      <div className="mb-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-4 flex items-center justify-between gap-2">
         <h2
-          className={`from-primary to-secondary bg-linear-to-r bg-clip-text text-xl font-bold text-transparent md:text-2xl`}
+          className={`from-primary to-secondary bg-linear-to-r bg-clip-text text-3xl font-bold text-transparent md:text-2xl`}
         >
-          {i18n("Community Impact")}
+          {i18n("Community impact")}
         </h2>
         {showLeaderboardLink && (
-          <Link className="inline-flex min-h-11 items-center gap-2 text-sm" href="/leaderboard">
-            <Star aria-hidden size={16} />
-            {i18n("Community leaderboard")}
+          <Link className="inline-flex items-center gap-2" href="/leaderboard">
+            <Star aria-hidden size={20} className="fill-primary" />
+            {i18n("Leaderboard")}
           </Link>
         )}
       </div>
       <div className="mb-4">
         <CommunityLevelProgress points={points} />
-        <p className="text-neutral mt-2 text-xs">{i18n("Points are awarded once a venue or event is published.")}</p>
+        <p className="text-neutral mt-2 text-right text-sm">
+          {i18n("Points are awarded once a venue or event is published")}
+        </p>
       </div>
-      <div className="mb-4">
+      <div className="my-4">
         <CommunityAchievements
           activeDays={activeDays}
           events={eventsCreated}
@@ -59,10 +61,10 @@ export const CommunityImpact = ({
           venues={venuesCreated}
         />
       </div>
-      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+      <div className="mt-8 grid grid-cols-3 gap-2 sm:gap-4">
         {stats.map(({ icon: Icon, label, value }) => (
           <div
-            className="group border-primary/20 from-primary/10 to-primary/5 relative overflow-hidden rounded-xl border bg-linear-to-br p-3 sm:p-4"
+            className="group border-primary/20 from-primary/10 to-primary/5 relative overflow-hidden rounded-xl bg-linear-to-br p-3 sm:p-4"
             key={label}
           >
             <div className="bg-primary/5 absolute -top-4 -right-4 h-24 w-24 rounded-full" />
@@ -71,7 +73,7 @@ export const CommunityImpact = ({
               <span className="from-primary to-secondary mt-1 block bg-linear-to-r bg-clip-text text-2xl font-bold text-transparent sm:text-3xl md:text-4xl">
                 {value}
               </span>
-              <div className="bg-primary/10 text-primary absolute top-0 right-0 flex h-9 w-9 items-center justify-center rounded-full sm:h-12 sm:w-12">
+              <div className="bg-primary/10 text-primary absolute top-0 right-0 flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12">
                 <Icon className="h-4 w-4 sm:h-6 sm:w-6" />
               </div>
             </div>

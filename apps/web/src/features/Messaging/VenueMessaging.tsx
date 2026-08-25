@@ -1065,7 +1065,7 @@ export const VenueMessaging = ({
         )}
         {!isExpanded && (
           <header className="mb-3 flex items-center justify-between gap-2">
-            <div className="min-w-0 flex-1">{renderConversationButton("w-full justify-between px-2 md:hidden")}</div>
+            <div className="min-w-0 flex-1">{renderConversationButton("w-fit md:hidden")}</div>
             <div className="flex shrink-0 gap-1.5 sm:gap-2">
               <PushNotifications />
               {renderArchiveButton()}

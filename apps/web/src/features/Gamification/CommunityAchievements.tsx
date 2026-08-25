@@ -47,10 +47,10 @@ export const CommunityAchievements = (stats: CommunityAchievementsProps) => {
   return (
     <section aria-labelledby="community-achievements">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <h3 className="text-sm font-semibold" id="community-achievements">
+        <h3 className="text-lg font-semibold" id="community-achievements">
           {i18n("Achievements")}
         </h3>
-        <span className="text-neutral text-xs">
+        <span className="text-neutral">
           {i18n("{count} of {total} unlocked", {
             count: achievements.filter((achievement) => achievement.achieved).length,
             total: achievements.length,
@@ -58,7 +58,7 @@ export const CommunityAchievements = (stats: CommunityAchievementsProps) => {
         </span>
       </div>
       <ul
-        className="-mx-4 flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-6"
+        className="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-6"
         role="list"
       >
         {achievements.map((achievement) => {
@@ -69,15 +69,15 @@ export const CommunityAchievements = (stats: CommunityAchievementsProps) => {
           return (
             <li className="flex w-40 shrink-0 snap-start self-stretch sm:w-auto" key={achievement.id}>
               <span
-                className={`relative flex h-full min-h-30 w-full flex-col justify-between rounded-xl border p-3 text-sm font-medium ${
+                className={`relative flex h-full min-h-30 w-full flex-col justify-between overflow-hidden rounded-4xl border-8 p-3 text-center text-sm font-medium ${
                   achievement.achieved
-                    ? "border-primary/20 bg-primary/10 text-primary"
-                    : "border-on-surface/10 bg-on-surface/5 text-neutral"
+                    ? "border-primary/10 bg-primary/10 text-primary"
+                    : "border-on-surface/5 bg-on-surface/5 text-neutral"
                 }`}
               >
                 <span
-                  className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-                    achievement.achieved ? "bg-primary/15" : "bg-on-surface/10"
+                  className={`absolute -top-10 -left-10 flex h-30 w-30 shrink-0 items-center justify-center rounded-full ${
+                    achievement.achieved ? "bg-primary/10" : "bg-on-surface/5"
                   }`}
                 >
                   <Icon aria-hidden size={21} />
@@ -90,9 +90,9 @@ export const CommunityAchievements = (stats: CommunityAchievementsProps) => {
                     strokeWidth={2.25}
                   />
                 )}
-                <span className="mt-2 line-clamp-2 leading-snug">{label}</span>
+                <span className="mt-10 line-clamp-2 text-xl leading-snug">{label}</span>
                 {lockedRequirement && (
-                  <span className="text-neutral mt-1 line-clamp-2 text-xs">{lockedRequirement}</span>
+                  <span className="text-neutral mt-4 line-clamp-2 text-xs">{lockedRequirement}</span>
                 )}
                 {!achievement.achieved && <span className="sr-only">{i18n("Locked")}</span>}
               </span>
