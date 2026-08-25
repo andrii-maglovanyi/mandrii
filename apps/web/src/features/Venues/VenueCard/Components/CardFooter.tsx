@@ -1,9 +1,8 @@
 "use client";
 
-import { Clock } from "lucide-react";
 import { useLocale } from "next-intl";
 
-import { Tooltip } from "~/components/ui";
+import { ContentStatusBadge, Tooltip } from "~/components/ui";
 import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -25,10 +24,7 @@ export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: Ca
   const linkContent = (
     <>
       {i18n("Discover")}
-      <span className={`
-        transition-transform
-        group-hover/card:translate-x-1
-      `}>→</span>
+      <span className={`transition-transform group-hover/card:translate-x-1`}>→</span>
     </>
   );
 
@@ -53,15 +49,10 @@ export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: Ca
   const CountryFlag = countryCode ? getFlagComponent(countryCode) : null;
 
   return (
-    <div className={`
-      flex items-center justify-between border-t border-primary/5 pt-3
-    `}>
-      <div className="flex items-center gap-2 text-xs text-neutral">
+    <div className={`border-primary/5 flex items-center justify-between border-t pt-3`}>
+      <div className="text-neutral flex items-center gap-2 text-xs">
         {venue.status === Venue_Status_Enum.Pending ? (
-          <>
-            <Clock size={14} />
-            <span className="capitalize">{venue.status?.toLowerCase()}</span>
-          </>
+          <ContentStatusBadge status={venue.status} />
         ) : CountryFlag && countryCode ? (
           <Tooltip
             label={
@@ -72,30 +63,21 @@ export const CardFooter = ({ hideUntilHover, isInsideLink, showFlag, venue }: Ca
           >
             <div className="inline-block h-4 w-6 cursor-help">
               <CountryFlag
-                className={`
-                  pointer-events-none h-4 w-6 rounded-sm opacity-60
-                  group-hover/card:opacity-100
-                `}
+                className={`pointer-events-none h-4 w-6 rounded-sm opacity-60 group-hover/card:opacity-100`}
               />
             </div>
           </Tooltip>
         ) : null}
 
         {eventsCount ? (
-          <span className={`
-            flex rounded-md bg-neutral-disabled/25 px-1 py-px text-xs
-            font-medium
-          `}>
+          <span className={`bg-neutral-disabled/25 flex rounded-md px-1 py-px text-xs font-medium`}>
             {i18n("{count} events", { count: eventsCount })}
           </span>
         ) : null}
       </div>
 
       {isInsideLink ? (
-        <span className={`
-          ${linkClassName}
-          pointer-events-none
-        `}>{linkContent}</span>
+        <span className={` ${linkClassName} pointer-events-none`}>{linkContent}</span>
       ) : (
         <Link className={linkClassName} href={`/venues/${venue.slug}`}>
           {linkContent}

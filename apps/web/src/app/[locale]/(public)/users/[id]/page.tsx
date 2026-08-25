@@ -26,7 +26,7 @@ export default async function PublicUserProfilePage({ params }: Readonly<PublicU
     getI18n({ locale }),
     new UserModel().findPublicById(id),
     sql<PublicVenueContribution[]>`
-      SELECT name, slug, city, country, created_at, logo, images
+      SELECT name, slug, city, country, created_at, logo, images, status
       FROM venues
       WHERE user_id = ${id} AND status = 'ACTIVE'
       ORDER BY created_at DESC

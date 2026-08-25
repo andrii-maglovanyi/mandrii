@@ -14,6 +14,6 @@ describe("Badge", () => {
   it("renders an accessible icon-only badge", () => {
     render(<Badge aria-label="Active" icon={<Check />} iconOnly variant="success" />);
 
-    expect(screen.getByLabelText("Active")).toHaveClass("h-9", "w-9");
+    expect(screen.getByLabelText("Active")).toHaveClass("h-7", "w-7");
   });
 });

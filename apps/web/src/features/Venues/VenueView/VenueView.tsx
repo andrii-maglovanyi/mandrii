@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import {
   AnimatedEllipsis,
   Button,
+  ContentStatusBadge,
   EmptyState,
   ImageCarousel,
   RichText,
@@ -19,7 +20,6 @@ import {
 } from "~/components/ui";
 import { EventsMasonryCard } from "~/features/Events/EventCard/EventsMasonryCard";
 import { VenueMessaging } from "~/features/Messaging/VenueMessaging";
-import { VenueStatus } from "~/features/UserDirectory/Venues/VenueStatus";
 import { useEvents } from "~/hooks/useEvents";
 import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
@@ -125,7 +125,7 @@ export const VenueView = ({
       <div className={`relative w-full pb-2 md:pb-4`}>
         {showStatus && (
           <div className="absolute top-4 right-4 z-10">
-            <VenueStatus expanded status={venue.status} />
+            <ContentStatusBadge appearance="label-with-icon" size="md" status={venue.status} />
           </div>
         )}
         {images.length ? (

@@ -4,12 +4,11 @@ import { Eye, UserSearch } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 
-import { EmptyState } from "~/components/ui";
+import { EmptyState, TextLink } from "~/components/ui";
 import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllipsis";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
-import { Link } from "~/i18n/navigation";
 import { type CommunityContributionStats } from "~/lib/gamification/community";
 import { useGetOwnUserRecentContributionsQuery } from "~/types/graphql.generated";
 import { Locale } from "~/types";
@@ -104,10 +103,10 @@ export const UserProfile = () => {
             >
               {i18n("Your Profile")}
             </h2>
-            <Link className="inline-flex min-h-11 items-center gap-2" href={`/users/${data.id}`}>
+            <TextLink href={`/users/${data.id}`}>
               <Eye size={18} />
               {i18n("View your public profile")}
-            </Link>
+            </TextLink>
           </div>
           <p className={`text-neutral text-sm md:text-base`}>
             {i18n("Manage your account settings and view your community contributions")}
@@ -117,7 +116,11 @@ export const UserProfile = () => {
         <UserForm onSubmit={submitProfile} onSuccess={onProfileSaved} profile={data} />
       </div>
 
-      <PublicContributions events={recentContributions?.events ?? []} venues={recentContributions?.venues ?? []} />
+      <PublicContributions
+        events={recentContributions?.events ?? []}
+        showDirectoryLinks
+        venues={recentContributions?.venues ?? []}
+      />
 
       <CommunityImpact
         activeDays={contributionStats.activeDays}

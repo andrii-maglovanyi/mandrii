@@ -7,7 +7,7 @@ import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
-import { ActionButton, AnimatedEllipsis, EmptyState, RichText, Tooltip } from "~/components/ui";
+import { ActionButton, AnimatedEllipsis, ContentStatusBadge, EmptyState, RichText, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useNotifications, useUser, useVenues } from "~/hooks";
 import { useI18n } from "~/i18n/useI18n";
@@ -15,7 +15,6 @@ import { constants } from "~/lib/constants";
 import { toDateLocale } from "~/lib/utils";
 import { DayOfWeek, Locale, Venue_Status_Enum } from "~/types";
 
-import { VenueStatus } from "../VenueStatus";
 import { VenueForm } from "./VenueForm";
 import { Link } from "~/i18n/navigation";
 
@@ -263,7 +262,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
             {format(new Date(data.created_at), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
           </Tooltip>
           <span>&bull;</span>
-          <VenueStatus status={data.status!} />
+          <ContentStatusBadge appearance="icon" status={data.status!} />
           {data.id ? (
             <Tooltip label={i18n("View venue in a new tab")}>
               <Link

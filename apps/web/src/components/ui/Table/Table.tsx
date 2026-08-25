@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { ChevronDown, ChevronsUpDown, ChevronUp, Search } from "lucide-react";
-import React, { type Key, useCallback, useEffect, useState } from "react";
+import React, { type Key, useCallback, useEffect, useLayoutEffect, useState } from "react";
 
 import { SortDirections, SortParams } from "~/types";
 
@@ -15,6 +15,12 @@ interface Column<T> {
   className?: string;
   defaultSortOrder?: "asc" | "desc";
   key: Array<string> | string;
+  mobile?: {
+    /** Makes a row span the full card width instead of sharing space with a label. */
+    fullWidth?: boolean;
+    /** Omits the desktop table heading from the compact mobile card. */
+    hideLabel?: boolean;
+  };
   render?: (value: unknown, record: T) => React.ReactNode;
   sorter?: boolean;
   title?: (() => React.ReactNode) | string;
@@ -123,16 +129,11 @@ export function Table<T>({
   const [expandedRows, setExpandedRows] = useState<Set<Key>>(new Set());
   const [sorterColumns, setSorterColumns] = useState<Map<string, SortDirections>>(new Map());
 
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-
-    if (!loading) {
-      timer = setTimeout(() => {
-        setData(dataSource);
-      });
-    }
-
-    return () => clearTimeout(timer);
+  // Swap data before the browser paints the completed request. Keeping the
+  // previous rows while loading avoids a collapsing table; the synchronous
+  // hand-off prevents a blank or stale frame once loading finishes.
+  useLayoutEffect(() => {
+    if (!loading) setData(dataSource);
   }, [dataSource, loading]);
 
   useEffect(() => {
@@ -177,20 +178,16 @@ export function Table<T>({
 
   const handleSort = useCallback(
     (key: string) => {
-      const sorter = sorterColumns.get(key);
+      const nextDirection: SortDirections = sorterColumns.get(key) === "asc" ? "desc" : "asc";
+      // A normal header click represents one primary sort. Retaining other
+      // default columns here made their ordering take precedence over the
+      // column the user had just selected.
+      const nextSorterColumns = new Map([[key, nextDirection]]);
 
-      if (sorter === "asc") {
-        sorterColumns.set(key, "desc");
-      } else if (sorter === "desc") {
-        sorterColumns.delete(key);
-      } else {
-        sorterColumns.set(key, "asc");
-      }
-
-      setSorterColumns(new Map(sorterColumns));
+      setSorterColumns(nextSorterColumns);
 
       onSort?.(
-        [...sorterColumns.entries()].map(([key, value]) => ({
+        [...nextSorterColumns.entries()].map(([key, value]) => ({
           [getDataPath({ key })]: value,
         })),
       );
@@ -202,9 +199,9 @@ export function Table<T>({
     if (sorterColumns.has(key)) {
       const direction = sorterColumns.get(key);
       if (direction === "asc") {
-        return <ChevronDown />;
-      } else {
         return <ChevronUp />;
+      } else {
+        return <ChevronDown />;
       }
     } else {
       return <ChevronsUpDown />;
@@ -348,6 +345,7 @@ export function Table<T>({
             const dataKey = getDataPath(column);
             const data = getNestedValue<T>(record, dataKey);
             const title = typeof column.title === "string" ? column.title : "";
+            const mobile = column.mobile;
 
             const displayValue = column.render
               ? column.render(data, record)
@@ -359,8 +357,18 @@ export function Table<T>({
 
             return (
               <React.Fragment key={dataKey}>
-                <span className="text-right text-neutral">{title}</span>
-                <span>{displayValue}</span>
+                {!mobile?.hideLabel && (
+                  <span className="self-start pt-0.5 text-right text-sm leading-6 text-neutral">{title}</span>
+                )}
+                <span
+                  className={clsx(
+                    "min-w-0",
+                    mobile?.fullWidth && "col-span-2",
+                    mobile?.hideLabel && !mobile?.fullWidth && "col-start-2",
+                  )}
+                >
+                  {displayValue}
+                </span>
               </React.Fragment>
             );
           })}
@@ -402,7 +410,7 @@ export function Table<T>({
               </thead>
             </>
           )}
-          <tbody className={loading ? "opacity-50" : ""}>{data.map(renderRow)}</tbody>
+          <tbody className={loading ? "opacity-60" : ""}>{data.map(renderRow)}</tbody>
         </table>
       </div>
 
@@ -412,11 +420,9 @@ export function Table<T>({
 
       {loading && (
         <div
-          className={`
-            absolute inset-0 hidden items-center justify-center
-            md:flex
-          `}
+          className={`bg-surface/40 absolute inset-0 z-10 flex items-center justify-center backdrop-blur-[1px]`}
           data-testid="spinner"
+          role="status"
           style={{ marginTop: data.length ? "0" : "5rem" }}
         >
           <AnimatedEllipsis size="md" />

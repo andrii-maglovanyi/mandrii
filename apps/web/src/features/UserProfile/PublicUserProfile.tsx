@@ -4,8 +4,7 @@ import { BadgeCheck, CalendarDays, MapPin, ShieldCheck, UserCog } from "lucide-r
 import { useLocale } from "next-intl";
 
 import { Avatar } from "~/components/layout";
-import { RichText } from "~/components/ui";
-import { Link } from "~/i18n/navigation";
+import { RichText, TextLink } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { CommunityLevelBadge } from "~/features/Gamification/CommunityLevel";
 
@@ -63,10 +62,12 @@ export const PublicUserProfile = ({ events, isOwnProfile, profile, venues }: Pub
     <div className={`flex grow flex-col gap-8 py-4 md:py-8`}>
       <section className={`bg-surface-tint/50 relative rounded-2xl p-6 md:p-8`}>
         {isOwnProfile && (
-          <Link className="absolute top-6 right-6 inline-flex items-center gap-2" href="/user-profile">
-            <UserCog size={18} />
-            {i18n("Manage your profile")}
-          </Link>
+          <div className="mb-2 flex justify-center sm:mb-0 sm:justify-end">
+            <TextLink className="relative" href="/user-profile">
+              <UserCog size={18} />
+              {i18n("Manage your profile")}
+            </TextLink>
+          </div>
         )}
         <div className={`flex flex-col items-center gap-6 text-center md:flex-row md:text-left`}>
           <Avatar avatarSize={174} className="border-primary m-0 rounded-full border" profile={profile} />
@@ -117,7 +118,7 @@ export const PublicUserProfile = ({ events, isOwnProfile, profile, venues }: Pub
         </div>
       </section>
 
-      <PublicContributions events={events} venues={venues} />
+      <PublicContributions events={events} showDirectoryLinks={isOwnProfile} venues={venues} />
       <CommunityImpact
         activeDays={profile.active_day_count}
         eventsCreated={profile.event_count}

@@ -2,7 +2,7 @@
 
 import { CalendarHeart, LayoutDashboard, Star } from "lucide-react";
 
-import { Link } from "~/i18n/navigation";
+import { TextLink } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { CommunityAchievements } from "~/features/Gamification/CommunityAchievements";
 import { CommunityLevelProgress } from "~/features/Gamification/CommunityLevel";
@@ -40,14 +40,14 @@ export const CommunityImpact = ({
           {i18n("Community impact")}
         </h2>
         {showLeaderboardLink && (
-          <Link className="inline-flex items-center gap-2" href="/leaderboard">
+          <TextLink href="/leaderboard">
             <Star aria-hidden size={20} className="fill-primary" />
             {i18n("Leaderboard")}
-          </Link>
+          </TextLink>
         )}
       </div>
       <div className="mb-4">
-        <CommunityLevelProgress points={points} />
+        <CommunityLevelProgress isVerified={isVerified} points={points} />
         <p className="text-neutral mt-2 text-right text-sm">
           {i18n("Points are awarded once a venue or event is published")}
         </p>

@@ -9,6 +9,7 @@ import { useLocale } from "next-intl";
 import {
   AnimatedEllipsis,
   Button,
+  ContentStatusBadge,
   EmptyState,
   ImageCarousel,
   RichText,
@@ -27,7 +28,6 @@ import { CardHeader } from "../EventCard/Components/CardHeader";
 import { AdditionalInfo } from "./Components/AdditionalInfo";
 import { CardMetadata } from "./Components/CardMetadata";
 import { OrganizerInfo } from "./Components/OrganizerInfo";
-import { EventStatus } from "~/features/UserDirectory/Events";
 
 interface EventViewProps {
   slug: string;
@@ -153,7 +153,7 @@ export const EventView = ({ slug }: EventViewProps) => {
       <div className={`relative w-full pb-2 md:pb-4`}>
         {showStatus && (
           <div className="absolute top-4 right-4 z-10">
-            <EventStatus expanded status={effectiveStatus} />
+            <ContentStatusBadge appearance="label-with-icon" size="md" status={effectiveStatus} />
           </div>
         )}
         {images.length ? (

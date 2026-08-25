@@ -55,6 +55,7 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
         try {
           dialog.showModal();
           requestAnimationFrame(() => {
+            dialog.focus({ preventScroll: true });
             setIsVisible(true);
           });
         } catch (err) {
@@ -64,6 +65,7 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
             dialog.close();
             dialog.showModal();
             requestAnimationFrame(() => {
+              dialog.focus({ preventScroll: true });
               setIsVisible(true);
             });
           } catch (retryErr) {
@@ -104,7 +106,13 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
   const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `fixed`);
 
   return ReactDOM.createPortal(
-    <dialog aria-labelledby="modal-title" aria-modal="true" className={modalClass} ref={dialogRef}>
+    <dialog
+      aria-labelledby={title ? "modal-title" : undefined}
+      aria-modal="true"
+      className={modalClass}
+      ref={dialogRef}
+      tabIndex={-1}
+    >
       <div className="fixed -top-12 right-0">
         <ActionButton
           aria-label="Close modal"
@@ -115,7 +123,13 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
           variant="ghost"
         />
       </div>
-      <div className="mb-4 flex items-center">{title && <h2 className={`text-xl font-normal`}>{title}</h2>}</div>
+      <div className="mb-4 flex items-center">
+        {title && (
+          <h2 className={`text-xl font-normal`} id="modal-title">
+            {title}
+          </h2>
+        )}
+      </div>
       <div className={className}>{children}</div>
     </dialog>,
     document.body,

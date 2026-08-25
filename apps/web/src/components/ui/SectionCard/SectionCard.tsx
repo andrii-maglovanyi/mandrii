@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { type ReactNode } from "react";
 
 interface SectionCardProps {
+  action?: ReactNode;
   as?: "aside" | "section";
   children: ReactNode;
   className?: string;
@@ -16,6 +17,7 @@ interface SectionCardProps {
  * interactive content such as inputs, lists, and buttons.
  */
 export const SectionCard = ({
+  action,
   as: Component = "section",
   children,
   className,
@@ -28,7 +30,12 @@ export const SectionCard = ({
       className,
     )}
   >
-    {title && <h3 className={clsx("mt-2 text-lg font-semibold", titleClassName)}>{title}</h3>}
+    {title && (
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+        <h3 className={clsx("text-lg font-semibold", titleClassName)}>{title}</h3>
+        {action}
+      </div>
+    )}
     {children}
   </Component>
 );

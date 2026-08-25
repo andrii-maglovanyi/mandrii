@@ -7,6 +7,11 @@ export { ActionButton } from "./Button/ActionButton";
 export { Button } from "./Button/Button";
 export { Card } from "./Card/Card";
 export { Checkbox } from "./Checkbox/Checkbox";
+export {
+  ContentStatusBadge,
+  getContentStatusPresentation,
+  type ContentStatus,
+} from "./ContentStatusBadge/ContentStatusBadge";
 export { EmptyState } from "./EmptyState/EmptyState";
 export { FallbackImage } from "./FallbackImage/FallbackImage";
 export { FilePicker } from "./FilePicker/FilePicker";
@@ -27,5 +32,6 @@ export { SvgIcon } from "./SvgIcon/SvgIcon";
 export { Table } from "./Table/Table";
 export { TabPane, Tabs } from "./Tabs";
 export { Textarea } from "./Textarea/Textarea";
+export { TextLink } from "./TextLink/TextLink";
 export { Tooltip } from "./Tooltip/Tooltip";
 export { UnionJack } from "./HeroFlag/UnionJack";

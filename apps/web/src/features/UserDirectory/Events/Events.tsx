@@ -6,26 +6,65 @@ import { ArrowUpRight, Calendar, Edit2, Headset, LayoutDashboard, Map, MapPin, P
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
-import { Button, Table, Tooltip } from "~/components/ui";
+import { Button, ContentStatusBadge, Table, Tooltip } from "~/components/ui";
 import { useEvents } from "~/hooks/useEvents";
 import { useListControls } from "~/hooks/useListControls";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
-import { GetPublicEventsQuery, Locale } from "~/types";
+import { Event_Status_Enum, FilterParams, GetPublicEventsQuery, Locale } from "~/types";
 
-import { EventStatus } from "./EventStatus";
+import { ContentDirectoryFilters } from "../components/ContentDirectoryFilters";
+
+const SEARCH_DEBOUNCE_MS = 300;
+const EVENT_STATUSES = Object.values(Event_Status_Enum);
 
 const Events = () => {
   const router = useRouter();
   const { useUserEvents } = useEvents();
-  const { handlePaginate, handleSort, listState } = useListControls();
+  const { handleFilter, handlePaginate, handleSort, listState } = useListControls({
+    order_by: [{ status: "asc" }, { updated_at: "desc" }],
+  });
   const { count, data, error, loading } = useUserEvents(listState);
 
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const dateLocale = locale === "uk" ? uk : enUS;
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [status, setStatus] = useState<Event_Status_Enum>();
+  const debouncedSetSearch = useDebouncedCallback((value: string) => setDebouncedSearch(value), SEARCH_DEBOUNCE_MS);
+
+  useEffect(() => {
+    const filters: FilterParams[] = [];
+    const query = debouncedSearch.trim();
+
+    if (status) filters.push({ status: { _eq: status } });
+    if (query) {
+      filters.push({
+        _or: [
+          { city: { _ilike: `%${query}%` } },
+          { country: { _ilike: `%${query}%` } },
+          { custom_location_name: { _ilike: `%${query}%` } },
+          { title_en: { _ilike: `%${query}%` } },
+          { title_uk: { _ilike: `%${query}%` } },
+          { venue: { name: { _ilike: `%${query}%` } } },
+        ],
+      });
+    }
+
+    handleFilter(filters.length ? { _and: filters } : {});
+  }, [debouncedSearch, handleFilter, status]);
+
+  useEffect(() => () => debouncedSetSearch.cancel(), [debouncedSetSearch]);
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    debouncedSetSearch(value);
+  };
 
   const COLUMNS = [
     {
@@ -33,9 +72,11 @@ const Events = () => {
       dataIndex: "status",
       key: "status",
       render: (status: unknown) => {
-        return <EventStatus status={status} />;
+        return <ContentStatusBadge status={status as Event_Status_Enum} />;
       },
-      sorter: false,
+      defaultSortOrder: "asc" as const,
+      sorter: true,
+      mobile: { fullWidth: true, hideLabel: true },
       title: i18n("Status"),
     },
     {
@@ -94,7 +135,7 @@ const Events = () => {
         return (
           <div className="flex flex-col">
             <Link
-              className={`group text-2xl font-bold md:text-base md:font-semibold`}
+              className={`group text-xl leading-7 font-bold md:text-base md:font-semibold`}
               href={`/events/${slug}`}
               target="_blank"
             >
@@ -104,18 +145,34 @@ const Events = () => {
                 size={16}
               />
             </Link>
-            <span className={`text-neutral-disabled flex items-center text-base md:text-xs`}>
-              <Calendar className="mr-1" size={14} />
-              {format(new Date(start_date), "PPP", { locale: dateLocale })}
-              <span className="mx-2">•</span>
-              <div className="flex items-center gap-1">{locationInfo}</div>
+            <span className={`text-neutral-disabled flex flex-wrap items-center gap-x-2 gap-y-1 text-sm md:text-xs`}>
+              <span className="flex items-center gap-1 whitespace-nowrap">
+                <Calendar size={14} />
+                {format(new Date(start_date), "PPP", { locale: dateLocale })}
+              </span>
+              <span aria-hidden="true">•</span>
+              <span className="flex min-w-0 items-center gap-1">{locationInfo}</span>
             </span>
           </div>
         );
       },
       sorter: true,
+      mobile: { fullWidth: true, hideLabel: true },
       title: i18n("Title"),
       width: "100%",
+    },
+    {
+      align: "center" as const,
+      dataIndex: "updated_at",
+      key: "updated_at",
+      render: (updatedAt: unknown) => (
+        <time className="inline-block text-sm whitespace-nowrap" dateTime={String(updatedAt)}>
+          {format(new Date(String(updatedAt)), "dd MMM yyyy", { locale: dateLocale })}
+        </time>
+      ),
+      defaultSortOrder: "desc" as const,
+      sorter: true,
+      title: i18n("Last updated"),
     },
     {
       align: "center" as const,
@@ -155,6 +212,7 @@ const Events = () => {
           </Button>
         </div>
       ),
+      mobile: { fullWidth: true, hideLabel: true },
     },
   ];
 
@@ -172,6 +230,14 @@ const Events = () => {
           {i18n("Add new event")}
         </Button>
       </div>
+      <ContentDirectoryFilters
+        onSearchChange={handleSearchChange}
+        onStatusChange={setStatus}
+        searchPlaceholder={i18n("Search events by title or location...")}
+        searchQuery={searchQuery}
+        status={status}
+        statuses={EVENT_STATUSES}
+      />
       {error ? (
         error.message
       ) : (

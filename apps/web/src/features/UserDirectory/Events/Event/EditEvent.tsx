@@ -7,14 +7,13 @@ import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-import { ActionButton, AnimatedEllipsis, EmptyState, RichText, Tooltip } from "~/components/ui";
+import { ActionButton, AnimatedEllipsis, ContentStatusBadge, EmptyState, RichText, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useEvents, useNotifications, useUser } from "~/hooks";
 import { useI18n } from "~/i18n/useI18n";
 import { toDateLocale } from "~/lib/utils";
 import { Event_Status_Enum, Locale } from "~/types";
 
-import { EventStatus } from "../EventStatus";
 import { EventForm } from "./EventForm";
 import { Link } from "~/i18n/navigation";
 
@@ -127,7 +126,7 @@ export const EditEvent = ({ slug }: EventProps) => {
               {format(new Date(meta.createdAt), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
             </Tooltip>
             <span>&bull;</span>
-            <EventStatus status={meta.status} />
+            <ContentStatusBadge appearance="icon" status={meta.status} />
             {data.id ? (
               <Tooltip label={i18n("View event in a new tab")}>
                 <Link

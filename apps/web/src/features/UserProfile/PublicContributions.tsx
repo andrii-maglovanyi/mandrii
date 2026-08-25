@@ -4,12 +4,12 @@ import { ArrowUpRight, MapPin, Store } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 
-import { Badge, type BadgeVariant, SectionCard } from "~/components/ui";
+import { ContentStatusBadge, SectionCard, TextLink } from "~/components/ui";
 import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 import { getEffectiveEventStatus } from "~/lib/events/status";
 import { getPublicMediaUrl } from "~/lib/media";
-import { Event_Status_Enum } from "~/types";
+import { Event_Status_Enum, Venue_Status_Enum } from "~/types";
 
 export type PublicEventContribution = {
   city?: null | string;
@@ -34,29 +34,17 @@ export type PublicVenueContribution = {
   logo?: null | string;
   name: string;
   slug: string;
+  status?: Venue_Status_Enum;
 };
 
 type PublicContributionsProps = {
   events: PublicEventContribution[];
+  showDirectoryLinks?: boolean;
   venues: PublicVenueContribution[];
 };
 
 const locationLabel = (city?: null | string, country?: null | string) => [city, country].filter(Boolean).join(", ");
-const getEventStatusPresentation = (status: Event_Status_Enum, i18n: (key: string) => string) => {
-  if (status === Event_Status_Enum.Completed) {
-    return { label: i18n("Completed"), variant: "info" as BadgeVariant };
-  }
-  if (status === Event_Status_Enum.Cancelled) {
-    return { label: i18n("Cancelled"), variant: "danger" as BadgeVariant };
-  }
-  if (status === Event_Status_Enum.Postponed) {
-    return { label: i18n("Postponed"), variant: "warning" as BadgeVariant };
-  }
-
-  return { label: i18n("Active"), variant: "success" as BadgeVariant };
-};
-
-export const PublicContributions = ({ events, venues }: PublicContributionsProps) => {
+export const PublicContributions = ({ events, showDirectoryLinks = false, venues }: PublicContributionsProps) => {
   const i18n = useI18n();
   const locale = useLocale();
   const dateLocale = locale === "uk" ? "uk-UA" : "en-GB";
@@ -74,7 +62,17 @@ export const PublicContributions = ({ events, venues }: PublicContributionsProps
       </h2>
       <div className="grid gap-4 lg:grid-cols-2">
         {venues.length > 0 && (
-          <SectionCard title={i18n("Last added venues")}>
+          <SectionCard
+            action={
+              showDirectoryLinks ? (
+                <TextLink className="shrink-0 text-xs" href="/user-directory#Venues">
+                  {i18n("View my venues")}
+                  <ArrowUpRight aria-hidden size={14} />
+                </TextLink>
+              ) : undefined
+            }
+            title={i18n("Last added venues")}
+          >
             <div className="-mx-4 mt-4 mb-2 flex flex-col">
               {venues.map((venue) => {
                 const location = locationLabel(venue.city, venue.country);
@@ -103,14 +101,13 @@ export const PublicContributions = ({ events, venues }: PublicContributionsProps
                             <span className="truncate">{location}</span>
                           </span>
                         )}
+                        &bull;
                         <time dateTime={venue.created_at}>
                           {i18n("Added")} {formatDate(venue.created_at)}
                         </time>
                       </span>
                     </span>
-                    <Badge className="shrink-0" variant="success">
-                      {i18n("Active")}
-                    </Badge>
+                    <ContentStatusBadge className="shrink-0" status={venue.status ?? Venue_Status_Enum.Active} />
                     <ArrowUpRight
                       className="text-neutral shrink-0 transition-transform group-hover/info:translate-x-0.5 group-hover/info:-translate-y-0.5"
                       size={16}
@@ -123,14 +120,23 @@ export const PublicContributions = ({ events, venues }: PublicContributionsProps
         )}
 
         {events.length > 0 && (
-          <SectionCard title={i18n("Last added events")}>
+          <SectionCard
+            action={
+              showDirectoryLinks ? (
+                <TextLink className="shrink-0 text-xs" href="/user-directory#Events">
+                  {i18n("View my events")}
+                  <ArrowUpRight aria-hidden size={14} />
+                </TextLink>
+              ) : undefined
+            }
+            title={i18n("Last added events")}
+          >
             <div className="-mx-4 mt-4 mb-2 flex flex-col">
               {events.map((event) => {
                 const title = locale === "uk" ? event.title_uk : event.title_en;
                 const location = event.is_online ? i18n("Online") : locationLabel(event.city, event.country);
                 const imageUrl = getPublicMediaUrl(event.images?.[0]);
                 const status = getEffectiveEventStatus(event);
-                const statusPresentation = getEventStatusPresentation(status, i18n);
                 return (
                   <Link
                     className={`group/info hover:bg-on-surface/5 focus-visible:bg-on-surface/5 grid min-h-16 w-full items-center gap-3 px-4 py-2 transition-colors hover:no-underline ${
@@ -149,13 +155,15 @@ export const PublicContributions = ({ events, venues }: PublicContributionsProps
                         {title}
                       </span>
                       <span className="text-neutral mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
-                        {location && <span className="truncate">{location}</span>}
+                        {location && (
+                          <>
+                            <span className="truncate">{location}</span>&bull;
+                          </>
+                        )}
                         <time dateTime={event.start_date}>{formatDate(event.start_date)}</time>
                       </span>
                     </span>
-                    <Badge className="shrink-0" variant={statusPresentation.variant}>
-                      {statusPresentation.label}
-                    </Badge>
+                    <ContentStatusBadge className="shrink-0" status={status} />
                     <ArrowUpRight
                       className="text-neutral shrink-0 transition-transform group-hover/info:translate-x-0.5 group-hover/info:-translate-y-0.5"
                       size={16}
