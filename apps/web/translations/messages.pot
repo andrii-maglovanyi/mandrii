@@ -4086,6 +4086,12 @@ msgstr ""
 msgid "Profile, unread messages"
 msgstr ""
 
+msgid "Back to website"
+msgstr ""
+
+msgid "Waiting for Telegram confirmation…"
+msgstr ""
+
 msgid "Admin"
 msgstr ""
 

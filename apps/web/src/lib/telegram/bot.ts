@@ -6,6 +6,8 @@ import { privateConfig } from "../config/private";
 import { sendMessagePushNotification } from "../web-push";
 import { getSenderColour } from "~/lib/messaging/sender";
 import { getReviewTelegramDeliveryOutcome } from "~/lib/telegram/review-delivery";
+import { getReviewQuestions, toReviewQuestionSetVersion } from "~/lib/reviews/questions";
+import { UrlHelper } from "~/lib/url-helper";
 
 export const bot = new Bot(privateConfig.telegram.token);
 
@@ -24,6 +26,9 @@ export function formatUserTelegramMessage({
   const senderLabel = `${getSenderColour(userName).emoji} ${userName}`;
   return isConsecutiveCustomerMessage ? `${quotedReply}${body}` : `${senderLabel}\n\n${quotedReply}${body}`;
 }
+
+const escapeTelegramHtml = (value: string) =>
+  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
 
 export async function sendVenueReviewTelegramNotification({
   rating: _rating,
@@ -263,9 +268,24 @@ export async function deliverPendingReviewTelegramNotifications(limit = 10) {
 
 async function deliverReviewTelegramNotification(delivery: ReviewTelegramDelivery) {
   try {
-    const [review] = await sql<Array<{ body: string; content_name: string; rating: number; reviewer: null | string }>>`
-      SELECT r.review_body AS body, r.rating, u.name AS reviewer,
-             COALESCE(v.name, e.title_en, e.title_uk, 'your content') AS content_name
+    const [review] = await sql<
+      Array<{
+        aspect_ratings: Record<string, number>;
+        body: string;
+        content_context: string;
+        content_name: string;
+        content_slug: string;
+        content_type: "event" | "venue";
+        question_set: number;
+        rating: number;
+        reviewer: null | string;
+      }>
+    >`
+      SELECT r.review_body AS body, r.rating, r.aspect_ratings, r.review_question_set AS question_set, u.name AS reviewer,
+             COALESCE(v.name, e.title_en, e.title_uk, 'your content') AS content_name,
+             COALESCE(v.category, e.type) AS content_context,
+             COALESCE(v.slug, e.slug) AS content_slug,
+             CASE WHEN r.venue_id IS NULL THEN 'event' ELSE 'venue' END AS content_type
       FROM review_telegram_deliveries d JOIN content_ratings r ON r.id = d.content_rating_id
       LEFT JOIN venues v ON v.id = r.venue_id
       LEFT JOIN events e ON e.id = r.event_id
@@ -273,9 +293,29 @@ async function deliverReviewTelegramNotification(delivery: ReviewTelegramDeliver
       WHERE d.id = ${delivery.id} AND r.review_status = 'PUBLISHED' AND d.telegram_chat_id = ${delivery.telegram_chat_id}
     `;
     if (!review) throw new Error("Review notification is no longer deliverable");
+    const aspectRatings = getReviewQuestions(
+      review.content_type,
+      review.content_context,
+      toReviewQuestionSetVersion(review.question_set),
+    )
+      .map((question) => {
+        const rating = review.aspect_ratings[question.key];
+        return rating ? `• ${escapeTelegramHtml(question.label)}: <b>${rating}/5</b>` : null;
+      })
+      .filter(Boolean)
+      .join("\n");
+    const reviewUrl = UrlHelper.buildUrl(`/${review.content_type}s/${review.content_slug}#Reviews`);
     await bot.api.sendMessage(
       delivery.telegram_chat_id,
-      `⭐ New ${review.rating}/5 review for ${review.content_name}\n\n${review.reviewer || "A community member"}: ${review.body.replace(/\s+/g, " ").slice(0, 280)}`,
+      `<b>⭐ New ${review.rating}/5 review</b> for <b>${escapeTelegramHtml(review.content_name)}</b>\n\n` +
+        `<b>${escapeTelegramHtml(review.reviewer || "A community member")}</b>\n` +
+        `${escapeTelegramHtml(review.body.replace(/\s+/g, " ").slice(0, 280))}` +
+        (aspectRatings ? `\n\n<b>Ratings</b>\n${aspectRatings}` : ""),
+      {
+        link_preview_options: { is_disabled: true },
+        parse_mode: "HTML",
+        reply_markup: { inline_keyboard: [[{ text: "Open review", url: reviewUrl }]] },
+      },
     );
     await sql`UPDATE review_telegram_deliveries SET status = ${getReviewTelegramDeliveryOutcome(delivery.attempts).status}, delivered_at = NOW(), locked_at = NULL, last_error = NULL WHERE id = ${delivery.id}`;
   } catch (error: any) {

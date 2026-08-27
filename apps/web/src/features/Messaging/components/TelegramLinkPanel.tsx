@@ -14,6 +14,7 @@ interface TelegramLinkPanelProps {
     status: "DELIVERED" | "FAILED" | "PENDING" | "PROCESSING";
   };
   error: string;
+  isAwaitingLink: boolean;
   isLinked: boolean;
   isSavingReviewNotifications: boolean;
   isUnlinking: boolean;
@@ -29,6 +30,7 @@ interface TelegramLinkPanelProps {
 export const TelegramLinkPanel = ({
   error,
   delivery,
+  isAwaitingLink,
   isLinked,
   isSavingReviewNotifications,
   isUnlinking,
@@ -71,6 +73,9 @@ export const TelegramLinkPanel = ({
             </Button>
           )}
         </div>
+        {isAwaitingLink && !isLinked && (
+          <p className="text-neutral -mt-1 text-sm">{i18n("Waiting for Telegram confirmation…")}</p>
+        )}
         <Checkbox
           checked={reviewNotificationsEnabled}
           disabled={!isLinked || isSavingReviewNotifications}

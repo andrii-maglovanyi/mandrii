@@ -36,6 +36,7 @@ export const VenueTelegramIntegrations = ({
   const [isUnlinking, setIsUnlinking] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
+  const [isAwaitingLink, setIsAwaitingLink] = useState(false);
   const targetPayload = targetType === "venue" ? { venueId: targetId } : { eventId: targetId };
 
   const refreshDelivery = useCallback(async () => {
@@ -46,9 +47,24 @@ export const VenueTelegramIntegrations = ({
     setDelivery(result.delivery);
     setLinked(result.linked);
     setReviewNotificationsEnabled(result.enabled);
+    if (result.linked) setIsAwaitingLink(false);
   }, [targetId, targetType]);
 
   useEffect(() => void refreshDelivery(), [refreshDelivery]);
+
+  useEffect(() => {
+    if (!isAwaitingLink || linked) return;
+
+    const refreshOnFocus = () => void refreshDelivery();
+    const interval = window.setInterval(refreshOnFocus, 5_000);
+    const timeout = window.setTimeout(() => setIsAwaitingLink(false), 15 * 60 * 1_000);
+    window.addEventListener("focus", refreshOnFocus);
+    return () => {
+      window.clearInterval(interval);
+      window.clearTimeout(timeout);
+      window.removeEventListener("focus", refreshOnFocus);
+    };
+  }, [isAwaitingLink, linked, refreshDelivery]);
 
   const link = async () => {
     setError("");
@@ -61,6 +77,7 @@ export const VenueTelegramIntegrations = ({
       const result = (await response.json()) as { error?: string; url?: string };
       if (!response.ok || !result.url) throw new Error(result.error || i18n("Unable to create a Telegram link"));
       window.open(result.url, "_blank", "noopener,noreferrer");
+      setIsAwaitingLink(true);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : i18n("Unable to create a Telegram link"));
     }
@@ -142,6 +159,7 @@ export const VenueTelegramIntegrations = ({
     <TelegramLinkPanel
       delivery={delivery}
       error={error}
+      isAwaitingLink={isAwaitingLink}
       isLinked={linked}
       isSavingReviewNotifications={isSaving}
       isUnlinking={isUnlinking}
