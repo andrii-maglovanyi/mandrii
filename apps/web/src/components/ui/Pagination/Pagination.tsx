@@ -4,6 +4,7 @@ import { useMediaQuery } from "react-responsive";
 
 import { InfiniteScroll } from "./InfiniteScroll";
 import { NumberedPagination } from "./NumberedPagination";
+import { useI18n } from "~/i18n/useI18n";
 
 export interface PaginationProps {
   count: number;
@@ -16,6 +17,7 @@ export interface PaginationProps {
 }
 
 export const Pagination = ({ count, index, loading, nextText, onPaginate, prevText, size = "md" }: PaginationProps) => {
+  const i18n = useI18n();
   const isMobile = useMediaQuery({
     query: "(max-width: 768px)",
   });
@@ -23,16 +25,13 @@ export const Pagination = ({ count, index, loading, nextText, onPaginate, prevTe
   if (count <= 1) return null;
 
   return (
-    <nav aria-label="Pagination">
+    <nav aria-label={i18n("Pagination")}>
       {isMobile ? (
         <div className="md:hidden">
           <InfiniteScroll count={count} index={index} loading={loading} onScroll={onPaginate} />
         </div>
       ) : (
-        <div className={`
-          hidden
-          md:flex
-        `}>
+        <div className={`hidden md:flex`}>
           <NumberedPagination
             count={count}
             index={index}

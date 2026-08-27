@@ -101,7 +101,7 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
           <ActionButton
             aria-label={
               profileData?.id === event.owner_id
-                ? i18n("You own this event — view your profile")
+                ? i18n("You own this event - view your profile")
                 : i18n("Verified owner - view profile")
             }
             className="cursor-pointer"

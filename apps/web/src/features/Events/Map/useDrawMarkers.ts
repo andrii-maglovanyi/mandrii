@@ -59,7 +59,7 @@ function attachMarkerHandlers({
   const textSpan = labelSpan.querySelector("span.marker-text") as HTMLSpanElement;
 
   labelSpan.onmouseover = () => {
-    // AdvancedMarkerElement controls stacking through its zIndex property—not
+    // AdvancedMarkerElement controls stacking through its zIndex property - not
     // through the DOM element's CSS. Keep the hovered marker above a selected
     // marker, which in turn stays above all ordinary markers.
     advancedMarker.zIndex = 4;

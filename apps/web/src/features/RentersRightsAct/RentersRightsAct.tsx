@@ -168,7 +168,7 @@ export function RentersRightsAct() {
           {
             type: "text",
             text: i18n(
-              "If your permission to stay in the UK is time-limited — for example, you are on a visa — your landlord must carry out a follow-up check before your leave expires. They cannot use a routine follow-up check as a reason to end your tenancy while your status remains valid.",
+              "If your permission to stay in the UK is time-limited - for example, you are on a visa - your landlord must carry out a follow-up check before your leave expires. They cannot use a routine follow-up check as a reason to end your tenancy while your status remains valid.",
             ),
           },
           {
@@ -182,7 +182,7 @@ export function RentersRightsAct() {
             type: "callout",
             variant: "tip",
             text: i18n(
-              "A landlord cannot refuse to rent to you based on your nationality alone — that is unlawful discrimination under the Equality Act 2010. If you believe you were refused a tenancy because of your nationality rather than your actual immigration status, you can seek advice from the Equality Advisory Support Service (EASS).",
+              "A landlord cannot refuse to rent to you based on your nationality alone - that is unlawful discrimination under the Equality Act 2010. If you believe you were refused a tenancy because of your nationality rather than your actual immigration status, you can seek advice from the Equality Advisory Support Service (EASS).",
             ),
           },
         ],
@@ -310,13 +310,9 @@ export function RentersRightsAct() {
             heading: i18n("Valid grounds your landlord may use include:"),
             items: [
               i18n("You have not paid your rent on time"),
-              i18n(
-                "You, others living with you, or visitors commit antisocial behaviour in or near the property",
-              ),
+              i18n("You, others living with you, or visitors commit antisocial behaviour in or near the property"),
               i18n("You or others living with you do not care for the property properly"),
-              i18n(
-                "The tenancy was connected to your employment, or was for temporary or supported accommodation",
-              ),
+              i18n("The tenancy was connected to your employment, or was for temporary or supported accommodation"),
             ],
           },
           {
@@ -390,19 +386,17 @@ export function RentersRightsAct() {
           {
             type: "text",
             text: i18n(
-              "Your landlord must also give you written information — called 'prescribed information' — about which scheme holds your deposit, how to get it back at the end of the tenancy, and what to do if there is a dispute.",
+              "Your landlord must also give you written information - called 'prescribed information' - about which scheme holds your deposit, how to get it back at the end of the tenancy, and what to do if there is a dispute.",
             ),
           },
           {
             type: "list",
             heading: i18n("Key rules about deposits:"),
             items: [
-              i18n(
-                "The maximum deposit is 5 weeks' rent (or 6 weeks if your annual rent is £50,000 or more)",
-              ),
+              i18n("The maximum deposit is 5 weeks' rent (or 6 weeks if your annual rent is £50,000 or more)"),
               i18n("Your landlord must return your deposit within 10 days of you both agreeing the final amount"),
               i18n(
-                "If there is a dispute, the deposit scheme offers a free resolution service — you do not need to go to court",
+                "If there is a dispute, the deposit scheme offers a free resolution service - you do not need to go to court",
               ),
             ],
           },
@@ -436,13 +430,13 @@ export function RentersRightsAct() {
           {
             type: "text",
             text: i18n(
-              "As a tenant, you will be able to check whether your landlord is registered. Renting from an unregistered landlord is a warning sign — it may mean the landlord is not meeting their legal obligations.",
+              "As a tenant, you will be able to check whether your landlord is registered. Renting from an unregistered landlord is a warning sign - it may mean the landlord is not meeting their legal obligations.",
             ),
           },
           {
             type: "text",
             text: i18n(
-              "All private landlords must also join a new mandatory ombudsman scheme. If you have a complaint about your landlord that you cannot resolve directly — for example, about repairs not being done, deposit disputes, or poor property management — you can take it to the ombudsman for free.",
+              "All private landlords must also join a new mandatory ombudsman scheme. If you have a complaint about your landlord that you cannot resolve directly - for example, about repairs not being done, deposit disputes, or poor property management - you can take it to the ombudsman for free.",
             ),
           },
           {
@@ -499,7 +493,7 @@ export function RentersRightsAct() {
             type: "callout",
             variant: "warning",
             text: i18n(
-              "Your landlord can only use ground 4A if they have previously given you written notice that they may use it — by 31 May 2026 in most cases. This information sheet does not count as that written notice.",
+              "Your landlord can only use ground 4A if they have previously given you written notice that they may use it - by 31 May 2026 in most cases. This information sheet does not count as that written notice.",
             ),
           },
           {
@@ -549,7 +543,7 @@ export function RentersRightsAct() {
       </div>
 
       {/* Body */}
-      <div className="space-y-6 px-4 pb-8 pt-4 md:px-12 md:py-8">
+      <div className="space-y-6 px-4 pt-4 pb-8 md:px-12 md:py-8">
         <div className="grid gap-4 md:grid-cols-2">
           {sections.map((section) => (
             <SectionCard key={section.id} content={section.content} icon={section.icon} title={section.title} />
@@ -573,15 +567,15 @@ export function RentersRightsAct() {
                 {[
                   {
                     href: "https://www.gov.uk/private-renting",
-                    label: i18n("GOV.UK — official guidance on private renting, forms and legislation"),
+                    label: i18n("GOV.UK - official guidance on private renting, forms and legislation"),
                   },
                   {
                     href: "https://england.shelter.org.uk/housing_advice/private_renting",
-                    label: i18n("Shelter — free housing advice and legal support for renters"),
+                    label: i18n("Shelter - free housing advice and legal support for renters"),
                   },
                   {
                     href: "https://www.citizensadvice.org.uk/housing/renting-privately/",
-                    label: i18n("Citizens Advice — help with tenancy rights, deposits and disputes"),
+                    label: i18n("Citizens Advice - help with tenancy rights, deposits and disputes"),
                   },
                 ].map(({ href, label }) => (
                   <li key={href} className="flex items-start gap-2">

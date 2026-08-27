@@ -124,7 +124,7 @@ export const ContentReviews = ({ context, targetId, type }: ContentReviewsProps)
           onError={showError}
           onSaved={() => {
             void load();
-            showSuccess(i18n("Report submitted. Our moderators will review it."));
+            showSuccess(i18n("Report submitted. I'm reviewing it."));
           }}
           reviewId={reviewId}
         />
@@ -232,7 +232,7 @@ export const ContentReviews = ({ context, targetId, type }: ContentReviewsProps)
                 aria-live="polite"
                 className="text-primary text-6xl leading-none font-semibold tracking-tight tabular-nums sm:text-7xl"
               >
-                {isLoading ? "—" : data.averageRating.toFixed(1)}
+                {isLoading ? "-" : data.averageRating.toFixed(1)}
               </div>
               <div className="min-w-0 pb-1.5">
                 <ReviewStars
@@ -275,7 +275,7 @@ export const ContentReviews = ({ context, targetId, type }: ContentReviewsProps)
               <div className="bg-surface-tint/50 min-w-0 px-5 py-4 sm:px-6 sm:py-5" key={question.key}>
                 <dt className="text-neutral truncate text-sm font-medium">{i18n(question.label)}</dt>
                 <dd className="mt-1 text-2xl font-semibold tabular-nums">
-                  {data.aspectAverages[question.key]?.toFixed(1) ?? "—"}
+                  {data.aspectAverages[question.key]?.toFixed(1) ?? "-"}
                   <span className="text-neutral text-sm"> / 5</span>
                 </dd>
               </div>

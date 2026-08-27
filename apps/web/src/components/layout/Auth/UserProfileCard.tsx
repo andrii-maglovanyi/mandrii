@@ -39,7 +39,7 @@ export const UserProfileCard = ({ inactive = false, profile }: UserProfileCardPr
               className={`flex items-center gap-1 rounded-md bg-linear-to-r from-amber-500 to-amber-600 px-2 py-0.5 text-xs font-medium text-white`}
             >
               <Crown size={12} />
-              <span>Admin</span>
+              <span>{i18n("Admin")}</span>
             </div>
           ) : null}
         </div>

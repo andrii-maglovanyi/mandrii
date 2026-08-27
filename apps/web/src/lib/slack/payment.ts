@@ -63,7 +63,7 @@ export async function sendPaymentNotification({
       const variantInfo = item.metadata?.variant
         ? ` (${item.metadata.variant.size}, ${item.metadata.variant.gender}${item.metadata.variant.color ? `, ${item.metadata.variant.color}` : ""})`
         : "";
-      return `• ${item.name_snapshot}${variantInfo} × ${item.quantity} — ${formatPrice(item.unit_price_minor * item.quantity, currency)}`;
+      return `• ${item.name_snapshot}${variantInfo} × ${item.quantity} - ${formatPrice(item.unit_price_minor * item.quantity, currency)}`;
     })
     .join("\n");
 

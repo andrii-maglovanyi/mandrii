@@ -1262,41 +1262,41 @@ export const ILRCalculator = () => {
           <p className="text-neutral mb-2 font-semibold uppercase">{i18n("Glossary")}</p>
           <ul className={`text-neutral list-inside list-disc space-y-4 md:space-y-2`}>
             <li>
-              <span className="text-on-surface font-semibold">ILR / Earned Settlement</span> -{" "}
+              <span className="text-on-surface font-semibold">{i18n("ILR / Earned Settlement")}</span> -{" "}
               {i18n(
                 "permission to remain in the UK without time limits. The earned route can take between 3 and 30 years.",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">Skilled Worker visa</span> -{" "}
+              <span className="text-on-surface font-semibold">{i18n("Skilled Worker visa")}</span> -{" "}
               {i18n(
                 "employer-sponsored work visa. The draft sets a baseline of 10 years, reducible to 5 or 3 years depending on salary.",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">RQF Level 6+</span> -{" "}
+              <span className="text-on-surface font-semibold">{i18n("RQF Level 6+")}</span> -{" "}
               {i18n(
                 "jobs that require a university-level qualification, such as a Bachelor's degree (Level 6), Master's degree (Level 7), or PhD (Level 8).",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">RQF Level 3-5</span> -{" "}
+              <span className="text-on-surface font-semibold">{i18n("RQF Level 3-5")}</span> -{" "}
               {i18n(
                 "A-levels are Level 3, and things like Foundation degrees, HNCs and HNDs are Levels 4-5. Lower-skill roles usually follow the longer 15-year ILR route.",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">Life in the UK Test</span> -{" "}
+              <span className="text-on-surface font-semibold">{i18n("Life in the UK Test")}</span> -{" "}
               {i18n(
                 "required culture/values test before settlement. It's short multiple-choice quiz about British history, culture and everyday life.",
               )}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">B2 / C1 English</span> -{" "}
+              <span className="text-on-surface font-semibold">{i18n("B2 / C1 English")}</span> -{" "}
               {i18n("you need at least B2, but C1 can speed things up by a year.")}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">Public funds</span> -{" "}
+              <span className="text-on-surface font-semibold">{i18n("Public funds")}</span> -{" "}
               {i18n(
                 "UK benefits (like Universal Credit or housing support). Using them can add 5-10 years to your settlement timeline.",
               )}
@@ -1310,7 +1310,7 @@ export const ILRCalculator = () => {
               {i18n("No Recourse to Public Funds, meaning you can't claim most UK benefits.")}
             </li>
             <li>
-              <span className="text-on-surface font-semibold">Community volunteering</span> -{" "}
+              <span className="text-on-surface font-semibold">{i18n("Community volunteering")}</span> -{" "}
               {i18n(
                 "helping your local area in a genuine, unpaid way - like working in a charity shop (Oxfam, Cancer Research UK, British Heart Foundation), helping at a food bank, joining park clean-ups, or supporting a community centre.",
               )}

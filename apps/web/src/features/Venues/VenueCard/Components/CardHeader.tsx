@@ -113,7 +113,7 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
           <ActionButton
             aria-label={
               profileData?.id === venue.owner_id
-                ? i18n("You own this venue — view your profile")
+                ? i18n("You own this venue - view your profile")
                 : i18n("Verified owner - view profile")
             }
             className="cursor-pointer"

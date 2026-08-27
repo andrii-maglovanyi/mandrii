@@ -27,6 +27,9 @@ export const NonUS = () => {
     },
   ];
 
+  const translateItem = <T extends Record<string, string>>(item: T) =>
+    Object.fromEntries(Object.entries(item).map(([key, value]) => [key, i18n(value)])) as T;
+
   const data = {
     banking: {
       icon: <CreditCard size={20} />,
@@ -225,16 +228,18 @@ export const NonUS = () => {
     <>
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 rounded-lg bg-white p-8 shadow-lg">
-          <h1 className="mb-4 text-4xl font-bold text-gray-800">🇪🇺 US Product & Service Alternatives</h1>
+          <h1 className="mb-4 text-4xl font-bold text-gray-800">{i18n("🇪🇺 US Product & Service Alternatives")}</h1>
           <p className="mb-4 text-lg text-gray-600">
-            Find European and non-US alternatives to popular American products and services. Support local businesses
-            and diversify your digital ecosystem.
+            {i18n(
+              "Find European and non-US alternatives to popular American products and services. Support local businesses and diversify your digital ecosystem.",
+            )}
           </p>
           <div className="rounded border-l-4 border-blue-500 bg-blue-50 p-4">
             <p className="text-sm text-gray-700">
-              <strong>Note:</strong> This guide focuses on alternatives with an emphasis on European options.
-              Recommended indicates products that are generally well-regarded and have clear European or non-US origins.
-              Always research products based on your specific needs and privacy requirements.
+              <strong>{i18n("Note:")}</strong>{" "}
+              {i18n(
+                "This guide focuses on alternatives with an emphasis on European options. Recommended indicates products that are generally well-regarded and have clear European or non-US origins. Always research products based on your specific needs and privacy requirements.",
+              )}
             </p>
           </div>
         </div>
@@ -244,7 +249,7 @@ export const NonUS = () => {
             <AccordionItem icon={category.icon} key={key} title={category.title}>
               <Table
                 columns={COLUMNS}
-                dataSource={data[key as keyof typeof data].items}
+                dataSource={data[key as keyof typeof data].items.map(translateItem)}
                 emptyStateBodyMessage={i18n(
                   "No events added yet. Click the button above to add the first one and start managing your events!",
                 )}
@@ -255,14 +260,12 @@ export const NonUS = () => {
           ))}
         </MultipleAccordion>
 
-        <div className={`
-          mt-8 rounded-lg border-l-4 border-yellow-500 bg-yellow-50 p-6
-        `}>
-          <h3 className="mb-2 text-lg font-semibold text-gray-800">Disclaimer</h3>
+        <div className={`mt-8 rounded-lg border-l-4 border-yellow-500 bg-yellow-50 p-6`}>
+          <h3 className="mb-2 text-lg font-semibold text-gray-800">{i18n("Disclaimer")}</h3>
           <p className="text-sm text-gray-700">
-            This list is for informational purposes. Company origins and ownership can change. Some European companies
-            may have US investors or partnerships. Always verify current information and choose products based on your
-            specific needs, privacy requirements, and values.
+            {i18n(
+              "This list is for informational purposes. Company origins and ownership can change. Some European companies may have US investors or partnerships. Always verify current information and choose products based on your specific needs, privacy requirements, and values.",
+            )}
           </p>
         </div>
       </div>

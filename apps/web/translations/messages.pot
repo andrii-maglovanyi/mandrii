@@ -345,7 +345,7 @@ msgstr ""
 msgid "Share this venue"
 msgstr ""
 
-msgid "You own this venue — view your profile"
+msgid "You own this venue - view your profile"
 msgstr ""
 
 msgid "Verified owner - view profile"
@@ -855,6 +855,12 @@ msgstr ""
 msgid "No venue (custom location)"
 msgstr ""
 
+msgid "Event title (🇺🇦 Ukrainian)"
+msgstr ""
+
+msgid "Event title (🇬🇧 English)"
+msgstr ""
+
 msgid "Event type"
 msgstr ""
 
@@ -1038,10 +1044,10 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-msgid "Your payment is still being verified. This can take a few minutes. We'll send you a confirmation email once your order is confirmed - no need to wait on this page."
+msgid "Your payment is still being verified. This can take a few minutes. I'll send you a confirmation email once your order is confirmed - no need to wait on this page."
 msgstr ""
 
-msgid "Your payment is being processed. We'll send you a confirmation email once complete."
+msgid "Your payment is being processed. I'll send you a confirmation email once complete."
 msgstr ""
 
 msgid "Still processing..."
@@ -1056,7 +1062,7 @@ msgstr ""
 msgid "Action required"
 msgstr ""
 
-msgid "Your order has been confirmed! We'll send you an email with the details."
+msgid "Your order has been confirmed! I'll send you an email with the details."
 msgstr ""
 
 msgid "Payment successful!"
@@ -1284,13 +1290,13 @@ msgstr ""
 msgid "The easiest way to prove your right to rent is through the government's online share code service. You generate a share code using your identity document at gov.uk/view-right-to-rent and give it to your landlord so they can verify your status online."
 msgstr ""
 
-msgid "If your permission to stay in the UK is time-limited — for example, you are on a visa — your landlord must carry out a follow-up check before your leave expires. They cannot use a routine follow-up check as a reason to end your tenancy while your status remains valid."
+msgid "If your permission to stay in the UK is time-limited - for example, you are on a visa - your landlord must carry out a follow-up check before your leave expires. They cannot use a routine follow-up check as a reason to end your tenancy while your status remains valid."
 msgstr ""
 
 msgid "If your immigration status changes and you no longer have the right to rent in England, your landlord may apply to court to end your tenancy under Ground 7B. If your immigration status is uncertain, seek advice from an immigration adviser as soon as possible."
 msgstr ""
 
-msgid "A landlord cannot refuse to rent to you based on your nationality alone — that is unlawful discrimination under the Equality Act 2010. If you believe you were refused a tenancy because of your nationality rather than your actual immigration status, you can seek advice from the Equality Advisory Support Service (EASS)."
+msgid "A landlord cannot refuse to rent to you based on your nationality alone - that is unlawful discrimination under the Equality Act 2010. If you believe you were refused a tenancy because of your nationality rather than your actual immigration status, you can seek advice from the Equality Advisory Support Service (EASS)."
 msgstr ""
 
 msgid "Changes to fixed-term tenancies"
@@ -1422,7 +1428,7 @@ msgstr ""
 msgid "If you pay a tenancy deposit, your landlord must protect it in one of three government-approved schemes within 30 days of receiving it: the Deposit Protection Service (DPS), MyDeposits, or the Tenancy Deposit Scheme (TDS)."
 msgstr ""
 
-msgid "Your landlord must also give you written information — called 'prescribed information' — about which scheme holds your deposit, how to get it back at the end of the tenancy, and what to do if there is a dispute."
+msgid "Your landlord must also give you written information - called 'prescribed information' - about which scheme holds your deposit, how to get it back at the end of the tenancy, and what to do if there is a dispute."
 msgstr ""
 
 msgid "Key rules about deposits:"
@@ -1434,7 +1440,7 @@ msgstr ""
 msgid "Your landlord must return your deposit within 10 days of you both agreeing the final amount"
 msgstr ""
 
-msgid "If there is a dispute, the deposit scheme offers a free resolution service — you do not need to go to court"
+msgid "If there is a dispute, the deposit scheme offers a free resolution service - you do not need to go to court"
 msgstr ""
 
 msgid "If your landlord does not protect your deposit in an approved scheme, you can apply to court for a penalty of up to 3 times the deposit amount. An unprotected deposit may also prevent your landlord from serving a valid eviction notice."
@@ -1449,10 +1455,10 @@ msgstr ""
 msgid "The Renters' Rights Act introduces a new national Private Rented Sector Database. All landlords in England must register their properties on this database before renting them out."
 msgstr ""
 
-msgid "As a tenant, you will be able to check whether your landlord is registered. Renting from an unregistered landlord is a warning sign — it may mean the landlord is not meeting their legal obligations."
+msgid "As a tenant, you will be able to check whether your landlord is registered. Renting from an unregistered landlord is a warning sign - it may mean the landlord is not meeting their legal obligations."
 msgstr ""
 
-msgid "All private landlords must also join a new mandatory ombudsman scheme. If you have a complaint about your landlord that you cannot resolve directly — for example, about repairs not being done, deposit disputes, or poor property management — you can take it to the ombudsman for free."
+msgid "All private landlords must also join a new mandatory ombudsman scheme. If you have a complaint about your landlord that you cannot resolve directly - for example, about repairs not being done, deposit disputes, or poor property management - you can take it to the ombudsman for free."
 msgstr ""
 
 msgid "Using the ombudsman is free for tenants and does not require you to go to court. The ombudsman can require your landlord to take action and award you compensation of up to £25,000."
@@ -1488,7 +1494,7 @@ msgstr ""
 msgid "If you are a full-time student, your landlord may be able to evict you using possession ground 4A at the end of the academic year, with 4 months' notice ending between 1 June and 30 September."
 msgstr ""
 
-msgid "Your landlord can only use ground 4A if they have previously given you written notice that they may use it — by 31 May 2026 in most cases. This information sheet does not count as that written notice."
+msgid "Your landlord can only use ground 4A if they have previously given you written notice that they may use it - by 31 May 2026 in most cases. This information sheet does not count as that written notice."
 msgstr ""
 
 msgid "If your landlord wants to evict you at the end of the 2025/26 academic year, they can serve notice between 1 May and 30 July 2026 (inclusive), with at least 2 months' notice."
@@ -1506,13 +1512,13 @@ msgstr ""
 msgid "These resources provide free guidance and advice on your rights as a private tenant in England:"
 msgstr ""
 
-msgid "GOV.UK — official guidance on private renting, forms and legislation"
+msgid "GOV.UK - official guidance on private renting, forms and legislation"
 msgstr ""
 
-msgid "Shelter — free housing advice and legal support for renters"
+msgid "Shelter - free housing advice and legal support for renters"
 msgstr ""
 
-msgid "Citizens Advice — help with tenancy rights, deposits and disputes"
+msgid "Citizens Advice - help with tenancy rights, deposits and disputes"
 msgstr ""
 
 msgid "Unable to load reviews"
@@ -1530,7 +1536,7 @@ msgstr ""
 msgid "Respond to review"
 msgstr ""
 
-msgid "Report submitted. Our moderators will review it."
+msgid "Report submitted. I'm reviewing it."
 msgstr ""
 
 msgid "Report review"
@@ -1755,6 +1761,9 @@ msgstr ""
 msgid "Share what was useful for the community. Your review is public and can be edited later."
 msgstr ""
 
+msgid "Overall rating"
+msgstr ""
+
 msgid "Your review"
 msgstr ""
 
@@ -1798,6 +1807,24 @@ msgid "Common US"
 msgstr ""
 
 msgid "Recommended Alternatives"
+msgstr ""
+
+msgid "🇪🇺 US Product & Service Alternatives"
+msgstr ""
+
+msgid "Find European and non-US alternatives to popular American products and services. Support local businesses and diversify your digital ecosystem."
+msgstr ""
+
+msgid "Note:"
+msgstr ""
+
+msgid "This guide focuses on alternatives with an emphasis on European options. Recommended indicates products that are generally well-regarded and have clear European or non-US origins. Always research products based on your specific needs and privacy requirements."
+msgstr ""
+
+msgid "Disclaimer"
+msgstr ""
+
+msgid "This list is for informational purposes. Company origins and ownership can change. Some European companies may have US investors or partnerships. Always verify current information and choose products based on your specific needs, privacy requirements, and values."
 msgstr ""
 
 msgid "Unable to load messages"
@@ -1944,10 +1971,10 @@ msgstr ""
 msgid "Telegram"
 msgstr ""
 
-msgid "Linked — customer messages are forwarded to Telegram"
+msgid "Linked - customer messages are forwarded to Telegram"
 msgstr ""
 
-msgid "Linked — review notifications can be sent to Telegram"
+msgid "Linked - review notifications can be sent to Telegram"
 msgstr ""
 
 msgid "Link Telegram to forward customer messages"
@@ -1960,6 +1987,9 @@ msgid "Unlink"
 msgstr ""
 
 msgid "Link"
+msgstr ""
+
+msgid "Waiting for Telegram confirmation…"
 msgstr ""
 
 msgid "Notify me about new written reviews"
@@ -2511,7 +2541,13 @@ msgstr ""
 msgid "Glossary"
 msgstr ""
 
+msgid "ILR / Earned Settlement"
+msgstr ""
+
 msgid "permission to remain in the UK without time limits. The earned route can take between 3 and 30 years."
+msgstr ""
+
+msgid "Skilled Worker visa"
 msgstr ""
 
 msgid "employer-sponsored work visa. The draft sets a baseline of 10 years, reducible to 5 or 3 years depending on salary."
@@ -2523,10 +2559,19 @@ msgstr ""
 msgid "A-levels are Level 3, and things like Foundation degrees, HNCs and HNDs are Levels 4-5. Lower-skill roles usually follow the longer 15-year ILR route."
 msgstr ""
 
+msgid "Life in the UK Test"
+msgstr ""
+
 msgid "required culture/values test before settlement. It's short multiple-choice quiz about British history, culture and everyday life."
 msgstr ""
 
+msgid "B2 / C1 English"
+msgstr ""
+
 msgid "you need at least B2, but C1 can speed things up by a year."
+msgstr ""
+
+msgid "Public funds"
 msgstr ""
 
 msgid "UK benefits (like Universal Credit or housing support). Using them can add 5-10 years to your settlement timeline."
@@ -2536,6 +2581,9 @@ msgid "a special British National (Overseas) visa with a 5-year path to settleme
 msgstr ""
 
 msgid "No Recourse to Public Funds, meaning you can't claim most UK benefits."
+msgstr ""
+
+msgid "Community volunteering"
 msgstr ""
 
 msgid "helping your local area in a genuine, unpaid way - like working in a charity shop (Oxfam, Cancer Research UK, British Heart Foundation), helping at a food bank, joining park clean-ups, or supporting a community centre."
@@ -2838,7 +2886,7 @@ msgstr ""
 msgid "Share this event"
 msgstr ""
 
-msgid "You own this event — view your profile"
+msgid "You own this event - view your profile"
 msgstr ""
 
 msgid "More"
@@ -3861,6 +3909,33 @@ msgstr ""
 msgid "Mandatory buildings insurance covering damage to the structure from fire, water, storm, and similar risks. Required by all mortgage lenders. For Eigentumswohnungen, this is commonly included within the Hausgeld paid to the WEG - if so, set this field to zero to avoid double-counting."
 msgstr ""
 
+msgid "Content sections"
+msgstr ""
+
+msgid "Pagination"
+msgstr ""
+
+msgid "Close modal"
+msgstr ""
+
+msgid "No image available"
+msgstr ""
+
+msgid "Image {current} of {total}"
+msgstr ""
+
+msgid "Previous image"
+msgstr ""
+
+msgid "Next image"
+msgstr ""
+
+msgid "Go to image {count}"
+msgstr ""
+
+msgid "No image"
+msgstr ""
+
 msgid "Cancelled"
 msgstr ""
 
@@ -4062,6 +4137,9 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
+msgid "Admin"
+msgstr ""
+
 msgid "My directory"
 msgstr ""
 
@@ -4086,16 +4164,10 @@ msgstr ""
 msgid "Profile, unread messages"
 msgstr ""
 
-msgid "Back to website"
-msgstr ""
-
-msgid "Waiting for Telegram confirmation…"
-msgstr ""
-
-msgid "Admin"
-msgstr ""
-
 msgid "Platform operations"
+msgstr ""
+
+msgid "Back to website"
 msgstr ""
 
 msgid "Admin navigation"
@@ -4182,7 +4254,7 @@ msgstr ""
 msgid "Thanks for your support"
 msgstr ""
 
-msgid "No matter how hard things get, we're still together"
+msgid "No matter how hard things get, I'm still here with you"
 msgstr ""
 
 msgid "Even a small gesture means the world."

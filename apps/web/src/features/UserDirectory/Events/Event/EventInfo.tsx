@@ -25,16 +25,11 @@ export const EventInfo = ({ getFieldProps, setErrors, values }: EventInfoProps) 
 
   return (
     <>
-      <div className={`
-        mb-4 rounded-lg border-2 border-primary/20 bg-primary/5 p-5
-      `}>
+      <div className={`border-primary/20 bg-primary/5 mb-4 rounded-lg border-2 p-5`}>
         <Select label={i18n("Price type")} options={priceTypeOptions} required {...getFieldProps("price_type")} />
 
         {showPriceAmount && (
-          <div className={`
-            flex grow gap-4
-            lg:flex-row
-          `}>
+          <div className={`flex grow gap-4 lg:flex-row`}>
             <Input
               className="max-w-80"
               label={i18n("Price amount")}
@@ -98,9 +93,7 @@ export const EventInfo = ({ getFieldProps, setErrors, values }: EventInfoProps) 
         />
       </div>
 
-      <div className={`
-        mb-8 rounded-lg border-2 border-primary/20 bg-primary/5 p-5
-      `}>
+      <div className={`border-primary/20 bg-primary/5 mb-8 rounded-lg border-2 p-5`}>
         <Checkbox label={i18n("Registration required")} {...getFieldProps("registration_required")} />
 
         {values.registration_required && (

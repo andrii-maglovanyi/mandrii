@@ -3,6 +3,7 @@
 import React, { type ReactNode, useEffect, useRef } from "react";
 
 import { Button } from "../Button/Button";
+import { useI18n } from "~/i18n/useI18n";
 import { getTabId, getTabPanelId } from "./TabPane";
 
 interface TabsBarProps {
@@ -12,6 +13,7 @@ interface TabsBarProps {
 }
 
 export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps) => {
+  const i18n = useI18n();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const indicatorRef = useRef<HTMLDivElement | null>(null);
 
@@ -67,7 +69,7 @@ export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps
   return (
     <div className="border-neutral-disabled relative border-b pt-2">
       <div
-        aria-label="Content sections"
+        aria-label={i18n("Content sections")}
         className="flex gap-1 overflow-x-auto overflow-y-hidden px-1 pt-2"
         role="tablist"
       >

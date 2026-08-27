@@ -3,6 +3,8 @@
 import Image, { ImageProps } from "next/image";
 import { useCallback, useState } from "react";
 
+import { useI18n } from "~/i18n/useI18n";
+
 const FALLBACK_IMAGE = "/static/no-image.webp";
 
 interface FallbackImageProps extends Omit<ImageProps, "onError"> {
@@ -10,11 +12,12 @@ interface FallbackImageProps extends Omit<ImageProps, "onError"> {
 }
 
 export const FallbackImage = ({ fallbackSrc = FALLBACK_IMAGE, src, ...props }: FallbackImageProps) => {
+  const i18n = useI18n();
   const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
 
   const handleError = useCallback(() => {
     setImgSrc(fallbackSrc);
   }, [fallbackSrc]);
 
-  return <Image {...props} alt="No image" onError={handleError} src={imgSrc} />;
+  return <Image {...props} alt={i18n("No image")} onError={handleError} src={imgSrc} />;
 };

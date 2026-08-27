@@ -111,7 +111,7 @@ export const ReviewEditor = ({ context, initialReview, onError, onSaved, targetI
       <p className="text-neutral text-sm">
         {i18n("Share what was useful for the community. Your review is public and can be edited later.")}
       </p>
-      <StarPicker label="Overall rating" onChange={setRating} value={rating} />
+      <StarPicker label={i18n("Overall rating")} onChange={setRating} value={rating} />
       <div className="border-on-surface/10 space-y-2 border-y py-4">
         {questions.map((question) => (
           <StarPicker

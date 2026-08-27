@@ -55,8 +55,8 @@ export const TelegramLinkPanel = ({
               <p className="text-on-surface/70 text-sm">
                 {isLinked
                   ? supportsCustomerMessages
-                    ? i18n("Linked — customer messages are forwarded to Telegram")
-                    : i18n("Linked — review notifications can be sent to Telegram")
+                    ? i18n("Linked - customer messages are forwarded to Telegram")
+                    : i18n("Linked - review notifications can be sent to Telegram")
                   : supportsCustomerMessages
                     ? i18n("Link Telegram to forward customer messages")
                     : i18n("Link Telegram to receive review notifications")}

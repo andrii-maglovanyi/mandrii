@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { useI18n } from "~/i18n/useI18n";
+
 interface ImageCarouselProps {
   autoPlay?: boolean;
   autoPlayDelay?: number;
@@ -23,6 +25,7 @@ export const ImageCarousel = ({
   transitionDurationMs = 500,
   transitionEasing = "cubic-bezier(0.33, 1, 0.68, 1)",
 }: ImageCarouselProps) => {
+  const i18n = useI18n();
   const [slideIndex, setSlideIndex] = useState(0);
   const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
   const [errorIndices, setErrorIndices] = useState<Set<number>>(new Set());
@@ -155,13 +158,9 @@ export const ImageCarousel = ({
   if (totalImages === 0) {
     return (
       <div
-        className={`
-          relative flex h-full w-full min-w-20 items-center justify-center
-          overflow-hidden bg-surface-tint
-          md:min-w-40
-        `}
+        className={`bg-surface-tint relative flex h-full w-full min-w-20 items-center justify-center overflow-hidden md:min-w-40`}
       >
-        <Image alt="No image available" className="object-cover" fill src="/static/no-image.webp" />
+        <Image alt={i18n("No image available")} className="object-cover" fill src="/static/no-image.webp" />
       </div>
     );
   }
@@ -172,12 +171,8 @@ export const ImageCarousel = ({
 
   return (
     <div
-      aria-label={`Image ${normalizedIndex + 1} of ${totalImages}`}
-      className={`
-        relative flex h-full w-full min-w-20 items-center justify-center
-        overflow-hidden bg-surface-tint
-        md:min-w-40
-      `}
+      aria-label={i18n("Image {current} of {total}", { current: normalizedIndex + 1, total: totalImages })}
+      className={`bg-surface-tint relative flex h-full w-full min-w-20 items-center justify-center overflow-hidden md:min-w-40`}
       role="img"
     >
       <div className="h-full w-full overflow-hidden">
@@ -201,7 +196,7 @@ export const ImageCarousel = ({
             return (
               <div className="relative h-full w-full shrink-0" key={`${src}-${originalIndex}-${slidePosition}`}>
                 <Image
-                  alt={`Image ${realIndex + 1} of ${totalImages}`}
+                  alt={i18n("Image {current} of {total}", { current: realIndex + 1, total: totalImages })}
                   className="mt-0 mb-0 object-cover"
                   fill
                   onError={() => {
@@ -230,15 +225,8 @@ export const ImageCarousel = ({
       {hasMultipleImages && (
         <>
           <button
-            aria-label="Previous image"
-            className={`
-              absolute top-1/2 left-2 z-10 flex h-8 w-8 -translate-y-1/2
-              transform items-center justify-center rounded-full bg-neutral/25
-              text-on-surface transition-all duration-200
-              hover:bg-neutral/50
-              focus:bg-neutral/50 focus:ring-2 focus:ring-white/50
-              focus:outline-none
-            `}
+            aria-label={i18n("Previous image")}
+            className={`bg-neutral/25 text-on-surface hover:bg-neutral/50 focus:bg-neutral/50 absolute top-1/2 left-2 z-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full transition-all duration-200 focus:ring-2 focus:ring-white/50 focus:outline-none`}
             onClick={() => {
               prevImage();
             }}
@@ -247,15 +235,8 @@ export const ImageCarousel = ({
             <ArrowLeft />
           </button>
           <button
-            aria-label="Next image"
-            className={`
-              absolute top-1/2 right-2 z-10 flex h-8 w-8 -translate-y-1/2
-              transform items-center justify-center rounded-full bg-neutral/25
-              text-on-surface transition-all duration-200
-              hover:bg-neutral/50
-              focus:bg-neutral/50 focus:ring-2 focus:ring-white/50
-              focus:outline-none
-            `}
+            aria-label={i18n("Next image")}
+            className={`bg-neutral/25 text-on-surface hover:bg-neutral/50 focus:bg-neutral/50 absolute top-1/2 right-2 z-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full transition-all duration-200 focus:ring-2 focus:ring-white/50 focus:outline-none`}
             onClick={() => {
               nextImage();
             }}
@@ -264,21 +245,13 @@ export const ImageCarousel = ({
             <ArrowRight />
           </button>
           {showDots && (
-            <div className={`
-              absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 space-x-1
-            `}>
+            <div className={`absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 space-x-1`}>
               {validImages.map((_, dotIndex) => (
                 <button
-                  aria-label={`Go to image ${dotIndex + 1}`}
-                  className={`
-                    h-2 w-2 rounded-full transition-all duration-200
-                    ${
-                    dotIndex === normalizedIndex ? "bg-white" : `
-                      bg-white/50
-                      hover:bg-white/75
-                    `
-                  }
-                  `}
+                  aria-label={i18n("Go to image {count}", { count: dotIndex + 1 })}
+                  className={`h-2 w-2 rounded-full transition-all duration-200 ${
+                    dotIndex === normalizedIndex ? "bg-white" : `bg-white/50 hover:bg-white/75`
+                  } `}
                   key={dotIndex}
                   onClick={() => {
                     goToImage(dotIndex);

@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
 import { ActionButton } from "../Button/ActionButton";
+import { useI18n } from "~/i18n/useI18n";
 
 export interface ModalProps {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ export interface ModalProps {
 export const MODAL_ANIMATION_TIMEOUT = 200;
 
 export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: ModalProps) => {
+  const i18n = useI18n();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -115,7 +117,7 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
     >
       <div className="fixed -top-12 right-0">
         <ActionButton
-          aria-label="Close modal"
+          aria-label={i18n("Close modal")}
           data-testid="close-modal"
           icon={<X />}
           onClick={onClose}

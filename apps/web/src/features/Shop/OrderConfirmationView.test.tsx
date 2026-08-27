@@ -173,7 +173,7 @@ describe("OrderConfirmationView", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText("Your order has been confirmed! We'll send you an email with the details."),
+          screen.getByText("Your order has been confirmed! I'll send you an email with the details."),
         ).toBeInTheDocument();
       });
     });
@@ -266,7 +266,7 @@ describe("OrderConfirmationView", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText("Your payment is being processed. We'll send you a confirmation email once complete."),
+          screen.getByText("Your payment is being processed. I'll send you a confirmation email once complete."),
         ).toBeInTheDocument();
       });
     });
