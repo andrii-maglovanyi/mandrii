@@ -13,8 +13,8 @@ interface AddEntityButtonProps {
   size?: "lg" | "md" | "sm";
 }
 
-const GRADIENT_CLASSES =
-  "animate-[gradientShift_5s_ease_infinite] border border-on-surface bg-[linear-gradient(270deg,#f9556d,#9670f7,#4d94f8,#20c997)] bg-size-[300%_300%] font-semibold text-white shadow-xl gap-2 p-5";
+export const ADD_ENTITY_BUTTON_CLASSES =
+  "animate-[gradientShift_5s_ease_infinite] border-2 border-on-surface bg-[linear-gradient(270deg,#f9556d,#9670f7,#4d94f8,#20c997)] bg-size-[300%_300%] font-semibold text-white shadow-xl gap-2 p-5 rounded-xl";
 
 export function AddEntityButton({
   className,
@@ -28,7 +28,7 @@ export function AddEntityButton({
 
   return (
     <Button
-      className={`${GRADIENT_CLASSES} ${className ?? ""}`}
+      className={`${ADD_ENTITY_BUTTON_CLASSES} ${className ?? ""}`}
       color="primary"
       onClick={onClick}
       size={size}

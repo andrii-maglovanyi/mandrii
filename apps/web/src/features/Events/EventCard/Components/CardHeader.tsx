@@ -24,6 +24,9 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
   const router = useRouter();
   const { showSuccess } = useNotifications();
   const { iconName, label } = constants.eventTypes[event.type as keyof typeof constants.eventTypes];
+  const canShare = [Event_Status_Enum.Active, Event_Status_Enum.Archived, Event_Status_Enum.Completed].includes(
+    event.status,
+  );
 
   const handleShareClick = async (e: React.MouseEvent) => {
     const title = locale === "uk" ? event.title_uk : event.title_en;
@@ -89,14 +92,16 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
             variant="ghost"
           />
         )}
-        <ActionButton
-          aria-label={i18n("Share this event")}
-          className="group"
-          icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
-          onClick={handleShareClick}
-          size="sm"
-          variant="ghost"
-        />
+        {canShare && (
+          <ActionButton
+            aria-label={i18n("Share this event")}
+            className="group"
+            icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+            onClick={handleShareClick}
+            size="sm"
+            variant="ghost"
+          />
+        )}
         {Boolean(event.owner_id) && (
           <ActionButton
             aria-label={

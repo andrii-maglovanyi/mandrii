@@ -21,6 +21,7 @@ import { useEvents } from "~/hooks/useEvents";
 import { useUser } from "~/hooks/useUser";
 import { ContentRating } from "~/features/Ratings/ContentRating";
 import { ContentReviews } from "~/features/Ratings/ContentReviews";
+import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
 import { VenueTelegramIntegrations } from "~/features/Messaging/components/VenueTelegramIntegrations";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -148,10 +149,13 @@ export const EventView = ({ slug }: EventViewProps) => {
     return text;
   };
 
-  const isArchived = event.status === Event_Status_Enum.Archived;
   const effectiveStatus = getEffectiveEventStatus(event);
   const showStatus = effectiveStatus !== Event_Status_Enum.Active;
   const isOwner = Boolean(profile?.id && event.owner_id === profile.id);
+  const canShowRatings = [Event_Status_Enum.Active, Event_Status_Enum.Archived, Event_Status_Enum.Completed].includes(
+    event.status,
+  );
+  const canManageUpdates = isOwner && [Event_Status_Enum.Active, Event_Status_Enum.Completed].includes(event.status);
 
   return (
     <div className="flex flex-col">
@@ -164,7 +168,7 @@ export const EventView = ({ slug }: EventViewProps) => {
         )}
         {images.length ? (
           <div className={`relative aspect-video w-full md:aspect-21/9`}>
-            <ImageCarousel images={images} showDots />
+            <ImageCarousel images={images} priority showDots />
             {/* Gradient overlay */}
             <div
               className={`pointer-events-none absolute inset-0 bg-linear-to-t from-neutral-900 via-neutral-900/30 to-transparent`}
@@ -274,13 +278,15 @@ export const EventView = ({ slug }: EventViewProps) => {
 
               {/* Info Cards - Right side (1/3) */}
               <div className="flex flex-col gap-4">
-                <ContentRating
-                  onOpenReviews={() => {
-                    window.location.hash = encodeURIComponent(i18n("Reviews"));
-                  }}
-                  targetId={String(event.id)}
-                  type="event"
-                />
+                {canShowRatings && (
+                  <ContentRating
+                    onOpenReviews={() => {
+                      window.location.hash = encodeURIComponent(i18n("Reviews"));
+                    }}
+                    targetId={String(event.id)}
+                    type="event"
+                  />
+                )}
                 <SectionCard title={i18n("Details")}>
                   <CardMetadata
                     event={event}
@@ -307,9 +313,17 @@ export const EventView = ({ slug }: EventViewProps) => {
             </div>
           </TabPane>
 
-          <TabPane tab={i18n("Reviews")}>
-            <ContentReviews context={event.type} targetId={String(event.id)} type="event" />
-          </TabPane>
+          {canShowRatings && (
+            <TabPane tab={i18n("Updates")}>
+              <ContentUpdates canManage={canManageUpdates} targetId={event.id} type="event" />
+            </TabPane>
+          )}
+
+          {canShowRatings && (
+            <TabPane tab={i18n("Reviews")}>
+              <ContentReviews context={event.type} targetId={String(event.id)} type="event" />
+            </TabPane>
+          )}
           {isOwner && (
             <TabPane tab={i18n("Manage")}>
               <VenueTelegramIntegrations

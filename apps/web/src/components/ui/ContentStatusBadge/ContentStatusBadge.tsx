@@ -72,7 +72,8 @@ export const ContentStatusBadge = ({
 }: ContentStatusBadgeProps) => {
   const i18n = useI18n();
   const { icon: Icon, label, variant } = getContentStatusPresentation(status, i18n);
-  const icon = <Icon aria-hidden size={size === "md" ? 16 : 14} />;
+  const iconSize = appearance === "icon" && size === "md" ? 24 : size === "md" ? 16 : 14;
+  const icon = <Icon aria-hidden size={iconSize} />;
 
   if (appearance === "icon") {
     return (

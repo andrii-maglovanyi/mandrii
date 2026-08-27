@@ -11,6 +11,7 @@ interface ImageCarouselProps {
   autoPlayDelay?: number;
   images?: Array<string>;
   preloadNext?: boolean;
+  priority?: boolean;
   showDots?: boolean;
   transitionDurationMs?: number;
   transitionEasing?: string;
@@ -21,12 +22,15 @@ export const ImageCarousel = ({
   autoPlayDelay = 8000,
   images = [],
   preloadNext = true,
+  priority = true,
   showDots = false,
   transitionDurationMs = 500,
   transitionEasing = "cubic-bezier(0.33, 1, 0.68, 1)",
 }: ImageCarouselProps) => {
   const i18n = useI18n();
-  const [slideIndex, setSlideIndex] = useState(0);
+  // With looped carousels, index 0 is a duplicate of the last image. Start on
+  // the first real image so the above-the-fold image can be eagerly loaded.
+  const [slideIndex, setSlideIndex] = useState(() => (images.length > 1 ? 1 : 0));
   const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
   const [errorIndices, setErrorIndices] = useState<Set<number>>(new Set());
 
@@ -202,7 +206,7 @@ export const ImageCarousel = ({
                   onError={() => {
                     handleImageError(originalIndex);
                   }}
-                  priority={slideIndex === slidePosition}
+                  priority={priority && slideIndex === slidePosition}
                   src={src}
                 />
               </div>

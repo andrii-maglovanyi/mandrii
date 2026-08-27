@@ -23,7 +23,9 @@ import { VenueMessaging } from "~/features/Messaging/VenueMessaging";
 import { VenueTelegramIntegrations } from "~/features/Messaging/components/VenueTelegramIntegrations";
 import { ContentRating } from "~/features/Ratings/ContentRating";
 import { ContentReviews } from "~/features/Ratings/ContentReviews";
+import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
 import { useEvents } from "~/hooks/useEvents";
+import { useUser } from "~/hooks/useUser";
 import { useVenues } from "~/hooks/useVenues";
 import { useVenueUnreadCount } from "~/hooks/useVenueUnreadCount";
 import { useI18n } from "~/i18n/useI18n";
@@ -73,6 +75,7 @@ export const VenueView = ({
   const locale = useLocale() as Locale;
   const { useGetVenue } = useVenues();
   const { usePublicEvents } = useEvents();
+  const { data: profile } = useUser();
   const router = useRouter();
 
   // Use initial data if provided (from server), otherwise fetch client-side
@@ -127,6 +130,10 @@ export const VenueView = ({
 
   const isArchived = venue.status === Venue_Status_Enum.Archived;
   const showStatus = venue.status !== Venue_Status_Enum.Active;
+  const canShowRatings = [Venue_Status_Enum.Active, Venue_Status_Enum.Archived].includes(venue.status);
+  const canManageUpdates = Boolean(
+    profile?.id && venue.owner_id === profile.id && venue.status === Venue_Status_Enum.Active,
+  );
   return (
     <div className="flex flex-col">
       {/* Hero section. Edge to edge image carousel */}
@@ -138,7 +145,7 @@ export const VenueView = ({
         )}
         {images.length ? (
           <div className={`relative aspect-video w-full md:aspect-21/9`}>
-            <ImageCarousel autoPlay images={images} showDots />
+            <ImageCarousel autoPlay images={images} priority showDots />
             {/* Gradient overlay */}
             <div
               className={`pointer-events-none absolute inset-0 bg-linear-to-t from-neutral-900 via-neutral-900/30 to-transparent`}
@@ -237,13 +244,15 @@ export const VenueView = ({
 
               {/* Info cards. Right side (1/3) */}
               <div className="flex flex-col gap-4">
-                <ContentRating
-                  onOpenReviews={() => {
-                    window.location.hash = encodeURIComponent(i18n("Reviews"));
-                  }}
-                  targetId={String(venue.id)}
-                  type="venue"
-                />
+                {canShowRatings && (
+                  <ContentRating
+                    onOpenReviews={() => {
+                      window.location.hash = encodeURIComponent(i18n("Reviews"));
+                    }}
+                    targetId={String(venue.id)}
+                    type="venue"
+                  />
+                )}
                 <SectionCard title={i18n("Details")}>
                   <CardMetadata expanded variant="list" venue={venue} />
                 </SectionCard>
@@ -261,9 +270,11 @@ export const VenueView = ({
             </div>
           </TabPane>
 
-          <TabPane tab={i18n("Reviews")}>
-            <ContentReviews context={venue.category} targetId={String(venue.id)} type="venue" />
-          </TabPane>
+          {canShowRatings && (
+            <TabPane tab={i18n("Updates")}>
+              <ContentUpdates canManage={canManageUpdates} targetId={venue.id} type="venue" />
+            </TabPane>
+          )}
 
           {upcomingEvents.length > 0 && !isArchived && (
             <TabPane tab={i18n("Events")}>
@@ -287,6 +298,12 @@ export const VenueView = ({
                   </div>
                 )}
               </div>
+            </TabPane>
+          )}
+
+          {canShowRatings && (
+            <TabPane tab={i18n("Reviews")}>
+              <ContentReviews context={venue.category} targetId={String(venue.id)} type="venue" />
             </TabPane>
           )}
 

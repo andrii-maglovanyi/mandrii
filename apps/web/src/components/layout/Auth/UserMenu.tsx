@@ -46,7 +46,7 @@ export const UserMenu = ({
           </Link>
           {isAdmin && (
             <Link href="/admin" onClick={onNavigate}>
-              <ShieldCheck className="mr-2" /> {i18n("Admin")}
+              <ShieldCheck className="mr-2" /> Admin
             </Link>
           )}
         </>

@@ -12,7 +12,7 @@ import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
 import { shareItem } from "~/lib/share";
-import { GetPublicVenuesQuery, Locale } from "~/types";
+import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
 
 import { ClaimOwnershipDialog } from "../../ClaimOwnershipDialog";
 
@@ -29,6 +29,7 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
   const router = useRouter();
   const { showSuccess } = useNotifications();
   const { iconName, label } = constants.categories[venue.category as keyof typeof constants.categories];
+  const canShare = [Venue_Status_Enum.Active, Venue_Status_Enum.Archived].includes(venue.status);
 
   const handleOwnerClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -84,7 +85,7 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
             size="sm"
             variant="ghost"
           />
-        ) : (
+        ) : !venue.owner_id ? (
           <div className={clsx(hideUntilHover && "hidden", `group-hover/card:flex`)}>
             <ActionButton
               aria-label={i18n("I own this venue")}
@@ -100,15 +101,17 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
               variant="ghost"
             />
           </div>
+        ) : null}
+        {canShare && (
+          <ActionButton
+            aria-label={i18n("Share this venue")}
+            className="group"
+            icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+            onClick={handleShareClick}
+            size="sm"
+            variant="ghost"
+          />
         )}
-        <ActionButton
-          aria-label={i18n("Share this venue")}
-          className="group"
-          icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
-          onClick={handleShareClick}
-          size="sm"
-          variant="ghost"
-        />
         {Boolean(venue.owner_id) && (
           <ActionButton
             aria-label={

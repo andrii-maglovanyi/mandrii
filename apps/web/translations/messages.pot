@@ -195,6 +195,9 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
+msgid "Updates"
+msgstr ""
+
 msgid "Events"
 msgstr ""
 
@@ -732,10 +735,10 @@ msgstr ""
 msgid "View venue in a new tab"
 msgstr ""
 
-msgid "Edit your venue details below.<br/>You can update all fields except the slug, which is locked after the first creation."
+msgid "Edit your venue details below.\nYou can update all fields except the slug, which is locked after the first creation."
 msgstr ""
 
-msgid "Start adding your venue by selecting its category and name.<br/>The slug is auto-generated the URL and can only be edited during the first creation."
+msgid "Start adding your venue by selecting its category and name.\nThe slug is auto-generated the URL and can only be edited during the first creation."
 msgstr ""
 
 msgid "Categories"
@@ -924,10 +927,10 @@ msgstr ""
 msgid "Are you sure you want to archive this event?"
 msgstr ""
 
-msgid "Edit your event details below.<br/>You can update all fields except the slug, which is locked after the first creation."
+msgid "Edit your event details below.\nYou can update all fields except the slug, which is locked after the first creation."
 msgstr ""
 
-msgid "Start adding your event by entering its title and type.<br/>The slug is auto-generated from the title and can only be edited during the first creation."
+msgid "Start adding your event by entering its title and type.\nThe slug is auto-generated from the title and can only be edited during the first creation."
 msgstr ""
 
 msgid "Products are not available at the moment"
@@ -2895,6 +2898,75 @@ msgstr ""
 msgid "To"
 msgstr ""
 
+msgid "Unable to load updates"
+msgstr ""
+
+msgid "Unable to save update"
+msgstr ""
+
+msgid "This update will be removed from the public feed."
+msgstr ""
+
+msgid "Remove update?"
+msgstr ""
+
+msgid "Update removed"
+msgstr ""
+
+msgid "Unable to remove update"
+msgstr ""
+
+msgid "Update unpinned"
+msgstr ""
+
+msgid "Update pinned"
+msgstr ""
+
+msgid "Unable to update pinned status"
+msgstr ""
+
+msgid "Post update"
+msgstr ""
+
+msgid "Share news, a practical update, or something visitors should know."
+msgstr ""
+
+msgid "Highlight this update"
+msgstr ""
+
+msgid "Add photos"
+msgstr ""
+
+msgid "Up to {count} photos"
+msgstr ""
+
+msgid "Unpin update"
+msgstr ""
+
+msgid "Pin update"
+msgstr ""
+
+msgid "Content owner"
+msgstr ""
+
+msgid "Pinned"
+msgstr ""
+
+msgid "Edit update"
+msgstr ""
+
+msgid "Remove update"
+msgstr ""
+
+msgid "Load more updates"
+msgstr ""
+
+msgid "Updates from this venue or event will appear here."
+msgstr ""
+
+msgid "No updates yet"
+msgstr ""
+
 msgid "I manage {name} ({slug}) and would like to claim ownership of its venue."
 msgstr ""
 
@@ -3999,6 +4071,24 @@ msgstr ""
 msgid "Number of occurrences"
 msgstr ""
 
+msgid "QR codes"
+msgstr ""
+
+msgid "Create a QR code for a short Mandrii reference link."
+msgstr ""
+
+msgid "Enter the path after https://{host}/, for example your-topic. Scanning the code opens the complete link."
+msgstr ""
+
+msgid "Reference path"
+msgstr ""
+
+msgid "your-topic"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
 msgid "Checking notification settings"
 msgstr ""
 
@@ -4248,7 +4338,7 @@ msgstr ""
 msgid "Thanks for your support"
 msgstr ""
 
-msgid "No matter how hard things get, we're still together"
+msgid "No matter how hard things get, I'm still here with you"
 msgstr ""
 
 msgid "Even a small gesture means the world."

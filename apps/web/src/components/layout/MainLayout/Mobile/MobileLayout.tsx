@@ -49,7 +49,7 @@ export function MobileLayout({ children, navLinks }: Readonly<MobileLayoutProps>
   }, [pathname]);
 
   return (
-    <div className="lg:hidden">
+    <div className="flex min-h-0 flex-1 flex-col lg:hidden">
       <header className={`relative z-50 flex h-16 items-center justify-between px-4 shadow-md`}>
         <span className="absolute left-1/2 -translate-x-1/2 transform">
           <Logo />

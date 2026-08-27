@@ -20,7 +20,7 @@ export default function LovePage() {
       >
         {i18n("Thanks for your support")}
       </h1>
-      <p className="text-xl">{i18n("No matter how hard things get, we're still together")}</p>
+      <p className="text-xl">{i18n("No matter how hard things get, I'm still here with you")}</p>
       <section className="mt-4 mb-6">
         <div className={`flex cursor-default flex-col items-center justify-center gap-4 md:flex-row md:gap-6`}>
           <div className="flex space-x-2">

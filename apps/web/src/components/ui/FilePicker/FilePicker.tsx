@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 import { FieldErrorMessage } from "../FieldErrorMessage/FieldErrorMessage";
 
 interface FilePickerProps {
+  accept?: string;
   className?: string;
   disabled?: boolean;
   error?: string;
@@ -24,6 +25,7 @@ const filePickerClass =
   "hover:bg-neutral/10 flex w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-8 transition";
 
 export const FilePicker = ({
+  accept = "image/*",
   className,
   disabled,
   error,
@@ -50,12 +52,12 @@ export const FilePicker = ({
     <>
       <label className={inputClass}>
         <div className="text-center">
-          <Upload className="mx-auto mb-2 h-8 w-8 text-neutral-disabled" />
+          <Upload className="text-neutral-disabled mx-auto mb-2 h-8 w-8" />
           {label}
-          {placeholder && <span className="mt-1 block text-sm text-neutral">{placeholder}</span>}
+          {placeholder && <span className="text-neutral mt-1 block text-sm">{placeholder}</span>}
         </div>
         <input
-          accept="image/*"
+          accept={accept}
           className="hidden"
           disabled={disabled}
           multiple={isMultiple}

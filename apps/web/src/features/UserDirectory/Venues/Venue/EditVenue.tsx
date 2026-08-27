@@ -262,11 +262,11 @@ export const EditVenue = ({ slug }: VenueProps) => {
             {format(new Date(data.created_at), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
           </Tooltip>
           <span>&bull;</span>
-          <ContentStatusBadge appearance="icon" status={data.status!} />
+          <ContentStatusBadge appearance="icon" size="md" status={data.status!} />
           {data.id ? (
             <Tooltip label={i18n("View venue in a new tab")}>
               <Link
-                className={`hover:bg-primary/10 inline-flex items-center gap-2 rounded-lg p-2`}
+                className="text-primary hover:bg-primary/20 focus:ring-primary focus:ring-offset-surface inline-flex h-10 w-10 items-center justify-center rounded-md transition focus:ring-2 focus:ring-offset-1 focus:outline-none"
                 href={`/venues/${data.slug}`}
                 target="_blank"
               >
@@ -288,10 +288,10 @@ export const EditVenue = ({ slug }: VenueProps) => {
       <RichText as="div" className="text-neutral mb-6 text-sm">
         {slug
           ? i18n(
-              "Edit your venue details below.<br/>You can update all fields except the slug, which is locked after the first creation.",
+              "Edit your venue details below.\nYou can update all fields except the slug, which is locked after the first creation.",
             )
           : i18n(
-              "Start adding your venue by selecting its category and name.<br/>The slug is auto-generated the URL and can only be edited during the first creation.",
+              "Start adding your venue by selecting its category and name.\nThe slug is auto-generated the URL and can only be edited during the first creation.",
             )}
       </RichText>
       <VenueForm initialValues={initialValues} onSubmit={submitVenue} onSuccess={handleSuccess} />

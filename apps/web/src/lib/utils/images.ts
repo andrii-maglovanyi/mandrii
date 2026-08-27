@@ -16,6 +16,12 @@ export const processAndUploadImage = async (file: Buffer, fileName: string) => {
   return new URL(blob.url).pathname.replace(/^\/+/, "");
 };
 
+export const deleteImages = async (imagePaths: string[]) => {
+  if (imagePaths.length) {
+    await del(imagePaths);
+  }
+};
+
 export const processImages = async (images: File[], prefix: string) => {
   const imageUrls: string[] = [];
   const fileNames = new Set(images.map((image) => image.name));

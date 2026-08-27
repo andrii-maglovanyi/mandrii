@@ -38,7 +38,7 @@ export const Badge = ({
     className={clsx(
       "inline-flex items-center justify-center gap-1.5 rounded-md font-medium uppercase no-underline",
       variantClasses[variant],
-      iconOnly ? (size === "md" ? "h-9 w-9 p-0" : "h-7 w-7 p-0") : sizeClasses[size],
+      iconOnly ? (size === "md" ? "h-10 w-10 p-0" : "h-7 w-7 p-0") : sizeClasses[size],
       className,
     )}
     {...rest}

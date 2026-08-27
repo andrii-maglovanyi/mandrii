@@ -20,15 +20,15 @@ export function AdminLayout({ children }: Readonly<{ children: React.ReactNode }
     <div className="bg-surface text-on-surface min-h-screen">
       <header className="border-on-surface/10 bg-surface/95 sticky top-0 z-40 border-b backdrop-blur">
         <div className="mx-auto flex min-h-16 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
-          <div className="flex gap-3 px-4 sm:px-6">
-            <a className="flex min-h-11 items-center gap-2 rounded-md font-semibold" href="/admin">
+          <div className="flex items-center gap-4">
+            <a className="flex min-h-11 items-center gap-3 rounded-md font-semibold" href="/admin">
               <span className="bg-primary/10 text-primary flex size-9 items-center justify-center rounded-lg">
                 <ShieldCheck aria-hidden size={20} />
               </span>
               <span>{i18n("Admin")}</span>
             </a>
-            <span aria-hidden className="bg-on-surface/15 h-5 w-px" />
-            <p className="text-neutral text-sm">{i18n("Platform operations")}</p>
+            <span aria-hidden className="bg-on-surface/15 h-6 w-px" />
+            <p className="text-neutral text-sm leading-none">{i18n("Platform operations")}</p>
           </div>
           <ActionButton
             aria-label={i18n("Back to website")}

@@ -51,6 +51,7 @@ export const VenueLogo = ({
           alt={`${venue.name} logo`}
           className="object-cover"
           fill
+          priority={variant === "hero"}
           sizes={size === "xl" ? "(min-width: 768px) 128px, 96px" : size === "lg" ? "56px" : "48px"}
           src={logoUrl}
         />

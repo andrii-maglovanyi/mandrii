@@ -126,11 +126,11 @@ export const EditEvent = ({ slug }: EventProps) => {
               {format(new Date(meta.createdAt), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
             </Tooltip>
             <span>&bull;</span>
-            <ContentStatusBadge appearance="icon" status={meta.status} />
+            <ContentStatusBadge appearance="icon" size="md" status={meta.status} />
             {data.id ? (
               <Tooltip label={i18n("View event in a new tab")}>
                 <Link
-                  className={`hover:bg-primary/10 inline-flex items-center gap-2 rounded-lg p-2`}
+                  className="text-primary hover:bg-primary/20 focus:ring-primary focus:ring-offset-surface inline-flex h-10 w-10 items-center justify-center rounded-md transition focus:ring-2 focus:ring-offset-1 focus:outline-none"
                   href={`/events/${data.slug}`}
                   target="_blank"
                 >
@@ -198,10 +198,10 @@ export const EditEvent = ({ slug }: EventProps) => {
         <RichText as="div" className="text-neutral mb-6 text-sm">
           {slug
             ? i18n(
-                "Edit your event details below.<br/>You can update all fields except the slug, which is locked after the first creation.",
+                "Edit your event details below.\nYou can update all fields except the slug, which is locked after the first creation.",
               )
             : i18n(
-                "Start adding your event by entering its title and type.<br/>The slug is auto-generated from the title and can only be edited during the first creation.",
+                "Start adding your event by entering its title and type.\nThe slug is auto-generated from the title and can only be edited during the first creation.",
               )}
         </RichText>
         <EventForm
