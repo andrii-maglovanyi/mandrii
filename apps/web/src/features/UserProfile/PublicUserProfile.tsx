@@ -24,6 +24,7 @@ export type PublicUserProfileData = {
   last_seen_at: null | string;
   name: string;
   points: number;
+  review_count: number;
   venue_count: number;
 };
 
@@ -124,6 +125,7 @@ export const PublicUserProfile = ({ events, isOwnProfile, profile, venues }: Pub
         eventsCreated={profile.event_count}
         isVerified={profile.is_verified_contributor}
         points={profile.points}
+        reviewsWritten={profile.review_count}
         showLeaderboardLink={!profile.isAdmin}
         venuesCreated={profile.venue_count}
       />

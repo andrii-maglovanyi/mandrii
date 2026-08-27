@@ -1,4 +1,4 @@
-import { LogOut, MessageCircle, StretchHorizontal } from "lucide-react";
+import { LogOut, MessageCircle, ShieldCheck, StretchHorizontal } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -7,11 +7,17 @@ import { sendToMixpanel } from "~/lib/mixpanel";
 
 interface UserMenuProps {
   inactive?: boolean;
+  isAdmin?: boolean;
   onNavigate?: () => void;
   unreadMessages?: number;
 }
 
-export const UserMenu = ({ inactive = false, onNavigate = () => {}, unreadMessages = 0 }: UserMenuProps) => {
+export const UserMenu = ({
+  inactive = false,
+  isAdmin = false,
+  onNavigate = () => {},
+  unreadMessages = 0,
+}: UserMenuProps) => {
   const i18n = useI18n();
 
   const handleSignOut = async () => {
@@ -38,6 +44,11 @@ export const UserMenu = ({ inactive = false, onNavigate = () => {}, unreadMessag
           <Link href="/user-directory" onClick={onNavigate}>
             <StretchHorizontal className="mr-2" /> {i18n("My directory")}
           </Link>
+          {isAdmin && (
+            <Link href="/admin" onClick={onNavigate}>
+              <ShieldCheck className="mr-2" /> {i18n("Admin")}
+            </Link>
+          )}
         </>
       )}
       <Link href="/#" onClick={handleSignOut}>

@@ -2,7 +2,7 @@
 
 import React, { Suspense, useEffect, useMemo, useState } from "react";
 
-import { TabPane, type TabPaneProps } from "./TabPane";
+import { getTabId, getTabPanelId, TabPane, type TabPaneProps } from "./TabPane";
 import { TabsBar } from "./TabsBar";
 
 export interface TabsMethods {
@@ -93,7 +93,13 @@ export const Tabs = ({ activeKey, children, defaultActiveKey = "", defer = false
         {defer
           ? React.Children.map(tabsOnly, (child, index) =>
               React.isValidElement<TabPaneProps>(child) && index === activeTab ? (
-                <div className="my-4">
+                <div
+                  aria-labelledby={getTabId(child.props.tab)}
+                  className="my-4"
+                  id={getTabPanelId(child.props.tab)}
+                  role="tabpanel"
+                  tabIndex={0}
+                >
                   <Suspense fallback="Loading">{child.props.children}</Suspense>
                 </div>
               ) : null,
@@ -101,10 +107,14 @@ export const Tabs = ({ activeKey, children, defaultActiveKey = "", defer = false
           : React.Children.map(tabsOnly, (child, index) =>
               React.isValidElement<TabPaneProps>(child) ? (
                 <div
-                  className="my-4 text-on-surface"
+                  aria-labelledby={getTabId(child.props.tab)}
+                  className="text-on-surface my-4"
+                  id={getTabPanelId(child.props.tab)}
+                  role="tabpanel"
                   style={{
                     display: `${index === activeTab ? "block" : "none"}`,
                   }}
+                  tabIndex={0}
                 >
                   {child.props.children}
                 </div>

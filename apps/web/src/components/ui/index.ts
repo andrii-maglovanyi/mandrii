@@ -30,7 +30,7 @@ export { Select } from "./Select/Select";
 export { Separator } from "./Separator/Separator";
 export { SvgIcon } from "./SvgIcon/SvgIcon";
 export { Table } from "./Table/Table";
-export { TabPane, Tabs } from "./Tabs";
+export { TabBadge, TabPane, Tabs } from "./Tabs";
 export { Textarea } from "./Textarea/Textarea";
 export { TextLink } from "./TextLink/TextLink";
 export { Tooltip } from "./Tooltip/Tooltip";

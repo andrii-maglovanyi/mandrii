@@ -1,4 +1,4 @@
-import { Ref } from "react";
+import { ButtonHTMLAttributes, Ref } from "react";
 
 import { Position } from "../Tooltip/Tooltip";
 
@@ -17,12 +17,15 @@ export type ButtonType = "button" | "reset" | "submit";
 
 export type ButtonVariant = "filled" | "ghost" | "outlined";
 
-interface BaseButton {
+interface BaseButton
+  extends Omit<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    "children" | "className" | "color" | "onClick" | "ref" | "size" | "type"
+  > {
   busy?: boolean;
   className?: string;
   color?: ButtonColor;
   "data-testid"?: string;
-  disabled?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   ref?: Ref<HTMLButtonElement>;
   size?: "lg" | "md" | "sm";

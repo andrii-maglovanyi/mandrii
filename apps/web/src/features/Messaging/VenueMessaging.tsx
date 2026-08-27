@@ -38,7 +38,6 @@ import { ConversationList } from "./components/ConversationList";
 import { MessageActionsMenu, type MessageActionsMenuState } from "./components/MessageActionsMenu";
 import { MessageComposer } from "./components/MessageComposer";
 import { ParticipantAvatar } from "./components/ParticipantAvatar";
-import { TelegramLinkPanel } from "./components/TelegramLinkPanel";
 import { VenuePreview } from "./components/VenuePreview";
 import { clsx } from "clsx";
 
@@ -53,6 +52,14 @@ type MessagePage = {
   hasMore: boolean;
   messages: ConversationMessage[];
   nextCursor: null | string;
+};
+
+type ReviewTelegramDelivery = {
+  attempts: number;
+  delivered_at: null | string;
+  last_error: null | string;
+  next_attempt_at: string;
+  status: "DELIVERED" | "FAILED" | "PENDING" | "PROCESSING";
 };
 
 const TELEGRAM_LOGO = "/static/telegram.svg";
@@ -82,6 +89,7 @@ interface VenueMessagingProps {
   inbox?: boolean;
   initialRole: MessagingRole | null;
   initialTelegramLinked: boolean | null;
+  initialTelegramReviewNotificationsEnabled?: boolean | null;
   venueId?: UUID;
   venueName?: string;
 }
@@ -91,6 +99,7 @@ export const VenueMessaging = ({
   inbox = false,
   initialRole,
   initialTelegramLinked,
+  initialTelegramReviewNotificationsEnabled = null,
   venueId,
   venueName,
 }: VenueMessagingProps) => {
@@ -101,6 +110,10 @@ export const VenueMessaging = ({
   const requestedConversationId = useSearchParams().get("conversation");
   const [role, setRole] = useState<MessagingRole | null>(initialRole);
   const [telegramLinked, setTelegramLinked] = useState<boolean | null>(initialTelegramLinked);
+  const [telegramReviewNotificationsEnabled, setTelegramReviewNotificationsEnabled] = useState<boolean | null>(
+    initialTelegramReviewNotificationsEnabled,
+  );
+  const [reviewTelegramDelivery, setReviewTelegramDelivery] = useState<null | ReviewTelegramDelivery>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
@@ -119,6 +132,8 @@ export const VenueMessaging = ({
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [retryingTelegramMessageId, setRetryingTelegramMessageId] = useState<string | null>(null);
   const [isUnlinkingTelegram, setIsUnlinkingTelegram] = useState(false);
+  const [isSavingTelegramReviewNotifications, setIsSavingTelegramReviewNotifications] = useState(false);
+  const [isRetryingReviewTelegramDelivery, setIsRetryingReviewTelegramDelivery] = useState(false);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
   const [reactionPicker, setReactionPicker] = useState<MessageActionsMenuState | null>(null);
   const selectedConversationIdRef = useRef<null | string>(null);
@@ -137,6 +152,18 @@ export const VenueMessaging = ({
   useEffect(() => {
     selectedConversationIdRef.current = selectedConversationId;
   }, [selectedConversationId]);
+
+  const refreshReviewTelegramDelivery = useCallback(async () => {
+    if (!venueId || role !== "OWNER") return;
+    const response = await fetch(`/api/telegram/review-notifications?venueId=${encodeURIComponent(venueId)}`);
+    if (!response.ok) return;
+    const data = (await response.json()) as { delivery: null | ReviewTelegramDelivery };
+    setReviewTelegramDelivery(data.delivery);
+  }, [role, venueId]);
+
+  useEffect(() => {
+    void refreshReviewTelegramDelivery();
+  }, [refreshReviewTelegramDelivery]);
 
   useEffect(() => {
     if (!selectedConversationId) return;
@@ -870,10 +897,53 @@ export const VenueMessaging = ({
       const data = (await response.json()) as { error?: string; telegramLinked?: boolean };
       if (!response.ok) throw new Error(data.error || i18n("Unable to unlink Telegram"));
       setTelegramLinked(data.telegramLinked ?? false);
+      setTelegramReviewNotificationsEnabled(false);
     } catch (error) {
       setMessageError(error instanceof Error ? error.message : i18n("Unable to unlink Telegram"));
     } finally {
       setIsUnlinkingTelegram(false);
+    }
+  };
+  const setTelegramReviewNotifications = async (enabled: boolean) => {
+    if (!venueId || isSavingTelegramReviewNotifications) return;
+
+    setIsSavingTelegramReviewNotifications(true);
+    setMessageError("");
+    try {
+      const response = await fetch("/api/telegram/review-notifications", {
+        body: JSON.stringify({ enabled, venueId }),
+        headers: { "Content-Type": "application/json" },
+        method: "PUT",
+      });
+      const data = (await response.json()) as { enabled?: boolean; error?: string };
+      if (!response.ok || data.enabled === undefined) {
+        throw new Error(data.error || i18n("Unable to update Telegram review notifications"));
+      }
+      setTelegramReviewNotificationsEnabled(data.enabled);
+      void refreshReviewTelegramDelivery();
+    } catch (error) {
+      setMessageError(error instanceof Error ? error.message : i18n("Unable to update Telegram review notifications"));
+    } finally {
+      setIsSavingTelegramReviewNotifications(false);
+    }
+  };
+  const retryReviewTelegramDelivery = async () => {
+    if (!venueId || isRetryingReviewTelegramDelivery) return;
+    setIsRetryingReviewTelegramDelivery(true);
+    setMessageError("");
+    try {
+      const response = await fetch("/api/telegram/review-notifications", {
+        body: JSON.stringify({ venueId }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const data = (await response.json()) as { error?: string };
+      if (!response.ok) throw new Error(data.error || i18n("Unable to retry Telegram review notification"));
+      await refreshReviewTelegramDelivery();
+    } catch (error) {
+      setMessageError(error instanceof Error ? error.message : i18n("Unable to retry Telegram review notification"));
+    } finally {
+      setIsRetryingReviewTelegramDelivery(false);
     }
   };
   const scrollToLatest = () => {
@@ -1029,15 +1099,6 @@ export const VenueMessaging = ({
               )}
       </RichText>
 
-      {!inbox && role === "OWNER" && telegramLinked !== null && (
-        <TelegramLinkPanel
-          error={messageError}
-          isLinked={telegramLinked}
-          isUnlinking={isUnlinkingTelegram}
-          onLink={() => void linkTelegram()}
-          onUnlink={() => void unlinkTelegram()}
-        />
-      )}
       <div
         className={clsx(
           isExpanded &&

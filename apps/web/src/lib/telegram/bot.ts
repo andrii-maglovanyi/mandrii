@@ -5,6 +5,7 @@ import sql from "../db/db";
 import { privateConfig } from "../config/private";
 import { sendMessagePushNotification } from "../web-push";
 import { getSenderColour } from "~/lib/messaging/sender";
+import { getReviewTelegramDeliveryOutcome } from "~/lib/telegram/review-delivery";
 
 export const bot = new Bot(privateConfig.telegram.token);
 
@@ -22,6 +23,81 @@ export function formatUserTelegramMessage({
   const quotedReply = replyBody ? `↩ ${replyBody}\n\n` : "";
   const senderLabel = `${getSenderColour(userName).emoji} ${userName}`;
   return isConsecutiveCustomerMessage ? `${quotedReply}${body}` : `${senderLabel}\n\n${quotedReply}${body}`;
+}
+
+export async function sendVenueReviewTelegramNotification({
+  rating: _rating,
+  reviewBody: _reviewBody,
+  reviewerId,
+  venueId,
+}: {
+  rating: number;
+  reviewBody: string;
+  reviewerId: string;
+  venueId: string;
+}) {
+  const [venue] = await sql<Array<{ telegram_chat_id: null | number }>>`
+    SELECT CASE
+      WHEN v.telegram_user_id IS NOT NULL AND v.telegram_review_notifications_enabled THEN v.telegram_chat_id
+      ELSE NULL
+    END AS telegram_chat_id
+    FROM venues v
+    WHERE v.id = ${venueId}
+  `;
+
+  if (!venue?.telegram_chat_id) return;
+
+  await sql`
+    INSERT INTO review_telegram_deliveries (content_rating_id, telegram_chat_id)
+    SELECT r.id, ${venue.telegram_chat_id}
+    FROM content_ratings r
+    WHERE r.user_id = ${reviewerId} AND r.venue_id = ${venueId}
+    ON CONFLICT (content_rating_id) DO UPDATE SET
+      telegram_chat_id = EXCLUDED.telegram_chat_id,
+      status = 'PENDING',
+      attempts = 0,
+      next_attempt_at = NOW(),
+      locked_at = NULL,
+      last_error = NULL,
+      delivered_at = NULL
+  `;
+
+  // Vercel Hobby cron runs infrequently. Try one queued delivery now while
+  // retaining the durable queue for retries and the scheduled fallback.
+  deliverPendingReviewTelegramNotifications(1).catch((error) => {
+    console.error("Immediate Telegram review delivery failed:", error);
+  });
+}
+
+export async function sendEventReviewTelegramNotification({
+  eventId,
+  reviewerId,
+}: {
+  eventId: string;
+  reviewerId: string;
+}) {
+  const [event] = await sql<Array<{ telegram_chat_id: null | number }>>`
+    SELECT COALESCE(
+      CASE WHEN e.telegram_user_id IS NOT NULL AND e.telegram_review_notifications_enabled THEN e.telegram_chat_id END,
+      CASE WHEN v.telegram_user_id IS NOT NULL AND v.telegram_review_notifications_enabled THEN v.telegram_chat_id END
+    ) AS telegram_chat_id
+    FROM events e LEFT JOIN venues v ON v.id = e.venue_id WHERE e.id = ${eventId}
+  `;
+  if (!event?.telegram_chat_id) return;
+  await sql`INSERT INTO review_telegram_deliveries (content_rating_id, telegram_chat_id)
+    SELECT id, ${event.telegram_chat_id} FROM content_ratings
+    WHERE user_id = ${reviewerId} AND event_id = ${eventId}
+    ON CONFLICT (content_rating_id) DO UPDATE SET
+      telegram_chat_id = EXCLUDED.telegram_chat_id,
+      status = 'PENDING',
+      attempts = 0,
+      next_attempt_at = NOW(),
+      locked_at = NULL,
+      last_error = NULL,
+      delivered_at = NULL`;
+  deliverPendingReviewTelegramNotifications(1).catch((error) =>
+    console.error("Immediate Telegram event review delivery failed:", error),
+  );
 }
 
 // Local polling uses the same bot token as the deployed webhook. It must be
@@ -54,13 +130,13 @@ bot.command("start", async (ctx) => {
   }
 
   try {
-    const [link] = await sql<{ venue_id: string }[]>`
+    const [link] = await sql<{ event_id: null | string; venue_id: null | string }[]>`
       UPDATE telegram_link_tokens
       SET used_at = NOW()
       WHERE token = ${token}
         AND used_at IS NULL
         AND expires_at > NOW()
-      RETURNING venue_id
+      RETURNING venue_id, event_id
     `;
 
     if (!link) {
@@ -69,13 +145,13 @@ bot.command("start", async (ctx) => {
       );
     }
 
-    await sql`
-      UPDATE venues
-      SET telegram_chat_id = ${chatId}, telegram_user_id = ${ctx.from.id}
-      WHERE id = ${link.venue_id}
-    `;
-
-    await ctx.reply("Your venue is now successfully linked! You will receive customer messages here. ✅");
+    if (link.event_id) {
+      await sql`UPDATE events SET telegram_chat_id = ${chatId}, telegram_user_id = ${ctx.from.id} WHERE id = ${link.event_id}`;
+      await ctx.reply("Your event is now successfully linked! You will receive review notifications here. ✅");
+    } else {
+      await sql`UPDATE venues SET telegram_chat_id = ${chatId}, telegram_user_id = ${ctx.from.id} WHERE id = ${link.venue_id}`;
+      await ctx.reply("Your venue is now successfully linked! You will receive customer messages here. ✅");
+    }
   } catch (error) {
     console.error("Link error:", error);
     await ctx.reply("There was an issue linking your account. Please try again.");
@@ -93,7 +169,12 @@ bot.command("unlink", async (ctx) => {
   await sql`
     WITH unlinked_venues AS (
       UPDATE venues
-      SET telegram_chat_id = NULL, telegram_user_id = NULL
+      SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false
+      WHERE telegram_chat_id = ${chatId} AND telegram_user_id = ${ctx.from.id}
+      RETURNING id
+    ), unlinked_events AS (
+      UPDATE events
+      SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false
       WHERE telegram_chat_id = ${chatId} AND telegram_user_id = ${ctx.from.id}
       RETURNING id
     ), cancelled_deliveries AS (
@@ -107,11 +188,11 @@ bot.command("unlink", async (ctx) => {
     )
     UPDATE telegram_link_tokens
     SET used_at = NOW()
-    WHERE venue_id IN (SELECT id FROM unlinked_venues)
+    WHERE (venue_id IN (SELECT id FROM unlinked_venues) OR event_id IN (SELECT id FROM unlinked_events))
       AND used_at IS NULL
   `;
 
-  await ctx.reply("Your venue has been unlinked. You will no longer receive customer messages.");
+  await ctx.reply("Your linked venues and events have been unlinked.");
 });
 
 export async function sendUserMessageToVenue(
@@ -159,6 +240,52 @@ type TelegramDelivery = {
 };
 
 const MAX_TELEGRAM_DELIVERY_ATTEMPTS = 8;
+
+type ReviewTelegramDelivery = { attempts: number; id: string; telegram_chat_id: number };
+
+export async function deliverPendingReviewTelegramNotifications(limit = 10) {
+  const deliveries = await sql.begin(
+    (transaction) => transaction<ReviewTelegramDelivery[]>`
+    WITH due AS (
+      SELECT id FROM review_telegram_deliveries
+      WHERE (status = 'PENDING' AND next_attempt_at <= NOW())
+         OR (status = 'PROCESSING' AND locked_at < NOW() - INTERVAL '10 minutes')
+      ORDER BY next_attempt_at, created_at LIMIT ${limit} FOR UPDATE SKIP LOCKED
+    )
+    UPDATE review_telegram_deliveries d SET status = 'PROCESSING', locked_at = NOW(), attempts = d.attempts + 1
+    FROM due WHERE d.id = due.id
+    RETURNING d.id, d.telegram_chat_id, d.attempts
+  `,
+  );
+  await Promise.all(deliveries.map(deliverReviewTelegramNotification));
+  return deliveries.length;
+}
+
+async function deliverReviewTelegramNotification(delivery: ReviewTelegramDelivery) {
+  try {
+    const [review] = await sql<Array<{ body: string; content_name: string; rating: number; reviewer: null | string }>>`
+      SELECT r.review_body AS body, r.rating, u.name AS reviewer,
+             COALESCE(v.name, e.title_en, e.title_uk, 'your content') AS content_name
+      FROM review_telegram_deliveries d JOIN content_ratings r ON r.id = d.content_rating_id
+      LEFT JOIN venues v ON v.id = r.venue_id
+      LEFT JOIN events e ON e.id = r.event_id
+      LEFT JOIN users u ON u.id = r.user_id
+      WHERE d.id = ${delivery.id} AND r.review_status = 'PUBLISHED' AND d.telegram_chat_id = ${delivery.telegram_chat_id}
+    `;
+    if (!review) throw new Error("Review notification is no longer deliverable");
+    await bot.api.sendMessage(
+      delivery.telegram_chat_id,
+      `⭐ New ${review.rating}/5 review for ${review.content_name}\n\n${review.reviewer || "A community member"}: ${review.body.replace(/\s+/g, " ").slice(0, 280)}`,
+    );
+    await sql`UPDATE review_telegram_deliveries SET status = ${getReviewTelegramDeliveryOutcome(delivery.attempts).status}, delivered_at = NOW(), locked_at = NULL, last_error = NULL WHERE id = ${delivery.id}`;
+  } catch (error: any) {
+    const outcome = getReviewTelegramDeliveryOutcome(delivery.attempts, true);
+    await sql`UPDATE review_telegram_deliveries SET status = ${outcome.status}, locked_at = NULL, last_error = ${String(error?.description ?? error?.message ?? "Telegram delivery failed").slice(0, 1000)}, next_attempt_at = NOW() + (${outcome.delaySeconds} * INTERVAL '1 second') WHERE id = ${delivery.id}`;
+    captureException(error, {
+      tags: { integration: "telegram", operation: "review_delivery", terminal: String(outcome.status === "FAILED") },
+    });
+  }
+}
 
 export async function deliverPendingTelegramMessages({
   limit = 25,

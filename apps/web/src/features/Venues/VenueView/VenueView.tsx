@@ -3,7 +3,6 @@
 import clsx from "clsx";
 import { BookMarked, MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
@@ -15,13 +14,18 @@ import {
   ImageCarousel,
   RichText,
   SectionCard,
+  TabBadge,
   TabPane,
   Tabs,
 } from "~/components/ui";
 import { EventsMasonryCard } from "~/features/Events/EventCard/EventsMasonryCard";
 import { VenueMessaging } from "~/features/Messaging/VenueMessaging";
+import { VenueTelegramIntegrations } from "~/features/Messaging/components/VenueTelegramIntegrations";
+import { ContentRating } from "~/features/Ratings/ContentRating";
+import { ContentReviews } from "~/features/Ratings/ContentReviews";
 import { useEvents } from "~/hooks/useEvents";
 import { useVenues } from "~/hooks/useVenues";
+import { useVenueUnreadCount } from "~/hooks/useVenueUnreadCount";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getPublicMediaUrl } from "~/lib/media";
@@ -38,6 +42,7 @@ import {
 import { CardHeader } from "../VenueCard/Components/CardHeader";
 import { CardMetadata } from "../VenueCard/Components/CardMetadata";
 import { ChainMetadata } from "../VenueCard/Components/ChainMetadata";
+import { VenueLogo } from "../VenueCard/Components/VenueLogo";
 import {
   AccommodationMetadataDisplay,
   BeautyMetadataDisplay,
@@ -51,6 +56,7 @@ interface VenueViewProps {
   initialEvents?: GetPublicEventsQuery["events"] | null;
   initialMessagingRole?: "OWNER" | "USER" | null;
   initialTelegramLinked?: boolean | null;
+  initialTelegramReviewNotificationsEnabled?: boolean | null;
   initialVenue?: GetPublicVenuesQuery["venues"][number] | null;
   slug: string;
 }
@@ -59,6 +65,7 @@ export const VenueView = ({
   initialEvents = null,
   initialMessagingRole = null,
   initialTelegramLinked = null,
+  initialTelegramReviewNotificationsEnabled = null,
   initialVenue = undefined,
   slug,
 }: VenueViewProps) => {
@@ -87,6 +94,7 @@ export const VenueView = ({
 
   const { data: clientEvents } = usePublicEvents(shouldFetchClientSide && venue?.id ? eventsQueryParams : {});
   const upcomingEvents = shouldFetchClientSide ? clientEvents : initialEvents || [];
+  const unreadChatCount = useVenueUnreadCount(venue?.id, initialMessagingRole !== null && Boolean(venue?.id));
 
   if (loading) {
     return (
@@ -184,15 +192,7 @@ export const VenueView = ({
         {logoUrl && (
           <div className="absolute right-0 bottom-0 left-0 px-4 md:px-8">
             <div className="mx-auto max-w-5xl">
-              <div className="border-surface bg-surface relative h-24 w-24 overflow-hidden rounded-3xl border-4 shadow-2xl md:h-32 md:w-32">
-                <Image
-                  alt={`${venue.name} logo`}
-                  className="object-cover"
-                  fill
-                  sizes="(min-width: 768px) 128px, 96px"
-                  src={logoUrl}
-                />
-              </div>
+              <VenueLogo expandable size="xl" variant="hero" venue={venue} />
             </div>
           </div>
         )}
@@ -203,7 +203,7 @@ export const VenueView = ({
       </div>
 
       <div className={`mx-auto w-full max-w-5xl px-4 py-2 lg:py-4`}>
-        <Tabs defaultActiveKey="about">
+        <Tabs defaultActiveKey="about" defer>
           <TabPane tab={i18n("About")}>
             <div className={`grid grid-cols-1 gap-8 lg:grid-cols-3`}>
               {/* Description. Left side (2/3) */}
@@ -237,6 +237,13 @@ export const VenueView = ({
 
               {/* Info cards. Right side (1/3) */}
               <div className="flex flex-col gap-4">
+                <ContentRating
+                  onOpenReviews={() => {
+                    window.location.hash = encodeURIComponent(i18n("Reviews"));
+                  }}
+                  targetId={String(venue.id)}
+                  type="venue"
+                />
                 <SectionCard title={i18n("Details")}>
                   <CardMetadata expanded variant="list" venue={venue} />
                 </SectionCard>
@@ -252,6 +259,10 @@ export const VenueView = ({
                 )}
               </div>
             </div>
+          </TabPane>
+
+          <TabPane tab={i18n("Reviews")}>
+            <ContentReviews context={venue.category} targetId={String(venue.id)} type="venue" />
           </TabPane>
 
           {upcomingEvents.length > 0 && !isArchived && (
@@ -280,13 +291,31 @@ export const VenueView = ({
           )}
 
           {initialMessagingRole !== null && (
-            <TabPane tab={i18n("Chat")}>
+            <TabPane
+              label={
+                <>
+                  {i18n("Chat")}
+                  <TabBadge count={unreadChatCount} />
+                </>
+              }
+              tab={i18n("Chat")}
+            >
               <VenueMessaging
                 hasOwner={Boolean(venue.owner_id)}
                 initialRole={initialMessagingRole}
                 initialTelegramLinked={initialTelegramLinked}
+                initialTelegramReviewNotificationsEnabled={initialTelegramReviewNotificationsEnabled}
                 venueId={venue.id}
                 venueName={venue.name}
+              />
+            </TabPane>
+          )}
+          {initialMessagingRole === "OWNER" && (
+            <TabPane tab={i18n("Manage")}>
+              <VenueTelegramIntegrations
+                initialLinked={Boolean(initialTelegramLinked)}
+                initialReviewNotificationsEnabled={Boolean(initialTelegramReviewNotificationsEnabled)}
+                targetId={venue.id}
               />
             </TabPane>
           )}

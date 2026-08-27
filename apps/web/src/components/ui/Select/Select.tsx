@@ -9,6 +9,7 @@ import { Menu, MenuHandle, MenuOption } from "../Menu/Menu";
 import { commonClass, commonInputClass, sizeClasses } from "../styles";
 
 export type SelectProps<K, T> = {
+  "aria-label"?: string;
   className?: string;
   "data-testid"?: string;
   disabled?: boolean;
@@ -27,6 +28,7 @@ export type SelectProps<K, T> = {
 };
 
 export function Select<K extends React.ReactNode, T>({
+  "aria-label": ariaLabel,
   className = "",
   "data-testid": testId = "select",
   disabled = false,
@@ -96,13 +98,14 @@ export function Select<K extends React.ReactNode, T>({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-sm font-medium text-on-surface" htmlFor={selectId}>
+        <label className="text-on-surface text-sm font-medium" htmlFor={selectId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>
       )}
       <div className="relative" ref={wrapperRef}>
         <button
+          aria-label={ariaLabel}
           aria-expanded={focused}
           aria-haspopup="listbox"
           className={selectClass}
@@ -119,9 +122,7 @@ export function Select<K extends React.ReactNode, T>({
           <span className="max-w-max min-w-full flex-1 truncate">{selectedLabel}</span>
           <ChevronDown
             aria-hidden
-            className={clsx(`
-              ml-2 shrink-0 text-neutral-500 transition-transform
-            `, focused && `rotate-180`)}
+            className={clsx(`ml-2 shrink-0 text-neutral-500 transition-transform`, focused && `rotate-180`)}
             size={18}
           />
         </button>

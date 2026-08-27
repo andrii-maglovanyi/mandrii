@@ -48,6 +48,12 @@ msgstr ""
 msgid "Website is invalid"
 msgstr ""
 
+msgid "Bio must be 500 characters or fewer"
+msgstr ""
+
+msgid "City must be 120 characters or fewer"
+msgstr ""
+
 msgid "Invalid user ID"
 msgstr ""
 
@@ -183,6 +189,9 @@ msgstr ""
 msgid "No description available"
 msgstr ""
 
+msgid "Reviews"
+msgstr ""
+
 msgid "Details"
 msgstr ""
 
@@ -190,6 +199,12 @@ msgid "Events"
 msgstr ""
 
 msgid "{count} events"
+msgstr ""
+
+msgid "Chat"
+msgstr ""
+
+msgid "Manage"
 msgstr ""
 
 msgid "Products"
@@ -232,6 +247,9 @@ msgid "Features"
 msgstr ""
 
 msgid "Opening hours"
+msgstr ""
+
+msgid "This venue is archived"
 msgstr ""
 
 msgid "Closed"
@@ -285,9 +303,6 @@ msgstr ""
 msgid "Copied"
 msgstr ""
 
-msgid "This venue is archived"
-msgstr ""
-
 msgid "Copy phone number"
 msgstr ""
 
@@ -330,7 +345,10 @@ msgstr ""
 msgid "Share this venue"
 msgstr ""
 
-msgid "Verified venue"
+msgid "You own this venue — view your profile"
+msgstr ""
+
+msgid "Verified owner - view profile"
 msgstr ""
 
 msgid "Discover"
@@ -414,6 +432,21 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+msgid "Active recently"
+msgstr ""
+
+msgid "Last active"
+msgstr ""
+
+msgid "Platform admin"
+msgstr ""
+
+msgid "Trusted contributor"
+msgstr ""
+
+msgid "View full profile"
+msgstr ""
+
 msgid "This is the glitch you get when there is no profile data available. Please contact me."
 msgstr ""
 
@@ -423,22 +456,13 @@ msgstr ""
 msgid "Profile updated successfully"
 msgstr ""
 
-msgid "points"
-msgstr ""
-
-msgid "venues"
-msgstr ""
-
-msgid "events"
-msgstr ""
-
 msgid "Your Profile"
 msgstr ""
 
-msgid "Manage your account settings and view your community contributions"
+msgid "View your public profile"
 msgstr ""
 
-msgid "Community Impact"
+msgid "Manage your account settings and view your community contributions"
 msgstr ""
 
 msgid "Preview image"
@@ -459,10 +483,70 @@ msgstr ""
 msgid "Your email address cannot be changed."
 msgstr ""
 
+msgid "About you"
+msgstr ""
+
+msgid "Tell the community a little about yourself. Markdown formatting is supported."
+msgstr ""
+
+msgid "City"
+msgstr ""
+
 msgid "Edit"
 msgstr ""
 
+msgid "Manage your profile"
+msgstr ""
+
+msgid "Member since"
+msgstr ""
+
+msgid "Recent contributions"
+msgstr ""
+
+msgid "View my venues"
+msgstr ""
+
+msgid "Last added venues"
+msgstr ""
+
+msgid "Added"
+msgstr ""
+
+msgid "View my events"
+msgstr ""
+
+msgid "Last added events"
+msgstr ""
+
+msgid "Online"
+msgstr ""
+
+msgid "venues"
+msgstr ""
+
+msgid "events"
+msgstr ""
+
+msgid "reviews"
+msgstr ""
+
+msgid "Community impact"
+msgstr ""
+
+msgid "Leaderboard"
+msgstr ""
+
+msgid "Points are awarded for published venues, events, and written reviews"
+msgstr ""
+
 msgid "Venues"
+msgstr ""
+
+msgid "All statuses"
+msgstr ""
+
+msgid "Search"
 msgstr ""
 
 msgid "Status"
@@ -472,6 +556,9 @@ msgid "Virtual venue"
 msgstr ""
 
 msgid "Title"
+msgstr ""
+
+msgid "Last updated"
 msgstr ""
 
 msgid "Category"
@@ -484,21 +571,6 @@ msgid "No venues added yet. Click the button above to add the first one and star
 msgstr ""
 
 msgid "No venues added yet"
-msgstr ""
-
-msgid "Pending"
-msgstr ""
-
-msgid "Active"
-msgstr ""
-
-msgid "Rejected"
-msgstr ""
-
-msgid "Archived"
-msgstr ""
-
-msgid "Hidden"
 msgstr ""
 
 msgid "Logo"
@@ -636,6 +708,12 @@ msgstr ""
 msgid "Venue updated successfully"
 msgstr ""
 
+msgid "Venue status updated successfully"
+msgstr ""
+
+msgid "Unable to update venue status"
+msgstr ""
+
 msgid "An unexpected error occurred. Please try again later."
 msgstr ""
 
@@ -649,6 +727,9 @@ msgid "Could not find that venue"
 msgstr ""
 
 msgid "Created on"
+msgstr ""
+
+msgid "View venue in a new tab"
 msgstr ""
 
 msgid "Edit your venue details below.<br/>You can update all fields except the slug, which is locked after the first creation."
@@ -693,31 +774,19 @@ msgstr ""
 msgid "Location TBD"
 msgstr ""
 
-msgid "Online"
-msgstr ""
-
 msgid "Type"
 msgstr ""
 
 msgid "Add new event"
 msgstr ""
 
+msgid "Search events by title or location..."
+msgstr ""
+
 msgid "No events added yet. Click the button above to add the first one and start managing your events!"
 msgstr ""
 
 msgid "No events added yet"
-msgstr ""
-
-msgid "Draft"
-msgstr ""
-
-msgid "Cancelled"
-msgstr ""
-
-msgid "Completed"
-msgstr ""
-
-msgid "Postponed"
 msgstr ""
 
 msgid "**Choose at least one!** Mark as online event, select a venue from the list, or enter a custom location name and address."
@@ -822,10 +891,19 @@ msgstr ""
 msgid "Event updated successfully"
 msgstr ""
 
+msgid "Event status updated successfully"
+msgstr ""
+
+msgid "Unable to update event status"
+msgstr ""
+
 msgid "Please check the event URL and try again, or return to your [events list]({events_list_url})"
 msgstr ""
 
 msgid "Could not find that event"
+msgstr ""
+
+msgid "View event in a new tab"
 msgstr ""
 
 msgid "Publish event"
@@ -1437,6 +1515,282 @@ msgstr ""
 msgid "Citizens Advice — help with tenancy rights, deposits and disputes"
 msgstr ""
 
+msgid "Unable to load reviews"
+msgstr ""
+
+msgid "Edit your review"
+msgstr ""
+
+msgid "Write a review"
+msgstr ""
+
+msgid "Edit your response"
+msgstr ""
+
+msgid "Respond to review"
+msgstr ""
+
+msgid "Report submitted. Our moderators will review it."
+msgstr ""
+
+msgid "Report review"
+msgstr ""
+
+msgid "Your written review will be removed, but your star rating will remain."
+msgstr ""
+
+msgid "Remove review?"
+msgstr ""
+
+msgid "Unable to remove review"
+msgstr ""
+
+msgid "Your public response will be removed from this review."
+msgstr ""
+
+msgid "Remove response?"
+msgstr ""
+
+msgid "Unable to remove response"
+msgstr ""
+
+msgid "This removes the written review from public view. Its rating remains recorded."
+msgstr ""
+
+msgid "Hide review?"
+msgstr ""
+
+msgid "Unable to hide review"
+msgstr ""
+
+msgid "Unable to update review feedback"
+msgstr ""
+
+msgid "1 review"
+msgstr ""
+
+msgid "{count} reviews"
+msgstr ""
+
+msgid "1 rating"
+msgstr ""
+
+msgid "{count} ratings"
+msgstr ""
+
+msgid "{count} out of 5"
+msgstr ""
+
+msgid "Loading reviews…"
+msgstr ""
+
+msgid "Sign in to review"
+msgstr ""
+
+msgid "Ratings and first-hand reviews help people decide where to go and what to expect."
+msgstr ""
+
+msgid "Reviews are available after this event is completed."
+msgstr ""
+
+msgid "Community reviews"
+msgstr ""
+
+msgid "Sort reviews"
+msgstr ""
+
+msgid "Newest"
+msgstr ""
+
+msgid "Most helpful"
+msgstr ""
+
+msgid "No written reviews yet"
+msgstr ""
+
+msgid "Be the first to share your experience with the community."
+msgstr ""
+
+msgid "You"
+msgstr ""
+
+msgid "Edited"
+msgstr ""
+
+msgid "Response from the venue or event team"
+msgstr ""
+
+msgid "Edit response"
+msgstr ""
+
+msgid "Respond publicly"
+msgstr ""
+
+msgid "Remove response"
+msgstr ""
+
+msgid "This review was helpful"
+msgstr ""
+
+msgid "This review was not helpful"
+msgstr ""
+
+msgid "You reported this review"
+msgstr ""
+
+msgid "Edit review"
+msgstr ""
+
+msgid "Remove review"
+msgstr ""
+
+msgid "Hide review"
+msgstr ""
+
+msgid "Show more reviews"
+msgstr ""
+
+msgid "Unable to load ratings"
+msgstr ""
+
+msgid "Unable to save your rating"
+msgstr ""
+
+msgid "Unable to remove your rating"
+msgstr ""
+
+msgid "Ratings & reviews"
+msgstr ""
+
+msgid "Open ratings and reviews"
+msgstr ""
+
+msgid "Loading ratings…"
+msgstr ""
+
+msgid "Sign in to rate"
+msgstr ""
+
+msgid "Your account must be active to rate content"
+msgstr ""
+
+msgid "Your rating"
+msgstr ""
+
+msgid "Rate this"
+msgstr ""
+
+msgid "Choose a rating from 1 to 5 stars"
+msgstr ""
+
+msgid "Rate {count} out of 5"
+msgstr ""
+
+msgid "Remove your rating"
+msgstr ""
+
+msgid "Manage your rating in your review"
+msgstr ""
+
+msgid "Ratings are available after an event is completed"
+msgstr ""
+
+msgid "You cannot rate content you manage"
+msgstr ""
+
+msgid "Unable to load review moderation"
+msgstr ""
+
+msgid "Unable to update this review"
+msgstr ""
+
+msgid "Review moderation"
+msgstr ""
+
+msgid "Open reports and hidden reviews"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "There are no reported or hidden reviews."
+msgstr ""
+
+msgid "Hidden"
+msgstr ""
+
+msgid "Reported"
+msgstr ""
+
+msgid "{count} open reports"
+msgstr ""
+
+msgid "Resolve reports"
+msgstr ""
+
+msgid "Publish"
+msgstr ""
+
+msgid "Hide and resolve"
+msgstr ""
+
+msgid "Unable to report this review"
+msgstr ""
+
+msgid "Details (optional)"
+msgstr ""
+
+msgid "Tell us what is wrong with this review"
+msgstr ""
+
+msgid "Submit report"
+msgstr ""
+
+msgid "Rate {label}"
+msgstr ""
+
+msgid "Unable to save review"
+msgstr ""
+
+msgid "Share what was useful for the community. Your review is public and can be edited later."
+msgstr ""
+
+msgid "Your review"
+msgstr ""
+
+msgid "What should other community members know?"
+msgstr ""
+
+msgid "Editing your review will remove the owner's response, because it may no longer reflect your updated review."
+msgstr ""
+
+msgid "Update review"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Publish review"
+msgstr ""
+
+msgid "Unable to save response"
+msgstr ""
+
+msgid "Your response is public and appears directly below this community review."
+msgstr ""
+
+msgid "Your public response"
+msgstr ""
+
+msgid "Thank the reviewer or add useful context for the community"
+msgstr ""
+
+msgid "Update response"
+msgstr ""
+
+msgid "Publish response"
+msgstr ""
+
 msgid "Service/Product"
 msgstr ""
 
@@ -1444,6 +1798,240 @@ msgid "Common US"
 msgstr ""
 
 msgid "Recommended Alternatives"
+msgstr ""
+
+msgid "Unable to load messages"
+msgstr ""
+
+msgid "Messages are taking too long to load. Please try again."
+msgstr ""
+
+msgid "Customer"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "View venue {name}"
+msgstr ""
+
+msgid "View profile for {name}"
+msgstr ""
+
+msgid "Delete this message?"
+msgstr ""
+
+msgid "Unable to delete the message"
+msgstr ""
+
+msgid "Unable to edit the message"
+msgstr ""
+
+msgid "Select a conversation"
+msgstr ""
+
+msgid "Unable to send the message"
+msgstr ""
+
+msgid "Unable to create a Telegram link"
+msgstr ""
+
+msgid "Telegram will stop receiving new customer messages. Your existing web conversations will remain available."
+msgstr ""
+
+msgid "Unlink Telegram?"
+msgstr ""
+
+msgid "Unable to unlink Telegram"
+msgstr ""
+
+msgid "Unable to update Telegram review notifications"
+msgstr ""
+
+msgid "Unable to retry Telegram review notification"
+msgstr ""
+
+msgid "Unable to retry Telegram delivery"
+msgstr ""
+
+msgid "Open conversations"
+msgstr ""
+
+msgid "Conversations"
+msgstr ""
+
+msgid "Unable to update the conversation"
+msgstr ""
+
+msgid "Restore conversation"
+msgstr ""
+
+msgid "Archive conversation"
+msgstr ""
+
+msgid "Manage customer enquiries in one place. Reply here, or reply to the forwarded message in Telegram - both appear in the same conversation."
+msgstr ""
+
+msgid "Manage customer enquiries here. Link Telegram to also receive and reply to messages there."
+msgstr ""
+
+msgid "Manage your private conversations and customer enquiries in one place."
+msgstr ""
+
+msgid "Send a private message to this venue. Only you and the venue owner can see this conversation. They can reply here or through Telegram."
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "Exit expanded chat"
+msgstr ""
+
+msgid "Expand chat"
+msgstr ""
+
+msgid "Close conversations"
+msgstr ""
+
+msgid "Loading older messages"
+msgstr ""
+
+msgid "You deleted a message"
+msgstr ""
+
+msgid "{name} deleted a message"
+msgstr ""
+
+msgid "Deleted message"
+msgstr ""
+
+msgid "Delivered to Telegram"
+msgstr ""
+
+msgid "Sending to Telegram"
+msgstr ""
+
+msgid "Retry Telegram delivery"
+msgstr ""
+
+msgid "Sent from Telegram"
+msgstr ""
+
+msgid "Your reaction and {count} other"
+msgstr ""
+
+msgid "{count} reactions"
+msgstr ""
+
+msgid "Your reaction"
+msgstr ""
+
+msgid "Reaction from the other participant"
+msgstr ""
+
+msgid "Start a conversation"
+msgstr ""
+
+msgid "Jump to latest messages"
+msgstr ""
+
+msgid "View venue"
+msgstr ""
+
+msgid "Integrations"
+msgstr ""
+
+msgid "Telegram"
+msgstr ""
+
+msgid "Linked — customer messages are forwarded to Telegram"
+msgstr ""
+
+msgid "Linked — review notifications can be sent to Telegram"
+msgstr ""
+
+msgid "Link Telegram to forward customer messages"
+msgstr ""
+
+msgid "Link Telegram to receive review notifications"
+msgstr ""
+
+msgid "Unlink"
+msgstr ""
+
+msgid "Link"
+msgstr ""
+
+msgid "Notify me about new written reviews"
+msgstr ""
+
+msgid "Receive a Telegram message when your {content} gets a new written review."
+msgstr ""
+
+msgid "venue"
+msgstr ""
+
+msgid "event"
+msgstr ""
+
+msgid "Link Telegram before enabling review notifications."
+msgstr ""
+
+msgid "Last review notification delivered"
+msgstr ""
+
+msgid "Last review notification failed"
+msgstr ""
+
+msgid "Review notification is waiting to be delivered"
+msgstr ""
+
+msgid "Attempt {count}; next retry {time}"
+msgstr ""
+
+msgid "Retry notification"
+msgstr ""
+
+msgid "Editing message"
+msgstr ""
+
+msgid "Cancel editing"
+msgstr ""
+
+msgid "Replying to"
+msgstr ""
+
+msgid "Cancel reply"
+msgstr ""
+
+msgid "Write a message"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "Reply"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "No conversations yet"
+msgstr ""
+
+msgid "Unread messages"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Archived"
 msgstr ""
 
 msgid "British National (Overseas) status"
@@ -1953,6 +2541,156 @@ msgstr ""
 msgid "helping your local area in a genuine, unpaid way - like working in a charity shop (Oxfam, Cancer Research UK, British Heart Foundation), helping at a food bank, joining park clean-ups, or supporting a community centre."
 msgstr ""
 
+msgid "1 approved venue"
+msgstr ""
+
+msgid "{count} approved venues"
+msgstr ""
+
+msgid "1 approved event"
+msgstr ""
+
+msgid "{count} approved events"
+msgstr ""
+
+msgid "1 published review"
+msgstr ""
+
+msgid "{count} published reviews"
+msgstr ""
+
+msgid "Community levels"
+msgstr ""
+
+msgid "Level details"
+msgstr ""
+
+msgid "Level"
+msgstr ""
+
+msgid "points"
+msgstr ""
+
+msgid "Progress to {level}"
+msgstr ""
+
+msgid "{points} points to {level}"
+msgstr ""
+
+msgid "Add {venues}, {events}, or {reviews} to reach {level}"
+msgstr ""
+
+msgid "You have reached the highest community level"
+msgstr ""
+
+msgid "How points work"
+msgstr ""
+
+msgid "Points are awarded for published venues, events, and written reviews."
+msgstr ""
+
+msgid "Event"
+msgstr ""
+
+msgid "Written review"
+msgstr ""
+
+msgid "Levels"
+msgstr ""
+
+msgid "{points} points"
+msgstr ""
+
+msgid "Current"
+msgstr ""
+
+msgid "Beacon"
+msgstr ""
+
+msgid "You can manage the publication status of your own venues and events."
+msgstr ""
+
+msgid "This status is reviewed by the platform for contributors who consistently provide accurate information."
+msgstr ""
+
+msgid "Be the first person to add a venue or event and earn community points."
+msgstr ""
+
+msgid "The leaderboard is just getting started"
+msgstr ""
+
+msgid "Top contributors"
+msgstr ""
+
+msgid "Leading the way"
+msgstr ""
+
+msgid "Community champions"
+msgstr ""
+
+msgid "Points earned this month"
+msgstr ""
+
+msgid "All-time community impact"
+msgstr ""
+
+msgid "1 ranked contributor"
+msgstr ""
+
+msgid "{count} ranked contributors"
+msgstr ""
+
+msgid "Rank {rank}"
+msgstr ""
+
+msgid "Your position"
+msgstr ""
+
+msgid "More contributors will appear here as the community grows."
+msgstr ""
+
+msgid "Publish your first venue, event, or written review"
+msgstr ""
+
+msgid "Add 1 more venue"
+msgstr ""
+
+msgid "Add {count} more venues"
+msgstr ""
+
+msgid "Add 1 more event"
+msgstr ""
+
+msgid "Add {count} more events"
+msgstr ""
+
+msgid "Write 1 more review"
+msgstr ""
+
+msgid "Write {count} more reviews"
+msgstr ""
+
+msgid "Publish {count} more contributions"
+msgstr ""
+
+msgid "Contribute on 1 more day"
+msgstr ""
+
+msgid "Contribute on {count} more days"
+msgstr ""
+
+msgid "Verification required"
+msgstr ""
+
+msgid "Achievements"
+msgstr ""
+
+msgid "{count} of {total} unlocked"
+msgstr ""
+
+msgid "Locked"
+msgstr ""
+
 msgid "Upcoming events"
 msgstr ""
 
@@ -2100,16 +2838,13 @@ msgstr ""
 msgid "Share this event"
 msgstr ""
 
-msgid "Verified event"
+msgid "You own this event — view your profile"
 msgstr ""
 
 msgid "More"
 msgstr ""
 
 msgid "All price types"
-msgstr ""
-
-msgid "Search events by title or location..."
 msgstr ""
 
 msgid "From"
@@ -3126,6 +3861,24 @@ msgstr ""
 msgid "Mandatory buildings insurance covering damage to the structure from fire, water, storm, and similar risks. Required by all mortgage lenders. For Eigentumswohnungen, this is commonly included within the Hausgeld paid to the WEG - if so, set this field to zero to avoid double-counting."
 msgstr ""
 
+msgid "Cancelled"
+msgstr ""
+
+msgid "Completed"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Pending"
+msgstr ""
+
+msgid "Postponed"
+msgstr ""
+
+msgid "Rejected"
+msgstr ""
+
 msgid "Light mode"
 msgstr ""
 
@@ -3177,6 +3930,21 @@ msgstr ""
 msgid "Number of occurrences"
 msgstr ""
 
+msgid "Checking notification settings"
+msgstr ""
+
+msgid "Disable message notifications"
+msgstr ""
+
+msgid "Notifications are blocked in browser settings"
+msgstr ""
+
+msgid "Retry enabling message notifications"
+msgstr ""
+
+msgid "Enable message notifications"
+msgstr ""
+
 msgid "Hold up - **{email}**, you're already subscribed!"
 msgstr ""
 
@@ -3210,10 +3978,10 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
-msgid "Posts"
+msgid "Close"
 msgstr ""
 
-msgid "Guides"
+msgid "New message"
 msgstr ""
 
 msgid "Close menu"
@@ -3228,13 +3996,7 @@ msgstr ""
 msgid "Failed to save data. Please try again."
 msgstr ""
 
-msgid "Cancel"
-msgstr ""
-
 msgid "Saving"
-msgstr ""
-
-msgid "Save"
 msgstr ""
 
 msgid "The idea"
@@ -3297,7 +4059,7 @@ msgstr ""
 msgid "Shopping bag"
 msgstr ""
 
-msgid "My profile"
+msgid "Inactive"
 msgstr ""
 
 msgid "My directory"
@@ -3319,6 +4081,18 @@ msgid "Sign in with Google"
 msgstr ""
 
 msgid "Loading your session..."
+msgstr ""
+
+msgid "Profile, unread messages"
+msgstr ""
+
+msgid "Admin"
+msgstr ""
+
+msgid "Platform operations"
+msgstr ""
+
+msgid "Admin navigation"
 msgstr ""
 
 msgid "Confirm newsletter subscription"
@@ -3384,6 +4158,9 @@ msgstr ""
 msgid "Explore Ukrainian venues and community spaces around the world"
 msgstr ""
 
+msgid "Posts"
+msgstr ""
+
 msgid "Unsubscribed"
 msgstr ""
 
@@ -3406,6 +4183,18 @@ msgid "Even a small gesture means the world."
 msgstr ""
 
 msgid "Thank you for being part of this adventure."
+msgstr ""
+
+msgid "Celebrating people who strengthen the Ukrainian community by adding useful places and events."
+msgstr ""
+
+msgid "Leaderboard period"
+msgstr ""
+
+msgid "All time"
+msgstr ""
+
+msgid "This month"
 msgstr ""
 
 msgid "Requirements, routes, timelines and practical steps."
@@ -3442,6 +4231,9 @@ msgid "ILR calculator and more practical helpers."
 msgstr ""
 
 msgid "Tools"
+msgstr ""
+
+msgid "Guides"
 msgstr ""
 
 msgid "Guides, community answers and calculators to help you live abroad with fewer surprises."
@@ -3549,7 +4341,10 @@ msgstr ""
 msgid "Didn't get the email? Check your spam folder or try again."
 msgstr ""
 
-msgid "Profile"
+msgid "Your account is inactive"
+msgstr ""
+
+msgid "You cannot use account features while your account is inactive. Please get in touch if you believe this is a mistake."
 msgstr ""
 
 msgid "Edit venue"

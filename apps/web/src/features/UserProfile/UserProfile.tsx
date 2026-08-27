@@ -17,7 +17,7 @@ import { CommunityImpact } from "./CommunityImpact";
 import { PublicContributions } from "./PublicContributions";
 import { UserForm } from "./UserForm";
 
-type ContributionCounts = Pick<CommunityContributionStats, "activeDays" | "events" | "venues">;
+type ContributionCounts = Pick<CommunityContributionStats, "activeDays" | "events" | "reviews" | "venues">;
 
 type LoadedContributionCounts = ContributionCounts & {
   userId: string;
@@ -48,7 +48,7 @@ export const UserProfile = () => {
         setContributionStats({ ...stats, userId: data.id });
       } catch {
         if (!abortController.signal.aborted) {
-          setContributionStats({ activeDays: 0, events: 0, userId: data.id, venues: 0 });
+          setContributionStats({ activeDays: 0, events: 0, reviews: 0, userId: data.id, venues: 0 });
         }
       }
     };
@@ -127,6 +127,7 @@ export const UserProfile = () => {
         eventsCreated={contributionStats.events}
         isVerified={Boolean(data.is_verified_contributor)}
         points={data.points}
+        reviewsWritten={contributionStats.reviews}
         showLeaderboardLink={data.role !== "admin"}
         venuesCreated={contributionStats.venues}
       />

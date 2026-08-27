@@ -64,7 +64,12 @@ const ProfileMenu = ({ profileData }: ProfileMenuProps) => {
         >
           <UserProfileCard inactive={inactive} profile={profileData} />
 
-          <UserMenu inactive={inactive} onNavigate={() => setOpen(false)} unreadMessages={unreadMessages} />
+          <UserMenu
+            inactive={inactive}
+            isAdmin={profileData.role === "admin"}
+            onNavigate={() => setOpen(false)}
+            unreadMessages={unreadMessages}
+          />
         </menu>
       )}
     </div>

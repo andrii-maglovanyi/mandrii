@@ -142,6 +142,11 @@
     width: 100%;
   }
 
+  nav a[aria-current="page"] {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
   /* Layout Glow */
   .mndr-layout-glow::before {
     background: linear-gradient(90deg, var(--color-primary) 10%, var(--color-secondary) 90%);

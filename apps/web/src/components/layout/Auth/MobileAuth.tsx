@@ -47,7 +47,7 @@ export function MobileAuth({ children }: Readonly<{ children: React.ReactNode }>
 
         {children}
         <Separator className="mb-6" variant="margin" />
-        <UserMenu inactive={inactive} unreadMessages={unreadMessages} />
+        <UserMenu inactive={inactive} isAdmin={profileData?.role === "admin"} unreadMessages={unreadMessages} />
       </>
     );
   }

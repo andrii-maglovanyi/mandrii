@@ -1,12 +1,21 @@
 "use client";
 
-import { BadgeCheck, CalendarDays, CalendarRange, Compass, LockKeyhole, MapPinned } from "lucide-react";
+import {
+  BadgeCheck,
+  CalendarDays,
+  CalendarRange,
+  Compass,
+  LockKeyhole,
+  MapPinned,
+  MessageSquareText,
+} from "lucide-react";
 
 import { getCommunityAchievements, type CommunityContributionStats } from "~/lib/gamification/community";
 import { useI18n } from "~/i18n/useI18n";
 
 const achievementIcons = {
   "community-regular": CalendarRange,
+  "community-voice": MessageSquareText,
   "event-connector": CalendarDays,
   "first-contribution": BadgeCheck,
   "local-guide": Compass,
@@ -24,11 +33,13 @@ const getLockedRequirement = (
 
   switch (achievement.id) {
     case "first-contribution":
-      return i18n("Publish your first venue or event");
+      return i18n("Publish your first venue, event, or written review");
     case "venue-scout":
       return remaining === 1 ? i18n("Add 1 more venue") : i18n("Add {count} more venues", { count: remaining });
     case "event-connector":
       return remaining === 1 ? i18n("Add 1 more event") : i18n("Add {count} more events", { count: remaining });
+    case "community-voice":
+      return remaining === 1 ? i18n("Write 1 more review") : i18n("Write {count} more reviews", { count: remaining });
     case "local-guide":
       return i18n("Publish {count} more contributions", { count: remaining });
     case "community-regular":
@@ -58,7 +69,7 @@ export const CommunityAchievements = (stats: CommunityAchievementsProps) => {
         </span>
       </div>
       <ul
-        className="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-6"
+        className="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-7"
         role="list"
       >
         {achievements.map((achievement) => {

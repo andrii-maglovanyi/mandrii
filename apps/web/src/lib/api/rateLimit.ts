@@ -95,38 +95,32 @@ export function createRateLimiter(config: RateLimitConfig) {
     const redisKey = `ratelimit:${rateLimitNamespace}:${prefix}:${key}`;
 
     try {
-      // Use Redis INCR with TTL for atomic rate limiting
-      // Get current count
-      const currentCount = await withKvTimeout(kv.get<number>(redisKey));
+      // Increment before inspecting the limit. Unlike a GET followed by INCR,
+      // this remains correct when several serverless instances receive the
+      // same user's requests at once.
+      const count = await withKvTimeout(kv.incr(redisKey));
+      let ttl = await withKvTimeout(kv.ttl(redisKey));
 
-      if (currentCount === null) {
-        // First request - set count to 1 with TTL
-        await withKvTimeout(kv.set(redisKey, 1, { ex: windowSeconds }));
-        return;
-      }
-
-      // A legacy/manual key without an expiry would otherwise block this
-      // identifier forever. Reset it as a new fixed window.
-      const ttl = await withKvTimeout(kv.ttl(redisKey));
+      // Start a fixed window for new keys. Also repair a legacy key that has
+      // no expiry without resetting its current count.
       if (ttl <= 0) {
-        await withKvTimeout(kv.set(redisKey, 1, { ex: windowSeconds }));
-        return;
+        await withKvTimeout(kv.expire(redisKey, windowSeconds));
+        ttl = windowSeconds;
       }
 
-      if (currentCount >= maxRequests) {
+      if (count > maxRequests) {
         throw new RateLimitError(`Too many requests. Please try again in ${ttl > 0 ? ttl : windowSeconds} seconds.`);
       }
-
-      // Increment count (keeping existing TTL)
-      await withKvTimeout(kv.incr(redisKey));
     } catch (error) {
       // If it's already a RateLimitError, rethrow
       if (error instanceof RateLimitError) {
         throw error;
       }
 
-      // Log Redis errors but don't block requests
-      console.warn(`[RateLimit] Redis error for ${prefix}, falling back to allow:`, error);
+      // KV outages must not disable protection entirely. The in-memory limiter
+      // is per process, but still bounds abuse until the shared store recovers.
+      console.warn(`[RateLimit] Redis error for ${prefix}, falling back to in-memory limiting:`, error);
+      await checkMemory(key);
     }
   }
 
@@ -240,6 +234,14 @@ export function createRateLimiter(config: RateLimitConfig) {
 async function getClientIp(): Promise<string> {
   const headersList = await headers();
 
+  // Prefer Vercel's platform-populated header in deployed environments. A
+  // generic forwarded header is less trustworthy when an application is ever
+  // reached through another proxy.
+  const vercelForwardedFor = headersList.get("x-vercel-forwarded-for");
+  if (vercelForwardedFor) {
+    return vercelForwardedFor.split(",")[0].trim();
+  }
+
   // Check common proxy headers
   const forwardedFor = headersList.get("x-forwarded-for");
   if (forwardedFor) {
@@ -250,12 +252,6 @@ async function getClientIp(): Promise<string> {
   const realIp = headersList.get("x-real-ip");
   if (realIp) {
     return realIp;
-  }
-
-  // Vercel-specific header
-  const vercelForwardedFor = headersList.get("x-vercel-forwarded-for");
-  if (vercelForwardedFor) {
-    return vercelForwardedFor.split(",")[0].trim();
   }
 
   // Fallback - in production this shouldn't happen behind a proxy
@@ -321,6 +317,23 @@ export const rateLimiters = {
   messagingAction: createRateLimiter({
     maxRequests: 60,
     prefix: "messaging-action",
+    windowMs: 60 * 1000,
+  }),
+
+  /** Rating writes are isolated from general browsing and messaging activity. */
+  rating: createRateLimiter({
+    maxRequests: 30,
+    prefix: "rating",
+    windowMs: 60 * 1000,
+  }),
+  review: createRateLimiter({
+    maxRequests: 10,
+    prefix: "review",
+    windowMs: 60 * 1000,
+  }),
+  reviewVote: createRateLimiter({
+    maxRequests: 30,
+    prefix: "review-vote",
     windowMs: 60 * 1000,
   }),
 };

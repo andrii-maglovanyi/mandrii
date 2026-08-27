@@ -214,8 +214,14 @@ export async function VenueViewServer({ slug, locale }: VenueViewServerProps) {
 
     const session = await auth();
     const sessionUserId = session?.user?.id;
-    const [messagingVenue] = await sql<{ owner_id: null | string; telegram_chat_id: null | string }[]>`
-      SELECT owner_id, telegram_chat_id FROM venues WHERE id = ${venue.id}
+    const [messagingVenue] = await sql<
+      {
+        owner_id: null | string;
+        telegram_chat_id: null | string;
+        telegram_review_notifications_enabled: boolean;
+      }[]
+    >`
+      SELECT owner_id, telegram_chat_id, telegram_review_notifications_enabled FROM venues WHERE id = ${venue.id}
     `;
     const initialMessagingRole =
       sessionUserId && messagingVenue?.owner_id ? (messagingVenue.owner_id === sessionUserId ? "OWNER" : "USER") : null;
@@ -225,6 +231,9 @@ export async function VenueViewServer({ slug, locale }: VenueViewServerProps) {
         initialEvents={events}
         initialMessagingRole={initialMessagingRole}
         initialTelegramLinked={initialMessagingRole === "OWNER" ? Boolean(messagingVenue?.telegram_chat_id) : null}
+        initialTelegramReviewNotificationsEnabled={
+          initialMessagingRole === "OWNER" ? (messagingVenue?.telegram_review_notifications_enabled ?? false) : null
+        }
         initialVenue={venue}
         slug={slug}
       />

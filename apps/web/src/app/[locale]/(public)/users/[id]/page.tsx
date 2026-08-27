@@ -58,6 +58,7 @@ export default async function PublicUserProfilePage({ params }: Readonly<PublicU
           event_count: contributionCounts.events,
           image: getPublicUserImageUrl(profile.image),
           name,
+          review_count: contributionCounts.reviews,
           venue_count: contributionCounts.venues,
         }}
         venues={venues}

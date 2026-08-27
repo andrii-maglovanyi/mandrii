@@ -34,6 +34,7 @@ export const GET = (req: Request) =>
     const url = new URL(req.url);
     const venueId = url.searchParams.get("venueId");
     const inbox = url.searchParams.get("inbox") === "true";
+    const unreadSummary = url.searchParams.get("summary") === "unread";
     if (inbox) {
       const conversations = await sql`
         SELECT * FROM (
@@ -114,6 +115,22 @@ export const GET = (req: Request) =>
 
     const venue = await getMessagingVenue(venueId);
     const owner = venue.owner_id === session.user.id;
+    if (unreadSummary) {
+      const [result] = await sql<Array<{ unread_count: number | string }>>`
+        SELECT COUNT(*) AS unread_count
+        FROM conversations c
+        JOIN messages m ON m.conversation_id = c.id
+        WHERE c.venue_id = ${venueId}
+          AND m.deleted_at IS NULL
+          AND m.sender_type = ${owner ? "USER" : "VENUE"}
+          AND m.created_at > COALESCE(
+            ${owner ? sql`c.owner_last_read_at` : sql`c.user_last_read_at`},
+            c.created_at
+          )
+          ${owner ? sql`` : sql`AND c.user_id = ${session.user.id}`}
+      `;
+      return Response.json({ unreadCount: Number(result?.unread_count ?? 0) });
+    }
     const conversations = owner
       ? await sql`
           SELECT c.id, c.created_at, c.owner_archived_at AS archived_at, c.user_id AS profile_user_id,

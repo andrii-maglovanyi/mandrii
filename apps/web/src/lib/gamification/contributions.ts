@@ -2,11 +2,15 @@ import sql from "~/lib/db/db";
 
 import { type CommunityContributionStats } from "./community";
 
-export type CommunityContributionCounts = Pick<CommunityContributionStats, "activeDays" | "events" | "venues">;
+export type CommunityContributionCounts = Pick<
+  CommunityContributionStats,
+  "activeDays" | "events" | "reviews" | "venues"
+>;
 
 type ContributionCountsRow = {
   active_days: number | string;
   events: number | string;
+  reviews: number | string;
   venues: number | string;
 };
 
@@ -26,6 +30,13 @@ export async function getCommunityContributionCounts(userId: string): Promise<Co
           AND status IN ('ACTIVE', 'COMPLETED', 'CANCELLED', 'POSTPONED')
       ) AS events,
       (
+        SELECT COUNT(*)
+        FROM public.content_ratings
+        WHERE user_id = ${userId}
+          AND review_body IS NOT NULL
+          AND review_status = 'PUBLISHED'
+      ) AS reviews,
+      (
         SELECT COUNT(DISTINCT created_at::date)
         FROM public.user_point_events
         WHERE user_id = ${userId}
@@ -35,6 +46,7 @@ export async function getCommunityContributionCounts(userId: string): Promise<Co
   return {
     activeDays: Number(result?.active_days ?? 0),
     events: Number(result?.events ?? 0),
+    reviews: Number(result?.reviews ?? 0),
     venues: Number(result?.venues ?? 0),
   };
 }

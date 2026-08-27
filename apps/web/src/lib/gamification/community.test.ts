@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  CONTRIBUTION_POINTS,
   getCommunityAchievements,
   getCommunityLevel,
   getCommunityLevelProgress,
@@ -8,6 +9,10 @@ import {
 } from "./community";
 
 describe("community gamification", () => {
+  it("uses the same review award as the database trigger", () => {
+    expect(CONTRIBUTION_POINTS.review).toBe(5);
+  });
+
   it("derives levels and progress from the points balance", () => {
     expect(getCommunityLevel(0).id).toBe("newcomer");
     expect(getCommunityLevel(50).id).toBe("contributor");
@@ -23,6 +28,7 @@ describe("community gamification", () => {
   it("gives concrete, rounded-up contribution options for the next level", () => {
     expect(getContributionsToNextLevel(60)).toMatchObject({
       events: 6,
+      reviews: 18,
       venues: 5,
     });
     expect(getContributionsToNextLevel(1_000)).toBeNull();
@@ -34,6 +40,7 @@ describe("community gamification", () => {
       events: 5,
       isVerified: true,
       points: 150,
+      reviews: 2,
       venues: 1,
     });
 
@@ -46,7 +53,12 @@ describe("community gamification", () => {
     expect(achievements.find((achievement) => achievement.id === "local-guide")).toMatchObject({
       achieved: false,
       target: 10,
-      value: 6,
+      value: 8,
+    });
+    expect(achievements.find((achievement) => achievement.id === "community-voice")).toMatchObject({
+      achieved: false,
+      target: 3,
+      value: 2,
     });
   });
 });

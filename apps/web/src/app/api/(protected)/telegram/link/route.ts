@@ -43,7 +43,7 @@ export const POST = (req: Request) =>
       INSERT INTO telegram_link_tokens (token, venue_id, created_by, expires_at)
       SELECT ${token}, ${venueId}, ${session.user.id}, NOW() + INTERVAL '15 minutes'
       FROM locked
-      ON CONFLICT (venue_id) WHERE used_at IS NULL DO UPDATE SET
+      ON CONFLICT (venue_id) WHERE used_at IS NULL AND venue_id IS NOT NULL DO UPDATE SET
         token = EXCLUDED.token,
         created_by = EXCLUDED.created_by,
         expires_at = EXCLUDED.expires_at,

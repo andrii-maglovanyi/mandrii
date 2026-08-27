@@ -13,6 +13,11 @@ import { MessageToast } from "../MessageToast/MessageToast";
 import { DesktopLayout } from "./Desktop/DesktopLayout";
 import { MobileLayout } from "./Mobile/MobileLayout";
 
+const isCurrentRoute = (pathname: string, href: string) => {
+  const pathWithoutLocale = pathname.replace(/^\/(en|uk)(?=\/|$)/, "") || "/";
+  return pathWithoutLocale === href || pathWithoutLocale.startsWith(`${href}/`);
+};
+
 export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const i18n = useI18n();
   const pathname = usePathname();
@@ -20,16 +25,27 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
     query: "(max-width: 768px)",
   });
 
-  const navLinks = (
-    <>
-      <Link href="/map">{i18n("Map")}</Link>
-      <Link href="/venues">{i18n("Venues")}</Link>
-      <Link href="/events">{i18n("Events")}</Link>
-      <Link href="/posts">{i18n("Posts")}</Link>
-      <Link href="/guides">{i18n("Guides")}</Link>
-      {envName !== "production" && <Link href="/shop">{i18n("Shop")}</Link>}
-    </>
-  );
+  const navItems = [
+    { href: "/map", label: "Map" },
+    { href: "/venues", label: "Venues" },
+    { href: "/events", label: "Events" },
+    { href: "/posts", label: "Posts" },
+    { href: "/guides", label: "Guides" },
+    ...(envName !== "production" ? [{ href: "/shop", label: "Shop" }] : []),
+  ];
+  const navLinks = navItems.map(({ href, label }) => {
+    const active = isCurrentRoute(pathname, href);
+    return (
+      <Link
+        aria-current={active ? "page" : undefined}
+        className={active ? "text-primary !font-semibold" : undefined}
+        href={href}
+        key={href}
+      >
+        {i18n(label)}
+      </Link>
+    );
+  });
 
   return (
     <div className="flex min-h-screen flex-col">

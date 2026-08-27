@@ -59,21 +59,25 @@ function attachMarkerHandlers({
   const textSpan = labelSpan.querySelector("span.marker-text") as HTMLSpanElement;
 
   labelSpan.onmouseover = () => {
+    // AdvancedMarkerElement controls stacking through its zIndex property—not
+    // through the DOM element's CSS. Keep the hovered marker above a selected
+    // marker, which in turn stays above all ordinary markers.
+    advancedMarker.zIndex = 4;
+
     if (!isSelected) {
       labelSpan.style.backgroundColor = STYLES.bgHover;
       arrowDiv.style.borderTop = `4px solid ${STYLES.bgHover}`;
-      advancedMarker.style.zIndex = "4";
       if (textSpan) {
         textSpan.innerHTML = `${getTextContent(title)} `;
       }
     }
   };
   labelSpan.onmouseout = () => {
+    advancedMarker.zIndex = isSelected ? 3 : hasVenue ? 2 : 1;
+
     if (!isSelected) {
       labelSpan.style.backgroundColor = STYLES.bg;
       arrowDiv.style.borderTop = `4px solid ${STYLES.bg}`;
-      // Restore z-index hierarchy: venue-based (2) > custom location (1)
-      advancedMarker.style.zIndex = hasVenue ? "2" : "1";
       if (textSpan) {
         textSpan.innerHTML = `${getEventType(type)}`;
       }
@@ -143,8 +147,8 @@ function createAndAddMarker(
     title: String(title),
   }) as AdvancedMarkerElement;
 
-  // Z-index hierarchy: selected (3) > venue-based (2) > custom location (1)
-  advancedMarker.style.zIndex = isSelected ? "3" : hasVenue ? "2" : "1";
+  // Selected markers remain above ordinary markers whenever nothing is hovered.
+  advancedMarker.zIndex = isSelected ? 3 : hasVenue ? 2 : 1;
 
   attachMarkerHandlers({
     advancedMarker,

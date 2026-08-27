@@ -1,5 +1,6 @@
 export const CONTRIBUTION_POINTS = {
   event: 15,
+  review: 5,
   venue: 20,
 } as const;
 
@@ -24,6 +25,7 @@ export type CommunityLevelProgress = {
 };
 
 export type CommunityAchievementId =
+  | "community-voice"
   | "event-connector"
   | "first-contribution"
   | "local-guide"
@@ -44,6 +46,7 @@ export type CommunityContributionStats = {
   events: number;
   isVerified: boolean;
   points: number;
+  reviews: number;
   venues: number;
 };
 
@@ -93,53 +96,62 @@ export function getCommunityAchievements({
   activeDays,
   events,
   isVerified,
+  reviews,
   venues,
 }: CommunityContributionStats): CommunityAchievement[] {
   const normalizedEvents = normalizeCommunityPoints(events);
   const normalizedVenues = normalizeCommunityPoints(venues);
+  const normalizedReviews = normalizeCommunityPoints(reviews);
   const normalizedActiveDays = normalizeCommunityPoints(activeDays);
-  const contributions = normalizedEvents + normalizedVenues;
+  const contributions = normalizedEvents + normalizedVenues + normalizedReviews;
 
   return [
     {
       achieved: contributions > 0,
       id: "first-contribution",
-      name: "First contribution",
+      name: "Spark",
       target: 1,
       value: contributions,
     },
     {
       achieved: normalizedVenues >= 5,
       id: "venue-scout",
-      name: "Venue Scout",
+      name: "Scout",
       target: 5,
       value: normalizedVenues,
     },
     {
       achieved: normalizedEvents >= 5,
       id: "event-connector",
-      name: "Event Connector",
+      name: "Gatherer",
       target: 5,
       value: normalizedEvents,
     },
     {
+      achieved: normalizedReviews >= 3,
+      id: "community-voice",
+      name: "Storyteller",
+      target: 3,
+      value: normalizedReviews,
+    },
+    {
       achieved: contributions >= 10,
       id: "local-guide",
-      name: "Local guide",
+      name: "Wayfinder",
       target: 10,
       value: contributions,
     },
     {
       achieved: normalizedActiveDays >= 3,
       id: "community-regular",
-      name: "Community regular",
+      name: "Steady",
       target: 3,
       value: normalizedActiveDays,
     },
     {
       achieved: isVerified,
       id: "trusted-contributor",
-      name: "Trusted contributor",
+      name: "Beacon",
       target: 1,
       value: Number(isVerified),
     },
@@ -156,6 +168,7 @@ export function getContributionsToNextLevel(points: number) {
   return {
     events: Math.ceil(remainingPoints / CONTRIBUTION_POINTS.event),
     nextLevel,
+    reviews: Math.ceil(remainingPoints / CONTRIBUTION_POINTS.review),
     venues: Math.ceil(remainingPoints / CONTRIBUTION_POINTS.venue),
   };
 }

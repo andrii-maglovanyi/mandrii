@@ -58,6 +58,11 @@ export const CommunityLevelProgress = ({ isVerified = false, points }: Community
       ? i18n("1 approved event")
       : i18n("{count} approved events", { count: contributionGoal.events })
     : null;
+  const reviewLabel = contributionGoal
+    ? contributionGoal.reviews === 1
+      ? i18n("1 published review")
+      : i18n("{count} published reviews", { count: contributionGoal.reviews })
+    : null;
   const openLevelDetails = () => {
     void openCustomDialog({
       children: <CommunityLevelDetails isVerified={isVerified} points={points} />,
@@ -116,11 +121,12 @@ export const CommunityLevelProgress = ({ isVerified = false, points }: Community
               points: pointsToNextLevel,
             })}
           </p>
-          {contributionGoal && venueLabel && eventLabel && (
+          {contributionGoal && venueLabel && eventLabel && reviewLabel && (
             <p className="mt-1 text-sm">
-              {i18n("Add {venues} or {events} to reach {level}", {
+              {i18n("Add {venues}, {events}, or {reviews} to reach {level}", {
                 events: eventLabel,
                 level: i18n(contributionGoal.nextLevel.name),
+                reviews: reviewLabel,
                 venues: venueLabel,
               })}
             </p>
@@ -145,8 +151,10 @@ const CommunityLevelDetails = ({ isVerified, points }: CommunityLevelProgressPro
     <div className="space-y-6">
       <section>
         <h3 className="text-lg font-semibold">{i18n("How points work")}</h3>
-        <p className="text-neutral mt-1 text-sm">{i18n("Points are awarded once a venue or event is published.")}</p>
-        <dl className="mt-3 grid grid-cols-2 gap-3">
+        <p className="text-neutral mt-1 text-sm">
+          {i18n("Points are awarded for published venues, events, and written reviews.")}
+        </p>
+        <dl className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           <div className="bg-primary/5 rounded-lg p-3">
             <dt className="text-neutral text-sm">{i18n("Venue")}</dt>
             <dd className="text-primary mt-1 text-lg font-semibold">
@@ -157,6 +165,12 @@ const CommunityLevelDetails = ({ isVerified, points }: CommunityLevelProgressPro
             <dt className="text-neutral text-sm">{i18n("Event")}</dt>
             <dd className="text-primary mt-1 text-lg font-semibold">
               {CONTRIBUTION_POINTS.event} {i18n("points")}
+            </dd>
+          </div>
+          <div className="bg-primary/5 rounded-lg p-3">
+            <dt className="text-neutral text-sm">{i18n("Written review")}</dt>
+            <dd className="text-primary mt-1 text-lg font-semibold">
+              {CONTRIBUTION_POINTS.review} {i18n("points")}
             </dd>
           </div>
         </dl>
@@ -188,7 +202,7 @@ const CommunityLevelDetails = ({ isVerified, points }: CommunityLevelProgressPro
       </section>
 
       <section className="bg-secondary/10 rounded-lg p-4">
-        <h3 className="text-lg font-semibold">{i18n("Trusted contributor")}</h3>
+        <h3 className="text-lg font-semibold">{i18n("Beacon")}</h3>
         <p className="text-neutral mt-1 text-sm">
           {isVerified
             ? i18n("You can manage the publication status of your own venues and events.")

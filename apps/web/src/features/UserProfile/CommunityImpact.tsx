@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarHeart, LayoutDashboard, Star } from "lucide-react";
+import { CalendarHeart, LayoutDashboard, MessageSquareText, Star } from "lucide-react";
 
 import { TextLink } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
@@ -12,6 +12,7 @@ type CommunityImpactProps = {
   eventsCreated?: number;
   isVerified?: boolean;
   points?: number;
+  reviewsWritten?: number;
   showLeaderboardLink?: boolean;
   venuesCreated?: number;
 };
@@ -21,14 +22,15 @@ export const CommunityImpact = ({
   eventsCreated = 0,
   isVerified = false,
   points = 0,
+  reviewsWritten = 0,
   showLeaderboardLink = true,
   venuesCreated = 0,
 }: CommunityImpactProps) => {
   const i18n = useI18n();
   const stats = [
-    { icon: Star, label: i18n("points"), value: points },
     { icon: LayoutDashboard, label: i18n("venues"), value: venuesCreated },
     { icon: CalendarHeart, label: i18n("events"), value: eventsCreated },
+    { icon: MessageSquareText, label: i18n("reviews"), value: reviewsWritten },
   ];
 
   return (
@@ -49,7 +51,7 @@ export const CommunityImpact = ({
       <div className="mb-4">
         <CommunityLevelProgress isVerified={isVerified} points={points} />
         <p className="text-neutral mt-2 text-right text-sm">
-          {i18n("Points are awarded once a venue or event is published")}
+          {i18n("Points are awarded for published venues, events, and written reviews")}
         </p>
       </div>
       <div className="my-4">
@@ -58,6 +60,7 @@ export const CommunityImpact = ({
           events={eventsCreated}
           isVerified={isVerified}
           points={points}
+          reviews={reviewsWritten}
           venues={venuesCreated}
         />
       </div>
