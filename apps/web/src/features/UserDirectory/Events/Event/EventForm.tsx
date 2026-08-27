@@ -115,7 +115,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
         <div className={`flex flex-col justify-evenly md:flex-row md:space-x-4`}>
           <div className="flex flex-1 flex-col">
             <Input
-              label={i18n("Event title (🇺🇦 Ukrainian)")}
+              label="Назва події (🇺🇦 Українською)"
               placeholder={`Український фестиваль ${new Date().getFullYear()}`}
               required
               type="text"
@@ -124,7 +124,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
           </div>
           <div className="flex flex-1 flex-col">
             <Input
-              label={i18n("Event title (🇬🇧 English)")}
+              label="Event title (🇬🇧 English)"
               placeholder={`Ukrainian Festival ${new Date().getFullYear()}`}
               required
               type="text"

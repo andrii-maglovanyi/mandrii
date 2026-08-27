@@ -855,12 +855,6 @@ msgstr ""
 msgid "No venue (custom location)"
 msgstr ""
 
-msgid "Event title (🇺🇦 Ukrainian)"
-msgstr ""
-
-msgid "Event title (🇬🇧 English)"
-msgstr ""
-
 msgid "Event type"
 msgstr ""
 
@@ -4254,7 +4248,7 @@ msgstr ""
 msgid "Thanks for your support"
 msgstr ""
 
-msgid "No matter how hard things get, I'm still here with you"
+msgid "No matter how hard things get, we're still together"
 msgstr ""
 
 msgid "Even a small gesture means the world."
