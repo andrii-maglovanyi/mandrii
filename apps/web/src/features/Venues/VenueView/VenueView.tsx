@@ -20,7 +20,6 @@ import {
 } from "~/components/ui";
 import { EventsMasonryCard } from "~/features/Events/EventCard/EventsMasonryCard";
 import { VenueMessaging } from "~/features/Messaging/VenueMessaging";
-import { VenueTelegramIntegrations } from "~/features/Messaging/components/VenueTelegramIntegrations";
 import { ContentRating } from "~/features/Ratings/ContentRating";
 import { ContentReviews } from "~/features/Ratings/ContentReviews";
 import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
@@ -28,7 +27,6 @@ import { useEvents } from "~/hooks/useEvents";
 import { useUser } from "~/hooks/useUser";
 import { useVenues } from "~/hooks/useVenues";
 import { useVenueUnreadCount } from "~/hooks/useVenueUnreadCount";
-import { useDialog } from "~/contexts/DialogContext";
 import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -79,7 +77,6 @@ export const VenueView = ({
   const { usePublicEvents } = useEvents();
   const { data: profile } = useUser();
   const router = useRouter();
-  const { openCustomDialog } = useDialog();
 
   // Use initial data if provided (from server), otherwise fetch client-side
   const shouldFetchClientSide = initialVenue === undefined;
@@ -142,18 +139,7 @@ export const VenueView = ({
       (profile.role === "admin" || profile.id === venue.owner_id || (profile.id === venue.user_id && !venue.owner_id)),
   );
   const isOwner = Boolean(profile?.id && profile.id === venue.owner_id);
-  const openSettings = () => {
-    void openCustomDialog({
-      children: (
-        <VenueTelegramIntegrations
-          initialLinked={Boolean(initialTelegramLinked)}
-          initialReviewNotificationsEnabled={Boolean(initialTelegramReviewNotificationsEnabled)}
-          targetId={venue.id}
-        />
-      ),
-      title: i18n("Venue settings"),
-    });
-  };
+  const openSettings = () => router.push(`/user-directory/venues/${venue.slug}/manage`);
 
   return (
     <div className="flex flex-col">
@@ -229,7 +215,16 @@ export const VenueView = ({
           <CardHeader
             hideUntilHover={false}
             hideCurrentOwnerProfileAction={isOwner}
-            viewActions={isOwner ? <ContentViewOwnerActions onOpenSettings={openSettings} /> : undefined}
+            viewActions={
+              isOwner ? (
+                <ContentViewOwnerActions
+                  onOpenAnalytics={() =>
+                    router.push(`/user-directory/venues/${venue.slug}/manage#${encodeURIComponent(i18n("Analytics"))}`)
+                  }
+                  onOpenSettings={openSettings}
+                />
+              ) : undefined
+            }
             showManageAction={false}
             venue={venue}
           />

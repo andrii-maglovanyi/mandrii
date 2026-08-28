@@ -27,6 +27,22 @@ export function formatUserTelegramMessage({
   return isConsecutiveCustomerMessage ? `${quotedReply}${body}` : `${senderLabel}\n\n${quotedReply}${body}`;
 }
 
+export async function sendQrScanTelegramNotification({
+  contentId,
+  contentType,
+}: {
+  contentId: string;
+  contentType: "event" | "venue";
+}) {
+  const [content] = await sql<Array<{ name: string; telegram_chat_id: null | number }>>`
+    SELECT ${contentType === "venue" ? sql`name` : sql`COALESCE(title_en, title_uk)`} AS name, telegram_chat_id
+    FROM ${contentType === "venue" ? sql`venues` : sql`events`}
+    WHERE id = ${contentId} AND telegram_user_id IS NOT NULL AND telegram_qr_notifications_enabled
+  `;
+  if (!content?.telegram_chat_id) return;
+  await bot.api.sendMessage(content.telegram_chat_id, `📱 Your ${contentType} QR code was scanned: ${content.name}`);
+}
+
 const escapeTelegramHtml = (value: string) =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
 
@@ -174,12 +190,12 @@ bot.command("unlink", async (ctx) => {
   await sql`
     WITH unlinked_venues AS (
       UPDATE venues
-      SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false
+      SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false, telegram_qr_notifications_enabled = false
       WHERE telegram_chat_id = ${chatId} AND telegram_user_id = ${ctx.from.id}
       RETURNING id
     ), unlinked_events AS (
       UPDATE events
-      SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false
+      SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false, telegram_qr_notifications_enabled = false
       WHERE telegram_chat_id = ${chatId} AND telegram_user_id = ${ctx.from.id}
       RETURNING id
     ), cancelled_deliveries AS (

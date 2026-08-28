@@ -31,6 +31,8 @@ export const VenueTelegramIntegrations = ({
   const { openConfirmDialog } = useDialog();
   const [linked, setLinked] = useState(initialLinked);
   const [reviewNotificationsEnabled, setReviewNotificationsEnabled] = useState(initialReviewNotificationsEnabled);
+  const [qrNotificationsEnabled, setQrNotificationsEnabled] = useState(false);
+  const [isSavingQrNotifications, setIsSavingQrNotifications] = useState(false);
   const [delivery, setDelivery] = useState<Delivery | null>(null);
   const [error, setError] = useState("");
   const [isUnlinking, setIsUnlinking] = useState(false);
@@ -51,6 +53,16 @@ export const VenueTelegramIntegrations = ({
   }, [targetId, targetType]);
 
   useEffect(() => void refreshDelivery(), [refreshDelivery]);
+
+  const refreshQrNotifications = useCallback(async () => {
+    const queryKey = targetType === "venue" ? "venueId" : "eventId";
+    const response = await fetch(`/api/telegram/qr-notifications?${queryKey}=${encodeURIComponent(targetId)}`);
+    if (!response.ok) return;
+    const result = (await response.json()) as { enabled: boolean };
+    setQrNotificationsEnabled(result.enabled);
+  }, [targetId, targetType]);
+
+  useEffect(() => void refreshQrNotifications(), [refreshQrNotifications]);
 
   useEffect(() => {
     if (!isAwaitingLink || linked) return;
@@ -155,6 +167,26 @@ export const VenueTelegramIntegrations = ({
     }
   };
 
+  const updateQrNotifications = async (enabled: boolean) => {
+    setIsSavingQrNotifications(true);
+    setError("");
+    try {
+      const response = await fetch("/api/telegram/qr-notifications", {
+        body: JSON.stringify({ ...targetPayload, enabled }),
+        headers: { "Content-Type": "application/json" },
+        method: "PUT",
+      });
+      const result = (await response.json()) as { enabled?: boolean; error?: string };
+      if (!response.ok || result.enabled === undefined)
+        throw new Error(result.error || i18n("Unable to update Telegram QR notifications"));
+      setQrNotificationsEnabled(result.enabled);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : i18n("Unable to update Telegram QR notifications"));
+    } finally {
+      setIsSavingQrNotifications(false);
+    }
+  };
+
   return (
     <TelegramLinkPanel
       delivery={delivery}
@@ -166,9 +198,12 @@ export const VenueTelegramIntegrations = ({
       onLink={() => void link()}
       onRetryReviewNotification={() => void retry()}
       onReviewNotificationsChange={(enabled) => void updateNotifications(enabled)}
+      onQrNotificationsChange={(enabled) => void updateQrNotifications(enabled)}
       onUnlink={() => void unlink()}
       retryingReviewNotification={isRetrying}
       reviewNotificationsEnabled={reviewNotificationsEnabled}
+      qrNotificationsEnabled={qrNotificationsEnabled}
+      isSavingQrNotifications={isSavingQrNotifications}
       supportsCustomerMessages={targetType === "venue"}
     />
   );

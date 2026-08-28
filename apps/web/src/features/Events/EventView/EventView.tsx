@@ -20,11 +20,9 @@ import {
 } from "~/components/ui";
 import { useEvents } from "~/hooks/useEvents";
 import { useUser } from "~/hooks/useUser";
-import { useDialog } from "~/contexts/DialogContext";
 import { ContentRating } from "~/features/Ratings/ContentRating";
 import { ContentReviews } from "~/features/Ratings/ContentReviews";
 import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
-import { VenueTelegramIntegrations } from "~/features/Messaging/components/VenueTelegramIntegrations";
 import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -46,7 +44,6 @@ export const EventView = ({ slug }: EventViewProps) => {
   const locale = useLocale() as Locale;
   const { useGetEvent } = useEvents();
   const { data: profile } = useUser();
-  const { openCustomDialog } = useDialog();
   const router = useRouter();
 
   const { data: event, loading } = useGetEvent(slug);
@@ -165,19 +162,7 @@ export const EventView = ({ slug }: EventViewProps) => {
     event.status,
   );
   const canManageUpdates = isOwner && [Event_Status_Enum.Active, Event_Status_Enum.Completed].includes(event.status);
-  const openSettings = () => {
-    void openCustomDialog({
-      children: (
-        <VenueTelegramIntegrations
-          initialLinked={false}
-          initialReviewNotificationsEnabled={false}
-          targetId={event.id}
-          targetType="event"
-        />
-      ),
-      title: i18n("Event settings"),
-    });
-  };
+  const openSettings = () => router.push(`/user-directory/events/${event.slug}/manage`);
 
   return (
     <div className="flex flex-col">
@@ -281,7 +266,16 @@ export const EventView = ({ slug }: EventViewProps) => {
             hideUntilHover={false}
             hideCurrentOwnerProfileAction={isOwner}
             showManageAction={false}
-            viewActions={isOwner ? <ContentViewOwnerActions onOpenSettings={openSettings} /> : undefined}
+            viewActions={
+              isOwner ? (
+                <ContentViewOwnerActions
+                  onOpenAnalytics={() =>
+                    router.push(`/user-directory/events/${event.slug}/manage#${encodeURIComponent(i18n("Analytics"))}`)
+                  }
+                  onOpenSettings={openSettings}
+                />
+              ) : undefined
+            }
           />
         </div>
       </div>

@@ -17,6 +17,20 @@ export type UnreadMessagingUpdate = {
   unreadCount: number;
 };
 
+let unreadRequest: null | Promise<null | UnreadMessagingUpdate> = null;
+
+const fetchUnreadMessages = () => {
+  if (unreadRequest) return unreadRequest;
+
+  unreadRequest = fetch("/api/conversations/unread", { cache: "no-store" })
+    .then(async (response) => (response.ok ? ((await response.json()) as UnreadMessagingUpdate) : null))
+    .catch(() => null)
+    .finally(() => {
+      unreadRequest = null;
+    });
+  return unreadRequest;
+};
+
 export const useUnreadMessages = (enabled = true) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const isActiveRef = useRef(false);
@@ -27,9 +41,8 @@ export const useUnreadMessages = (enabled = true) => {
   const loadUnreadCount = useCallback(async () => {
     const requestId = ++requestIdRef.current;
     try {
-      const response = await fetch("/api/conversations/unread", { cache: "no-store" });
-      if (!response.ok) return;
-      const data = (await response.json()) as UnreadMessagingUpdate;
+      const data = await fetchUnreadMessages();
+      if (!data) return;
       if (isActiveRef.current && requestId === requestIdRef.current) {
         if (
           previousUnreadCountRef.current !== null &&
@@ -44,7 +57,7 @@ export const useUnreadMessages = (enabled = true) => {
         setUnreadCount(data.unreadCount);
       }
     } catch {
-      // The counter is supplementary; a transient request failure should remain invisible.
+      /* The counter is supplementary; a transient request failure should remain invisible. */
     }
   }, []);
   const scheduleUnreadRefresh = useCallback(

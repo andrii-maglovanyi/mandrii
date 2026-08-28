@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useLocale } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Avatar, ImagePreview } from "~/components/layout";
@@ -370,6 +371,8 @@ const CommentThread = ({
 
 export const ContentUpdates = ({ canManage, targetId, type }: ContentUpdatesProps) => {
   const i18n = useI18n();
+  const pathname = usePathname();
+  const router = useRouter();
   const locale = useLocale();
   const { isDark } = useTheme();
   const { openConfirmDialog, openCustomDialog } = useDialog();
@@ -730,9 +733,9 @@ export const ContentUpdates = ({ canManage, targetId, type }: ContentUpdatesProp
     if (!update) return;
 
     event.preventDefault();
-    const url = new URL(window.location.href);
-    url.searchParams.set("update", updateId);
-    window.history.replaceState(null, "", url);
+    const params = new URLSearchParams(window.location.search);
+    params.set("update", updateId);
+    router.replace(`${pathname}?${params.toString()}${window.location.hash}`, { scroll: false });
     update.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 

@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { ActionButton, AnimatedEllipsis, Button, RichText, SectionCard, Separator, Tooltip } from "~/components/ui";
 import { PushNotifications } from "~/components/layout/PushNotifications/PushNotifications";
@@ -107,6 +107,8 @@ export const VenueMessaging = ({
   const i18n = useI18n();
   const { openConfirmDialog, openCustomDialog } = useDialog();
   const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
   const requestedConversationId = useSearchParams().get("conversation");
   const [role, setRole] = useState<MessagingRole | null>(initialRole);
   const [telegramLinked, setTelegramLinked] = useState<boolean | null>(initialTelegramLinked);
@@ -168,13 +170,12 @@ export const VenueMessaging = ({
   useEffect(() => {
     if (!selectedConversationId) return;
 
-    const url = new URL(window.location.href);
-    if (url.searchParams.get("conversation") === selectedConversationId) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("conversation") === selectedConversationId) return;
 
-    url.searchParams.set("conversation", selectedConversationId);
-    if (!inbox) url.hash = "Messaging";
-    window.history.replaceState(window.history.state, "", url);
-  }, [inbox, selectedConversationId]);
+    params.set("conversation", selectedConversationId);
+    router.replace(`${pathname}?${params.toString()}${inbox ? "" : "#Messaging"}`, { scroll: false });
+  }, [inbox, pathname, router, selectedConversationId]);
   const resizeComposer = useCallback(() => {
     const composer = composerRef.current;
     if (!composer) return;

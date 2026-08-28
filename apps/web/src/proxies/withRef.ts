@@ -4,6 +4,8 @@ import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { MiddlewareFactory } from "./stackHandler";
 
 interface Redirect {
+  contentId?: string;
+  contentType?: "event" | "venue";
   hits: number;
   url: string;
 }
@@ -32,7 +34,12 @@ export const withRef: MiddlewareFactory = (next) => {
         kv.incr(`ref:${topic}:hits`);
 
         fetch(`${request.nextUrl.origin}/api/slack-notify`, {
-          body: JSON.stringify({ topic, url: redirect.url }),
+          body: JSON.stringify({
+            contentId: redirect.contentId,
+            contentType: redirect.contentType,
+            topic,
+            url: redirect.url,
+          }),
           headers: { "Content-Type": "application/json" },
           method: "POST",
         });

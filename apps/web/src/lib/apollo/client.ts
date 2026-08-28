@@ -7,15 +7,40 @@ import { createClient } from "graphql-ws";
 
 import { publicConfig } from "../config/public";
 
+const ACCESS_TOKEN_CACHE_MS = 30_000;
+let accessTokenCache: { expiresAt: number; token: string | undefined } | null = null;
+let accessTokenRequest: null | Promise<string | undefined> = null;
+
 const getAccessToken = async () => {
-  try {
-    return (await getSession())?.accessToken;
-  } catch {
-    // Session restoration can fail transiently (for example while an expired
-    // cookie is being cleared). Public GraphQL requests must still work, and
-    // a WebSocket reconnect must not turn that into an unbounded error loop.
-    return undefined;
+  if (typeof window !== "undefined" && accessTokenCache && accessTokenCache.expiresAt > Date.now()) {
+    return accessTokenCache.token;
   }
+  if (typeof window !== "undefined" && accessTokenRequest) return accessTokenRequest;
+
+  const load = async () => {
+    let token: string | undefined;
+    try {
+      token = (await getSession())?.accessToken;
+    } catch {
+      // Session restoration can fail transiently (for example while an expired
+      // cookie is being cleared). Public GraphQL requests must still work, and
+      // a WebSocket reconnect must not turn that into an unbounded error loop.
+      token = undefined;
+    }
+    if (typeof window !== "undefined") {
+      accessTokenCache = { expiresAt: Date.now() + ACCESS_TOKEN_CACHE_MS, token };
+    }
+    return token;
+  };
+
+  if (typeof window !== "undefined") {
+    accessTokenRequest = load().finally(() => {
+      accessTokenRequest = null;
+    });
+    return accessTokenRequest;
+  }
+
+  return load();
 };
 
 const httpLink = new HttpLink({

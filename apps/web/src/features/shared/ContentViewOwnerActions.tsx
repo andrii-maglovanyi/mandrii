@@ -1,11 +1,12 @@
 "use client";
 
-import { MessageCircle, Settings } from "lucide-react";
+import { BarChart3, MessageCircle, Settings } from "lucide-react";
 
 import { ActionButton } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 
 interface ContentViewOwnerActionsProps {
+  onOpenAnalytics?: () => void;
   onOpenChat?: () => void;
   onOpenSettings?: () => void;
   unreadChatCount?: number;
@@ -18,12 +19,13 @@ interface ContentViewOwnerActionsProps {
  */
 export const ContentViewOwnerActions = ({
   onOpenChat,
+  onOpenAnalytics,
   onOpenSettings,
   unreadChatCount = 0,
 }: ContentViewOwnerActionsProps) => {
   const i18n = useI18n();
 
-  if (!onOpenChat && !onOpenSettings) return null;
+  if (!onOpenAnalytics && !onOpenChat && !onOpenSettings) return null;
 
   return (
     <div className="flex items-center gap-1">
@@ -45,6 +47,14 @@ export const ContentViewOwnerActions = ({
             </span>
           )}
         </div>
+      )}
+      {onOpenAnalytics && (
+        <ActionButton
+          aria-label={i18n("Analytics")}
+          icon={<BarChart3 size={20} />}
+          onClick={onOpenAnalytics}
+          variant="ghost"
+        />
       )}
       {onOpenSettings && (
         <ActionButton

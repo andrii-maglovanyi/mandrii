@@ -17,12 +17,15 @@ interface TelegramLinkPanelProps {
   isAwaitingLink: boolean;
   isLinked: boolean;
   isSavingReviewNotifications: boolean;
+  isSavingQrNotifications: boolean;
   isUnlinking: boolean;
   onLink: () => void;
   onReviewNotificationsChange: (enabled: boolean) => void;
+  onQrNotificationsChange: (enabled: boolean) => void;
   onRetryReviewNotification: () => void;
   onUnlink: () => void;
   reviewNotificationsEnabled: boolean;
+  qrNotificationsEnabled: boolean;
   retryingReviewNotification: boolean;
   supportsCustomerMessages?: boolean;
 }
@@ -33,12 +36,15 @@ export const TelegramLinkPanel = ({
   isAwaitingLink,
   isLinked,
   isSavingReviewNotifications,
+  isSavingQrNotifications,
   isUnlinking,
   onLink,
   onReviewNotificationsChange,
+  onQrNotificationsChange,
   onRetryReviewNotification,
   onUnlink,
   reviewNotificationsEnabled,
+  qrNotificationsEnabled,
   retryingReviewNotification,
   supportsCustomerMessages = true,
 }: TelegramLinkPanelProps) => {
@@ -88,6 +94,17 @@ export const TelegramLinkPanel = ({
                 content: supportsCustomerMessages ? i18n("venue") : i18n("event"),
               })
             : i18n("Link Telegram before enabling review notifications.")}
+        </p>
+        <Checkbox
+          checked={qrNotificationsEnabled}
+          disabled={!isLinked || isSavingQrNotifications}
+          label={i18n("Notify me when someone scans this QR code")}
+          onChange={(event) => onQrNotificationsChange(event.target.checked)}
+        />
+        <p className="text-on-surface/70 -mt-2 text-sm">
+          {isLinked
+            ? i18n("Receive a Telegram message whenever this QR code is scanned.")
+            : i18n("Link Telegram before enabling QR scan notifications.")}
         </p>
         {isLinked && reviewNotificationsEnabled && delivery && (
           <div className="border-on-surface/10 rounded-lg border px-3 py-2 text-sm">
