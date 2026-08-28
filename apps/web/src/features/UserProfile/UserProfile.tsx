@@ -103,10 +103,13 @@ export const UserProfile = () => {
             >
               {i18n("Your Profile")}
             </h2>
-            <TextLink href={`/users/${data.id}`}>
-              <Eye size={18} />
-              {i18n("View your public profile")}
-            </TextLink>
+            <div className="flex flex-wrap items-center gap-4">
+              <TextLink href={`/users/${data.id}`}>
+                <Eye size={18} />
+                {i18n("View your public profile")}
+              </TextLink>
+              <TextLink href="/settings">{i18n("Settings")}</TextLink>
+            </div>
           </div>
           <p className={`text-neutral text-sm md:text-base`}>
             {i18n("Manage your account settings and view your community contributions")}

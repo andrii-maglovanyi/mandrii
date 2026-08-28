@@ -1,6 +1,4 @@
-import { Facebook, Instagram } from "lucide-react";
-
-import { Input, RichText } from "~/components/ui";
+import { Input, RichText, SvgIcon } from "~/components/ui";
 import { FormProps } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
 import { EventSchema } from "~/lib/validation/event";
@@ -39,7 +37,7 @@ export const EventContacts = ({ getFieldProps }: EventContactsProps) => {
         {...getFieldProps("organizer_email")}
       />
       <div className="flex flex-col">
-        <RichText as="div" className="py-2 text-sm text-neutral">
+        <RichText as="div" className="text-neutral py-2 text-sm">
           {i18n(
             "**🌍 Auto-detection enabled**.<br />Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.<br /><br />  You can add up to three phone numbers.",
           )}
@@ -52,9 +50,14 @@ export const EventContacts = ({ getFieldProps }: EventContactsProps) => {
         />
       </div>
 
-      <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-5">
-        {renderSocialMediaInput(<Facebook />, "facebook", "Facebook", "https://facebook.com/puzatahata")}
-        {renderSocialMediaInput(<Instagram />, "instagram", "Instagram", "https://instagram.com/puzatahata")}
+      <div className="border-primary/20 bg-primary/5 rounded-lg border-2 p-5">
+        {renderSocialMediaInput(<SvgIcon id="facebook" />, "facebook", "Facebook", "https://facebook.com/puzatahata")}
+        {renderSocialMediaInput(
+          <SvgIcon id="instagram" />,
+          "instagram",
+          "Instagram",
+          "https://instagram.com/puzatahata",
+        )}
       </div>
     </div>
   );

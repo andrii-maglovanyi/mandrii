@@ -164,7 +164,13 @@ export const ImageCarousel = ({
       <div
         className={`bg-surface-tint relative flex h-full w-full min-w-20 items-center justify-center overflow-hidden md:min-w-40`}
       >
-        <Image alt={i18n("No image available")} className="object-cover" fill src="/static/no-image.webp" />
+        <Image
+          alt={i18n("No image available")}
+          className="object-cover"
+          fill
+          sizes="(max-width: 768px) 100vw, 768px"
+          src="/static/no-image.webp"
+        />
       </div>
     );
   }
@@ -207,6 +213,7 @@ export const ImageCarousel = ({
                     handleImageError(originalIndex);
                   }}
                   priority={priority && slideIndex === slidePosition}
+                  sizes="(max-width: 768px) 100vw, 768px"
                   src={src}
                 />
               </div>

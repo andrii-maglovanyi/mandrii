@@ -18,6 +18,9 @@ msgstr ""
 msgid "Please enter a valid {name} URL (e.g., {example})"
 msgstr ""
 
+msgid "Please choose a supported image."
+msgstr ""
+
 msgid "Maximum is {MAX_IMAGES} images."
 msgstr ""
 
@@ -132,6 +135,15 @@ msgstr ""
 msgid "Someone"
 msgstr ""
 
+msgid "Chat"
+msgstr ""
+
+msgid "{count} unread messages"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
 msgid "Let's unite, Ukrainians!"
 msgstr ""
 
@@ -180,10 +192,16 @@ msgstr ""
 msgid "Venue not found"
 msgstr ""
 
+msgid "Venue settings"
+msgstr ""
+
 msgid "Map"
 msgstr ""
 
 msgid "About"
+msgstr ""
+
+msgid "Manage venue info"
 msgstr ""
 
 msgid "No description available"
@@ -195,19 +213,13 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-msgid "Updates"
+msgid "Feed"
 msgstr ""
 
 msgid "Events"
 msgstr ""
 
 msgid "{count} events"
-msgstr ""
-
-msgid "Chat"
-msgstr ""
-
-msgid "Manage"
 msgstr ""
 
 msgid "Products"
@@ -348,10 +360,10 @@ msgstr ""
 msgid "Share this venue"
 msgstr ""
 
-msgid "You own this venue - view your profile"
+msgid "You own this venue"
 msgstr ""
 
-msgid "Verified owner - view profile"
+msgid "Verified owner"
 msgstr ""
 
 msgid "Discover"
@@ -468,10 +480,16 @@ msgstr ""
 msgid "Manage your account settings and view your community contributions"
 msgstr ""
 
+msgid "Unable to prepare photos"
+msgstr ""
+
 msgid "Preview image"
 msgstr ""
 
 msgid "Remove image"
+msgstr ""
+
+msgid "Preparing photos"
 msgstr ""
 
 msgid "User image"
@@ -568,6 +586,9 @@ msgid "Category"
 msgstr ""
 
 msgid "Add new venue"
+msgstr ""
+
+msgid "Only venues I own"
 msgstr ""
 
 msgid "No venues added yet. Click the button above to add the first one and start managing your venues!"
@@ -781,6 +802,9 @@ msgid "Type"
 msgstr ""
 
 msgid "Add new event"
+msgstr ""
+
+msgid "Only events I own"
 msgstr ""
 
 msgid "Search events by title or location..."
@@ -1254,6 +1278,24 @@ msgstr ""
 msgid "out of stock"
 msgstr ""
 
+msgid "Unable to load notification preferences"
+msgstr ""
+
+msgid "Unable to save notification preferences"
+msgstr ""
+
+msgid "Updates notifications"
+msgstr ""
+
+msgid "Choose which Updates activity you want to be notified about across your account."
+msgstr ""
+
+msgid "Comments"
+msgstr ""
+
+msgid "Replies"
+msgstr ""
+
 msgid "Who does this affect?"
 msgstr ""
 
@@ -1704,6 +1746,15 @@ msgstr ""
 msgid "Unable to load review moderation"
 msgstr ""
 
+msgid "Unable to load discussion moderation"
+msgstr ""
+
+msgid "Unable to moderate comment"
+msgstr ""
+
+msgid "Unable to block term"
+msgstr ""
+
 msgid "Unable to update this review"
 msgstr ""
 
@@ -1735,6 +1786,30 @@ msgid "Publish"
 msgstr ""
 
 msgid "Hide and resolve"
+msgstr ""
+
+msgid "Comment moderation"
+msgstr ""
+
+msgid "There are no reported comments."
+msgstr ""
+
+msgid "{count} reports"
+msgstr ""
+
+msgid "Remove comment"
+msgstr ""
+
+msgid "Blocked comment terms"
+msgstr ""
+
+msgid "Add blocked term"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Unable to remove blocked term"
 msgstr ""
 
 msgid "Unable to report this review"
@@ -2823,6 +2898,9 @@ msgstr ""
 msgid "until"
 msgstr ""
 
+msgid "Event settings"
+msgstr ""
+
 msgid "Online event"
 msgstr ""
 
@@ -2830,6 +2908,9 @@ msgid "Register Now"
 msgstr ""
 
 msgid "Learn More"
+msgstr ""
+
+msgid "Manage event info"
 msgstr ""
 
 msgid "Additional information"
@@ -2883,7 +2964,7 @@ msgstr ""
 msgid "Share this event"
 msgstr ""
 
-msgid "You own this event - view your profile"
+msgid "You own this event"
 msgstr ""
 
 msgid "More"
@@ -2896,6 +2977,42 @@ msgid "From"
 msgstr ""
 
 msgid "To"
+msgstr ""
+
+msgid "Unable to load replies"
+msgstr ""
+
+msgid "Unable to load comments"
+msgstr ""
+
+msgid "Member"
+msgstr ""
+
+msgid "Report"
+msgstr ""
+
+msgid "Write a reply"
+msgstr ""
+
+msgid "Post reply"
+msgstr ""
+
+msgid "Loading replies"
+msgstr ""
+
+msgid "View replies"
+msgstr ""
+
+msgid "Add a comment"
+msgstr ""
+
+msgid "Post comment"
+msgstr ""
+
+msgid "Loading comments"
+msgstr ""
+
+msgid "View more comments"
 msgstr ""
 
 msgid "Unable to load updates"
@@ -2925,19 +3042,55 @@ msgstr ""
 msgid "Unable to update pinned status"
 msgstr ""
 
+msgid "Unable to update reaction"
+msgstr ""
+
+msgid "Unable to post comment"
+msgstr ""
+
+msgid "This comment and any replies will be removed."
+msgstr ""
+
+msgid "Remove comment?"
+msgstr ""
+
+msgid "Unable to remove comment"
+msgstr ""
+
+msgid "Unable to edit comment"
+msgstr ""
+
+msgid "Why are you reporting this comment?"
+msgstr ""
+
+msgid "Comment reported"
+msgstr ""
+
+msgid "Unable to report comment"
+msgstr ""
+
+msgid "Sign in to post update"
+msgstr ""
+
 msgid "Post update"
 msgstr ""
 
-msgid "Share news, a practical update, or something visitors should know."
+msgid "Updates activity"
 msgstr ""
 
-msgid "Highlight this update"
+msgid "Manage Updates notification settings"
+msgstr ""
+
+msgid "Share news, a practical update, or something visitors should know."
 msgstr ""
 
 msgid "Add photos"
 msgstr ""
 
 msgid "Up to {count} photos"
+msgstr ""
+
+msgid "Highlight it"
 msgstr ""
 
 msgid "Unpin update"
@@ -2956,6 +3109,9 @@ msgid "Edit update"
 msgstr ""
 
 msgid "Remove update"
+msgstr ""
+
+msgid "Like"
 msgstr ""
 
 msgid "Load more updates"
@@ -4513,4 +4669,7 @@ msgid "Edit venue"
 msgstr ""
 
 msgid "Edit event"
+msgstr ""
+
+msgid "Manage preferences that apply across your account."
 msgstr ""

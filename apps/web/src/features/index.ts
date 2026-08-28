@@ -7,4 +7,5 @@ export * from "./Shop";
 export { EditEvent, EditVenue, UserDirectory } from "./UserDirectory";
 export { UserProfile } from "./UserProfile/UserProfile";
 export { PublicUserProfile } from "./UserProfile/PublicUserProfile";
+export { AccountSettings } from "./Settings/AccountSettings";
 export { UserMessaging } from "./Messaging/UserMessaging";

@@ -1,12 +1,11 @@
 import { z } from "zod";
 
 import { getI18n } from "~/i18n/getI18n";
+import { IMAGE_UPLOAD_PROFILES, isProcessedImageUpload } from "~/lib/images/uploadConfig";
 import { isEmail, isWebsite, validatePhoneNumber } from "~/lib/utils";
 import { Event_Status_Enum, Event_Type_Enum, Price_Type_Enum } from "~/types";
 
 import { FACEBOOK_HOSTS, INSTAGRAM_HOSTS, validateHost } from "./utils/social-links";
-
-const MAX_IMAGES = 3;
 
 export const eventDescriptionMaxCharsCount = 1500;
 
@@ -90,8 +89,18 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       image: z.preprocess((val) => (val === "" ? null : val), z.instanceof(File).optional().nullable()),
 
       images: z
-        .array(z.instanceof(File))
-        .max(MAX_IMAGES, i18n("Maximum is {MAX_IMAGES} images.", { MAX_IMAGES }))
+        .array(
+          z
+            .instanceof(File)
+            .refine(
+              (image) => isProcessedImageUpload(image, IMAGE_UPLOAD_PROFILES.event.maxBytes),
+              i18n("Please choose a supported image."),
+            ),
+        )
+        .max(
+          IMAGE_UPLOAD_PROFILES.event.maxImages,
+          i18n("Maximum is {MAX_IMAGES} images.", { MAX_IMAGES: IMAGE_UPLOAD_PROFILES.event.maxImages }),
+        )
         .optional()
         .nullable(),
 

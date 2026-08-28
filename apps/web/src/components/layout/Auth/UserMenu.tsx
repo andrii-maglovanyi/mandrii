@@ -1,4 +1,4 @@
-import { LogOut, MessageCircle, ShieldCheck, StretchHorizontal } from "lucide-react";
+import { LogOut, MessageCircle, Settings, ShieldCheck, StretchHorizontal } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -43,6 +43,9 @@ export const UserMenu = ({
           </Link>
           <Link href="/user-directory" onClick={onNavigate}>
             <StretchHorizontal className="mr-2" /> {i18n("My directory")}
+          </Link>
+          <Link href="/settings" onClick={onNavigate}>
+            <Settings className="mr-2" /> {i18n("Settings")}
           </Link>
           {isAdmin && (
             <Link href="/admin" onClick={onNavigate}>

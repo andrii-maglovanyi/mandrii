@@ -336,6 +336,7 @@ export const rateLimiters = {
     prefix: "content-update",
     windowMs: 60 * 1000,
   }),
+  contentComment: createRateLimiter({ maxRequests: 10, prefix: "content-comment", windowMs: 60 * 1000 }),
   reviewVote: createRateLimiter({
     maxRequests: 30,
     prefix: "review-vote",

@@ -1,7 +1,8 @@
 import { clsx } from "clsx";
-import { Crown, PenTool, Share2, UserSquare } from "lucide-react";
+import { Crown, PenTool, Share2, UserStar } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
+import { type ReactNode } from "react";
 
 import { ActionButton, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
@@ -18,10 +19,21 @@ import { ClaimOwnershipDialog } from "../../ClaimOwnershipDialog";
 
 interface CardHeaderProps {
   hideUntilHover?: boolean;
+  /** Full views can add actions without exposing them on search and map cards. */
+  viewActions?: ReactNode;
+  /** Full views use their owner action area for settings instead of a profile shortcut. */
+  hideCurrentOwnerProfileAction?: boolean;
+  showManageAction?: boolean;
   venue: GetPublicVenuesQuery["venues"][number];
 }
 
-export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) => {
+export const CardHeader = ({
+  hideUntilHover = false,
+  hideCurrentOwnerProfileAction = false,
+  showManageAction = true,
+  venue,
+  viewActions,
+}: CardHeaderProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const { data: profileData } = useUser();
@@ -77,14 +89,16 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
     return (
       <div className="flex items-center gap-1">
         {canManage ? (
-          <ActionButton
-            aria-label={i18n("Manage venue")}
-            className="group"
-            icon={<PenTool className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
-            onClick={handleManageClick}
-            size="sm"
-            variant="ghost"
-          />
+          showManageAction && (
+            <ActionButton
+              aria-label={i18n("Manage venue")}
+              className="group"
+              icon={<PenTool className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+              onClick={handleManageClick}
+              size="sm"
+              variant="ghost"
+            />
+          )
         ) : !venue.owner_id ? (
           <div className={clsx(hideUntilHover && "hidden", `group-hover/card:flex`)}>
             <ActionButton
@@ -106,27 +120,22 @@ export const CardHeader = ({ hideUntilHover = false, venue }: CardHeaderProps) =
           <ActionButton
             aria-label={i18n("Share this venue")}
             className="group"
-            icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+            icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={20} />}
             onClick={handleShareClick}
-            size="sm"
             variant="ghost"
           />
         )}
-        {Boolean(venue.owner_id) && (
+        {viewActions}
+        {Boolean(venue.owner_id) && !(profileData?.id === venue.owner_id && hideCurrentOwnerProfileAction) && (
           <ActionButton
-            aria-label={
-              profileData?.id === venue.owner_id
-                ? i18n("You own this venue - view your profile")
-                : i18n("Verified owner - view profile")
-            }
+            aria-label={profileData?.id === venue.owner_id ? i18n("You own this venue") : i18n("Verified owner")}
             className="cursor-pointer"
-            icon={<UserSquare className={`stroke-green-600 dark:stroke-green-400`} size={18} />}
+            icon={<UserStar size={20} />}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
               router.push(`/users/${venue.owner_id}`);
             }}
-            size="sm"
             type="button"
             variant="ghost"
           />

@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { auth } from "~/lib/auth";
 import { BadRequestError, getApiContext, rateLimiters, validateRequest, withErrorHandling } from "~/lib/api";
 import {
   createContentUpdate,
@@ -13,6 +14,7 @@ import { envName } from "~/lib/config/env";
 import {
   CONTENT_UPDATE_MAX_PAGE_SIZE,
   CONTENT_UPDATE_MAX_IMAGES,
+  CONTENT_UPDATE_MAX_TOTAL_IMAGE_BYTES,
   CONTENT_UPDATE_PAGE_SIZE,
   isContentUpdateImage,
 } from "~/lib/updates/constants";
@@ -27,7 +29,11 @@ const targetSchema = z.object({
 
 const createUpdateSchema = targetSchema.extend({
   body: z.string().trim().min(1).max(1500),
-  images: z.array(z.instanceof(File).refine(isContentUpdateImage)).max(CONTENT_UPDATE_MAX_IMAGES).optional(),
+  images: z
+    .array(z.instanceof(File).refine(isContentUpdateImage))
+    .max(CONTENT_UPDATE_MAX_IMAGES)
+    .refine((images) => images.reduce((total, image) => total + image.size, 0) <= CONTENT_UPDATE_MAX_TOTAL_IMAGE_BYTES)
+    .optional(),
   isHighlighted: z.boolean().default(false),
 });
 
@@ -64,7 +70,13 @@ export const GET = (req: Request) =>
         : CONTENT_UPDATE_PAGE_SIZE;
 
     return Response.json(
-      await getContentUpdates(target.data.type, target.data.targetId, parseCursor(searchParams.get("cursor")), limit),
+      await getContentUpdates(
+        target.data.type,
+        target.data.targetId,
+        parseCursor(searchParams.get("cursor")),
+        limit,
+        (await auth())?.user?.id ?? null,
+      ),
     );
   });
 

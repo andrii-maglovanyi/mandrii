@@ -1,8 +1,8 @@
 "use client";
 
-import { AtSign, Facebook, Globe, Instagram, MapPin } from "lucide-react";
+import { AtSign, Globe, MapPin } from "lucide-react";
 
-import { Separator } from "~/components/ui";
+import { Separator, SvgIcon } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { GetPublicVenuesQuery, Venue_Status_Enum } from "~/types";
 
@@ -79,7 +79,7 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
           {socialLinks.facebook && (
             <InfoLine
               hideUntilHover={hideUntilHover}
-              icon={<Facebook className="min-h-4 min-w-4" size={16} />}
+              icon={<SvgIcon className="min-h-4 min-w-4" id="facebook" size="small" />}
               info={socialLinks.facebook.toString()}
               isLink
               tooltipText="Copy Facebook link"
@@ -88,7 +88,7 @@ export const CardMetadata = ({ expanded, hideUntilHover, variant = "list", venue
           {socialLinks.instagram && (
             <InfoLine
               hideUntilHover={hideUntilHover}
-              icon={<Instagram className="min-h-4 min-w-4" size={16} />}
+              icon={<SvgIcon className="min-h-4 min-w-4" id="instagram" size="small" />}
               info={socialLinks.instagram.toString()}
               isLink
               tooltipText="Copy Instagram link"

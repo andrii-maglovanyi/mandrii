@@ -3,8 +3,9 @@
 import clsx from "clsx";
 import { format, parse } from "date-fns";
 import { enGB } from "date-fns/locale";
-import { ArrowUpRight, Calendar, Globe, MapPin } from "lucide-react";
+import { ArrowUpRight, Calendar, Globe, Info, MapPin, Newspaper, Pencil, Star } from "lucide-react";
 import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
 import {
   AnimatedEllipsis,
@@ -19,10 +20,12 @@ import {
 } from "~/components/ui";
 import { useEvents } from "~/hooks/useEvents";
 import { useUser } from "~/hooks/useUser";
+import { useDialog } from "~/contexts/DialogContext";
 import { ContentRating } from "~/features/Ratings/ContentRating";
 import { ContentReviews } from "~/features/Ratings/ContentReviews";
 import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
 import { VenueTelegramIntegrations } from "~/features/Messaging/components/VenueTelegramIntegrations";
+import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getEffectiveEventStatus } from "~/lib/events/status";
@@ -43,6 +46,8 @@ export const EventView = ({ slug }: EventViewProps) => {
   const locale = useLocale() as Locale;
   const { useGetEvent } = useEvents();
   const { data: profile } = useUser();
+  const { openCustomDialog } = useDialog();
+  const router = useRouter();
 
   const { data: event, loading } = useGetEvent(slug);
 
@@ -152,10 +157,27 @@ export const EventView = ({ slug }: EventViewProps) => {
   const effectiveStatus = getEffectiveEventStatus(event);
   const showStatus = effectiveStatus !== Event_Status_Enum.Active;
   const isOwner = Boolean(profile?.id && event.owner_id === profile.id);
+  const canManageInfo = Boolean(
+    profile &&
+      (profile.role === "admin" || profile.id === event.owner_id || (profile.id === event.user_id && !event.owner_id)),
+  );
   const canShowRatings = [Event_Status_Enum.Active, Event_Status_Enum.Archived, Event_Status_Enum.Completed].includes(
     event.status,
   );
   const canManageUpdates = isOwner && [Event_Status_Enum.Active, Event_Status_Enum.Completed].includes(event.status);
+  const openSettings = () => {
+    void openCustomDialog({
+      children: (
+        <VenueTelegramIntegrations
+          initialLinked={false}
+          initialReviewNotificationsEnabled={false}
+          targetId={event.id}
+          targetType="event"
+        />
+      ),
+      title: i18n("Event settings"),
+    });
+  };
 
   return (
     <div className="flex flex-col">
@@ -254,14 +276,36 @@ export const EventView = ({ slug }: EventViewProps) => {
         )}
 
         <div className={`mx-auto mt-2 w-full max-w-5xl px-4`}>
-          <CardHeader event={event} hideUntilHover={false} />
+          <CardHeader
+            event={event}
+            hideUntilHover={false}
+            hideCurrentOwnerProfileAction={isOwner}
+            showManageAction={false}
+            viewActions={isOwner ? <ContentViewOwnerActions onOpenSettings={openSettings} /> : undefined}
+          />
         </div>
       </div>
 
       {/* Main Content */}
       <div className={`mx-auto w-full max-w-5xl px-4 py-2 lg:py-4`}>
-        <Tabs defaultActiveKey="about" defer>
-          <TabPane tab={i18n("About")}>
+        <Tabs defaultActiveKey="about" defer mobileFullWidth>
+          <TabPane
+            icon={<Info aria-hidden className="size-6 sm:size-5" />}
+            label={<span className="hidden sm:inline">{i18n("About")}</span>}
+            tab={i18n("About")}
+          >
+            {canManageInfo && (
+              <div className="mb-4 flex justify-end">
+                <Button
+                  onClick={() => router.push(`/user-directory/events/${event.slug}`)}
+                  size="sm"
+                  variant="outlined"
+                >
+                  <Pencil size={16} />
+                  {i18n("Manage event info")}
+                </Button>
+              </div>
+            )}
             <div className={`grid grid-cols-1 gap-4 lg:grid-cols-3`}>
               {/* Description - Left side (2/3) */}
               <div className="lg:col-span-2">
@@ -314,24 +358,22 @@ export const EventView = ({ slug }: EventViewProps) => {
           </TabPane>
 
           {canShowRatings && (
-            <TabPane tab={i18n("Updates")}>
+            <TabPane
+              icon={<Newspaper aria-hidden className="size-6 sm:size-5" />}
+              label={<span className="hidden sm:inline">{i18n("Feed")}</span>}
+              tab={i18n("Feed")}
+            >
               <ContentUpdates canManage={canManageUpdates} targetId={event.id} type="event" />
             </TabPane>
           )}
 
           {canShowRatings && (
-            <TabPane tab={i18n("Reviews")}>
+            <TabPane
+              icon={<Star aria-hidden className="size-6 sm:size-5" />}
+              label={<span className="hidden sm:inline">{i18n("Reviews")}</span>}
+              tab={i18n("Reviews")}
+            >
               <ContentReviews context={event.type} targetId={String(event.id)} type="event" />
-            </TabPane>
-          )}
-          {isOwner && (
-            <TabPane tab={i18n("Manage")}>
-              <VenueTelegramIntegrations
-                initialLinked={false}
-                initialReviewNotificationsEnabled={false}
-                targetId={event.id}
-                targetType="event"
-              />
             </TabPane>
           )}
         </Tabs>

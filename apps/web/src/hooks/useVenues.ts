@@ -361,17 +361,18 @@ export const useVenues = () => {
     };
   };
 
-  const useUserVenues = (params?: APIParams) => {
+  const useUserVenues = (params?: APIParams, ownedOnly = false) => {
     const { data: session } = useSession();
+    const ownershipField = ownedOnly ? "owner_id" : "user_id";
 
     const mergedParams = useMemo(
       () => ({
         ...params,
         where: {
-          _and: [{ user_id: { _eq: session?.user.id } }, ...(params?.where ? [params.where] : [])],
+          _and: [{ [ownershipField]: { _eq: session?.user.id } }, ...(params?.where ? [params.where] : [])],
         },
       }),
-      [params, session?.user.id],
+      [ownedOnly, ownershipField, params, session?.user.id],
     );
 
     const result = useGraphApi<GetUserVenuesQuery["venues"]>(GET_USER_VENUES, mergedParams, {

@@ -14,10 +14,18 @@ export interface TabsProps {
   children: React.ReactNode;
   defaultActiveKey?: string;
   defer?: boolean;
+  mobileFullWidth?: boolean;
   onChange?: (tab: string) => void;
 }
 
-export const Tabs = ({ activeKey, children, defaultActiveKey = "", defer = false, onChange }: TabsProps) => {
+export const Tabs = ({
+  activeKey,
+  children,
+  defaultActiveKey = "",
+  defer = false,
+  mobileFullWidth = false,
+  onChange,
+}: TabsProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const isControlled = activeKey !== undefined;
 
@@ -86,7 +94,7 @@ export const Tabs = ({ activeKey, children, defaultActiveKey = "", defer = false
   return (
     <div className="flex w-full">
       <div className="grow">
-        <TabsBar activeIndex={activeTab} onTabChange={handleTabChange}>
+        <TabsBar activeIndex={activeTab} mobileFullWidth={mobileFullWidth} onTabChange={handleTabChange}>
           {tabsOnly}
         </TabsBar>
 

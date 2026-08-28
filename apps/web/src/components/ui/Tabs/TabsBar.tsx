@@ -1,6 +1,7 @@
 "use client";
 
 import React, { type ReactNode, useEffect, useRef } from "react";
+import clsx from "clsx";
 
 import { Button } from "../Button/Button";
 import { useI18n } from "~/i18n/useI18n";
@@ -9,10 +10,11 @@ import { getTabId, getTabPanelId } from "./TabPane";
 interface TabsBarProps {
   activeIndex: number;
   children: ReactNode;
+  mobileFullWidth?: boolean;
   onTabChange: (index: number) => void;
 }
 
-export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps) => {
+export const TabsBar = ({ activeIndex = 0, children, mobileFullWidth = false, onTabChange }: TabsBarProps) => {
   const i18n = useI18n();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const indicatorRef = useRef<HTMLDivElement | null>(null);
@@ -67,10 +69,13 @@ export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps
   }, [activeIndex, children]);
 
   return (
-    <div className="border-neutral-disabled relative border-b pt-2">
+    <div className={clsx("border-neutral-disabled relative border-b pt-2", mobileFullWidth && "w-full")}>
       <div
         aria-label={i18n("Content sections")}
-        className="flex gap-1 overflow-x-auto overflow-y-hidden px-1 pt-2"
+        className={clsx(
+          "flex gap-1 overflow-x-auto overflow-y-hidden px-1 pt-2",
+          mobileFullWidth && "w-full gap-0 overflow-hidden px-0 sm:gap-1 sm:overflow-x-auto sm:px-1",
+        )}
         role="tablist"
       >
         {React.Children.map(children, (child, index) => {
@@ -82,11 +87,16 @@ export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps
             }>(child)
           ) {
             const tabLabel = child.props.label ?? child.props.tab;
+            const isActive = activeIndex === index;
             return (
               <Button
+                aria-label={child.props.tab}
                 aria-controls={getTabPanelId(child.props.tab)}
-                aria-selected={activeIndex === index}
-                className="relative translate-y-0.5"
+                aria-selected={isActive}
+                className={clsx(
+                  "relative translate-y-0.5",
+                  mobileFullWidth && "flex-1 justify-center !px-2 sm:flex-none sm:!px-4",
+                )}
                 id={getTabId(child.props.tab)}
                 key={child.props.tab}
                 onClick={() => selectTab(index)}
@@ -98,7 +108,10 @@ export const TabsBar = ({ activeIndex = 0, children, onTabChange }: TabsBarProps
                 tabIndex={activeIndex === index ? 0 : -1}
                 variant="ghost"
               >
-                {child.props.icon} {tabLabel}
+                {child.props.icon && (
+                  <span className={clsx(mobileFullWidth && "shrink-0 sm:mr-1.5")}>{child.props.icon}</span>
+                )}
+                {tabLabel}
               </Button>
             );
           }

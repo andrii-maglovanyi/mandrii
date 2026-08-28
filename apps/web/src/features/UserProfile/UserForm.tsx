@@ -8,7 +8,10 @@ import { Avatar, FormFooter, ImagePreview } from "~/components/layout";
 import { Button, FilePicker, Input, LocationAutocomplete, MDEditor, RichText, Tooltip } from "~/components/ui";
 import { useTheme } from "~/contexts/ThemeContext";
 import { OnFormSubmitHandler, useForm } from "~/hooks/form/useForm";
+import { useImageUploadPreparation } from "~/hooks/useImageUploadPreparation";
+import { useNotifications } from "~/hooks/useNotifications";
 import { useI18n } from "~/i18n/useI18n";
+import { IMAGE_UPLOAD_ACCEPT, IMAGE_UPLOAD_PROFILES } from "~/lib/images/uploadConfig";
 import { getUserSchema } from "~/lib/validation/user";
 import { UserSession } from "~/types/user";
 
@@ -21,6 +24,7 @@ interface UserFormProps {
 export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
   const i18n = useI18n();
   const { isDark } = useTheme();
+  const { showError } = useNotifications();
   const [isEditing, setIsEditing] = useState(false);
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
@@ -43,6 +47,9 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
   });
 
   const { previews, removePreview } = useImagePreviews("image");
+  const { isPreparing: isPreparingImage, prepareImages } = useImageUploadPreparation(
+    IMAGE_UPLOAD_PROFILES.profile.maxBytes,
+  );
 
   const isBusy = status === "processing";
 
@@ -51,9 +58,22 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
     setIsEditing(false);
   };
 
+  const addImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    if (!files.length) return;
+
+    try {
+      const [image] = await prepareImages(files.slice(0, 1));
+      if (image) setValues((current) => ({ ...current, image }));
+    } catch (error) {
+      showError(error instanceof Error ? error.message : i18n("Unable to prepare photos"));
+    }
+  };
+
   return (
     <div className="mt-4 flex grow flex-col">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={isPreparingImage ? (event) => event.preventDefault() : handleSubmit}>
         <div className={`flex flex-col items-center gap-6 text-center md:flex-row md:text-left`}>
           {isEditing ? (
             <div className="h-44 w-44 overflow-hidden">
@@ -69,7 +89,10 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
                 <FilePicker
                   className="h-44 w-44"
                   {...getFieldProps("image")}
-                  label={i18n("User image")}
+                  accept={IMAGE_UPLOAD_ACCEPT}
+                  disabled={isPreparingImage}
+                  label={isPreparingImage ? i18n("Preparing photos") : i18n("User image")}
+                  onChange={(event) => void addImage(event)}
                   placeholder={i18n("Click to upload")}
                 />
               )}
@@ -117,7 +140,13 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
         )}
 
         {isEditing ? (
-          <FormFooter handleCancel={handleCancel} hasChanges={hasChanges} isFormValid={isFormValid} status={status} />
+          <FormFooter
+            disabled={isPreparingImage}
+            handleCancel={handleCancel}
+            hasChanges={hasChanges}
+            isFormValid={isFormValid}
+            status={status}
+          />
         ) : (
           <div className={`mt-16 flex flex-col justify-center md:flex-row md:justify-end`}>
             <Button onClick={() => setIsEditing(true)} variant="outlined">

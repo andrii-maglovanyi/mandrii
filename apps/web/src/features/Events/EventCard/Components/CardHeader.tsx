@@ -1,6 +1,7 @@
-import { PenTool, Share2, UserSquare } from "lucide-react";
+import { PenTool, Share2, UserStar } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
+import { type ReactNode } from "react";
 
 import { ActionButton, Tooltip } from "~/components/ui";
 import { useNotifications } from "~/hooks/useNotifications";
@@ -15,9 +16,20 @@ import { Event_Status_Enum, GetPublicEventsQuery, Locale } from "~/types";
 interface CardHeaderProps {
   event: GetPublicEventsQuery["events"][number];
   hideUntilHover?: boolean;
+  /** Full views can add actions without exposing them on search and map cards. */
+  viewActions?: ReactNode;
+  /** Full views use their owner action area for settings instead of a profile shortcut. */
+  hideCurrentOwnerProfileAction?: boolean;
+  showManageAction?: boolean;
 }
 
-export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) => {
+export const CardHeader = ({
+  event,
+  hideUntilHover = false,
+  hideCurrentOwnerProfileAction = false,
+  showManageAction = true,
+  viewActions,
+}: CardHeaderProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const { data: profileData } = useUser();
@@ -53,23 +65,6 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
   };
 
   const renderEventControls = () => {
-    if (event.status === Event_Status_Enum.Active) {
-      return (
-        <div className="flex items-center gap-2">
-          {profileData?.role === "admin" && (
-            <ActionButton
-              aria-label={i18n("Manage event")}
-              className="group"
-              icon={<PenTool size={18} />}
-              onClick={handleManageClick}
-              size="sm"
-              variant="ghost"
-            />
-          )}
-        </div>
-      );
-    }
-
     // Check if user can manage this event:
     // 1. Admin users can manage any event
     // 2. Owner can manage (event.owner_id matches user)
@@ -79,10 +74,13 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
       (profileData.role === "admin" ||
         profileData.id === event.owner_id ||
         (profileData.id === event.user_id && !event.owner_id));
+    // Keep the existing, stricter card-level rule for active events, while
+    // still rendering share, owner, and view-specific controls for them.
+    const canShowManageAction = event.status === Event_Status_Enum.Active ? profileData?.role === "admin" : canManage;
 
     return (
       <div className="flex items-center gap-1">
-        {canManage && (
+        {canShowManageAction && showManageAction && (
           <ActionButton
             aria-label={i18n("Manage event")}
             className="group"
@@ -96,27 +94,23 @@ export const CardHeader = ({ event, hideUntilHover = false }: CardHeaderProps) =
           <ActionButton
             aria-label={i18n("Share this event")}
             className="group"
-            icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+            icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={20} />}
             onClick={handleShareClick}
             size="sm"
             variant="ghost"
           />
         )}
-        {Boolean(event.owner_id) && (
+        {viewActions}
+        {Boolean(event.owner_id) && !(profileData?.id === event.owner_id && hideCurrentOwnerProfileAction) && (
           <ActionButton
-            aria-label={
-              profileData?.id === event.owner_id
-                ? i18n("You own this event - view your profile")
-                : i18n("Verified owner - view profile")
-            }
+            aria-label={profileData?.id === event.owner_id ? i18n("You own this event") : i18n("Verified owner")}
             className="cursor-pointer"
-            icon={<UserSquare className={`stroke-green-600 dark:stroke-green-400`} size={18} />}
+            icon={<UserStar size={20} />}
             onClick={(eventClick) => {
               eventClick.preventDefault();
               eventClick.stopPropagation();
               router.push(`/users/${event.owner_id}`);
             }}
-            size="sm"
             type="button"
             variant="ghost"
           />

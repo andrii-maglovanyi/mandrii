@@ -20,14 +20,7 @@ export const PlatformLink = ({ href, label, size = "medium", type }: Readonly<Pl
   return (
     <Tooltip label={label}>
       <a
-        className={clsx(
-          baseClass,
-          variantClasses.ghost.neutral,
-          `
-            fill-on-surface p-2 text-surface
-            hover:text-surface-tint
-          `,
-        )}
+        className={clsx(baseClass, variantClasses.ghost.neutral, `text-on-surface hover:text-primary p-2`)}
         href={href}
         onClick={handleClick}
         rel="noopener noreferrer"

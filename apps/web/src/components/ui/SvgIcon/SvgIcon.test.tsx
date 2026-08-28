@@ -1,13 +1,14 @@
 import { render, screen } from "@testing-library/react";
+import { siYoutube } from "simple-icons";
 import { describe, expect, it } from "vitest";
 
 import { IconSize, SvgIcon } from "./SvgIcon";
 
 describe("SvgIcon", () => {
-  it("renders with correct <use> href", () => {
+  it("renders the matching Simple Icons path", () => {
     render(<SvgIcon data-testid="svg-icon" id="youtube" />);
-    const use = screen.getByTestId("svg-icon-presentation");
-    expect(use).toHaveAttribute("href", "/static/sprite.svg#youtube");
+    const path = screen.getByTestId("svg-icon-presentation");
+    expect(path).toHaveAttribute("d", siYoutube.path);
   });
 
   it("applies default size 'medium'", () => {

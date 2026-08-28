@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { BookMarked, MapPin } from "lucide-react";
+import { BookMarked, CalendarDays, Info, MapPin, MessageCircle, Newspaper, Pencil, Star } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
@@ -28,6 +28,8 @@ import { useEvents } from "~/hooks/useEvents";
 import { useUser } from "~/hooks/useUser";
 import { useVenues } from "~/hooks/useVenues";
 import { useVenueUnreadCount } from "~/hooks/useVenueUnreadCount";
+import { useDialog } from "~/contexts/DialogContext";
+import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getPublicMediaUrl } from "~/lib/media";
@@ -77,6 +79,7 @@ export const VenueView = ({
   const { usePublicEvents } = useEvents();
   const { data: profile } = useUser();
   const router = useRouter();
+  const { openCustomDialog } = useDialog();
 
   // Use initial data if provided (from server), otherwise fetch client-side
   const shouldFetchClientSide = initialVenue === undefined;
@@ -134,6 +137,24 @@ export const VenueView = ({
   const canManageUpdates = Boolean(
     profile?.id && venue.owner_id === profile.id && venue.status === Venue_Status_Enum.Active,
   );
+  const canManageInfo = Boolean(
+    profile &&
+      (profile.role === "admin" || profile.id === venue.owner_id || (profile.id === venue.user_id && !venue.owner_id)),
+  );
+  const isOwner = Boolean(profile?.id && profile.id === venue.owner_id);
+  const openSettings = () => {
+    void openCustomDialog({
+      children: (
+        <VenueTelegramIntegrations
+          initialLinked={Boolean(initialTelegramLinked)}
+          initialReviewNotificationsEnabled={Boolean(initialTelegramReviewNotificationsEnabled)}
+          targetId={venue.id}
+        />
+      ),
+      title: i18n("Venue settings"),
+    });
+  };
+
   return (
     <div className="flex flex-col">
       {/* Hero section. Edge to edge image carousel */}
@@ -205,13 +226,35 @@ export const VenueView = ({
         )}
 
         <div className={clsx(logoUrl && "pl-32 md:pl-44", "mx-auto mt-2 w-full max-w-5xl px-4")}>
-          <CardHeader hideUntilHover={false} venue={venue} />
+          <CardHeader
+            hideUntilHover={false}
+            hideCurrentOwnerProfileAction={isOwner}
+            viewActions={isOwner ? <ContentViewOwnerActions onOpenSettings={openSettings} /> : undefined}
+            showManageAction={false}
+            venue={venue}
+          />
         </div>
       </div>
 
       <div className={`mx-auto w-full max-w-5xl px-4 py-2 lg:py-4`}>
-        <Tabs defaultActiveKey="about" defer>
-          <TabPane tab={i18n("About")}>
+        <Tabs defaultActiveKey="about" defer mobileFullWidth>
+          <TabPane
+            icon={<Info aria-hidden className="size-6 sm:size-5" />}
+            label={<span className="hidden sm:inline">{i18n("About")}</span>}
+            tab={i18n("About")}
+          >
+            {canManageInfo && (
+              <div className="mb-4 flex justify-end">
+                <Button
+                  onClick={() => router.push(`/user-directory/venues/${venue.slug}`)}
+                  size="sm"
+                  variant="outlined"
+                >
+                  <Pencil size={16} />
+                  {i18n("Manage venue info")}
+                </Button>
+              </div>
+            )}
             <div className={`grid grid-cols-1 gap-8 lg:grid-cols-3`}>
               {/* Description. Left side (2/3) */}
               <div className={`space-y-8 lg:col-span-2`}>
@@ -271,13 +314,21 @@ export const VenueView = ({
           </TabPane>
 
           {canShowRatings && (
-            <TabPane tab={i18n("Updates")}>
+            <TabPane
+              icon={<Newspaper aria-hidden className="size-6 sm:size-5" />}
+              label={<span className="hidden sm:inline">{i18n("Feed")}</span>}
+              tab={i18n("Feed")}
+            >
               <ContentUpdates canManage={canManageUpdates} targetId={venue.id} type="venue" />
             </TabPane>
           )}
 
           {upcomingEvents.length > 0 && !isArchived && (
-            <TabPane tab={i18n("Events")}>
+            <TabPane
+              icon={<CalendarDays aria-hidden className="size-6 sm:size-5" />}
+              label={<span className="hidden sm:inline">{i18n("Events")}</span>}
+              tab={i18n("Events")}
+            >
               <div className="space-y-6">
                 {upcomingEvents.length > 0 && (
                   <div className="space-y-4">
@@ -302,16 +353,21 @@ export const VenueView = ({
           )}
 
           {canShowRatings && (
-            <TabPane tab={i18n("Reviews")}>
+            <TabPane
+              icon={<Star aria-hidden className="size-6 sm:size-5" />}
+              label={<span className="hidden sm:inline">{i18n("Reviews")}</span>}
+              tab={i18n("Reviews")}
+            >
               <ContentReviews context={venue.category} targetId={String(venue.id)} type="venue" />
             </TabPane>
           )}
 
           {initialMessagingRole !== null && (
             <TabPane
+              icon={<MessageCircle aria-hidden className="size-6 sm:size-5" />}
               label={
                 <>
-                  {i18n("Chat")}
+                  <span className="hidden sm:inline">{i18n("Chat")}</span>
                   <TabBadge count={unreadChatCount} />
                 </>
               }
@@ -324,15 +380,6 @@ export const VenueView = ({
                 initialTelegramReviewNotificationsEnabled={initialTelegramReviewNotificationsEnabled}
                 venueId={venue.id}
                 venueName={venue.name}
-              />
-            </TabPane>
-          )}
-          {initialMessagingRole === "OWNER" && (
-            <TabPane tab={i18n("Manage")}>
-              <VenueTelegramIntegrations
-                initialLinked={Boolean(initialTelegramLinked)}
-                initialReviewNotificationsEnabled={Boolean(initialTelegramReviewNotificationsEnabled)}
-                targetId={venue.id}
               />
             </TabPane>
           )}

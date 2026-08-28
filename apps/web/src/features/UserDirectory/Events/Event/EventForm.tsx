@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { FormFooter } from "~/components/layout";
 import { Input, RichText, Select, TabPane, Tabs } from "~/components/ui";
@@ -108,9 +108,10 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
   }, [venues, i18n]);
 
   const isBusy = status === "processing";
+  const [isPreparingImages, setIsPreparingImages] = useState(false);
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-4" onSubmit={isPreparingImages ? (event) => event.preventDefault() : handleSubmit}>
       <div className={`flex grow flex-col justify-evenly lg:space-x-4`}>
         <div className={`flex flex-col justify-evenly md:flex-row md:space-x-4`}>
           <div className="flex flex-1 flex-col">
@@ -183,11 +184,22 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
           <EventContacts getFieldProps={getFieldProps} />
         </TabPane>
         <TabPane tab={i18n("Images")}>
-          <EventImages getFieldProps={getFieldProps} setValues={setValues} useImagePreviews={useImagePreviews} />
+          <EventImages
+            getFieldProps={getFieldProps}
+            onPreparingChange={setIsPreparingImages}
+            setValues={setValues}
+            useImagePreviews={useImagePreviews}
+          />
         </TabPane>
       </Tabs>
 
-      <FormFooter handleCancel={resetForm} hasChanges={hasChanges} isFormValid={isFormValid} status={status} />
+      <FormFooter
+        disabled={isPreparingImages}
+        handleCancel={resetForm}
+        hasChanges={hasChanges}
+        isFormValid={isFormValid}
+        status={status}
+      />
     </form>
   );
 };

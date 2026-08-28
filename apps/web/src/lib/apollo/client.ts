@@ -7,14 +7,23 @@ import { createClient } from "graphql-ws";
 
 import { publicConfig } from "../config/public";
 
+const getAccessToken = async () => {
+  try {
+    return (await getSession())?.accessToken;
+  } catch {
+    // Session restoration can fail transiently (for example while an expired
+    // cookie is being cleared). Public GraphQL requests must still work, and
+    // a WebSocket reconnect must not turn that into an unbounded error loop.
+    return undefined;
+  }
+};
+
 const httpLink = new HttpLink({
   uri: publicConfig.hasura.endpoint,
 });
 
 const authLink = setContext(async (_, { headers }) => {
-  const session = await getSession();
-
-  const token = session?.accessToken;
+  const token = await getAccessToken();
 
   const authorizationHeader = token ? { Authorization: `Bearer ${token}` } : {};
 
@@ -38,8 +47,8 @@ const wsLink =
     : new GraphQLWsLink(
         createClient({
           connectionParams: async () => {
-            const session = await getSession();
-            return session?.accessToken ? { headers: { Authorization: `Bearer ${session.accessToken}` } } : {};
+            const token = await getAccessToken();
+            return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
           },
           lazy: true,
           retryAttempts: Infinity,

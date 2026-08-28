@@ -23,6 +23,11 @@ export const AdminReviewModerationQueue = () => {
   const [reviews, setReviews] = useState<ModerationReview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [reportedComments, setReportedComments] = useState<
+    Array<{ body: string; comment_id: string; report_count: number; report_reasons: string[]; target_name: string }>
+  >([]);
+  const [blockedTerms, setBlockedTerms] = useState<Array<{ term: string }>>([]);
+  const [term, setTerm] = useState("");
   const load = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -37,6 +42,52 @@ export const AdminReviewModerationQueue = () => {
     }
   }, [i18n, showError]);
   useEffect(() => void load(), [load]);
+
+  const loadDiscussionModeration = useCallback(async () => {
+    try {
+      const [commentsResponse, termsResponse] = await Promise.all([
+        fetch("/api/admin/update-comments"),
+        fetch("/api/admin/blocked-comment-terms"),
+      ]);
+      if (!commentsResponse.ok || !termsResponse.ok) throw new Error("Unable to load discussion moderation");
+      setReportedComments(((await commentsResponse.json()) as { comments: typeof reportedComments }).comments);
+      setBlockedTerms(((await termsResponse.json()) as { terms: typeof blockedTerms }).terms);
+    } catch (error) {
+      showError(error instanceof Error ? error.message : i18n("Unable to load discussion moderation"));
+    }
+  }, [i18n, showError]);
+  useEffect(() => void loadDiscussionModeration(), [loadDiscussionModeration]);
+
+  const moderateComment = async (commentId: string, action: "REMOVE" | "RESOLVE") => {
+    try {
+      const response = await fetch(`/api/admin/update-comments/${commentId}`, {
+        body: JSON.stringify({ action }),
+        headers: { "Content-Type": "application/json" },
+        method: "PUT",
+      });
+      if (!response.ok) throw new Error("Unable to moderate comment");
+      await loadDiscussionModeration();
+    } catch (error) {
+      showError(error instanceof Error ? error.message : i18n("Unable to moderate comment"));
+    }
+  };
+
+  const saveTerm = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!term.trim()) return;
+    try {
+      const response = await fetch("/api/admin/blocked-comment-terms", {
+        body: JSON.stringify({ term: term.trim() }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      if (!response.ok) throw new Error("Unable to block term");
+      setTerm("");
+      await loadDiscussionModeration();
+    } catch (error) {
+      showError(error instanceof Error ? error.message : i18n("Unable to block term"));
+    }
+  };
 
   const update = async (
     review: ModerationReview,
@@ -119,6 +170,82 @@ export const AdminReviewModerationQueue = () => {
           )}
         </SectionCard>
       ))}
+      <section className="space-y-4 pt-6">
+        <h2 className="text-2xl font-semibold">{i18n("Comment moderation")}</h2>
+        {reportedComments.length === 0 ? (
+          <SectionCard>{i18n("There are no reported comments.")}</SectionCard>
+        ) : (
+          reportedComments.map((comment) => (
+            <SectionCard key={comment.comment_id}>
+              <p className="font-semibold">
+                {comment.target_name} · {i18n("{count} reports", { count: comment.report_count })}
+              </p>
+              <p className="mt-2 whitespace-pre-wrap">{comment.body}</p>
+              <ul className="text-neutral mt-2 list-disc pl-5 text-sm">
+                {comment.report_reasons.map((reason, index) => (
+                  <li key={`${comment.comment_id}-${index}`}>{reason}</li>
+                ))}
+              </ul>
+              <div className="mt-3 flex gap-2">
+                <Button
+                  onClick={() => void moderateComment(comment.comment_id, "RESOLVE")}
+                  size="sm"
+                  variant="outlined"
+                >
+                  {i18n("Resolve reports")}
+                </Button>
+                <Button
+                  color="danger"
+                  onClick={() => void moderateComment(comment.comment_id, "REMOVE")}
+                  size="sm"
+                  variant="outlined"
+                >
+                  {i18n("Remove comment")}
+                </Button>
+              </div>
+            </SectionCard>
+          ))
+        )}
+        <SectionCard>
+          <h3 className="font-semibold">{i18n("Blocked comment terms")}</h3>
+          <form className="mt-3 flex gap-2" onSubmit={(event) => void saveTerm(event)}>
+            <input
+              aria-label={i18n("Add blocked term")}
+              className="border-primary/20 min-w-0 flex-1 rounded border px-3 py-2"
+              onChange={(event) => setTerm(event.target.value)}
+              placeholder={i18n("Add blocked term")}
+              value={term}
+            />
+            <Button type="submit">{i18n("Add")}</Button>
+          </form>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {blockedTerms.map(({ term: blockedTerm }) => (
+              <button
+                className="bg-surface-tint rounded-full px-3 py-1 text-sm"
+                key={blockedTerm}
+                onClick={() =>
+                  void (async () => {
+                    try {
+                      const response = await fetch("/api/admin/blocked-comment-terms", {
+                        body: JSON.stringify({ term: blockedTerm }),
+                        headers: { "Content-Type": "application/json" },
+                        method: "DELETE",
+                      });
+                      if (!response.ok) throw new Error("Unable to remove blocked term");
+                      await loadDiscussionModeration();
+                    } catch (error) {
+                      showError(error instanceof Error ? error.message : i18n("Unable to remove blocked term"));
+                    }
+                  })()
+                }
+                type="button"
+              >
+                {blockedTerm} ×
+              </button>
+            ))}
+          </div>
+        </SectionCard>
+      </section>
     </main>
   );
 };

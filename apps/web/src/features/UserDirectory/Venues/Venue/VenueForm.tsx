@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { FormFooter } from "~/components/layout";
 import { Checkbox, Input, RichText, Select, TabPane, Tabs } from "~/components/ui";
@@ -61,6 +61,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
 
   const isEditMode = Boolean(initialValues.id);
   const isBusy = status === "processing";
+  const [isPreparingImages, setIsPreparingImages] = useState(false);
 
   useEffect(() => {
     if (isEditMode || !name) return;
@@ -133,15 +134,9 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className={`
-        flex grow flex-col justify-evenly
-        lg:flex-row lg:space-x-4
-      `}>
-        <div className={`
-          flex flex-3 flex-col justify-evenly
-          md:flex-row md:space-x-4
-        `}>
+    <form className="space-y-4" onSubmit={isPreparingImages ? (event) => event.preventDefault() : handleSubmit}>
+      <div className={`flex grow flex-col justify-evenly lg:flex-row lg:space-x-4`}>
+        <div className={`flex flex-3 flex-col justify-evenly md:flex-row md:space-x-4`}>
           <div className="flex flex-3 flex-col">
             <Select
               label={i18n("Category")}
@@ -164,7 +159,7 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
             {...getFieldProps("slug")}
             disabled={isBusy || isEditMode}
           />
-          <RichText as="p" className="mt-1.5 text-sm text-neutral">
+          <RichText as="p" className="text-neutral mt-1.5 text-sm">
             {i18n(
               "↑ This is the unique identifier which must be URL-friendly and **at least 10 characters long**. Once created, it cannot be changed.",
             )}
@@ -172,9 +167,9 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
         </div>
       </div>
 
-      <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-5">
+      <div className="border-primary/20 bg-primary/5 rounded-lg border-2 p-5">
         <Checkbox label={i18n("I own this venue")} {...getFieldProps("is_owner")} disabled={isBusy || isEditMode} />
-        <p className="text-sm text-neutral">
+        <p className="text-neutral text-sm">
           ↑ {i18n("Legal owners have additional management privileges. This setting cannot be changed.")}
         </p>
       </div>
@@ -191,7 +186,12 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
           <VenueInfo getFieldProps={getFieldProps} />
         </TabPane>
         <TabPane tab={i18n("Images")}>
-          <VenueImages getFieldProps={getFieldProps} setValues={setValues} useImagePreviews={useImagePreviews} />
+          <VenueImages
+            getFieldProps={getFieldProps}
+            onPreparingChange={setIsPreparingImages}
+            setValues={setValues}
+            useImagePreviews={useImagePreviews}
+          />
         </TabPane>
         <TabPane tab={i18n("Address")}>
           <VenueAddress
@@ -212,7 +212,13 @@ export const VenueForm = ({ initialValues = {}, onSubmit, onSuccess }: VenueForm
         {renderDetailsTab()}
       </Tabs>
 
-      <FormFooter handleCancel={resetForm} hasChanges={hasChanges} isFormValid={isFormValid} status={status} />
+      <FormFooter
+        disabled={isPreparingImages}
+        handleCancel={resetForm}
+        hasChanges={hasChanges}
+        isFormValid={isFormValid}
+        status={status}
+      />
     </form>
   );
 };

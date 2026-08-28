@@ -33,7 +33,10 @@ const masonryVariants = {
       `,
     ),
     descriptionClasses: "text-neutral text-sm line-clamp-3",
-    imageClasses: { horizontal: "h-full min-h-[300px] w-full sm:w-2/5", vertical: "h-48 w-full sm:h-56" },
+    imageClasses: {
+      horizontal: "h-48 w-full sm:h-auto sm:min-h-[300px] sm:w-2/5 sm:self-stretch",
+      vertical: "h-48 w-full sm:h-56",
+    },
     imageSizes: "(max-width: 768px) 100vw, 40vw",
     minHeight: "min-h-[300px]",
     showDescription: true,
@@ -49,7 +52,10 @@ const masonryVariants = {
       `,
     ),
     descriptionClasses: "text-neutral text-sm line-clamp-2",
-    imageClasses: { horizontal: "h-full min-h-[300px] w-full sm:w-1/2", vertical: "h-44 w-full sm:h-52" },
+    imageClasses: {
+      horizontal: "h-44 w-full sm:h-auto sm:min-h-[300px] sm:w-1/2 sm:self-stretch",
+      vertical: "h-44 w-full sm:h-52",
+    },
     imageSizes: "(max-width: 768px) 100vw, 50vw",
     minHeight: "min-h-[300px]",
     showDescription: true,
@@ -95,7 +101,7 @@ export const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): Layo
       imageSizes: config.imageSizes,
       innerContainerClasses: clsx("flex h-full w-full", config.minHeight, {
         "flex-col": isMasonryVertical,
-        "flex-row": !isMasonryVertical && hasImage,
+        "flex-col sm:flex-row": !isMasonryVertical && hasImage,
       }),
       showDescription: config.showDescription,
       titleClasses: clsx(
@@ -112,7 +118,7 @@ export const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): Layo
     containerClasses: clsx(baseCardClasses, "flex flex-row"),
     contentClasses: "flex flex-1 flex-col gap-2 p-4",
     descriptionClasses: "text-neutral text-sm line-clamp-3",
-    imageContainerClasses: "bg-neutral/5 relative overflow-hidden max-h-64 min-h-48 max-w-64 min-w-48 flex-shrink-0",
+    imageContainerClasses: "bg-neutral/5 relative overflow-hidden max-h-72 min-h-48 max-w-64 min-w-48 flex-shrink-0",
     imageSizes: "256px",
     innerContainerClasses: "w-full flex",
     showDescription: true,

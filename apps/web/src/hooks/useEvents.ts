@@ -74,18 +74,19 @@ export const useEvents = () => {
     };
   };
 
-  const useUserEvents = (params?: APIParams) => {
+  const useUserEvents = (params?: APIParams, ownedOnly = false) => {
     const { data: session } = useSession();
+    const ownershipField = ownedOnly ? "owner_id" : "user_id";
 
     const mergedParams = useMemo(
       () => ({
         ...params,
         order_by: params?.order_by ?? [{ updated_at: "desc" }],
         where: {
-          _and: [{ user_id: { _eq: session?.user.id } }, ...(params?.where ? [params.where] : [])],
+          _and: [{ [ownershipField]: { _eq: session?.user.id } }, ...(params?.where ? [params.where] : [])],
         },
       }),
-      [params, session?.user.id],
+      [ownedOnly, ownershipField, params, session?.user.id],
     );
 
     const result = useGraphApi<GetUserEventsQuery["events"]>(GET_USER_EVENTS, mergedParams, {

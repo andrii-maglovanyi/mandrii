@@ -1,7 +1,9 @@
 import { z } from "zod";
 
+import { auth } from "~/lib/auth";
 import { BadRequestError, getApiContext, rateLimiters, validateRequest, withErrorHandling } from "~/lib/api";
-import { removeContentUpdate, updateContentUpdate } from "~/lib/models/content-updates";
+import { getContentUpdateById, removeContentUpdate, updateContentUpdate } from "~/lib/models/content-updates";
+import { RATING_TARGET_TYPES } from "~/lib/ratings/types";
 import { deleteImages } from "~/lib/utils/images";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +15,21 @@ const getUpdateId = async (params: Promise<{ updateId: string }>) => {
   if (!z.string().uuid().safeParse(updateId).success) throw new BadRequestError("A valid update ID is required");
   return updateId;
 };
+
+export const GET = (req: Request, { params }: { params: Promise<{ updateId: string }> }) =>
+  withErrorHandling(async () => {
+    await rateLimiters.general.check();
+    const updateId = await getUpdateId(params);
+    const { searchParams } = new URL(req.url);
+    const target = z.object({ targetId: z.string().uuid(), type: z.enum(RATING_TARGET_TYPES) }).safeParse({
+      targetId: searchParams.get("targetId"),
+      type: searchParams.get("type"),
+    });
+    if (!target.success) throw new BadRequestError("A valid updates target is required");
+    return Response.json(
+      await getContentUpdateById(updateId, target.data.type, target.data.targetId, (await auth())?.user?.id ?? null),
+    );
+  });
 
 export const PUT = (req: Request, { params }: { params: Promise<{ updateId: string }> }) =>
   withErrorHandling(async () => {

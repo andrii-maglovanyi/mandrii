@@ -28,14 +28,15 @@ const Venues = () => {
   const { handleFilter, handlePaginate, handleSort, listState } = useListControls({
     order_by: [{ status: "desc" }, { updated_at: "desc" }],
   });
-  const { count, data, error, loading } = useUserVenues(listState);
 
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const dateLocale = locale === "uk" ? uk : enUS;
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [ownedOnly, setOwnedOnly] = useState(false);
   const [status, setStatus] = useState<Venue_Status_Enum>();
+  const { count, data, error, loading } = useUserVenues(listState, ownedOnly);
   const debouncedSetSearch = useDebouncedCallback((value: string) => setDebouncedSearch(value), SEARCH_DEBOUNCE_MS);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const Venues = () => {
     }
 
     handleFilter(filters.length ? { _and: filters } : {});
-  }, [debouncedSearch, handleFilter, status]);
+  }, [debouncedSearch, handleFilter, ownedOnly, status]);
 
   useEffect(() => () => debouncedSetSearch.cancel(), [debouncedSetSearch]);
 
@@ -175,8 +176,11 @@ const Venues = () => {
         </Button>
       </div>
       <ContentDirectoryFilters
+        onOwnedOnlyChange={setOwnedOnly}
         onSearchChange={handleSearchChange}
         onStatusChange={setStatus}
+        ownedOnly={ownedOnly}
+        ownedOnlyLabel={i18n("Only venues I own")}
         searchPlaceholder={i18n("Search venues by title or location...")}
         searchQuery={searchQuery}
         status={status}

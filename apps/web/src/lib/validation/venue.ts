@@ -1,13 +1,12 @@
 import { z } from "zod";
 
 import { getI18n } from "~/i18n/getI18n";
+import { IMAGE_UPLOAD_PROFILES, isProcessedImageUpload } from "~/lib/images/uploadConfig";
 import { isEmail, isWebsite, validatePhoneNumber } from "~/lib/utils";
 import { Venue_Category_Enum } from "~/types";
 
 import { constants } from "../constants";
 import { FACEBOOK_HOSTS, INSTAGRAM_HOSTS, validateHost } from "./utils/social-links";
-
-const MAX_IMAGES = 6;
 
 const venueScheduleItemSchema = z
   .object({
@@ -172,8 +171,18 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
     id: z.string().optional(),
 
     images: z
-      .array(z.instanceof(File))
-      .max(MAX_IMAGES, i18n("Maximum is {MAX_IMAGES} images.", { MAX_IMAGES }))
+      .array(
+        z
+          .instanceof(File)
+          .refine(
+            (image) => isProcessedImageUpload(image, IMAGE_UPLOAD_PROFILES.venue.maxBytes),
+            i18n("Please choose a supported image."),
+          ),
+      )
+      .max(
+        IMAGE_UPLOAD_PROFILES.venue.maxImages,
+        i18n("Maximum is {MAX_IMAGES} images.", { MAX_IMAGES: IMAGE_UPLOAD_PROFILES.venue.maxImages }),
+      )
       .optional()
       .nullable(),
 
@@ -203,7 +212,17 @@ export const getVenueSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
       .optional()
       .nullable(),
 
-    logo: z.preprocess((val) => (val === "" ? null : val), z.instanceof(File).optional().nullable()),
+    logo: z.preprocess(
+      (val) => (val === "" ? null : val),
+      z
+        .instanceof(File)
+        .refine(
+          (image) => isProcessedImageUpload(image, IMAGE_UPLOAD_PROFILES.venue.maxBytes),
+          i18n("Please choose a supported image."),
+        )
+        .optional()
+        .nullable(),
+    ),
 
     longitude: z
       .union([z.string().transform((val) => Number.parseFloat(val)), z.number()])

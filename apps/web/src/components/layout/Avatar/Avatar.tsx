@@ -27,7 +27,7 @@ export const Avatar = ({ avatarSize = 48, className, profile }: AvatarProps) => 
           className={`border-primary relative overflow-hidden rounded-full border`}
           style={{ height: avatarSize, width: avatarSize }}
         >
-          <Image alt={name ?? i18n("Someone")} className="object-cover" fill src={imageUrl} />
+          <Image alt={name ?? i18n("Someone")} className="object-cover" fill sizes={`${avatarSize}px`} src={imageUrl} />
         </div>
       ) : (
         <div
