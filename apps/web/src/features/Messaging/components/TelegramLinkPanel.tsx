@@ -55,7 +55,7 @@ export const TelegramLinkPanel = ({
       <div className="space-y-4">
         <div className="bg-primary/10 flex items-center justify-between rounded-xl px-4 py-3">
           <div className="flex space-x-2">
-            <Image alt="Telegram" width={22} height={22} src={TELEGRAM_LOGO} />
+            <Image alt="Telegram" height={22} src={TELEGRAM_LOGO} style={{ height: 22, width: 22 }} width={22} />
             <div>
               <p className="font-medium">{i18n("Telegram")}</p>
               <p className="text-on-surface/70 text-sm">

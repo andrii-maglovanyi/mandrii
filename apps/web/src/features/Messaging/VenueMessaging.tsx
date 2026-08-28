@@ -1438,7 +1438,13 @@ export const VenueMessaging = ({
                                   )}
                                   {message.sent_from_telegram && (
                                     <Tooltip label={i18n("Sent from Telegram")}>
-                                      <Image alt="Telegram" width={14} height={14} src={TELEGRAM_LOGO} />
+                                      <Image
+                                        alt="Telegram"
+                                        height={14}
+                                        src={TELEGRAM_LOGO}
+                                        style={{ height: 14, width: 14 }}
+                                        width={14}
+                                      />
                                     </Tooltip>
                                   )}
                                   {message.edited_at && (
