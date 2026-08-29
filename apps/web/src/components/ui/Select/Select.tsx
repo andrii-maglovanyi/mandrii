@@ -23,6 +23,7 @@ export type SelectProps<K, T> = {
   placeholder?: string;
   ref?: Ref<HTMLButtonElement>;
   required?: boolean;
+  selectedLabel?: React.ReactNode;
   showErrorMessage?: boolean;
   value?: T;
 };
@@ -42,6 +43,7 @@ export function Select<K extends React.ReactNode, T>({
   placeholder = "Select...",
   ref,
   required = false,
+  selectedLabel: selectedLabelOverride,
   showErrorMessage = false,
   value,
 }: Readonly<SelectProps<K, T>>) {
@@ -49,7 +51,7 @@ export function Select<K extends React.ReactNode, T>({
   const selectId = id ?? generatedId;
   const [focused, setFocused] = useState(false);
 
-  const selectedLabel = options.find((opt) => opt.value === value)?.label ?? placeholder;
+  const selectedLabel = selectedLabelOverride ?? options.find((opt) => opt.value === value)?.label ?? placeholder;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<MenuHandle>(null);

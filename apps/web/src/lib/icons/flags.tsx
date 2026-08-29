@@ -63,6 +63,7 @@ const FLAG_MAP = new Map<string, React.ComponentType<{ className?: string }>>([
   ["es", ES],
   ["fi", FI],
   ["fr", FR],
+  ["gb", GB],
   ["ge", GE],
   ["gr", GR],
   ["id", ID],

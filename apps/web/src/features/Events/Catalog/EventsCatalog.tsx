@@ -1,11 +1,13 @@
 "use client";
 
 import { Grid3X3, List, MapPinOff } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useDebouncedCallback } from "use-debounce";
 
-import { ActionButton, AnimatedEllipsis, EmptyState, Pagination, RichText } from "~/components/ui";
+import { ActionButton, AnimatedEllipsis, Pagination, RichText } from "~/components/ui";
+import { LocationResultsFallback } from "~/features/Discovery/LocationResultsFallback";
 import { generateCatalogLayouts } from "~/features/shared/Catalog/layoutConfig";
 import { useEvents } from "~/hooks/useEvents";
 import { useListControls } from "~/hooks/useListControls";
@@ -14,7 +16,9 @@ import { Event_Type_Enum, GetPublicEventsQuery, Price_Type_Enum } from "~/types"
 
 import { EventsListCard } from "../EventCard/EventsListCard";
 import { EventsMasonryCard } from "../EventCard/EventsMasonryCard";
+import { getEventDatePreset } from "../utils/getEventDatePreset";
 import { getEventsFilter } from "../utils/getEventsFilter";
+import { removeDiscoveryCityFromUrl } from "~/features/Discovery/discoveryLocation";
 import { EventsCatalogFilter } from "./EventsCatalogFilter";
 
 type ViewMode = "grid" | "list";
@@ -25,14 +29,31 @@ const SEARCH_DEBOUNCE_MS = 300;
 export const EventsCatalog = () => {
   const i18n = useI18n();
   const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
+  const searchParams = useSearchParams();
+  const searchParamsKey = searchParams.toString();
+  const querySearch = searchParams.get("q") ?? "";
+  const datePreset = useMemo(() => getEventDatePreset(searchParams.get("when")), [searchParamsKey]);
 
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [type, setType] = useState<Event_Type_Enum | undefined>();
   const [priceType, setPriceType] = useState<Price_Type_Enum | undefined>();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [dateFrom, setDateFrom] = useState<string | undefined>();
-  const [dateTo, setDateTo] = useState<string | undefined>();
+  const [searchQuery, setSearchQuery] = useState(querySearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(querySearch);
+  const [dateFrom, setDateFrom] = useState<string | undefined>(datePreset?.dateFrom);
+  const [dateTo, setDateTo] = useState<string | undefined>(datePreset?.dateTo);
+  const city = searchParams.get("city") ?? undefined;
+  const country = searchParams.get("country") ?? undefined;
+  const locationFallbackHref = useMemo(
+    () => (city && country ? removeDiscoveryCityFromUrl(`/events?${searchParamsKey}`) : undefined),
+    [city, country, searchParamsKey],
+  );
+
+  useEffect(() => {
+    setSearchQuery(querySearch);
+    setDebouncedSearch(querySearch);
+    setDateFrom(datePreset?.dateFrom);
+    setDateTo(datePreset?.dateTo);
+  }, [datePreset, querySearch]);
 
   const { usePublicEvents } = useEvents();
 
@@ -58,6 +79,8 @@ export const EventsCatalog = () => {
 
   useEffect(() => {
     const { variables } = getEventsFilter({
+      city,
+      country,
       dateFrom,
       dateTo,
       name: debouncedSearch,
@@ -66,7 +89,7 @@ export const EventsCatalog = () => {
     });
 
     handleFilter(variables.where);
-  }, [type, priceType, debouncedSearch, dateFrom, dateTo, handleFilter]);
+  }, [type, priceType, city, country, debouncedSearch, dateFrom, dateTo, handleFilter]);
 
   const handlePageChange = (pageIndex: number) => {
     const actualOffset = (pageIndex - 1) * ITEMS_LIMIT;
@@ -104,10 +127,7 @@ export const EventsCatalog = () => {
 
       <div className="flex flex-wrap items-center justify-between">
         {count ? (
-          <RichText as="div" className={`
-            text-sm
-            sm:text-base
-          `}>
+          <RichText as="div" className={`text-sm sm:text-base`}>
             {(() => {
               const currentOffset = listState.offset ?? 0;
               const start = currentOffset + 1;
@@ -124,10 +144,7 @@ export const EventsCatalog = () => {
           <div />
         )}
 
-        <div className={`
-          hidden gap-1 rounded-lg bg-surface-tint p-1
-          lg:flex
-        `}>
+        <div className={`bg-surface-tint hidden gap-1 rounded-lg p-1 lg:flex`}>
           <ActionButton
             aria-label={i18n("Grid view")}
             color="primary"
@@ -147,17 +164,15 @@ export const EventsCatalog = () => {
       </div>
 
       {!loading && events?.length === 0 ? (
-        <EmptyState
-          body={i18n("Try adjusting your filters or search terms")}
+        <LocationResultsFallback
+          city={city}
+          country={country}
+          fallbackHref={locationFallbackHref}
           heading={i18n("No events found")}
           icon={<MapPinOff size={50} />}
         />
       ) : viewMode === "grid" && !isMobile ? (
-        <div className={`
-          grid auto-rows-auto grid-cols-1 gap-4
-          sm:grid-cols-2
-          lg:grid-cols-4
-        `}>
+        <div className={`grid auto-rows-auto grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4`}>
           {eventLayouts.map((layout) => (
             <EventsMasonryCard
               event={layout.item}

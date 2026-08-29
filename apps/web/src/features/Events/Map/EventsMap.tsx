@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { LayoutDashboard, LocateFixed, MapPinOff } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useMediaQuery } from "react-responsive";
@@ -33,6 +34,10 @@ const MAX_DISTANCE = 100000;
 export const EventsMap = () => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
+  const searchParams = useSearchParams();
+  const city = searchParams.get("city") ?? undefined;
+  const country = searchParams.get("country") ?? undefined;
+  const hasLocationFilter = Boolean(city || country);
 
   const { handleAdd: handleAddEvent, isAuthenticated } = useAddEntity({
     mixpanelEvent: "Clicked Add Event",
@@ -90,8 +95,10 @@ export const EventsMap = () => {
 
   const { isDark } = useTheme();
   const { variables } = getEventsFilter({
+    city,
+    country,
     distance,
-    geo: userLocation,
+    geo: hasLocationFilter ? undefined : userLocation,
     type,
   });
 
@@ -213,14 +220,16 @@ export const EventsMap = () => {
 
   useEffect(() => {
     const { variables } = getEventsFilter({
+      city,
+      country,
       distance,
-      geo: userLocation,
+      geo: hasLocationFilter ? undefined : userLocation,
       isOnline: false,
       type,
     });
 
     handleFilter(variables.where);
-  }, [type, distance, userLocation, handleFilter]);
+  }, [type, city, country, distance, hasLocationFilter, userLocation, handleFilter]);
 
   useEffect(() => {
     const handler = setTimeout(async () => {
@@ -367,7 +376,7 @@ export const EventsMap = () => {
               <PinMap
                 colorScheme={isDark ? "DARK" : "LIGHT"}
                 distance={Number(distance)}
-                drawRadius
+                drawRadius={!hasLocationFilter}
                 events={eventsWithGeo}
                 onClick={() => {
                   setSelectedEventId(null);

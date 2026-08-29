@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { LayoutDashboard, LocateFixed, MapPinOff } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useMediaQuery } from "react-responsive";
@@ -36,6 +37,10 @@ const MAX_DISTANCE = 100000;
 export const VenuesMap = ({ slug }: VenuesProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
+  const searchParams = useSearchParams();
+  const city = searchParams.get("city") ?? undefined;
+  const country = searchParams.get("country") ?? undefined;
+  const hasLocationFilter = Boolean(city || country);
 
   const { handleAdd: handleAddVenue, isAuthenticated } = useAddEntity({
     mixpanelEvent: "Clicked Add Venue",
@@ -95,8 +100,10 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
   const { isDark } = useTheme();
   const { variables } = getVenuesFilter({
     category,
+    city,
+    country,
     distance,
-    geo: userLocation,
+    geo: hasLocationFilter ? undefined : userLocation,
     slug: venueSlug,
   });
 
@@ -218,13 +225,15 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
   useEffect(() => {
     const { variables } = getVenuesFilter({
       category,
+      city,
+      country,
       distance,
-      geo: userLocation,
+      geo: hasLocationFilter ? undefined : userLocation,
       slug: venueSlug,
     });
 
     handleFilter(variables.where);
-  }, [category, distance, userLocation, venueSlug, handleFilter]);
+  }, [category, city, country, distance, hasLocationFilter, userLocation, venueSlug, handleFilter]);
 
   useEffect(() => {
     if (slug && data.length === 1 && data[0].slug === slug) {
@@ -387,7 +396,7 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
               <PinMap
                 colorScheme={isDark ? "DARK" : "LIGHT"}
                 distance={Number(distance)}
-                drawRadius
+                drawRadius={!hasLocationFilter}
                 onClick={() => {
                   if (venueSlug) return;
                   setSelectedVenueId(null);

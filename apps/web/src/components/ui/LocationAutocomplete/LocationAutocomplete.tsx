@@ -14,6 +14,7 @@ type LocationAutocompleteProps = Omit<
   InputProps<string, string>,
   "onFocus" | "onSelectSuggestion" | "suggestions" | "type"
 > & {
+  includedRegionCodes?: string[];
   onLocationSelect?: (location: string) => void;
 };
 
@@ -22,6 +23,7 @@ type LocationAutocompleteProps = Omit<
  * when the Maps API is unavailable.
  */
 export const LocationAutocomplete = ({
+  includedRegionCodes,
   onChange,
   onLocationSelect,
   ...inputProps
@@ -51,7 +53,7 @@ export const LocationAutocomplete = ({
     const timeout = window.setTimeout(async () => {
       try {
         const result = await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
-          includedRegionCodes: Object.keys(constants.whitelisted_countries),
+          includedRegionCodes: includedRegionCodes ?? Object.keys(constants.whitelisted_countries),
           input: searchTerm,
           sessionToken: sessionTokenRef.current ?? undefined,
         });
@@ -62,7 +64,7 @@ export const LocationAutocomplete = ({
     }, 300);
 
     return () => window.clearTimeout(timeout);
-  }, [isLoaded, searchTerm]);
+  }, [includedRegionCodes, isLoaded, searchTerm]);
 
   const handleSuggestionSelect = useCallback(
     (placeId: string) => {

@@ -39,7 +39,7 @@ export const useEvents = () => {
     return result.content;
   }, []);
 
-  const usePublicEvents = (params: APIParams) => {
+  const usePublicEvents = (params: APIParams, options?: { skip?: boolean }) => {
     const mergedParams = useMemo(
       () => ({
         ...params,
@@ -48,7 +48,7 @@ export const useEvents = () => {
       [params],
     );
 
-    const result = useGraphApi<GetPublicEventsQuery["events"]>(GET_PUBLIC_EVENTS, mergedParams);
+    const result = useGraphApi<GetPublicEventsQuery["events"]>(GET_PUBLIC_EVENTS, mergedParams, options);
 
     return result;
   };

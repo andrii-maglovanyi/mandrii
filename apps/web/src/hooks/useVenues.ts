@@ -18,6 +18,8 @@ import { useGraphApi } from "./useGraphApi";
 
 interface VenuesParams {
   category?: Venue_Category_Enum;
+  categories?: Venue_Category_Enum[];
+  city?: string;
   country?: string;
   distance?: string;
   geo?: {
@@ -30,7 +32,7 @@ interface VenuesParams {
 
 const now = new Date().toISOString();
 
-export const getVenuesFilter = ({ category, country, distance, geo, name, slug }: VenuesParams) => {
+export const getVenuesFilter = ({ categories, category, city, country, distance, geo, name, slug }: VenuesParams) => {
   const where: FilterParams = {};
 
   if (slug) {
@@ -50,8 +52,14 @@ export const getVenuesFilter = ({ category, country, distance, geo, name, slug }
     };
   }
 
-  if (category) {
+  if (categories?.length) {
+    where.category = { _in: categories };
+  } else if (category) {
     where.category = { _eq: category.toUpperCase() };
+  }
+
+  if (city) {
+    where.city = { _ilike: `%${city}%` };
   }
 
   if (country) {

@@ -7,6 +7,8 @@ type EventsFilterResult = {
 };
 
 interface EventsParams {
+  city?: string;
+  country?: string;
   dateFrom?: string;
   dateTo?: string;
   distance?: string;
@@ -22,6 +24,8 @@ interface EventsParams {
 }
 
 export const getEventsFilter = ({
+  city,
+  country,
   dateFrom,
   dateTo,
   distance,
@@ -34,6 +38,7 @@ export const getEventsFilter = ({
 }: EventsParams): EventsFilterResult => {
   const where: FilterParams = {};
   const now = new Date().toISOString();
+  let dateConditions: FilterParams[] = [];
 
   if (slug) {
     where.slug = { _eq: slug };
@@ -52,20 +57,30 @@ export const getEventsFilter = ({
     where.price_type = { _eq: priceType };
   }
 
+  if (country) {
+    where.country = { _eq: country };
+  }
+
+  if (city) {
+    where.city = { _ilike: `%${city}%` };
+  }
+
   // Date range filter - only show upcoming/ongoing events
   if (dateFrom) {
-    where._or = [{ end_date: { _gte: dateFrom } }, { start_date: { _gte: dateFrom } }];
+    dateConditions = [{ end_date: { _gte: dateFrom } }, { start_date: { _gte: dateFrom } }];
   } else {
-    where._or = [{ end_date: { _gte: now } }, { start_date: { _gte: now } }];
+    dateConditions = [{ end_date: { _gte: now } }, { start_date: { _gte: now } }];
   }
 
   if (dateTo) {
-    where._or = where._or?.map((condition) => {
+    const endOfDay = /^\d{4}-\d{2}-\d{2}$/.test(dateTo) ? `${dateTo}T23:59:59.999Z` : dateTo;
+
+    dateConditions = dateConditions.map((condition) => {
       if ("end_date" in condition) {
-        return { end_date: { ...condition.end_date, _lte: dateTo } };
+        return { end_date: { ...condition.end_date, _lte: endOfDay } };
       }
       if ("start_date" in condition) {
-        return { start_date: { ...condition.start_date, _lte: dateTo } };
+        return { start_date: { ...condition.start_date, _lte: endOfDay } };
       }
       return condition;
     });
@@ -82,24 +97,30 @@ export const getEventsFilter = ({
       },
     };
 
-    where._and = [
-      {
-        _or: [{ geo: geoFilter }, { venue: { geo: geoFilter } }],
-      },
-    ];
+    where._and = [{ _or: [{ geo: geoFilter }, { venue: { geo: geoFilter } }] }];
   }
 
   if (name) {
-    where._or = [
-      { title_en: { _ilike: `%${name}%` } },
-      { title_uk: { _ilike: `%${name}%` } },
-      { description_en: { _ilike: `%${name}%` } },
-      { description_uk: { _ilike: `%${name}%` } },
-      { area: { _ilike: `%${name}%` } },
-      { city: { _ilike: `%${name}%` } },
-      { custom_location_address: { _ilike: `%${name}%` } },
-      { venue: { name: { _ilike: `%${name}%` } } },
+    const existingAnd = Array.isArray(where._and) ? where._and : [];
+
+    where._and = [
+      ...existingAnd,
+      { _or: dateConditions },
+      {
+        _or: [
+          { title_en: { _ilike: `%${name}%` } },
+          { title_uk: { _ilike: `%${name}%` } },
+          { description_en: { _ilike: `%${name}%` } },
+          { description_uk: { _ilike: `%${name}%` } },
+          { area: { _ilike: `%${name}%` } },
+          { city: { _ilike: `%${name}%` } },
+          { custom_location_address: { _ilike: `%${name}%` } },
+          { venue: { name: { _ilike: `%${name}%` } } },
+        ],
+      },
     ];
+  } else {
+    where._or = dateConditions;
   }
 
   return {

@@ -1,6 +1,6 @@
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { useLocale } from "next-intl";
-import { Ref, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { Ref, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 
 import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
@@ -10,6 +10,7 @@ import { UUID } from "~/types/uuid";
 
 import { COLOR_STYLES } from "../../Venues/constants";
 import { createDashedCirclePolyline } from "../../Venues/utils";
+import { useFitMapToItems } from "../../Map/useFitMapToItems";
 import { useDrawMarkers } from "./useDrawMarkers";
 
 export interface GoogleMapRef {
@@ -21,6 +22,9 @@ type GoogleMapInstance = google.maps.Map;
 type Polyline = google.maps.Polyline;
 
 const libraries = ["marker", "places"] as Libraries;
+
+const getEventCoordinates = (event: GetPublicEventsQuery["events"][number]) =>
+  (event.geo ?? event.venue?.geo)?.coordinates;
 
 interface PinMapProps {
   colorScheme: "DARK" | "LIGHT";
@@ -57,6 +61,7 @@ export const PinMap = ({
   const locale = useLocale() as Locale;
 
   const mapRef = useRef<GoogleMapInstance | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
   const dashedCircleRef = useRef<null | Polyline>(null);
   const markersRef = useRef<Map<UUID, AdvancedMarkerElement>>(new Map());
   const labelSpansRef = useRef<Map<UUID, HTMLSpanElement>>(new Map());
@@ -84,6 +89,7 @@ export const PinMap = ({
 
   const onLoad = (map: GoogleMapInstance) => {
     mapRef.current = map;
+    setIsMapReady(true);
   };
 
   useEffect(() => {
@@ -142,6 +148,15 @@ export const PinMap = ({
       setTimeout(drawDashedCircle, 500);
     }
   }, [isLoaded, userLocation, distance, colorScheme, drawRadius]);
+
+  useFitMapToItems({
+    enabled: !drawRadius,
+    getCoordinates: getEventCoordinates,
+    isLoaded,
+    isMapReady,
+    items: events,
+    mapRef,
+  });
 
   useDrawMarkers({
     colorScheme,
