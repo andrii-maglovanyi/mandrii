@@ -8,7 +8,12 @@ export default function SettingsPage() {
 
   return (
     <>
-      <Breadcrumbs items={[{ title: i18n("Home"), url: `/` }]} />
+      <Breadcrumbs
+        items={[
+          { title: i18n("Home"), url: `/` },
+          { title: i18n("Profile"), url: `/user-profile` },
+        ]}
+      />
       <main className="mx-auto w-full max-w-3xl py-4 md:py-8">
         <header className="mb-8">
           <h1 className="text-3xl font-extrabold md:text-5xl">{i18n("Settings")}</h1>

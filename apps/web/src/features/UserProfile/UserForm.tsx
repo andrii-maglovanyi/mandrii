@@ -1,6 +1,6 @@
 "use client";
 
-import { Lock } from "lucide-react";
+import { AtSign, Lock } from "lucide-react";
 import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
@@ -38,6 +38,7 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
     onSubmit: (body) => {
       if (!body.has("bio")) body.set("bio", "");
       if (!body.has("city")) body.set("city", "");
+      if (!body.has("username")) body.set("username", "");
       return onSubmit(body);
     },
     onSuccess: async () => {
@@ -104,25 +105,39 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
             {isEditing ? (
               <Input placeholder={`${i18n("Your name")}`} required {...getFieldProps("name")} />
             ) : (
-              <h1 className={`mb-6 text-3xl font-bold text-nowrap md:mb-3 md:text-5xl`}>{values.name}</h1>
+              <h1 className="text-3xl font-bold text-nowrap md:mb-3 md:text-5xl">{values.name}</h1>
             )}
+            {isEditing ? (
+              <Input placeholder="Your username" prefix={<AtSign size={18} />} {...getFieldProps("username")} />
+            ) : values.username ? (
+              <p className="text-primary my-4 flex items-center gap-0.5 text-lg font-medium">
+                <AtSign className="stroke-primary" strokeWidth={3} size={16} />
+                {values.username}
+              </p>
+            ) : null}
             <div className={`text-neutral flex items-center justify-center gap-2 md:justify-start`}>
               <Tooltip label={i18n("Your email address cannot be changed.")} position="top">
                 <Lock className="stroke-neutral-disabled" size={16} />
               </Tooltip>
               {profile.email}
             </div>
-            {!isEditing && values.city && <p className="text-neutral mt-3 text-sm">{values.city}</p>}
-            {!isEditing && values.bio && (
-              <RichText className="text-on-surface mt-4 max-w-prose text-sm">{values.bio}</RichText>
-            )}
           </div>
         </div>
 
-        {isEditing && (
-          <div className="mt-8 flex flex-col gap-5">
+        <div className="mt-8 flex flex-col gap-5">
+          {isEditing ? (
+            <LocationAutocomplete
+              label={i18n("Location")}
+              {...getFieldProps("city")}
+              onLocationSelect={(city) => setValues((current) => ({ ...current, city }))}
+              placeholder={i18n("Search street, city, or region...")}
+            />
+          ) : values.city ? (
+            <p className="text-neutral mt-3">{values.city}</p>
+          ) : null}
+          {isEditing ? (
             <MDEditor
-              height={180}
+              height={250}
               isDark={isDark}
               label={i18n("About you")}
               maxChars={500}
@@ -130,14 +145,10 @@ export const UserForm = ({ onSubmit, onSuccess, profile }: UserFormProps) => {
               preview={isMobile ? "edit" : "live"}
               {...getFieldProps("bio")}
             />
-            <LocationAutocomplete
-              label={i18n("City")}
-              onLocationSelect={(city) => setValues((current) => ({ ...current, city }))}
-              placeholder={i18n("Search street, city, or region...")}
-              {...getFieldProps("city")}
-            />
-          </div>
-        )}
+          ) : values.bio ? (
+            <RichText className="text-on-surface mt-4">{values.bio}</RichText>
+          ) : null}
+        </div>
 
         {isEditing ? (
           <FormFooter

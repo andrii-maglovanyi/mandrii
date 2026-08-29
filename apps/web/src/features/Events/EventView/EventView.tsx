@@ -28,7 +28,7 @@ import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getEffectiveEventStatus } from "~/lib/events/status";
 import { toDateLocale } from "~/lib/utils/locale";
-import { Event_Status_Enum, Locale } from "~/types";
+import { Event_Status_Enum, GetPublicEventsQuery, Locale } from "~/types";
 
 import { CardHeader } from "../EventCard/Components/CardHeader";
 import { AdditionalInfo } from "./Components/AdditionalInfo";
@@ -36,17 +36,20 @@ import { CardMetadata } from "./Components/CardMetadata";
 import { OrganizerInfo } from "./Components/OrganizerInfo";
 
 interface EventViewProps {
+  initialEvent?: GetPublicEventsQuery["events"][number] | null;
   slug: string;
 }
 
-export const EventView = ({ slug }: EventViewProps) => {
+export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const { useGetEvent } = useEvents();
   const { data: profile } = useUser();
   const router = useRouter();
 
-  const { data: event, loading } = useGetEvent(slug);
+  const shouldFetchClientSide = initialEvent === undefined;
+  const { data: clientEvent, loading } = useGetEvent(shouldFetchClientSide ? slug : undefined);
+  const event = shouldFetchClientSide ? clientEvent : initialEvent;
 
   if (loading) {
     return (

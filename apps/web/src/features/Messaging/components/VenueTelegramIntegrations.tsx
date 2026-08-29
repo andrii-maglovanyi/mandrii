@@ -33,6 +33,8 @@ export const VenueTelegramIntegrations = ({
   const [reviewNotificationsEnabled, setReviewNotificationsEnabled] = useState(initialReviewNotificationsEnabled);
   const [qrNotificationsEnabled, setQrNotificationsEnabled] = useState(false);
   const [isSavingQrNotifications, setIsSavingQrNotifications] = useState(false);
+  const [messageNotificationsEnabled, setMessageNotificationsEnabled] = useState(false);
+  const [isSavingMessageNotifications, setIsSavingMessageNotifications] = useState(false);
   const [delivery, setDelivery] = useState<Delivery | null>(null);
   const [error, setError] = useState("");
   const [isUnlinking, setIsUnlinking] = useState(false);
@@ -63,6 +65,16 @@ export const VenueTelegramIntegrations = ({
   }, [targetId, targetType]);
 
   useEffect(() => void refreshQrNotifications(), [refreshQrNotifications]);
+
+  const refreshMessageNotifications = useCallback(async () => {
+    if (targetType !== "venue") return;
+    const response = await fetch(`/api/telegram/message-notifications?venueId=${encodeURIComponent(targetId)}`);
+    if (!response.ok) return;
+    const result = (await response.json()) as { enabled: boolean };
+    setMessageNotificationsEnabled(result.enabled);
+  }, [targetId, targetType]);
+
+  useEffect(() => void refreshMessageNotifications(), [refreshMessageNotifications]);
 
   useEffect(() => {
     if (!isAwaitingLink || linked) return;
@@ -187,6 +199,27 @@ export const VenueTelegramIntegrations = ({
     }
   };
 
+  const updateMessageNotifications = async (enabled: boolean) => {
+    if (targetType !== "venue") return;
+    setIsSavingMessageNotifications(true);
+    setError("");
+    try {
+      const response = await fetch("/api/telegram/message-notifications", {
+        body: JSON.stringify({ enabled, venueId: targetId }),
+        headers: { "Content-Type": "application/json" },
+        method: "PUT",
+      });
+      const result = (await response.json()) as { enabled?: boolean; error?: string };
+      if (!response.ok || result.enabled === undefined)
+        throw new Error(result.error || i18n("Unable to update Telegram message notifications"));
+      setMessageNotificationsEnabled(result.enabled);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : i18n("Unable to update Telegram message notifications"));
+    } finally {
+      setIsSavingMessageNotifications(false);
+    }
+  };
+
   return (
     <TelegramLinkPanel
       delivery={delivery}
@@ -196,6 +229,7 @@ export const VenueTelegramIntegrations = ({
       isSavingReviewNotifications={isSaving}
       isUnlinking={isUnlinking}
       onLink={() => void link()}
+      onMessageNotificationsChange={(enabled) => void updateMessageNotifications(enabled)}
       onRetryReviewNotification={() => void retry()}
       onReviewNotificationsChange={(enabled) => void updateNotifications(enabled)}
       onQrNotificationsChange={(enabled) => void updateQrNotifications(enabled)}
@@ -204,7 +238,9 @@ export const VenueTelegramIntegrations = ({
       reviewNotificationsEnabled={reviewNotificationsEnabled}
       qrNotificationsEnabled={qrNotificationsEnabled}
       isSavingQrNotifications={isSavingQrNotifications}
-      supportsCustomerMessages={targetType === "venue"}
+      isSavingMessageNotifications={isSavingMessageNotifications}
+      messageNotificationsEnabled={messageNotificationsEnabled}
+      isVenue={targetType === "venue"}
     />
   );
 };

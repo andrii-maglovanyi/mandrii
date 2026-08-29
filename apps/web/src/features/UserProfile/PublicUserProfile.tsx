@@ -25,6 +25,7 @@ export type PublicUserProfileData = {
   name: string;
   points: number;
   review_count: number;
+  username: null | string;
   venue_count: number;
 };
 
@@ -61,63 +62,68 @@ export const PublicUserProfile = ({ events, isOwnProfile, profile, venues }: Pub
 
   return (
     <div className={`flex grow flex-col gap-8 py-4 md:py-8`}>
-      <section className={`bg-surface-tint/50 relative rounded-2xl p-6 md:p-8`}>
+      <div className="flex flex-col gap-2">
         {isOwnProfile && (
-          <div className="mb-2 flex justify-center sm:mb-0 sm:justify-end">
+          <div className="flex flex-wrap items-center justify-end gap-4 px-4">
             <TextLink className="relative" href="/user-profile">
               <UserCog size={18} />
               {i18n("Manage your profile")}
             </TextLink>
           </div>
         )}
-        <div className={`flex flex-col items-center gap-6 text-center md:flex-row md:text-left`}>
-          <Avatar avatarSize={174} className="border-primary m-0 rounded-full border" profile={profile} />
-          <div className="flex flex-col gap-2">
-            <h1 className={`text-3xl font-bold md:text-5xl`}>{profile.name}</h1>
-            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm md:justify-start md:text-base">
-              <CommunityLevelBadge points={profile.points} />
-              {profile.isAdmin && (
-                <>
-                  &bull;
-                  <span className="text-primary inline-flex items-center gap-1 font-medium">
-                    <ShieldCheck size={18} />
-                    {i18n("Platform admin")}
-                  </span>
-                </>
-              )}
-              {profile.is_verified_contributor && (
-                <>
-                  &bull;
-                  <span className="text-primary inline-flex items-center gap-1 font-medium">
-                    <BadgeCheck size={18} />
-                    {i18n("Trusted contributor")}
-                  </span>
-                </>
-              )}
-            </div>
-            {(profile.city || joinedAt || (lastSeenLabel && !isOwnProfile)) && (
-              <div className="text-neutral flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm md:justify-start md:text-base">
-                {profile.city && (
-                  <span className="inline-flex items-center gap-1">
-                    <MapPin size={16} />
-                    {profile.city}
-                  </span>
+        <section className={`bg-surface-tint/50 relative rounded-2xl p-6 md:p-8`}>
+          <div className={`flex flex-col items-center gap-6 text-center md:flex-row md:text-left`}>
+            <Avatar avatarSize={174} className="border-primary m-0 rounded-full border" profile={profile} />
+            <div className="flex flex-col gap-2">
+              <h1 className={`text-3xl font-bold md:text-5xl`}>{profile.name}</h1>
+              {profile.username && <p className="text-primary font-medium">@{profile.username}</p>}
+              <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm md:justify-start md:text-base">
+                <CommunityLevelBadge points={profile.points} />
+                {profile.isAdmin && (
+                  <>
+                    &bull;
+                    <span className="text-primary inline-flex items-center gap-1 font-medium">
+                      <ShieldCheck size={18} />
+                      {i18n("Platform admin")}
+                    </span>
+                  </>
                 )}
-                {joinedAt && profile.city && <span aria-hidden="true">&bull;</span>}
-                {joinedAt && (
-                  <span className="inline-flex items-center gap-1">
-                    <CalendarDays size={16} />
-                    {i18n("Member since")} {joinedAt}
-                  </span>
+                {profile.is_verified_contributor && (
+                  <>
+                    &bull;
+                    <span className="text-primary inline-flex items-center gap-1 font-medium">
+                      <BadgeCheck size={18} />
+                      {i18n("Trusted contributor")}
+                    </span>
+                  </>
                 )}
-                {lastSeenLabel && !isOwnProfile && (profile.city || joinedAt) && <span aria-hidden="true">&bull;</span>}
-                {lastSeenLabel && !isOwnProfile && <span>{lastSeenLabel}</span>}
               </div>
-            )}
-            {profile.bio && <RichText className="text-on-surface mt-3 max-w-2xl">{profile.bio}</RichText>}
+              {(profile.city || joinedAt || (lastSeenLabel && !isOwnProfile)) && (
+                <div className="text-neutral flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm md:justify-start md:text-base">
+                  {profile.city && (
+                    <span className="inline-flex items-center gap-1">
+                      <MapPin size={16} />
+                      {profile.city}
+                    </span>
+                  )}
+                  {joinedAt && profile.city && <span aria-hidden="true">&bull;</span>}
+                  {joinedAt && (
+                    <span className="inline-flex items-center gap-1">
+                      <CalendarDays size={16} />
+                      {i18n("Member since")} {joinedAt}
+                    </span>
+                  )}
+                  {lastSeenLabel && !isOwnProfile && (profile.city || joinedAt) && (
+                    <span aria-hidden="true">&bull;</span>
+                  )}
+                  {lastSeenLabel && !isOwnProfile && <span>{lastSeenLabel}</span>}
+                </div>
+              )}
+              {profile.bio && <RichText className="text-on-surface mt-3 max-w-2xl">{profile.bio}</RichText>}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       <PublicContributions events={events} showDirectoryLinks={isOwnProfile} venues={venues} />
       <CommunityImpact

@@ -14,23 +14,7 @@ type LocationAutocompleteProps = Omit<
   InputProps<string, string>,
   "onFocus" | "onSelectSuggestion" | "suggestions" | "type"
 > & {
-  onLocationSelect?: (city: string) => void;
-};
-
-type AddressComponent = {
-  longText?: string;
-  types?: string[];
-};
-
-const getCity = (addressComponents: AddressComponent[]) => {
-  const cityComponentTypes = ["locality", "postal_town", "administrative_area_level_1"];
-
-  for (const type of cityComponentTypes) {
-    const city = addressComponents.find((component) => component.types?.includes(type))?.longText;
-    if (city) return city;
-  }
-
-  return null;
+  onLocationSelect?: (location: string) => void;
 };
 
 /**
@@ -81,19 +65,12 @@ export const LocationAutocomplete = ({
   }, [isLoaded, searchTerm]);
 
   const handleSuggestionSelect = useCallback(
-    async (placeId: string) => {
+    (placeId: string) => {
       const suggestion = suggestions.find((item) => item.placePrediction?.placeId === placeId);
       const fallback = suggestion?.placePrediction?.text.text;
       setSuggestions([]);
 
-      try {
-        const place = new google.maps.places.Place({ id: placeId });
-        await place.fetchFields({ fields: ["addressComponents"] });
-
-        onLocationSelect?.(getCity((place.addressComponents ?? []) as AddressComponent[]) ?? fallback ?? "");
-      } catch {
-        if (fallback) onLocationSelect?.(fallback);
-      }
+      if (fallback) onLocationSelect?.(fallback);
     },
     [onLocationSelect, suggestions],
   );

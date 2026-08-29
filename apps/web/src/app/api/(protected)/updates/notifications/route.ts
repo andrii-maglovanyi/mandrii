@@ -3,7 +3,11 @@ import { z } from "zod";
 import { getApiContext, rateLimiters, validateRequest, withErrorHandling } from "~/lib/api";
 import { getContentUpdateNotifications, setContentUpdateNotificationPreferences } from "~/lib/models/content-updates";
 
-const schema = z.object({ commentsEnabled: z.boolean(), repliesEnabled: z.boolean() });
+const schema = z
+  .object({ commentsEnabled: z.boolean().optional(), repliesEnabled: z.boolean().optional() })
+  .refine((data) => data.commentsEnabled !== undefined || data.repliesEnabled !== undefined, {
+    message: "At least one notification preference is required",
+  });
 
 export const GET = (req: Request) =>
   withErrorHandling(async () => {

@@ -78,6 +78,7 @@ select_permissions:
         - points
         - role
         - status
+        - username
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -90,6 +91,7 @@ update_permissions:
         - city
         - image
         - name
+        - username
       filter:
         _and:
           - id:

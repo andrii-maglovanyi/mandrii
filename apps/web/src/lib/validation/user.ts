@@ -6,6 +6,22 @@ import { Scalars } from "~/types";
 const optionalText = (max: number, message: string) =>
   z.preprocess((value) => (value === "" ? null : value), z.string().trim().max(max, { message }).optional().nullable());
 
+const username = (i18n: (key: string) => string) =>
+  z.preprocess(
+    (value) => {
+      if (typeof value !== "string") return value;
+      const normalized = value.trim().replace(/^@/, "").toLowerCase();
+      return normalized === "" ? null : normalized;
+    },
+    z
+      .string()
+      .regex(/^[a-z0-9_]{3,30}$/, {
+        message: i18n("Username must be 3–30 lowercase letters, numbers, or underscores"),
+      })
+      .optional()
+      .nullable(),
+  );
+
 export const getUserSchema = (i18n: (key: string) => string) =>
   z.object({
     bio: optionalText(500, i18n("Bio must be 500 characters or fewer")),
@@ -23,6 +39,7 @@ export const getUserSchema = (i18n: (key: string) => string) =>
         .nullable(),
     ),
     name: z.string().min(1, { message: i18n("Name is required") }),
+    username: username(i18n),
   });
 
 export type UserFormData = z.infer<UserSchema>;

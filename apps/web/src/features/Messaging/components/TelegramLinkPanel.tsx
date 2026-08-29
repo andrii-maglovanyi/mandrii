@@ -18,16 +18,19 @@ interface TelegramLinkPanelProps {
   isLinked: boolean;
   isSavingReviewNotifications: boolean;
   isSavingQrNotifications: boolean;
+  isSavingMessageNotifications: boolean;
   isUnlinking: boolean;
   onLink: () => void;
   onReviewNotificationsChange: (enabled: boolean) => void;
   onQrNotificationsChange: (enabled: boolean) => void;
+  onMessageNotificationsChange: (enabled: boolean) => void;
   onRetryReviewNotification: () => void;
   onUnlink: () => void;
   reviewNotificationsEnabled: boolean;
   qrNotificationsEnabled: boolean;
+  messageNotificationsEnabled: boolean;
   retryingReviewNotification: boolean;
-  supportsCustomerMessages?: boolean;
+  isVenue?: boolean;
 }
 
 export const TelegramLinkPanel = ({
@@ -37,35 +40,34 @@ export const TelegramLinkPanel = ({
   isLinked,
   isSavingReviewNotifications,
   isSavingQrNotifications,
+  isSavingMessageNotifications,
   isUnlinking,
   onLink,
   onReviewNotificationsChange,
   onQrNotificationsChange,
+  onMessageNotificationsChange,
   onRetryReviewNotification,
   onUnlink,
   reviewNotificationsEnabled,
   qrNotificationsEnabled,
+  messageNotificationsEnabled,
   retryingReviewNotification,
-  supportsCustomerMessages = true,
+  isVenue,
 }: TelegramLinkPanelProps) => {
   const i18n = useI18n();
 
   return (
     <SectionCard title={i18n("Integrations")}>
-      <div className="space-y-4">
-        <div className="bg-primary/10 flex items-center justify-between rounded-xl px-4 py-3">
-          <div className="flex space-x-2">
-            <Image alt="Telegram" height={22} src={TELEGRAM_LOGO} style={{ height: 22, width: 22 }} width={22} />
-            <div>
+      <div className="mt-4 space-y-4">
+        <div className="from-primary/10 flex items-center justify-between rounded-xl bg-linear-to-r to-transparent px-4 py-3">
+          <div className="flex items-center space-x-2">
+            <Image alt="Telegram" height={36} src={TELEGRAM_LOGO} style={{ height: 36, width: 36 }} width={36} />
+            <div className="ml-2">
               <p className="font-medium">{i18n("Telegram")}</p>
               <p className="text-on-surface/70 text-sm">
                 {isLinked
-                  ? supportsCustomerMessages
-                    ? i18n("Linked - customer messages are forwarded to Telegram")
-                    : i18n("Linked - review notifications can be sent to Telegram")
-                  : supportsCustomerMessages
-                    ? i18n("Link Telegram to forward customer messages")
-                    : i18n("Link Telegram to receive review notifications")}
+                  ? i18n("Linked - choose what Telegram receives")
+                  : i18n("Link Telegram to choose messages and notifications")}
               </p>
             </div>
           </div>
@@ -82,30 +84,47 @@ export const TelegramLinkPanel = ({
         {isAwaitingLink && !isLinked && (
           <p className="text-neutral -mt-1 text-sm">{i18n("Waiting for Telegram confirmation…")}</p>
         )}
-        <Checkbox
-          checked={reviewNotificationsEnabled}
-          disabled={!isLinked || isSavingReviewNotifications}
-          label={i18n("Notify me about new written reviews")}
-          onChange={(event) => onReviewNotificationsChange(event.target.checked)}
-        />
-        <p className="text-on-surface/70 -mt-2 text-sm">
-          {isLinked
-            ? i18n("Receive a Telegram message when your {content} gets a new written review.", {
-                content: supportsCustomerMessages ? i18n("venue") : i18n("event"),
-              })
-            : i18n("Link Telegram before enabling review notifications.")}
-        </p>
-        <Checkbox
-          checked={qrNotificationsEnabled}
-          disabled={!isLinked || isSavingQrNotifications}
-          label={i18n("Notify me when someone scans this QR code")}
-          onChange={(event) => onQrNotificationsChange(event.target.checked)}
-        />
-        <p className="text-on-surface/70 -mt-2 text-sm">
-          {isLinked
-            ? i18n("Receive a Telegram message whenever this QR code is scanned.")
-            : i18n("Link Telegram before enabling QR scan notifications.")}
-        </p>
+        <div className="my-4 ml-2 space-y-3">
+          <Checkbox
+            checked={reviewNotificationsEnabled}
+            disabled={!isLinked || isSavingReviewNotifications}
+            label={i18n("Notify me about new reviews")}
+            onChange={(event) => onReviewNotificationsChange(event.target.checked)}
+          />
+          <p className="text-on-surface/70 -mt-2 ml-10 text-sm">
+            {isLinked
+              ? i18n("Receive a Telegram message when your {content} gets a new review.", {
+                  content: isVenue ? i18n("venue") : i18n("event"),
+                })
+              : i18n("Link Telegram first ⤴")}
+          </p>
+        </div>
+        {isVenue && (
+          <div className="my-4 ml-2 space-y-3">
+            <Checkbox
+              checked={messageNotificationsEnabled}
+              disabled={!isLinked || isSavingMessageNotifications}
+              label={i18n("Forward new chat messages to Telegram")}
+              onChange={(event) => onMessageNotificationsChange(event.target.checked)}
+            />
+            <p className="text-on-surface/70 -mt-2 ml-10 text-sm">
+              {isLinked ? i18n("Receive new customer chat messages in Telegram.") : i18n("Link Telegram first ⤴")}
+            </p>
+          </div>
+        )}
+        <div className="mt-4 mb-8 ml-2 space-y-3">
+          <Checkbox
+            checked={qrNotificationsEnabled}
+            disabled={!isLinked || isSavingQrNotifications}
+            label={i18n("Notify me when QR code scanned")}
+            onChange={(event) => onQrNotificationsChange(event.target.checked)}
+          />
+          <p className="text-on-surface/70 -mt-2 ml-10 text-sm">
+            {isLinked
+              ? i18n("Receive a Telegram message whenever this QR code is scanned.")
+              : i18n("Link Telegram first ⤴")}
+          </p>
+        </div>
         {isLinked && reviewNotificationsEnabled && delivery && (
           <div className="border-on-surface/10 rounded-lg border px-3 py-2 text-sm">
             <p className="font-medium">
@@ -116,7 +135,7 @@ export const TelegramLinkPanel = ({
                   : i18n("Review notification is waiting to be delivered")}
             </p>
             {delivery.status === "FAILED" && delivery.last_error && (
-              <p className="text-neutral mt-1 break-words">{delivery.last_error}</p>
+              <p className="text-neutral mt-1 wrap-break-word">{delivery.last_error}</p>
             )}
             {delivery.status !== "DELIVERED" && (
               <p className="text-neutral mt-1">

@@ -190,7 +190,7 @@ bot.command("unlink", async (ctx) => {
   await sql`
     WITH unlinked_venues AS (
       UPDATE venues
-      SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false, telegram_qr_notifications_enabled = false
+      SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false, telegram_qr_notifications_enabled = false, telegram_message_notifications_enabled = false
       WHERE telegram_chat_id = ${chatId} AND telegram_user_id = ${ctx.from.id}
       RETURNING id
     ), unlinked_events AS (
@@ -224,7 +224,7 @@ export async function sendUserMessageToVenue(
 ) {
   // 1. Get the business chat_id linked to this conversation
   const [conversation] = await sql<{ owner_id: string; telegram_chat_id: null | string }[]>`
-    SELECT CASE WHEN b.telegram_user_id IS NOT NULL THEN b.telegram_chat_id ELSE NULL END AS telegram_chat_id,
+    SELECT CASE WHEN b.telegram_user_id IS NOT NULL AND b.telegram_message_notifications_enabled THEN b.telegram_chat_id ELSE NULL END AS telegram_chat_id,
            b.owner_id
     FROM conversations c
     JOIN venues b ON c.venue_id = b.id
@@ -395,6 +395,7 @@ async function deliverTelegramMessage(delivery: TelegramDelivery) {
       AND m.sender_type = 'USER'
       AND m.deleted_at IS NULL
       AND v.telegram_chat_id = ${delivery.telegram_chat_id}
+      AND v.telegram_message_notifications_enabled
   `;
 
   if (!message) {

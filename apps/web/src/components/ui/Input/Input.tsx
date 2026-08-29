@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { Phone, Search } from "lucide-react";
-import { Ref, useEffect, useId, useMemo, useRef, useState } from "react";
+import { ReactNode, Ref, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { getFlagComponent } from "~/lib/icons/flags";
 import { CountryPhoneConfig, processPhoneNumber } from "~/lib/utils/phone-number";
@@ -26,6 +26,7 @@ export type InputProps<K, T> = {
   onFocus?: () => void;
   onSelectSuggestion?: (value: string) => void;
   placeholder?: string;
+  prefix?: ReactNode;
   ref?: Ref<HTMLInputElement>;
   required?: boolean;
   showErrorMessage?: boolean;
@@ -52,6 +53,7 @@ export function Input<K extends string, T extends string>({
   onFocus,
   onSelectSuggestion,
   placeholder,
+  prefix,
   ref,
   required = false,
   showErrorMessage = false,
@@ -70,6 +72,7 @@ export function Input<K extends string, T extends string>({
   const [detectedCountry, setDetectedCountry] = useState<CountryPhoneConfig | null>(null);
 
   const isPhoneInput = type === "tel";
+  const hasPrefix = prefix !== undefined;
 
   useEffect(() => {
     const newValue = value === null || value === undefined ? "" : String(value);
@@ -95,12 +98,12 @@ export function Input<K extends string, T extends string>({
   );
 
   const inputClass = clsx(
-    "px-3",
+    hasPrefix ? "min-w-0 flex-1 border-0 bg-transparent px-3 focus:ring-0" : "px-3",
     sizeClasses.md,
-    error ? "border-red-500" : "border-neutral",
-    commonClass,
-    commonInputClass,
-    isPhoneInput || type === "search" ? "pl-12" : "",
+    hasPrefix ? "text-on-surface placeholder:text-neutral-disabled" : error ? "border-red-500" : "border-neutral",
+    hasPrefix ? "" : commonClass,
+    hasPrefix ? "" : commonInputClass,
+    !hasPrefix && (isPhoneInput || type === "search") ? "pl-12" : "",
     (type === "datetime-local" || type === "date" || type === "time") &&
       `dark:[color-scheme:dark]`,
     className,
@@ -167,6 +170,8 @@ export function Input<K extends string, T extends string>({
   const iconWrapperClass = "pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-2xl";
 
   const renderLeftIcon = () => {
+    if (hasPrefix) return null;
+
     if (isPhoneInput) {
       const CountryFlag = getFlagComponent(detectedCountry?.country);
       return (
@@ -201,30 +206,43 @@ export function Input<K extends string, T extends string>({
       )}
       <span className="relative" ref={wrapperRef}>
         {renderLeftIcon()}
-        <input
-          aria-required={required}
-          autoComplete={onSelectSuggestion ? "off" : undefined}
-          className={inputClass}
-          data-testid={testId}
-          disabled={disabled}
-          id={inputId}
-          max={max}
-          min={min}
-          name={name}
-          onBlur={onBlur}
-          onChange={handleInputChange}
-          onFocus={() => {
-            setShowSuggestions(true);
-            onFocus?.();
-          }}
-          onKeyDown={onInputKeyDown}
-          placeholder={placeholder || (isPhoneInput ? "+44 0123 456 789" : undefined)}
-          ref={ref}
-          required={required}
-          step={step}
-          type={isPhoneInput ? "tel" : type}
-          value={query}
-        />
+        <span
+          className={clsx(
+            hasPrefix &&
+              "border-neutral bg-surface flex h-10 w-full overflow-hidden rounded-md border transition focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-1 focus-within:ring-offset-surface has-[input:disabled]:cursor-not-allowed has-[input:disabled]:border-neutral-disabled has-[input:disabled]:bg-neutral-500/10",
+            hasPrefix && error && "border-red-500",
+          )}
+        >
+          {hasPrefix && (
+            <span aria-hidden="true" className="text-neutral flex shrink-0 items-center border-r border-inherit px-3">
+              {prefix}
+            </span>
+          )}
+          <input
+            aria-required={required}
+            autoComplete={onSelectSuggestion ? "off" : undefined}
+            className={inputClass}
+            data-testid={testId}
+            disabled={disabled}
+            id={inputId}
+            max={max}
+            min={min}
+            name={name}
+            onBlur={onBlur}
+            onChange={handleInputChange}
+            onFocus={() => {
+              setShowSuggestions(true);
+              onFocus?.();
+            }}
+            onKeyDown={onInputKeyDown}
+            placeholder={placeholder || (isPhoneInput ? "+44 0123 456 789" : undefined)}
+            ref={ref}
+            required={required}
+            step={step}
+            type={isPhoneInput ? "tel" : type}
+            value={query}
+          />
+        </span>
         {formedSuggestions.length > 0 && showSuggestions && (
           <Menu
             onSelect={(option) => {

@@ -774,7 +774,9 @@ export const ContentUpdates = ({ canManage, targetId, type }: ContentUpdatesProp
       )}
 
       {isAuthenticated && (
-        <TextLink href="/settings#updates-notifications">{i18n("Manage Updates notification settings")}</TextLink>
+        <TextLink href="/user-profile/settings#updates-notifications">
+          {i18n("Manage Updates notification settings")}
+        </TextLink>
       )}
 
       {canManage && isComposerOpen && (

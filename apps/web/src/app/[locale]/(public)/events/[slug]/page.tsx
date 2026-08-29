@@ -1,4 +1,4 @@
-import { EventView } from "~/features/Events";
+import { EventViewServer } from "~/features/Events/EventView/EventViewServer";
 
 interface EventPageProps {
   params: Promise<{
@@ -8,11 +8,11 @@ interface EventPageProps {
 }
 
 export default async function EventPage({ params }: EventPageProps) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
 
   return (
     <div className="flex h-full grow flex-col">
-      <EventView slug={slug} />
+      <EventViewServer locale={locale} slug={slug} />
     </div>
   );
 }

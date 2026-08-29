@@ -30,7 +30,7 @@ describe("Input", () => {
   });
 
   it("displays an error message and adds red border", () => {
-    render(<Input error="Invalid email" label="Email" />);
+    render(<Input error="Invalid email" label="Email" showErrorMessage />);
     expect(screen.getByText("Invalid email")).toBeInTheDocument();
     const input = screen.getByLabelText("Email");
     expect(input).toHaveClass("border-red-500");
@@ -40,5 +40,11 @@ describe("Input", () => {
     render(<Input label="Password" type="password" />);
     const input = screen.getByLabelText("Password");
     expect(input).toHaveAttribute("type", "password");
+  });
+
+  it("renders a non-editable prefix", () => {
+    render(<Input label="Username" prefix="@" />);
+    expect(screen.getByText("@")).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByLabelText("Username")).toBeInTheDocument();
   });
 });

@@ -225,7 +225,7 @@ export const ContentReviews = ({ context, targetId, type }: ContentReviewsProps)
   return (
     <div aria-busy={isLoading} className="space-y-8 pb-4">
       <SectionCard className="overflow-hidden p-0">
-        <div className="from-primary/10 via-surface-tint/50 to-secondary/10 bg-gradient-to-br px-5 py-7 sm:px-8 sm:py-10">
+        <div className="from-primary/10 via-surface-tint/50 to-secondary/10 bg-linear-to-br px-5 py-7 sm:px-8 sm:py-10">
           <div className="flex flex-col gap-7 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-end gap-4 sm:gap-5">
               <div

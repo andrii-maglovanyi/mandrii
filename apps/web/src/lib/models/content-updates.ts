@@ -524,13 +524,15 @@ export async function assertPublicContentUpdate(updateId: string) {
 
 export async function setContentUpdateNotificationPreferences(
   userId: string,
-  commentsEnabled: boolean,
-  repliesEnabled: boolean,
+  commentsEnabled?: boolean,
+  repliesEnabled?: boolean,
 ) {
   const [preferences] = await sql<Array<{ comments_enabled: boolean; replies_enabled: boolean }>>`
     INSERT INTO content_update_notification_preferences (user_id, comments_enabled, replies_enabled)
-    VALUES (${userId}, ${commentsEnabled}, ${repliesEnabled})
-    ON CONFLICT (user_id) DO UPDATE SET comments_enabled = EXCLUDED.comments_enabled, replies_enabled = EXCLUDED.replies_enabled
+    VALUES (${userId}, COALESCE(${commentsEnabled ?? null}, true), COALESCE(${repliesEnabled ?? null}, true))
+    ON CONFLICT (user_id) DO UPDATE SET
+      comments_enabled = COALESCE(${commentsEnabled ?? null}, content_update_notification_preferences.comments_enabled),
+      replies_enabled = COALESCE(${repliesEnabled ?? null}, content_update_notification_preferences.replies_enabled)
     RETURNING comments_enabled, replies_enabled
   `;
   return preferences;

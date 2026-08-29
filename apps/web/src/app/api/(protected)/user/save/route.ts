@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { getApiContext, InternalServerError, validateRequest, withErrorHandling } from "~/lib/api";
+import { getApiContext, InternalServerError, ValidationError, validateRequest, withErrorHandling } from "~/lib/api";
 import { envName } from "~/lib/config/env";
 import { UserModel, type UserUpdate } from "~/lib/models";
 import { processImages } from "~/lib/utils/images";
@@ -18,6 +18,15 @@ export const POST = (req: Request) =>
       ...data,
       name: name.trim(),
     };
+
+    if (profileData.username) {
+      const existingUser = await new UserModel().findPublicByUsername(profileData.username);
+      if (existingUser && existingUser.id !== session.user.id) {
+        throw new ValidationError("Validation failed", [
+          { code: "custom", message: "This username is already taken", path: ["username"] },
+        ]);
+      }
+    }
 
     const prefix = [envName, "users", profileData.id].join("/");
     profileData.image = (await processImages(image ? [image] : [], [prefix, "image"].join("/")))[0] ?? "";

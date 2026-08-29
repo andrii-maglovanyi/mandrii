@@ -10,6 +10,15 @@ const schema = z.union([z.object({ venueId: z.uuid() }), z.object({ eventId: z.u
 const getTarget = (data: z.infer<typeof schema>) =>
   "venueId" in data ? { id: data.venueId, type: "venue" as const } : { id: data.eventId, type: "event" as const };
 
+const getRecentDays = (count: number) =>
+  Array.from({ length: count }, (_, index) => {
+    const date = new Date();
+    date.setUTCDate(date.getUTCDate() - (count - index - 1));
+    return date.toISOString().slice(0, 10);
+  });
+
+const formatMonth = (date: string) => date.slice(0, 7);
+
 export const GET = (req: Request) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
@@ -22,11 +31,49 @@ export const GET = (req: Request) =>
       WHERE id = ${target.id} AND owner_id = ${session.user.id}
     `;
     if (!content) throw new ForbiddenError("You do not own this content");
+    const period = new URL(req.url).searchParams.get("period");
+    const daysToLoad = period === "year" ? 365 : period === "month" ? 30 : 7;
+    const days = getRecentDays(daysToLoad);
     if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
-      return Response.json({ scans: 0, tracked: false });
+      const dailyScans = days.map((date) => ({ count: 0, date }));
+      return Response.json({
+        scanSeries:
+          period === "year"
+            ? Object.values(
+                dailyScans.reduce<Record<string, { count: number; date: string }>>((series, item) => {
+                  const month = formatMonth(item.date);
+                  series[month] ??= { count: 0, date: month };
+                  return series;
+                }, {}),
+              )
+            : dailyScans,
+        scans: 0,
+        tracked: false,
+      });
     }
-    const scans = (await kv.get<number>(`ref:${target.type}-${target.id}:hits`)) ?? 0;
-    return Response.json({ scans, tracked: true });
+    const topic = `${target.type}-${target.id}`;
+    const [scans, dailyCounts] = await Promise.all([
+      kv.get<number>(`ref:${topic}:hits`),
+      kv.mget<Array<null | number>>(...days.map((day) => `ref:${topic}:day:${day}`)),
+    ]);
+    const dailyScans = days.map((date, index) => ({ count: dailyCounts[index] ?? 0, date }));
+    const scanSeries =
+      period === "year"
+        ? Object.values(
+            dailyScans.reduce<Record<string, { count: number; date: string }>>((series, item) => {
+              const month = formatMonth(item.date);
+              series[month] ??= { count: 0, date: month };
+              series[month].count += item.count;
+              return series;
+            }, {}),
+          )
+        : dailyScans;
+
+    return Response.json({
+      scanSeries,
+      scans: scans ?? 0,
+      tracked: true,
+    });
   });
 
 export const POST = (req: Request) =>

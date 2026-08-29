@@ -21,7 +21,10 @@ export const AccountSettings = () => {
     replies_enabled: true,
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const [savingPreferences, setSavingPreferences] = useState<Record<keyof UpdateNotificationPreferences, boolean>>({
+    comments_enabled: false,
+    replies_enabled: false,
+  });
 
   useEffect(() => {
     const controller = new AbortController();
@@ -42,25 +45,27 @@ export const AccountSettings = () => {
     return () => controller.abort();
   }, [i18n, showError]);
 
-  const save = async (next: UpdateNotificationPreferences) => {
-    if (isSaving) return;
+  const save = async (preference: keyof UpdateNotificationPreferences, enabled: boolean) => {
+    if (savingPreferences[preference]) return;
     const previous = preferences;
-    setPreferences(next);
-    setIsSaving(true);
+    setPreferences((current) => ({ ...current, [preference]: enabled }));
+    setSavingPreferences((current) => ({ ...current, [preference]: true }));
     try {
       const response = await fetch("/api/updates/notifications", {
-        body: JSON.stringify({ commentsEnabled: next.comments_enabled, repliesEnabled: next.replies_enabled }),
+        body: JSON.stringify({
+          [preference === "comments_enabled" ? "commentsEnabled" : "repliesEnabled"]: enabled,
+        }),
         headers: { "Content-Type": "application/json" },
         method: "PUT",
       });
       const saved = (await response.json()) as UpdateNotificationPreferences & { error?: string };
       if (!response.ok) throw new Error(saved.error ?? "Unable to save notification preferences");
-      setPreferences(saved);
+      setPreferences((current) => ({ ...current, [preference]: saved[preference] }));
     } catch (error) {
-      setPreferences(previous);
+      setPreferences((current) => ({ ...current, [preference]: previous[preference] }));
       showError(error instanceof Error ? error.message : i18n("Unable to save notification preferences"));
     } finally {
-      setIsSaving(false);
+      setSavingPreferences((current) => ({ ...current, [preference]: false }));
     }
   };
 
@@ -71,9 +76,9 @@ export const AccountSettings = () => {
           <Bell aria-hidden size={20} />
         </div>
         <div>
-          <h2 className="text-xl font-bold md:text-2xl">{i18n("Updates notifications")}</h2>
+          <h2 className="text-xl font-bold md:text-2xl">{i18n("Feed notifications")}</h2>
           <p className="text-neutral mt-1 text-sm md:text-base">
-            {i18n("Choose which Updates activity you want to be notified about across your account.")}
+            {i18n("Choose which feed activity you want to be notified about")}
           </p>
         </div>
       </div>
@@ -84,25 +89,15 @@ export const AccountSettings = () => {
         <div className="mt-6 flex flex-wrap gap-5 border-t border-current/10 pt-5">
           <Checkbox
             checked={preferences.comments_enabled}
-            disabled={isSaving}
-            label={i18n("Comments")}
-            onChange={(event) =>
-              void save({
-                ...preferences,
-                comments_enabled: event.target.checked,
-              })
-            }
+            disabled={savingPreferences.comments_enabled}
+            label={i18n("Comments to posts")}
+            onChange={(event) => void save("comments_enabled", event.target.checked)}
           />
           <Checkbox
             checked={preferences.replies_enabled}
-            disabled={isSaving}
-            label={i18n("Replies")}
-            onChange={(event) =>
-              void save({
-                ...preferences,
-                replies_enabled: event.target.checked,
-              })
-            }
+            disabled={savingPreferences.replies_enabled}
+            label={i18n("Replies to comments")}
+            onChange={(event) => void save("replies_enabled", event.target.checked)}
           />
         </div>
       )}

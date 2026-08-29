@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, UserSearch } from "lucide-react";
+import { Eye, Settings, UserSearch } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -95,28 +95,34 @@ export const UserProfile = () => {
 
   return (
     <div className={`flex grow flex-col gap-8 py-4 md:py-8`}>
-      <div className={`bg-surface-tint/50 rounded-2xl p-6 md:p-8`}>
-        <div className="mb-8">
-          <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <h2
-              className={`from-primary to-secondary bg-linear-to-r bg-clip-text text-2xl font-bold text-transparent md:text-3xl`}
-            >
-              {i18n("Your Profile")}
-            </h2>
-            <div className="flex flex-wrap items-center gap-4">
-              <TextLink href={`/users/${data.id}`}>
-                <Eye size={18} />
-                {i18n("View your public profile")}
-              </TextLink>
-              <TextLink href="/settings">{i18n("Settings")}</TextLink>
-            </div>
-          </div>
-          <p className={`text-neutral text-sm md:text-base`}>
-            {i18n("Manage your account settings and view your community contributions")}
-          </p>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-4 px-4">
+          <TextLink href={`/users/${data.username ?? data.id}`}>
+            <Eye size={18} />
+            {i18n("View your public profile")}
+          </TextLink>
+          &bull;
+          <TextLink href="/user-profile/settings">
+            <Settings size={18} />
+            {i18n("Settings")}
+          </TextLink>
         </div>
+        <div className={`bg-surface-tint/50 rounded-2xl p-6 md:p-8`}>
+          <div className="mb-8">
+            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <h2
+                className={`from-primary to-secondary bg-linear-to-r bg-clip-text text-2xl font-bold text-transparent md:text-3xl`}
+              >
+                {i18n("Your Profile")}
+              </h2>
+            </div>
+            <p className={`text-neutral text-sm md:text-base`}>
+              {i18n("Manage your account and view your contributions")}
+            </p>
+          </div>
 
-        <UserForm onSubmit={submitProfile} onSuccess={onProfileSaved} profile={data} />
+          <UserForm onSubmit={submitProfile} onSuccess={onProfileSaved} profile={data} />
+        </div>
       </div>
 
       <PublicContributions

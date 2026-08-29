@@ -17,6 +17,7 @@ const USER_FIELDS = `
   status
   points
   is_verified_contributor
+  username
 `;
 
 const GET_USER_BY_ID_QUERY = `
@@ -40,6 +41,25 @@ const GET_PUBLIC_USER_BY_ID_QUERY = `
       points
       is_verified_contributor
       role
+      username
+    }
+  }
+`;
+
+const GET_PUBLIC_USER_BY_USERNAME_QUERY = `
+  query GetPublicUserByUsername($username: String!) {
+    users(where: { username: { _eq: $username } }, limit: 1) {
+      id
+      name
+      bio
+      city
+      image
+      last_seen_at
+      joined_at
+      points
+      is_verified_contributor
+      role
+      username
     }
   }
 `;
@@ -55,6 +75,7 @@ export type PublicUser = {
   last_seen_at: null | string;
   name: null | string;
   points: number;
+  username: null | string;
 };
 
 type PublicUserRecord = Omit<PublicUser, "isAdmin"> & {
@@ -67,6 +88,7 @@ export type UserUpdate = {
   id: string;
   image?: null | string;
   name?: string;
+  username?: null | string;
 };
 
 export function getPublicUserImageUrl(image: null | string) {
@@ -109,6 +131,20 @@ export class UserModel {
 
     const { role, ...profile } = result.users_by_pk;
     return { ...profile, isAdmin: role === "admin" };
+  }
+
+  async findPublicByUsername(username: string): Promise<null | PublicUser> {
+    const result = await executeGraphQLQuery<{ users: PublicUserRecord[] }>(
+      GET_PUBLIC_USER_BY_USERNAME_QUERY,
+      { username: username.toLowerCase() },
+      this.getAuthHeaders(true),
+    );
+
+    const profile = result.users[0];
+    if (!profile) return null;
+
+    const { role, ...publicProfile } = profile;
+    return { ...publicProfile, isAdmin: role === "admin" };
   }
 
   async update(variables: UserUpdate): Promise<Users> {

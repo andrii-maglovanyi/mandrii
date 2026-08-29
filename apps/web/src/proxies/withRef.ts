@@ -11,14 +11,14 @@ interface Redirect {
 }
 
 export const withRef: MiddlewareFactory = (next) => {
-  return async (request: NextRequest, _next: NextFetchEvent) => {
+  return async (request: NextRequest, event: NextFetchEvent) => {
     const { hostname, pathname } = request.nextUrl;
 
     if (hostname.startsWith("ref.")) {
       const rawTopic = pathname.slice(1);
 
       if (!rawTopic) {
-        return next(request, _next);
+        return next(request, event);
       }
 
       const topic = decodeURI(rawTopic);
@@ -27,11 +27,24 @@ export const withRef: MiddlewareFactory = (next) => {
         const redirect = await kv.get<Redirect>(`ref:${topic}`);
 
         if (!redirect) {
-          return next(request, _next);
+          return next(request, event);
         }
 
-        // Increment hits atomically to avoid race conditions
-        kv.incr(`ref:${topic}:hits`);
+        // One Redis pipeline keeps scan tracking to a single background KV
+        // request, without delaying the visitor's redirect. Daily buckets are
+        // retained long enough for the year view without growing forever.
+        const day = new Date().toISOString().slice(0, 10);
+        event.waitUntil(
+          kv
+            .pipeline()
+            .incr(`ref:${topic}:hits`)
+            .incr(`ref:${topic}:day:${day}`)
+            .expire(`ref:${topic}:day:${day}`, 400 * 24 * 60 * 60)
+            .exec()
+            .catch((error) => {
+              console.error("Reference tracking increment failed:", error);
+            }),
+        );
 
         fetch(`${request.nextUrl.origin}/api/slack-notify`, {
           body: JSON.stringify({
@@ -51,6 +64,6 @@ export const withRef: MiddlewareFactory = (next) => {
       }
     }
 
-    return next(request, _next);
+    return next(request, event);
   };
 };

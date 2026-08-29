@@ -20,6 +20,7 @@ const GET_USER_PROFILE = gql`
       image
       points
       is_verified_contributor
+      username
     }
   }
 `;

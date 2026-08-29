@@ -579,6 +579,8 @@ export type Chains = {
   slug: Scalars['String']['output'];
   social_links: Scalars['json']['output'];
   updated_at: Scalars['timestamptz']['output'];
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id: Scalars['uuid']['output'];
   /** An array relationship */
   venues: Array<Venues>;
@@ -703,6 +705,7 @@ export type Chains_Bool_Exp = {
   slug?: InputMaybe<String_Comparison_Exp>;
   social_links?: InputMaybe<Json_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
   venues?: InputMaybe<Venues_Bool_Exp>;
   venues_aggregate?: InputMaybe<Venues_Aggregate_Bool_Exp>;
@@ -736,6 +739,7 @@ export type Chains_Insert_Input = {
   slug?: InputMaybe<Scalars['String']['input']>;
   social_links?: InputMaybe<Scalars['json']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
   venues?: InputMaybe<Venues_Arr_Rel_Insert_Input>;
   website?: InputMaybe<Scalars['String']['input']>;
@@ -865,6 +869,7 @@ export type Chains_Order_By = {
   slug?: InputMaybe<Order_By>;
   social_links?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
   venues_aggregate?: InputMaybe<Venues_Aggregate_Order_By>;
   website?: InputMaybe<Order_By>;
@@ -2839,6 +2844,10 @@ export type Events = {
   social_links?: Maybe<Scalars['jsonb']['output']>;
   start_date: Scalars['timestamptz']['output'];
   status: Event_Status_Enum;
+  telegram_chat_id?: Maybe<Scalars['bigint']['output']>;
+  telegram_qr_notifications_enabled: Scalars['Boolean']['output'];
+  telegram_review_notifications_enabled: Scalars['Boolean']['output'];
+  telegram_user_id?: Maybe<Scalars['bigint']['output']>;
   title_en: Scalars['String']['output'];
   title_uk: Scalars['String']['output'];
   type: Event_Type_Enum;
@@ -2966,12 +2975,16 @@ export type Events_Avg_Fields = {
   __typename?: 'events_avg_fields';
   capacity?: Maybe<Scalars['Float']['output']>;
   price_amount?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by avg() on columns of table "events" */
 export type Events_Avg_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "events". All fields are combined with a logical 'AND'. */
@@ -3018,6 +3031,10 @@ export type Events_Bool_Exp = {
   social_links?: InputMaybe<Jsonb_Comparison_Exp>;
   start_date?: InputMaybe<Timestamptz_Comparison_Exp>;
   status?: InputMaybe<Event_Status_Enum_Comparison_Exp>;
+  telegram_chat_id?: InputMaybe<Bigint_Comparison_Exp>;
+  telegram_qr_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
+  telegram_review_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
+  telegram_user_id?: InputMaybe<Bigint_Comparison_Exp>;
   title_en?: InputMaybe<String_Comparison_Exp>;
   title_uk?: InputMaybe<String_Comparison_Exp>;
   type?: InputMaybe<Event_Type_Enum_Comparison_Exp>;
@@ -3033,7 +3050,9 @@ export enum Events_Constraint {
   /** unique or primary key constraint on columns "id" */
   EventsPkey = 'events_pkey',
   /** unique or primary key constraint on columns "slug" */
-  EventsSlugKey = 'events_slug_key'
+  EventsSlugKey = 'events_slug_key',
+  /** unique or primary key constraint on columns "telegram_chat_id" */
+  EventsTelegramChatIdKey = 'events_telegram_chat_id_key'
 }
 
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
@@ -3251,6 +3270,8 @@ export type Events_Event_Tags_Updates = {
 export type Events_Inc_Input = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
   price_amount?: InputMaybe<Scalars['numeric']['input']>;
+  telegram_chat_id?: InputMaybe<Scalars['bigint']['input']>;
+  telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
 };
 
 /** input type for inserting data into table "events" */
@@ -3294,6 +3315,10 @@ export type Events_Insert_Input = {
   social_links?: InputMaybe<Scalars['jsonb']['input']>;
   start_date?: InputMaybe<Scalars['timestamptz']['input']>;
   status?: InputMaybe<Event_Status_Enum>;
+  telegram_chat_id?: InputMaybe<Scalars['bigint']['input']>;
+  telegram_qr_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_review_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
   title_en?: InputMaybe<Scalars['String']['input']>;
   title_uk?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Event_Type_Enum>;
@@ -3334,6 +3359,8 @@ export type Events_Max_Fields = {
   registration_url?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['String']['output']>;
   start_date?: Maybe<Scalars['timestamptz']['output']>;
+  telegram_chat_id?: Maybe<Scalars['bigint']['output']>;
+  telegram_user_id?: Maybe<Scalars['bigint']['output']>;
   title_en?: Maybe<Scalars['String']['output']>;
   title_uk?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -3370,6 +3397,8 @@ export type Events_Max_Order_By = {
   registration_url?: InputMaybe<Order_By>;
   slug?: InputMaybe<Order_By>;
   start_date?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
   title_en?: InputMaybe<Order_By>;
   title_uk?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
@@ -3407,6 +3436,8 @@ export type Events_Min_Fields = {
   registration_url?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['String']['output']>;
   start_date?: Maybe<Scalars['timestamptz']['output']>;
+  telegram_chat_id?: Maybe<Scalars['bigint']['output']>;
+  telegram_user_id?: Maybe<Scalars['bigint']['output']>;
   title_en?: Maybe<Scalars['String']['output']>;
   title_uk?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -3443,6 +3474,8 @@ export type Events_Min_Order_By = {
   registration_url?: InputMaybe<Order_By>;
   slug?: InputMaybe<Order_By>;
   start_date?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
   title_en?: InputMaybe<Order_By>;
   title_uk?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
@@ -3513,6 +3546,10 @@ export type Events_Order_By = {
   social_links?: InputMaybe<Order_By>;
   start_date?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_qr_notifications_enabled?: InputMaybe<Order_By>;
+  telegram_review_notifications_enabled?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
   title_en?: InputMaybe<Order_By>;
   title_uk?: InputMaybe<Order_By>;
   type?: InputMaybe<Order_By>;
@@ -3602,6 +3639,14 @@ export enum Events_Select_Column {
   /** column name */
   Status = 'status',
   /** column name */
+  TelegramChatId = 'telegram_chat_id',
+  /** column name */
+  TelegramQrNotificationsEnabled = 'telegram_qr_notifications_enabled',
+  /** column name */
+  TelegramReviewNotificationsEnabled = 'telegram_review_notifications_enabled',
+  /** column name */
+  TelegramUserId = 'telegram_user_id',
+  /** column name */
   TitleEn = 'title_en',
   /** column name */
   TitleUk = 'title_uk',
@@ -3622,7 +3667,11 @@ export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_And_Arguments_Co
   /** column name */
   IsRecurring = 'is_recurring',
   /** column name */
-  RegistrationRequired = 'registration_required'
+  RegistrationRequired = 'registration_required',
+  /** column name */
+  TelegramQrNotificationsEnabled = 'telegram_qr_notifications_enabled',
+  /** column name */
+  TelegramReviewNotificationsEnabled = 'telegram_review_notifications_enabled'
 }
 
 /** select "events_aggregate_bool_exp_bool_or_arguments_columns" columns of table "events" */
@@ -3632,7 +3681,11 @@ export enum Events_Select_Column_Events_Aggregate_Bool_Exp_Bool_Or_Arguments_Col
   /** column name */
   IsRecurring = 'is_recurring',
   /** column name */
-  RegistrationRequired = 'registration_required'
+  RegistrationRequired = 'registration_required',
+  /** column name */
+  TelegramQrNotificationsEnabled = 'telegram_qr_notifications_enabled',
+  /** column name */
+  TelegramReviewNotificationsEnabled = 'telegram_review_notifications_enabled'
 }
 
 /** input type for updating data in table "events" */
@@ -3671,6 +3724,10 @@ export type Events_Set_Input = {
   social_links?: InputMaybe<Scalars['jsonb']['input']>;
   start_date?: InputMaybe<Scalars['timestamptz']['input']>;
   status?: InputMaybe<Event_Status_Enum>;
+  telegram_chat_id?: InputMaybe<Scalars['bigint']['input']>;
+  telegram_qr_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_review_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
   title_en?: InputMaybe<Scalars['String']['input']>;
   title_uk?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Event_Type_Enum>;
@@ -3684,12 +3741,16 @@ export type Events_Stddev_Fields = {
   __typename?: 'events_stddev_fields';
   capacity?: Maybe<Scalars['Float']['output']>;
   price_amount?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by stddev() on columns of table "events" */
 export type Events_Stddev_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_pop on columns */
@@ -3697,12 +3758,16 @@ export type Events_Stddev_Pop_Fields = {
   __typename?: 'events_stddev_pop_fields';
   capacity?: Maybe<Scalars['Float']['output']>;
   price_amount?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by stddev_pop() on columns of table "events" */
 export type Events_Stddev_Pop_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
@@ -3710,12 +3775,16 @@ export type Events_Stddev_Samp_Fields = {
   __typename?: 'events_stddev_samp_fields';
   capacity?: Maybe<Scalars['Float']['output']>;
   price_amount?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by stddev_samp() on columns of table "events" */
 export type Events_Stddev_Samp_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "events" */
@@ -3762,6 +3831,10 @@ export type Events_Stream_Cursor_Value_Input = {
   social_links?: InputMaybe<Scalars['jsonb']['input']>;
   start_date?: InputMaybe<Scalars['timestamptz']['input']>;
   status?: InputMaybe<Event_Status_Enum>;
+  telegram_chat_id?: InputMaybe<Scalars['bigint']['input']>;
+  telegram_qr_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_review_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
   title_en?: InputMaybe<Scalars['String']['input']>;
   title_uk?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Event_Type_Enum>;
@@ -3775,12 +3848,16 @@ export type Events_Sum_Fields = {
   __typename?: 'events_sum_fields';
   capacity?: Maybe<Scalars['Int']['output']>;
   price_amount?: Maybe<Scalars['numeric']['output']>;
+  telegram_chat_id?: Maybe<Scalars['bigint']['output']>;
+  telegram_user_id?: Maybe<Scalars['bigint']['output']>;
 };
 
 /** order by sum() on columns of table "events" */
 export type Events_Sum_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "events" */
@@ -3852,6 +3929,14 @@ export enum Events_Update_Column {
   /** column name */
   Status = 'status',
   /** column name */
+  TelegramChatId = 'telegram_chat_id',
+  /** column name */
+  TelegramQrNotificationsEnabled = 'telegram_qr_notifications_enabled',
+  /** column name */
+  TelegramReviewNotificationsEnabled = 'telegram_review_notifications_enabled',
+  /** column name */
+  TelegramUserId = 'telegram_user_id',
+  /** column name */
   TitleEn = 'title_en',
   /** column name */
   TitleUk = 'title_uk',
@@ -3889,12 +3974,16 @@ export type Events_Var_Pop_Fields = {
   __typename?: 'events_var_pop_fields';
   capacity?: Maybe<Scalars['Float']['output']>;
   price_amount?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by var_pop() on columns of table "events" */
 export type Events_Var_Pop_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate var_samp on columns */
@@ -3902,12 +3991,16 @@ export type Events_Var_Samp_Fields = {
   __typename?: 'events_var_samp_fields';
   capacity?: Maybe<Scalars['Float']['output']>;
   price_amount?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by var_samp() on columns of table "events" */
 export type Events_Var_Samp_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate variance on columns */
@@ -3915,12 +4008,16 @@ export type Events_Variance_Fields = {
   __typename?: 'events_variance_fields';
   capacity?: Maybe<Scalars['Float']['output']>;
   price_amount?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by variance() on columns of table "events" */
 export type Events_Variance_Order_By = {
   capacity?: InputMaybe<Order_By>;
   price_amount?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 export type Geography_Cast_Exp = {
@@ -4018,6 +4115,10 @@ export type Jsonb_Comparison_Exp = {
   _has_keys_any?: InputMaybe<Array<Scalars['String']['input']>>;
   _in?: InputMaybe<Array<Scalars['jsonb']['input']>>;
   _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  /** does the jsonpath return any item for the specified JSON value */
+  _jsonb_path_exists?: InputMaybe<Scalars['String']['input']>;
+  /** does the jsonpath predicate check return true for the specified JSON value */
+  _jsonb_path_match?: InputMaybe<Scalars['String']['input']>;
   _lt?: InputMaybe<Scalars['jsonb']['input']>;
   _lte?: InputMaybe<Scalars['jsonb']['input']>;
   _neq?: InputMaybe<Scalars['jsonb']['input']>;
@@ -13050,6 +13151,7 @@ export type Users = {
   user_role: User_Role;
   /** An object relationship */
   user_status: User_Status;
+  username?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   venues?: Maybe<Venues>;
 };
@@ -13276,6 +13378,7 @@ export type Users_Bool_Exp = {
   status?: InputMaybe<User_Status_Enum_Comparison_Exp>;
   user_role?: InputMaybe<User_Role_Bool_Exp>;
   user_status?: InputMaybe<User_Status_Bool_Exp>;
+  username?: InputMaybe<String_Comparison_Exp>;
   venues?: InputMaybe<Venues_Bool_Exp>;
 };
 
@@ -13284,7 +13387,9 @@ export enum Users_Constraint {
   /** unique or primary key constraint on columns "email" */
   UsersEmailKey = 'users_email_key',
   /** unique or primary key constraint on columns "id" */
-  UsersPkey = 'users_pkey'
+  UsersPkey = 'users_pkey',
+  /** unique or primary key constraint on columns  */
+  UsersUsernameLowerUniqueIdx = 'users_username_lower_unique_idx'
 }
 
 /** input type for incrementing numeric columns in table "users" */
@@ -13316,6 +13421,7 @@ export type Users_Insert_Input = {
   status?: InputMaybe<User_Status_Enum>;
   user_role?: InputMaybe<User_Role_Obj_Rel_Insert_Input>;
   user_status?: InputMaybe<User_Status_Obj_Rel_Insert_Input>;
+  username?: InputMaybe<Scalars['String']['input']>;
   venues?: InputMaybe<Venues_Obj_Rel_Insert_Input>;
 };
 
@@ -13333,6 +13439,7 @@ export type Users_Max_Fields = {
   last_seen_at?: Maybe<Scalars['timestamptz']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   points?: Maybe<Scalars['Int']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by max() on columns of table "users" */
@@ -13348,6 +13455,7 @@ export type Users_Max_Order_By = {
   last_seen_at?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
+  username?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -13364,6 +13472,7 @@ export type Users_Min_Fields = {
   last_seen_at?: Maybe<Scalars['timestamptz']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   points?: Maybe<Scalars['Int']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by min() on columns of table "users" */
@@ -13379,6 +13488,7 @@ export type Users_Min_Order_By = {
   last_seen_at?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
+  username?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "users" */
@@ -13428,6 +13538,7 @@ export type Users_Order_By = {
   status?: InputMaybe<Order_By>;
   user_role?: InputMaybe<User_Role_Order_By>;
   user_status?: InputMaybe<User_Status_Order_By>;
+  username?: InputMaybe<Order_By>;
   venues?: InputMaybe<Venues_Order_By>;
 };
 
@@ -13465,7 +13576,9 @@ export enum Users_Select_Column {
   /** column name */
   Role = 'role',
   /** column name */
-  Status = 'status'
+  Status = 'status',
+  /** column name */
+  Username = 'username'
 }
 
 /** select "users_aggregate_bool_exp_bool_and_arguments_columns" columns of table "users" */
@@ -13496,6 +13609,7 @@ export type Users_Set_Input = {
   points?: InputMaybe<Scalars['Int']['input']>;
   role?: InputMaybe<User_Role_Enum>;
   status?: InputMaybe<User_Status_Enum>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate stddev on columns */
@@ -13555,6 +13669,7 @@ export type Users_Stream_Cursor_Value_Input = {
   points?: InputMaybe<Scalars['Int']['input']>;
   role?: InputMaybe<User_Role_Enum>;
   status?: InputMaybe<User_Status_Enum>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate sum on columns */
@@ -13597,7 +13712,9 @@ export enum Users_Update_Column {
   /** column name */
   Role = 'role',
   /** column name */
-  Status = 'status'
+  Status = 'status',
+  /** column name */
+  Username = 'username'
 }
 
 export type Users_Updates = {
@@ -15929,6 +16046,9 @@ export type Venues = {
   social_links: Scalars['json']['output'];
   status: Venue_Status_Enum;
   telegram_chat_id?: Maybe<Scalars['Int']['output']>;
+  telegram_message_notifications_enabled: Scalars['Boolean']['output'];
+  telegram_qr_notifications_enabled: Scalars['Boolean']['output'];
+  telegram_review_notifications_enabled: Scalars['Boolean']['output'];
   telegram_user_id?: Maybe<Scalars['bigint']['output']>;
   updated_at: Scalars['timestamptz']['output'];
   /** An object relationship */
@@ -16149,7 +16269,23 @@ export type Venues_Aggregate = {
 };
 
 export type Venues_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Venues_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Venues_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Venues_Aggregate_Bool_Exp_Count>;
+};
+
+export type Venues_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Venues_Select_Column_Venues_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Venues_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Venues_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Venues_Select_Column_Venues_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Venues_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
 };
 
 export type Venues_Aggregate_Bool_Exp_Count = {
@@ -16250,6 +16386,9 @@ export type Venues_Bool_Exp = {
   social_links?: InputMaybe<Json_Comparison_Exp>;
   status?: InputMaybe<Venue_Status_Enum_Comparison_Exp>;
   telegram_chat_id?: InputMaybe<Int_Comparison_Exp>;
+  telegram_message_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
+  telegram_qr_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
+  telegram_review_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
   telegram_user_id?: InputMaybe<Bigint_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
@@ -16320,6 +16459,9 @@ export type Venues_Insert_Input = {
   social_links?: InputMaybe<Scalars['json']['input']>;
   status?: InputMaybe<Venue_Status_Enum>;
   telegram_chat_id?: InputMaybe<Scalars['Int']['input']>;
+  telegram_message_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_qr_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_review_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
   telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
@@ -16497,6 +16639,9 @@ export type Venues_Order_By = {
   social_links?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
   telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_message_notifications_enabled?: InputMaybe<Order_By>;
+  telegram_qr_notifications_enabled?: InputMaybe<Order_By>;
+  telegram_review_notifications_enabled?: InputMaybe<Order_By>;
   telegram_user_id?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user?: InputMaybe<Users_Order_By>;
@@ -16569,6 +16714,12 @@ export enum Venues_Select_Column {
   /** column name */
   TelegramChatId = 'telegram_chat_id',
   /** column name */
+  TelegramMessageNotificationsEnabled = 'telegram_message_notifications_enabled',
+  /** column name */
+  TelegramQrNotificationsEnabled = 'telegram_qr_notifications_enabled',
+  /** column name */
+  TelegramReviewNotificationsEnabled = 'telegram_review_notifications_enabled',
+  /** column name */
   TelegramUserId = 'telegram_user_id',
   /** column name */
   UpdatedAt = 'updated_at',
@@ -16576,6 +16727,26 @@ export enum Venues_Select_Column {
   UserId = 'user_id',
   /** column name */
   Website = 'website'
+}
+
+/** select "venues_aggregate_bool_exp_bool_and_arguments_columns" columns of table "venues" */
+export enum Venues_Select_Column_Venues_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  TelegramMessageNotificationsEnabled = 'telegram_message_notifications_enabled',
+  /** column name */
+  TelegramQrNotificationsEnabled = 'telegram_qr_notifications_enabled',
+  /** column name */
+  TelegramReviewNotificationsEnabled = 'telegram_review_notifications_enabled'
+}
+
+/** select "venues_aggregate_bool_exp_bool_or_arguments_columns" columns of table "venues" */
+export enum Venues_Select_Column_Venues_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  TelegramMessageNotificationsEnabled = 'telegram_message_notifications_enabled',
+  /** column name */
+  TelegramQrNotificationsEnabled = 'telegram_qr_notifications_enabled',
+  /** column name */
+  TelegramReviewNotificationsEnabled = 'telegram_review_notifications_enabled'
 }
 
 /** input type for updating data in table "venues" */
@@ -16602,6 +16773,9 @@ export type Venues_Set_Input = {
   social_links?: InputMaybe<Scalars['json']['input']>;
   status?: InputMaybe<Venue_Status_Enum>;
   telegram_chat_id?: InputMaybe<Scalars['Int']['input']>;
+  telegram_message_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_qr_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_review_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
   telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -16679,6 +16853,9 @@ export type Venues_Stream_Cursor_Value_Input = {
   social_links?: InputMaybe<Scalars['json']['input']>;
   status?: InputMaybe<Venue_Status_Enum>;
   telegram_chat_id?: InputMaybe<Scalars['Int']['input']>;
+  telegram_message_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_qr_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  telegram_review_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
   telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -16744,6 +16921,12 @@ export enum Venues_Update_Column {
   Status = 'status',
   /** column name */
   TelegramChatId = 'telegram_chat_id',
+  /** column name */
+  TelegramMessageNotificationsEnabled = 'telegram_message_notifications_enabled',
+  /** column name */
+  TelegramQrNotificationsEnabled = 'telegram_qr_notifications_enabled',
+  /** column name */
+  TelegramReviewNotificationsEnabled = 'telegram_review_notifications_enabled',
   /** column name */
   TelegramUserId = 'telegram_user_id',
   /** column name */
@@ -16967,7 +17150,7 @@ export type GetUserProfileQueryVariables = Exact<{
 }>;
 
 
-export type GetUserProfileQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', id: UUID, name?: string | null, bio?: string | null, city?: string | null, email: string, role: User_Role_Enum, status: User_Status_Enum, image?: string | null, points: number, is_verified_contributor: boolean } | null };
+export type GetUserProfileQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', id: UUID, name?: string | null, bio?: string | null, city?: string | null, email: string, role: User_Role_Enum, status: User_Status_Enum, image?: string | null, points: number, is_verified_contributor: boolean, username?: string | null } | null };
 
 export type VenueMessagingEventsSubscriptionVariables = Exact<{
   venueId: Scalars['uuid']['input'];
@@ -16998,7 +17181,6 @@ export type MessagingUnreadEventsSubscription = { __typename?: 'subscription_roo
 export type GetOwnUserRecentContributionsQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
-
 
 export type GetOwnUserRecentContributionsQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', name: string, slug: string, city?: string | null, country?: string | null, created_at: Timestamp, logo?: string | null, images?: Array<string> | null }>, events: Array<{ __typename?: 'events', title_en: string, title_uk: string, slug: string, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, is_recurring: boolean, status: Event_Status_Enum, city?: string | null, country?: string | null, created_at: Timestamp, images?: Array<string> | null }> };
 
@@ -17158,14 +17340,6 @@ export type GetUserEventsQueryVariables = Exact<{
 
 export type GetUserEventsQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', updated_at: Timestamp, id: UUID, title_en: string, title_uk: string, slug: string, description_en?: string | null, description_uk?: string | null, type: Event_Type_Enum, price_type: Price_Type_Enum, price_amount?: Numeric | null, price_currency?: string | null, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, external_url?: string | null, custom_location_address?: string | null, custom_location_name?: string | null, area?: string | null, city?: string | null, country?: string | null, geo?: Geography | null, images?: Array<string> | null, registration_url?: string | null, registration_required: boolean, capacity?: number | null, age_restriction?: string | null, language?: Array<string> | null, accessibility_info?: string | null, social_links?: Json | null, status: Event_Status_Enum, created_at: Timestamp, is_recurring: boolean, recurrence_rule?: string | null, organizer_name?: string | null, organizer_phone_number?: string | null, organizer_email?: string | null, owner_id?: UUID | null, venue_id?: UUID | null, user_id: UUID, venue?: { __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null, logo?: string | null, category: Venue_Category_Enum, geo?: Geography | null } | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null } };
 
-export type UpdateEventStatusMutationVariables = Exact<{
-  id: Scalars['uuid']['input'];
-  status: Event_Status_Enum;
-}>;
-
-
-export type UpdateEventStatusMutation = { __typename?: 'mutation_root', update_events_by_pk?: { __typename?: 'events', id: UUID, status: Event_Status_Enum, updated_at: Timestamp } | null };
-
 export type ChainFieldsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json };
 
 export type ChainWithVenuesFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
@@ -17203,14 +17377,6 @@ export type GetAdminVenuesQueryVariables = Exact<{
 
 
 export type GetAdminVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', created_at: Timestamp, id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export type UpdateVenueStatusMutationVariables = Exact<{
-  id: Scalars['uuid']['input'];
-  status: Venue_Status_Enum;
-}>;
-
-
-export type UpdateVenueStatusMutation = { __typename?: 'mutation_root', update_venues_by_pk?: { __typename?: 'venues', id: UUID, status: Venue_Status_Enum, updated_at: Timestamp } | null };
 
 export const VenueViewChainFieldsFragmentDoc = gql`
     fragment VenueViewChainFields on chains {
@@ -17671,6 +17837,7 @@ export const GetUserProfileDocument = gql`
     image
     points
     is_verified_contributor
+    username
   }
 }
     `;
@@ -17853,11 +18020,7 @@ export type MessagingUnreadEventsSubscriptionHookResult = ReturnType<typeof useM
 export type MessagingUnreadEventsSubscriptionResult = Apollo.SubscriptionResult<MessagingUnreadEventsSubscription>;
 export const GetOwnUserRecentContributionsDocument = gql`
     query GetOwnUserRecentContributions($id: uuid!) {
-  venues(
-    where: {user_id: {_eq: $id}, status: {_eq: ACTIVE}}
-    order_by: {created_at: desc}
-    limit: 5
-  ) {
+  venues(where: {user_id: {_eq: $id}, status: {_eq: ACTIVE}}, order_by: {created_at: desc}, limit: 5) {
     name
     slug
     city
@@ -17866,11 +18029,7 @@ export const GetOwnUserRecentContributionsDocument = gql`
     logo
     images
   }
-  events(
-    where: {user_id: {_eq: $id}, status: {_in: [ACTIVE, COMPLETED, CANCELLED, POSTPONED]}}
-    order_by: {created_at: desc}
-    limit: 5
-  ) {
+  events(where: {user_id: {_eq: $id}, status: {_in: [ACTIVE, COMPLETED, CANCELLED, POSTPONED]}}, order_by: {created_at: desc}, limit: 5) {
     title_en
     title_uk
     slug
@@ -17886,35 +18045,18 @@ export const GetOwnUserRecentContributionsDocument = gql`
   }
 }
     `;
-
-/**
- * __useGetOwnUserRecentContributionsQuery__
- *
- * To run a query within a React component, call `useGetOwnUserRecentContributionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetOwnUserRecentContributionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetOwnUserRecentContributionsQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
 export function useGetOwnUserRecentContributionsQuery(baseOptions: Apollo.QueryHookOptions<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables> & ({ variables: GetOwnUserRecentContributionsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
-      }
+  const options = {...defaultOptions, ...baseOptions};
+  return Apollo.useQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
+}
 export function useGetOwnUserRecentContributionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
-        }
+  const options = {...defaultOptions, ...baseOptions};
+  return Apollo.useLazyQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
+}
 export function useGetOwnUserRecentContributionsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
-        }
+  const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions};
+  return Apollo.useSuspenseQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
+}
 export type GetOwnUserRecentContributionsQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsQuery>;
 export type GetOwnUserRecentContributionsLazyQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsLazyQuery>;
 export type GetOwnUserRecentContributionsSuspenseQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsSuspenseQuery>;
@@ -18643,42 +18785,6 @@ export type GetUserEventsQueryHookResult = ReturnType<typeof useGetUserEventsQue
 export type GetUserEventsLazyQueryHookResult = ReturnType<typeof useGetUserEventsLazyQuery>;
 export type GetUserEventsSuspenseQueryHookResult = ReturnType<typeof useGetUserEventsSuspenseQuery>;
 export type GetUserEventsQueryResult = Apollo.QueryResult<GetUserEventsQuery, GetUserEventsQueryVariables>;
-export const UpdateEventStatusDocument = gql`
-    mutation UpdateEventStatus($id: uuid!, $status: event_status_enum!) {
-  update_events_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
-    id
-    status
-    updated_at
-  }
-}
-    `;
-export type UpdateEventStatusMutationFn = Apollo.MutationFunction<UpdateEventStatusMutation, UpdateEventStatusMutationVariables>;
-
-/**
- * __useUpdateEventStatusMutation__
- *
- * To run a mutation, you first call `useUpdateEventStatusMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateEventStatusMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateEventStatusMutation, { data, loading, error }] = useUpdateEventStatusMutation({
- *   variables: {
- *      id: // value for 'id'
- *      status: // value for 'status'
- *   },
- * });
- */
-export function useUpdateEventStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateEventStatusMutation, UpdateEventStatusMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateEventStatusMutation, UpdateEventStatusMutationVariables>(UpdateEventStatusDocument, options);
-      }
-export type UpdateEventStatusMutationHookResult = ReturnType<typeof useUpdateEventStatusMutation>;
-export type UpdateEventStatusMutationResult = Apollo.MutationResult<UpdateEventStatusMutation>;
-export type UpdateEventStatusMutationOptions = Apollo.BaseMutationOptions<UpdateEventStatusMutation, UpdateEventStatusMutationVariables>;
 export const GetPublicVenuesDocument = gql`
     query GetPublicVenues($where: venues_bool_exp!, $whereEvents: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
   venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -18831,39 +18937,3 @@ export type GetAdminVenuesQueryHookResult = ReturnType<typeof useGetAdminVenuesQ
 export type GetAdminVenuesLazyQueryHookResult = ReturnType<typeof useGetAdminVenuesLazyQuery>;
 export type GetAdminVenuesSuspenseQueryHookResult = ReturnType<typeof useGetAdminVenuesSuspenseQuery>;
 export type GetAdminVenuesQueryResult = Apollo.QueryResult<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>;
-export const UpdateVenueStatusDocument = gql`
-    mutation UpdateVenueStatus($id: uuid!, $status: venue_status_enum!) {
-  update_venues_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
-    id
-    status
-    updated_at
-  }
-}
-    `;
-export type UpdateVenueStatusMutationFn = Apollo.MutationFunction<UpdateVenueStatusMutation, UpdateVenueStatusMutationVariables>;
-
-/**
- * __useUpdateVenueStatusMutation__
- *
- * To run a mutation, you first call `useUpdateVenueStatusMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateVenueStatusMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateVenueStatusMutation, { data, loading, error }] = useUpdateVenueStatusMutation({
- *   variables: {
- *      id: // value for 'id'
- *      status: // value for 'status'
- *   },
- * });
- */
-export function useUpdateVenueStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateVenueStatusMutation, UpdateVenueStatusMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateVenueStatusMutation, UpdateVenueStatusMutationVariables>(UpdateVenueStatusDocument, options);
-      }
-export type UpdateVenueStatusMutationHookResult = ReturnType<typeof useUpdateVenueStatusMutation>;
-export type UpdateVenueStatusMutationResult = Apollo.MutationResult<UpdateVenueStatusMutation>;
-export type UpdateVenueStatusMutationOptions = Apollo.BaseMutationOptions<UpdateVenueStatusMutation, UpdateVenueStatusMutationVariables>;

@@ -42,7 +42,7 @@ export const POST = (req: Request) =>
         WHERE id = ${venueId} AND owner_id = ${session.user.id}
         ), unlinked_venue AS (
           UPDATE venues
-          SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false, telegram_qr_notifications_enabled = false
+          SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false, telegram_qr_notifications_enabled = false, telegram_message_notifications_enabled = false
         WHERE id IN (SELECT id FROM owned_venue)
         RETURNING id
       ), cancelled_deliveries AS (

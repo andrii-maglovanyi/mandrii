@@ -44,7 +44,7 @@ export const UserMenu = ({
           <Link href="/user-directory" onClick={onNavigate}>
             <StretchHorizontal className="mr-2" /> {i18n("My directory")}
           </Link>
-          <Link href="/settings" onClick={onNavigate}>
+          <Link href="/user-profile/settings" onClick={onNavigate}>
             <Settings className="mr-2" /> {i18n("Settings")}
           </Link>
           {isAdmin && (

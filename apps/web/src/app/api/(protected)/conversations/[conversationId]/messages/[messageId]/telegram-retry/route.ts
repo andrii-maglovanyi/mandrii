@@ -32,6 +32,7 @@ export const POST = (req: Request, { params }: { params: Promise<{ conversationI
         AND m.sender_type = 'USER'
         AND m.deleted_at IS NULL
         AND v.telegram_chat_id IS NOT NULL
+        AND v.telegram_message_notifications_enabled
       ON CONFLICT (message_id) DO UPDATE
       SET status = 'PENDING', attempts = 0, next_attempt_at = NOW(), locked_at = NULL, last_error = NULL,
           telegram_chat_id = EXCLUDED.telegram_chat_id

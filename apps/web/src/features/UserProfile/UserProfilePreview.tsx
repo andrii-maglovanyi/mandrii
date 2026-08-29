@@ -31,6 +31,7 @@ type UserProfilePreviewData = Pick<
   | "last_seen_at"
   | "name"
   | "points"
+  | "username"
 >;
 
 export const UserProfilePreview = ({ fallbackName, userId }: UserProfilePreviewProps) => {
@@ -78,6 +79,7 @@ export const UserProfilePreview = ({ fallbackName, userId }: UserProfilePreviewP
     last_seen_at: null,
     name: fallbackName,
     points: 0,
+    username: null,
   };
   const dateLocale = locale === "uk" ? "uk-UA" : "en-GB";
   const relativeTimeFormatter = new Intl.RelativeTimeFormat(dateLocale, { numeric: "auto" });
@@ -134,7 +136,7 @@ export const UserProfilePreview = ({ fallbackName, userId }: UserProfilePreviewP
       </div>
       <Link
         className="bg-primary hover:bg-primary-hover inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:no-underline"
-        href={`/users/${userId}`}
+        href={`/users/${displayedProfile.username ?? userId}`}
         onClick={closeDialog}
       >
         {i18n("View full profile")}
