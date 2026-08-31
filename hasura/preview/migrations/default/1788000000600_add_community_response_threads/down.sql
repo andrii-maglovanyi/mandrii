@@ -1,0 +1,5 @@
+DROP INDEX IF EXISTS public.community_response_messages_telegram_identity_idx;
+DROP INDEX IF EXISTS public.community_response_messages_thread_idx;
+DROP TABLE IF EXISTS public.community_response_messages;
+DROP INDEX IF EXISTS public.community_response_telegram_deliveries_message_idx;
+ALTER TABLE public.community_response_telegram_deliveries DROP COLUMN IF EXISTS telegram_message_id;

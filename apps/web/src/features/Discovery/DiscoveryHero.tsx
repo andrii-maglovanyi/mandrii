@@ -105,7 +105,7 @@ export function DiscoveryHero() {
               href={href === "/guides" ? href : withLocation(href)}
               key={title}
             >
-              <span className="bg-primary/10 text-primary group-hover:!bg-primary/20 group-hover:!text-primary mb-4 inline-flex rounded-xl p-3 transition-colors">
+              <span className="bg-primary/10 text-primary group-hover:bg-primary/20! group-hover:text-primary! mb-4 inline-flex rounded-xl p-3 transition-colors">
                 <Icon size={22} />
               </span>
               <h3 className="group-hover:text-primary text-lg font-bold transition-colors">{title}</h3>

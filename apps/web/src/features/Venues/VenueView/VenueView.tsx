@@ -23,6 +23,7 @@ import { VenueMessaging } from "~/features/Messaging/VenueMessaging";
 import { ContentRating } from "~/features/Ratings/ContentRating";
 import { ContentReviews } from "~/features/Ratings/ContentReviews";
 import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
+import { CommunityAroundContent } from "~/features/CommunityRequests";
 import { useEvents } from "~/hooks/useEvents";
 import { useUser } from "~/hooks/useUser";
 import { useVenues } from "~/hooks/useVenues";
@@ -315,6 +316,7 @@ export const VenueView = ({
               tab={i18n("Feed")}
             >
               <ContentUpdates canManage={canManageUpdates} targetId={venue.id} type="venue" />
+              <CommunityAroundContent targetId={venue.id} targetType="venue" />
             </TabPane>
           )}
 

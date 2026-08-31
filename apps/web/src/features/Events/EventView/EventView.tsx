@@ -23,6 +23,7 @@ import { useUser } from "~/hooks/useUser";
 import { ContentRating } from "~/features/Ratings/ContentRating";
 import { ContentReviews } from "~/features/Ratings/ContentReviews";
 import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
+import { CommunityAroundContent } from "~/features/CommunityRequests";
 import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -361,6 +362,7 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
               tab={i18n("Feed")}
             >
               <ContentUpdates canManage={canManageUpdates} targetId={event.id} type="event" />
+              <CommunityAroundContent targetId={event.id} targetType="event" />
             </TabPane>
           )}
 

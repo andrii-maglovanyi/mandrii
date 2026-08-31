@@ -15,7 +15,7 @@ type RentingBreakdownProps = {
 export const RentingBreakdown = ({ result, showHints, formatCurrency }: RentingBreakdownProps) => {
   const i18n = useI18n();
 
-  const { years, initialSavings, returnOnInitialSavings, ongoingSavings, rentPaid, rentingNet } = result;
+  const { years, initialSavings, rentalDeposit, returnOnInitialSavings, ongoingSavings, rentPaid, rentingNet } = result;
 
   return (
     <div className="border-neutral-disabled bg-surface/70 flex flex-col gap-y-1 rounded-xl border px-4 py-3 shadow-sm md:px-5 md:py-4">
@@ -27,11 +27,24 @@ export const RentingBreakdown = ({ result, showHints, formatCurrency }: RentingB
         label={i18n("Savings from not buying")}
         value={initialSavings}
         showHints={showHints}
+        isInformational
         explanation={i18n(
-          "Capital you keep by not buying: deposit, taxes, buying costs, repair budget, and first year's insurance. Shown for reference - the actual investment base used for return calculations may exclude certain items.",
+          "Starting capital retained by renting. It is shown for context and is excluded from net gain/loss because both scenarios begin with the same capital.",
         )}
         formatCurrency={formatCurrency}
       />
+
+      <ResultRow
+        label={i18n("Rental deposit")}
+        value={rentalDeposit}
+        showHints={showHints}
+        isInformational
+        explanation={i18n(
+          "Refundable amount paid at move-in. It is held during the tenancy and returned when you move out, so it is not part of gain/loss.",
+        )}
+        formatCurrency={formatCurrency}
+      />
+
       <ResultRow
         label={i18n("Return on initial savings")}
         value={returnOnInitialSavings}
@@ -41,15 +54,17 @@ export const RentingBreakdown = ({ result, showHints, formatCurrency }: RentingB
         )}
         formatCurrency={formatCurrency}
       />
-      <ResultRow
-        label={i18n("Return on ongoing savings")}
-        value={ongoingSavings}
-        showHints={showHints}
-        explanation={i18n(
-          "If your mortgage payment would be higher than your rent, the difference is invested each year and compounds. Only applies when mortgage > rent.",
-        )}
-        formatCurrency={formatCurrency}
-      />
+      {ongoingSavings !== 0 && (
+        <ResultRow
+          label={i18n("Return on ongoing savings")}
+          value={ongoingSavings}
+          showHints={showHints}
+          explanation={i18n(
+            "Investment growth on the difference between mortgage payments and rent. The saved principal is already reflected in the two scenarios' cash flows.",
+          )}
+          formatCurrency={formatCurrency}
+        />
+      )}
       <ResultRow
         label={i18n("Rent paid")}
         value={-rentPaid}
@@ -65,7 +80,7 @@ export const RentingBreakdown = ({ result, showHints, formatCurrency }: RentingB
           highlight
           showHints={showHints}
           explanation={i18n(
-            "Investment returns minus rent paid, plus your deposit returned. A negative number means renting cost you more than your investments returned.",
+            "Investment returns minus rent paid. Starting capital and the returned rental deposit are not gains or losses.",
           )}
           formatCurrency={formatCurrency}
         />

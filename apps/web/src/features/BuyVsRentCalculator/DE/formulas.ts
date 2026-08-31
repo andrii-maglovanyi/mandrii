@@ -17,6 +17,7 @@ import type { CalculationResult, CalculatorInputs, Bundesland } from "./types";
  * Grunderwerbsteuer (GrESt) rates by Bundesland as of 2025.
  * A single source of truth used by both transferTax() and transferTaxRate().
  *
+ *
  * Changes vs. previous version:
  *   - Berlin moved from BE_HB_MV_NI_ST (5.5%) to BE_RP_TH (6.0%) - Berlin has
  *     been at 6.0% since 1 January 2014.
@@ -110,8 +111,9 @@ export function transferTaxRate(stateGroup: Bundesland): number {
  *
  * 7. RENTAL DEPOSIT (Mietkaution): Legally capped at 3 months' cold rent
  *    (§551 BGB). The deposit is held in a separate account during the tenancy
- *    and returned on move-out, so it is excluded from the investable initial
- *    savings base but added back to rentingNet on exit.
+ *    and returned on move-out. It is excluded from the investable initial
+ *    savings base; its principal nets to zero, while its foregone return is
+ *    reflected in the renter's result.
  */
 export function calculate(inputs: CalculatorInputs): CalculationResult {
   const propertyValue = safe(inputs.propertyValue);
@@ -186,24 +188,20 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
 
   // ── Renting ───────────────────────────────────────────────────────────────
 
-  // "Savings from not buying" shown in the UI (informational):
-  // everything the renter does not spend at acquisition.
-  const initialSavings =
-    deposit + transferTaxAmount + buyerAgentFee + notaryAndLandRegistryCosts + initialRepairCosts + annualHomeInsurance;
+  // Upfront capital retained by the renter instead of spending it on purchase costs.
+  // Recurring owner costs (such as buildings insurance) are not part of this
+  // initial lump sum. It is not a gain: both scenarios start with the same capital.
+  const initialSavings = deposit + transferTaxAmount + buyerAgentFee + notaryAndLandRegistryCosts + initialRepairCosts;
 
-  // Investment base: the capital that is actually available to invest.
-  // Excludes rentalDeposit (Mietkaution - legally locked in deposit scheme, not investable).
-  // Excludes the first year's insurance (that cost is incurred by the buyer
-  // as an informational line only).
-  const initialSavingsBase =
-    deposit + transferTaxAmount + buyerAgentFee + notaryAndLandRegistryCosts + initialRepairCosts - rentalDeposit;
-
-  const returnOnInitialSavings = fvLump(initialSavingsBase, returnOnSavings, years) - initialSavingsBase;
+  // The Mietkaution is held separately, so it cannot be invested.
+  const investableInitialSavings = initialSavings - rentalDeposit;
+  const returnOnInitialSavings = fvLump(investableInitialSavings, returnOnSavings, years) - investableInitialSavings;
   const ongoingSavings = returnOnOngoingSavings(monthlyRent, rentIncrease, monthlyMortgage, returnOnSavings, years);
   const rentPaid = totalRentPaid(monthlyRent, rentIncrease, years);
 
-  // Rental deposit (Mietkaution) is returned at end of tenancy - added back to net position.
-  const rentingNet = returnOnInitialSavings + ongoingSavings - rentPaid + rentalDeposit;
+  // Starting capital and the returned deposit are not gains. Only their investment
+  // return changes the renter's net position relative to the buyer.
+  const rentingNet = returnOnInitialSavings + ongoingSavings - rentPaid;
 
   return {
     // Buying
@@ -225,6 +223,8 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
     loanAmount,
     // Renting
     initialSavings,
+    investableInitialSavings,
+    rentalDeposit,
     returnOnInitialSavings,
     ongoingSavings,
     rentPaid,
@@ -281,13 +281,13 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
 
   // Renting state
   let cumRent = 0;
-  let cumInvestmentProfit = 0;
   let ongoingBalance = 0;
   let ongoingDeposited = 0;
   let rent = monthlyRent;
   // Investment base: same as calculate() - excludes rentalDeposit (Mietkaution)
   let investmentBase =
     deposit + transferTaxAmount + buyerAgentFee + notaryAndLandRegistryCosts + initialRepairCosts - rentalDeposit;
+  const initialInvestment = investmentBase;
 
   // Buying state
   let cumMortgage = 0;
@@ -330,17 +330,13 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
     // ── Renting ─────────────────────────────────────────────────────────────
     cumRent += rent * 12;
     const annualProfit = investmentBase * (returnOnSavings / 100);
-    cumInvestmentProfit += annualProfit;
     investmentBase += annualProfit;
 
     const surplus = Math.max(0, (monthlyMortgagePayment - rent) * 12);
     ongoingBalance = (ongoingBalance + surplus) * (1 + returnOnSavings / 100);
     ongoingDeposited += surplus;
 
-    // Rental deposit (Mietkaution) returned at user's chosen move-out year
-    const depositReturn = yr === userYears ? rentalDeposit : 0;
-
-    const totalRenting = cumRent - cumInvestmentProfit - (ongoingBalance - ongoingDeposited) - depositReturn;
+    const totalRenting = cumRent - (investmentBase - initialInvestment) - (ongoingBalance - ongoingDeposited);
 
     data.push({
       year: yr,

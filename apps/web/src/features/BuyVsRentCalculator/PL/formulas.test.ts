@@ -120,7 +120,7 @@ describe("calculate - buying", () => {
     const r1 = calculate({ ...BASE, years: 1 });
     const loan = 600_000 - 120_000;
     // equityYears = 1 → futureValue = propertyValue * 1.04^1
-    const expectedEquity = 600_000 * 1.04 - loan;
+    const expectedEquity = 600_000 * 1.04 - remainingBalance(BASE.mortgageRate, BASE.mortgageTerm, loan, 12);
     expect(r2(r1.equity)).toBe(r2(expectedEquity));
   });
 
@@ -184,14 +184,14 @@ describe("calculate - buying", () => {
 describe("calculate - renting", () => {
   const result = calculate(BASE);
 
-  it("initialSavings includes deposit + PCC + agent + notary + repairs + 1yr insurance", () => {
+  it("initialSavings is the starting capital retained by renting", () => {
     const pcc = pccTax(600_000, false, false);
     const agent = 600_000 * 0.02;
-    const expected = 120_000 + pcc + agent + 4_500 + 30_000 + 600;
+    const expected = 120_000 + pcc + agent + 4_500 + 30_000;
     expect(r2(result.initialSavings)).toBe(r2(expected));
   });
 
-  it("initialSavingsBase excludes rentalDeposit (kaucja - not investable)", () => {
+  it("rentalDeposit reduces the amount available to invest", () => {
     const withDeposit = calculate(BASE);
     const withoutDeposit = calculate({ ...BASE, rentalDeposit: 0 });
     expect(withoutDeposit.returnOnInitialSavings).toBeGreaterThan(withDeposit.returnOnInitialSavings);
@@ -205,11 +205,16 @@ describe("calculate - renting", () => {
     expect(result.rentPaid).toBeGreaterThan(2_820 * 12 * 10);
   });
 
-  it("rentalDeposit (kaucja) is returned at end - added back to rentingNet", () => {
+  it("rentalDeposit (kaucja) affects renting net through foregone investment return", () => {
     const withDeposit = calculate(BASE);
     const noDeposit = calculate({ ...BASE, rentalDeposit: 0 });
-    // The deposit return raises rentingNet by depositAmount minus the forgone investment return
-    expect(withDeposit.rentingNet).toBeGreaterThan(noDeposit.rentingNet - BASE.rentalDeposit);
+    expect(r2(withDeposit.rentingNet - noDeposit.rentingNet)).toBe(
+      r2(-BASE.rentalDeposit * (Math.pow(1 + BASE.returnOnSavings / 100, BASE.years) - 1)),
+    );
+  });
+
+  it("renting net reconciles to the displayed gain/loss rows", () => {
+    expect(r2(result.rentingNet)).toBe(r2(result.returnOnInitialSavings + result.ongoingSavings - result.rentPaid));
   });
 
   it("rentingNet is finite for default inputs", () => {
@@ -292,6 +297,10 @@ describe("buildChartData", () => {
     expect(data[19].renting).toBeGreaterThan(data[9].renting);
   });
 
+  it("renting at year 10 matches the calculation summary", () => {
+    expect(data[9].renting).toBe(Math.round(-calculate(BASE).rentingNet));
+  });
+
   it("buying cost falls after mortgage is paid off", () => {
     const longData = buildChartData({ ...BASE, mortgageTerm: 25, years: 10 });
     expect(longData[35].buying).toBeLessThan(longData[27].buying);
@@ -308,7 +317,7 @@ describe("buildChartData", () => {
   it("rentalDeposit (kaucja) return lowers renting cost at user's chosen year", () => {
     const withDeposit = buildChartData({ ...BASE, years: 10 });
     const noDeposit = buildChartData({ ...BASE, years: 10, rentalDeposit: 0 });
-    expect(withDeposit[9].renting).toBeLessThan(noDeposit[9].renting);
+    expect(withDeposit[9].renting).toBeGreaterThan(noDeposit[9].renting);
   });
 
   it("buying values never go unrealistically negative due to clamped remainingBalance", () => {

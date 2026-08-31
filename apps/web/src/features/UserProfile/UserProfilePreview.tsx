@@ -101,6 +101,7 @@ export const UserProfilePreview = ({ fallbackName, userId }: UserProfilePreviewP
       <Avatar avatarSize={80} profile={displayedProfile} />
       <div className="flex max-w-md flex-col items-center">
         <p className="text-xl font-semibold">{displayedProfile.name}</p>
+        {displayedProfile.username && <p className="text-neutral mt-1 text-sm">@{displayedProfile.username}</p>}
         <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
           <CommunityLevelBadge points={displayedProfile.points} />
           {displayedProfile.isAdmin && (

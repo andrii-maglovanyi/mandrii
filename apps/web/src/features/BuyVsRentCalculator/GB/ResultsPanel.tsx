@@ -39,6 +39,15 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
       </h3>
 
       <ResultRow
+        label={i18n("Equity value")}
+        value={equity}
+        showHints={showHints}
+        explanation={i18n(
+          "What you'd receive when selling: the projected property value minus any remaining mortgage balance. Calculated at the start of your final year.",
+        )}
+        formatCurrency={gbp}
+      />
+      <ResultRow
         label={i18n("Deposit")}
         value={-deposit}
         showHints={showHints}
@@ -62,15 +71,6 @@ const BuyingBreakdown = ({ result, showHints }: BuyingBreakdownProps) => {
         showHints={showHints}
         explanation={i18n(
           "Total capital and interest payments made to the bank over your chosen period. Includes only years within the mortgage term.",
-        )}
-        formatCurrency={gbp}
-      />
-      <ResultRow
-        label={i18n("Equity value")}
-        value={equity}
-        showHints={showHints}
-        explanation={i18n(
-          "What you'd receive when selling: the projected property value minus any remaining mortgage balance. Calculated at the start of your final year.",
         )}
         formatCurrency={gbp}
       />

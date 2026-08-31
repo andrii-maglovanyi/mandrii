@@ -13,6 +13,8 @@ export type ChartDataPoint = {
 /** Renting-related calculation metrics - common structure across both calculators */
 export type RentingMetrics = {
   readonly initialSavings: number;
+  readonly investableInitialSavings: number;
+  readonly rentalDeposit: number;
   readonly returnOnInitialSavings: number;
   readonly ongoingSavings: number;
   readonly rentPaid: number;

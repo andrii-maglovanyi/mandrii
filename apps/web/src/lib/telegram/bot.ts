@@ -7,6 +7,7 @@ import { sendMessagePushNotification } from "../web-push";
 import { getSenderColour } from "~/lib/messaging/sender";
 import { getReviewTelegramDeliveryOutcome } from "~/lib/telegram/review-delivery";
 import { getReviewQuestions, toReviewQuestionSetVersion } from "~/lib/reviews/questions";
+import { createCommunityResponseMessage } from "~/lib/models/community-requests";
 import { UrlHelper } from "~/lib/url-helper";
 
 export const bot = new Bot(privateConfig.telegram.token);
@@ -121,6 +122,129 @@ export async function sendEventReviewTelegramNotification({
   );
 }
 
+type CommunityResponseTelegramDelivery = {
+  attempts: number;
+  id: string;
+  response_id: string;
+  telegram_chat_id: number;
+};
+
+const MAX_COMMUNITY_RESPONSE_TELEGRAM_DELIVERY_ATTEMPTS = 8;
+
+export async function sendCommunityResponseTelegramNotification(responseId: string) {
+  const [delivery] = await sql<Array<{ id: string }>>`
+    INSERT INTO community_response_telegram_deliveries (response_id, telegram_chat_id)
+    SELECT response.id, request_author.telegram_chat_id
+    FROM community_request_responses response
+    JOIN community_requests request ON request.id = response.request_id
+    JOIN users request_author ON request_author.id = request.user_id
+    WHERE response.id = ${responseId}
+      AND request_author.telegram_chat_id IS NOT NULL
+      AND request_author.telegram_user_id IS NOT NULL
+      AND request_author.community_telegram_notifications_enabled
+    ON CONFLICT (response_id) DO UPDATE SET
+      telegram_chat_id = EXCLUDED.telegram_chat_id,
+      status = 'PENDING',
+      attempts = 0,
+      next_attempt_at = NOW(),
+      locked_at = NULL,
+      last_error = NULL,
+      delivered_at = NULL
+    RETURNING id
+  `;
+  if (!delivery) return;
+
+  deliverPendingCommunityResponseTelegramNotifications({ limit: 1, responseId }).catch((error) => {
+    console.error("Immediate Community response Telegram delivery failed:", error);
+  });
+}
+
+export async function deliverPendingCommunityResponseTelegramNotifications({
+  limit = 10,
+  responseId,
+}: { limit?: number; responseId?: string } = {}) {
+  const deliveries = await sql.begin(
+    (transaction) => transaction<CommunityResponseTelegramDelivery[]>`
+      WITH due AS (
+        SELECT id
+        FROM community_response_telegram_deliveries
+        WHERE (
+          (status = 'PENDING' AND next_attempt_at <= NOW())
+          OR (status = 'PROCESSING' AND locked_at < NOW() - INTERVAL '10 minutes')
+        )
+        ${responseId ? sql`AND response_id = ${responseId}` : sql``}
+        ORDER BY next_attempt_at, created_at
+        LIMIT ${limit}
+        FOR UPDATE SKIP LOCKED
+      )
+      UPDATE community_response_telegram_deliveries delivery
+      SET status = 'PROCESSING', locked_at = NOW(), attempts = delivery.attempts + 1
+      FROM due
+      WHERE delivery.id = due.id
+      RETURNING delivery.id, delivery.response_id, delivery.telegram_chat_id, delivery.attempts
+    `,
+  );
+  await Promise.all(deliveries.map(deliverCommunityResponseTelegramNotification));
+  return deliveries.length;
+}
+
+async function deliverCommunityResponseTelegramNotification(delivery: CommunityResponseTelegramDelivery) {
+  try {
+    const [response] = await sql<
+      Array<{
+        body: string;
+        post_title: string;
+        responder_name: null | string;
+      }>
+    >`
+      SELECT response.body, request.title AS post_title, responder.name AS responder_name
+      FROM community_response_telegram_deliveries delivery
+      JOIN community_request_responses response ON response.id = delivery.response_id
+      JOIN community_requests request ON request.id = response.request_id
+      JOIN users responder ON responder.id = response.user_id
+      JOIN users request_author ON request_author.id = request.user_id
+      WHERE delivery.id = ${delivery.id}
+        AND request_author.telegram_chat_id = ${delivery.telegram_chat_id}
+        AND request_author.telegram_user_id IS NOT NULL
+        AND request_author.community_telegram_notifications_enabled
+    `;
+    if (!response) throw new Error("Community response notification is no longer deliverable");
+
+    const telegramResponse = await bot.api.sendMessage(
+      delivery.telegram_chat_id,
+      `<b>💬 New private response</b>\n\n<b>${escapeTelegramHtml(response.post_title)}</b>\n\n` +
+        `<b>${escapeTelegramHtml(response.responder_name || "A community member")}</b>\n` +
+        escapeTelegramHtml(response.body.replace(/\s+/g, " ").slice(0, 600)) +
+        "\n\nReply to this message to continue privately in Mandrii.",
+      {
+        link_preview_options: { is_disabled: true },
+        parse_mode: "HTML",
+        reply_markup: {
+          inline_keyboard: [[{ text: "View private responses", url: UrlHelper.buildUrl("/community") }]],
+        },
+      },
+    );
+    await sql`
+      UPDATE community_response_telegram_deliveries
+      SET status = 'DELIVERED', telegram_message_id = ${telegramResponse.message_id}, delivered_at = NOW(), locked_at = NULL, last_error = NULL
+      WHERE id = ${delivery.id}
+    `;
+  } catch (error: any) {
+    const errorMessage = String(error?.description ?? error?.message ?? "Telegram delivery failed").slice(0, 1_000);
+    const terminal = delivery.attempts >= MAX_COMMUNITY_RESPONSE_TELEGRAM_DELIVERY_ATTEMPTS;
+    const retryDelaySeconds = Math.min(60 * 60, 2 ** Math.min(delivery.attempts, 11));
+    await sql`
+      UPDATE community_response_telegram_deliveries
+      SET status = ${terminal ? "FAILED" : "PENDING"},
+          locked_at = NULL,
+          last_error = ${errorMessage},
+          next_attempt_at = NOW() + (${retryDelaySeconds} * INTERVAL '1 second')
+      WHERE id = ${delivery.id}
+    `;
+    captureException(error, { tags: { integration: "telegram", operation: "community_response_delivery" } });
+  }
+}
+
 // Local polling uses the same bot token as the deployed webhook. It must be
 // explicitly enabled so running the app locally can never disconnect production.
 if (process.env.NODE_ENV === "development" && process.env.TELEGRAM_LOCAL_POLLING === "true") {
@@ -143,21 +267,21 @@ bot.command("start", async (ctx) => {
   const chatId = ctx.chat.id;
 
   if (!token) {
-    return ctx.reply("Welcome to Mandrii! To link your venue, please use the integration link on your dashboard.");
+    return ctx.reply("Welcome to Mandrii! Use a link from Settings or your dashboard to connect Telegram.");
   }
 
   if (ctx.chat.type !== "private" || !ctx.from) {
-    return ctx.reply("For privacy, link your venue from a private chat with Mandrii Bot.");
+    return ctx.reply("For privacy, connect Telegram from a private chat with Mandrii Bot.");
   }
 
   try {
-    const [link] = await sql<{ event_id: null | string; venue_id: null | string }[]>`
+    const [link] = await sql<{ event_id: null | string; user_id: null | string; venue_id: null | string }[]>`
       UPDATE telegram_link_tokens
       SET used_at = NOW()
       WHERE token = ${token}
         AND used_at IS NULL
         AND expires_at > NOW()
-      RETURNING venue_id, event_id
+      RETURNING venue_id, event_id, user_id
     `;
 
     if (!link) {
@@ -166,7 +290,16 @@ bot.command("start", async (ctx) => {
       );
     }
 
-    if (link.event_id) {
+    if (link.user_id) {
+      await sql`
+        UPDATE users
+        SET telegram_chat_id = ${chatId}, telegram_user_id = ${ctx.from.id}
+        WHERE id = ${link.user_id}
+      `;
+      await ctx.reply(
+        "Your Mandrii account is now linked! You can choose Community response notifications in Settings. ✅",
+      );
+    } else if (link.event_id) {
       await sql`UPDATE events SET telegram_chat_id = ${chatId}, telegram_user_id = ${ctx.from.id} WHERE id = ${link.event_id}`;
       await ctx.reply("Your event is now successfully linked! You will receive review notifications here. ✅");
     } else {
@@ -198,6 +331,11 @@ bot.command("unlink", async (ctx) => {
       SET telegram_chat_id = NULL, telegram_user_id = NULL, telegram_review_notifications_enabled = false, telegram_qr_notifications_enabled = false
       WHERE telegram_chat_id = ${chatId} AND telegram_user_id = ${ctx.from.id}
       RETURNING id
+    ), unlinked_users AS (
+      UPDATE users
+      SET telegram_chat_id = NULL, telegram_user_id = NULL, community_telegram_notifications_enabled = false
+      WHERE telegram_chat_id = ${chatId} AND telegram_user_id = ${ctx.from.id}
+      RETURNING id
     ), cancelled_deliveries AS (
       UPDATE telegram_message_deliveries delivery
       SET status = 'CANCELLED', locked_at = NULL
@@ -206,14 +344,20 @@ bot.command("unlink", async (ctx) => {
       WHERE delivery.message_id = m.id
         AND c.venue_id IN (SELECT id FROM unlinked_venues)
         AND delivery.status IN ('PENDING', 'PROCESSING')
+    ), cancelled_community_deliveries AS (
+      UPDATE community_response_telegram_deliveries
+      SET status = 'CANCELLED', locked_at = NULL
+      WHERE telegram_chat_id = ${chatId} AND status IN ('PENDING', 'PROCESSING')
     )
     UPDATE telegram_link_tokens
     SET used_at = NOW()
-    WHERE (venue_id IN (SELECT id FROM unlinked_venues) OR event_id IN (SELECT id FROM unlinked_events))
+    WHERE (venue_id IN (SELECT id FROM unlinked_venues)
+        OR event_id IN (SELECT id FROM unlinked_events)
+        OR user_id IN (SELECT id FROM unlinked_users))
       AND used_at IS NULL
   `;
 
-  await ctx.reply("Your linked venues and events have been unlinked.");
+  await ctx.reply("Your linked Mandrii account, venues and events have been unlinked.");
 });
 
 export async function sendUserMessageToVenue(
@@ -483,6 +627,7 @@ async function deliverTelegramMessage(delivery: TelegramDelivery) {
 
 // Listen for incoming text messages on Telegram
 bot.on("message:text", async (ctx) => {
+  if (ctx.chat.type !== "private" || !ctx.from) return;
   const replyToMessage = ctx.message.reply_to_message;
 
   // Ignore standard messages; we only care about replies to bot messages
@@ -535,6 +680,39 @@ bot.on("message:text", async (ctx) => {
         ).catch((error) => {
           console.error("Web Push notification failed:", error);
         });
+      }
+      return;
+    }
+
+    const [communityResponse] = await sql<Array<{ request_author_id: string; response_id: string }>>`
+      SELECT request.user_id AS request_author_id, delivery.response_id
+      FROM community_response_telegram_deliveries delivery
+      JOIN community_request_responses response ON response.id = delivery.response_id
+      JOIN community_requests request ON request.id = response.request_id
+      JOIN users request_author ON request_author.id = request.user_id
+      WHERE delivery.telegram_chat_id = ${ctx.chat.id}
+        AND delivery.telegram_message_id = ${originalTelegramMessageId}
+        AND delivery.status = 'DELIVERED'
+        AND request_author.telegram_chat_id = ${ctx.chat.id}
+        AND request_author.telegram_user_id = ${ctx.from.id}
+    `;
+
+    if (communityResponse) {
+      try {
+        await createCommunityResponseMessage({
+          body: replyText,
+          responseId: communityResponse.response_id,
+          source: "TELEGRAM",
+          telegramChatId: ctx.chat.id,
+          telegramMessageId: ctx.message.message_id,
+          userId: communityResponse.request_author_id,
+        });
+        await ctx.reply("Your reply was added to this private conversation. ✅", {
+          reply_parameters: { message_id: ctx.message.message_id },
+        });
+      } catch (error) {
+        if (error instanceof Error && error.message === "This Telegram reply has already been received") return;
+        throw error;
       }
     }
   } catch (error) {

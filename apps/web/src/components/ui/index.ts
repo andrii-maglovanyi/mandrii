@@ -20,6 +20,7 @@ export { Input } from "./Input/Input";
 export { LocationAutocomplete } from "./LocationAutocomplete/LocationAutocomplete";
 export { MDEditor } from "./MDEditor/MDEditor";
 export { MetadataRow } from "./MetadataRow/MetadataRow";
+export { Modal } from "./Modal/Modal";
 export { Notification } from "./Notification/Notification";
 export { Pagination } from "./Pagination/Pagination";
 export { ProgressBar } from "./ProgressBar/ProgressBar";

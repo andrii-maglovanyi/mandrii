@@ -182,17 +182,15 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
 
   // ── Renting ─────────────────────────────────────────────────────────────────
 
-  const initialSavings = deposit + pccTaxAmount + agentFee + notaryCosts + initialRepairCosts + annualHomeInsurance;
+  // Recurring ownership costs are not part of the initial lump-sum investment.
+  const initialSavings = deposit + pccTaxAmount + agentFee + notaryCosts + initialRepairCosts;
+  const investableInitialSavings = initialSavings - rentalDeposit;
 
-  // Investment base: excludes rentalDeposit (kaucja - held by landlord, not investable)
-  const initialSavingsBase = deposit + pccTaxAmount + agentFee + notaryCosts + initialRepairCosts - rentalDeposit;
-
-  const returnOnInitialSavings = fvLump(initialSavingsBase, returnOnSavings, years) - initialSavingsBase;
+  const returnOnInitialSavings = fvLump(investableInitialSavings, returnOnSavings, years) - investableInitialSavings;
   const ongoingSavings = returnOnOngoingSavings(monthlyRent, rentIncrease, monthlyMortgage, returnOnSavings, years);
   const rentPaid = totalRentPaid(monthlyRent, rentIncrease, years);
 
-  // Kaucja is returned at end of tenancy
-  const rentingNet = returnOnInitialSavings + ongoingSavings - rentPaid + rentalDeposit;
+  const rentingNet = returnOnInitialSavings + ongoingSavings - rentPaid;
 
   return {
     // Buying
@@ -214,6 +212,8 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
     loanAmount,
     // Renting
     initialSavings,
+    investableInitialSavings,
+    rentalDeposit,
     returnOnInitialSavings,
     ongoingSavings,
     rentPaid,
@@ -265,12 +265,12 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
 
   // Renting state
   let cumRent = 0;
-  let cumInvestmentProfit = 0;
   let ongoingBalance = 0;
   let ongoingDeposited = 0;
   let rent = monthlyRent;
   // Investment base: excludes kaucja (rentalDeposit)
   let investmentBase = deposit + pccTaxAmount + agentFee + notaryCosts + initialRepairCosts - rentalDeposit;
+  const initialInvestment = investmentBase;
 
   // Buying state
   let cumMortgage = 0;
@@ -310,17 +310,13 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
     // ── Renting ─────────────────────────────────────────────────────────────
     cumRent += rent * 12;
     const annualProfit = investmentBase * (returnOnSavings / 100);
-    cumInvestmentProfit += annualProfit;
     investmentBase += annualProfit;
 
     const surplus = Math.max(0, (monthlyMortgagePayment - rent) * 12);
     ongoingBalance = (ongoingBalance + surplus) * (1 + returnOnSavings / 100);
     ongoingDeposited += surplus;
 
-    // Kaucja returned at user's chosen move-out year
-    const depositReturn = yr === userYears ? rentalDeposit : 0;
-
-    const totalRenting = cumRent - cumInvestmentProfit - (ongoingBalance - ongoingDeposited) - depositReturn;
+    const totalRenting = cumRent - (investmentBase - initialInvestment) - (ongoingBalance - ongoingDeposited);
 
     data.push({
       year: yr,

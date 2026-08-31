@@ -66,6 +66,15 @@ describe.each(COUNTRIES)(
       expect(Math.abs(chartPoint.buying - Math.abs(result.buyingNet))).toBeLessThan(2);
     });
 
+    it("chart renting at user's year matches calculate() rentingNet magnitude (within £/€/zł 2)", () => {
+      const inputs = { ...defaults } as never;
+      const result = calculate(inputs);
+      const data = buildChartData(inputs);
+      const horizon = (defaults as { years: number }).years;
+      const chartPoint = data[horizon - 1];
+      expect(Math.abs(chartPoint.renting - Math.abs(result.rentingNet))).toBeLessThan(2);
+    });
+
     it("chart returns at least 40 data points", () => {
       const data = buildChartData({ ...defaults } as never);
       expect(data.length).toBeGreaterThanOrEqual(40);

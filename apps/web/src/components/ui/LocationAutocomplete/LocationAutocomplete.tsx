@@ -15,6 +15,7 @@ type LocationAutocompleteProps = Omit<
   "onFocus" | "onSelectSuggestion" | "suggestions" | "type"
 > & {
   includedRegionCodes?: string[];
+  onPlaceDetailsSelect?: (place: { country?: string; location: string }) => void;
   onLocationSelect?: (location: string) => void;
 };
 
@@ -25,6 +26,7 @@ type LocationAutocompleteProps = Omit<
 export const LocationAutocomplete = ({
   includedRegionCodes,
   onChange,
+  onPlaceDetailsSelect,
   onLocationSelect,
   ...inputProps
 }: Readonly<LocationAutocompleteProps>) => {
@@ -67,14 +69,33 @@ export const LocationAutocomplete = ({
   }, [includedRegionCodes, isLoaded, searchTerm]);
 
   const handleSuggestionSelect = useCallback(
-    (placeId: string) => {
+    async (placeId: string) => {
       const suggestion = suggestions.find((item) => item.placePrediction?.placeId === placeId);
       const fallback = suggestion?.placePrediction?.text.text;
       setSuggestions([]);
 
       if (fallback) onLocationSelect?.(fallback);
+
+      if (!suggestion?.placePrediction || !onPlaceDetailsSelect) return;
+
+      try {
+        const place = suggestion.placePrediction.toPlace();
+        await place.fetchFields({ fields: ["addressComponents", "formattedAddress"] });
+        const country =
+          place.addressComponents?.find((component) => component.types.includes("country"))?.longText ?? undefined;
+        const formattedAddress = place.formattedAddress ?? fallback ?? "";
+        if (!formattedAddress) return;
+        const countrySuffix = country ? `, ${country}` : "";
+        const location =
+          countrySuffix && formattedAddress.endsWith(countrySuffix)
+            ? formattedAddress.slice(0, -countrySuffix.length)
+            : formattedAddress;
+        onPlaceDetailsSelect({ country, location });
+      } catch {
+        // The normal input behaviour remains available if place details cannot be loaded.
+      }
     },
-    [onLocationSelect, suggestions],
+    [onLocationSelect, onPlaceDetailsSelect, suggestions],
   );
 
   return (

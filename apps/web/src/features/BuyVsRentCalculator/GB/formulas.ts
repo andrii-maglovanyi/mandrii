@@ -26,7 +26,6 @@ import type { CalculationResult, CalculatorInputs } from "./types";
  *   0%  up to £300,000
  *   5%  on £300,001-£500,000
  *   No relief above £500,000 - standard rates apply
- *
  * NOTE: FTB relief is a government program designed to help buyers afford homes
  * up to £500k. Above £500k, the property is deemed outside the assistance bracket,
  * so standard rates apply. For a £500,001 property, this results in ~£15,000 SDLT
@@ -34,7 +33,6 @@ import type { CalculationResult, CalculatorInputs } from "./types";
  */
 export function stampDuty(propertyValue: number, firstTimeBuyer: boolean) {
   const v = propertyValue;
-
   if (firstTimeBuyer && v <= 500_000) {
     if (v <= 300_000) return 0;
     return (v - 300_000) * 0.05;
@@ -139,17 +137,14 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
     totalGroundRent;
 
   // Renting
-  // "Savings from not buying" = deposit + SD + buying costs + repair costs + 1yr insurance
-  // Note: tenancyDeposit is NOT included in initial savings since it's not actually spent, just frozen
-  const initialSavings = deposit + sd + initialBuyingCosts + initialRepairCosts + annualHomeInsurance;
-  // Investment base excludes home insurance (matches col K in spreadsheet)
-  // Also excludes tenancyDeposit since it's frozen in a deposit scheme and not available for investment
-  const initialSavingsBase = deposit + sd + initialBuyingCosts + initialRepairCosts - tenancyDeposit;
-  const returnOnInitialSavings = fvLump(initialSavingsBase, returnOnSavings, years) - initialSavingsBase;
+  // Only one-off purchase costs form the initial investment. Recurring ownership
+  // costs are already accounted for in buyingNet year by year.
+  const initialSavings = deposit + sd + initialBuyingCosts + initialRepairCosts + mortgageArrangementFee;
+  const investableInitialSavings = initialSavings - tenancyDeposit;
+  const returnOnInitialSavings = fvLump(investableInitialSavings, returnOnSavings, years) - investableInitialSavings;
   const ongoingSavings = returnOnOngoingSavings(monthlyRent, rentIncrease, monthlyMortgage, returnOnSavings, years);
   const rentPaid = totalRentPaid(monthlyRent, rentIncrease, years);
-  // Note: tenancyDeposit is returned at end of tenancy, so it's added back to rentingNet
-  const rentingNet = returnOnInitialSavings + ongoingSavings - rentPaid + tenancyDeposit;
+  const rentingNet = returnOnInitialSavings + ongoingSavings - rentPaid;
 
   return {
     // Buying
@@ -169,6 +164,8 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
     monthlyMortgage,
     // Renting
     initialSavings,
+    investableInitialSavings,
+    rentalDeposit: tenancyDeposit,
     returnOnInitialSavings,
     ongoingSavings,
     rentPaid,
@@ -221,13 +218,13 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
 
   // Renting state
   let cumRent = 0;
-  let cumInvestmentProfit = 0;
   let ongoingBalance = 0;
   let ongoingDeposited = 0;
   let rent = monthlyRent;
-  // Investment base matches calculate()'s initialSavingsBase (col K in spreadsheet):
-  // deposit + SD + buying costs + repairs - excludes mortgageArrangementFee and tenancyDeposit.
-  let investmentBase = deposit + sd + initialBuyingCosts + initialRepairCosts - tenancyDeposit;
+  // Investment base matches calculate(): all one-off purchase costs, less the
+  // tenancy deposit that is held separately.
+  let investmentBase = deposit + sd + initialBuyingCosts + initialRepairCosts + mortgageArrangementFee - tenancyDeposit;
+  const initialInvestment = investmentBase;
 
   // Buying state
   let cumMortgage = 0;
@@ -269,18 +266,13 @@ export function buildChartData(inputs: CalculatorInputs): readonly ChartDataPoin
     // Renting (col N)
     cumRent += rent * 12;
     const annualProfit = investmentBase * (returnOnSavings / 100);
-    cumInvestmentProfit += annualProfit;
     investmentBase += annualProfit;
     // Reuse monthlyMortgagePayment - same value as pmt(...) would return
     const surplus = Math.max(0, (monthlyMortgagePayment - rent) * 12);
     ongoingBalance = (ongoingBalance + surplus) * (1 + returnOnSavings / 100);
     ongoingDeposited += surplus;
 
-    // Tenancy deposit is returned at the user's chosen move-out year, reducing
-    // the net cost of renting. Subtract it (deposit return = benefit to renter).
-    const depositReturn = yr === userYears ? tenancyDeposit : 0;
-
-    const totalRenting = cumRent - cumInvestmentProfit - (ongoingBalance - ongoingDeposited) - depositReturn;
+    const totalRenting = cumRent - (investmentBase - initialInvestment) - (ongoingBalance - ongoingDeposited);
 
     data.push({
       year: yr,

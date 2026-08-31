@@ -14,17 +14,14 @@ export const EmptyState = ({ body, className, heading, icon }: EmptyStateProps) 
     <div className={clsx("my-4 flex flex-col items-center justify-center", className)}>
       <div
         className={clsx(
-          `
-            mb-8 flex h-[120px] w-[120px] items-center justify-center
-            rounded-full bg-neutral-disabled/25
-          `,
+          `bg-neutral-disabled/25 mb-8 flex h-[120px] w-[120px] items-center justify-center rounded-full`,
         )}
       >
         {icon}
       </div>
 
       {heading ? <div className="text-lg font-semibold">{heading}</div> : null}
-      {body ? <RichText className="mt-1.5 text-center text-neutral">{body}</RichText> : null}
+      {body ? <RichText className="text-neutral mt-1.5 text-center">{body}</RichText> : null}
     </div>
   );
 };

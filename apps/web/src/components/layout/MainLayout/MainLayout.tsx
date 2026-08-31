@@ -29,6 +29,7 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
     { href: "/map", label: "Map" },
     { href: "/venues", label: "Venues" },
     { href: "/events", label: "Events" },
+    { href: "/community", label: "Community" },
     { href: "/posts", label: "Posts" },
     { href: "/guides", label: "Guides" },
     ...(envName !== "production" ? [{ href: "/shop", label: "Shop" }] : []),

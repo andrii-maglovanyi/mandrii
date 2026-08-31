@@ -11,14 +11,24 @@ import { useI18n } from "~/i18n/useI18n";
 export interface ModalProps {
   children: React.ReactNode;
   className?: string;
+  height?: "auto" | "conversation";
   isOpen?: boolean;
   onClose?: () => void;
+  scrollable?: boolean;
   title?: string;
 }
 
 export const MODAL_ANIMATION_TIMEOUT = 200;
 
-export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: ModalProps) => {
+export const Modal = ({
+  children,
+  className = "mb-6",
+  height = "auto",
+  isOpen,
+  onClose,
+  scrollable = false,
+  title,
+}: ModalProps) => {
   const i18n = useI18n();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -102,7 +112,14 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
 
   const backdropClass = "backdrop:backdrop-blur-xs backdrop:bg-neutral-800/20 dark:backdrop:bg-neutral-200/20";
   const positionClass = "md:top-1/2 md:left-1/2 md:right-1/2 md:bottom-auto md:-translate-x-1/2 md:max-w-lg";
-  const layoutClass = "bg-surface text-on-surface w-full z-50 rounded-xl p-6 shadow-x overflow-visible";
+  const layoutClass = clsx(
+    "bg-surface text-on-surface z-50 w-full rounded-xl p-6 shadow-x",
+    height === "conversation"
+      ? "h-[min(42rem,calc(100dvh-2rem))] open:flex open:flex-col"
+      : scrollable
+        ? "max-h-[calc(100dvh-2rem)] overflow-y-auto"
+        : "overflow-visible",
+  );
   const mobileClass = "bottom-0 mt-auto mx-auto mb-4";
 
   const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `fixed`);
@@ -132,7 +149,7 @@ export const Modal = ({ children, className = "mb-6", isOpen, onClose, title }: 
           </h2>
         )}
       </div>
-      <div className={className}>{children}</div>
+      <div className={clsx(className, height === "conversation" && "min-h-0 flex-1")}>{children}</div>
     </dialog>,
     document.body,
   );

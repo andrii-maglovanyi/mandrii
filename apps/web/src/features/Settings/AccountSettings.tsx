@@ -8,6 +8,8 @@ import { AnimatedEllipsis } from "~/components/ui/AnimatedEllipsis/AnimatedEllip
 import { useNotifications } from "~/hooks/useNotifications";
 import { useI18n } from "~/i18n/useI18n";
 
+import { UserTelegramCommunitySettings } from "./UserTelegramCommunitySettings";
+
 type UpdateNotificationPreferences = {
   comments_enabled: boolean;
   replies_enabled: boolean;
@@ -70,37 +72,43 @@ export const AccountSettings = () => {
   };
 
   return (
-    <section className="bg-surface-tint/50 border-primary/10 rounded-2xl border p-6 md:p-8" id="updates-notifications">
-      <div className="flex items-start gap-3">
-        <div className="bg-primary/10 text-primary rounded-xl p-2.5">
-          <Bell aria-hidden size={20} />
+    <div className="space-y-6">
+      <section
+        className="bg-surface-tint/50 border-primary/10 rounded-2xl border p-6 md:p-8"
+        id="updates-notifications"
+      >
+        <div className="flex items-start gap-3">
+          <div className="bg-primary/10 text-primary rounded-xl p-2.5">
+            <Bell aria-hidden size={20} />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold md:text-2xl">{i18n("Feed notifications")}</h2>
+            <p className="text-neutral mt-1 text-sm md:text-base">
+              {i18n("Choose which feed activity you want to be notified about")}
+            </p>
+          </div>
         </div>
-        <div>
-          <h2 className="text-xl font-bold md:text-2xl">{i18n("Feed notifications")}</h2>
-          <p className="text-neutral mt-1 text-sm md:text-base">
-            {i18n("Choose which feed activity you want to be notified about")}
-          </p>
-        </div>
-      </div>
 
-      {isLoading ? (
-        <AnimatedEllipsis centered size="sm" />
-      ) : (
-        <div className="mt-6 flex flex-wrap gap-5 border-t border-current/10 pt-5">
-          <Checkbox
-            checked={preferences.comments_enabled}
-            disabled={savingPreferences.comments_enabled}
-            label={i18n("Comments to posts")}
-            onChange={(event) => void save("comments_enabled", event.target.checked)}
-          />
-          <Checkbox
-            checked={preferences.replies_enabled}
-            disabled={savingPreferences.replies_enabled}
-            label={i18n("Replies to comments")}
-            onChange={(event) => void save("replies_enabled", event.target.checked)}
-          />
-        </div>
-      )}
-    </section>
+        {isLoading ? (
+          <AnimatedEllipsis centered size="sm" />
+        ) : (
+          <div className="mt-6 flex flex-wrap gap-5 border-t border-current/10 pt-5">
+            <Checkbox
+              checked={preferences.comments_enabled}
+              disabled={savingPreferences.comments_enabled}
+              label={i18n("Comments to posts")}
+              onChange={(event) => void save("comments_enabled", event.target.checked)}
+            />
+            <Checkbox
+              checked={preferences.replies_enabled}
+              disabled={savingPreferences.replies_enabled}
+              label={i18n("Replies to comments")}
+              onChange={(event) => void save("replies_enabled", event.target.checked)}
+            />
+          </div>
+        )}
+      </section>
+      <UserTelegramCommunitySettings />
+    </div>
   );
 };

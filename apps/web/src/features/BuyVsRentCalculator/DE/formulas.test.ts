@@ -37,7 +37,7 @@ const BASE: CalculatorInputs = {
 
 describe("transferTax", () => {
   it("Bavaria & Saxony (BY_SN) - 3.5%", () => {
-    expect(transferTax(400_000, "BY_SN")).toBe(14_000);
+    expect(transferTax(400_000, "BY_SN")).toBeCloseTo(14_000, 2);
   });
 
   it("Hamburg (HH) - 4.0%", () => {
@@ -122,7 +122,7 @@ describe("calculate - buying", () => {
     // equity at years=1 should use equityYears=1 → futureValue = propertyValue * 1.03^1
     const result1 = calculate({ ...BASE, years: 1 });
     const loanAmount = 400_000 - 80_000;
-    const expectedEquity = 400_000 * 1.03 - loanAmount;
+    const expectedEquity = 400_000 * 1.03 - remainingBalance(BASE.mortgageRate, BASE.mortgageTerm, loanAmount, 12);
     expect(r2(result1.equity)).toBe(r2(expectedEquity));
   });
 
@@ -179,14 +179,18 @@ describe("calculate - buying", () => {
 describe("calculate - renting", () => {
   const result = calculate(BASE);
 
-  it("initialSavings includes deposit + transferTax + agent + notary + repairs + 1yr insurance", () => {
-    const transferTaxAmount = transferTax(400_000, "BE_RP_TH"); // 24000
+  it("initialSavings is the starting capital retained by renting", () => {
+    const transferTaxAmount = transferTax(400_000, "HB_MV_NI_ST"); // 22000
     const agentFee = 400_000 * 0.0357;
-    const expected = 80_000 + transferTaxAmount + agentFee + 8_000 + 4_000 + 400;
+    const expected = 80_000 + transferTaxAmount + agentFee + 8_000 + 4_000;
     expect(r2(result.initialSavings)).toBe(r2(expected));
   });
 
-  it("initialSavingsBase excludes rentalDeposit (not investable)", () => {
+  it("does not treat recurring buildings insurance as an upfront investment amount", () => {
+    expect(r2(result.investableInitialSavings)).toBe(r2(result.initialSavings - BASE.rentalDeposit));
+  });
+
+  it("rentalDeposit reduces the amount available to invest", () => {
     // rentingNet should be higher when rentalDeposit is 0 (all savings can be invested)
     const withDeposit = calculate(BASE);
     const withoutDeposit = calculate({ ...BASE, rentalDeposit: 0 });
@@ -201,16 +205,30 @@ describe("calculate - renting", () => {
     expect(result.rentPaid).toBeGreaterThan(1_500 * 12 * 10); // must be more than flat rent
   });
 
-  it("rentalDeposit is returned at end (added to rentingNet)", () => {
+  it("rentalDeposit affects renting net only through foregone investment return", () => {
     const withDeposit = calculate(BASE);
     const noDeposit = calculate({ ...BASE, rentalDeposit: 0 });
-    // rentingNet with deposit should be higher by the deposit amount (returned at exit)
+    // It is not a gain or loss, but its opportunity cost is the foregone investment return.
     expect(r2(withDeposit.rentingNet - noDeposit.rentingNet)).toBe(
-      r2(
-        BASE.rentalDeposit -
-          (calculate(BASE).returnOnInitialSavings - calculate({ ...BASE, rentalDeposit: 0 }).returnOnInitialSavings),
-      ),
+      r2(-BASE.rentalDeposit * (Math.pow(1 + BASE.returnOnSavings / 100, BASE.years) - 1)),
     );
+  });
+
+  it("renting net excludes starting capital and reconciles to the gain/loss rows", () => {
+    expect(r2(result.rentingNet)).toBe(r2(result.returnOnInitialSavings + result.ongoingSavings - result.rentPaid));
+  });
+
+  it("does not count retained starting capital or the returned deposit twice", () => {
+    const screenshotScenario: CalculatorInputs = {
+      ...BASE,
+      propertyValue: 500_000,
+      deposit: 100_000,
+      stateGroup: "HB_MV_NI_ST",
+    };
+    const result = calculate(screenshotScenario);
+
+    expect(r2(result.rentingNet)).toBe(-138_791.75);
+    expect(r2(result.buyingNet - result.rentingNet)).toBe(20_516.35);
   });
 });
 
@@ -288,18 +306,22 @@ describe("buildChartData", () => {
     expect(data[19].renting).toBeGreaterThan(data[9].renting);
   });
 
+  it("renting chart value at the selected horizon matches the summary", () => {
+    const data = buildChartData(BASE);
+    expect(data[BASE.years - 1].renting).toBe(Math.round(-calculate(BASE).rentingNet));
+  });
+
   it("buying cost falls after mortgage is paid off", () => {
     const data40 = buildChartData({ ...BASE, mortgageTerm: 25, years: 10 });
     // year 35 vs year 28 - once mortgage term ends, cost trajectory changes
     expect(data40[35].buying).toBeLessThan(data40[27].buying);
   });
 
-  it("deposit returned at user's chosen year lowers renting cost at that year", () => {
-    // The rentalDeposit causes a one-off reduction at yr === userYears
+  it("rental deposit increases renting cost only through foregone investment growth", () => {
     const withDeposit = buildChartData({ ...BASE, years: 10 });
     const noDeposit = buildChartData({ ...BASE, years: 10, rentalDeposit: 0 });
-    // At year 10, renting should be lower (more profitable) with deposit returned
-    expect(withDeposit[9].renting).toBeLessThan(noDeposit[9].renting);
+    // The returned principal nets to zero; the deposit only reduces investment gains.
+    expect(withDeposit[9].renting).toBeGreaterThan(noDeposit[9].renting);
   });
 });
 

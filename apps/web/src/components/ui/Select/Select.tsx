@@ -50,6 +50,7 @@ export function Select<K extends React.ReactNode, T>({
   const generatedId = useId();
   const selectId = id ?? generatedId;
   const [focused, setFocused] = useState(false);
+  const [menuPlacement, setMenuPlacement] = useState<"bottom" | "top">("bottom");
 
   const selectedLabel = selectedLabelOverride ?? options.find((opt) => opt.value === value)?.label ?? placeholder;
 
@@ -88,6 +89,22 @@ export function Select<K extends React.ReactNode, T>({
     }
   };
 
+  const toggleMenu = () => {
+    if (focused) {
+      setFocused(false);
+      return;
+    }
+
+    const rect = wrapperRef.current?.getBoundingClientRect();
+    const estimatedMenuHeight = Math.min(320, options.length * 48) + 6;
+    const shouldOpenUpward =
+      Boolean(rect) &&
+      window.innerHeight - (rect?.bottom ?? 0) < estimatedMenuHeight &&
+      (rect?.top ?? 0) >= estimatedMenuHeight;
+    setMenuPlacement(shouldOpenUpward ? "top" : "bottom");
+    setFocused(true);
+  };
+
   const selectClass = clsx(
     "flex items-center px-3 pr-10 text-left",
     sizeClasses.md,
@@ -116,7 +133,7 @@ export function Select<K extends React.ReactNode, T>({
           id={selectId}
           name={name}
           onBlur={onBlur}
-          onClick={() => setFocused((f) => !f)}
+          onClick={toggleMenu}
           onKeyDown={onSelectKeyDown}
           ref={ref}
           type="button"
@@ -142,6 +159,7 @@ export function Select<K extends React.ReactNode, T>({
               setFocused(false);
             }}
             options={options}
+            placement={menuPlacement}
             ref={menuRef}
           />
         )}

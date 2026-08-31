@@ -1,6 +1,9 @@
+import { clsx } from "clsx";
+
 type ResultRowProps = {
   readonly label: string;
   readonly value: number;
+  readonly isInformational?: boolean;
   readonly highlight?: boolean;
   readonly explanation?: string;
   readonly showHints?: boolean;
@@ -15,6 +18,7 @@ type ResultRowProps = {
 export function ResultRow({
   label,
   value,
+  isInformational = false,
   highlight = false,
   explanation,
   showHints = false,
@@ -25,15 +29,16 @@ export function ResultRow({
       className={
         highlight
           ? "bg-neutral-disabled/20 mt-1.5 flex flex-col rounded-md px-2 py-3 text-[0.95rem] font-bold"
-          : "flex flex-col rounded py-2 text-[0.85rem] transition-colors hover:bg-neutral/10"
+          : "hover:bg-neutral/10 flex flex-col rounded py-2 text-[0.85rem] transition-colors"
       }
     >
       <div className="flex w-full items-center justify-between gap-2">
         <span className={`min-w-0 flex-1 ${highlight ? "text-on-surface" : "text-neutral"}`}>{label}</span>
         <span
-          className={`shrink-0 font-semibold tabular-nums ${
-            value < 0 ? "text-danger" : value > 0 ? "text-success" : "text-neutral"
-          }`}
+          className={clsx(
+            "shrink-0 font-semibold tabular-nums",
+            isInformational ? "text-neutral" : value < 0 ? "text-danger" : value > 0 ? "text-success" : "text-neutral",
+          )}
         >
           {formatCurrency(value)}
         </span>
