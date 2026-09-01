@@ -37,6 +37,10 @@ export const COUNTRIES = {
   },
 };
 
+export type CountryCode = keyof typeof COUNTRIES;
+
+export const isCountryCode = (value: string): value is CountryCode => value in COUNTRIES;
+
 export const EU_COUNTRY_CODES = [
   "at",
   "be",

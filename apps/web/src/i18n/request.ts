@@ -1,7 +1,10 @@
 import { hasLocale } from "next-intl";
 import { getRequestConfig } from "next-intl/server";
 
+import { normalizeTranslationMessages } from "./normalizeTranslationMessages";
 import { routing } from "./routing";
+
+const messagesByLocale = new Map<string, Record<string, unknown>>();
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale;
@@ -13,7 +16,12 @@ export default getRequestConfig(async ({ requestLocale }) => {
   }
 
   // Only load messages for non-default locales
-  const messages = (await import(`../../translations/${locale}.json`)).default;
+  let messages = messagesByLocale.get(locale);
+
+  if (!messages) {
+    messages = normalizeTranslationMessages((await import(`../../translations/${locale}.json`)).default);
+    messagesByLocale.set(locale, messages);
+  }
 
   return { locale, messages };
 });

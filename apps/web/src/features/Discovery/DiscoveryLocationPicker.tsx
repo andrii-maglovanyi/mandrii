@@ -21,9 +21,10 @@ import { useDiscoveryLocation } from "./useDiscoveryLocation";
 
 type DiscoveryLocationPickerProps = {
   onChange?: (location: DiscoveryLocation) => void;
+  variant?: "default" | "hero";
 };
 
-export function DiscoveryLocationPicker({ onChange }: Readonly<DiscoveryLocationPickerProps>) {
+export function DiscoveryLocationPicker({ onChange, variant = "hero" }: Readonly<DiscoveryLocationPickerProps>) {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
   const [isOpen, setIsOpen] = useState(false);
@@ -84,7 +85,11 @@ export function DiscoveryLocationPicker({ onChange }: Readonly<DiscoveryLocation
   return (
     <>
       <button
-        className="inline-flex min-h-12 w-full items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20 sm:w-auto"
+        className={
+          variant === "hero"
+            ? "inline-flex min-h-12 w-full items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20 sm:w-auto"
+            : "border-neutral/30 bg-surface text-on-surface hover:border-primary/40 inline-flex min-h-11 w-full items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition-colors sm:w-auto"
+        }
         onClick={open}
         type="button"
       >
@@ -112,14 +117,16 @@ export function DiscoveryLocationPicker({ onChange }: Readonly<DiscoveryLocation
             options={countryOptions}
             value={draft.countryCode}
           />
-          <LocationAutocomplete
-            includedRegionCodes={draft.countryCode ? [draft.countryCode] : undefined}
-            label={i18n("City (optional)")}
-            onChange={(event) => setDraft((current) => ({ ...current, city: event.target.value }))}
-            onLocationSelect={(city) => setDraft((current) => ({ ...current, city: normalizeDiscoveryCity(city) }))}
-            placeholder={i18n("For example, London")}
-            value={draft.city}
-          />
+          {isOpen && (
+            <LocationAutocomplete
+              includedRegionCodes={draft.countryCode ? [draft.countryCode] : undefined}
+              label={i18n("City (optional)")}
+              onChange={(event) => setDraft((current) => ({ ...current, city: event.target.value }))}
+              onLocationSelect={(city) => setDraft((current) => ({ ...current, city: normalizeDiscoveryCity(city) }))}
+              placeholder={i18n("For example, London")}
+              value={draft.city}
+            />
+          )}
           <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-between">
             <Button className="w-full justify-center sm:w-auto" color="neutral" onClick={clear} variant="ghost">
               {i18n("Clear location")}

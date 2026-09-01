@@ -1,11 +1,10 @@
 import { constants } from "~/lib/constants";
+import { CountryCode, isCountryCode } from "~/lib/constants/COUNTRIES";
 import { localStore } from "~/lib/utils/storage";
 import { Locale } from "~/types";
 
 export const DISCOVERY_LOCATION_CHANGE_EVENT = "mndr:discovery-location";
 export const DISCOVERY_LOCATION_STORAGE_KEY = "discovery-location";
-
-type CountryCode = keyof typeof constants.whitelisted_countries;
 
 export type DiscoveryLocation = {
   city: string;
@@ -14,7 +13,7 @@ export type DiscoveryLocation = {
 
 export const EMPTY_DISCOVERY_LOCATION: DiscoveryLocation = { city: "", countryCode: "" };
 
-export const isDiscoveryCountryCode = (value: string): value is CountryCode => value in constants.whitelisted_countries;
+export const isDiscoveryCountryCode = isCountryCode;
 
 export const normalizeDiscoveryCity = (location: string) => location.split(",")[0]?.trim() ?? "";
 
@@ -50,18 +49,28 @@ export const clearDiscoveryLocation = () => {
   return EMPTY_DISCOVERY_LOCATION;
 };
 
-export const appendDiscoveryLocationToUrl = (href: string, location: DiscoveryLocation) => {
+type DiscoveryLocationParam = "city" | "location";
+
+const appendLocationToUrl = (href: string, location: DiscoveryLocation, locationParam: DiscoveryLocationParam) => {
   const url = new URL(href, "https://mandrii.local");
 
   if (location.countryCode) {
     url.searchParams.set("country", constants.whitelisted_countries[location.countryCode].label.en);
   }
   if (location.city) {
-    url.searchParams.set("city", location.city);
+    url.searchParams.set(locationParam, location.city);
   }
 
   return `${url.pathname}${url.search}${url.hash}`;
 };
+
+/** The venue, event and map routes use `city` as their local filter. */
+export const appendDiscoveryLocationToUrl = (href: string, location: DiscoveryLocation) =>
+  appendLocationToUrl(href, location, "city");
+
+/** Community uses `location`, so retain locality without changing venue/event URL behaviour. */
+export const appendDiscoveryCommunityLocationToUrl = (href: string, location: DiscoveryLocation) =>
+  appendLocationToUrl(href, location, "location");
 
 export const removeDiscoveryCityFromUrl = (href: string) => {
   const url = new URL(href, "https://mandrii.local");
