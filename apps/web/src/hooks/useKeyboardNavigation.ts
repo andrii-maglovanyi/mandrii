@@ -7,14 +7,14 @@ export const useKeyboardNavigation = () => {
   const [focusedIndex, setFocusedIndex] = useState<null | number>(null);
 
   useEffect(() => {
-    const items = menuRef.current?.querySelectorAll("li") ?? [];
+    const items = menuRef.current?.querySelectorAll('[role="option"]') ?? [];
 
     setItemsLength(items.length);
     focusItemAtIndex(focusedIndex);
   }, [focusedIndex]);
 
   const focusItemAtIndex = (index: null | number) => {
-    const items = menuRef.current?.querySelectorAll<HTMLLIElement>("li");
+    const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="option"]');
     if (index !== null && items?.[index]) {
       items[index].focus();
     }

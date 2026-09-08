@@ -16,6 +16,8 @@ import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
+import { FollowAreaButton } from "~/features/Following/FollowAreaButton";
+import { getSavedMapArea } from "~/features/Map/savedArea";
 import { AddEntityButton, useAddEntity } from "~/features/shared/AddEntityButton";
 import { Event_Type_Enum, Locale } from "~/types";
 import { UUID } from "~/types/uuid";
@@ -30,6 +32,7 @@ type Location = google.maps.LatLngLiteral | undefined;
 type Suggestion = google.maps.places.AutocompleteSuggestion;
 
 const MAX_DISTANCE = 100000;
+const DISTANCE_METERS = [1000, 2000, 3000, 5000, 10000, 25000, 50000, MAX_DISTANCE];
 
 export const EventsMap = () => {
   const i18n = useI18n();
@@ -38,6 +41,8 @@ export const EventsMap = () => {
   const city = searchParams.get("city") ?? undefined;
   const country = searchParams.get("country") ?? undefined;
   const hasLocationFilter = Boolean(city || country);
+  const savedMapAreaQuery = searchParams.toString();
+  const savedMapArea = useMemo(() => getSavedMapArea(new URLSearchParams(savedMapAreaQuery)), [savedMapAreaQuery]);
 
   const { handleAdd: handleAddEvent, isAuthenticated } = useAddEntity({
     mixpanelEvent: "Clicked Add Event",
@@ -75,7 +80,7 @@ export const EventsMap = () => {
 
   const DISTANCES = useMemo(
     () =>
-      [1000, 2000, 5000, 10000, 25000, MAX_DISTANCE].map((value) => ({
+      DISTANCE_METERS.map((value) => ({
         label: `${value / 1000}${i18n("km")}`,
         value: String(value),
       })),
@@ -85,12 +90,15 @@ export const EventsMap = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [mapIsLoaded, setMapIsLoaded] = useState(false);
   const [showMe, setShowMe] = useState(false);
+  const [hasSelectedMapArea, setHasSelectedMapArea] = useState(Boolean(savedMapArea));
   const [showMap, setShowMap] = useState(false);
   const { showError } = useNotifications();
   const [suggestions, setSuggestions] = useState<Array<Suggestion>>([]);
-  const [userLocation, setUserLocation] = useState<Location>(constants.london_coordinates);
+  const [userLocation, setUserLocation] = useState<Location>(
+    savedMapArea ? { lat: savedMapArea.latitude, lng: savedMapArea.longitude } : constants.london_coordinates,
+  );
   const [selectedEventId, setSelectedEventId] = useState<null | UUID>(null);
-  const [distance, setDistance] = useState(String(MAX_DISTANCE));
+  const [distance, setDistance] = useState(String(savedMapArea?.radiusMeters ?? MAX_DISTANCE));
   const [type, setType] = useState<Event_Type_Enum | undefined>(eventTypeOptions[0].value);
 
   const { isDark } = useTheme();
@@ -153,12 +161,13 @@ export const EventsMap = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setDistance(DISTANCES[3].value);
+          setDistance(String(10_000));
 
           setUserLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
+          setHasSelectedMapArea(true);
           setShowMe(true);
         },
         (error) => {
@@ -203,6 +212,7 @@ export const EventsMap = () => {
         });
 
         setUserLocation(coords);
+        setHasSelectedMapArea(true);
       }
       setShowMe(false);
     } catch (error) {
@@ -230,6 +240,14 @@ export const EventsMap = () => {
 
     handleFilter(variables.where);
   }, [type, city, country, distance, hasLocationFilter, userLocation, handleFilter]);
+
+  useEffect(() => {
+    if (!savedMapArea) return;
+    setUserLocation({ lat: savedMapArea.latitude, lng: savedMapArea.longitude });
+    setDistance(String(savedMapArea.radiusMeters));
+    setHasSelectedMapArea(true);
+    setShowMe(false);
+  }, [savedMapArea]);
 
   useEffect(() => {
     const handler = setTimeout(async () => {
@@ -332,7 +350,7 @@ export const EventsMap = () => {
               </div>
 
               <div className="flex flex-wrap items-center justify-between">
-                <div className="flex gap-2">
+                <div className="flex items-center gap-2">
                   <Button
                     aria-label={i18n("Find me")}
                     onClick={() => {
@@ -343,6 +361,19 @@ export const EventsMap = () => {
                   >
                     <LocateFixed className="mr-2" size={18} /> {i18n("Find me")}
                   </Button>
+                  <FollowAreaButton
+                    mapArea={
+                      hasSelectedMapArea && userLocation
+                        ? {
+                            latitude: userLocation.lat,
+                            longitude: userLocation.lng,
+                            radiusMeters: Number(distance),
+                          }
+                        : undefined
+                    }
+                    presentation="action"
+                    size="md"
+                  />
                 </div>
                 <RichText as="div" className={clsx(`text-sm sm:text-base`, isReady ? `visible` : `hidden`)}>
                   {i18n("Showing **{count}** of **{total}**", { count, total })}

@@ -1,7 +1,7 @@
 "use client";
 
 import { CalendarDays, MapPin } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useI18n } from "~/i18n/useI18n";
 
@@ -14,10 +14,14 @@ const VIEWS = ["events", "venues"] as const;
 
 export const MapView = () => {
   const i18n = useI18n();
-  const hashView = decodeURIComponent(window.location.hash?.replace("#", ""));
-  const view = VIEWS.includes(hashView as (typeof VIEWS)[number]) ? (hashView as (typeof VIEWS)[number]) : "venues";
+  const [viewMode, setViewMode] = useState<ViewMode>("venues");
 
-  const [viewMode, setViewMode] = useState<ViewMode>(view);
+  useEffect(() => {
+    const hashView = decodeURIComponent(window.location.hash.replace("#", ""));
+    if (VIEWS.includes(hashView as (typeof VIEWS)[number])) {
+      setViewMode(hashView as ViewMode);
+    }
+  }, []);
 
   return (
     <div className={`bg-neutral/10 flex h-[calc(100vh-64px)] grow flex-col overflow-hidden`}>

@@ -47,6 +47,29 @@ export async function sendQrScanTelegramNotification({
 const escapeTelegramHtml = (value: string) =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
 
+export async function sendContentAlertTelegramNotification({
+  alerts,
+  chatId,
+}: {
+  alerts: Array<{ href: string; title: string }>;
+  chatId: number;
+}) {
+  if (!alerts.length) return;
+
+  const lines = alerts
+    .slice(0, 10)
+    .map(
+      (alert) =>
+        `• <a href="${escapeTelegramHtml(UrlHelper.buildUrl(alert.href))}">${escapeTelegramHtml(alert.title)}</a>`,
+    );
+  const suffix = alerts.length > lines.length ? `\n\n…and ${alerts.length - lines.length} more in Mandrii.` : "";
+  await bot.api.sendMessage(
+    chatId,
+    `<b>🔔 ${alerts.length === 1 ? "New update" : `${alerts.length} new updates`}</b>\n\n${lines.join("\n")}${suffix}`,
+    { link_preview_options: { is_disabled: true }, parse_mode: "HTML" },
+  );
+}
+
 export async function sendVenueReviewTelegramNotification({
   rating: _rating,
   reviewBody: _reviewBody,
@@ -333,7 +356,10 @@ bot.command("unlink", async (ctx) => {
       RETURNING id
     ), unlinked_users AS (
       UPDATE users
-      SET telegram_chat_id = NULL, telegram_user_id = NULL, community_telegram_notifications_enabled = false
+      SET telegram_chat_id = NULL,
+          telegram_user_id = NULL,
+          community_telegram_notifications_enabled = false,
+          content_alert_telegram_notifications_enabled = false
       WHERE telegram_chat_id = ${chatId} AND telegram_user_id = ${ctx.from.id}
       RETURNING id
     ), cancelled_deliveries AS (
@@ -348,6 +374,12 @@ bot.command("unlink", async (ctx) => {
       UPDATE community_response_telegram_deliveries
       SET status = 'CANCELLED', locked_at = NULL
       WHERE telegram_chat_id = ${chatId} AND status IN ('PENDING', 'PROCESSING')
+    ), cancelled_content_alert_deliveries AS (
+      UPDATE content_subscription_alert_deliveries
+      SET status = 'CANCELLED', locked_at = NULL
+      WHERE channel = 'TELEGRAM'
+        AND recipient_id IN (SELECT id FROM unlinked_users)
+        AND status IN ('PENDING', 'PROCESSING')
     )
     UPDATE telegram_link_tokens
     SET used_at = NOW()

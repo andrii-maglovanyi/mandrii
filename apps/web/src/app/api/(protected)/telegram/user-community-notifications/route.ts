@@ -1,20 +1,19 @@
 import { z } from "zod";
 
 import { getApiContext, rateLimiters, validateRequest, withErrorHandling } from "~/lib/api";
+import { getTelegramCommunityNotificationPreferences } from "~/lib/models/telegram-community-notifications";
 import sql from "~/lib/db/db";
 
 const schema = z.object({ enabled: z.boolean() });
+const privateNoStoreHeaders = { "Cache-Control": "private, no-store" };
 
 export const GET = (req: Request) =>
   withErrorHandling(async () => {
     const { session } = await getApiContext(req, { withAuth: true });
     await rateLimiters.general.check(session.user.id);
-    const [user] = await sql<Array<{ enabled: boolean; linked: boolean }>>`
-      SELECT community_telegram_notifications_enabled AS enabled,
-             telegram_chat_id IS NOT NULL AND telegram_user_id IS NOT NULL AS linked
-      FROM users WHERE id = ${session.user.id}
-    `;
-    return Response.json(user ?? { enabled: false, linked: false });
+    return Response.json(await getTelegramCommunityNotificationPreferences(session.user.id), {
+      headers: privateNoStoreHeaders,
+    });
   });
 
 export const PUT = (req: Request) =>
@@ -29,5 +28,5 @@ export const PUT = (req: Request) =>
       RETURNING community_telegram_notifications_enabled AS enabled,
                 telegram_chat_id IS NOT NULL AND telegram_user_id IS NOT NULL AS linked
     `;
-    return Response.json(user ?? { enabled: false, linked: false });
+    return Response.json(user ?? { enabled: false, linked: false }, { headers: privateNoStoreHeaders });
   });

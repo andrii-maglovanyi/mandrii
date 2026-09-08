@@ -25,6 +25,7 @@ import { ContentReviews } from "~/features/Ratings/ContentReviews";
 import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
 import { CommunityAroundContent } from "~/features/CommunityRequests";
 import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
+import { FollowContentButton } from "~/features/Following/FollowContentButton";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getEffectiveEventStatus } from "~/lib/events/status";
@@ -278,7 +279,9 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
                   }
                   onOpenSettings={openSettings}
                 />
-              ) : undefined
+              ) : (
+                <FollowContentButton targetId={event.id} type="event" />
+              )
             }
           />
         </div>

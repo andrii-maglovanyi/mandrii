@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import { getApiContext, InternalServerError, validateRequest, ValidationError, withErrorHandling } from "~/lib/api";
 import { envName } from "~/lib/config/env";
 import { saveEvent } from "~/lib/models/event";
+import { deliverPendingContentSubscriptionAlerts } from "~/lib/models/content-subscription-alerts";
 import { sendSlackNotification } from "~/lib/slack/event";
 import { processImages } from "~/lib/utils/images";
 import { constructSlug } from "~/lib/utils/slug";
@@ -136,6 +137,11 @@ export const POST = (req: Request) =>
     sendSlackNotification(session.user, eventData).catch((error) => {
       console.error("Slack notification failed (non-critical):", error);
     });
+    after(() =>
+      deliverPendingContentSubscriptionAlerts({ limit: 10 }).catch((error) =>
+        console.error("Event change alert delivery failed:", error),
+      ),
+    );
 
     return NextResponse.json({ id: eventId, success: true }, { status: 200 });
   });

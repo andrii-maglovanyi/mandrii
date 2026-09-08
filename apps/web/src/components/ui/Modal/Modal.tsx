@@ -117,7 +117,7 @@ export const Modal = ({
     height === "conversation"
       ? "h-[min(42rem,calc(100dvh-2rem))] open:flex open:flex-col"
       : scrollable
-        ? "max-h-[calc(100dvh-2rem)] overflow-y-auto"
+        ? "max-h-[calc(100dvh-2rem)] overflow-visible"
         : "overflow-visible",
   );
   const mobileClass = "bottom-0 mt-auto mx-auto mb-4";
@@ -149,7 +149,15 @@ export const Modal = ({
           </h2>
         )}
       </div>
-      <div className={clsx(className, height === "conversation" && "min-h-0 flex-1")}>{children}</div>
+      <div
+        className={clsx(
+          className,
+          height === "conversation" && "min-h-0 flex-1",
+          scrollable && "-mx-1 max-h-[calc(100dvh-8rem)] overflow-y-auto px-1",
+        )}
+      >
+        {children}
+      </div>
     </dialog>,
     document.body,
   );

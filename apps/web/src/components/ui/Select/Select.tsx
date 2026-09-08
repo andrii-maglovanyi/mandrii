@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { ChangeEvent, Ref, useEffect, useId, useRef, useState } from "react";
 
 import { FieldErrorMessage } from "../FieldErrorMessage/FieldErrorMessage";
-import { Menu, MenuHandle, MenuOption } from "../Menu/Menu";
+import { getMenuOverlayLayout, Menu, MenuHandle, MenuOption, MenuOverlayLayout } from "../Menu/Menu";
 import { commonClass, commonInputClass, sizeClasses } from "../styles";
 
 export type SelectProps<K, T> = {
@@ -50,7 +50,7 @@ export function Select<K extends React.ReactNode, T>({
   const generatedId = useId();
   const selectId = id ?? generatedId;
   const [focused, setFocused] = useState(false);
-  const [menuPlacement, setMenuPlacement] = useState<"bottom" | "top">("bottom");
+  const [menuOverlay, setMenuOverlay] = useState<MenuOverlayLayout>({ placement: "bottom", portalTarget: null });
 
   const selectedLabel = selectedLabelOverride ?? options.find((opt) => opt.value === value)?.label ?? placeholder;
 
@@ -59,7 +59,11 @@ export function Select<K extends React.ReactNode, T>({
 
   useEffect(() => {
     const handleFocusOut = (e: FocusEvent) => {
-      if (!wrapperRef.current?.contains(e.relatedTarget as Node)) {
+      const menu = (e.relatedTarget as Element | null)?.closest?.("[data-menu-overlay]");
+      if (
+        !wrapperRef.current?.contains(e.relatedTarget as Node) &&
+        menu?.getAttribute("data-menu-owner") !== selectId
+      ) {
         setFocused(false);
       }
     };
@@ -95,13 +99,7 @@ export function Select<K extends React.ReactNode, T>({
       return;
     }
 
-    const rect = wrapperRef.current?.getBoundingClientRect();
-    const estimatedMenuHeight = Math.min(320, options.length * 48) + 6;
-    const shouldOpenUpward =
-      Boolean(rect) &&
-      window.innerHeight - (rect?.bottom ?? 0) < estimatedMenuHeight &&
-      (rect?.top ?? 0) >= estimatedMenuHeight;
-    setMenuPlacement(shouldOpenUpward ? "top" : "bottom");
+    setMenuOverlay(getMenuOverlayLayout(wrapperRef.current, options.length));
     setFocused(true);
   };
 
@@ -147,6 +145,8 @@ export function Select<K extends React.ReactNode, T>({
         </button>
         {focused && options.length > 0 && (
           <Menu
+            floatingPosition={menuOverlay.floatingPosition}
+            maxHeight={menuOverlay.maxHeight}
             onSelect={(value) => {
               const event = {
                 target: {
@@ -159,7 +159,9 @@ export function Select<K extends React.ReactNode, T>({
               setFocused(false);
             }}
             options={options}
-            placement={menuPlacement}
+            ownerId={selectId}
+            placement={menuOverlay.placement}
+            portalTarget={menuOverlay.portalTarget}
             ref={menuRef}
           />
         )}

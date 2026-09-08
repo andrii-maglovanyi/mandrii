@@ -3,6 +3,7 @@
 import { MixpanelTracker } from "~/components/layout";
 import { Breadcrumbs } from "~/components/ui";
 import { EventsCatalog } from "~/features/Events";
+import { FollowAreaButton } from "~/features/Following/FollowAreaButton";
 import { AddEntityButton, useAddEntity } from "~/features/shared/AddEntityButton";
 import { useI18n } from "~/i18n/useI18n";
 
@@ -24,13 +25,15 @@ export default function EventsPage() {
         >
           {i18n("Explore events")}
         </h1>
-        <AddEntityButton
-          className="ml-auto"
-          isAuthenticated={isAuthenticated}
-          label={i18n("Add event")}
-          onClick={handleAddEvent}
-          signInLabel={i18n("Sign in to add event")}
-        />
+        <div className="ml-auto flex flex-wrap justify-end gap-3">
+          <FollowAreaButton size="md" />
+          <AddEntityButton
+            isAuthenticated={isAuthenticated}
+            label={i18n("Add event")}
+            onClick={handleAddEvent}
+            signInLabel={i18n("Sign in to add event")}
+          />
+        </div>
       </div>
 
       <div className="container mx-auto">

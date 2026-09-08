@@ -252,10 +252,21 @@ update_permissions:
         - website
       filter:
         _and:
-          - user_id:
-              _eq: X-Hasura-User-Id
-          - user:
-              status:
-                _eq: active
+          - _or:
+              - owner:
+                  _and:
+                    - id:
+                        _eq: X-Hasura-User-Id
+                    - status:
+                        _eq: active
+              - _and:
+                  - owner_id:
+                      _is_null: true
+                  - user:
+                      _and:
+                        - id:
+                            _eq: X-Hasura-User-Id
+                        - status:
+                            _eq: active
       check: null
     comment: ""

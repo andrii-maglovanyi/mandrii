@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { after } from "next/server";
 
 import { auth } from "~/lib/auth";
 import { BadRequestError, getApiContext, rateLimiters, validateRequest, withErrorHandling } from "~/lib/api";
@@ -8,6 +9,7 @@ import {
   removeFailedContentUpdate,
   setContentUpdateImages,
 } from "~/lib/models/content-updates";
+import { deliverPendingContentSubscriptionAlerts } from "~/lib/models/content-subscription-alerts";
 import { RATING_TARGET_TYPES } from "~/lib/ratings/types";
 import { ContentUpdateCursor } from "~/lib/updates/types";
 import { envName } from "~/lib/config/env";
@@ -103,6 +105,14 @@ export const POST = (req: Request) =>
         throw error;
       }
     }
+
+    // The database trigger recorded a durable job in the same transaction as
+    // the update. Try delivery after the response; cron retries any failure.
+    after(() =>
+      deliverPendingContentSubscriptionAlerts({ limit: 10 }).catch((error) =>
+        console.error("Content update follower alert delivery failed:", error),
+      ),
+    );
 
     return Response.json({ id }, { status: 201 });
   });

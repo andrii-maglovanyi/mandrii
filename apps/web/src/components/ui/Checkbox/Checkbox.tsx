@@ -13,13 +13,14 @@ export type CheckboxProps = {
   disabled?: boolean;
   error?: string;
   id?: string;
-  label?: string;
+  label?: React.ReactNode;
   name?: string;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   ref?: Ref<HTMLInputElement>;
   required?: boolean;
   showErrorMessage?: boolean;
+  size?: "md" | "sm";
   value?: boolean | string;
 };
 
@@ -37,6 +38,7 @@ export function Checkbox({
   ref,
   required = false,
   showErrorMessage = false,
+  size = "md",
   value,
 }: Readonly<CheckboxProps>) {
   const generatedId = useId();
@@ -51,7 +53,8 @@ export function Checkbox({
   };
 
   const checkboxClass = clsx(
-    "flex h-7 w-7 items-center justify-center rounded border-2 transition",
+    "flex items-center justify-center rounded border-2 transition",
+    size === "sm" ? "h-5 w-5 rounded-md" : "h-7 w-7",
     "cursor-pointer border-neutral bg-surface",
     "peer-checked:border-primary peer-checked:bg-primary",
     `
@@ -67,17 +70,14 @@ export function Checkbox({
   );
 
   const labelClass = clsx(
-    "text-base text-on-surface select-none",
-    disabled
-      ? "pointer-events-none cursor-not-allowed text-neutral-disabled"
-      : `cursor-pointer`,
+    "text-on-surface select-none",
+    size === "sm" ? "text-sm" : "text-base",
+    disabled ? "pointer-events-none cursor-not-allowed text-neutral-disabled" : `cursor-pointer`,
   );
 
   return (
     <div className="flex flex-col gap-1">
-      <div className={clsx("flex items-center gap-3", disabled && `
-        cursor-not-allowed
-      `)}>
+      <div className={clsx("flex items-center gap-3", disabled && `cursor-not-allowed`)}>
         <div className="relative">
           <input
             aria-required={required}
@@ -95,9 +95,14 @@ export function Checkbox({
           />
           <label className={checkboxClass} htmlFor={checkboxId}>
             {isChecked && (
-              <Check className={clsx("text-white", disabled && `
-                stroke-neutral-disabled
-              `)} size={18} strokeWidth={3} />
+              <Check
+                className={clsx(
+                  size === "sm" ? "h-3.5 w-3.5" : "h-[18px] w-[18px]",
+                  "text-white",
+                  disabled && `stroke-neutral-disabled`,
+                )}
+                strokeWidth={3}
+              />
             )}
           </label>
         </div>

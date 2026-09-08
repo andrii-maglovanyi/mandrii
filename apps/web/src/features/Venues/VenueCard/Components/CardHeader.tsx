@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { Crown, PenTool, Share2, UserStar } from "lucide-react";
+import { Crown, PenTool, Share2, UserRound } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { type ReactNode } from "react";
@@ -128,9 +128,11 @@ export const CardHeader = ({
         {viewActions}
         {Boolean(venue.owner_id) && !(profileData?.id === venue.owner_id && hideCurrentOwnerProfileAction) && (
           <ActionButton
-            aria-label={profileData?.id === venue.owner_id ? i18n("You own this venue") : i18n("Verified owner")}
+            aria-label={
+              profileData?.id === venue.owner_id ? i18n("You manage this venue") : i18n("View venue manager profile")
+            }
             className="cursor-pointer"
-            icon={<UserStar size={20} />}
+            icon={<UserRound size={20} />}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();

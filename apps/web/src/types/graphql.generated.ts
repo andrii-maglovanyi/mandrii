@@ -13117,6 +13117,7 @@ export type Users = {
   accounts_aggregate: Accounts_Aggregate;
   bio?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
+  community_telegram_notifications_enabled: Scalars['Boolean']['output'];
   /** An array relationship */
   conversations: Array<Conversations>;
   /** An aggregate relationship */
@@ -13147,6 +13148,8 @@ export type Users = {
   /** An aggregate relationship */
   sessions_aggregate: Sessions_Aggregate;
   status: User_Status_Enum;
+  telegram_chat_id?: Maybe<Scalars['bigint']['output']>;
+  telegram_user_id?: Maybe<Scalars['bigint']['output']>;
   /** An object relationship */
   user_role: User_Role;
   /** An object relationship */
@@ -13339,11 +13342,15 @@ export type Users_Arr_Rel_Insert_Input = {
 export type Users_Avg_Fields = {
   __typename?: 'users_avg_fields';
   points?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by avg() on columns of table "users" */
 export type Users_Avg_Order_By = {
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'. */
@@ -13355,6 +13362,7 @@ export type Users_Bool_Exp = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Bool_Exp>;
   bio?: InputMaybe<String_Comparison_Exp>;
   city?: InputMaybe<String_Comparison_Exp>;
+  community_telegram_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
   conversations?: InputMaybe<Conversations_Bool_Exp>;
   conversations_aggregate?: InputMaybe<Conversations_Aggregate_Bool_Exp>;
   email?: InputMaybe<String_Comparison_Exp>;
@@ -13376,6 +13384,8 @@ export type Users_Bool_Exp = {
   sessions?: InputMaybe<Sessions_Bool_Exp>;
   sessions_aggregate?: InputMaybe<Sessions_Aggregate_Bool_Exp>;
   status?: InputMaybe<User_Status_Enum_Comparison_Exp>;
+  telegram_chat_id?: InputMaybe<Bigint_Comparison_Exp>;
+  telegram_user_id?: InputMaybe<Bigint_Comparison_Exp>;
   user_role?: InputMaybe<User_Role_Bool_Exp>;
   user_status?: InputMaybe<User_Status_Bool_Exp>;
   username?: InputMaybe<String_Comparison_Exp>;
@@ -13388,13 +13398,19 @@ export enum Users_Constraint {
   UsersEmailKey = 'users_email_key',
   /** unique or primary key constraint on columns "id" */
   UsersPkey = 'users_pkey',
-  /** unique or primary key constraint on columns  */
-  UsersUsernameLowerUniqueIdx = 'users_username_lower_unique_idx'
+  /** unique or primary key constraint on columns "telegram_chat_id" */
+  UsersTelegramChatIdKey = 'users_telegram_chat_id_key',
+  /** unique or primary key constraint on columns "telegram_user_id" */
+  UsersTelegramUserIdKey = 'users_telegram_user_id_key',
+  /** unique or primary key constraint on columns "username" */
+  UsersUsernameUniqueIdx = 'users_username_unique_idx'
 }
 
 /** input type for incrementing numeric columns in table "users" */
 export type Users_Inc_Input = {
   points?: InputMaybe<Scalars['Int']['input']>;
+  telegram_chat_id?: InputMaybe<Scalars['bigint']['input']>;
+  telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
 };
 
 /** input type for inserting data into table "users" */
@@ -13402,6 +13418,7 @@ export type Users_Insert_Input = {
   accounts?: InputMaybe<Accounts_Arr_Rel_Insert_Input>;
   bio?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
+  community_telegram_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
   conversations?: InputMaybe<Conversations_Arr_Rel_Insert_Input>;
   email?: InputMaybe<Scalars['String']['input']>;
   emailVerified?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -13419,6 +13436,8 @@ export type Users_Insert_Input = {
   role?: InputMaybe<User_Role_Enum>;
   sessions?: InputMaybe<Sessions_Arr_Rel_Insert_Input>;
   status?: InputMaybe<User_Status_Enum>;
+  telegram_chat_id?: InputMaybe<Scalars['bigint']['input']>;
+  telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
   user_role?: InputMaybe<User_Role_Obj_Rel_Insert_Input>;
   user_status?: InputMaybe<User_Status_Obj_Rel_Insert_Input>;
   username?: InputMaybe<Scalars['String']['input']>;
@@ -13439,6 +13458,8 @@ export type Users_Max_Fields = {
   last_seen_at?: Maybe<Scalars['timestamptz']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   points?: Maybe<Scalars['Int']['output']>;
+  telegram_chat_id?: Maybe<Scalars['bigint']['output']>;
+  telegram_user_id?: Maybe<Scalars['bigint']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
 
@@ -13455,6 +13476,8 @@ export type Users_Max_Order_By = {
   last_seen_at?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
   username?: InputMaybe<Order_By>;
 };
 
@@ -13472,6 +13495,8 @@ export type Users_Min_Fields = {
   last_seen_at?: Maybe<Scalars['timestamptz']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   points?: Maybe<Scalars['Int']['output']>;
+  telegram_chat_id?: Maybe<Scalars['bigint']['output']>;
+  telegram_user_id?: Maybe<Scalars['bigint']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
 
@@ -13488,6 +13513,8 @@ export type Users_Min_Order_By = {
   last_seen_at?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
   username?: InputMaybe<Order_By>;
 };
 
@@ -13519,6 +13546,7 @@ export type Users_Order_By = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Order_By>;
   bio?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
+  community_telegram_notifications_enabled?: InputMaybe<Order_By>;
   conversations_aggregate?: InputMaybe<Conversations_Aggregate_Order_By>;
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
@@ -13536,6 +13564,8 @@ export type Users_Order_By = {
   role?: InputMaybe<Order_By>;
   sessions_aggregate?: InputMaybe<Sessions_Aggregate_Order_By>;
   status?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
   user_role?: InputMaybe<User_Role_Order_By>;
   user_status?: InputMaybe<User_Status_Order_By>;
   username?: InputMaybe<Order_By>;
@@ -13554,6 +13584,8 @@ export enum Users_Select_Column {
   /** column name */
   City = 'city',
   /** column name */
+  CommunityTelegramNotificationsEnabled = 'community_telegram_notifications_enabled',
+  /** column name */
   Email = 'email',
   /** column name */
   EmailVerified = 'emailVerified',
@@ -13578,17 +13610,25 @@ export enum Users_Select_Column {
   /** column name */
   Status = 'status',
   /** column name */
+  TelegramChatId = 'telegram_chat_id',
+  /** column name */
+  TelegramUserId = 'telegram_user_id',
+  /** column name */
   Username = 'username'
 }
 
 /** select "users_aggregate_bool_exp_bool_and_arguments_columns" columns of table "users" */
 export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
   /** column name */
+  CommunityTelegramNotificationsEnabled = 'community_telegram_notifications_enabled',
+  /** column name */
   IsVerifiedContributor = 'is_verified_contributor'
 }
 
 /** select "users_aggregate_bool_exp_bool_or_arguments_columns" columns of table "users" */
 export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  CommunityTelegramNotificationsEnabled = 'community_telegram_notifications_enabled',
   /** column name */
   IsVerifiedContributor = 'is_verified_contributor'
 }
@@ -13597,6 +13637,7 @@ export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Colum
 export type Users_Set_Input = {
   bio?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
+  community_telegram_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   emailVerified?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -13609,6 +13650,8 @@ export type Users_Set_Input = {
   points?: InputMaybe<Scalars['Int']['input']>;
   role?: InputMaybe<User_Role_Enum>;
   status?: InputMaybe<User_Status_Enum>;
+  telegram_chat_id?: InputMaybe<Scalars['bigint']['input']>;
+  telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -13616,33 +13659,45 @@ export type Users_Set_Input = {
 export type Users_Stddev_Fields = {
   __typename?: 'users_stddev_fields';
   points?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by stddev() on columns of table "users" */
 export type Users_Stddev_Order_By = {
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_pop on columns */
 export type Users_Stddev_Pop_Fields = {
   __typename?: 'users_stddev_pop_fields';
   points?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by stddev_pop() on columns of table "users" */
 export type Users_Stddev_Pop_Order_By = {
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
 export type Users_Stddev_Samp_Fields = {
   __typename?: 'users_stddev_samp_fields';
   points?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by stddev_samp() on columns of table "users" */
 export type Users_Stddev_Samp_Order_By = {
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "users" */
@@ -13657,6 +13712,7 @@ export type Users_Stream_Cursor_Input = {
 export type Users_Stream_Cursor_Value_Input = {
   bio?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
+  community_telegram_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   emailVerified?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -13669,6 +13725,8 @@ export type Users_Stream_Cursor_Value_Input = {
   points?: InputMaybe<Scalars['Int']['input']>;
   role?: InputMaybe<User_Role_Enum>;
   status?: InputMaybe<User_Status_Enum>;
+  telegram_chat_id?: InputMaybe<Scalars['bigint']['input']>;
+  telegram_user_id?: InputMaybe<Scalars['bigint']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -13676,11 +13734,15 @@ export type Users_Stream_Cursor_Value_Input = {
 export type Users_Sum_Fields = {
   __typename?: 'users_sum_fields';
   points?: Maybe<Scalars['Int']['output']>;
+  telegram_chat_id?: Maybe<Scalars['bigint']['output']>;
+  telegram_user_id?: Maybe<Scalars['bigint']['output']>;
 };
 
 /** order by sum() on columns of table "users" */
 export type Users_Sum_Order_By = {
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "users" */
@@ -13689,6 +13751,8 @@ export enum Users_Update_Column {
   Bio = 'bio',
   /** column name */
   City = 'city',
+  /** column name */
+  CommunityTelegramNotificationsEnabled = 'community_telegram_notifications_enabled',
   /** column name */
   Email = 'email',
   /** column name */
@@ -13713,6 +13777,10 @@ export enum Users_Update_Column {
   Role = 'role',
   /** column name */
   Status = 'status',
+  /** column name */
+  TelegramChatId = 'telegram_chat_id',
+  /** column name */
+  TelegramUserId = 'telegram_user_id',
   /** column name */
   Username = 'username'
 }
@@ -13730,33 +13798,45 @@ export type Users_Updates = {
 export type Users_Var_Pop_Fields = {
   __typename?: 'users_var_pop_fields';
   points?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by var_pop() on columns of table "users" */
 export type Users_Var_Pop_Order_By = {
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate var_samp on columns */
 export type Users_Var_Samp_Fields = {
   __typename?: 'users_var_samp_fields';
   points?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by var_samp() on columns of table "users" */
 export type Users_Var_Samp_Order_By = {
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate variance on columns */
 export type Users_Variance_Fields = {
   __typename?: 'users_variance_fields';
   points?: Maybe<Scalars['Float']['output']>;
+  telegram_chat_id?: Maybe<Scalars['Float']['output']>;
+  telegram_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** order by variance() on columns of table "users" */
 export type Users_Variance_Order_By = {
   points?: InputMaybe<Order_By>;
+  telegram_chat_id?: InputMaybe<Order_By>;
+  telegram_user_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
@@ -17178,12 +17258,6 @@ export type MessagingUnreadEventsSubscriptionVariables = Exact<{ [key: string]: 
 
 export type MessagingUnreadEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', body: string, conversation_id: UUID, deleted_at?: Timestamp | null, edited_at?: Timestamp | null, id: UUID }> };
 
-export type GetOwnUserRecentContributionsQueryVariables = Exact<{
-  id: Scalars['uuid']['input'];
-}>;
-
-export type GetOwnUserRecentContributionsQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', name: string, slug: string, city?: string | null, country?: string | null, created_at: Timestamp, logo?: string | null, images?: Array<string> | null }>, events: Array<{ __typename?: 'events', title_en: string, title_uk: string, slug: string, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, is_recurring: boolean, status: Event_Status_Enum, city?: string | null, country?: string | null, created_at: Timestamp, images?: Array<string> | null }> };
-
 export type VenueViewChainFieldsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json };
 
 export type VenueViewChainWithVenuesFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
@@ -17329,6 +17403,13 @@ export type GetVariantsByIdsQueryVariables = Exact<{
 
 
 export type GetVariantsByIdsQuery = { __typename?: 'query_root', product_variants: Array<{ __typename?: 'product_variants', id: UUID, gender?: Clothing_Gender_Enum | null, age_group?: Clothing_Age_Group_Enum | null, size?: Clothing_Size_Enum | null, color?: string | null, stock: number, sku?: string | null, price_override_minor?: number | null, product: { __typename?: 'products', id: UUID, name: string, slug: string, price_minor: number, currency: string, status: Product_Status_Enum } }> };
+
+export type GetOwnUserRecentContributionsQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type GetOwnUserRecentContributionsQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', name: string, slug: string, city?: string | null, country?: string | null, created_at: Timestamp, logo?: string | null, images?: Array<string> | null }>, events: Array<{ __typename?: 'events', title_en: string, title_uk: string, slug: string, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, is_recurring: boolean, status: Event_Status_Enum, city?: string | null, country?: string | null, created_at: Timestamp, images?: Array<string> | null }> };
 
 export type GetUserEventsQueryVariables = Exact<{
   where: Events_Bool_Exp;
@@ -18018,49 +18099,6 @@ export function useMessagingUnreadEventsSubscription(baseOptions?: Apollo.Subscr
       }
 export type MessagingUnreadEventsSubscriptionHookResult = ReturnType<typeof useMessagingUnreadEventsSubscription>;
 export type MessagingUnreadEventsSubscriptionResult = Apollo.SubscriptionResult<MessagingUnreadEventsSubscription>;
-export const GetOwnUserRecentContributionsDocument = gql`
-    query GetOwnUserRecentContributions($id: uuid!) {
-  venues(where: {user_id: {_eq: $id}, status: {_eq: ACTIVE}}, order_by: {created_at: desc}, limit: 5) {
-    name
-    slug
-    city
-    country
-    created_at
-    logo
-    images
-  }
-  events(where: {user_id: {_eq: $id}, status: {_in: [ACTIVE, COMPLETED, CANCELLED, POSTPONED]}}, order_by: {created_at: desc}, limit: 5) {
-    title_en
-    title_uk
-    slug
-    start_date
-    end_date
-    is_online
-    is_recurring
-    status
-    city
-    country
-    created_at
-    images
-  }
-}
-    `;
-export function useGetOwnUserRecentContributionsQuery(baseOptions: Apollo.QueryHookOptions<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables> & ({ variables: GetOwnUserRecentContributionsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-  const options = {...defaultOptions, ...baseOptions};
-  return Apollo.useQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
-}
-export function useGetOwnUserRecentContributionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>) {
-  const options = {...defaultOptions, ...baseOptions};
-  return Apollo.useLazyQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
-}
-export function useGetOwnUserRecentContributionsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions};
-  return Apollo.useSuspenseQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
-}
-export type GetOwnUserRecentContributionsQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsQuery>;
-export type GetOwnUserRecentContributionsLazyQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsLazyQuery>;
-export type GetOwnUserRecentContributionsSuspenseQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsSuspenseQuery>;
-export type GetOwnUserRecentContributionsQueryResult = Apollo.QueryResult<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>;
 export const GetVenueViewBySlugDocument = gql`
     query GetVenueViewBySlug($where: venues_bool_exp!) {
   venues(where: $where, limit: 1) {
@@ -18736,6 +18774,74 @@ export type GetVariantsByIdsQueryHookResult = ReturnType<typeof useGetVariantsBy
 export type GetVariantsByIdsLazyQueryHookResult = ReturnType<typeof useGetVariantsByIdsLazyQuery>;
 export type GetVariantsByIdsSuspenseQueryHookResult = ReturnType<typeof useGetVariantsByIdsSuspenseQuery>;
 export type GetVariantsByIdsQueryResult = Apollo.QueryResult<GetVariantsByIdsQuery, GetVariantsByIdsQueryVariables>;
+export const GetOwnUserRecentContributionsDocument = gql`
+    query GetOwnUserRecentContributions($id: uuid!) {
+  venues(
+    where: {user_id: {_eq: $id}, status: {_eq: ACTIVE}}
+    order_by: {created_at: desc}
+    limit: 5
+  ) {
+    name
+    slug
+    city
+    country
+    created_at
+    logo
+    images
+  }
+  events(
+    where: {user_id: {_eq: $id}, status: {_in: [ACTIVE, COMPLETED, CANCELLED, POSTPONED]}}
+    order_by: {created_at: desc}
+    limit: 5
+  ) {
+    title_en
+    title_uk
+    slug
+    start_date
+    end_date
+    is_online
+    is_recurring
+    status
+    city
+    country
+    created_at
+    images
+  }
+}
+    `;
+
+/**
+ * __useGetOwnUserRecentContributionsQuery__
+ *
+ * To run a query within a React component, call `useGetOwnUserRecentContributionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOwnUserRecentContributionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOwnUserRecentContributionsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOwnUserRecentContributionsQuery(baseOptions: Apollo.QueryHookOptions<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables> & ({ variables: GetOwnUserRecentContributionsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
+      }
+export function useGetOwnUserRecentContributionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
+        }
+export function useGetOwnUserRecentContributionsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>(GetOwnUserRecentContributionsDocument, options);
+        }
+export type GetOwnUserRecentContributionsQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsQuery>;
+export type GetOwnUserRecentContributionsLazyQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsLazyQuery>;
+export type GetOwnUserRecentContributionsSuspenseQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsSuspenseQuery>;
+export type GetOwnUserRecentContributionsQueryResult = Apollo.QueryResult<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>;
 export const GetUserEventsDocument = gql`
     query GetUserEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
   events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {

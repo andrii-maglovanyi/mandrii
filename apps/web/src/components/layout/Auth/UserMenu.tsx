@@ -1,4 +1,4 @@
-import { LogOut, MessageCircle, Settings, ShieldCheck, StretchHorizontal } from "lucide-react";
+import { Bell, LogOut, MessageCircle, Settings, ShieldCheck, StretchHorizontal } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -43,6 +43,9 @@ export const UserMenu = ({
           </Link>
           <Link href="/user-directory" onClick={onNavigate}>
             <StretchHorizontal className="mr-2" /> {i18n("My directory")}
+          </Link>
+          <Link href="/following" onClick={onNavigate}>
+            <Bell className="mr-2" /> {i18n("Following and alerts")}
           </Link>
           <Link href="/user-profile/settings" onClick={onNavigate}>
             <Settings className="mr-2" /> {i18n("Settings")}

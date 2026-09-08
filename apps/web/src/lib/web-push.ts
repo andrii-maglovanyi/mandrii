@@ -90,3 +90,67 @@ export async function sendMessagePushNotification(
 
   await sendPushNotifications(subscriptions, payload);
 }
+
+/** Sends a follower alert without sharing message-specific wording or URLs. */
+export async function sendContentAlertPushNotification({
+  alerts,
+  recipientUserId,
+}: {
+  alerts: Array<{ href: string; title: string }>;
+  recipientUserId: string;
+}) {
+  if (!alerts.length) return true;
+  configureWebPush();
+
+  const subscriptions = await getSubscriptions(recipientUserId);
+  if (!subscriptions.length) {
+    await sql`
+      UPDATE users
+      SET content_alert_push_notifications_enabled = false
+      WHERE id = ${recipientUserId} AND content_alert_push_notifications_enabled
+    `;
+    return false;
+  }
+
+  const firstAlert = alerts[0];
+  const payload = JSON.stringify({
+    body:
+      alerts.length === 1 ? "Open Mandrii to see what changed." : `${alerts.length} new updates are waiting for you.`,
+    title: alerts.length === 1 ? `🔔 ${firstAlert.title}` : `🔔 ${alerts.length} new updates on Mandrii`,
+    url: alerts.length === 1 ? firstAlert.href : "/en/following",
+  });
+
+  const results = await Promise.allSettled(
+    subscriptions.map(async (subscription) => {
+      try {
+        await webpush.sendNotification(
+          { endpoint: subscription.endpoint, keys: { auth: subscription.auth, p256dh: subscription.p256dh } },
+          payload,
+        );
+      } catch (error: any) {
+        if (error.statusCode === 404 || error.statusCode === 410) {
+          await sql`DELETE FROM push_subscriptions WHERE endpoint = ${subscription.endpoint}`;
+          return false;
+        }
+        throw error;
+      }
+      return true;
+    }),
+  );
+
+  if (results.some((result) => result.status === "rejected")) {
+    throw new Error("Unable to deliver browser push notification");
+  }
+
+  const delivered = results.some((result) => result.status === "fulfilled" && result.value);
+  if (!delivered) {
+    // Every saved device endpoint has expired. Stop attempting deliveries until
+    // the account explicitly enables browser alerts on a current device.
+    await sql`
+      UPDATE users
+      SET content_alert_push_notifications_enabled = false
+      WHERE id = ${recipientUserId} AND content_alert_push_notifications_enabled
+    `;
+  }
+  return delivered;
+}

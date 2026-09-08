@@ -12,7 +12,8 @@ export const POST = (req: Request) =>
         UPDATE users user_account
         SET telegram_chat_id = NULL,
             telegram_user_id = NULL,
-            community_telegram_notifications_enabled = false
+            community_telegram_notifications_enabled = false,
+            content_alert_telegram_notifications_enabled = false
         FROM target
         WHERE user_account.id = target.id
         RETURNING target.id, target.telegram_chat_id
@@ -21,6 +22,12 @@ export const POST = (req: Request) =>
         SET status = 'CANCELLED', locked_at = NULL
         WHERE delivery.status IN ('PENDING', 'PROCESSING')
           AND delivery.telegram_chat_id = (SELECT telegram_chat_id FROM unlinked_user)
+      ), cancelled_content_alert_deliveries AS (
+        UPDATE content_subscription_alert_deliveries delivery
+        SET status = 'CANCELLED', locked_at = NULL
+        WHERE delivery.status IN ('PENDING', 'PROCESSING')
+          AND delivery.channel = 'TELEGRAM'
+          AND delivery.recipient_id = (SELECT id FROM unlinked_user)
       )
       UPDATE telegram_link_tokens
       SET used_at = NOW()

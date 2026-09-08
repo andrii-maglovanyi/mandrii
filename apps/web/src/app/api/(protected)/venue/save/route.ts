@@ -1,16 +1,19 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import {
   BadRequestError,
+  ForbiddenError,
   getApiContext,
   InternalServerError,
   validateRequest,
   ValidationError,
   withErrorHandling,
 } from "~/lib/api";
+import sql from "~/lib/db/db";
 import { envName } from "~/lib/config/env";
 import { privateConfig } from "~/lib/config/private";
 import { saveVenue } from "~/lib/models/venue";
+import { deliverPendingContentSubscriptionAlerts } from "~/lib/models/content-subscription-alerts";
 import { upsertVenueAccommodationDetails } from "~/lib/models/venue-accomodation-details";
 import { upsertVenueBeautySalonDetails } from "~/lib/models/venue-beauty-salon-details";
 import { upsertVenueRestaurantDetails } from "~/lib/models/venue-restaurant-details";
@@ -43,6 +46,20 @@ export const POST = (req: Request) =>
 
     const schema = getVenueSchema(i18n);
     const data = await validateRequest(req, schema);
+
+    if (data.id) {
+      const [existingVenue] = await sql<Array<{ owner_id: null | string; user_id: string }>>`
+        SELECT owner_id, user_id FROM venues WHERE id = ${data.id}
+      `;
+      const canEdit =
+        session.user.role === "admin" ||
+        existingVenue?.owner_id === session.user.id ||
+        (existingVenue?.user_id === session.user.id && existingVenue.owner_id === null);
+
+      if (!canEdit) {
+        throw new ForbiddenError("This venue is now managed by its owner");
+      }
+    }
 
     const {
       address,
@@ -227,6 +244,11 @@ export const POST = (req: Request) =>
     sendSlackNotification(session.user, venueData).catch((error) => {
       console.error("Slack notification failed (non-critical):", error);
     });
+    after(() =>
+      deliverPendingContentSubscriptionAlerts({ limit: 10 }).catch((error) =>
+        console.error("Venue publication alert delivery failed:", error),
+      ),
+    );
 
     return NextResponse.json({ id: venueId, success: true }, { status: 200 });
   });

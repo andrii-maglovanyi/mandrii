@@ -126,7 +126,7 @@ export const VenueContacts = ({ getFieldProps, getFieldsProps, setValues }: Venu
         <div className="flex grow flex-col">
           <RichText as="div" className="text-neutral py-2 text-sm">
             {i18n(
-              "**🌍 Auto-detection enabled**.<br />Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.<br /><br />  You can add up to three phone numbers.",
+              "**🌍 Auto-detection enabled**.\nStart typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.\n\nYou can add up to three phone numbers.",
             )}
           </RichText>
           {renderDynamicFields(

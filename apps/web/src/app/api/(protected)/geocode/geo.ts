@@ -29,6 +29,23 @@ interface OSMRequestOptions {
   lon?: number;
 }
 
+const fetchGoogleGeocode = async (params: URLSearchParams, apiKey: string) => {
+  params.set("key", apiKey);
+  const googleUrl = `https://maps.googleapis.com/maps/api/geocode/json?${params.toString()}`;
+  const googleResponse = await fetch(googleUrl);
+
+  if (!googleResponse.ok) {
+    throw new Error(`Google API HTTP ${googleResponse.status}: ${googleResponse.statusText}`);
+  }
+
+  const googleData = await googleResponse.json();
+  if (googleData.status !== "OK") {
+    throw new Error(`Google API error: ${googleData.status} - ${googleData.error_message || "Unknown error"}`);
+  }
+
+  return googleData;
+};
+
 const fetchFromOSM = async (options: OSMRequestOptions) => {
   const { address, lang = "en", lat, lon } = options;
 
@@ -149,24 +166,8 @@ const getCombinedAreaFromOSM = async (
  * Geocodes an address using Google Maps API and enriches it with OSM data.
  */
 export const geocodeAddress = async (address: string, apiKey: string) => {
-  const googleUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-    address,
-  )}&key=${apiKey}`;
-
   try {
-    const googleResponse = await fetch(googleUrl);
-    if (!googleResponse.ok) {
-      const errorMessage = `Google API HTTP ${googleResponse.status}: ${googleResponse.statusText}`;
-      console.error("Google Geocoding API request failed:", errorMessage);
-      throw new Error(errorMessage);
-    }
-
-    const googleData = await googleResponse.json();
-    if (googleData.status !== "OK") {
-      const errorMessage = `Google Geocoding API error: ${googleData.status} - ${googleData.error_message || "Unknown error"}`;
-      console.error("Google Geocoding API returned error:", errorMessage);
-      throw new Error(errorMessage);
-    }
+    const googleData = await fetchGoogleGeocode(new URLSearchParams({ address }), apiKey);
 
     const locationData = extractLocationData(googleData);
     if (!locationData) {
@@ -195,6 +196,28 @@ export const geocodeAddress = async (address: string, apiKey: string) => {
         : new Error(`Geocoding failed for address "${address}": Unknown error`);
 
     console.error("Geocoding error:", enhancedError);
+    throw enhancedError;
+  }
+};
+
+/** Reverse-geocodes a user-selected map point with the server-only Maps key. */
+export const reverseGeocodeCoordinates = async (latitude: number, longitude: number, apiKey: string) => {
+  try {
+    const googleData = await fetchGoogleGeocode(new URLSearchParams({ latlng: `${latitude},${longitude}` }), apiKey);
+    const locationData = extractLocationData(googleData);
+
+    if (!locationData?.placeId) {
+      throw new Error("Failed to identify the selected location");
+    }
+
+    return locationData;
+  } catch (error) {
+    const enhancedError =
+      error instanceof Error
+        ? new Error(`Reverse geocoding failed: ${error.message}`)
+        : new Error("Reverse geocoding failed: Unknown error");
+
+    console.error("Reverse geocoding error:", enhancedError);
     throw enhancedError;
   }
 };

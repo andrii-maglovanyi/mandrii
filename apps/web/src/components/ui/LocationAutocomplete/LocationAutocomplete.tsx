@@ -10,12 +10,47 @@ import { Input, type InputProps } from "../Input/Input";
 
 const libraries = ["marker", "places"] as Libraries;
 
+export type LocationPlaceDetails = {
+  country?: string;
+  latitude?: number;
+  location: string;
+  longitude?: number;
+  placeId: string;
+};
+
+export const createLocationPlaceDetails = ({
+  country,
+  formattedAddress,
+  latitude,
+  longitude,
+  placeId,
+}: {
+  country?: string;
+  formattedAddress: string;
+  latitude?: number;
+  longitude?: number;
+  placeId: string;
+}): LocationPlaceDetails => {
+  const countrySuffix = country ? `, ${country}` : "";
+
+  return {
+    country,
+    latitude,
+    location:
+      countrySuffix && formattedAddress.endsWith(countrySuffix)
+        ? formattedAddress.slice(0, -countrySuffix.length)
+        : formattedAddress,
+    longitude,
+    placeId,
+  };
+};
+
 type LocationAutocompleteProps = Omit<
   InputProps<string, string>,
   "onFocus" | "onSelectSuggestion" | "suggestions" | "type"
 > & {
   includedRegionCodes?: string[];
-  onPlaceDetailsSelect?: (place: { country?: string; location: string }) => void;
+  onPlaceDetailsSelect?: (place: LocationPlaceDetails) => void;
   onLocationSelect?: (location: string) => void;
 };
 
@@ -33,6 +68,8 @@ export const LocationAutocomplete = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<google.maps.places.AutocompleteSuggestion[]>([]);
   const sessionTokenRef = useRef<google.maps.places.AutocompleteSessionToken | null>(null);
+  const searchRequestRef = useRef(0);
+  const selectionRequestRef = useRef(0);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: publicConfig.maps.apiKey,
@@ -47,6 +84,7 @@ export const LocationAutocomplete = ({
   }, [isLoaded]);
 
   useEffect(() => {
+    const requestId = ++searchRequestRef.current;
     if (!isLoaded || searchTerm.trim().length < 3) {
       setSuggestions([]);
       return;
@@ -59,9 +97,10 @@ export const LocationAutocomplete = ({
           input: searchTerm,
           sessionToken: sessionTokenRef.current ?? undefined,
         });
+        if (requestId !== searchRequestRef.current) return;
         setSuggestions(result.suggestions.filter((suggestion) => suggestion.placePrediction !== null));
       } catch {
-        setSuggestions([]);
+        if (requestId === searchRequestRef.current) setSuggestions([]);
       }
     }, 300);
 
@@ -70,6 +109,10 @@ export const LocationAutocomplete = ({
 
   const handleSuggestionSelect = useCallback(
     async (placeId: string) => {
+      const requestId = ++selectionRequestRef.current;
+      // Invalidate an autocomplete request that may still be resolving while
+      // the selected place is being hydrated.
+      searchRequestRef.current += 1;
       const suggestion = suggestions.find((item) => item.placePrediction?.placeId === placeId);
       const fallback = suggestion?.placePrediction?.text.text;
       setSuggestions([]);
@@ -80,17 +123,21 @@ export const LocationAutocomplete = ({
 
       try {
         const place = suggestion.placePrediction.toPlace();
-        await place.fetchFields({ fields: ["addressComponents", "formattedAddress"] });
+        await place.fetchFields({ fields: ["addressComponents", "formattedAddress", "location"] });
         const country =
           place.addressComponents?.find((component) => component.types.includes("country"))?.longText ?? undefined;
         const formattedAddress = place.formattedAddress ?? fallback ?? "";
+        if (requestId !== selectionRequestRef.current) return;
         if (!formattedAddress) return;
-        const countrySuffix = country ? `, ${country}` : "";
-        const location =
-          countrySuffix && formattedAddress.endsWith(countrySuffix)
-            ? formattedAddress.slice(0, -countrySuffix.length)
-            : formattedAddress;
-        onPlaceDetailsSelect({ country, location });
+        onPlaceDetailsSelect(
+          createLocationPlaceDetails({
+            country,
+            formattedAddress,
+            latitude: place.location?.lat(),
+            longitude: place.location?.lng(),
+            placeId,
+          }),
+        );
       } catch {
         // The normal input behaviour remains available if place details cannot be loaded.
       }
@@ -102,6 +149,7 @@ export const LocationAutocomplete = ({
     <Input
       {...inputProps}
       onChange={(event) => {
+        selectionRequestRef.current += 1;
         setSearchTerm(event.target.value);
         onChange?.(event);
       }}

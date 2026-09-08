@@ -371,16 +371,21 @@ export const useVenues = () => {
 
   const useUserVenues = (params?: APIParams, ownedOnly = false) => {
     const { data: session } = useSession();
+    const isAdmin = session?.user.role === "admin";
+    const shouldScopeToUser = ownedOnly || !isAdmin;
     const ownershipField = ownedOnly ? "owner_id" : "user_id";
 
     const mergedParams = useMemo(
       () => ({
         ...params,
         where: {
-          _and: [{ [ownershipField]: { _eq: session?.user.id } }, ...(params?.where ? [params.where] : [])],
+          _and: [
+            ...(shouldScopeToUser ? [{ [ownershipField]: { _eq: session?.user.id } }] : []),
+            ...(params?.where ? [params.where] : []),
+          ],
         },
       }),
-      [ownedOnly, ownershipField, params, session?.user.id],
+      [ownershipField, params, session?.user.id, shouldScopeToUser],
     );
 
     const result = useGraphApi<GetUserVenuesQuery["venues"]>(GET_USER_VENUES, mergedParams, {

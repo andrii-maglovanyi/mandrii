@@ -13,6 +13,7 @@ export {
   type ContentStatus,
 } from "./ContentStatusBadge/ContentStatusBadge";
 export { EmptyState } from "./EmptyState/EmptyState";
+export { Dropdown } from "./Dropdown/Dropdown";
 export { FallbackImage } from "./FallbackImage/FallbackImage";
 export { FilePicker } from "./FilePicker/FilePicker";
 export { ImageCarousel } from "./ImageCarousel/ImageCarousel";
@@ -30,6 +31,8 @@ export { SectionCard } from "./SectionCard/SectionCard";
 export { Select } from "./Select/Select";
 export { Separator } from "./Separator/Separator";
 export { SvgIcon } from "./SvgIcon/SvgIcon";
+export { GoogleBrandIcon } from "./SvgIcon/GoogleBrandIcon";
+export { Switch, type SwitchProps } from "./Switch/Switch";
 export { Table } from "./Table/Table";
 export { TabBadge, TabPane, Tabs } from "./Tabs";
 export { Textarea } from "./Textarea/Textarea";

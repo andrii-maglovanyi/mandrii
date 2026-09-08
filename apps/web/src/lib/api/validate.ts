@@ -38,7 +38,11 @@ export async function validateRequest<T extends ZodType>(req: Request, schema: T
     const formData = await req.formData();
     body = Object.fromEntries(formData);
   } else {
-    body = await req.json();
+    try {
+      body = await req.json();
+    } catch {
+      throw new BadRequestError("Invalid JSON body");
+    }
   }
 
   const result = schema.safeParse(body);

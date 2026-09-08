@@ -9,6 +9,7 @@ interface GeocodeResponse {
     address_components: AddressComponent[];
     formatted_address: string;
     geometry: Geometry;
+    place_id?: string;
   }[];
   status: string;
 }
@@ -47,5 +48,5 @@ export const extractLocationData = (response: GeocodeResponse) => {
 
   if (!country || !address) return null;
 
-  return { address, area, city, coordinates, country, postcode };
+  return { address, area, city, coordinates, country, placeId: res.place_id ?? null, postcode };
 };

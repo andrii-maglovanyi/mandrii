@@ -119,7 +119,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
   const { updateVenueStatus, useGetVenue } = useVenues();
   const { openConfirmDialog } = useDialog();
 
-  const { data: profileData } = useUser();
+  const { data: profileData, isLoading: profileLoading } = useUser();
   const { data, error, loading } = useGetVenue(slug);
 
   const handleSuccess = useCallback(async () => {
@@ -216,7 +216,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
     [client, data?.id, i18n, showError, showSuccess, updateVenueStatus],
   );
 
-  if (loading) {
+  if (loading || profileLoading) {
     return (
       <div className="flex flex-col">
         <AnimatedEllipsis centered size="md" />
@@ -251,8 +251,24 @@ export const EditVenue = ({ slug }: VenueProps) => {
   }
 
   const isAdmin = profileData?.role === "admin";
-  const isVerifiedOwner = profileData?.is_verified_contributor === true && profileData.id === data?.user_id;
+  const isVerifiedOwner =
+    profileData?.is_verified_contributor === true && profileData.id === data?.user_id && data?.owner_id === null;
   const canManageStatus = isAdmin || isVerifiedOwner;
+  const canEditVenueInfo = Boolean(
+    isAdmin || profileData?.id === data?.owner_id || (profileData?.id === data?.user_id && data?.owner_id === null),
+  );
+
+  if (data && !canEditVenueInfo) {
+    return (
+      <div className="flex flex-col">
+        <EmptyState
+          body={i18n("The venue owner now manages this information.")}
+          heading={i18n("Venue information is managed by its owner")}
+          icon={<Search size={50} />}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col">

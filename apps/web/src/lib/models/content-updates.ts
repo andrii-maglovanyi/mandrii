@@ -410,11 +410,23 @@ export async function reportContentUpdateComment(updateId: string, commentId: st
   if (!report) throw new ConflictError("You have already reported this comment");
 }
 
+export type ContentUpdateNotificationPreferences = {
+  comments_enabled: boolean;
+  replies_enabled: boolean;
+};
+
+export async function getContentUpdateNotificationPreferences(
+  userId: string,
+): Promise<ContentUpdateNotificationPreferences> {
+  const [preferences] = await sql<ContentUpdateNotificationPreferences[]>`
+    SELECT comments_enabled, replies_enabled FROM content_update_notification_preferences WHERE user_id = ${userId}
+  `;
+  return preferences ?? { comments_enabled: true, replies_enabled: true };
+}
+
 export async function getContentUpdateNotifications(userId: string) {
   const [preferences, notifications] = await Promise.all([
-    sql<Array<{ comments_enabled: boolean; replies_enabled: boolean }>>`
-      SELECT comments_enabled, replies_enabled FROM content_update_notification_preferences WHERE user_id = ${userId}
-    `,
+    getContentUpdateNotificationPreferences(userId),
     sql<
       Array<{
         actor_name: null | string;
@@ -439,7 +451,7 @@ export async function getContentUpdateNotifications(userId: string) {
       ...notification,
       createdAt: new Date(notification.created_at).toISOString(),
     })),
-    preferences: preferences[0] ?? { comments_enabled: true, replies_enabled: true },
+    preferences,
   };
 }
 

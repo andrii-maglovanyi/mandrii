@@ -6,22 +6,7 @@ import { useEffect, useState } from "react";
 import { ActionButton } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
-
-function urlBase64ToUint8Array(value: string) {
-  const padding = "=".repeat((4 - (value.length % 4)) % 4);
-  const base64 = (value + padding).replace(/-/g, "+").replace(/_/g, "/");
-  const raw = window.atob(base64);
-  return Uint8Array.from(raw, (character) => character.charCodeAt(0));
-}
-
-function hasMatchingApplicationServerKey(subscription: PushSubscription, publicKey: string) {
-  const applicationServerKey = subscription.options.applicationServerKey;
-  if (!applicationServerKey) return false;
-
-  const currentKey = new Uint8Array(applicationServerKey as ArrayBuffer);
-  const expectedKey = urlBase64ToUint8Array(publicKey);
-  return currentKey.length === expectedKey.length && currentKey.every((byte, index) => byte === expectedKey[index]);
-}
+import { getCompatiblePushSubscription, urlBase64ToUint8Array } from "~/lib/push-subscription";
 
 export const PushNotifications = () => {
   const i18n = useI18n();
@@ -54,11 +39,7 @@ export const PushNotifications = () => {
           if (isCurrent) setStatus("idle");
           return;
         }
-        const existingSubscription = await registration.pushManager.getSubscription();
-        if (existingSubscription && !hasMatchingApplicationServerKey(existingSubscription, publicKey)) {
-          await existingSubscription.unsubscribe();
-        }
-        const subscription = await registration.pushManager.getSubscription();
+        const subscription = await getCompatiblePushSubscription(registration, publicKey);
         if (!subscription) {
           if (isCurrent) setStatus("idle");
           return;
@@ -103,12 +84,8 @@ export const PushNotifications = () => {
       }
       await navigator.serviceWorker.register("/sw.js");
       const registration = await navigator.serviceWorker.ready;
-      const existingSubscription = await registration.pushManager.getSubscription();
-      if (existingSubscription && !hasMatchingApplicationServerKey(existingSubscription, publicKey)) {
-        await existingSubscription.unsubscribe();
-      }
       const subscription =
-        (await registration.pushManager.getSubscription()) ??
+        (await getCompatiblePushSubscription(registration, publicKey)) ??
         (await registration.pushManager.subscribe({
           applicationServerKey: urlBase64ToUint8Array(publicKey) as BufferSource,
           userVisibleOnly: true,

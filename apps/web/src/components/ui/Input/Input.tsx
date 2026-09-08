@@ -8,7 +8,7 @@ import { getFlagComponent } from "~/lib/icons/flags";
 import { CountryPhoneConfig, processPhoneNumber } from "~/lib/utils/phone-number";
 
 import { FieldErrorMessage } from "../FieldErrorMessage/FieldErrorMessage";
-import { Menu, MenuHandle, MenuOption } from "../Menu/Menu";
+import { getMenuOverlayLayout, Menu, MenuHandle, MenuOption, MenuOverlayLayout } from "../Menu/Menu";
 import { commonClass, commonInputClass, sizeClasses } from "../styles";
 
 export type InputProps<K, T> = {
@@ -69,6 +69,7 @@ export function Input<K extends string, T extends string>({
     return String(value);
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [menuOverlay, setMenuOverlay] = useState<MenuOverlayLayout>({ placement: "bottom", portalTarget: null });
   const [detectedCountry, setDetectedCountry] = useState<CountryPhoneConfig | null>(null);
 
   const isPhoneInput = type === "tel";
@@ -114,7 +115,11 @@ export function Input<K extends string, T extends string>({
 
   useEffect(() => {
     const handleFocusOut = (e: FocusEvent) => {
-      if (!wrapperRef.current?.contains(e.relatedTarget as Node)) {
+      const menu = (e.relatedTarget as Element | null)?.closest?.("[data-menu-overlay]");
+      if (
+        !wrapperRef.current?.contains(e.relatedTarget as Node) &&
+        menu?.getAttribute("data-menu-owner") !== inputId
+      ) {
         setShowSuggestions(false);
       }
     };
@@ -166,6 +171,11 @@ export function Input<K extends string, T extends string>({
   const formedSuggestions = filteredSuggestions.map((suggestion) =>
     typeof suggestion === "string" ? { label: suggestion, value: suggestion } : suggestion,
   );
+
+  useEffect(() => {
+    if (!showSuggestions || formedSuggestions.length === 0) return;
+    setMenuOverlay(getMenuOverlayLayout(wrapperRef.current, formedSuggestions.length));
+  }, [formedSuggestions.length, showSuggestions]);
 
   const iconWrapperClass = "pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-2xl";
 
@@ -245,12 +255,17 @@ export function Input<K extends string, T extends string>({
         </span>
         {formedSuggestions.length > 0 && showSuggestions && (
           <Menu
+            floatingPosition={menuOverlay.floatingPosition}
+            maxHeight={menuOverlay.maxHeight}
             onSelect={(option) => {
               setQuery(formedSuggestions.find(({ value }) => value === option)?.label ?? option);
               onSelectSuggestion?.(option);
               setShowSuggestions(false);
             }}
             options={formedSuggestions}
+            ownerId={inputId}
+            placement={menuOverlay.placement}
+            portalTarget={menuOverlay.portalTarget}
             ref={menuRef}
           />
         )}

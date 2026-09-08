@@ -17,6 +17,8 @@ type ContentStatusChange =
     };
 
 type ContentRecord = {
+  owner_id?: null | string;
+  status: Event_Status_Enum | Venue_Status_Enum;
   user_id: string;
 };
 
@@ -41,15 +43,18 @@ const isStatusAllowedForVerifiedContributor = ({ status, type }: ContentStatusCh
 export async function updateContentStatus(change: ContentStatusChange, actor: UserSession) {
   const [content] =
     change.type === "event"
-      ? await sql<ContentRecord[]>`SELECT user_id FROM events WHERE id = ${change.id}`
-      : await sql<ContentRecord[]>`SELECT user_id FROM venues WHERE id = ${change.id}`;
+      ? await sql<ContentRecord[]>`SELECT user_id, status FROM events WHERE id = ${change.id}`
+      : await sql<ContentRecord[]>`SELECT user_id, owner_id, status FROM venues WHERE id = ${change.id}`;
 
   if (!content) {
     throw new NotFoundError(change.type === "event" ? "Event not found" : "Venue not found");
   }
 
   const isAdmin = actor.role === "admin";
-  const isVerifiedOwner = actor.is_verified_contributor === true && content.user_id === actor.id;
+  const isVerifiedOwner =
+    actor.is_verified_contributor === true &&
+    content.user_id === actor.id &&
+    (change.type !== "venue" || content.owner_id === null);
 
   if (!isAdmin && !isVerifiedOwner) {
     throw new ForbiddenError("Only trusted contributors can manage the status of content they created");
@@ -78,5 +83,5 @@ export async function updateContentStatus(change: ContentStatusChange, actor: Us
     throw new NotFoundError(change.type === "event" ? "Event not found" : "Venue not found");
   }
 
-  return updated;
+  return { ...updated, previousStatus: content.status };
 }

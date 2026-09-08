@@ -1,3 +1,4 @@
+import { Earth } from "lucide-react";
 import { Input, RichText, SvgIcon } from "~/components/ui";
 import { FormProps } from "~/hooks/form/useForm";
 import { useI18n } from "~/i18n/useI18n";
@@ -37,11 +38,15 @@ export const EventContacts = ({ getFieldProps }: EventContactsProps) => {
         {...getFieldProps("organizer_email")}
       />
       <div className="flex flex-col">
-        <RichText as="div" className="text-neutral py-2 text-sm">
+        <div className="flex items-center space-x-1">
+          <Earth strokeWidth={2.5} size={16} /> <strong>{i18n("Auto-detection enabled")}</strong>
+        </div>
+        <RichText as="div" className="text-neutral pb-3 text-sm">
           {i18n(
-            "**🌍 Auto-detection enabled**.<br />Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.<br /><br />  You can add up to three phone numbers.",
+            "Start typing with + and your country code (e.g., +1, +44, +380). The format will be automatically detected and applied for 42 countries.\nYou can add up to three phone numbers.",
           )}
         </RichText>
+
         <Input
           label={i18n("Organizer phone number")}
           placeholder="+44 123 456 789"

@@ -76,6 +76,8 @@ export const useEvents = () => {
 
   const useUserEvents = (params?: APIParams, ownedOnly = false) => {
     const { data: session } = useSession();
+    const isAdmin = session?.user.role === "admin";
+    const shouldScopeToUser = ownedOnly || !isAdmin;
     const ownershipField = ownedOnly ? "owner_id" : "user_id";
 
     const mergedParams = useMemo(
@@ -83,10 +85,13 @@ export const useEvents = () => {
         ...params,
         order_by: params?.order_by ?? [{ updated_at: "desc" }],
         where: {
-          _and: [{ [ownershipField]: { _eq: session?.user.id } }, ...(params?.where ? [params.where] : [])],
+          _and: [
+            ...(shouldScopeToUser ? [{ [ownershipField]: { _eq: session?.user.id } }] : []),
+            ...(params?.where ? [params.where] : []),
+          ],
         },
       }),
-      [ownedOnly, ownershipField, params, session?.user.id],
+      [ownershipField, params, session?.user.id, shouldScopeToUser],
     );
 
     const result = useGraphApi<GetUserEventsQuery["events"]>(GET_USER_EVENTS, mergedParams, {

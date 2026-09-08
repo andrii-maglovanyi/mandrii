@@ -1,12 +1,13 @@
 "use client";
 
 import clsx from "clsx";
-import { BookMarked, CalendarDays, Info, MapPin, MessageCircle, Newspaper, Pencil, Star } from "lucide-react";
+import { BookMarked, CalendarDays, Info, MapPin, MessageCircle, Newspaper, PenTool, Star } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 import {
+  ActionButton,
   AnimatedEllipsis,
   Button,
   ContentStatusBadge,
@@ -29,6 +30,7 @@ import { useUser } from "~/hooks/useUser";
 import { useVenues } from "~/hooks/useVenues";
 import { useVenueUnreadCount } from "~/hooks/useVenueUnreadCount";
 import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
+import { FollowContentButton } from "~/features/Following/FollowContentButton";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getPublicMediaUrl } from "~/lib/media";
@@ -135,12 +137,13 @@ export const VenueView = ({
   const canManageUpdates = Boolean(
     profile?.id && venue.owner_id === profile.id && venue.status === Venue_Status_Enum.Active,
   );
-  const canManageInfo = Boolean(
-    profile &&
-      (profile.role === "admin" || profile.id === venue.owner_id || (profile.id === venue.user_id && !venue.owner_id)),
-  );
   const isOwner = Boolean(profile?.id && profile.id === venue.owner_id);
+  const canEditVenueInfo = Boolean(
+    profile?.id &&
+      (profile.role === "admin" || isOwner || (profile.id === venue.user_id && venue.owner_id === null)),
+  );
   const openSettings = () => router.push(`/user-directory/venues/${venue.slug}/manage`);
+  const openVenueEditor = () => router.push(`/user-directory/venues/${venue.slug}`);
 
   return (
     <div className="flex flex-col">
@@ -224,7 +227,16 @@ export const VenueView = ({
                   }
                   onOpenSettings={openSettings}
                 />
-              ) : undefined
+              ) : canEditVenueInfo ? (
+                <ActionButton
+                  aria-label={i18n("Edit venue info")}
+                  icon={<PenTool size={20} />}
+                  onClick={openVenueEditor}
+                  variant="ghost"
+                />
+              ) : (
+                <FollowContentButton targetId={venue.id} type="venue" />
+              )
             }
             showManageAction={false}
             venue={venue}
@@ -239,18 +251,6 @@ export const VenueView = ({
             label={<span className="hidden sm:inline">{i18n("About")}</span>}
             tab={i18n("About")}
           >
-            {canManageInfo && (
-              <div className="mb-4 flex justify-end">
-                <Button
-                  onClick={() => router.push(`/user-directory/venues/${venue.slug}`)}
-                  size="sm"
-                  variant="outlined"
-                >
-                  <Pencil size={16} />
-                  {i18n("Manage venue info")}
-                </Button>
-              </div>
-            )}
             <div className={`grid grid-cols-1 gap-8 lg:grid-cols-3`}>
               {/* Description. Left side (2/3) */}
               <div className={`space-y-8 lg:col-span-2`}>

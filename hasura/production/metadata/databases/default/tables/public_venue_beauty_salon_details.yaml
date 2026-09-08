@@ -10,12 +10,22 @@ insert_permissions:
     permission:
       check:
         venue:
-          _and:
-            - user_id:
-                _eq: X-Hasura-User-Id
-            - user:
-                status:
-                  _eq: active
+          _or:
+            - owner:
+                _and:
+                  - id:
+                      _eq: X-Hasura-User-Id
+                  - status:
+                      _eq: active
+            - _and:
+                - owner_id:
+                    _is_null: true
+                - user:
+                    _and:
+                      - id:
+                          _eq: X-Hasura-User-Id
+                      - status:
+                          _eq: active
       columns:
         - appointment_required
         - services
@@ -67,12 +77,22 @@ update_permissions:
         - walk_ins_accepted
       filter:
         venue:
-          _and:
-            - user_id:
-                _eq: X-Hasura-User-Id
-            - user:
-                status:
-                  _eq: active
+          _or:
+            - owner:
+                _and:
+                  - id:
+                      _eq: X-Hasura-User-Id
+                  - status:
+                      _eq: active
+            - _and:
+                - owner_id:
+                    _is_null: true
+                - user:
+                    _and:
+                      - id:
+                          _eq: X-Hasura-User-Id
+                      - status:
+                          _eq: active
       check: null
     comment: ""
 delete_permissions:
@@ -80,10 +100,20 @@ delete_permissions:
     permission:
       filter:
         venue:
-          _and:
-            - user_id:
-                _eq: X-Hasura-User-Id
-            - user:
-                status:
-                  _eq: active
+          _or:
+            - owner:
+                _and:
+                  - id:
+                      _eq: X-Hasura-User-Id
+                  - status:
+                      _eq: active
+            - _and:
+                - owner_id:
+                    _is_null: true
+                - user:
+                    _and:
+                      - id:
+                          _eq: X-Hasura-User-Id
+                      - status:
+                          _eq: active
     comment: ""

@@ -1,4 +1,4 @@
-import { PenTool, Share2, UserStar } from "lucide-react";
+import { PenTool, Share2, UserRound } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { type ReactNode } from "react";
@@ -96,16 +96,17 @@ export const CardHeader = ({
             className="group"
             icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={20} />}
             onClick={handleShareClick}
-            size="sm"
             variant="ghost"
           />
         )}
         {viewActions}
         {Boolean(event.owner_id) && !(profileData?.id === event.owner_id && hideCurrentOwnerProfileAction) && (
           <ActionButton
-            aria-label={profileData?.id === event.owner_id ? i18n("You own this event") : i18n("Verified owner")}
+            aria-label={
+              profileData?.id === event.owner_id ? i18n("You manage this event") : i18n("View event manager profile")
+            }
             className="cursor-pointer"
-            icon={<UserStar size={20} />}
+            icon={<UserRound size={20} />}
             onClick={(eventClick) => {
               eventClick.preventDefault();
               eventClick.stopPropagation();
