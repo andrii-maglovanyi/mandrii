@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-export const FieldErrorMessage = ({ error }: { error?: string }) => {
+export const FieldErrorMessage = ({ error, id }: { error?: string; id?: string }) => {
   return (
     <div
       className={clsx(
@@ -12,6 +12,7 @@ export const FieldErrorMessage = ({ error }: { error?: string }) => {
           pointer-events-none scale-y-0 opacity-0
         `,
       )}
+      id={id}
     >
       {error}
     </div>

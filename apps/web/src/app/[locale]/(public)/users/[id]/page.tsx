@@ -1,5 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 
+import type { PublicEventContribution, PublicVenueContribution } from "~/features/UserProfile/PublicContributions";
+
 import { Breadcrumbs } from "~/components/ui";
 import { PublicUserProfile } from "~/features";
 import { getI18n } from "~/i18n/getI18n";
@@ -8,7 +10,6 @@ import sql from "~/lib/db/db";
 import { getCommunityContributionCounts } from "~/lib/gamification/contributions";
 import { getPublicUserImageUrl, UserModel } from "~/lib/models/user";
 import { Locale } from "~/types";
-import type { PublicEventContribution, PublicVenueContribution } from "~/features/UserProfile/PublicContributions";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +39,7 @@ export default async function PublicUserProfilePage({ params }: Readonly<PublicU
       LIMIT 5
     `,
     sql<PublicEventContribution[]>`
-      SELECT title_en, title_uk, slug, start_date, end_date, is_online, is_recurring, status, city, country, created_at, images
+      SELECT title_en, title_uk, slug, start_date, end_date, is_online, is_recurring, recurrence_rule, status, city, country, created_at, images
       FROM events
       WHERE user_id = ${profile.id}
         AND status IN ('ACTIVE', 'COMPLETED', 'CANCELLED', 'POSTPONED')

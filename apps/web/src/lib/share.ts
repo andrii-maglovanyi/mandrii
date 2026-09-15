@@ -23,6 +23,7 @@ export const shareItem = async (e: React.MouseEvent, params: ShareItemParams) =>
       await navigator.share(item);
       return;
     } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
       console.error("Error sharing:", err);
     }
   }

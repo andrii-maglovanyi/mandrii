@@ -14,7 +14,7 @@ export interface LayoutConfig {
 export type LayoutVariant = "list" | "masonry-full" | "masonry-half" | "masonry-small" | "masonry-third";
 
 export const baseCardClasses = clsx(
-  "relative flex overflow-hidden rounded-xl border border-primary/0",
+  "relative flex min-w-0 overflow-hidden rounded-xl border border-primary/0",
   "group/card bg-surface-tint/50 transition-all duration-300",
   `
     no-underline
@@ -89,7 +89,7 @@ export const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): Layo
 
     return {
       containerClasses: config.containerClasses,
-      contentClasses: clsx("flex flex-1 flex-col p-4", {
+      contentClasses: clsx("flex min-w-0 flex-1 flex-col p-4", {
         "gap-2": isMasonryVertical,
         "justify-between p-4": !isMasonryVertical,
       }),
@@ -99,14 +99,16 @@ export const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): Layo
         [config.imageClasses.vertical]: isMasonryVertical,
       }),
       imageSizes: config.imageSizes,
-      innerContainerClasses: clsx("flex h-full w-full", config.minHeight, {
+      innerContainerClasses: clsx("flex h-full w-full min-w-0", config.minHeight, {
         "flex-col": isMasonryVertical,
         "flex-col sm:flex-row": !isMasonryVertical && hasImage,
       }),
       showDescription: config.showDescription,
       titleClasses: clsx(
         `
-          mb-2 line-clamp-2 font-bold text-primary transition-colors
+          mb-2 font-bold
+          [overflow-wrap:anywhere]
+          text-primary transition-colors
           group-hover/card:underline
         `,
         config.titleClasses,
@@ -116,13 +118,13 @@ export const getLayoutConfig = (variant: LayoutVariant, hasImage: boolean): Layo
 
   return {
     containerClasses: clsx(baseCardClasses, "flex flex-row"),
-    contentClasses: "flex flex-1 flex-col gap-2 p-4",
+    contentClasses: "flex min-w-0 flex-1 flex-col gap-2 p-4",
     descriptionClasses: "text-neutral text-sm line-clamp-3",
     imageContainerClasses: "bg-neutral/5 relative overflow-hidden max-h-72 min-h-48 max-w-64 min-w-48 flex-shrink-0",
     imageSizes: "256px",
-    innerContainerClasses: "w-full flex",
+    innerContainerClasses: "w-full min-w-0 flex",
     showDescription: true,
     titleClasses:
-      "text-lg sm:text-xl text-primary mb-2 line-clamp-1 font-bold transition-colors group-hover/card:underline",
+      "text-lg sm:text-xl text-primary mb-2 [overflow-wrap:anywhere] font-bold transition-colors group-hover/card:underline",
   };
 };

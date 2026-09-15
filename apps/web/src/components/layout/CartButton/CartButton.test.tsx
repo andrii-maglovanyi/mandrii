@@ -22,6 +22,8 @@ vi.mock("~/contexts/CartContext", () => ({
   useCart: () => mockUseCart(),
 }));
 
+vi.mock("~/i18n/useI18n", () => ({ useI18n: () => (key: string) => key }));
+
 describe("CartButton", () => {
   beforeEach(() => {
     vi.clearAllMocks();

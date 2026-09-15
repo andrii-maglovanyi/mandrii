@@ -30,7 +30,7 @@ export default defineConfig({
       "src/components/**/*.test.ts?(x)",
       "src/contexts/**/*.test.ts?(x)",
       "src/features/**/*.test.ts?(x)",
-      "src/hooks/**/*.test.ts",
+      "src/hooks/**/*.test.ts?(x)",
       "src/i18n/**/*.test.ts?(x)",
       "src/lib/**/*.test.ts",
     ],

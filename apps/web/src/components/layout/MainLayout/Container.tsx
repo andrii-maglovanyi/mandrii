@@ -5,8 +5,8 @@ interface ContainerProps {
   children: React.ReactNode;
 }
 
-const COMMON_CLASS = "flex h-full grow flex-col w-full";
-const DEFAULT_CLASS = "z-0 m-auto max-w-5xl space-y-6 overflow-y-auto px-4 py-12 leading-relaxed md:py-16";
+const COMMON_CLASS = "flex min-w-0 grow flex-col w-full";
+const DEFAULT_CLASS = "z-0 m-auto max-w-5xl space-y-6 px-4 py-12 leading-relaxed md:py-16";
 
 export const Container = ({ children }: ContainerProps) => {
   const pathname = usePathname();

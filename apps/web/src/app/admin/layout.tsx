@@ -1,7 +1,7 @@
 import "../globals.css";
 
-import { redirect } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
+import { redirect } from "next/navigation";
 
 import { AdminLayout } from "~/components/layout";
 import { NotificationsTicker } from "~/components/layout/NotificationsTicker/NotificationsTicker";
@@ -11,8 +11,6 @@ import { NotificationsProvider } from "~/contexts/NotificationsContext";
 import { ThemeProvider } from "~/contexts/ThemeContext";
 import ApolloWrapper from "~/lib/apollo/provider";
 import { requireAuth } from "~/lib/auth/requireAuth";
-import { UserModel } from "~/lib/models/user";
-import type { AuthenticatedSession } from "~/lib/api/context";
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -20,9 +18,8 @@ type RootLayoutProps = Readonly<{
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const session = await requireAuth("/admin", "/en/account-inactive");
-  const user = await new UserModel(session as unknown as AuthenticatedSession).findById(session.user.id);
 
-  if (user?.role !== "admin") {
+  if (session.user.role !== "admin") {
     return redirect("/");
   }
 
@@ -30,7 +27,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body>
         <ApolloWrapper>
-          <AuthProvider>
+          <AuthProvider session={session}>
             <ThemeProvider>
               <NextIntlClientProvider>
                 <DialogProvider>

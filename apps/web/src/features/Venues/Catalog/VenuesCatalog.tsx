@@ -12,6 +12,7 @@ import { generateCatalogLayouts } from "~/features/shared/Catalog/layoutConfig";
 import { useListControls } from "~/hooks/useListControls";
 import { getVenuesFilter, useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
+import { INFINITE_SCROLL_MEDIA_QUERY } from "~/lib/responsive";
 import { GetPublicVenuesQuery, Venue_Category_Enum } from "~/types";
 
 import { VenuesListCard } from "../VenueCard/VenuesListCard";
@@ -26,6 +27,7 @@ const SEARCH_DEBOUNCE_MS = 300;
 export const VenuesCatalog = () => {
   const i18n = useI18n();
   const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
+  const usesInfiniteScroll = useMediaQuery({ query: INFINITE_SCROLL_MEDIA_QUERY });
   const searchParams = useSearchParams();
   const searchParamsKey = searchParams.toString();
   const queryCountry = searchParams.get("country") ?? undefined;
@@ -73,7 +75,10 @@ export const VenuesCatalog = () => {
 
   const { usePublicVenues } = useVenues();
 
-  const { handleFilter, handlePaginate, listState } = useListControls({ limit: ITEMS_LIMIT });
+  const { handleFilter, handlePaginate, listState } = useListControls({
+    limit: ITEMS_LIMIT,
+    where: getVenuesFilter({ categories, city, country, name: debouncedSearch }).variables.where,
+  });
 
   const { count, data: venues, loading } = usePublicVenues(listState);
 
@@ -109,7 +114,7 @@ export const VenuesCatalog = () => {
     handlePaginate({ offset: actualOffset });
 
     // Only scroll to top on desktop (numbered pagination)
-    if (!isMobile) {
+    if (!usesInfiniteScroll) {
       window.scrollTo({ behavior: "smooth", top: 0 });
     }
   };
@@ -137,11 +142,14 @@ export const VenuesCatalog = () => {
 
       <div className="flex flex-wrap items-center justify-between">
         {count ? (
-          <RichText as="div" className={`text-sm sm:text-base`}>
+          <RichText as="div" className={`
+            text-sm
+            sm:text-base
+          `}>
             {(() => {
               const currentOffset = listState.offset ?? 0;
-              const start = currentOffset + 1;
-              const end = Math.min(currentOffset + venues.length, count);
+              const start = usesInfiniteScroll ? 1 : currentOffset + 1;
+              const end = Math.min((usesInfiniteScroll ? 0 : currentOffset) + venues.length, count);
 
               return i18n("Showing **{start}**-**{end}** of **{count}** items", {
                 count,
@@ -154,7 +162,10 @@ export const VenuesCatalog = () => {
           <div />
         )}
 
-        <div className={`bg-surface-tint hidden gap-1 rounded-lg p-1 lg:flex`}>
+        <div className={`
+          hidden gap-1 rounded-lg bg-surface-tint p-1
+          lg:flex
+        `}>
           <ActionButton
             aria-label={i18n("Grid view")}
             color="primary"
@@ -182,9 +193,14 @@ export const VenuesCatalog = () => {
           icon={<MapPinOff size={50} />}
         />
       ) : viewMode === "grid" && !isMobile ? (
-        <div className={`grid auto-rows-auto grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4`}>
+        <div className={`
+          grid auto-rows-auto grid-cols-1 gap-4
+          sm:grid-cols-2
+          lg:grid-cols-4
+        `}>
           {venueLayouts.map((layout) => (
             <VenuesMasonryCard
+              analyticsSource="catalog"
               hasImage={layout.hasImage}
               key={layout.item.id}
               layoutSize={layout.layoutSize}
@@ -196,7 +212,7 @@ export const VenuesCatalog = () => {
       ) : (
         <div className="flex flex-col gap-4">
           {venues.map((venue) => (
-            <VenuesListCard key={venue.id} showFlag={!country} venue={venue} />
+            <VenuesListCard analyticsSource="catalog" key={venue.id} showFlag={!country} venue={venue} />
           ))}
         </div>
       )}

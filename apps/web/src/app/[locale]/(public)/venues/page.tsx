@@ -1,47 +1,21 @@
-"use client";
+import type { Metadata } from "next";
 
-import { MixpanelTracker } from "~/components/layout";
-import { Breadcrumbs } from "~/components/ui";
-import { VenuesCatalog } from "~/features/Venues";
-import { FollowAreaButton } from "~/features/Following/FollowAreaButton";
-import { AddEntityButton, useAddEntity } from "~/features/shared/AddEntityButton";
-import { useI18n } from "~/i18n/useI18n";
+import type { Locale } from "~/types";
+
+import { VenuesCatalogPage } from "~/features/Venues";
+import { getI18n } from "~/i18n/getI18n";
+import { buildPublicPageMetadata } from "~/lib/seo";
+
+type VenuesPageProps = Readonly<{ params: Promise<{ locale: Locale }> }>;
+
+export async function generateMetadata({ params }: VenuesPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const i18n = await getI18n({ locale });
+  const title = i18n("Discover venues");
+  const description = i18n("Explore Ukrainian venues and community spaces around the world");
+  return buildPublicPageMetadata({ description, locale, pathname: "/venues", title });
+}
 
 export default function VenuesPage() {
-  const i18n = useI18n();
-
-  const { handleAdd: handleAddVenue, isAuthenticated } = useAddEntity({
-    mixpanelEvent: "Clicked Add Venue",
-    mixpanelSource: "venues_page",
-    route: "/user-directory/venues",
-  });
-
-  return (
-    <div className="container mx-auto">
-      <Breadcrumbs items={[{ title: i18n("Home"), url: `/` }]} />
-      <div className={`mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center`}>
-        <h1
-          className={`from-primary to-secondary bg-gradient-to-r bg-clip-text text-3xl font-extrabold text-transparent md:text-5xl`}
-        >
-          {i18n("Discover venues")}
-        </h1>
-        <div className="ml-auto flex flex-wrap justify-end gap-3">
-          <FollowAreaButton size="md" />
-          <AddEntityButton
-            isAuthenticated={isAuthenticated}
-            label={i18n("Add venue")}
-            onClick={handleAddVenue}
-            signInLabel={i18n("Sign in to add venue")}
-          />
-        </div>
-      </div>
-
-      <div className="container mx-auto">
-        <p className="text-neutral">{i18n("Explore Ukrainian venues and community spaces around the world")}</p>
-
-        <VenuesCatalog />
-        <MixpanelTracker event="Viewed Venues Catalog Page" />
-      </div>
-    </div>
-  );
+  return <VenuesCatalogPage />;
 }

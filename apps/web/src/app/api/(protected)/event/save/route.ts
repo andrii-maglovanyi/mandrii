@@ -2,8 +2,9 @@ import { after, NextResponse } from "next/server";
 
 import { getApiContext, InternalServerError, validateRequest, ValidationError, withErrorHandling } from "~/lib/api";
 import { envName } from "~/lib/config/env";
-import { saveEvent } from "~/lib/models/event";
+import { getEditableContentSlug } from "~/lib/models/content-edit-access";
 import { deliverPendingContentSubscriptionAlerts } from "~/lib/models/content-subscription-alerts";
+import { saveEvent } from "~/lib/models/event";
 import { sendSlackNotification } from "~/lib/slack/event";
 import { processImages } from "~/lib/utils/images";
 import { constructSlug } from "~/lib/utils/slug";
@@ -20,6 +21,7 @@ export const POST = (req: Request) =>
 
     const schema = getEventSchema(i18n);
     const data = await validateRequest(req, schema);
+    const mediaSlug = data.id ? await getEditableContentSlug("event", data.id, session) : data.slug;
 
     const {
       accessibility_info,
@@ -72,7 +74,7 @@ export const POST = (req: Request) =>
       external_url: external_url?.trim() || null,
       images: [],
       is_online: Boolean(is_online),
-      is_recurring: Boolean(is_recurring),
+      is_recurring: Boolean(is_recurring && recurrence_rule?.trim()),
       language,
       organizer_email,
       organizer_name: organizer_name?.trim(),
@@ -80,7 +82,7 @@ export const POST = (req: Request) =>
       price_amount,
       price_currency,
       price_type,
-      recurrence_rule: recurrence_rule?.trim() || null,
+      recurrence_rule: is_recurring ? recurrence_rule?.trim() || null : null,
       registration_required: Boolean(registration_required),
       registration_url: registration_url?.trim() || null,
       social_links: {
@@ -125,7 +127,7 @@ export const POST = (req: Request) =>
       }
     }
 
-    const prefix = [envName, "events", slug].join("/");
+    const prefix = [envName, "events", mediaSlug].join("/");
     eventData.images = await processImages(images ?? [], [prefix, "images"].join("/"));
 
     const eventId = await saveEvent(eventData, session);

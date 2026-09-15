@@ -8,6 +8,8 @@ import { Clothing_Age_Group_Enum, Clothing_Gender_Enum, Clothing_Size_Enum } fro
 
 import { CartView } from "./CartView";
 
+vi.mock("next/image", () => import("~/__mocks__/next-image"));
+
 // Mock next-intl
 vi.mock("next-intl", () => ({
   useLocale: () => "en",

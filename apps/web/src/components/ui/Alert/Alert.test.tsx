@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
@@ -22,24 +22,28 @@ describe("Alert", () => {
   });
 
   it("dismisses the alert when dismiss button is clicked", async () => {
-    render(<Alert>Dismiss me</Alert>);
+    render(<Alert dismissLabel="Dismiss alert">Dismiss me</Alert>);
     const button = screen.getByRole("button", { name: /dismiss alert/i });
     await userEvent.click(button);
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("alert")).not.toBeInTheDocument());
   });
 
   it("calls onDismiss callback when alert is dismissed", async () => {
     const onDismiss = vi.fn();
-    render(<Alert onDismiss={onDismiss}>With callback</Alert>);
+    render(
+      <Alert dismissLabel="Dismiss alert" onDismiss={onDismiss}>
+        With callback
+      </Alert>,
+    );
     const button = screen.getByRole("button", { name: /dismiss alert/i });
     await userEvent.click(button);
-    expect(onDismiss).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(onDismiss).toHaveBeenCalledTimes(1));
   });
 
   it("does not render after being dismissed", async () => {
-    render(<Alert>To disappear</Alert>);
+    render(<Alert dismissLabel="Dismiss alert">To disappear</Alert>);
     const button = screen.getByRole("button", { name: /dismiss alert/i });
     await userEvent.click(button);
-    expect(screen.queryByText("To disappear")).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText("To disappear")).not.toBeInTheDocument());
   });
 });

@@ -14,7 +14,13 @@ import { publicConfig } from "~/lib/config/public";
 import { getContactFormSchema } from "~/lib/validation/contact";
 import { Status } from "~/types";
 
-const Contact = ({ message = "" }: { message?: string }) => {
+type ContactProps = {
+  message?: string;
+  trackingEvent?: string;
+  trackingProps?: Record<string, unknown>;
+};
+
+const Contact = ({ message = "", trackingEvent = "Message Sent via Contact Form", trackingProps }: ContactProps) => {
   const i18n = useI18n();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { data: profileData } = useUser();
@@ -96,7 +102,7 @@ const Contact = ({ message = "" }: { message?: string }) => {
         <MailCheck size={50} />
         <h1 className="text-4xl font-bold">{i18n("Thanks for your message!")}</h1>
         <p className="text-lg">{i18n("I'll get back to you soon.")}</p>
-        <MixpanelTracker event="Message Sent via Contact Form" />
+        <MixpanelTracker event={trackingEvent} props={trackingProps} />
       </div>
     );
   }
@@ -147,10 +153,14 @@ const Contact = ({ message = "" }: { message?: string }) => {
   );
 };
 
-export function ContactForm({ template }: { template?: string }) {
+export function ContactForm({
+  template,
+  trackingEvent,
+  trackingProps,
+}: { template?: string } & Omit<ContactProps, "message">) {
   return (
     <GoogleReCaptchaProvider reCaptchaKey={publicConfig.recaptcha.siteKey}>
-      <Contact message={template} />
+      <Contact message={template} trackingEvent={trackingEvent} trackingProps={trackingProps} />
     </GoogleReCaptchaProvider>
   );
 }

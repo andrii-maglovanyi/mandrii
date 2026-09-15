@@ -3,12 +3,13 @@ import { GetPublicEventsQuery } from "~/types";
 import { CardBase } from "./CardBase";
 
 interface EventsMasonryCardProps {
+  analyticsSource?: string;
   event: GetPublicEventsQuery["events"][number];
   hasImage?: boolean;
   layoutSize: "full" | "half" | "small" | "third";
 }
 
-export const EventsMasonryCard = ({ event, hasImage = false, layoutSize }: EventsMasonryCardProps) => {
+export const EventsMasonryCard = ({ analyticsSource, event, hasImage = false, layoutSize }: EventsMasonryCardProps) => {
   const variantMap = {
     full: "masonry-full" as const,
     half: "masonry-half" as const,
@@ -16,5 +17,7 @@ export const EventsMasonryCard = ({ event, hasImage = false, layoutSize }: Event
     third: "masonry-third" as const,
   };
 
-  return <CardBase event={event} hasImage={hasImage} variant={variantMap[layoutSize]} />;
+  return (
+    <CardBase analyticsSource={analyticsSource} event={event} hasImage={hasImage} variant={variantMap[layoutSize]} />
+  );
 };

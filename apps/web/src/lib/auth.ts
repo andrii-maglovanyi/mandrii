@@ -60,14 +60,15 @@ const getUserById = async (id: string) => {
   const status: UserStatus = user.status === User_Status_Enum.Active ? "active" : "inactive";
 
   return {
-    hasuraClaims: getHasuraClaims({ id: user.id, role }),
+    hasuraClaims: getHasuraClaims({ id: user.id, role: status === "active" ? role : "user" }),
     id: user.id,
     role,
     status,
   };
 };
 
-const ACCESS_TOKEN_EXPIRY_SECONDS = 60 * 60; // 1 hour
+const ACCESS_TOKEN_EXPIRY_SECONDS = 60 * 60; // 1 hour for ordinary users
+const ADMIN_ACCESS_TOKEN_EXPIRY_SECONDS = 5 * 60;
 const REFRESH_BUFFER_MS = 60 * 1000; // 1 minute buffer
 
 const authOptions: NextAuthConfig = {
@@ -93,7 +94,7 @@ const authOptions: NextAuthConfig = {
       const now = Date.now();
       const expiry = token.accessTokenExpiry as number | undefined;
 
-      const shouldRefresh = !token.accessToken || !expiry || expiry < now + REFRESH_BUFFER_MS;
+      const shouldRefresh = Boolean(dbUser) || !token.accessToken || !expiry || expiry < now + REFRESH_BUFFER_MS;
 
       if (shouldRefresh) {
         // Reuse dbUser if already fetched this cycle, otherwise fetch fresh
@@ -106,6 +107,10 @@ const authOptions: NextAuthConfig = {
           throw new Error("Cannot sign token without Hasura claims");
         }
 
+        const expiresIn =
+          freshUser.hasuraClaims["x-hasura-default-role"] === "admin"
+            ? ADMIN_ACCESS_TOKEN_EXPIRY_SECONDS
+            : ACCESS_TOKEN_EXPIRY_SECONDS;
         token.accessToken = jwt.sign(
           {
             "https://hasura.io/jwt/claims": token.hasuraClaims,
@@ -114,12 +119,12 @@ const authOptions: NextAuthConfig = {
           privateConfig.auth.nextAuthSecret,
           {
             algorithm: "HS256",
-            expiresIn: ACCESS_TOKEN_EXPIRY_SECONDS,
+            expiresIn,
             issuer: UrlHelper.getBaseUrl(isDevelopment ? "preview" : undefined),
           },
         );
 
-        token.accessTokenExpiry = now + ACCESS_TOKEN_EXPIRY_SECONDS * 1000;
+        token.accessTokenExpiry = now + expiresIn * 1000;
       }
 
       return token;
@@ -131,6 +136,7 @@ const authOptions: NextAuthConfig = {
       session.user.role = token.role as UserRole;
       session.user.status = token.status as UserStatus;
       session.accessToken = token.accessToken as string;
+      session.accessTokenExpiresAt = token.accessTokenExpiry as number;
 
       return session;
     },

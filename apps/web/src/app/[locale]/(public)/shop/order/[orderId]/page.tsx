@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
+
 import { OrderConfirmationView } from "~/features/Shop";
+import { noIndexRobots } from "~/lib/seo";
 
 interface OrderPageProps {
   params: Promise<{
@@ -6,6 +9,8 @@ interface OrderPageProps {
     orderId: string;
   }>;
 }
+
+export const metadata: Metadata = { robots: noIndexRobots };
 
 export default async function OrderPage({ params }: Readonly<OrderPageProps>) {
   const { orderId } = await params;

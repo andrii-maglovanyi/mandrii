@@ -5,21 +5,22 @@ import { Phone, Search } from "lucide-react";
 import { ReactNode, Ref, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { getFlagComponent } from "~/lib/icons/flags";
-import { CountryPhoneConfig, processPhoneNumber } from "~/lib/utils/phone-number";
+import { processPhoneNumber } from "~/lib/utils/phone-number";
 
 import { FieldErrorMessage } from "../FieldErrorMessage/FieldErrorMessage";
 import { getMenuOverlayLayout, Menu, MenuHandle, MenuOption, MenuOverlayLayout } from "../Menu/Menu";
 import { commonClass, commonInputClass, sizeClasses } from "../styles";
 
 export type InputProps<K, T> = {
+  "aria-label"?: string;
   className?: string;
   "data-testid"?: string;
   disabled?: boolean;
   error?: string;
   id?: string;
   label?: string;
-  max?: number;
-  min?: number;
+  max?: number | string;
+  min?: number | string;
   name?: string;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -39,6 +40,7 @@ export type InputProps<K, T> = {
 export type SuggestOption<K, T> = MenuOption<K, T> | string;
 
 export function Input<K extends string, T extends string>({
+  "aria-label": ariaLabel,
   className = "",
   "data-testid": testId = "input",
   disabled = false,
@@ -64,27 +66,19 @@ export function Input<K extends string, T extends string>({
 }: Readonly<InputProps<K, T>>) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
-  const [query, setQuery] = useState<string>(() => {
-    if (value === null || value === undefined) return "";
-    return String(value);
-  });
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [menuOverlay, setMenuOverlay] = useState<MenuOverlayLayout>({ placement: "bottom", portalTarget: null });
-  const [detectedCountry, setDetectedCountry] = useState<CountryPhoneConfig | null>(null);
-
   const isPhoneInput = type === "tel";
   const hasPrefix = prefix !== undefined;
+  const newValue = value == null ? "" : String(value);
+  const [previousValue, setPreviousValue] = useState({ type, value });
+  const [query, setQuery] = useState(() => isPhoneInput ? processPhoneNumber(newValue).formatted : newValue);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [menuOverlay, setMenuOverlay] = useState<MenuOverlayLayout>({ placement: "bottom", portalTarget: null });
 
-  useEffect(() => {
-    const newValue = value === null || value === undefined ? "" : String(value);
-    setQuery(newValue);
-
-    if (isPhoneInput && newValue) {
-      const result = processPhoneNumber(newValue);
-      setDetectedCountry(result.detectedCountry);
-      setQuery(result.formatted);
-    }
-  }, [value, isPhoneInput]);
+  if (!Object.is(previousValue.value, value) || previousValue.type !== type) {
+    setPreviousValue({ type, value });
+    setQuery(isPhoneInput ? processPhoneNumber(newValue).formatted : newValue);
+  }
+  const detectedCountry = isPhoneInput ? processPhoneNumber(query).detectedCountry : null;
 
   const filteredSuggestions = useMemo(
     () =>
@@ -99,14 +93,21 @@ export function Input<K extends string, T extends string>({
   );
 
   const inputClass = clsx(
-    hasPrefix ? "min-w-0 flex-1 border-0 bg-transparent px-3 focus:ring-0" : "px-3",
+    hasPrefix ? `
+      min-w-0 flex-1 border-0 bg-transparent px-3
+      focus:ring-0
+    ` : `px-3`,
     sizeClasses.md,
-    hasPrefix ? "text-on-surface placeholder:text-neutral-disabled" : error ? "border-red-500" : "border-neutral",
+    hasPrefix ? `
+      text-on-surface
+      placeholder:text-neutral-disabled
+    ` : error ? `border-red-500` : `border-neutral`,
     hasPrefix ? "" : commonClass,
     hasPrefix ? "" : commonInputClass,
     !hasPrefix && (isPhoneInput || type === "search") ? "pl-12" : "",
-    (type === "datetime-local" || type === "date" || type === "time") &&
-      `dark:[color-scheme:dark]`,
+    (type === "datetime-local" || type === "date" || type === "time") && `
+      dark:[color-scheme:dark]
+    `,
     className,
   );
 
@@ -114,33 +115,23 @@ export function Input<K extends string, T extends string>({
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleFocusOut = (e: FocusEvent) => {
-      const menu = (e.relatedTarget as Element | null)?.closest?.("[data-menu-overlay]");
+    if (!showSuggestions) return;
+    const dismissOutside = (event: Event) => {
+      const target = event.target as Element | null;
       if (
-        !wrapperRef.current?.contains(e.relatedTarget as Node) &&
-        menu?.getAttribute("data-menu-owner") !== inputId
+        !wrapperRef.current?.contains(target) &&
+        target?.closest?.("[data-menu-overlay]")?.getAttribute("data-menu-owner") !== inputId
       ) {
         setShowSuggestions(false);
       }
     };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setShowSuggestions(false);
-      }
+    document.addEventListener("focusin", dismissOutside);
+    document.addEventListener("pointerdown", dismissOutside);
+    return () => {
+      document.removeEventListener("focusin", dismissOutside);
+      document.removeEventListener("pointerdown", dismissOutside);
     };
-
-    const node = wrapperRef.current;
-    if (node) {
-      node.addEventListener("focusout", handleFocusOut);
-      node.addEventListener("keydown", handleKeyDown);
-
-      return () => {
-        node.removeEventListener("keydown", handleKeyDown);
-        node.removeEventListener("focusout", handleFocusOut);
-      };
-    }
-  }, []);
+  }, [inputId, showSuggestions]);
 
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown" && filteredSuggestions.length > 0) {
@@ -158,7 +149,6 @@ export function Input<K extends string, T extends string>({
       const result = processPhoneNumber(newValue);
       newValue = result.formatted;
 
-      setDetectedCountry(result.detectedCountry);
 
       e.target.value = newValue;
     }
@@ -214,21 +204,46 @@ export function Input<K extends string, T extends string>({
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>
       )}
-      <span className="relative" ref={wrapperRef}>
+      <span
+        className="relative"
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && showSuggestions) {
+            event.preventDefault();
+            event.stopPropagation();
+            wrapperRef.current?.querySelector("input")?.focus();
+            setShowSuggestions(false);
+          }
+        }}
+        ref={wrapperRef}
+      >
         {renderLeftIcon()}
         <span
           className={clsx(
             hasPrefix &&
-              "border-neutral bg-surface flex h-10 w-full overflow-hidden rounded-md border transition focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-1 focus-within:ring-offset-surface has-[input:disabled]:cursor-not-allowed has-[input:disabled]:border-neutral-disabled has-[input:disabled]:bg-neutral-500/10",
+              `
+                flex h-10 w-full overflow-hidden rounded-md border
+                border-neutral bg-surface transition
+                focus-within:ring-2 focus-within:ring-primary
+                focus-within:ring-offset-1 focus-within:ring-offset-surface
+                has-[input:disabled]:cursor-not-allowed
+                has-[input:disabled]:border-neutral-disabled
+                has-[input:disabled]:bg-neutral-500/10
+              `,
             hasPrefix && error && "border-red-500",
           )}
         >
           {hasPrefix && (
-            <span aria-hidden="true" className="text-neutral flex shrink-0 items-center border-r border-inherit px-3">
+            <span aria-hidden="true" className={`
+              flex shrink-0 items-center border-r border-inherit px-3
+              text-neutral
+            `}>
               {prefix}
             </span>
           )}
           <input
+            aria-describedby={showErrorMessage && error ? `${inputId}-error` : undefined}
+            aria-invalid={Boolean(error)}
+            aria-label={ariaLabel}
             aria-required={required}
             autoComplete={onSelectSuggestion ? "off" : undefined}
             className={inputClass}
@@ -260,6 +275,7 @@ export function Input<K extends string, T extends string>({
             onSelect={(option) => {
               setQuery(formedSuggestions.find(({ value }) => value === option)?.label ?? option);
               onSelectSuggestion?.(option);
+              wrapperRef.current?.querySelector("input")?.focus();
               setShowSuggestions(false);
             }}
             options={formedSuggestions}
@@ -271,7 +287,7 @@ export function Input<K extends string, T extends string>({
         )}
       </span>
 
-      {showErrorMessage && <FieldErrorMessage error={error} />}
+      {showErrorMessage && <FieldErrorMessage error={error} id={`${inputId}-error`} />}
     </div>
   );
 }

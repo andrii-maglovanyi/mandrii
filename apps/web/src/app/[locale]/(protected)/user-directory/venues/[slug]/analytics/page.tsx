@@ -1,17 +1,18 @@
 "use client";
 
-import { AnimatedEllipsis, Breadcrumbs, EmptyState } from "~/components/ui";
 import { MapPin } from "lucide-react";
 import { use } from "react";
+
+import { AnimatedEllipsis, Breadcrumbs, EmptyState } from "~/components/ui";
 import { ContentAnalyticsPage } from "~/features/ContentQRCode/ContentAnalyticsPage";
 import { useVenues } from "~/hooks/useVenues";
 import { useI18n } from "~/i18n/useI18n";
 
 export default function VenueAnalyticsPage({ params }: { params: Promise<{ slug: string }> }) {
   const i18n = useI18n();
-  const { useGetVenue } = useVenues();
+  const { useOwnedVenue } = useVenues();
   const { slug } = use(params);
-  const { data: venue, loading } = useGetVenue(slug);
+  const { data: venue, loading } = useOwnedVenue(slug);
   if (loading)
     return (
       <div className="flex min-h-64 items-center justify-center">

@@ -10,6 +10,10 @@ import { Clothing_Age_Group_Enum, Clothing_Gender_Enum, Clothing_Size_Enum } fro
 
 import { CheckoutView } from "./CheckoutView";
 
+vi.mock("~/contexts/ThemeContext", () => ({ useTheme: () => ({ isDark: false }) }));
+
+vi.mock("next/image", () => import("~/__mocks__/next-image"));
+
 // Mock next-intl
 vi.mock("next-intl", () => ({
   useLocale: () => "en",
@@ -356,10 +360,14 @@ describe("CheckoutView", () => {
     it("shows validating state when continue clicked", async () => {
       const user = userEvent.setup();
 
-      // Setup slow response
+      let finishRequest!: () => void;
+      const pending = new Promise<void>((resolve) => {
+        finishRequest = resolve;
+      });
+      // Hold the response until the loading state has been observed.
       server.use(
         http.post("/api/checkout", async () => {
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await pending;
           return HttpResponse.json({ clientSecret: "pi_test_secret" });
         }),
       );
@@ -373,8 +381,10 @@ describe("CheckoutView", () => {
       await user.click(continueButton);
 
       await waitFor(() => {
-        expect(screen.getByText("Validating your order...")).toBeInTheDocument();
+        expect(screen.getByRole("status", { name: "Validating your order..." })).toBeInTheDocument();
       });
+      finishRequest();
+      await waitFor(() => expect(screen.queryByRole("status")).not.toBeInTheDocument());
     });
 
     it("shows checkout form on successful validation", async () => {

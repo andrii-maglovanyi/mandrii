@@ -15,6 +15,7 @@ import { useGeocode } from "../../Venues/Venue/hooks";
 interface EventLocationProps
   extends Pick<FormProps<EventSchema["shape"]>, "errors" | "getFieldProps" | "setErrors" | "setValues" | "values"> {
   isBusy: boolean;
+  setVenueSearch: (query: string) => void;
   venueOptions: Array<{ label: string; value: string }>;
   venuesLoading: boolean;
 }
@@ -34,6 +35,7 @@ export const EventLocation = ({
   isBusy,
   setErrors,
   setValues,
+  setVenueSearch,
   values,
   venueOptions,
   venuesLoading,
@@ -53,7 +55,8 @@ export const EventLocation = ({
     [values.custom_location_address, values.longitude, values.latitude],
   );
 
-  const [fullAddress, setFullAddress] = useState(initialAddress);
+  const [originalAddress] = useState(initialAddress);
+  const fullAddress = data ?? originalAddress;
 
   const bounds = useMemo(() => {
     if (!fullAddress?.coordinates) return null;
@@ -64,7 +67,7 @@ export const EventLocation = ({
       latitude: getLatitudeBounds(lat),
       longitude: getLongitudeBounds(lat, lng),
     };
-  }, [fullAddress?.coordinates]);
+  }, [fullAddress]);
 
   useEffect(() => {
     if (data) {
@@ -74,7 +77,6 @@ export const EventLocation = ({
         city: data.city,
         country: data.country,
       }));
-      setFullAddress(data);
     }
   }, [data, setValues]);
 
@@ -147,10 +149,16 @@ export const EventLocation = ({
       )}
 
       <Select
-        disabled={venuesLoading || isBusy}
+        disabled={isBusy}
         label={i18n("Venue")}
+        loading={venuesLoading}
+        onSearchChange={setVenueSearch}
         options={venueOptions}
         placeholder={i18n("Select a venue...")}
+        searchable
+        searchEmptyLabel={i18n("No venues match your search")}
+        searchPlaceholder={i18n("Search by venue or city...")}
+        searchText={(option) => String(option.label)}
         {...getFieldProps("venue_id")}
         value={values.venue_id || ""}
       />

@@ -1,11 +1,14 @@
 import { z } from "zod";
 
 import { getI18n } from "~/i18n/getI18n";
+import { getRecurrenceEnd, isRecurrenceRuleValid } from "~/lib/events/recurrence";
 import { IMAGE_UPLOAD_PROFILES, isProcessedImageUpload } from "~/lib/images/uploadConfig";
 import { isEmail, isWebsite, validatePhoneNumber } from "~/lib/utils";
 import { Event_Status_Enum, Event_Type_Enum, Price_Type_Enum } from "~/types";
 
 import { FACEBOOK_HOSTS, INSTAGRAM_HOSTS, validateHost } from "./utils/social-links";
+
+const eventBoolean = z.union([z.boolean(), z.enum(["true", "false"]).transform((value) => value === "true")]);
 
 export const eventDescriptionMaxCharsCount = 1500;
 
@@ -115,9 +118,9 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
         .optional()
         .nullable(),
 
-      is_online: z.coerce.boolean().default(false).optional(),
+      is_online: eventBoolean.default(false).optional(),
 
-      is_recurring: z.coerce.boolean().default(false).optional(),
+      is_recurring: eventBoolean.default(false).optional(),
 
       // Social & Metadata
       language: z.array(z.string()).optional().nullable(),
@@ -192,7 +195,7 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
 
       recurrence_rule: z.string().max(200, i18n("Recurrence rule is too long")).optional().nullable(),
 
-      registration_required: z.coerce.boolean().default(false).optional(),
+      registration_required: eventBoolean.default(false).optional(),
 
       registration_url: z
         .string()
@@ -234,6 +237,14 @@ export const getEventSchema = (i18n: Awaited<ReturnType<typeof getI18n>>) => {
         .transform((val) => (val === "" ? null : val))
         .optional()
         .nullable(),
+    })
+    .refine((data) => !data.is_recurring || isRecurrenceRuleValid(data.recurrence_rule), {
+      message: i18n("Please choose a valid recurrence pattern"),
+      path: ["recurrence_rule"],
+    })
+    .refine((data) => !data.is_recurring || getRecurrenceEnd(data.start_date, data.recurrence_rule) !== undefined, {
+      message: i18n("The recurrence must end on or after the first occurrence"),
+      path: ["recurrence_rule"],
     })
     .refine(
       (data) => {

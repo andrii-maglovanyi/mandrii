@@ -1,5 +1,6 @@
 import { constants } from "~/lib/constants";
-import { GetPublicEventsQuery, Locale, Price_Type_Enum } from "~/types";
+import { isEventScheduleFinished } from "~/lib/events/recurrence";
+import { Event_Status_Enum, GetPublicEventsQuery, Locale, Price_Type_Enum } from "~/types";
 
 export function formatEventPrice(event: GetPublicEventsQuery["events"][number], locale: Locale): string {
   switch (event.price_type) {
@@ -36,13 +37,8 @@ export function isEventOngoing(event: GetPublicEventsQuery["events"][number]): b
 }
 
 export function isEventPast(event: GetPublicEventsQuery["events"][number]): boolean {
-  const now = new Date();
-  if (event.end_date) {
-    const endDate = new Date(event.end_date);
-    return endDate < now;
-  }
-  const startDate = new Date(event.start_date);
-  return startDate < now;
+  if (event.status === Event_Status_Enum.Completed) return true;
+  return isEventScheduleFinished(event);
 }
 
 export function isEventUpcoming(event: GetPublicEventsQuery["events"][number]): boolean {

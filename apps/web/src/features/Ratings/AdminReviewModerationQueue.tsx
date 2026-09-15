@@ -1,9 +1,9 @@
 "use client";
 
-import { Eye, EyeOff, RefreshCw } from "lucide-react";
+import { Eye, EyeOff, RefreshCw, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-import { Button, SectionCard } from "~/components/ui";
+import { ActionButton, Button, Input, SectionCard } from "~/components/ui";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useI18n } from "~/i18n/useI18n";
 
@@ -22,7 +22,7 @@ export const AdminReviewModerationQueue = () => {
   const { showError } = useNotifications();
   const [reviews, setReviews] = useState<ModerationReview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] = useState<null | string>(null);
   const [reportedComments, setReportedComments] = useState<
     Array<{ body: string; comment_id: string; report_count: number; report_reasons: string[]; target_name: string }>
   >([]);
@@ -116,7 +116,7 @@ export const AdminReviewModerationQueue = () => {
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold">{i18n("Review moderation")}</h1>
-          <p className="text-neutral mt-1">{i18n("Open reports and hidden reviews")}</p>
+          <p className="mt-1 text-neutral">{i18n("Open reports and hidden reviews")}</p>
         </div>
         <Button busy={isLoading} onClick={() => void load()} size="sm" variant="outlined">
           <RefreshCw size={16} />
@@ -131,7 +131,7 @@ export const AdminReviewModerationQueue = () => {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="font-semibold">{review.target_name}</p>
-              <p className="text-neutral text-sm">
+              <p className="text-sm text-neutral">
                 {review.status === "HIDDEN" ? i18n("Hidden") : i18n("Reported")}
                 {review.open_report_count > 0 &&
                   ` · ${i18n("{count} open reports", { count: review.open_report_count })}`}
@@ -162,7 +162,7 @@ export const AdminReviewModerationQueue = () => {
           </div>
           <p className="mt-4 whitespace-pre-wrap">{review.body}</p>
           {review.report_reasons.length > 0 && (
-            <ul className="text-neutral mt-4 list-disc space-y-1 pl-5 text-sm">
+            <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-neutral">
               {review.report_reasons.map((reason, index) => (
                 <li key={`${review.id}-${index}`}>{reason}</li>
               ))}
@@ -181,7 +181,7 @@ export const AdminReviewModerationQueue = () => {
                 {comment.target_name} · {i18n("{count} reports", { count: comment.report_count })}
               </p>
               <p className="mt-2 whitespace-pre-wrap">{comment.body}</p>
-              <ul className="text-neutral mt-2 list-disc pl-5 text-sm">
+              <ul className="mt-2 list-disc pl-5 text-sm text-neutral">
                 {comment.report_reasons.map((reason, index) => (
                   <li key={`${comment.comment_id}-${index}`}>{reason}</li>
                 ))}
@@ -206,42 +206,58 @@ export const AdminReviewModerationQueue = () => {
             </SectionCard>
           ))
         )}
-        <SectionCard>
-          <h3 className="font-semibold">{i18n("Blocked comment terms")}</h3>
-          <form className="mt-3 flex gap-2" onSubmit={(event) => void saveTerm(event)}>
-            <input
-              aria-label={i18n("Add blocked term")}
-              className="border-primary/20 min-w-0 flex-1 rounded border px-3 py-2"
-              onChange={(event) => setTerm(event.target.value)}
-              placeholder={i18n("Add blocked term")}
-              value={term}
-            />
-            <Button type="submit">{i18n("Add")}</Button>
+        <SectionCard className="max-w-3xl" title={i18n("Blocked comment terms")}>
+          <p className="mt-2 text-sm text-neutral">
+            {i18n("Comments containing these terms are held back for moderation.")}
+          </p>
+          <form className={`
+            mt-4 flex flex-col gap-2
+            sm:flex-row
+          `} onSubmit={(event) => void saveTerm(event)}>
+            <div className="min-w-0 flex-1">
+              <Input
+                aria-label={i18n("Add blocked term")}
+                onChange={(event) => setTerm(event.target.value)}
+                placeholder={i18n("Add blocked term")}
+                value={term}
+              />
+            </div>
+            <Button className="shrink-0" type="submit">
+              {i18n("Add term")}
+            </Button>
           </form>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-2">
             {blockedTerms.map(({ term: blockedTerm }) => (
-              <button
-                className="bg-surface-tint rounded-full px-3 py-1 text-sm"
+              <span
+                className={`
+                  inline-flex max-w-full items-center gap-1 rounded-full
+                  bg-primary/10 py-1 pr-1 pl-3 text-sm text-on-surface
+                `}
                 key={blockedTerm}
-                onClick={() =>
-                  void (async () => {
-                    try {
-                      const response = await fetch("/api/admin/blocked-comment-terms", {
-                        body: JSON.stringify({ term: blockedTerm }),
-                        headers: { "Content-Type": "application/json" },
-                        method: "DELETE",
-                      });
-                      if (!response.ok) throw new Error("Unable to remove blocked term");
-                      await loadDiscussionModeration();
-                    } catch (error) {
-                      showError(error instanceof Error ? error.message : i18n("Unable to remove blocked term"));
-                    }
-                  })()
-                }
-                type="button"
               >
-                {blockedTerm} ×
-              </button>
+                <span className="truncate">{blockedTerm}</span>
+                <ActionButton
+                  aria-label={i18n("Remove blocked term {term}", { term: blockedTerm })}
+                  icon={<X aria-hidden size={14} />}
+                  onClick={() =>
+                    void (async () => {
+                      try {
+                        const response = await fetch("/api/admin/blocked-comment-terms", {
+                          body: JSON.stringify({ term: blockedTerm }),
+                          headers: { "Content-Type": "application/json" },
+                          method: "DELETE",
+                        });
+                        if (!response.ok) throw new Error("Unable to remove blocked term");
+                        await loadDiscussionModeration();
+                      } catch (error) {
+                        showError(error instanceof Error ? error.message : i18n("Unable to remove blocked term"));
+                      }
+                    })()
+                  }
+                  size="sm"
+                  variant="ghost"
+                />
+              </span>
             ))}
           </div>
         </SectionCard>

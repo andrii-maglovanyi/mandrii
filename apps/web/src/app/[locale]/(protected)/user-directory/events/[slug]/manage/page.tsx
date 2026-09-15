@@ -13,9 +13,9 @@ import { Locale } from "~/types";
 export default function EventManagementPage({ params }: { params: Promise<{ slug: string }> }) {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
-  const { useGetEvent } = useEvents();
+  const { useOwnedEvent } = useEvents();
   const { slug } = use(params);
-  const { data: event, loading } = useGetEvent(slug);
+  const { data: event, loading } = useOwnedEvent(slug);
 
   if (loading) {
     return (
@@ -44,7 +44,10 @@ export default function EventManagementPage({ params }: { params: Promise<{ slug
           { title: i18n("Manage") },
         ]}
       />
-      <h1 className="text-on-surface my-8 text-3xl font-extrabold md:text-5xl">{i18n("Manage event")}</h1>
+      <h1 className={`
+        my-8 text-3xl font-extrabold text-on-surface
+        md:text-5xl
+      `}>{i18n("Manage event")}</h1>
       <ContentManagementPage targetId={event.id} targetType="event" />
     </>
   );

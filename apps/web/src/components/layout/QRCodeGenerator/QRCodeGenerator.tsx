@@ -3,6 +3,7 @@
 import QRCodeStyling from "qr-code-styling";
 import { useEffect, useRef, useState } from "react";
 
+import { Button, Input, SectionCard } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { UrlHelper } from "~/lib/url-helper";
 
@@ -39,7 +40,7 @@ const qrCode = new QRCodeStyling({
 const QRCodeGenerator = () => {
   const i18n = useI18n();
   const [path, setPath] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [readyPath, setReadyPath] = useState<null | string>(null);
   const qrRef = useRef<HTMLDivElement>(null);
   const referenceHostname = `ref.${UrlHelper.getProductionHostname()}`;
 
@@ -52,21 +53,18 @@ const QRCodeGenerator = () => {
   useEffect(() => {
     const normalizedPath = path.trim().replace(/^\/+/, "");
     if (!normalizedPath) {
-      setIsDisabled(true);
       return;
     }
 
+    try {
     const url = new URL(`/${normalizedPath}`, `https://${referenceHostname}`);
     const data = url.toString();
     const topic = decodeURI(url.pathname.slice(1));
 
-    try {
       qrCode.update({ data });
-      setTimeout(() => {
-        const canvases = document.getElementsByTagName("canvas");
-        if (!canvases.length) return;
-
-        const canvas = canvases[0];
+      const drawingTimeout = window.setTimeout(() => {
+        const canvas = qrRef.current?.querySelector("canvas");
+        if (!canvas) return;
 
         const font = getComputedStyle(canvas).fontFamily;
 
@@ -99,12 +97,13 @@ const QRCodeGenerator = () => {
           ctx.lineWidth = 10;
           ctx.strokeStyle = "#273D6C";
           ctx.strokeRect(0, 0, canvas.width, canvas.height);
+          setReadyPath(path);
         }
       }, 2000);
-      setIsDisabled(false);
+
+      return () => window.clearTimeout(drawingTimeout);
     } catch (error) {
       console.error(error);
-      setIsDisabled(true);
     }
   }, [path, referenceHostname]);
 
@@ -115,42 +114,46 @@ const QRCodeGenerator = () => {
   };
 
   return (
-    <div className={`m-auto flex max-w-4xl flex-col p-2 lg:p-4`}>
-      <div className="mb-6 max-w-2xl space-y-2">
-        <h1 className="text-2xl font-semibold">{i18n("QR codes")}</h1>
+    <main className="w-full max-w-4xl space-y-6">
+      <div className="max-w-2xl space-y-2">
+        <h1 className="text-3xl font-semibold">{i18n("QR codes")}</h1>
         <p className="text-neutral">{i18n("Create a QR code for a short Mandrii reference link.")}</p>
-        <p className="text-neutral text-sm">
+        <p className="text-sm text-neutral">
           {i18n(
             "Enter the path after https://{host}/, for example your-topic. Scanning the code opens the complete link.",
             { host: referenceHostname },
           )}
         </p>
       </div>
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="flex min-w-0 flex-1 overflow-hidden rounded-sm border border-gray-300">
-          <span className="bg-surface-tint text-neutral flex shrink-0 items-center border-r border-gray-300 px-3 text-sm">
-            {`https://${referenceHostname}/`}
-          </span>
-          <input
-            aria-label={i18n("Reference path")}
-            className="min-w-0 flex-1 bg-transparent p-2 outline-none"
-            name="path"
-            onChange={(event) => setPath(event.target.value)}
-            placeholder={i18n("your-topic")}
-            type="text"
-          />
+      <SectionCard className="max-w-3xl" title={i18n("Reference link")}>
+        <div className={`
+          mt-4 flex flex-col gap-3
+          sm:flex-row sm:items-end
+        `}>
+          <div className="min-w-0 flex-1">
+            <Input
+              aria-label={i18n("Reference path")}
+              onChange={(event) => setPath(event.target.value)}
+              placeholder={i18n("your-topic")}
+              prefix={<span className={`
+                max-w-40 truncate text-sm
+                sm:max-w-64
+              `}>{`https://${referenceHostname}/`}</span>}
+              value={path}
+            />
+          </div>
+          <Button disabled={!path.trim() || readyPath !== path} onClick={handleDownload}>
+            {i18n("Download QR code")}
+          </Button>
         </div>
-        <button
-          className={`shrink-0 rounded-sm bg-[#273D6C] px-4 py-2 font-bold text-white hover:bg-[#12284A] disabled:cursor-not-allowed disabled:opacity-50`}
-          disabled={isDisabled}
-          onClick={handleDownload}
-        >
-          {i18n("Download")}
-        </button>
-      </div>
+      </SectionCard>
 
-      <div className="mt-8 flex justify-center" ref={qrRef} />
-    </div>
+      <SectionCard className={`
+        flex min-h-[24rem] items-center justify-center p-6
+      `} title={i18n("Preview")}>
+        <div ref={qrRef} />
+      </SectionCard>
+    </main>
   );
 };
 

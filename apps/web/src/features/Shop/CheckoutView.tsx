@@ -446,7 +446,11 @@ function CheckoutViewInner() {
             )}
 
             {isLoading && (
-              <div className="flex items-center justify-center py-8">
+              <div
+                aria-label={i18n("Validating your order...")}
+                className="flex items-center justify-center py-8"
+                role="status"
+              >
                 <AnimatedEllipsis size="md" />
               </div>
             )}

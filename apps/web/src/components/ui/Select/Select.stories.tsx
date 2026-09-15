@@ -102,3 +102,17 @@ export const PreFilled: Story = {
   },
   render: PreFilledTemplate,
 };
+
+export const Searchable: Story = {
+  args: {
+    label: "Searchable select",
+    options: [
+      ...options,
+      { label: "Dragon fruit", value: "dragon-fruit" },
+      { label: "Grapefruit", value: "grapefruit" },
+    ],
+    searchable: true,
+    searchPlaceholder: "Search fruit...",
+  },
+  render: Template,
+};

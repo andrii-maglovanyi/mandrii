@@ -3,7 +3,8 @@ import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { type ReactNode } from "react";
 
-import { ActionButton, Tooltip } from "~/components/ui";
+import { ActionButton, Badge, Tooltip } from "~/components/ui";
+import { isEventPast } from "~/features/Events/utils";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
@@ -15,18 +16,18 @@ import { Event_Status_Enum, GetPublicEventsQuery, Locale } from "~/types";
 
 interface CardHeaderProps {
   event: GetPublicEventsQuery["events"][number];
-  hideUntilHover?: boolean;
-  /** Full views can add actions without exposing them on search and map cards. */
-  viewActions?: ReactNode;
   /** Full views use their owner action area for settings instead of a profile shortcut. */
   hideCurrentOwnerProfileAction?: boolean;
+  hideUntilHover?: boolean;
   showManageAction?: boolean;
+  /** Full views can add actions without exposing them on search and map cards. */
+  viewActions?: ReactNode;
 }
 
 export const CardHeader = ({
   event,
-  hideUntilHover = false,
   hideCurrentOwnerProfileAction = false,
+  hideUntilHover = false,
   showManageAction = true,
   viewActions,
 }: CardHeaderProps) => {
@@ -84,7 +85,10 @@ export const CardHeader = ({
           <ActionButton
             aria-label={i18n("Manage event")}
             className="group"
-            icon={<PenTool className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+            icon={<PenTool className={hideUntilHover ? `
+              hidden
+              group-hover/card:flex
+            ` : ""} size={18} />}
             onClick={handleManageClick}
             size="sm"
             variant="ghost"
@@ -94,7 +98,10 @@ export const CardHeader = ({
           <ActionButton
             aria-label={i18n("Share this event")}
             className="group"
-            icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={20} />}
+            icon={<Share2 className={hideUntilHover ? `
+              hidden
+              group-hover/card:flex
+            ` : ""} size={20} />}
             onClick={handleShareClick}
             variant="ghost"
           />
@@ -122,9 +129,13 @@ export const CardHeader = ({
 
   return (
     <div className="mb-2 flex h-8 justify-between gap-2">
-      <div className={`text-on-surface flex h-full min-w-0 flex-1 items-center gap-1 text-sm`}>
+      <div className={`
+        flex h-full min-w-0 flex-1 items-center gap-1 text-sm text-on-surface
+      `}>
         {getIcon(iconName, { size: 18 })}
         <span className="block min-w-0 flex-1 truncate">{label[locale]}</span>
+
+        {isEventPast(event) && <Badge variant="neutral">{i18n("Event ended")}</Badge>}
 
         {renderEventControls()}
       </div>

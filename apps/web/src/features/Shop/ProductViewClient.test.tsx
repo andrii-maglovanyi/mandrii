@@ -35,9 +35,7 @@ vi.mock("~/i18n/navigation", () => ({
 }));
 
 // Mock next/image
-vi.mock("next/image", () => ({
-  default: ({ alt, src }: { alt: string; src: string }) => <Image alt={alt} src={src} />,
-}));
+vi.mock("next/image", () => import("~/__mocks__/next-image"));
 
 // Mock UI components
 vi.mock("~/components/ui", async () => {
@@ -69,8 +67,9 @@ vi.mock("~/components/ui", async () => {
 });
 
 // Mock constants
-vi.mock("~/lib/constants", () => ({
+vi.mock("~/lib/constants", async () => ({
   constants: {
+    ...(await vi.importActual<typeof import("~/lib/constants")>("~/lib/constants")).constants,
     vercelBlobStorageUrl: "https://blob.example.com",
   },
 }));

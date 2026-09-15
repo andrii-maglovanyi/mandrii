@@ -1,12 +1,13 @@
-import { gql } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { getEventsFilter } from "~/features/Events/utils/getEventsFilter";
+import { GET_PUBLIC_VENUE_OPTIONS, GET_PUBLIC_VENUES, GET_USER_VENUES } from "~/graphql/venues";
+import { getDiscoverableEventsWhere, getDiscoverableVenuesWhere } from "~/lib/content-visibility";
+import { getVenueData } from "~/lib/venues/presentation";
 import {
   APIParams,
   FilterParams,
-  GetAdminVenuesQuery,
   GetPublicVenuesQuery,
   GetUserVenuesQuery,
   Venue_Category_Enum,
@@ -16,9 +17,15 @@ import { UUID } from "~/types/uuid";
 
 import { useGraphApi } from "./useGraphApi";
 
+export type PublicVenueOption = {
+  city?: null | string;
+  id: UUID;
+  name: string;
+};
+
 interface VenuesParams {
-  category?: Venue_Category_Enum;
   categories?: Venue_Category_Enum[];
+  category?: Venue_Category_Enum;
   city?: string;
   country?: string;
   distance?: string;
@@ -29,8 +36,6 @@ interface VenuesParams {
   name?: string;
   slug?: string;
 }
-
-const now = new Date().toISOString();
 
 export const getVenuesFilter = ({ categories, category, city, country, distance, geo, name, slug }: VenuesParams) => {
   const where: FilterParams = {};
@@ -78,270 +83,6 @@ export const getVenuesFilter = ({ categories, category, city, country, distance,
   return { variables: { where } };
 };
 
-const CHAIN_FRAGMENT = gql`
-  fragment ChainFields on chains {
-    id
-    name
-    slug
-    logo
-    country
-    description_uk
-    description_en
-    phone_numbers
-    emails
-    website
-    social_links
-  }
-`;
-
-const CHAIN_WITH_VENUES_FRAGMENT = gql`
-  ${CHAIN_FRAGMENT}
-  fragment ChainWithVenues on chains {
-    ...ChainFields
-    venues {
-      id
-      name
-      slug
-      city
-      country
-    }
-    venues_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-const CHAIN_WITH_CHAINS_FRAGMENT = gql`
-  ${CHAIN_FRAGMENT}
-  fragment ChainWithChains on chains {
-    ...ChainFields
-    chains {
-      id
-      name
-      slug
-      country
-      venues {
-        id
-        name
-        slug
-        city
-        country
-      }
-      venues_aggregate {
-        aggregate {
-          count
-        }
-      }
-    }
-    chains_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-// Shared venue fields fragment with chain tree
-const VENUE_FIELDS_FRAGMENT = gql`
-  ${CHAIN_WITH_VENUES_FRAGMENT}
-  ${CHAIN_WITH_CHAINS_FRAGMENT}
-  fragment VenueFields on venues {
-    id
-    name
-    address
-    city
-    country
-    logo
-    images
-    description_uk
-    description_en
-    geo
-    category
-    emails
-    website
-    phone_numbers
-    social_links
-    slug
-    status
-    owner_id
-    user_id
-    venue_schedules {
-      id
-      open_time
-      close_time
-      day_of_week
-    }
-    venue_accommodation_details {
-      bedrooms
-      bathrooms
-      max_guests
-      check_in_time
-      check_out_time
-      minimum_stay_nights
-      amenities
-    }
-    venue_beauty_salon_details {
-      services
-      appointment_required
-      walk_ins_accepted
-    }
-    venue_restaurant_details {
-      cuisine_types
-      seating_capacity
-      price_range
-      features
-    }
-    venue_school_details {
-      subjects
-      languages_taught
-      age_groups
-      class_size_max
-      online_classes_available
-    }
-    venue_shop_details {
-      product_categories
-      payment_methods
-    }
-    updated_at
-    events_aggregate(where: $whereEvents) {
-      aggregate {
-        count
-      }
-    }
-    chain {
-      ...ChainWithVenues
-      chain {
-        ...ChainWithChains
-      }
-    }
-  }
-`;
-
-const GET_PUBLIC_VENUES = gql`
-  ${VENUE_FIELDS_FRAGMENT}
-  query GetPublicVenues(
-    $where: venues_bool_exp!
-    $whereEvents: events_bool_exp!
-    $limit: Int
-    $offset: Int
-    $order_by: [venues_order_by!]
-  ) {
-    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
-      ...VenueFields
-    }
-    venues_aggregate(where: $where) {
-      aggregate {
-        count
-      }
-    }
-    total: venues_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-const GET_USER_VENUES = gql`
-  ${VENUE_FIELDS_FRAGMENT}
-  query GetUserVenues(
-    $where: venues_bool_exp!
-    $whereEvents: events_bool_exp
-    $limit: Int
-    $offset: Int
-    $order_by: [venues_order_by!]
-  ) {
-    venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
-      ...VenueFields
-      postcode
-      created_at
-    }
-    venues_aggregate(where: $where) {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-const GET_ADMIN_VENUES = gql`
-  ${VENUE_FIELDS_FRAGMENT}
-  query GetAdminVenues($where: venues_bool_exp!, $whereEvents: events_bool_exp) {
-    venues(where: $where, order_by: { updated_at: desc }) {
-      ...VenueFields
-      created_at
-    }
-    venues_aggregate(where: $where) {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-const getChainFallback = <T>(
-  venueValue: null | T | undefined,
-  chainValue: null | T | undefined,
-  parentChainValue: null | T | undefined,
-): null | T | undefined => {
-  return venueValue || chainValue || parentChainValue;
-};
-
-const getArrayFallback = <T>(
-  venueArr?: null | T[],
-  chainArr?: null | T[],
-  parentChainArr?: null | T[],
-): T[] | undefined => {
-  if (venueArr?.length) return venueArr;
-  if (chainArr?.length) return chainArr;
-  if (parentChainArr?.length) return parentChainArr;
-  return undefined;
-};
-
-const getVenueData = <T extends Partial<GetAdminVenuesQuery["venues"][number]>>(venue: T) => {
-  // Type-safe chain access - only attempt if chain property might exist
-  const venueWithChain = venue as {
-    chain?: {
-      chain?: {
-        description_en?: null | string;
-        description_uk?: null | string;
-        emails?: null | string[];
-        logo?: null | string;
-        phone_numbers?: null | string[];
-        social_links?: null | Record<string, string>;
-        website?: null | string;
-      } | null;
-      description_en?: null | string;
-      description_uk?: null | string;
-      emails?: null | string[];
-      logo?: null | string;
-      phone_numbers?: null | string[];
-      social_links?: null | Record<string, string>;
-      website?: null | string;
-    } | null;
-  } & T;
-
-  const parentChain = venueWithChain.chain?.chain;
-  const chain = venueWithChain.chain;
-
-  return {
-    ...venue,
-    description_en: getChainFallback(venue.description_en, chain?.description_en, parentChain?.description_en),
-    description_uk: getChainFallback(venue.description_uk, chain?.description_uk, parentChain?.description_uk),
-    emails: getArrayFallback(venue.emails, chain?.emails, parentChain?.emails),
-    logo: getChainFallback(venue.logo, chain?.logo, parentChain?.logo),
-    phone_numbers: getArrayFallback(venue.phone_numbers, chain?.phone_numbers, parentChain?.phone_numbers),
-    social_links: {
-      ...(parentChain?.social_links || {}),
-      ...(chain?.social_links || {}),
-      ...(venue.social_links || {}),
-    },
-    website: getChainFallback(venue.website, chain?.website, parentChain?.website),
-  };
-};
-
 export const useVenues = () => {
   const updateVenueStatus = useCallback(async (id: UUID, status: Venue_Status_Enum) => {
     const response = await fetch("/api/content/status", {
@@ -358,17 +99,6 @@ export const useVenues = () => {
     return result.content;
   }, []);
 
-  const useAdminVenues = (params: APIParams) => {
-    const result = useGraphApi<GetAdminVenuesQuery["venues"]>(GET_ADMIN_VENUES, params);
-
-    const transformedData = useMemo(() => result.data?.map(getVenueData), [result.data]);
-
-    return {
-      ...result,
-      data: transformedData,
-    };
-  };
-
   const useUserVenues = (params?: APIParams, ownedOnly = false) => {
     const { data: session } = useSession();
     const isAdmin = session?.user.role === "admin";
@@ -383,13 +113,13 @@ export const useVenues = () => {
             ...(shouldScopeToUser ? [{ [ownershipField]: { _eq: session?.user.id } }] : []),
             ...(params?.where ? [params.where] : []),
           ],
-        },
+        } as FilterParams,
       }),
       [ownershipField, params, session?.user.id, shouldScopeToUser],
     );
 
     const result = useGraphApi<GetUserVenuesQuery["venues"]>(GET_USER_VENUES, mergedParams, {
-      pause: !session?.user.id,
+      skip: !session?.user.id,
     });
 
     const transformedData = useMemo(() => result.data?.map(getVenueData), [result.data]);
@@ -400,15 +130,22 @@ export const useVenues = () => {
     };
   };
 
-  const usePublicVenues = (params: APIParams) => {
-    const { variables } = getEventsFilter({
-      dateFrom: now,
-    });
+  const usePublicVenues = (params: APIParams, options?: { includeTotal?: boolean; skip?: boolean }) => {
+    const { includeTotal = false, skip = false } = options ?? {};
+    const [whereEvents] = useState(() =>
+      getDiscoverableEventsWhere(getEventsFilter({ dateFrom: new Date().toISOString() }).variables.where),
+    );
+    const mergedParams = useMemo(() => {
+      return {
+        ...params,
+        includeTotal,
+        totalWhere: getDiscoverableVenuesWhere(),
+        where: getDiscoverableVenuesWhere(params.where),
+        whereEvents,
+      };
+    }, [includeTotal, params, whereEvents]);
 
-    const result = useGraphApi<GetPublicVenuesQuery["venues"]>(GET_PUBLIC_VENUES, {
-      ...params,
-      whereEvents: variables.where,
-    });
+    const result = useGraphApi<GetPublicVenuesQuery["venues"]>(GET_PUBLIC_VENUES, mergedParams, { skip });
 
     const transformedData = useMemo(() => result.data?.map(getVenueData), [result.data]);
 
@@ -418,18 +155,119 @@ export const useVenues = () => {
     };
   };
 
-  const useGetVenue = (slug?: string) => {
+  const usePublicVenue = (slug?: string) => {
     const queryParams = useMemo(
       () => ({
+        includeCount: false,
+        includeTotal: false,
         limit: 1,
-        where: {
-          slug: { _eq: slug },
-        },
+        totalWhere: getDiscoverableVenuesWhere(),
+        where: getDiscoverableVenuesWhere({ slug: { _eq: slug } }),
+        whereEvents: getDiscoverableEventsWhere(
+          getEventsFilter({ dateFrom: new Date().toISOString() }).variables.where,
+        ),
       }),
       [slug],
     );
 
-    const result = useGraphApi<GetUserVenuesQuery["venues"]>(GET_USER_VENUES, queryParams, { skip: !slug });
+    const result = useGraphApi<GetPublicVenuesQuery["venues"]>(GET_PUBLIC_VENUES, queryParams, { skip: !slug });
+
+    const transformedData = useMemo(() => (result.data?.[0] ? getVenueData(result.data[0]) : undefined), [result.data]);
+
+    return {
+      ...result,
+      data: transformedData,
+    };
+  };
+
+  const usePublicVenueOptions = (query = "", selectedId?: null | string) => {
+    const queryParams = useMemo(
+      () => ({
+        limit: 20,
+        order_by: [{ name: "asc" as const }],
+        where: getDiscoverableVenuesWhere(
+          query.trim() ? getVenuesFilter({ name: query.trim() }).variables.where : undefined,
+        ),
+      }),
+      [query],
+    );
+
+    const result = useGraphApi<PublicVenueOption[]>(GET_PUBLIC_VENUE_OPTIONS, queryParams);
+    const selectedParams = useMemo(
+      () => ({
+        limit: 1,
+        where: getDiscoverableVenuesWhere({ id: { _eq: selectedId ?? undefined } }),
+      }),
+      [selectedId],
+    );
+    const selected = useGraphApi<PublicVenueOption[]>(GET_PUBLIC_VENUE_OPTIONS, selectedParams, { skip: !selectedId });
+    const data = useMemo(() => {
+      const selectedVenue = selected.data.find((venue) => venue.id === selectedId);
+      return selectedVenue && !result.data.some((venue) => venue.id === selectedId)
+        ? [selectedVenue, ...result.data]
+        : result.data;
+    }, [result.data, selected.data, selectedId]);
+
+    return { ...result, data };
+  };
+
+  const useEditableVenue = (slug?: string) => {
+    const { data: session } = useSession();
+    const isAdmin = session?.user.role === "admin";
+    const queryParams = useMemo(
+      () => ({
+        includeCount: false,
+        limit: 1,
+        where: {
+          _and: [
+            { slug: { _eq: slug } },
+            ...(isAdmin
+              ? []
+              : [
+                  {
+                    _or: [
+                      { owner_id: { _eq: session?.user.id } },
+                      {
+                        _and: [{ owner_id: { _is_null: true } }, { user_id: { _eq: session?.user.id } }],
+                      },
+                    ],
+                  },
+                ]),
+          ],
+        } as FilterParams,
+      }),
+      [isAdmin, session?.user.id, slug],
+    );
+
+    const result = useGraphApi<GetUserVenuesQuery["venues"]>(GET_USER_VENUES, queryParams, {
+      skip: !session?.user.id || !slug,
+    });
+
+    const transformedData = useMemo(() => (result.data?.[0] ? result.data[0] : undefined), [result.data]);
+
+    return {
+      ...result,
+      data: transformedData,
+    };
+  };
+
+  const useOwnedVenue = (slug?: string) => {
+    const { data: session } = useSession();
+    const isAdmin = session?.user.role === "admin";
+    const queryParams = useMemo(
+      () => ({
+        includeCount: false,
+        limit: 1,
+        where: {
+          _and: [{ slug: { _eq: slug } }, ...(isAdmin ? [] : [{ owner_id: { _eq: session?.user.id } }])],
+        } as FilterParams,
+      }),
+      [isAdmin, session?.user.id, slug],
+    );
+
+    const result = useGraphApi<GetUserVenuesQuery["venues"]>(GET_USER_VENUES, queryParams, {
+      skip: !session?.user.id || !slug,
+    });
 
     const transformedData = useMemo(() => (result.data?.[0] ? getVenueData(result.data[0]) : undefined), [result.data]);
 
@@ -441,8 +279,10 @@ export const useVenues = () => {
 
   return {
     updateVenueStatus,
-    useAdminVenues,
-    useGetVenue,
+    useEditableVenue,
+    useOwnedVenue,
+    usePublicVenue,
+    usePublicVenueOptions,
     usePublicVenues,
     useUserVenues,
   };

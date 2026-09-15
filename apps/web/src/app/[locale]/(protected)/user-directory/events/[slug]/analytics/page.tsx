@@ -1,20 +1,21 @@
 "use client";
 
-import { AnimatedEllipsis, Breadcrumbs, EmptyState } from "~/components/ui";
 import { Calendar } from "lucide-react";
+import { useLocale } from "next-intl";
+import { use } from "react";
+
+import { AnimatedEllipsis, Breadcrumbs, EmptyState } from "~/components/ui";
 import { ContentAnalyticsPage } from "~/features/ContentQRCode/ContentAnalyticsPage";
 import { useEvents } from "~/hooks/useEvents";
 import { useI18n } from "~/i18n/useI18n";
 import { Locale } from "~/types";
-import { useLocale } from "next-intl";
-import { use } from "react";
 
 export default function EventAnalyticsPage({ params }: { params: Promise<{ slug: string }> }) {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
-  const { useGetEvent } = useEvents();
+  const { useOwnedEvent } = useEvents();
   const { slug } = use(params);
-  const { data: event, loading } = useGetEvent(slug);
+  const { data: event, loading } = useOwnedEvent(slug);
   if (loading)
     return (
       <div className="flex min-h-64 items-center justify-center">

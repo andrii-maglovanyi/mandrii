@@ -2,13 +2,17 @@
 
 import clsx from "clsx";
 import { LayoutDashboard, LocateFixed, MapPinOff } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 import { Button, EmptyState, Input, ProgressBar, RichText, Select } from "~/components/ui";
 import { useTheme } from "~/contexts/ThemeContext";
+import { FollowAreaButton } from "~/features/Following/FollowAreaButton";
+import { getSavedMapArea } from "~/features/Map/savedArea";
+import { AddEntityButton, useAddEntity } from "~/features/shared/AddEntityButton";
+import { useCurrentLocation } from "~/hooks/useCurrentLocation";
 import { useListControls } from "~/hooks/useListControls";
 import { useNotifications } from "~/hooks/useNotifications";
 import { getVenuesFilter, useVenues } from "~/hooks/useVenues";
@@ -16,9 +20,6 @@ import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
 import { sendToMixpanel } from "~/lib/mixpanel";
-import { FollowAreaButton } from "~/features/Following/FollowAreaButton";
-import { getSavedMapArea } from "~/features/Map/savedArea";
-import { AddEntityButton, useAddEntity } from "~/features/shared/AddEntityButton";
 import { Locale, Venue_Category_Enum } from "~/types";
 import { UUID } from "~/types/uuid";
 
@@ -128,7 +129,7 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
     query: "(max-width: 768px)",
   });
 
-  const { count, data, loading, total } = usePublicVenues(listState);
+  const { count, data, loading, total } = usePublicVenues(listState, { includeTotal: true });
 
   const isReady = mapIsLoaded && !loading;
 
@@ -138,50 +139,14 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
     }
   }, []);
 
-  // SECURITY: Using geolocation is justified and necessary.
-  // - Triggered only by explicit user action (clicking the "Find me" button).
-  // - Used exclusively to center map/search results near the user's position.
-  // - Location data is not stored, transmitted, or shared with third parties.
-  // - Complies with browser permission prompts for user consent.
-  const getLocation = async () => {
-    if ("permissions" in navigator) {
-      try {
-        const permissionStatus = await navigator.permissions.query({ name: "geolocation" });
-
-        if (permissionStatus.state === "denied") {
-          showError(i18n("Location access denied. Please enable it in your browser settings."));
-          return;
-        }
-
-        permissionStatus.addEventListener("change", () => {
-          console.log("Geolocation permission changed to:", permissionStatus.state);
-        });
-      } catch (error) {
-        console.warn("Permissions API not available:", error);
-      }
-    }
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setDistance(String(10_000));
-
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-          setHasSelectedMapArea(true);
-          setShowMe(true);
-        },
-        (error) => {
-          console.error(error);
-          showError(i18n("Unable to find your location. Please try searching!"));
-        },
-      );
-    } else {
-      showError(i18n("Unable to find your location. Please try searching!"));
-    }
-  };
+  const { locate, locating } = useCurrentLocation();
+  const getLocation = () =>
+    locate((location) => {
+      setDistance(String(10_000));
+      setUserLocation(location);
+      setHasSelectedMapArea(true);
+      setShowMe(true);
+    });
 
   const fetchPlaceDetails = async (placeId: string) => {
     const place = new google.maps.places.Place({
@@ -278,8 +243,8 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
       if (searchTerm.length > 2) {
         try {
           const res = await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
-            input: searchTerm,
             includedRegionCodes: Object.keys(constants.whitelisted_countries),
+            input: searchTerm,
             sessionToken: sessionTokenRef.current ?? undefined,
           });
 
@@ -321,13 +286,19 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
   }
 
   return (
-    <div className="bg-surface z-10 flex h-full grow flex-col">
+    <div className="z-10 flex h-full grow flex-col bg-surface">
       <div className="flex grow flex-row">
         <div className="flex grow flex-col">
           <div className="mx-auto mt-4 w-full max-w-(--breakpoint-xl) p-4">
             <div className="shrink-0 space-y-4">
-              <div className={`flex flex-col gap-x-2 md:flex-row`}>
-                <div className={`mb-4 flex-2 md:mb-0`}>
+              <div className={`
+                flex flex-col gap-x-2
+                md:flex-row
+              `}>
+                <div className={`
+                  mb-4 flex-2
+                  md:mb-0
+                `}>
                   <Input
                     disabled={!isReady}
                     onChange={(e) => {
@@ -372,7 +343,9 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
               <div className="flex flex-wrap items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Button
+                    aria-busy={locating}
                     aria-label={i18n("Find me")}
+                    disabled={locating}
                     onClick={() => {
                       getLocation();
                       sendToMixpanel("Clicked Find Me");
@@ -395,19 +368,30 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
                     size="md"
                   />
                 </div>
-                <RichText as="div" className={clsx(`text-sm sm:text-base`, isReady ? `visible` : `hidden`)}>
+                <RichText as="div" className={clsx(`
+                  text-sm
+                  sm:text-base
+                `, isReady ? `visible` : `hidden`)}>
                   {i18n("Showing **{count}** of **{total}**", { count, total })}
                 </RichText>
               </div>
             </div>
           </div>
 
-          <div className={clsx("mx-auto h-full w-1/2 flex-col justify-center", showMap ? `hidden` : `flex`)}>
+          <div className={clsx("mx-auto h-full w-1/2 flex-col justify-center", showMap ? `
+            hidden
+          ` : `flex`)}>
             <ProgressBar isLoading={!isReady} onLoaded={() => setShowMap(true)} />
           </div>
 
-          <div className={clsx(`h-full grid-cols-1 gap-2 md:grid-cols-2`, showMap ? `grid` : `hidden`)}>
-            <div className={`hidden md:block`}>
+          <div className={clsx(`
+            h-full grid-cols-1 gap-2
+            md:grid-cols-2
+          `, showMap ? `grid` : `hidden`)}>
+            <div className={`
+              hidden
+              md:block
+            `}>
               {!(venueCards?.length || loading) ? (
                 <div className="flex h-full w-full items-center justify-center">
                   <EmptyState
@@ -417,7 +401,10 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
                   />
                 </div>
               ) : (
-                <div className={`-mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3 pt-0.5`}>
+                <div className={`
+                  -mt-0.5 h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
+                  pt-0.5
+                `}>
                   {venueCards}
                 </div>
               )}
@@ -456,7 +443,9 @@ export const VenuesMap = ({ slug }: VenuesProps) => {
               />
 
               <div className="absolute top-0 left-0 mt-3 ml-3">
-                <p className={`bg-on-surface/70 text-surface rounded-md px-3 py-1 text-sm`}>
+                <p className={`
+                  rounded-md bg-on-surface/70 px-3 py-1 text-sm text-surface
+                `}>
                   {venueCards.length
                     ? `${i18n("Showing {number} results", { number: venueCards.length })}`
                     : i18n("Nothing found")}

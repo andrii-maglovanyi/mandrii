@@ -2,7 +2,7 @@
 
 import { useApolloClient } from "@apollo/client";
 import { format } from "date-fns";
-import { Archive, Bug, CheckCircle2, Search, XCircle, Eye } from "lucide-react";
+import { Archive, Bug, CheckCircle2, Eye, Search, XCircle } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
@@ -10,13 +10,14 @@ import { useCallback, useMemo } from "react";
 import { ActionButton, AnimatedEllipsis, ContentStatusBadge, EmptyState, RichText, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useNotifications, useUser, useVenues } from "~/hooks";
+import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
+import { sendToMixpanel } from "~/lib/mixpanel";
 import { toDateLocale } from "~/lib/utils";
 import { DayOfWeek, Locale, Venue_Status_Enum } from "~/types";
 
 import { VenueForm } from "./VenueForm";
-import { Link } from "~/i18n/navigation";
 
 interface VenueProps {
   slug?: string;
@@ -38,8 +39,8 @@ interface ConfirmDialogConfig {
 }
 
 const VenueStatusActions = ({
-  i18n,
   canReject,
+  i18n,
   openConfirmDialog,
   status,
   updateVenueStatus,
@@ -116,11 +117,11 @@ export const EditVenue = ({ slug }: VenueProps) => {
   const locale = useLocale() as Locale;
   const i18n = useI18n();
   const router = useRouter();
-  const { updateVenueStatus, useGetVenue } = useVenues();
+  const { updateVenueStatus, useEditableVenue } = useVenues();
   const { openConfirmDialog } = useDialog();
 
   const { data: profileData, isLoading: profileLoading } = useUser();
-  const { data, error, loading } = useGetVenue(slug);
+  const { data, error, loading } = useEditableVenue(slug);
 
   const handleSuccess = useCallback(async () => {
     await client.refetchQueries({
@@ -132,13 +133,16 @@ export const EditVenue = ({ slug }: VenueProps) => {
       },
     });
 
+    sendToMixpanel(slug ? "Updated Venue" : "Submitted Venue", {
+      submission_type: slug ? "update" : "new",
+    });
     showSuccess(i18n("Venue updated successfully"));
     router.push("/user-directory");
 
     setTimeout(() => {
       window.location.hash = encodeURIComponent(i18n("Venues"));
     }, 300);
-  }, [i18n, router, showSuccess, client]);
+  }, [client, i18n, router, showSuccess, slug]);
 
   const submitVenue = useCallback(
     async (body: FormData) => {
@@ -207,7 +211,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
 
       try {
         await updateVenueStatus(data.id, status);
-        await client.refetchQueries({ include: ["GetAdminVenues", "GetPublicVenues", "GetUserVenues"] });
+        await client.refetchQueries({ include: ["GetPublicVenues", "GetUserVenues"] });
         showSuccess(i18n("Venue status updated successfully"));
       } catch (error) {
         showError(error instanceof Error ? error.message : i18n("Unable to update venue status"));
@@ -273,7 +277,10 @@ export const EditVenue = ({ slug }: VenueProps) => {
   return (
     <div className="flex flex-col">
       {data && (
-        <div className={`text-neutral-disabled flex cursor-default items-center justify-end space-x-3 text-sm`}>
+        <div className={`
+          flex cursor-default items-center justify-end space-x-3 text-sm
+          text-neutral-disabled
+        `}>
           <Tooltip label={i18n("Created on")}>
             {format(new Date(data.created_at), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
           </Tooltip>
@@ -282,7 +289,13 @@ export const EditVenue = ({ slug }: VenueProps) => {
           {data.id ? (
             <Tooltip label={i18n("View venue in a new tab")}>
               <Link
-                className="text-primary hover:bg-primary/20 focus:ring-primary focus:ring-offset-surface inline-flex h-10 w-10 items-center justify-center rounded-md transition focus:ring-2 focus:ring-offset-1 focus:outline-none"
+                className={`
+                  inline-flex h-10 w-10 items-center justify-center rounded-md
+                  text-primary transition
+                  hover:bg-primary/20
+                  focus:ring-2 focus:ring-primary focus:ring-offset-1
+                  focus:ring-offset-surface focus:outline-none
+                `}
                 href={`/venues/${data.slug}`}
                 target="_blank"
               >
@@ -301,7 +314,7 @@ export const EditVenue = ({ slug }: VenueProps) => {
           )}
         </div>
       )}
-      <RichText as="div" className="text-neutral mb-6 text-sm">
+      <RichText as="div" className="mb-6 text-sm text-neutral">
         {slug
           ? i18n(
               "Edit your venue details below.\nYou can update all fields except the slug, which is locked after the first creation.",

@@ -67,8 +67,8 @@ export async function getApiContext(
 ): Promise<ApiContextBase>;
 export async function getApiContext(req: Request, { withAuth = false, withI18n = false }: ApiContextParams = {}) {
   const { searchParams } = new URL(req.url);
-  const localeParam = searchParams.get("locale") as Locale | null;
-  const locale = Object.values(Locale).includes(localeParam ?? Locale.EN) ? (localeParam as Locale) : Locale.EN;
+  const localeParam = (searchParams.get("locale") ?? Locale.EN) as Locale;
+  const locale = Object.values(Locale).includes(localeParam) ? localeParam : Locale.EN;
 
   if (withAuth && withI18n) {
     const session = await getUserContext();

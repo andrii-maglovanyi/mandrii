@@ -5,15 +5,17 @@
 import { Bell, ChevronDown, ChevronUp, Mail, Smartphone } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
+import type {
+  ContentAlertDeliveryPreferences,
+  ContentAlertDeliveryPreferenceUpdate,
+} from "~/lib/models/content-subscription-alert-deliveries";
+
 import { Button, Select, Switch } from "~/components/ui";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
-import type {
-  ContentAlertDeliveryPreferenceUpdate,
-  ContentAlertDeliveryPreferences,
-} from "~/lib/models/content-subscription-alert-deliveries";
 import { getCompatiblePushSubscription, urlBase64ToUint8Array } from "~/lib/push-subscription";
+import { readyAppWorker } from "~/lib/pwa/registration";
 
 type DeliveryMethodProps = {
   action?: ReactNode;
@@ -37,17 +39,26 @@ const DeliveryMethod = ({
   title,
 }: DeliveryMethodProps) => (
   <div
-    className={`flex min-h-28 flex-col rounded-xl p-4 transition ${
+    className={`
+      flex min-h-28 flex-col rounded-xl p-4 transition
+      ${
       checked ? "bg-primary/10" : "bg-surface"
-    } ${disabled ? "opacity-60" : ""}`}
+    }
+      ${disabled ? "opacity-60" : ""}
+    `}
   >
     <div className="flex items-start gap-3">
-      <div className={`rounded-lg p-2 ${checked ? "bg-primary/15 text-primary" : "bg-surface-tint text-neutral"}`}>
+      <div className={`
+        rounded-lg p-2
+        ${checked ? "bg-primary/15 text-primary" : `
+          bg-surface-tint text-neutral
+        `}
+      `}>
         {icon}
       </div>
       <div className="min-w-0 flex-1">
         <p className="font-semibold">{title}</p>
-        <p className="text-neutral mt-0.5 text-sm leading-snug">{description}</p>
+        <p className="mt-0.5 text-sm leading-snug text-neutral">{description}</p>
       </div>
       <Switch
         aria-label={title}
@@ -62,13 +73,13 @@ const DeliveryMethod = ({
   </div>
 );
 
-type DeliveryControl = "email" | "frequency" | "push";
-
 type ContentAlertDeliverySettingsProps = {
   defaultExpanded?: boolean;
   id?: string;
   initialPreferences: ContentAlertDeliveryPreferences;
 };
+
+type DeliveryControl = "email" | "frequency" | "push";
 
 export const ContentAlertDeliverySettings = ({
   defaultExpanded = false,
@@ -102,7 +113,7 @@ export const ContentAlertDeliverySettings = ({
       headers: { "Content-Type": "application/json" },
       method: "PUT",
     });
-    const result = (await response.json()) as ContentAlertDeliveryPreferences & { error?: string };
+    const result = (await response.json()) as { error?: string } & ContentAlertDeliveryPreferences;
     if (!response.ok) throw new Error(result.error ?? "Unable to save alert delivery settings");
     return result;
   };
@@ -148,8 +159,7 @@ export const ContentAlertDeliverySettings = ({
     try {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") throw new Error("Browser notification permission was not granted");
-      await navigator.serviceWorker.register("/sw.js");
-      const registration = await navigator.serviceWorker.ready;
+      const registration = await readyAppWorker();
       const subscription =
         (await getCompatiblePushSubscription(registration, publicKey)) ??
         (await registration.pushManager.subscribe({
@@ -184,10 +194,13 @@ export const ContentAlertDeliverySettings = ({
 
   return (
     <section className="border-t border-current/10 pt-7" id={id}>
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className={`
+        flex flex-col justify-between gap-4
+        sm:flex-row sm:items-center
+      `}>
         <div>
           <h4 className="text-lg font-bold">{i18n("Delivery channels")}</h4>
-          <p className="text-neutral mt-1 text-sm">
+          <p className="mt-1 text-sm text-neutral">
             {enabledMethods.length > 0
               ? i18n("In-app alerts, plus {methods}.", { methods: enabledMethods.join(", ") })
               : i18n("In-app alerts are on. Add another channel when you need it.")}
@@ -205,8 +218,14 @@ export const ContentAlertDeliverySettings = ({
         </Button>
       </div>
       {isExpanded && (
-        <div className="bg-surface-tint/60 mt-5 rounded-2xl p-3 sm:p-4">
-          <div className="grid gap-3 md:grid-cols-2">
+        <div className={`
+          mt-5 rounded-2xl bg-surface-tint/60 p-3
+          sm:p-4
+        `}>
+          <div className={`
+            grid gap-3
+            md:grid-cols-2
+          `}>
             <DeliveryMethod
               checked={preferences.emailEnabled}
               description={i18n("Receive alerts in your inbox.")}
@@ -248,14 +267,22 @@ export const ContentAlertDeliverySettings = ({
               title={i18n("Browser alerts")}
             />
           </div>
-          <div className="bg-surface mt-3 flex flex-col gap-3 rounded-xl p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div
+            className={`
+              mt-3 flex flex-col gap-3 rounded-xl bg-surface p-4
+              sm:flex-row sm:items-center sm:justify-between
+            `}
+          >
             <div>
               <p className="font-semibold">{i18n("Following alert frequency")}</p>
-              <p className="text-neutral mt-0.5 text-sm">
+              <p className="mt-0.5 text-sm text-neutral">
                 {i18n("Choose when Email, Browser, and Telegram follow alerts are sent.")}
               </p>
             </div>
-            <div className="w-full sm:w-72">
+            <div className={`
+              w-full
+              sm:w-72
+            `}>
               <Select
                 aria-label={i18n("Following alert frequency")}
                 disabled={isSaving("frequency")}
@@ -266,7 +293,8 @@ export const ContentAlertDeliverySettings = ({
                 }
                 options={[
                   { label: i18n("Immediate"), value: "IMMEDIATE" },
-                  { label: i18n("Daily digest (09:00 UTC)"), value: "DAILY" },
+                  { label: i18n("Daily · 09:00 UTC"), value: "DAILY" },
+                  { label: i18n("Weekly · Mon 09:00 UTC"), value: "WEEKLY" },
                 ]}
                 value={preferences.frequency}
               />

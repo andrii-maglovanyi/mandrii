@@ -6,19 +6,19 @@ import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useDebouncedCallback } from "use-debounce";
 
-import { ActionButton, AnimatedEllipsis, Pagination, RichText } from "~/components/ui";
+import { ActionButton, Alert, AnimatedEllipsis, Pagination, RichText } from "~/components/ui";
+import { removeDiscoveryCityFromUrl } from "~/features/Discovery/discoveryLocation";
 import { LocationResultsFallback } from "~/features/Discovery/LocationResultsFallback";
 import { generateCatalogLayouts } from "~/features/shared/Catalog/layoutConfig";
-import { useEvents } from "~/hooks/useEvents";
-import { useListControls } from "~/hooks/useListControls";
+import { useEventDiscovery } from "~/hooks/useEventDiscovery";
 import { useI18n } from "~/i18n/useI18n";
+import { INFINITE_SCROLL_MEDIA_QUERY } from "~/lib/responsive";
 import { Event_Type_Enum, GetPublicEventsQuery, Price_Type_Enum } from "~/types";
 
 import { EventsListCard } from "../EventCard/EventsListCard";
 import { EventsMasonryCard } from "../EventCard/EventsMasonryCard";
 import { getEventDatePreset } from "../utils/getEventDatePreset";
 import { getEventsFilter } from "../utils/getEventsFilter";
-import { removeDiscoveryCityFromUrl } from "~/features/Discovery/discoveryLocation";
 import { EventsCatalogFilter } from "./EventsCatalogFilter";
 
 type ViewMode = "grid" | "list";
@@ -29,14 +29,17 @@ const SEARCH_DEBOUNCE_MS = 300;
 export const EventsCatalog = () => {
   const i18n = useI18n();
   const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
+  const usesInfiniteScroll = useMediaQuery({ query: INFINITE_SCROLL_MEDIA_QUERY });
   const searchParams = useSearchParams();
   const searchParamsKey = searchParams.toString();
   const querySearch = searchParams.get("q") ?? "";
-  const datePreset = useMemo(() => getEventDatePreset(searchParams.get("when")), [searchParamsKey]);
+  const when = searchParams.get("when");
+  const datePreset = useMemo(() => getEventDatePreset(when), [when]);
 
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [type, setType] = useState<Event_Type_Enum | undefined>();
   const [priceType, setPriceType] = useState<Price_Type_Enum | undefined>();
+  const [includePast, setIncludePast] = useState(false);
   const [searchQuery, setSearchQuery] = useState(querySearch);
   const [debouncedSearch, setDebouncedSearch] = useState(querySearch);
   const [dateFrom, setDateFrom] = useState<string | undefined>(datePreset?.dateFrom);
@@ -51,21 +54,48 @@ export const EventsCatalog = () => {
   useEffect(() => {
     setSearchQuery(querySearch);
     setDebouncedSearch(querySearch);
+  }, [querySearch]);
+
+  useEffect(() => {
     setDateFrom(datePreset?.dateFrom);
     setDateTo(datePreset?.dateTo);
-  }, [datePreset, querySearch]);
+  }, [datePreset]);
 
-  const { usePublicEvents } = useEvents();
-
-  const { handleFilter, handlePaginate, listState } = useListControls({ limit: ITEMS_LIMIT });
-
-  const { count, data: events, loading } = usePublicEvents(listState);
+  const where = useMemo(
+    () =>
+      getEventsFilter({
+        city,
+        country,
+        dateFrom,
+        dateTo,
+        includePast,
+        name: debouncedSearch,
+        priceType,
+        type,
+      }).variables.where,
+    [city, country, dateFrom, dateTo, debouncedSearch, priceType, includePast, type],
+  );
+  const filterKey = JSON.stringify(where);
+  const [pagination, setPagination] = useState({ key: filterKey, offset: 0 });
+  const offset = pagination.key === filterKey ? pagination.offset : 0;
+  const {
+    count: displayedCount,
+    data: events,
+    error,
+    loading,
+  } = useEventDiscovery({
+    from: dateFrom,
+    includePast,
+    limit: usesInfiniteScroll ? offset + ITEMS_LIMIT : ITEMS_LIMIT,
+    offset: usesInfiniteScroll ? 0 : offset,
+    to: dateTo,
+    where,
+  });
 
   // Calculate pagination
   const countPages = useMemo(() => {
-    if (!events) return 0;
-    return Math.ceil(count / ITEMS_LIMIT);
-  }, [count, events]);
+    return Math.ceil(displayedCount / ITEMS_LIMIT);
+  }, [displayedCount]);
 
   // Debounce search to avoid hammering the API
   const debouncedSetSearch = useDebouncedCallback((value: string) => {
@@ -77,26 +107,12 @@ export const EventsCatalog = () => {
     debouncedSetSearch(query);
   };
 
-  useEffect(() => {
-    const { variables } = getEventsFilter({
-      city,
-      country,
-      dateFrom,
-      dateTo,
-      name: debouncedSearch,
-      priceType,
-      type,
-    });
-
-    handleFilter(variables.where);
-  }, [type, priceType, city, country, debouncedSearch, dateFrom, dateTo, handleFilter]);
-
   const handlePageChange = (pageIndex: number) => {
     const actualOffset = (pageIndex - 1) * ITEMS_LIMIT;
-    handlePaginate({ offset: actualOffset });
+    setPagination({ key: filterKey, offset: actualOffset });
 
     // Only scroll to top on desktop (numbered pagination)
-    if (!isMobile) {
+    if (!usesInfiniteScroll) {
       window.scrollTo({ behavior: "smooth", top: 0 });
     }
   };
@@ -104,19 +120,21 @@ export const EventsCatalog = () => {
   const eventLayouts = useMemo(() => {
     if (!events || viewMode !== "grid") return [];
 
-    const currentPage = Math.floor((listState.offset ?? 0) / ITEMS_LIMIT) + 1;
+    const currentPage = Math.floor(offset / ITEMS_LIMIT) + 1;
     const layouts = generateCatalogLayouts<GetPublicEventsQuery["events"][number]>(events, currentPage < countPages);
 
     return layouts;
-  }, [events, viewMode, countPages, listState.offset]);
+  }, [events, viewMode, countPages, offset]);
 
   return (
     <div className="flex flex-col gap-6">
       <EventsCatalogFilter
         dateFrom={dateFrom}
         dateTo={dateTo}
+        includePast={includePast}
         onDateFromChange={setDateFrom}
         onDateToChange={setDateTo}
+        onIncludePastChange={setIncludePast}
         onPriceTypeChange={setPriceType}
         onSearchChange={handleSearchChange}
         onTypeChange={setType}
@@ -126,15 +144,18 @@ export const EventsCatalog = () => {
       />
 
       <div className="flex flex-wrap items-center justify-between">
-        {count ? (
-          <RichText as="div" className={`text-sm sm:text-base`}>
+        {displayedCount ? (
+          <RichText as="div" className={`
+            text-sm
+            sm:text-base
+          `}>
             {(() => {
-              const currentOffset = listState.offset ?? 0;
-              const start = currentOffset + 1;
-              const end = Math.min(currentOffset + events.length, count);
+              const currentOffset = offset ?? 0;
+              const start = usesInfiniteScroll ? 1 : currentOffset + 1;
+              const end = Math.min(currentOffset + ITEMS_LIMIT, displayedCount);
 
               return i18n("Showing **{start}**-**{end}** of **{count}** items", {
-                count,
+                count: displayedCount,
                 end,
                 start,
               });
@@ -144,7 +165,10 @@ export const EventsCatalog = () => {
           <div />
         )}
 
-        <div className={`bg-surface-tint hidden gap-1 rounded-lg p-1 lg:flex`}>
+        <div className={`
+          hidden gap-1 rounded-lg bg-surface-tint p-1
+          lg:flex
+        `}>
           <ActionButton
             aria-label={i18n("Grid view")}
             color="primary"
@@ -163,7 +187,9 @@ export const EventsCatalog = () => {
         </div>
       </div>
 
-      {!loading && events?.length === 0 ? (
+      {error ? (
+        <Alert variant="warning">{i18n("Events are not available at the moment")}</Alert>
+      ) : !loading && events?.length === 0 ? (
         <LocationResultsFallback
           city={city}
           country={country}
@@ -172,9 +198,14 @@ export const EventsCatalog = () => {
           icon={<MapPinOff size={50} />}
         />
       ) : viewMode === "grid" && !isMobile ? (
-        <div className={`grid auto-rows-auto grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4`}>
+        <div className={`
+          grid auto-rows-auto grid-cols-1 gap-4
+          sm:grid-cols-2
+          lg:grid-cols-4
+        `}>
           {eventLayouts.map((layout) => (
             <EventsMasonryCard
+              analyticsSource="catalog"
               event={layout.item}
               hasImage={layout.hasImage}
               key={layout.item.id}
@@ -185,7 +216,7 @@ export const EventsCatalog = () => {
       ) : (
         <div className="flex flex-col gap-4">
           {events.map((event) => (
-            <EventsListCard event={event} key={event.id} />
+            <EventsListCard analyticsSource="catalog" event={event} key={event.id} />
           ))}
         </div>
       )}
@@ -199,7 +230,7 @@ export const EventsCatalog = () => {
       <div className="mt-6 flex justify-center">
         <Pagination
           count={countPages}
-          index={(listState.offset ?? 0) / ITEMS_LIMIT + 1}
+          index={offset / ITEMS_LIMIT + 1}
           loading={loading}
           nextText={i18n("Next")}
           onPaginate={handlePageChange}

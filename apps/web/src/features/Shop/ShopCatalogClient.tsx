@@ -24,6 +24,7 @@ import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { ClothingSize } from "~/lib/constants/options/CLOTHING";
 import { sendToMixpanel } from "~/lib/mixpanel";
+import { INFINITE_SCROLL_MEDIA_QUERY } from "~/lib/responsive";
 import { formatPrice } from "~/lib/utils";
 import { FilterParams, Locale } from "~/types";
 import { Clothing_Age_Group_Enum, Clothing_Gender_Enum, GetPublicProductsQuery } from "~/types/graphql.generated";
@@ -135,7 +136,7 @@ const ProductCard = ({ locale, product }: { locale: Locale; product: Product }) 
 export function ShopCatalogClient({ initialCount, initialProducts }: ShopCatalogClientProps) {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const isMobile = useMediaQuery({ query: INFINITE_SCROLL_MEDIA_QUERY });
   const { usePublicProducts } = useProducts();
 
   const [category, setCategory] = useState<string | undefined>();
@@ -238,6 +239,7 @@ export function ShopCatalogClient({ initialCount, initialProducts }: ShopCatalog
               md:flex-1
             `}>
               <Input
+                aria-label={i18n("Search products by name...")}
                 onChange={handleSearchChange}
                 placeholder={i18n("Search products by name...")}
                 type="search"

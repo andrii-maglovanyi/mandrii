@@ -16,6 +16,7 @@ interface EventsParams {
     lat: number;
     lng: number;
   };
+  includePast?: boolean;
   isOnline?: boolean;
   name?: string;
   priceType?: Price_Type_Enum;
@@ -30,6 +31,7 @@ export const getEventsFilter = ({
   dateTo,
   distance,
   geo,
+  includePast = false,
   isOnline,
   name,
   priceType,
@@ -65,25 +67,19 @@ export const getEventsFilter = ({
     where.city = { _ilike: `%${city}%` };
   }
 
-  // Date range filter - only show upcoming/ongoing events
-  if (dateFrom) {
-    dateConditions = [{ end_date: { _gte: dateFrom } }, { start_date: { _gte: dateFrom } }];
-  } else {
-    dateConditions = [{ end_date: { _gte: now } }, { start_date: { _gte: now } }];
-  }
-
-  if (dateTo) {
-    const endOfDay = /^\d{4}-\d{2}-\d{2}$/.test(dateTo) ? `${dateTo}T23:59:59.999Z` : dateTo;
-
-    dateConditions = dateConditions.map((condition) => {
-      if ("end_date" in condition) {
-        return { end_date: { ...condition.end_date, _lte: endOfDay } };
-      }
-      if ("start_date" in condition) {
-        return { start_date: { ...condition.start_date, _lte: endOfDay } };
-      }
-      return condition;
-    });
+  // An occurrence overlaps the window when it starts before the upper bound
+  // and ends after the lower bound. Checking either endpoint inside the window
+  // would miss multi-day events that span the entire requested period.
+  const rangeStart = dateFrom ?? (includePast ? undefined : now);
+  const rangeEnd = dateTo && (/^\d{4}-\d{2}-\d{2}$/.test(dateTo) ? `${dateTo}T23:59:59.999Z` : dateTo);
+  if (rangeStart || rangeEnd) {
+    dateConditions = [
+      { is_recurring: { _eq: true } },
+      {
+        ...(rangeEnd ? { start_date: { _lte: rangeEnd } } : {}),
+        ...(rangeStart ? { _or: [{ end_date: { _gte: rangeStart } }, { start_date: { _gte: rangeStart } }] } : {}),
+      },
+    ];
   }
 
   if (geo && isOnline !== true) {
@@ -105,7 +101,7 @@ export const getEventsFilter = ({
 
     where._and = [
       ...existingAnd,
-      { _or: dateConditions },
+      ...(dateConditions.length ? [{ _or: dateConditions }] : []),
       {
         _or: [
           { title_en: { _ilike: `%${name}%` } },
@@ -119,7 +115,7 @@ export const getEventsFilter = ({
         ],
       },
     ];
-  } else {
+  } else if (dateConditions.length) {
     where._or = dateConditions;
   }
 

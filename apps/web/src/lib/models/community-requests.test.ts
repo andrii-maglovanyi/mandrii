@@ -12,7 +12,8 @@ vi.mock("~/lib/db/db", () => ({ default: sqlMock }));
 vi.mock("~/lib/api", async () => import("~/lib/api/errors"));
 
 import { ConflictError, ForbiddenError } from "~/lib/api/errors";
-import { createCommunityRequest, createCommunityRequestResponse, getCommunityRequestPage } from "./community-requests";
+
+import { createCommunityRequest, createCommunityRequestResponse, getCommunityRequestPage, getCommunityRequestResponses, getCommunityRequests, getCommunityResponseThread } from "./community-requests";
 
 const responseResult = {
   author_id: "responder-id",
@@ -81,5 +82,33 @@ describe("community request concurrency safeguards", () => {
     const query = String(sqlMock.mock.calls.find(([strings]) => String(strings).includes("FROM community_requests request"))?.[0]);
     expect(query).toContain("ORDER BY\n      location_rank,");
     expect(query).not.toContain("ORDER BY\n      0,");
+  });
+});
+
+describe("community visibility and query cost", () => {
+  it("does not count all posts when fetching previews for an event or venue", async () => {
+    sqlMock.mockReset();
+    sqlMock.mockResolvedValue([]);
+    expect(await getCommunityRequests({ relatedEventId: "event-id" }, 6)).toEqual([]);
+    const queries = sqlMock.mock.calls.map(([strings]) => String(strings));
+    expect(queries.some((query) => query.includes("COUNT(*)::int AS total"))).toBe(false);
+    const list = queries.find((query) => query.includes("FROM community_requests request"));
+    expect(list).toContain("venue.status IN ('ACTIVE', 'ARCHIVED')");
+    expect(list).toContain("event.status IN ('ACTIVE', 'COMPLETED', 'ARCHIVED')");
+  });
+
+  it("does not load private messages for someone outside the conversation", async () => {
+    sqlMock.mockReset();
+    sqlMock.mockResolvedValueOnce([{ author_id: "responder", request_author_id: "author" }]);
+    await expect(getCommunityResponseThread("response-id", "stranger")).rejects.toBeInstanceOf(ForbiddenError);
+    expect(sqlMock).toHaveBeenCalledOnce();
+    expect(String(sqlMock.mock.calls[0][0])).not.toContain("COUNT(*)");
+  });
+
+  it("does not load private responses for someone other than the post author", async () => {
+    sqlMock.mockReset();
+    sqlMock.mockResolvedValueOnce([{ user_id: "author" }]);
+    await expect(getCommunityRequestResponses("request-id", "stranger")).rejects.toBeInstanceOf(ForbiddenError);
+    expect(sqlMock).toHaveBeenCalledOnce();
   });
 });

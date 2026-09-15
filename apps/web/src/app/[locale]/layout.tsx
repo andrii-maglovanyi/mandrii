@@ -1,13 +1,14 @@
 import "../globals.css";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { MainLayout } from "~/components/layout";
 import { NotificationsTicker } from "~/components/layout/NotificationsTicker/NotificationsTicker";
+import { SentryUserContext } from "~/components/layout/SentryUserContext/SentryUserContext";
 import AuthProvider from "~/contexts/AuthContext";
 import { CartProvider } from "~/contexts/CartContext";
 import { DialogProvider } from "~/contexts/DialogContext";
@@ -15,7 +16,18 @@ import { NotificationsProvider } from "~/contexts/NotificationsContext";
 import { ThemeProvider } from "~/contexts/ThemeContext";
 import { routing } from "~/i18n/routing";
 import ApolloWrapper from "~/lib/apollo/provider";
+import { auth } from "~/lib/auth";
+import { isPreview } from "~/lib/config/env";
+import { noIndexRobots } from "~/lib/seo";
 import { UrlHelper } from "~/lib/url-helper";
+
+export const viewport: Viewport = {
+  initialScale: 1,
+  interactiveWidget: "resizes-content",
+  themeColor: "#336fb0",
+  viewportFit: "cover",
+  width: "device-width",
+};
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -28,11 +40,9 @@ export async function generateMetadata({ params }: RootLayoutProps): Promise<Met
 
   return {
     alternates: {
-      canonical: UrlHelper.buildUrl(`/${locale}`),
-      languages: {
-        en: UrlHelper.buildUrl("/en"),
-        uk: UrlHelper.buildUrl("/uk"),
-      },
+      // A relative canonical follows the current route. Route-specific pages
+      // replace this with their fully localized canonical and hreflang links.
+      canonical: "./",
     },
     appleWebApp: {
       capable: true,
@@ -59,6 +69,7 @@ export async function generateMetadata({ params }: RootLayoutProps): Promise<Met
       title: isUkrainian ? "Мандрій" : "Mandrii",
       type: "website",
     },
+    ...(isPreview ? { robots: noIndexRobots } : {}),
     title: isUkrainian ? "Мандрій" : "Mandrii",
   };
 }
@@ -90,7 +101,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
     notFound();
   }
 
-  const cookieStore = await cookies();
+  const [cookieStore, session] = await Promise.all([cookies(), auth()]);
   const themeCookie = cookieStore.get("mndr.theme");
   const themeCookieValue = themeCookie?.value;
   const hasThemeCookie = themeCookieValue === "dark" || themeCookieValue === "light";
@@ -103,12 +114,13 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
       </head>
       <body suppressHydrationWarning>
         <ApolloWrapper>
-          <AuthProvider>
+          <AuthProvider session={session}>
             <ThemeProvider>
               <NextIntlClientProvider>
                 <DialogProvider>
                   <NotificationsProvider>
                     <CartProvider>
+                      <SentryUserContext />
                       <MainLayout>{children}</MainLayout>
                       <NotificationsTicker />
                     </CartProvider>

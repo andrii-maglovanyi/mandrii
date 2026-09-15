@@ -19,7 +19,6 @@ export interface ContentData {
 }
 
 export interface ContentManagerConfig {
-  baseDirectory?: string;
   defaultLocale?: Locale;
   sortBy?: keyof ContentData["meta"];
   sortOrder?: "asc" | "desc";
@@ -48,7 +47,6 @@ interface PaginatedResult<T> {
 }
 
 const DEFAULT_CONFIG: Required<ContentManagerConfig> = {
-  baseDirectory: "content",
   defaultLocale: Locale.EN,
   sortBy: "date" as keyof ContentData["meta"],
   sortOrder: "desc",
@@ -61,7 +59,9 @@ class MarkdownContentManager {
 
   constructor(config: ContentManagerConfig = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
-    this.baseDirectory = path.join(process.cwd(), this.config.baseDirectory);
+    // Content files are explicitly included for consuming routes in next.config.mjs.
+    // Avoid treating dynamic Markdown filenames as an unrestricted project glob.
+    this.baseDirectory = path.join(/* turbopackIgnore: true */ process.cwd(), "content");
   }
 
   /**
@@ -69,6 +69,7 @@ class MarkdownContentManager {
    */
   public contentExists(contentType: ContentType, id: string, lang: Locale = this.config.defaultLocale): boolean {
     try {
+      if (!isSafeContentSegment(id)) return false;
       const validLang = this.validateLocale(lang);
       const contentDirectory = this.getContentDirectory(contentType, validLang);
 
@@ -168,6 +169,7 @@ class MarkdownContentManager {
     locale: Locale = this.config.defaultLocale,
   ): Promise<ContentData | null> {
     try {
+      if (!isSafeContentSegment(id)) return null;
       const scanDirectory = (locale: Locale) => {
         let fullPath: null | string = null;
 
@@ -324,6 +326,7 @@ class MarkdownContentManager {
   }
 
   private getContentDirectory(contentType: ContentType, locale: Locale) {
+    if (!isSafeContentSegment(contentType)) throw new Error("Invalid content type");
     const validLocale = this.validateLocale(locale);
 
     return path.join(this.baseDirectory, contentType, validLocale);
@@ -398,6 +401,10 @@ class MarkdownContentManager {
   private validateLocale(lang: Locale) {
     return this.config.supportedLocales.includes(lang) ? lang : this.config.defaultLocale;
   }
+}
+
+export function isSafeContentSegment(value: string) {
+  return typeof value === "string" && value.length > 0 && value !== "." && value !== ".." && !/[\\/\0]/.test(value);
 }
 
 export const contentManager = new MarkdownContentManager();

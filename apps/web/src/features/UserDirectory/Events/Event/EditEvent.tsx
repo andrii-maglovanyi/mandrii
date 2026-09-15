@@ -10,12 +10,13 @@ import { useCallback, useEffect, useState } from "react";
 import { ActionButton, AnimatedEllipsis, ContentStatusBadge, EmptyState, RichText, Tooltip } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
 import { useEvents, useNotifications, useUser } from "~/hooks";
+import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
+import { sendToMixpanel } from "~/lib/mixpanel";
 import { toDateLocale } from "~/lib/utils";
 import { Event_Status_Enum, Locale } from "~/types";
 
 import { EventForm } from "./EventForm";
-import { Link } from "~/i18n/navigation";
 
 interface EventProps {
   slug?: string;
@@ -27,11 +28,11 @@ export const EditEvent = ({ slug }: EventProps) => {
   const locale = useLocale() as Locale;
   const i18n = useI18n();
   const router = useRouter();
-  const { updateEventStatus, useGetEvent } = useEvents();
+  const { updateEventStatus, useEditableEvent } = useEvents();
   const { openConfirmDialog } = useDialog();
 
   const { data: profileData } = useUser();
-  const { data, error, loading } = useGetEvent(slug);
+  const { data, error, loading } = useEditableEvent(slug);
   const [meta, setMeta] = useState<{ createdAt: string; status: Event_Status_Enum } | null>(null);
 
   useEffect(() => {
@@ -53,6 +54,9 @@ export const EditEvent = ({ slug }: EventProps) => {
       },
     });
 
+    sendToMixpanel(slug ? "Updated Event" : "Submitted Event", {
+      submission_type: slug ? "update" : "new",
+    });
     showSuccess(i18n("Event updated successfully"));
     router.push("/user-directory");
 
@@ -60,7 +64,7 @@ export const EditEvent = ({ slug }: EventProps) => {
     setTimeout(() => {
       window.location.hash = encodeURIComponent(i18n("Events"));
     }, 300);
-  }, [i18n, router, showSuccess, client]);
+  }, [client, i18n, router, showSuccess, slug]);
 
   const submitEvent = useCallback(
     async (body: FormData) => {
@@ -121,7 +125,10 @@ export const EditEvent = ({ slug }: EventProps) => {
     return (
       <>
         {data && meta ? (
-          <div className={`text-neutral-disabled flex cursor-default items-center justify-end space-x-3 text-sm`}>
+          <div className={`
+            flex cursor-default items-center justify-end space-x-3 text-sm
+            text-neutral-disabled
+          `}>
             <Tooltip label={i18n("Created on")}>
               {format(new Date(meta.createdAt), "dd MMMM yyyy", { locale: toDateLocale(locale) })}
             </Tooltip>
@@ -130,7 +137,13 @@ export const EditEvent = ({ slug }: EventProps) => {
             {data.id ? (
               <Tooltip label={i18n("View event in a new tab")}>
                 <Link
-                  className="text-primary hover:bg-primary/20 focus:ring-primary focus:ring-offset-surface inline-flex h-10 w-10 items-center justify-center rounded-md transition focus:ring-2 focus:ring-offset-1 focus:outline-none"
+                  className={`
+                    inline-flex h-10 w-10 items-center justify-center rounded-md
+                    text-primary transition
+                    hover:bg-primary/20
+                    focus:ring-2 focus:ring-primary focus:ring-offset-1
+                    focus:ring-offset-surface focus:outline-none
+                  `}
                   href={`/events/${data.slug}`}
                   target="_blank"
                 >
@@ -195,7 +208,7 @@ export const EditEvent = ({ slug }: EventProps) => {
             )}
           </div>
         ) : null}
-        <RichText as="div" className="text-neutral mb-6 text-sm">
+        <RichText as="div" className="mb-6 text-sm text-neutral">
           {slug
             ? i18n(
                 "Edit your event details below.\nYou can update all fields except the slug, which is locked after the first creation.",
@@ -208,7 +221,7 @@ export const EditEvent = ({ slug }: EventProps) => {
           initialValues={{
             ...data,
             is_online: Boolean(data?.is_online),
-            is_recurring: Boolean(data?.recurrence_rule),
+            is_recurring: Boolean(data?.is_recurring),
             registration_required: Boolean(data?.registration_required),
             slug: data?.slug || "",
             title_en: data?.title_en || "",

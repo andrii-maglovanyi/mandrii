@@ -2,6 +2,7 @@
 
 import { useLocale } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 import { FormFooter } from "~/components/layout";
 import { Input, RichText, Select, TabPane, Tabs } from "~/components/ui";
@@ -12,7 +13,7 @@ import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
 import { constructSlug } from "~/lib/utils/slug";
 import { EventSchema, getEventSchema } from "~/lib/validation/event";
-import { Event_Type_Enum, Locale, Status, Venue_Status_Enum } from "~/types";
+import { Event_Type_Enum, Locale, Status } from "~/types";
 
 import { EventContacts } from "./EventContacts";
 import { EventDate } from "./EventDate";
@@ -30,16 +31,10 @@ interface EventFormProps {
 export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventFormProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
-  const { usePublicVenues } = useVenues();
+  const { usePublicVenueOptions } = useVenues();
 
-  // Fetch all active venues for the dropdown
-  const { data: venues, loading: venuesLoading } = usePublicVenues({
-    limit: 1000, // TODO: implement pagination when needed
-    order_by: [{ name: "asc" }],
-    where: {
-      status: { _eq: Venue_Status_Enum.Active },
-    },
-  });
+  const [venueSearch, setVenueSearch] = useState("");
+  const [debouncedVenueSearch] = useDebounce(venueSearch, 250);
 
   const {
     errors,
@@ -57,6 +52,8 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
     schema: getEventSchema(i18n),
   });
 
+  const { data: venues, loading: venuesLoading } = usePublicVenueOptions(debouncedVenueSearch, values.venue_id);
+
   const { handleSubmit, status } = useFormSubmit({
     onSubmit,
     onSuccess,
@@ -71,16 +68,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
       ...prev,
       slug: constructSlug(values.type, title, values.area?.split(",")[0]?.trim()),
     }));
-  }, [
-    initialValues.id,
-    setValues,
-    values.type,
-    values.title_en,
-    values.title_uk,
-    values.area,
-    values.venue_id,
-    venues,
-  ]);
+  }, [initialValues.id, setValues, values.type, values.title_en, values.title_uk, values.area, values.venue_id]);
 
   const eventTypeOptions = Object.values(Event_Type_Enum).map((value) => {
     const { iconName, label } = constants.eventTypes[value as keyof typeof constants.eventTypes];
@@ -112,8 +100,14 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
 
   return (
     <form className="space-y-4" onSubmit={isPreparingImages ? (event) => event.preventDefault() : handleSubmit}>
-      <div className={`flex grow flex-col justify-evenly lg:space-x-4`}>
-        <div className={`flex flex-col justify-evenly md:flex-row md:space-x-4`}>
+      <div className={`
+        flex grow flex-col justify-evenly
+        lg:space-x-4
+      `}>
+        <div className={`
+          flex flex-col justify-evenly
+          md:flex-row md:space-x-4
+        `}>
           <div className="flex flex-1 flex-col">
             <Input
               label="Назва події (🇺🇦 Українською)"
@@ -133,7 +127,10 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
             />
           </div>
         </div>
-        <div className={`mt-1 flex flex-col justify-evenly md:flex-row md:space-x-4`}>
+        <div className={`
+          mt-1 flex flex-col justify-evenly
+          md:flex-row md:space-x-4
+        `}>
           <div className="flex flex-2 flex-col">
             <Select label={i18n("Event type")} options={eventTypeOptions} required {...getFieldProps("type")} />
           </div>
@@ -146,7 +143,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
               {...getFieldProps("slug")}
               disabled={isBusy || Boolean(initialValues.id)}
             />
-            <RichText as="p" className="text-neutral mt-1.5 text-sm">
+            <RichText as="p" className="mt-1.5 text-sm text-neutral">
               {i18n(
                 "↑ This is the unique identifier which must be URL-friendly and **at least 10 characters long**. Once created, it cannot be changed.",
               )}
@@ -169,6 +166,7 @@ export const EventForm = ({ initialValues = {}, onSubmit, onSuccess }: EventForm
             isBusy={isBusy}
             setErrors={setErrors}
             setValues={setValues}
+            setVenueSearch={setVenueSearch}
             values={values}
             venueOptions={venueOptions}
             venuesLoading={venuesLoading}

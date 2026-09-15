@@ -5,6 +5,7 @@ import { Building, Calendar, MapPin, PoundSterling, Users } from "lucide-react";
 import { useLocale } from "next-intl";
 
 import { useI18n } from "~/i18n/useI18n";
+import { getNextOccurrenceStart, getOccurrenceEnd } from "~/lib/events/recurrence";
 import { toDateLocale } from "~/lib/utils";
 import { GetPublicEventsQuery, Locale } from "~/types";
 
@@ -30,8 +31,13 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
   const i18n = useI18n();
   const locale = useLocale() as Locale;
 
-  const startDate = event.start_date ? new Date(String(event.start_date)) : null;
-  const endDate = event.end_date ? new Date(String(event.end_date)) : null;
+  const originalStartDate = event.start_date ? new Date(String(event.start_date)) : null;
+  const nextOccurrenceStart = getNextOccurrenceStart(event);
+  const startDate = nextOccurrenceStart ?? originalStartDate;
+  const endDate = startDate ? getOccurrenceEnd(startDate, event) : null;
+  const displaysNextOccurrence = Boolean(
+    event.is_recurring && nextOccurrenceStart && originalStartDate && nextOccurrenceStart > originalStartDate,
+  );
   const capacity = event.capacity as null | number;
   const isOnline = event.is_online as boolean;
   const venueName = event.venue ? String((event.venue as Record<string, unknown>)?.name || "") : null;
@@ -52,6 +58,7 @@ export const CardMetadata = ({ event, variant = "list" }: CardMetadataProps) => 
           <Calendar className="mt-0.5 min-h-4 min-w-4 shrink-0" size={16} />
           <div className="flex-1">
             <div className="gap-2 font-medium">
+              {displaysNextOccurrence && <span className="mr-1 text-primary">{i18n("Next occurrence")}:</span>}
               <span>{format(startDate, "EE, d MMMM yyyy", { locale: toDateLocale(locale) })} - </span>
               <span>
                 {endDate &&

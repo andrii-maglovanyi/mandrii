@@ -1,8 +1,8 @@
 "use client";
 
 import clsx from "clsx";
-import { ChevronDown } from "lucide-react";
-import { ChangeEvent, Ref, useEffect, useId, useRef, useState } from "react";
+import { ChevronDown, LoaderCircle } from "lucide-react";
+import { ChangeEvent, Ref, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { FieldErrorMessage } from "../FieldErrorMessage/FieldErrorMessage";
 import { getMenuOverlayLayout, Menu, MenuHandle, MenuOption, MenuOverlayLayout } from "../Menu/Menu";
@@ -16,13 +16,19 @@ export type SelectProps<K, T> = {
   error?: string;
   id?: string;
   label?: string;
+  loading?: boolean;
   name?: string;
   onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onChange?: (e: { target: { value: T } } & ChangeEvent<HTMLSelectElement>) => void;
+  onSearchChange?: (query: string) => void;
   options: Array<MenuOption<K, T>>;
   placeholder?: string;
   ref?: Ref<HTMLButtonElement>;
   required?: boolean;
+  searchable?: boolean;
+  searchEmptyLabel?: React.ReactNode;
+  searchPlaceholder?: string;
+  searchText?: (option: MenuOption<K, T>) => string;
   selectedLabel?: React.ReactNode;
   showErrorMessage?: boolean;
   value?: T;
@@ -36,13 +42,19 @@ export function Select<K extends React.ReactNode, T>({
   error,
   id,
   label,
+  loading = false,
   name,
   onBlur,
   onChange,
+  onSearchChange,
   options = [],
   placeholder = "Select...",
   ref,
   required = false,
+  searchable = false,
+  searchEmptyLabel = "No matching options",
+  searchPlaceholder = "Search options...",
+  searchText,
   selectedLabel: selectedLabelOverride,
   showErrorMessage = false,
   value,
@@ -50,58 +62,68 @@ export function Select<K extends React.ReactNode, T>({
   const generatedId = useId();
   const selectId = id ?? generatedId;
   const [focused, setFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [menuOverlay, setMenuOverlay] = useState<MenuOverlayLayout>({ placement: "bottom", portalTarget: null });
 
   const selectedLabel = selectedLabelOverride ?? options.find((opt) => opt.value === value)?.label ?? placeholder;
+  const visibleOptions = useMemo(() => {
+    if (onSearchChange || !searchable || !searchQuery.trim()) return options;
+
+    const normalizedQuery = searchQuery.trim().toLocaleLowerCase();
+    return options.filter((option) =>
+      (searchText?.(option) ?? String(option.label)).toLocaleLowerCase().includes(normalizedQuery),
+    );
+  }, [onSearchChange, options, searchQuery, searchable, searchText]);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<MenuHandle>(null);
 
   useEffect(() => {
-    const handleFocusOut = (e: FocusEvent) => {
-      const menu = (e.relatedTarget as Element | null)?.closest?.("[data-menu-overlay]");
+    if (!focused) return;
+
+    const dismissOutside = (event: Event) => {
+      const target = event.target as Element | null;
       if (
-        !wrapperRef.current?.contains(e.relatedTarget as Node) &&
-        menu?.getAttribute("data-menu-owner") !== selectId
+        !wrapperRef.current?.contains(target) &&
+        target?.closest?.("[data-menu-overlay]")?.getAttribute("data-menu-owner") !== selectId
       ) {
         setFocused(false);
       }
     };
-
-    const handleKeyDown = (event: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
-      if (event.key === "Escape") {
-        setFocused(false);
-      }
-    };
-
-    const node = wrapperRef.current;
-    if (node) {
-      node.addEventListener("focusout", handleFocusOut);
-      node.addEventListener("keydown", handleKeyDown);
-    }
-
+    document.addEventListener("focusin", dismissOutside);
+    document.addEventListener("pointerdown", dismissOutside);
     return () => {
-      node?.removeEventListener("keydown", handleKeyDown);
-      node?.removeEventListener("focusout", handleFocusOut);
+      document.removeEventListener("focusin", dismissOutside);
+      document.removeEventListener("pointerdown", dismissOutside);
     };
-  }, []);
+  }, [focused, selectId]);
+
+  const openMenu = () => {
+    setSearchQuery("");
+    onSearchChange?.("");
+    setMenuOverlay(getMenuOverlayLayout(wrapperRef.current, options.length + (searchable ? 2 : 0)));
+    setFocused(true);
+  };
 
   const onSelectKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "ArrowDown" && options.length > 0) {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
-      menuRef.current?.focusIndex(0);
+      if (!focused) openMenu();
+      else menuRef.current?.focusIndex(e.key === "ArrowUp" ? visibleOptions.length - 1 : 0);
     }
   };
 
   const toggleMenu = () => {
-    if (focused) {
-      setFocused(false);
-      return;
-    }
-
-    setMenuOverlay(getMenuOverlayLayout(wrapperRef.current, options.length));
-    setFocused(true);
+    if (focused) setFocused(false);
+    else openMenu();
   };
+
+  useEffect(() => {
+    if (!focused) return;
+    if (searchable) menuRef.current?.focusSearch();
+    else menuRef.current?.focusIndex(0);
+  }, [focused, searchable]);
 
   const selectClass = clsx(
     "flex items-center px-3 pr-10 text-left",
@@ -115,16 +137,29 @@ export function Select<K extends React.ReactNode, T>({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-on-surface text-sm font-medium" htmlFor={selectId}>
+        <label className="text-sm font-medium text-on-surface" htmlFor={selectId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>
       )}
-      <div className="relative" ref={wrapperRef}>
+      <div
+        className="relative"
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && focused) {
+            event.preventDefault();
+            event.stopPropagation();
+            setFocused(false);
+            buttonRef.current?.focus();
+          }
+        }}
+        ref={wrapperRef}
+      >
         <button
-          aria-label={ariaLabel}
+          aria-describedby={showErrorMessage && error ? `${selectId}-error` : undefined}
           aria-expanded={focused}
           aria-haspopup="listbox"
+          aria-invalid={Boolean(error)}
+          aria-label={ariaLabel}
           className={selectClass}
           data-testid={testId}
           disabled={disabled}
@@ -133,19 +168,32 @@ export function Select<K extends React.ReactNode, T>({
           onBlur={onBlur}
           onClick={toggleMenu}
           onKeyDown={onSelectKeyDown}
-          ref={ref}
+          ref={(node) => {
+            buttonRef.current = node;
+            if (typeof ref === "function") return ref(node);
+            if (ref) ref.current = node;
+          }}
           type="button"
         >
-          <span className="max-w-max min-w-full flex-1 truncate">{selectedLabel}</span>
-          <ChevronDown
-            aria-hidden
-            className={clsx(`ml-2 shrink-0 text-neutral-500 transition-transform`, focused && `rotate-180`)}
-            size={18}
-          />
+          <span className="min-w-0 flex-1 truncate">{selectedLabel}</span>
+          {loading ? (
+            <LoaderCircle aria-hidden className={`
+              ml-2 shrink-0 animate-spin text-neutral-500
+            `} size={18} />
+          ) : (
+            <ChevronDown
+              aria-hidden
+              className={clsx(`
+                ml-2 shrink-0 text-neutral-500 transition-transform
+              `, focused && `rotate-180`)}
+              size={18}
+            />
+          )}
         </button>
-        {focused && options.length > 0 && (
+        {focused && (options.length > 0 || searchable) && (
           <Menu
             floatingPosition={menuOverlay.floatingPosition}
+            loading={loading}
             maxHeight={menuOverlay.maxHeight}
             onSelect={(value) => {
               const event = {
@@ -157,16 +205,32 @@ export function Select<K extends React.ReactNode, T>({
               onChange?.(event);
 
               setFocused(false);
+              buttonRef.current?.focus();
             }}
-            options={options}
+            options={visibleOptions}
             ownerId={selectId}
             placement={menuOverlay.placement}
             portalTarget={menuOverlay.portalTarget}
             ref={menuRef}
+            search={
+              searchable
+                ? {
+                    emptyLabel: searchEmptyLabel,
+                    label: ariaLabel ?? label ?? placeholder,
+                    onChange: (query) => {
+                      setSearchQuery(query);
+                      onSearchChange?.(query);
+                    },
+                    placeholder: searchPlaceholder,
+                    value: searchQuery,
+                  }
+                : undefined
+            }
+            selectedValue={value}
           />
         )}
       </div>
-      {showErrorMessage && <FieldErrorMessage error={error} />}
+      {showErrorMessage && <FieldErrorMessage error={error} id={`${selectId}-error`} />}
     </div>
   );
 }

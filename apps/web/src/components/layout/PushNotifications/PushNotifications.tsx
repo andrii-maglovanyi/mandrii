@@ -7,6 +7,7 @@ import { ActionButton } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { publicConfig } from "~/lib/config/public";
 import { getCompatiblePushSubscription, urlBase64ToUint8Array } from "~/lib/push-subscription";
+import { readyAppWorker } from "~/lib/pwa/registration";
 
 export const PushNotifications = () => {
   const i18n = useI18n();
@@ -82,8 +83,7 @@ export const PushNotifications = () => {
         setStatus(permission === "denied" ? "blocked" : "idle");
         return;
       }
-      await navigator.serviceWorker.register("/sw.js");
-      const registration = await navigator.serviceWorker.ready;
+      const registration = await readyAppWorker();
       const subscription =
         (await getCompatiblePushSubscription(registration, publicKey)) ??
         (await registration.pushManager.subscribe({

@@ -15,6 +15,13 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+          { key: "Service-Worker-Allowed", value: "/" },
+        ],
+      },
+      {
         headers: [
           {
             key: "Strict-Transport-Security",
@@ -48,8 +55,10 @@ const nextConfig = {
     ],
   },
   outputFileTracingIncludes: {
-    "/api/**/*": ["./content/**/*", "./.next/static/css/**/*"],
-    "/app/[locale]/**/*": ["./content/**/*"],
+    "/api/pdf": ["./content/**/*", "./.next/static/css/**/*.css", "./.next/static/chunks/**/*.css"],
+    "/\\[locale\\]": ["./content/**/*"],
+    "/\\[locale\\]/**": ["./content/**/*"],
+    "/sitemap.xml": ["./content/posts/**/*"],
   },
   async rewrites() {
     return [
@@ -67,17 +76,17 @@ const nextConfig = {
 
 export default withSentryConfig(withNextIntl(nextConfig), {
   authToken: process.env.SENTRY_AUTH_TOKEN,
-  webpack: {
-    automaticVercelMonitors: true,
-    treeshake: {
-      removeDebugLogging: true,
-    },
-    reactComponentAnnotation: {
-      enabled: true,
-    },
-  },
   org: "mandrii",
   project: "mandrii",
   silent: !process.env.CI,
+  webpack: {
+    automaticVercelMonitors: true,
+    reactComponentAnnotation: {
+      enabled: true,
+    },
+    treeshake: {
+      removeDebugLogging: true,
+    },
+  },
   widenClientFileUpload: true,
 });

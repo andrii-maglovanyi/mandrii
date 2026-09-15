@@ -14,7 +14,27 @@ interface LocationData {
   regionName?: string;
 }
 
-let debounceTimer: NodeJS.Timeout | null = null;
+let locationDataPromise: null | Promise<LocationData> = null;
+
+const getLocationData = () => {
+  if (!locationDataPromise) {
+    locationDataPromise = fetch("/api/geo-ip")
+      .then(async (response) => {
+        if (!response.ok) {
+          console.log("Could not fetch location.");
+          return {};
+        }
+
+        return (await response.json()) as LocationData;
+      })
+      .catch((error) => {
+        console.log("Could not fetch location:", error);
+        return {};
+      });
+  }
+
+  return locationDataPromise;
+};
 
 function getUserID(): string {
   let userID = localStore.get("uid");
@@ -36,23 +56,8 @@ export const sendToMixpanel = (eventName: string, eventProperties?: EventPropert
     return;
   }
 
-  if (debounceTimer) {
-    clearTimeout(debounceTimer);
-  }
-
-  debounceTimer = setTimeout(async () => {
-    let locationData: LocationData = {};
-
-    try {
-      const locationResponse = await fetch("/api/geo-ip");
-      if (locationResponse.ok) {
-        locationData = (await locationResponse.json()) as LocationData;
-      } else {
-        console.log("Could not fetch location.");
-      }
-    } catch (error) {
-      console.log("Could not fetch location:", error);
-    }
+  void (async () => {
+    const locationData = await getLocationData();
 
     const urlParams = new URLSearchParams(window.location.search);
     const utmParams: Record<string, string | undefined> = Object.fromEntries(
@@ -106,5 +111,5 @@ export const sendToMixpanel = (eventName: string, eventProperties?: EventPropert
         console.log("Error sending Mixpanel event:", error);
       }
     }
-  }, 500);
+  })();
 };

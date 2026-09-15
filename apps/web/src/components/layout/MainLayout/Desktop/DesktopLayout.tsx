@@ -5,23 +5,29 @@ import { CartButton } from "../../CartButton/CartButton";
 import { LanguageToggle } from "../../LanguageToggle/LanguageToggle";
 import { LoveButton } from "../../LoveButton/LoveButton";
 import { ThemeToggle } from "../../ThemeToggle/ThemeToggle";
-import { Container } from "../Container";
 import { Logo } from "../Logo";
 
 type DesktopLayoutProps = {
-  children: React.ReactNode;
   navLinks: React.ReactNode;
 };
 
-export function DesktopLayout({ children, navLinks }: Readonly<DesktopLayoutProps>) {
+export function DesktopLayout({ navLinks }: Readonly<DesktopLayoutProps>) {
   return (
-    <div className="hidden min-h-0 flex-1 flex-col md:flex">
+    <>
       <header
-        className={`relative z-50 flex h-16 items-center justify-between px-4 shadow-md dark:shadow-neutral-500/10`}
+        className={`
+          relative z-40 flex min-h-16 shrink-0 items-center justify-between px-4
+          pt-[env(safe-area-inset-top)] shadow-md
+          dark:shadow-neutral-500/10
+        `}
       >
         <Logo />
 
-        <nav className={`hidden space-x-6 md:flex lg:space-x-12`}>
+        <nav className={`
+          hidden space-x-6
+          md:flex
+          lg:space-x-12
+        `}>
           {navLinks}
 
           <div className="flex space-x-2">
@@ -33,7 +39,6 @@ export function DesktopLayout({ children, navLinks }: Readonly<DesktopLayoutProp
           </div>
         </nav>
       </header>
-      <Container>{children}</Container>
-    </div>
+    </>
   );
 }

@@ -13,7 +13,7 @@ describe("useForm", () => {
   it("initializes with empty or provided values", () => {
     const { result } = renderHook(() => useForm({ initialValues: { name: "John" }, schema }));
     expect(result.current.values.name).toBe("John");
-    expect(result.current.values.email).toBe("");
+    expect(result.current.values.email).toBeUndefined();
   });
 
   it("updates values via onChange", () => {
@@ -27,7 +27,7 @@ describe("useForm", () => {
   });
 
   it("validates field on blur and sets error", () => {
-    const { result } = renderHook(() => useForm({ schema }));
+    const { result } = renderHook(() => useForm({ initialValues: { name: "" }, schema }));
 
     act(() => {
       result.current.handleBlur("name")();
@@ -38,7 +38,7 @@ describe("useForm", () => {
   });
 
   it("validates entire form and returns false if invalid", () => {
-    const { result } = renderHook(() => useForm({ schema }));
+    const { result } = renderHook(() => useForm({ initialValues: { email: "", name: "" }, schema }));
 
     let validationResult: { email: string; name: string } | false = false;
 

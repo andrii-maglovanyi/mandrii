@@ -1,7 +1,14 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { ShippingInfo } from "./ShippingInfo";
+
+vi.mock("~/i18n/useI18n", () => ({
+  useI18n:
+    () =>
+    (key: string, params: Record<string, unknown> = {}) =>
+      key.replace(/\{(\w+)\}/g, (_, name) => String(params[name] ?? name)),
+}));
 
 describe("ShippingInfo", () => {
   it("renders shipping information correctly", () => {

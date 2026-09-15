@@ -5,12 +5,19 @@ const { sqlMock } = vi.hoisted(() => ({ sqlMock: vi.fn() }));
 
 vi.mock("~/lib/db/db", () => ({ default: sqlMock }));
 
-import { getContentAlertDeliveryRetryOutcome } from "./content-subscription-alert-deliveries";
+import {
+  CONTENT_ALERT_DELIVERY_FREQUENCIES,
+  getContentAlertDeliveryRetryOutcome,
+} from "./content-subscription-alert-deliveries";
 
 describe("content subscription external alert delivery", () => {
   it("uses bounded exponential retries and fails permanently after eight attempts", () => {
     expect(getContentAlertDeliveryRetryOutcome(1)).toEqual({ delaySeconds: 60, status: "PENDING" });
     expect(getContentAlertDeliveryRetryOutcome(2)).toEqual({ delaySeconds: 120, status: "PENDING" });
     expect(getContentAlertDeliveryRetryOutcome(8)).toEqual({ delaySeconds: null, status: "FAILED" });
+  });
+
+  it("supports immediate, daily, and weekly delivery schedules", () => {
+    expect(CONTENT_ALERT_DELIVERY_FREQUENCIES).toEqual(["DAILY", "IMMEDIATE", "WEEKLY"]);
   });
 });

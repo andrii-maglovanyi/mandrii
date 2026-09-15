@@ -19,20 +19,21 @@ import {
   TabPane,
   Tabs,
 } from "~/components/ui";
+import { CommunityAroundContent } from "~/features/CommunityRequests";
+import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
 import { EventsMasonryCard } from "~/features/Events/EventCard/EventsMasonryCard";
+import { FollowContentButton } from "~/features/Following/FollowContentButton";
 import { VenueMessaging } from "~/features/Messaging/VenueMessaging";
 import { ContentRating } from "~/features/Ratings/ContentRating";
 import { ContentReviews } from "~/features/Ratings/ContentReviews";
-import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
-import { CommunityAroundContent } from "~/features/CommunityRequests";
+import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
 import { useEvents } from "~/hooks/useEvents";
 import { useUser } from "~/hooks/useUser";
 import { useVenues } from "~/hooks/useVenues";
 import { useVenueUnreadCount } from "~/hooks/useVenueUnreadCount";
-import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
-import { FollowContentButton } from "~/features/Following/FollowContentButton";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
+import { isEventScheduleFinished, sortEventsByNextOccurrence } from "~/lib/events/recurrence";
 import { getPublicMediaUrl } from "~/lib/media";
 import {
   FilterParams,
@@ -76,30 +77,38 @@ export const VenueView = ({
 }: VenueViewProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
-  const { useGetVenue } = useVenues();
+  const { usePublicVenue } = useVenues();
   const { usePublicEvents } = useEvents();
   const { data: profile } = useUser();
   const router = useRouter();
 
   // Use initial data if provided (from server), otherwise fetch client-side
   const shouldFetchClientSide = initialVenue === undefined;
-  const { data: clientVenue, loading } = useGetVenue(shouldFetchClientSide ? slug : undefined);
+  const { data: clientVenue, loading } = usePublicVenue(shouldFetchClientSide ? slug : undefined);
   const venue = shouldFetchClientSide ? clientVenue : initialVenue;
 
   const eventsQueryParams = useMemo(
     () => ({
-      limit: 100,
+      limit: undefined,
       order_by: [{ start_date: "asc" as SortDirections }],
       where: {
-        _or: [{ end_date: { _gte: new Date().toISOString() } }, { start_date: { _gte: new Date().toISOString() } }],
+        _or: [
+          { is_recurring: { _eq: true } },
+          { end_date: { _gte: new Date().toISOString() } },
+          { start_date: { _gte: new Date().toISOString() } },
+        ],
         venue_id: { _eq: venue?.id },
       } as FilterParams,
     }),
     [venue?.id],
   );
 
-  const { data: clientEvents } = usePublicEvents(shouldFetchClientSide && venue?.id ? eventsQueryParams : {});
-  const upcomingEvents = shouldFetchClientSide ? clientEvents : initialEvents || [];
+  const { data: clientEvents } = usePublicEvents(eventsQueryParams, {
+    skip: !shouldFetchClientSide || !venue?.id,
+  });
+  const upcomingEvents = sortEventsByNextOccurrence(
+    (shouldFetchClientSide ? clientEvents : initialEvents || []).filter((event) => !isEventScheduleFinished(event)),
+  );
   const unreadChatCount = useVenueUnreadCount(venue?.id, initialMessagingRole !== null && Boolean(venue?.id));
 
   if (loading) {
@@ -139,8 +148,7 @@ export const VenueView = ({
   );
   const isOwner = Boolean(profile?.id && profile.id === venue.owner_id);
   const canEditVenueInfo = Boolean(
-    profile?.id &&
-      (profile.role === "admin" || isOwner || (profile.id === venue.user_id && venue.owner_id === null)),
+    profile?.id && (profile.role === "admin" || isOwner || (profile.id === venue.user_id && venue.owner_id === null)),
   );
   const openSettings = () => router.push(`/user-directory/venues/${venue.slug}/manage`);
   const openVenueEditor = () => router.push(`/user-directory/venues/${venue.slug}`);
@@ -148,35 +156,56 @@ export const VenueView = ({
   return (
     <div className="flex flex-col">
       {/* Hero section. Edge to edge image carousel */}
-      <div className={`relative w-full pb-2 md:pb-4`}>
+      <div className={`
+        relative w-full pb-2
+        md:pb-4
+      `}>
         {showStatus && (
           <div className="absolute top-4 right-4 z-10">
             <ContentStatusBadge appearance="label-with-icon" size="md" status={venue.status} />
           </div>
         )}
         {images.length ? (
-          <div className={`relative aspect-video w-full md:aspect-21/9`}>
+          <div className={`
+            relative aspect-video w-full
+            md:aspect-21/9
+          `}>
             <ImageCarousel autoPlay images={images} priority showDots />
             {/* Gradient overlay */}
             <div
-              className={`pointer-events-none absolute inset-0 bg-linear-to-t from-neutral-900 via-neutral-900/30 to-transparent`}
+              className={`
+                pointer-events-none absolute inset-0 bg-linear-to-t
+                from-neutral-900 via-neutral-900/30 to-transparent
+              `}
             />
           </div>
         ) : (
           <div
-            className={`from-primary/30 via-primary/15 to-secondary/30 relative aspect-video w-full bg-linear-to-br md:aspect-21/9`}
+            className={`
+              relative aspect-video w-full bg-linear-to-br from-primary/30
+              via-primary/15 to-secondary/30
+              md:aspect-21/9
+            `}
           />
         )}
 
         {/* Venue name overlay on image */}
-        <div className={`absolute right-0 bottom-20 left-0 px-4 pb-8 md:bottom-28 md:px-8`}>
+        <div className={`
+          absolute right-0 bottom-20 left-0 px-4 pb-8
+          md:bottom-28 md:px-8
+        `}>
           <div className="mx-auto max-w-5xl">
             <div className="min-w-0">
               <h1
                 className={clsx(
                   isArchived && "line-through",
                   images.length ? "text-neutral-0" : "text-on-surface",
-                  `mb-3 text-3xl leading-tight font-black tracking-tight drop-shadow-2xl md:text-5xl lg:text-6xl`,
+                  `
+                    mb-3 text-3xl leading-tight font-black tracking-tight
+                    drop-shadow-2xl
+                    md:text-5xl
+                    lg:text-6xl
+                  `,
                 )}
               >
                 {venue.name}
@@ -190,7 +219,10 @@ export const VenueView = ({
                   )}
                 >
                   {venue.geo ? <MapPin /> : <BookMarked />}
-                  <span className={`text-base font-medium md:text-lg`}>{venue.address}</span>{" "}
+                  <span className={`
+                    text-base font-medium
+                    md:text-lg
+                  `}>{venue.address}</span>{" "}
                   {venue.geo ? (
                     <Button
                       color="primary"
@@ -208,17 +240,25 @@ export const VenueView = ({
         </div>
 
         {logoUrl && (
-          <div className="absolute right-0 bottom-0 left-0 px-4 md:px-8">
+          <div className={`
+            absolute right-0 bottom-0 left-0 px-4
+            md:px-8
+          `}>
             <div className="mx-auto max-w-5xl">
               <VenueLogo expandable size="xl" variant="hero" venue={venue} />
             </div>
           </div>
         )}
 
-        <div className={clsx(logoUrl && "pl-32 md:pl-44", "mx-auto mt-2 w-full max-w-5xl px-4")}>
+        <div className={clsx(logoUrl && `
+          pl-32
+          md:pl-44
+        `, `mx-auto mt-2 w-full max-w-5xl px-4`)}>
           <CardHeader
-            hideUntilHover={false}
             hideCurrentOwnerProfileAction={isOwner}
+            hideUntilHover={false}
+            showManageAction={false}
+            venue={venue}
             viewActions={
               isOwner ? (
                 <ContentViewOwnerActions
@@ -238,27 +278,47 @@ export const VenueView = ({
                 <FollowContentButton targetId={venue.id} type="venue" />
               )
             }
-            showManageAction={false}
-            venue={venue}
           />
         </div>
       </div>
 
-      <div className={`mx-auto w-full max-w-5xl px-4 py-2 lg:py-4`}>
+      <div className={`
+        mx-auto w-full max-w-5xl px-4 py-2
+        lg:py-4
+      `}>
         <Tabs defaultActiveKey="about" defer mobileFullWidth>
           <TabPane
-            icon={<Info aria-hidden className="size-6 sm:size-5" />}
-            label={<span className="hidden sm:inline">{i18n("About")}</span>}
+            icon={<Info aria-hidden className={`
+              size-6
+              sm:size-5
+            `} />}
+            label={<span className={`
+              hidden
+              sm:inline
+            `}>{i18n("About")}</span>}
             tab={i18n("About")}
           >
-            <div className={`grid grid-cols-1 gap-8 lg:grid-cols-3`}>
+            <div className={`
+              grid grid-cols-1 gap-8
+              lg:grid-cols-3
+            `}>
               {/* Description. Left side (2/3) */}
-              <div className={`space-y-8 lg:col-span-2`}>
+              <div className={`
+                space-y-8
+                lg:col-span-2
+              `}>
                 {description ? (
-                  <RichText className={`prose dark:prose-invert max-w-none text-base`}>{description}</RichText>
+                  <RichText className={`
+                    prose max-w-none text-base
+                    dark:prose-invert
+                  `}>{description}</RichText>
                 ) : (
                   <div
-                    className={`flex items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 py-16 dark:border-gray-700`}
+                    className={`
+                      flex items-center justify-center rounded-2xl border-2
+                      border-dashed border-gray-200 py-16
+                      dark:border-gray-700
+                    `}
                   >
                     <p className="text-neutral/60">{i18n("No description available")}</p>
                   </div>
@@ -297,7 +357,7 @@ export const VenueView = ({
                 </SectionCard>
                 {venue.venue_schedules?.length ? (
                   <SectionCard>
-                    <OpeningHoursDisplay schedules={venue.venue_schedules} isArchived={isArchived} />{" "}
+                    <OpeningHoursDisplay isArchived={isArchived} schedules={venue.venue_schedules} />{" "}
                   </SectionCard>
                 ) : null}
                 {venue.chain && (
@@ -311,8 +371,14 @@ export const VenueView = ({
 
           {canShowRatings && (
             <TabPane
-              icon={<Newspaper aria-hidden className="size-6 sm:size-5" />}
-              label={<span className="hidden sm:inline">{i18n("Feed")}</span>}
+              icon={<Newspaper aria-hidden className={`
+                size-6
+                sm:size-5
+              `} />}
+              label={<span className={`
+                hidden
+                sm:inline
+              `}>{i18n("Feed")}</span>}
               tab={i18n("Feed")}
             >
               <ContentUpdates canManage={canManageUpdates} targetId={venue.id} type="venue" />
@@ -322,15 +388,24 @@ export const VenueView = ({
 
           {upcomingEvents.length > 0 && !isArchived && (
             <TabPane
-              icon={<CalendarDays aria-hidden className="size-6 sm:size-5" />}
-              label={<span className="hidden sm:inline">{i18n("Events")}</span>}
+              icon={<CalendarDays aria-hidden className={`
+                size-6
+                sm:size-5
+              `} />}
+              label={<span className={`
+                hidden
+                sm:inline
+              `}>{i18n("Events")}</span>}
               tab={i18n("Events")}
             >
               <div className="space-y-6">
                 {upcomingEvents.length > 0 && (
                   <div className="space-y-4">
                     <div className="flex items-center justify-end">
-                      <span className={`bg-surface-tint text-neutral rounded-full px-3 py-1 text-xs font-medium`}>
+                      <span className={`
+                        rounded-full bg-surface-tint px-3 py-1 text-xs
+                        font-medium text-neutral
+                      `}>
                         {i18n("{count} events", { count: upcomingEvents.length })}
                       </span>
                     </div>
@@ -351,8 +426,14 @@ export const VenueView = ({
 
           {canShowRatings && (
             <TabPane
-              icon={<Star aria-hidden className="size-6 sm:size-5" />}
-              label={<span className="hidden sm:inline">{i18n("Reviews")}</span>}
+              icon={<Star aria-hidden className={`
+                size-6
+                sm:size-5
+              `} />}
+              label={<span className={`
+                hidden
+                sm:inline
+              `}>{i18n("Reviews")}</span>}
               tab={i18n("Reviews")}
             >
               <ContentReviews context={venue.category} targetId={String(venue.id)} type="venue" />
@@ -361,10 +442,16 @@ export const VenueView = ({
 
           {initialMessagingRole !== null && (
             <TabPane
-              icon={<MessageCircle aria-hidden className="size-6 sm:size-5" />}
+              icon={<MessageCircle aria-hidden className={`
+                size-6
+                sm:size-5
+              `} />}
               label={
                 <>
-                  <span className="hidden sm:inline">{i18n("Chat")}</span>
+                  <span className={`
+                    hidden
+                    sm:inline
+                  `}>{i18n("Chat")}</span>
                   <TabBadge count={unreadChatCount} />
                 </>
               }

@@ -2,18 +2,17 @@ import { after, NextResponse } from "next/server";
 
 import {
   BadRequestError,
-  ForbiddenError,
   getApiContext,
   InternalServerError,
   validateRequest,
   ValidationError,
   withErrorHandling,
 } from "~/lib/api";
-import sql from "~/lib/db/db";
 import { envName } from "~/lib/config/env";
 import { privateConfig } from "~/lib/config/private";
-import { saveVenue } from "~/lib/models/venue";
+import { getEditableContentSlug } from "~/lib/models/content-edit-access";
 import { deliverPendingContentSubscriptionAlerts } from "~/lib/models/content-subscription-alerts";
+import { saveVenue } from "~/lib/models/venue";
 import { upsertVenueAccommodationDetails } from "~/lib/models/venue-accomodation-details";
 import { upsertVenueBeautySalonDetails } from "~/lib/models/venue-beauty-salon-details";
 import { upsertVenueRestaurantDetails } from "~/lib/models/venue-restaurant-details";
@@ -47,19 +46,7 @@ export const POST = (req: Request) =>
     const schema = getVenueSchema(i18n);
     const data = await validateRequest(req, schema);
 
-    if (data.id) {
-      const [existingVenue] = await sql<Array<{ owner_id: null | string; user_id: string }>>`
-        SELECT owner_id, user_id FROM venues WHERE id = ${data.id}
-      `;
-      const canEdit =
-        session.user.role === "admin" ||
-        existingVenue?.owner_id === session.user.id ||
-        (existingVenue?.user_id === session.user.id && existingVenue.owner_id === null);
-
-      if (!canEdit) {
-        throw new ForbiddenError("This venue is now managed by its owner");
-      }
-    }
+    const mediaSlug = data.id ? await getEditableContentSlug("venue", data.id, session) : data.slug;
 
     const {
       address,
@@ -149,7 +136,7 @@ export const POST = (req: Request) =>
       }
     }
 
-    const prefix = [envName, "venues", slug].join("/");
+    const prefix = [envName, "venues", mediaSlug].join("/");
 
     venueData.logo = (await processImages(logo ? [logo] : [], [prefix, "logo"].join("/")))[0] ?? null;
     venueData.images = await processImages(images ?? [], [prefix, "images"].join("/"));

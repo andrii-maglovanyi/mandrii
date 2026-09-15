@@ -10,6 +10,8 @@ import { envName } from "~/lib/config/env";
 import CookieConsentBanner from "../CookieConsentBanner/CookieConsentBanner";
 import { Footer } from "../Footer/Footer";
 import { MessageToast } from "../MessageToast/MessageToast";
+import { PwaControls } from "../Pwa/PwaControls";
+import { Container } from "./Container";
 import { DesktopLayout } from "./Desktop/DesktopLayout";
 import { MobileLayout } from "./Mobile/MobileLayout";
 
@@ -22,7 +24,7 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
   const i18n = useI18n();
   const pathname = usePathname();
   const isMobile = useMediaQuery({
-    query: "(max-width: 768px)",
+    query: "(max-width: 1279px)",
   });
 
   const navItems = [
@@ -39,7 +41,7 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
     return (
       <Link
         aria-current={active ? "page" : undefined}
-        className={active ? "text-primary !font-semibold" : undefined}
+        className={active ? "!font-semibold text-primary" : undefined}
         href={href}
         key={href}
       >
@@ -49,16 +51,10 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
   });
 
   return (
-    <div className="flex min-h-screen flex-col">
-      {isMobile ? (
-        <MobileLayout key="mobile" navLinks={navLinks}>
-          {children}
-        </MobileLayout>
-      ) : (
-        <DesktopLayout key="desktop" navLinks={navLinks}>
-          {children}
-        </DesktopLayout>
-      )}
+    <div className="flex min-h-dvh min-w-0 flex-col">
+      {isMobile ? <MobileLayout navLinks={navLinks} /> : <DesktopLayout navLinks={navLinks} />}
+      <Container>{children}</Container>
+      <PwaControls />
       <CookieConsentBanner />
       <MessageToast />
       {!pathname.includes("/map") && <Footer />}

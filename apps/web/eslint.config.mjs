@@ -1,15 +1,15 @@
-import { FlatCompat } from "@eslint/eslintrc";
 import vitest from "@vitest/eslint-plugin";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import betterTailwindcss from "eslint-plugin-better-tailwindcss";
 import perfectionist from "eslint-plugin-perfectionist";
+import storybook from "eslint-plugin-storybook";
 import testingLibrary from "eslint-plugin-testing-library";
 
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-});
-
 const config = [
-  ...compat.extends("next/core-web-vitals", "next/typescript", "plugin:storybook/recommended"),
+  ...nextVitals,
+  ...nextTypescript,
+  ...storybook.configs["flat/recommended"],
   {
     files: ["src/**/*.test.{ts,tsx}"],
     plugins: {

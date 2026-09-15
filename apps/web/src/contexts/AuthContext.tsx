@@ -1,9 +1,12 @@
 "use client";
 
+import type { Session } from "next-auth";
+
 import { gql, useQuery } from "@apollo/client";
 import { SessionProvider, useSession } from "next-auth/react";
-import { createContext, ReactNode, useContext, useEffect, useRef } from "react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from "react";
 
+import { syncApolloSession } from "~/lib/apollo/client";
 import { Users } from "~/types";
 import { User_Status_Enum } from "~/types/graphql.generated";
 
@@ -35,6 +38,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 type AuthProviderProps = Readonly<{
   children: React.ReactNode;
+  session?: null | Session;
 }>;
 
 const LAST_SEEN_UPDATE_INTERVAL_MS = 5 * 60 * 1000;
@@ -51,7 +55,9 @@ const LastSeenTracker = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
       }
 
       lastTrackedAt.current = Date.now();
-      void fetch("/api/user/last-seen", { keepalive: true, method: "POST" });
+      void fetch("/api/user/last-seen", { keepalive: true, method: "POST" }).catch(() => {
+        // Presence tracking must not interrupt the session on a network failure.
+      });
     };
 
     const trackWhenVisible = () => {
@@ -75,9 +81,9 @@ const LastSeenTracker = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   return null;
 };
 
-export default function AuthProvider({ children }: AuthProviderProps) {
+export default function AuthProvider({ children, session }: AuthProviderProps) {
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <AuthContextProvider>{children}</AuthContextProvider>
     </SessionProvider>
   );
@@ -95,26 +101,32 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
 
+  useEffect(() => {
+    if (status !== "loading") syncApolloSession(session);
+  }, [session, status]);
+
   const { data, loading, refetch } = useQuery(GET_USER_PROFILE, {
     skip: !userId,
     variables: { id: userId! },
   });
 
-  const refetchProfile = async () => {
-    await refetch();
-  };
+  const profile = userId && data?.users_by_pk?.id === userId ? data.users_by_pk : null;
+  const refetchProfile = useCallback(async () => {
+    if (userId) await refetch();
+  }, [refetch, userId]);
 
-  const value: AuthContextType = {
-    isLoading: status === "loading" || loading,
-    profile: data?.users_by_pk || null,
-    refetchProfile,
-  };
+  const value: AuthContextType = useMemo(
+    () => ({
+      isLoading: status === "loading" || Boolean(userId && loading && !profile),
+      profile,
+      refetchProfile,
+    }),
+    [status, userId, loading, profile, refetchProfile],
+  );
 
   return (
     <AuthContext.Provider value={value}>
-      <LastSeenTracker
-        isAuthenticated={status === "authenticated" && data?.users_by_pk?.status === User_Status_Enum.Active}
-      />
+      <LastSeenTracker isAuthenticated={status === "authenticated" && profile?.status === User_Status_Enum.Active} />
       {children}
     </AuthContext.Provider>
   );

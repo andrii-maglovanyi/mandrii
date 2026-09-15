@@ -1,19 +1,29 @@
 import { Event_Status_Enum } from "~/types";
 
+import { isEventScheduleFinished } from "./recurrence";
+
 type EventStatusInput = {
-  end_date?: null | string;
+  end_date?: Date | null | string;
   is_recurring?: boolean;
-  start_date: string;
+  recurrence_rule?: null | string;
+  start_date: Date | string;
   status: Event_Status_Enum;
 };
 
 /**
  * Keeps time-bound event state accurate between scheduled status updates.
- * Recurring events stay active until they are explicitly completed or archived.
+ * A recurring event only stays active while its RRULE still has occurrences.
  */
-export const getEffectiveEventStatus = ({ end_date, is_recurring, start_date, status }: EventStatusInput) => {
-  if (status !== Event_Status_Enum.Active || is_recurring) return status;
+export const getEffectiveEventStatus = ({
+  end_date,
+  is_recurring,
+  recurrence_rule,
+  start_date,
+  status,
+}: EventStatusInput) => {
+  if (status !== Event_Status_Enum.Active) return status;
 
-  const completionTime = Date.parse(end_date || start_date);
-  return Number.isNaN(completionTime) || completionTime >= Date.now() ? status : Event_Status_Enum.Completed;
+  return isEventScheduleFinished({ end_date, is_recurring, recurrence_rule, start_date })
+    ? Event_Status_Enum.Completed
+    : status;
 };

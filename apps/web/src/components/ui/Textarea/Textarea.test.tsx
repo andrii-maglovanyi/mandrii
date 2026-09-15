@@ -36,7 +36,7 @@ describe("Textarea", () => {
   });
 
   it("shows an error message when error prop is provided", () => {
-    render(<Textarea error="This field is required" label="Feedback" />);
+    render(<Textarea error="This field is required" label="Feedback" showErrorMessage />);
     expect(screen.getByText("This field is required")).toBeInTheDocument();
     const textarea = screen.getByLabelText("Feedback");
     expect(textarea).toHaveClass("border-red-500");

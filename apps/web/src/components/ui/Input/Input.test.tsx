@@ -18,6 +18,14 @@ describe("Input", () => {
     expect(handleChange).toHaveBeenCalled();
   });
 
+  it("updates an existing field when its parent changes or clears the value", () => {
+    const { rerender } = render(<Input label="Name" value="First" />);
+    rerender(<Input label="Name" value="Second" />);
+    expect(screen.getByRole("textbox", { name: "Name" })).toHaveValue("Second");
+    rerender(<Input label="Name" value={null} />);
+    expect(screen.getByRole("textbox", { name: "Name" })).toHaveValue("");
+  });
+
   it("disables the input when disabled=true", () => {
     render(<Input disabled label="Disabled" />);
     const input = screen.getByLabelText("Disabled");
@@ -46,5 +54,25 @@ describe("Input", () => {
     render(<Input label="Username" prefix="@" />);
     expect(screen.getByText("@")).toHaveAttribute("aria-hidden", "true");
     expect(screen.getByLabelText("Username")).toBeInTheDocument();
+  });
+  it("forwards an accessible label to inputs without a visible label", () => {
+    render(<Input aria-label="Search chains" type="search" />);
+    expect(screen.getByRole("searchbox", { name: "Search chains" })).toBeInTheDocument();
+  });
+
+  it("dismisses portalled suggestions with Escape and restores the input focus", async () => {
+    const user = userEvent.setup();
+    render(
+      <dialog open>
+        <Input label="City" suggestions={["London"]} />
+      </dialog>,
+    );
+    const input = screen.getByRole("textbox", { name: "City" });
+    await user.type(input, "Lon");
+    await user.keyboard("{ArrowDown}");
+    expect(screen.getByRole("option", { name: "London" })).toHaveFocus();
+    await user.keyboard("{Escape}");
+    expect(input).toHaveFocus();
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 });

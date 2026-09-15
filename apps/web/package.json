@@ -10,6 +10,8 @@
     "generate": "./scripts/graphql-codegen.sh",
     "import-translations": "import-translations --dir=translations && node ./scripts/normalize-translation-keys.mjs",
     "format": "prettier --write .",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit",
     "lint:js": "eslint .",
     "lint:css": "stylelint '**/*.css'",
     "start": "next start",

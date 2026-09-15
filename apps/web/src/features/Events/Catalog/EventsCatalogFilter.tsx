@@ -2,7 +2,7 @@ import { LayoutDashboard } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useMemo } from "react";
 
-import { Input, Select } from "~/components/ui";
+import { Checkbox, Input, Select } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { getIcon } from "~/lib/icons/icons";
@@ -11,9 +11,11 @@ import { Event_Type_Enum, Locale, Price_Type_Enum } from "~/types";
 interface VenuesListFilterProps {
   dateFrom?: string;
   dateTo?: string;
+  includePast: boolean;
   onDateFromChange: (dateFrom?: string) => void;
-  onDateToChange: (dateTo?: string) => void;
 
+  onDateToChange: (dateTo?: string) => void;
+  onIncludePastChange: (includePast: boolean) => void;
   onPriceTypeChange: (priceType?: Price_Type_Enum) => void;
   onSearchChange: (query: string) => void;
   onTypeChange: (type?: Event_Type_Enum) => void;
@@ -25,8 +27,10 @@ interface VenuesListFilterProps {
 export const EventsCatalogFilter = ({
   dateFrom,
   dateTo,
+  includePast,
   onDateFromChange,
   onDateToChange,
+  onIncludePastChange,
   onPriceTypeChange,
   onSearchChange,
   onTypeChange,
@@ -94,7 +98,11 @@ export const EventsCatalogFilter = ({
           value={searchQuery}
         />
 
-        <div className={`grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4`}>
+        <div className={`
+          grid grid-cols-1 gap-2
+          sm:grid-cols-2
+          lg:grid-cols-4
+        `}>
           <Select
             onChange={(e) => onTypeChange(e.target.value)}
             options={eventTypeOptions}
@@ -110,6 +118,11 @@ export const EventsCatalogFilter = ({
           />
           <Input onChange={(e) => onDateToChange(e.target.value)} placeholder={i18n("To")} type="date" value={dateTo} />
         </div>
+        <Checkbox
+          checked={includePast}
+          label={i18n("Include past events")}
+          onChange={(event) => onIncludePastChange(event.target.checked)}
+        />
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { constants } from "~/lib/constants";
 import { compileMDX } from "~/lib/mdx/compiler";
 import { ContentData } from "~/lib/mdx/reader";
 
+import { SaveArticleButton } from "../Pwa/SaveArticleButton";
 import { ContentMeta } from "./ContentMeta";
 
 interface ContentViewerProps {
@@ -25,7 +26,8 @@ export const ContentViewer = async ({ data, id, showMeta, type, variables }: Con
   const Content = MDXContent.default;
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto max-w-5xl min-w-0" data-offline-article>
+      {type === "posts" && <SaveArticleButton title={meta.title} />}
       <article className={`
         prose max-w-none space-y-6
         dark:prose-invert
@@ -34,7 +36,9 @@ export const ContentViewer = async ({ data, id, showMeta, type, variables }: Con
           className={`
             mb-8
             bg-[linear-gradient(to_right,var(--color-neutral)_0%,var(--color-on-surface)_30%,var(--color-on-surface)_70%,var(--color-neutral)_100%)]
-            bg-clip-text text-center text-7xl text-transparent
+            bg-clip-text text-center text-4xl break-words text-transparent
+            sm:text-5xl
+            md:text-7xl
           `}
         >
           {meta.title}

@@ -6,6 +6,7 @@ export type UserStatus = "active" | "inactive";
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
+    accessTokenExpiresAt?: number;
     user: {
       email?: null | string;
       id: string;

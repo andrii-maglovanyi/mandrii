@@ -55,19 +55,40 @@ export const EVENT_FIELDS_FRAGMENT = gql`
 
 export const GET_PUBLIC_EVENTS = gql`
   ${EVENT_FIELDS_FRAGMENT}
-  query GetPublicEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
+  query GetPublicEvents(
+    $where: events_bool_exp!
+    $limit: Int
+    $offset: Int
+    $order_by: [events_order_by!]
+    $includeCount: Boolean! = false
+    $includeTotal: Boolean! = false
+    $totalWhere: events_bool_exp!
+  ) {
     events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
       ...EventFields
     }
-    events_aggregate(where: $where) {
+    events_aggregate(where: $where) @include(if: $includeCount) {
       aggregate {
         count
       }
     }
-    total: events_aggregate {
+    total: events_aggregate(where: $totalWhere) @include(if: $includeTotal) {
       aggregate {
         count
       }
+    }
+  }
+`;
+
+/** Only schedule fields are needed to choose a page of recurring occurrences. */
+export const GET_PUBLIC_EVENT_SCHEDULES = gql`
+  query GetPublicEventSchedules($where: events_bool_exp!) {
+    events(where: $where) {
+      id
+      start_date
+      end_date
+      is_recurring
+      recurrence_rule
     }
   }
 `;

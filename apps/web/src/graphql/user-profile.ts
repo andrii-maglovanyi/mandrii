@@ -24,6 +24,7 @@ export const GET_OWN_USER_RECENT_CONTRIBUTIONS = gql`
       end_date
       is_online
       is_recurring
+      recurrence_rule
       status
       city
       country

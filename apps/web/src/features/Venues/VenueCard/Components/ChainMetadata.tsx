@@ -73,8 +73,8 @@ export const ChainMetadata = ({ venue }: ChainMetadataProps) => {
             label={<span className="text-on-surface">{parentChain.name}</span>}
             metadata={i18n("{number} countries", { number: chainsInParent.length })}
           >
-            {chainsInParent.map(({ country, id, name, venues, venues_aggregate }) => {
-              const venueCount = venues_aggregate?.aggregate?.count || venues.length;
+            {chainsInParent.map(({ country, id, name, venues }) => {
+              const venueCount = venues.length;
 
               const countryCode = Object.entries(constants.whitelisted_countries).find(
                 ([, { label }]) => country === label.en,

@@ -1,37 +1,28 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export const useKeyboardNavigation = () => {
   const menuRef = useRef<HTMLDivElement>(null);
-
-  const [itemsLength, setItemsLength] = useState(0);
   const [focusedIndex, setFocusedIndex] = useState<null | number>(null);
-
-  useEffect(() => {
-    const items = menuRef.current?.querySelectorAll('[role="option"]') ?? [];
-
-    setItemsLength(items.length);
-    focusItemAtIndex(focusedIndex);
-  }, [focusedIndex]);
 
   const focusItemAtIndex = (index: null | number) => {
     const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="option"]');
-    if (index !== null && items?.[index]) {
-      items[index].focus();
-    }
-    setFocusedIndex(index);
+    const item = index === null ? undefined : items?.[index];
+    item?.focus();
+    setFocusedIndex(item ? index : null);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>, handler: () => void) => {
+    const items = Array.from(menuRef.current?.querySelectorAll<HTMLElement>('[role="option"]') ?? []);
+    const index = items.findIndex((item) => item === document.activeElement);
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      setFocusedIndex(null);
       handler();
-    } else if (event.key === "ArrowDown") {
+      setFocusedIndex(null);
+    } else if (items.length && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
       event.preventDefault();
-      setFocusedIndex((prevIndex) => (prevIndex === null || prevIndex === itemsLength - 1 ? 0 : prevIndex + 1));
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      setFocusedIndex((prevIndex) => (prevIndex === null || prevIndex === 0 ? itemsLength - 1 : prevIndex - 1));
+      focusItemAtIndex(
+        event.key === "ArrowDown" ? (index + 1) % items.length : index <= 0 ? items.length - 1 : index - 1,
+      );
     }
   };
 

@@ -81,7 +81,8 @@ export const generateCatalogLayouts = <T extends GenericItem>(
         }
       }
     } else {
-      const pattern = LAYOUT_PATTERNS[Math.floor(Math.random() * LAYOUT_PATTERNS.length)];
+      // Keep a varied grid without reshuffling cards whenever the catalogue re-renders.
+      const pattern = LAYOUT_PATTERNS[layouts.length % LAYOUT_PATTERNS.length];
 
       for (const segment of pattern) {
         for (let i = 0; i < segment.count && itemIndex < items.length; i++) {

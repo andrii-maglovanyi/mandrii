@@ -8,6 +8,7 @@ import { useMediaQuery } from "react-responsive";
 
 import { Card, RichText } from "~/components/ui";
 import { constants } from "~/lib/constants";
+import { sendToMixpanel } from "~/lib/mixpanel";
 import { GetPublicEventsQuery, Locale } from "~/types";
 
 import { getLayoutConfig, LayoutVariant } from "../../shared/Card/layoutConfig";
@@ -16,12 +17,13 @@ import { CardHeader } from "./Components/CardHeader";
 import { CardMetadata } from "./Components/CardMetadata";
 
 interface CardBaseProps {
+  analyticsSource?: string;
   event: GetPublicEventsQuery["events"][number];
   hasImage?: boolean;
   variant: LayoutVariant;
 }
 
-export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) => {
+export const CardBase = ({ analyticsSource = "card", event, hasImage = false, variant }: CardBaseProps) => {
   const locale = useLocale() as Locale;
 
   const title = locale === "uk" ? event.title_uk : event.title_en;
@@ -42,7 +44,12 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
     variant === "masonry-full" ? "sm:!grid sm:!grid-cols-[2fr_3fr]" : "sm:!grid sm:!grid-cols-2";
 
   return (
-    <Card className={config.containerClasses} href={`/events/${event.slug}`}>
+    <Card
+      className={config.containerClasses}
+      href={`/events/${event.slug}`}
+      linkLabel={title}
+      onLinkClick={() => sendToMixpanel("Opened Event", { slug: event.slug, source: analyticsSource, variant })}
+    >
       <CardWrapper className={clsx(config.innerContainerClasses, usesDesktopMasonryGrid && desktopMasonryGridClasses)}>
         {hasImage && mainImage && (
           <div
@@ -53,24 +60,38 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
           >
             <Image
               alt={title}
-              className={`object-cover transition-transform duration-300 group-hover/card:scale-110`}
+              className={`
+                object-cover transition-transform duration-300
+                group-hover/card:scale-110
+              `}
               fill
               sizes={config.imageSizes}
               src={`${constants.vercelBlobStorageUrl}/${mainImage}`}
             />
             <div
-              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
+              className={`
+                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
+                to-transparent opacity-0 transition-opacity
+                group-hover/card:opacity-100
+              `}
             />
           </div>
         )}
 
         {hasImage && !mainImage && variant.startsWith("masonry") && (
           <div className={config.imageContainerClasses}>
-            <div className={`from-primary/10 to-secondary/10 flex h-full items-center justify-center bg-linear-to-br`}>
+            <div className={`
+              flex h-full items-center justify-center bg-linear-to-br
+              from-primary/10 to-secondary/10
+            `}>
               <Calendar className="text-neutral opacity-30" size={48} />
             </div>
             <div
-              className={`absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 transition-opacity group-hover/card:opacity-100`}
+              className={`
+                absolute inset-0 bg-linear-to-t from-black/40 via-black/10
+                to-transparent opacity-0 transition-opacity
+                group-hover/card:opacity-100
+              `}
             />
           </div>
         )}
@@ -82,7 +103,10 @@ export const CardBase = ({ event, hasImage = false, variant }: CardBaseProps) =>
             <h3 className={config.titleClasses}>{title}</h3>
 
             {config.showDescription && description && (
-              <RichText className={clsx(`prose dark:prose-invert max-w-none`, config.descriptionClasses)}>
+              <RichText className={clsx(`
+                prose max-w-none
+                dark:prose-invert
+              `, config.descriptionClasses)}>
                 {variant.startsWith("list") ? truncatedDescription : description}
               </RichText>
             )}

@@ -1,27 +1,16 @@
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
+import { cache as cacheForRequest } from "react";
 
 import { auth } from "~/lib/auth";
 
 import { publicConfig } from "../config/public";
 
-export async function getServerClient() {
+export const getServerClient = cacheForRequest(async () => {
+  const session = await auth();
+  const token = session?.accessToken;
   const httpLink = new HttpLink({
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
     uri: publicConfig.hasura.endpoint,
-  });
-
-  const authLink = setContext(async (_, { headers }) => {
-    const session = await auth();
-    const token = session?.accessToken;
-
-    const authorizationHeader = token ? { Authorization: `Bearer ${token}` } : {};
-
-    return {
-      headers: {
-        ...headers,
-        ...authorizationHeader,
-      },
-    };
   });
 
   const cache = new InMemoryCache({
@@ -47,6 +36,6 @@ export async function getServerClient() {
 
   return new ApolloClient({
     cache,
-    link: authLink.concat(httpLink),
+    link: httpLink,
   });
-}
+});

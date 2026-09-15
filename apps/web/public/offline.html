@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#336fb0" />
+    <title>Mandrii · Offline</title>
+    <link rel="stylesheet" href="/offline.css" />
+    <script src="/offline.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <img src="/static/icon-192.png" width="64" height="64" alt="Mandrii" />
+      <h1 id="heading">You’re offline</h1>
+      <p id="description">
+        Reconnect to browse live content, use maps, or send messages. Saved articles are available below.
+      </p>
+      <button id="retry" type="button">Try again</button>
+      <h2 id="saved-heading">Saved articles</h2>
+      <p id="empty">No articles saved on this device yet.</p>
+      <ul id="saved"></ul>
+      <article id="reader" hidden>
+        <h2 id="title"></h2>
+        <p id="date"></p>
+        <div id="content"></div>
+      </article>
+    </main>
+  </body>
+</html>

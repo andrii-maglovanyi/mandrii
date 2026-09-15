@@ -13118,6 +13118,11 @@ export type Users = {
   bio?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   community_telegram_notifications_enabled: Scalars['Boolean']['output'];
+  content_alert_delivery_frequency: Scalars['String']['output'];
+  content_alert_delivery_preferences_updated_at: Scalars['timestamptz']['output'];
+  content_alert_email_notifications_enabled: Scalars['Boolean']['output'];
+  content_alert_push_notifications_enabled: Scalars['Boolean']['output'];
+  content_alert_telegram_notifications_enabled: Scalars['Boolean']['output'];
   /** An array relationship */
   conversations: Array<Conversations>;
   /** An aggregate relationship */
@@ -13363,6 +13368,11 @@ export type Users_Bool_Exp = {
   bio?: InputMaybe<String_Comparison_Exp>;
   city?: InputMaybe<String_Comparison_Exp>;
   community_telegram_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
+  content_alert_delivery_frequency?: InputMaybe<String_Comparison_Exp>;
+  content_alert_delivery_preferences_updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  content_alert_email_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
+  content_alert_push_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
+  content_alert_telegram_notifications_enabled?: InputMaybe<Boolean_Comparison_Exp>;
   conversations?: InputMaybe<Conversations_Bool_Exp>;
   conversations_aggregate?: InputMaybe<Conversations_Aggregate_Bool_Exp>;
   email?: InputMaybe<String_Comparison_Exp>;
@@ -13419,6 +13429,11 @@ export type Users_Insert_Input = {
   bio?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   community_telegram_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  content_alert_delivery_frequency?: InputMaybe<Scalars['String']['input']>;
+  content_alert_delivery_preferences_updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  content_alert_email_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  content_alert_push_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  content_alert_telegram_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
   conversations?: InputMaybe<Conversations_Arr_Rel_Insert_Input>;
   email?: InputMaybe<Scalars['String']['input']>;
   emailVerified?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -13449,6 +13464,8 @@ export type Users_Max_Fields = {
   __typename?: 'users_max_fields';
   bio?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
+  content_alert_delivery_frequency?: Maybe<Scalars['String']['output']>;
+  content_alert_delivery_preferences_updated_at?: Maybe<Scalars['timestamptz']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   emailVerified?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -13467,6 +13484,8 @@ export type Users_Max_Fields = {
 export type Users_Max_Order_By = {
   bio?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
+  content_alert_delivery_frequency?: InputMaybe<Order_By>;
+  content_alert_delivery_preferences_updated_at?: InputMaybe<Order_By>;
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -13486,6 +13505,8 @@ export type Users_Min_Fields = {
   __typename?: 'users_min_fields';
   bio?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
+  content_alert_delivery_frequency?: Maybe<Scalars['String']['output']>;
+  content_alert_delivery_preferences_updated_at?: Maybe<Scalars['timestamptz']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   emailVerified?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -13504,6 +13525,8 @@ export type Users_Min_Fields = {
 export type Users_Min_Order_By = {
   bio?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
+  content_alert_delivery_frequency?: InputMaybe<Order_By>;
+  content_alert_delivery_preferences_updated_at?: InputMaybe<Order_By>;
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -13547,6 +13570,11 @@ export type Users_Order_By = {
   bio?: InputMaybe<Order_By>;
   city?: InputMaybe<Order_By>;
   community_telegram_notifications_enabled?: InputMaybe<Order_By>;
+  content_alert_delivery_frequency?: InputMaybe<Order_By>;
+  content_alert_delivery_preferences_updated_at?: InputMaybe<Order_By>;
+  content_alert_email_notifications_enabled?: InputMaybe<Order_By>;
+  content_alert_push_notifications_enabled?: InputMaybe<Order_By>;
+  content_alert_telegram_notifications_enabled?: InputMaybe<Order_By>;
   conversations_aggregate?: InputMaybe<Conversations_Aggregate_Order_By>;
   email?: InputMaybe<Order_By>;
   emailVerified?: InputMaybe<Order_By>;
@@ -13586,6 +13614,16 @@ export enum Users_Select_Column {
   /** column name */
   CommunityTelegramNotificationsEnabled = 'community_telegram_notifications_enabled',
   /** column name */
+  ContentAlertDeliveryFrequency = 'content_alert_delivery_frequency',
+  /** column name */
+  ContentAlertDeliveryPreferencesUpdatedAt = 'content_alert_delivery_preferences_updated_at',
+  /** column name */
+  ContentAlertEmailNotificationsEnabled = 'content_alert_email_notifications_enabled',
+  /** column name */
+  ContentAlertPushNotificationsEnabled = 'content_alert_push_notifications_enabled',
+  /** column name */
+  ContentAlertTelegramNotificationsEnabled = 'content_alert_telegram_notifications_enabled',
+  /** column name */
   Email = 'email',
   /** column name */
   EmailVerified = 'emailVerified',
@@ -13622,6 +13660,12 @@ export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_And_Arguments_Colu
   /** column name */
   CommunityTelegramNotificationsEnabled = 'community_telegram_notifications_enabled',
   /** column name */
+  ContentAlertEmailNotificationsEnabled = 'content_alert_email_notifications_enabled',
+  /** column name */
+  ContentAlertPushNotificationsEnabled = 'content_alert_push_notifications_enabled',
+  /** column name */
+  ContentAlertTelegramNotificationsEnabled = 'content_alert_telegram_notifications_enabled',
+  /** column name */
   IsVerifiedContributor = 'is_verified_contributor'
 }
 
@@ -13629,6 +13673,12 @@ export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_And_Arguments_Colu
 export enum Users_Select_Column_Users_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
   /** column name */
   CommunityTelegramNotificationsEnabled = 'community_telegram_notifications_enabled',
+  /** column name */
+  ContentAlertEmailNotificationsEnabled = 'content_alert_email_notifications_enabled',
+  /** column name */
+  ContentAlertPushNotificationsEnabled = 'content_alert_push_notifications_enabled',
+  /** column name */
+  ContentAlertTelegramNotificationsEnabled = 'content_alert_telegram_notifications_enabled',
   /** column name */
   IsVerifiedContributor = 'is_verified_contributor'
 }
@@ -13638,6 +13688,11 @@ export type Users_Set_Input = {
   bio?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   community_telegram_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  content_alert_delivery_frequency?: InputMaybe<Scalars['String']['input']>;
+  content_alert_delivery_preferences_updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  content_alert_email_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  content_alert_push_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  content_alert_telegram_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   emailVerified?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -13713,6 +13768,11 @@ export type Users_Stream_Cursor_Value_Input = {
   bio?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   community_telegram_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  content_alert_delivery_frequency?: InputMaybe<Scalars['String']['input']>;
+  content_alert_delivery_preferences_updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  content_alert_email_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  content_alert_push_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  content_alert_telegram_notifications_enabled?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   emailVerified?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -13753,6 +13813,16 @@ export enum Users_Update_Column {
   City = 'city',
   /** column name */
   CommunityTelegramNotificationsEnabled = 'community_telegram_notifications_enabled',
+  /** column name */
+  ContentAlertDeliveryFrequency = 'content_alert_delivery_frequency',
+  /** column name */
+  ContentAlertDeliveryPreferencesUpdatedAt = 'content_alert_delivery_preferences_updated_at',
+  /** column name */
+  ContentAlertEmailNotificationsEnabled = 'content_alert_email_notifications_enabled',
+  /** column name */
+  ContentAlertPushNotificationsEnabled = 'content_alert_push_notifications_enabled',
+  /** column name */
+  ContentAlertTelegramNotificationsEnabled = 'content_alert_telegram_notifications_enabled',
   /** column name */
   Email = 'email',
   /** column name */
@@ -17258,21 +17328,6 @@ export type MessagingUnreadEventsSubscriptionVariables = Exact<{ [key: string]: 
 
 export type MessagingUnreadEventsSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', body: string, conversation_id: UUID, deleted_at?: Timestamp | null, edited_at?: Timestamp | null, id: UUID }> };
 
-export type VenueViewChainFieldsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json };
-
-export type VenueViewChainWithVenuesFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export type VenueViewChainWithChainsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } };
-
-export type VenueViewFieldsFragment = { __typename?: 'venues', id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null };
-
-export type GetVenueViewBySlugQueryVariables = Exact<{
-  where: Venues_Bool_Exp;
-}>;
-
-
-export type GetVenueViewBySlugQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', postcode?: string | null, created_at: Timestamp, id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null }> };
-
 export type EventFieldsFragment = { __typename?: 'events', id: UUID, title_en: string, title_uk: string, slug: string, description_en?: string | null, description_uk?: string | null, type: Event_Type_Enum, price_type: Price_Type_Enum, price_amount?: Numeric | null, price_currency?: string | null, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, external_url?: string | null, custom_location_address?: string | null, custom_location_name?: string | null, area?: string | null, city?: string | null, country?: string | null, geo?: Geography | null, images?: Array<string> | null, registration_url?: string | null, registration_required: boolean, capacity?: number | null, age_restriction?: string | null, language?: Array<string> | null, accessibility_info?: string | null, social_links?: Json | null, status: Event_Status_Enum, created_at: Timestamp, is_recurring: boolean, recurrence_rule?: string | null, organizer_name?: string | null, organizer_phone_number?: string | null, organizer_email?: string | null, owner_id?: UUID | null, venue_id?: UUID | null, user_id: UUID, venue?: { __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null, logo?: string | null, category: Venue_Category_Enum, geo?: Geography | null } | null };
 
 export type GetPublicEventsQueryVariables = Exact<{
@@ -17280,10 +17335,20 @@ export type GetPublicEventsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<Events_Order_By> | Events_Order_By>;
+  includeCount?: Scalars['Boolean']['input'];
+  includeTotal?: Scalars['Boolean']['input'];
+  totalWhere: Events_Bool_Exp;
 }>;
 
 
-export type GetPublicEventsQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', id: UUID, title_en: string, title_uk: string, slug: string, description_en?: string | null, description_uk?: string | null, type: Event_Type_Enum, price_type: Price_Type_Enum, price_amount?: Numeric | null, price_currency?: string | null, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, external_url?: string | null, custom_location_address?: string | null, custom_location_name?: string | null, area?: string | null, city?: string | null, country?: string | null, geo?: Geography | null, images?: Array<string> | null, registration_url?: string | null, registration_required: boolean, capacity?: number | null, age_restriction?: string | null, language?: Array<string> | null, accessibility_info?: string | null, social_links?: Json | null, status: Event_Status_Enum, created_at: Timestamp, is_recurring: boolean, recurrence_rule?: string | null, organizer_name?: string | null, organizer_phone_number?: string | null, organizer_email?: string | null, owner_id?: UUID | null, venue_id?: UUID | null, user_id: UUID, venue?: { __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null, logo?: string | null, category: Venue_Category_Enum, geo?: Geography | null } | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, total: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null } };
+export type GetPublicEventsQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', id: UUID, title_en: string, title_uk: string, slug: string, description_en?: string | null, description_uk?: string | null, type: Event_Type_Enum, price_type: Price_Type_Enum, price_amount?: Numeric | null, price_currency?: string | null, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, external_url?: string | null, custom_location_address?: string | null, custom_location_name?: string | null, area?: string | null, city?: string | null, country?: string | null, geo?: Geography | null, images?: Array<string> | null, registration_url?: string | null, registration_required: boolean, capacity?: number | null, age_restriction?: string | null, language?: Array<string> | null, accessibility_info?: string | null, social_links?: Json | null, status: Event_Status_Enum, created_at: Timestamp, is_recurring: boolean, recurrence_rule?: string | null, organizer_name?: string | null, organizer_phone_number?: string | null, organizer_email?: string | null, owner_id?: UUID | null, venue_id?: UUID | null, user_id: UUID, venue?: { __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null, logo?: string | null, category: Venue_Category_Enum, geo?: Geography | null } | null }>, events_aggregate?: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, total?: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null } };
+
+export type GetPublicEventSchedulesQueryVariables = Exact<{
+  where: Events_Bool_Exp;
+}>;
+
+
+export type GetPublicEventSchedulesQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', id: UUID, start_date: Timestamp, end_date?: Timestamp | null, is_recurring: boolean, recurrence_rule?: string | null }> };
 
 export type CreateOrderMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -17409,7 +17474,58 @@ export type GetOwnUserRecentContributionsQueryVariables = Exact<{
 }>;
 
 
-export type GetOwnUserRecentContributionsQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', name: string, slug: string, city?: string | null, country?: string | null, created_at: Timestamp, logo?: string | null, images?: Array<string> | null }>, events: Array<{ __typename?: 'events', title_en: string, title_uk: string, slug: string, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, is_recurring: boolean, status: Event_Status_Enum, city?: string | null, country?: string | null, created_at: Timestamp, images?: Array<string> | null }> };
+export type GetOwnUserRecentContributionsQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', name: string, slug: string, city?: string | null, country?: string | null, created_at: Timestamp, logo?: string | null, images?: Array<string> | null }>, events: Array<{ __typename?: 'events', title_en: string, title_uk: string, slug: string, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, is_recurring: boolean, recurrence_rule?: string | null, status: Event_Status_Enum, city?: string | null, country?: string | null, created_at: Timestamp, images?: Array<string> | null }> };
+
+export type ChainFieldsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json };
+
+export type ChainWithVenuesFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> };
+
+export type ChainWithChainsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> }> };
+
+export type VenueFieldsFragment = { __typename?: 'venues', id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> }> } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> } | null };
+
+export type GetPublicVenuesQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+  whereEvents: Events_Bool_Exp;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
+  includeCount?: Scalars['Boolean']['input'];
+  includeTotal?: Scalars['Boolean']['input'];
+  totalWhere: Venues_Bool_Exp;
+}>;
+
+
+export type GetPublicVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> }> } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> } | null }>, venues_aggregate?: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }, total?: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
+
+export type GetPublicVenueOptionsQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
+}>;
+
+
+export type GetPublicVenueOptionsQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', id: UUID, name: string, city?: string | null }> };
+
+export type GetUserVenuesQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+  whereEvents?: InputMaybe<Events_Bool_Exp>;
+  includeCount?: Scalars['Boolean']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
+}>;
+
+
+export type GetUserVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', postcode?: string | null, created_at: Timestamp, id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> }> } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> } | null }>, venues_aggregate?: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
+
+export type GetVenueViewBySlugQueryVariables = Exact<{
+  where: Venues_Bool_Exp;
+  whereEvents?: InputMaybe<Events_Bool_Exp>;
+}>;
+
+
+export type GetVenueViewBySlugQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', postcode?: string | null, created_at: Timestamp, id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> }> } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }> } | null }> };
 
 export type GetUserEventsQueryVariables = Exact<{
   where: Events_Bool_Exp;
@@ -17421,177 +17537,6 @@ export type GetUserEventsQueryVariables = Exact<{
 
 export type GetUserEventsQuery = { __typename?: 'query_root', events: Array<{ __typename?: 'events', updated_at: Timestamp, id: UUID, title_en: string, title_uk: string, slug: string, description_en?: string | null, description_uk?: string | null, type: Event_Type_Enum, price_type: Price_Type_Enum, price_amount?: Numeric | null, price_currency?: string | null, start_date: Timestamp, end_date?: Timestamp | null, is_online: boolean, external_url?: string | null, custom_location_address?: string | null, custom_location_name?: string | null, area?: string | null, city?: string | null, country?: string | null, geo?: Geography | null, images?: Array<string> | null, registration_url?: string | null, registration_required: boolean, capacity?: number | null, age_restriction?: string | null, language?: Array<string> | null, accessibility_info?: string | null, social_links?: Json | null, status: Event_Status_Enum, created_at: Timestamp, is_recurring: boolean, recurrence_rule?: string | null, organizer_name?: string | null, organizer_phone_number?: string | null, organizer_email?: string | null, owner_id?: UUID | null, venue_id?: UUID | null, user_id: UUID, venue?: { __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null, logo?: string | null, category: Venue_Category_Enum, geo?: Geography | null } | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null } };
 
-export type ChainFieldsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json };
-
-export type ChainWithVenuesFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export type ChainWithChainsFragment = { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } };
-
-export type VenueFieldsFragment = { __typename?: 'venues', id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null };
-
-export type GetPublicVenuesQueryVariables = Exact<{
-  where: Venues_Bool_Exp;
-  whereEvents: Events_Bool_Exp;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
-}>;
-
-
-export type GetPublicVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null }, total: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export type GetUserVenuesQueryVariables = Exact<{
-  where: Venues_Bool_Exp;
-  whereEvents?: InputMaybe<Events_Bool_Exp>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Venues_Order_By> | Venues_Order_By>;
-}>;
-
-
-export type GetUserVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', postcode?: string | null, created_at: Timestamp, id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export type GetAdminVenuesQueryVariables = Exact<{
-  where: Venues_Bool_Exp;
-  whereEvents?: InputMaybe<Events_Bool_Exp>;
-}>;
-
-
-export type GetAdminVenuesQuery = { __typename?: 'query_root', venues: Array<{ __typename?: 'venues', created_at: Timestamp, id: UUID, name: string, address?: string | null, city?: string | null, country?: string | null, logo?: string | null, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo?: Geography | null, category: Venue_Category_Enum, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, social_links: Json, slug: string, status: Venue_Status_Enum, owner_id?: UUID | null, user_id?: UUID | null, updated_at: Timestamp, venue_schedules: Array<{ __typename?: 'venue_schedule', id: UUID, open_time: Time, close_time: Time, day_of_week: string }>, venue_accommodation_details: Array<{ __typename?: 'venue_accommodation_details', bedrooms?: number | null, bathrooms?: number | null, max_guests?: number | null, check_in_time?: Time | null, check_out_time?: Time | null, minimum_stay_nights?: number | null, amenities?: Array<string> | null }>, venue_beauty_salon_details: Array<{ __typename?: 'venue_beauty_salon_details', services?: Array<string> | null, appointment_required?: boolean | null, walk_ins_accepted?: boolean | null }>, venue_restaurant_details: Array<{ __typename?: 'venue_restaurant_details', cuisine_types?: Array<string> | null, seating_capacity?: number | null, price_range?: string | null, features?: Array<string> | null }>, venue_school_details: Array<{ __typename?: 'venue_school_details', subjects?: Array<string> | null, languages_taught?: Array<string> | null, age_groups?: Array<string> | null, class_size_max?: number | null, online_classes_available?: boolean | null }>, venue_shop_details: Array<{ __typename?: 'venue_shop_details', product_categories?: Array<string> | null, payment_methods?: Array<string> | null }>, events_aggregate: { __typename?: 'events_aggregate', aggregate?: { __typename?: 'events_aggregate_fields', count: number } | null }, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chain?: { __typename?: 'chains', id: UUID, name: string, slug: string, logo?: string | null, country?: string | null, description_uk?: string | null, description_en?: string | null, phone_numbers?: Array<string> | null, emails?: Array<string> | null, website?: string | null, social_links: Json, chains: Array<{ __typename?: 'chains', id: UUID, name: string, slug: string, country?: string | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } }>, chains_aggregate: { __typename?: 'chains_aggregate', aggregate?: { __typename?: 'chains_aggregate_fields', count: number } | null } } | null, venues: Array<{ __typename?: 'venues', id: UUID, name: string, slug: string, city?: string | null, country?: string | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } } | null }>, venues_aggregate: { __typename?: 'venues_aggregate', aggregate?: { __typename?: 'venues_aggregate_fields', count: number } | null } };
-
-export const VenueViewChainFieldsFragmentDoc = gql`
-    fragment VenueViewChainFields on chains {
-  id
-  name
-  slug
-  logo
-  country
-  description_uk
-  description_en
-  phone_numbers
-  emails
-  website
-  social_links
-}
-    `;
-export const VenueViewChainWithVenuesFragmentDoc = gql`
-    fragment VenueViewChainWithVenues on chains {
-  ...VenueViewChainFields
-  venues {
-    id
-    name
-    slug
-    city
-    country
-  }
-  venues_aggregate {
-    aggregate {
-      count
-    }
-  }
-}
-    ${VenueViewChainFieldsFragmentDoc}`;
-export const VenueViewChainWithChainsFragmentDoc = gql`
-    fragment VenueViewChainWithChains on chains {
-  ...VenueViewChainFields
-  chains {
-    id
-    name
-    slug
-    country
-    venues {
-      id
-      name
-      slug
-      city
-      country
-    }
-    venues_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-  chains_aggregate {
-    aggregate {
-      count
-    }
-  }
-}
-    ${VenueViewChainFieldsFragmentDoc}`;
-export const VenueViewFieldsFragmentDoc = gql`
-    fragment VenueViewFields on venues {
-  id
-  name
-  address
-  city
-  country
-  logo
-  images
-  description_uk
-  description_en
-  geo
-  category
-  emails
-  website
-  phone_numbers
-  social_links
-  slug
-  status
-  owner_id
-  user_id
-  venue_schedules {
-    id
-    open_time
-    close_time
-    day_of_week
-  }
-  venue_accommodation_details {
-    bedrooms
-    bathrooms
-    max_guests
-    check_in_time
-    check_out_time
-    minimum_stay_nights
-    amenities
-  }
-  venue_beauty_salon_details {
-    services
-    appointment_required
-    walk_ins_accepted
-  }
-  venue_restaurant_details {
-    cuisine_types
-    seating_capacity
-    price_range
-    features
-  }
-  venue_school_details {
-    subjects
-    languages_taught
-    age_groups
-    class_size_max
-    online_classes_available
-  }
-  venue_shop_details {
-    product_categories
-    payment_methods
-  }
-  updated_at
-  events_aggregate {
-    aggregate {
-      count
-    }
-  }
-  chain {
-    ...VenueViewChainWithVenues
-    chain {
-      ...VenueViewChainWithChains
-    }
-  }
-}
-    ${VenueViewChainWithVenuesFragmentDoc}
-${VenueViewChainWithChainsFragmentDoc}`;
 export const EventFieldsFragmentDoc = gql`
     fragment EventFields on events {
   id
@@ -17698,17 +17643,12 @@ export const ChainFieldsFragmentDoc = gql`
 export const ChainWithVenuesFragmentDoc = gql`
     fragment ChainWithVenues on chains {
   ...ChainFields
-  venues {
+  venues(where: {status: {_in: [ACTIVE, ARCHIVED]}}) {
     id
     name
     slug
     city
     country
-  }
-  venues_aggregate {
-    aggregate {
-      count
-    }
   }
 }
     ${ChainFieldsFragmentDoc}`;
@@ -17720,22 +17660,12 @@ export const ChainWithChainsFragmentDoc = gql`
     name
     slug
     country
-    venues {
+    venues(where: {status: {_in: [ACTIVE, ARCHIVED]}}) {
       id
       name
       slug
       city
       country
-    }
-    venues_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-  chains_aggregate {
-    aggregate {
-      count
     }
   }
 }
@@ -18099,59 +18029,17 @@ export function useMessagingUnreadEventsSubscription(baseOptions?: Apollo.Subscr
       }
 export type MessagingUnreadEventsSubscriptionHookResult = ReturnType<typeof useMessagingUnreadEventsSubscription>;
 export type MessagingUnreadEventsSubscriptionResult = Apollo.SubscriptionResult<MessagingUnreadEventsSubscription>;
-export const GetVenueViewBySlugDocument = gql`
-    query GetVenueViewBySlug($where: venues_bool_exp!) {
-  venues(where: $where, limit: 1) {
-    ...VenueViewFields
-    postcode
-    created_at
-  }
-}
-    ${VenueViewFieldsFragmentDoc}`;
-
-/**
- * __useGetVenueViewBySlugQuery__
- *
- * To run a query within a React component, call `useGetVenueViewBySlugQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetVenueViewBySlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetVenueViewBySlugQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetVenueViewBySlugQuery(baseOptions: Apollo.QueryHookOptions<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables> & ({ variables: GetVenueViewBySlugQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>(GetVenueViewBySlugDocument, options);
-      }
-export function useGetVenueViewBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>(GetVenueViewBySlugDocument, options);
-        }
-export function useGetVenueViewBySlugSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>(GetVenueViewBySlugDocument, options);
-        }
-export type GetVenueViewBySlugQueryHookResult = ReturnType<typeof useGetVenueViewBySlugQuery>;
-export type GetVenueViewBySlugLazyQueryHookResult = ReturnType<typeof useGetVenueViewBySlugLazyQuery>;
-export type GetVenueViewBySlugSuspenseQueryHookResult = ReturnType<typeof useGetVenueViewBySlugSuspenseQuery>;
-export type GetVenueViewBySlugQueryResult = Apollo.QueryResult<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>;
 export const GetPublicEventsDocument = gql`
-    query GetPublicEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
+    query GetPublicEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!], $includeCount: Boolean! = false, $includeTotal: Boolean! = false, $totalWhere: events_bool_exp!) {
   events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
     ...EventFields
   }
-  events_aggregate(where: $where) {
+  events_aggregate(where: $where) @include(if: $includeCount) {
     aggregate {
       count
     }
   }
-  total: events_aggregate {
+  total: events_aggregate(where: $totalWhere) @include(if: $includeTotal) {
     aggregate {
       count
     }
@@ -18175,6 +18063,9 @@ export const GetPublicEventsDocument = gql`
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
  *      order_by: // value for 'order_by'
+ *      includeCount: // value for 'includeCount'
+ *      includeTotal: // value for 'includeTotal'
+ *      totalWhere: // value for 'totalWhere'
  *   },
  * });
  */
@@ -18194,6 +18085,50 @@ export type GetPublicEventsQueryHookResult = ReturnType<typeof useGetPublicEvent
 export type GetPublicEventsLazyQueryHookResult = ReturnType<typeof useGetPublicEventsLazyQuery>;
 export type GetPublicEventsSuspenseQueryHookResult = ReturnType<typeof useGetPublicEventsSuspenseQuery>;
 export type GetPublicEventsQueryResult = Apollo.QueryResult<GetPublicEventsQuery, GetPublicEventsQueryVariables>;
+export const GetPublicEventSchedulesDocument = gql`
+    query GetPublicEventSchedules($where: events_bool_exp!) {
+  events(where: $where) {
+    id
+    start_date
+    end_date
+    is_recurring
+    recurrence_rule
+  }
+}
+    `;
+
+/**
+ * __useGetPublicEventSchedulesQuery__
+ *
+ * To run a query within a React component, call `useGetPublicEventSchedulesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicEventSchedulesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicEventSchedulesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetPublicEventSchedulesQuery(baseOptions: Apollo.QueryHookOptions<GetPublicEventSchedulesQuery, GetPublicEventSchedulesQueryVariables> & ({ variables: GetPublicEventSchedulesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPublicEventSchedulesQuery, GetPublicEventSchedulesQueryVariables>(GetPublicEventSchedulesDocument, options);
+      }
+export function useGetPublicEventSchedulesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicEventSchedulesQuery, GetPublicEventSchedulesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicEventSchedulesQuery, GetPublicEventSchedulesQueryVariables>(GetPublicEventSchedulesDocument, options);
+        }
+export function useGetPublicEventSchedulesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPublicEventSchedulesQuery, GetPublicEventSchedulesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetPublicEventSchedulesQuery, GetPublicEventSchedulesQueryVariables>(GetPublicEventSchedulesDocument, options);
+        }
+export type GetPublicEventSchedulesQueryHookResult = ReturnType<typeof useGetPublicEventSchedulesQuery>;
+export type GetPublicEventSchedulesLazyQueryHookResult = ReturnType<typeof useGetPublicEventSchedulesLazyQuery>;
+export type GetPublicEventSchedulesSuspenseQueryHookResult = ReturnType<typeof useGetPublicEventSchedulesSuspenseQuery>;
+export type GetPublicEventSchedulesQueryResult = Apollo.QueryResult<GetPublicEventSchedulesQuery, GetPublicEventSchedulesQueryVariables>;
 export const CreateOrderDocument = gql`
     mutation CreateOrder($email: String!, $user_id: uuid, $subtotal_minor: Int!, $total_minor: Int!, $currency: String!, $status: order_status_enum!, $payment_intent_id: String, $idempotency_key: String!, $items: [order_items_insert_input!]!) {
   insert_orders_one(
@@ -18801,6 +18736,7 @@ export const GetOwnUserRecentContributionsDocument = gql`
     end_date
     is_online
     is_recurring
+    recurrence_rule
     status
     city
     country
@@ -18842,6 +18778,202 @@ export type GetOwnUserRecentContributionsQueryHookResult = ReturnType<typeof use
 export type GetOwnUserRecentContributionsLazyQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsLazyQuery>;
 export type GetOwnUserRecentContributionsSuspenseQueryHookResult = ReturnType<typeof useGetOwnUserRecentContributionsSuspenseQuery>;
 export type GetOwnUserRecentContributionsQueryResult = Apollo.QueryResult<GetOwnUserRecentContributionsQuery, GetOwnUserRecentContributionsQueryVariables>;
+export const GetPublicVenuesDocument = gql`
+    query GetPublicVenues($where: venues_bool_exp!, $whereEvents: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!], $includeCount: Boolean! = true, $includeTotal: Boolean! = false, $totalWhere: venues_bool_exp!) {
+  venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+    ...VenueFields
+  }
+  venues_aggregate(where: $where) @include(if: $includeCount) {
+    aggregate {
+      count
+    }
+  }
+  total: venues_aggregate(where: $totalWhere) @include(if: $includeTotal) {
+    aggregate {
+      count
+    }
+  }
+}
+    ${VenueFieldsFragmentDoc}`;
+
+/**
+ * __useGetPublicVenuesQuery__
+ *
+ * To run a query within a React component, call `useGetPublicVenuesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicVenuesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicVenuesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      whereEvents: // value for 'whereEvents'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      order_by: // value for 'order_by'
+ *      includeCount: // value for 'includeCount'
+ *      includeTotal: // value for 'includeTotal'
+ *      totalWhere: // value for 'totalWhere'
+ *   },
+ * });
+ */
+export function useGetPublicVenuesQuery(baseOptions: Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables> & ({ variables: GetPublicVenuesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
+      }
+export function useGetPublicVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
+        }
+export function useGetPublicVenuesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
+        }
+export type GetPublicVenuesQueryHookResult = ReturnType<typeof useGetPublicVenuesQuery>;
+export type GetPublicVenuesLazyQueryHookResult = ReturnType<typeof useGetPublicVenuesLazyQuery>;
+export type GetPublicVenuesSuspenseQueryHookResult = ReturnType<typeof useGetPublicVenuesSuspenseQuery>;
+export type GetPublicVenuesQueryResult = Apollo.QueryResult<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>;
+export const GetPublicVenueOptionsDocument = gql`
+    query GetPublicVenueOptions($where: venues_bool_exp!, $limit: Int, $order_by: [venues_order_by!]) {
+  venues(where: $where, limit: $limit, order_by: $order_by) {
+    id
+    name
+    city
+  }
+}
+    `;
+
+/**
+ * __useGetPublicVenueOptionsQuery__
+ *
+ * To run a query within a React component, call `useGetPublicVenueOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicVenueOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicVenueOptionsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      order_by: // value for 'order_by'
+ *   },
+ * });
+ */
+export function useGetPublicVenueOptionsQuery(baseOptions: Apollo.QueryHookOptions<GetPublicVenueOptionsQuery, GetPublicVenueOptionsQueryVariables> & ({ variables: GetPublicVenueOptionsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPublicVenueOptionsQuery, GetPublicVenueOptionsQueryVariables>(GetPublicVenueOptionsDocument, options);
+      }
+export function useGetPublicVenueOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicVenueOptionsQuery, GetPublicVenueOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicVenueOptionsQuery, GetPublicVenueOptionsQueryVariables>(GetPublicVenueOptionsDocument, options);
+        }
+export function useGetPublicVenueOptionsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPublicVenueOptionsQuery, GetPublicVenueOptionsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetPublicVenueOptionsQuery, GetPublicVenueOptionsQueryVariables>(GetPublicVenueOptionsDocument, options);
+        }
+export type GetPublicVenueOptionsQueryHookResult = ReturnType<typeof useGetPublicVenueOptionsQuery>;
+export type GetPublicVenueOptionsLazyQueryHookResult = ReturnType<typeof useGetPublicVenueOptionsLazyQuery>;
+export type GetPublicVenueOptionsSuspenseQueryHookResult = ReturnType<typeof useGetPublicVenueOptionsSuspenseQuery>;
+export type GetPublicVenueOptionsQueryResult = Apollo.QueryResult<GetPublicVenueOptionsQuery, GetPublicVenueOptionsQueryVariables>;
+export const GetUserVenuesDocument = gql`
+    query GetUserVenues($where: venues_bool_exp!, $whereEvents: events_bool_exp, $includeCount: Boolean! = true, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
+  venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+    ...VenueFields
+    postcode
+    created_at
+  }
+  venues_aggregate(where: $where) @include(if: $includeCount) {
+    aggregate {
+      count
+    }
+  }
+}
+    ${VenueFieldsFragmentDoc}`;
+
+/**
+ * __useGetUserVenuesQuery__
+ *
+ * To run a query within a React component, call `useGetUserVenuesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserVenuesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserVenuesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      whereEvents: // value for 'whereEvents'
+ *      includeCount: // value for 'includeCount'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      order_by: // value for 'order_by'
+ *   },
+ * });
+ */
+export function useGetUserVenuesQuery(baseOptions: Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables> & ({ variables: GetUserVenuesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
+      }
+export function useGetUserVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
+        }
+export function useGetUserVenuesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
+        }
+export type GetUserVenuesQueryHookResult = ReturnType<typeof useGetUserVenuesQuery>;
+export type GetUserVenuesLazyQueryHookResult = ReturnType<typeof useGetUserVenuesLazyQuery>;
+export type GetUserVenuesSuspenseQueryHookResult = ReturnType<typeof useGetUserVenuesSuspenseQuery>;
+export type GetUserVenuesQueryResult = Apollo.QueryResult<GetUserVenuesQuery, GetUserVenuesQueryVariables>;
+export const GetVenueViewBySlugDocument = gql`
+    query GetVenueViewBySlug($where: venues_bool_exp!, $whereEvents: events_bool_exp) {
+  venues(where: $where, limit: 1) {
+    ...VenueFields
+    postcode
+    created_at
+  }
+}
+    ${VenueFieldsFragmentDoc}`;
+
+/**
+ * __useGetVenueViewBySlugQuery__
+ *
+ * To run a query within a React component, call `useGetVenueViewBySlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVenueViewBySlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVenueViewBySlugQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      whereEvents: // value for 'whereEvents'
+ *   },
+ * });
+ */
+export function useGetVenueViewBySlugQuery(baseOptions: Apollo.QueryHookOptions<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables> & ({ variables: GetVenueViewBySlugQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>(GetVenueViewBySlugDocument, options);
+      }
+export function useGetVenueViewBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>(GetVenueViewBySlugDocument, options);
+        }
+export function useGetVenueViewBySlugSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>(GetVenueViewBySlugDocument, options);
+        }
+export type GetVenueViewBySlugQueryHookResult = ReturnType<typeof useGetVenueViewBySlugQuery>;
+export type GetVenueViewBySlugLazyQueryHookResult = ReturnType<typeof useGetVenueViewBySlugLazyQuery>;
+export type GetVenueViewBySlugSuspenseQueryHookResult = ReturnType<typeof useGetVenueViewBySlugSuspenseQuery>;
+export type GetVenueViewBySlugQueryResult = Apollo.QueryResult<GetVenueViewBySlugQuery, GetVenueViewBySlugQueryVariables>;
 export const GetUserEventsDocument = gql`
     query GetUserEvents($where: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [events_order_by!]) {
   events(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
@@ -18891,155 +19023,3 @@ export type GetUserEventsQueryHookResult = ReturnType<typeof useGetUserEventsQue
 export type GetUserEventsLazyQueryHookResult = ReturnType<typeof useGetUserEventsLazyQuery>;
 export type GetUserEventsSuspenseQueryHookResult = ReturnType<typeof useGetUserEventsSuspenseQuery>;
 export type GetUserEventsQueryResult = Apollo.QueryResult<GetUserEventsQuery, GetUserEventsQueryVariables>;
-export const GetPublicVenuesDocument = gql`
-    query GetPublicVenues($where: venues_bool_exp!, $whereEvents: events_bool_exp!, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
-  venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
-    ...VenueFields
-  }
-  venues_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-  total: venues_aggregate {
-    aggregate {
-      count
-    }
-  }
-}
-    ${VenueFieldsFragmentDoc}`;
-
-/**
- * __useGetPublicVenuesQuery__
- *
- * To run a query within a React component, call `useGetPublicVenuesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPublicVenuesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPublicVenuesQuery({
- *   variables: {
- *      where: // value for 'where'
- *      whereEvents: // value for 'whereEvents'
- *      limit: // value for 'limit'
- *      offset: // value for 'offset'
- *      order_by: // value for 'order_by'
- *   },
- * });
- */
-export function useGetPublicVenuesQuery(baseOptions: Apollo.QueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables> & ({ variables: GetPublicVenuesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
-      }
-export function useGetPublicVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
-        }
-export function useGetPublicVenuesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>(GetPublicVenuesDocument, options);
-        }
-export type GetPublicVenuesQueryHookResult = ReturnType<typeof useGetPublicVenuesQuery>;
-export type GetPublicVenuesLazyQueryHookResult = ReturnType<typeof useGetPublicVenuesLazyQuery>;
-export type GetPublicVenuesSuspenseQueryHookResult = ReturnType<typeof useGetPublicVenuesSuspenseQuery>;
-export type GetPublicVenuesQueryResult = Apollo.QueryResult<GetPublicVenuesQuery, GetPublicVenuesQueryVariables>;
-export const GetUserVenuesDocument = gql`
-    query GetUserVenues($where: venues_bool_exp!, $whereEvents: events_bool_exp, $limit: Int, $offset: Int, $order_by: [venues_order_by!]) {
-  venues(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
-    ...VenueFields
-    postcode
-    created_at
-  }
-  venues_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-}
-    ${VenueFieldsFragmentDoc}`;
-
-/**
- * __useGetUserVenuesQuery__
- *
- * To run a query within a React component, call `useGetUserVenuesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserVenuesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserVenuesQuery({
- *   variables: {
- *      where: // value for 'where'
- *      whereEvents: // value for 'whereEvents'
- *      limit: // value for 'limit'
- *      offset: // value for 'offset'
- *      order_by: // value for 'order_by'
- *   },
- * });
- */
-export function useGetUserVenuesQuery(baseOptions: Apollo.QueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables> & ({ variables: GetUserVenuesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
-      }
-export function useGetUserVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
-        }
-export function useGetUserVenuesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserVenuesQuery, GetUserVenuesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetUserVenuesQuery, GetUserVenuesQueryVariables>(GetUserVenuesDocument, options);
-        }
-export type GetUserVenuesQueryHookResult = ReturnType<typeof useGetUserVenuesQuery>;
-export type GetUserVenuesLazyQueryHookResult = ReturnType<typeof useGetUserVenuesLazyQuery>;
-export type GetUserVenuesSuspenseQueryHookResult = ReturnType<typeof useGetUserVenuesSuspenseQuery>;
-export type GetUserVenuesQueryResult = Apollo.QueryResult<GetUserVenuesQuery, GetUserVenuesQueryVariables>;
-export const GetAdminVenuesDocument = gql`
-    query GetAdminVenues($where: venues_bool_exp!, $whereEvents: events_bool_exp) {
-  venues(where: $where, order_by: {updated_at: desc}) {
-    ...VenueFields
-    created_at
-  }
-  venues_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-}
-    ${VenueFieldsFragmentDoc}`;
-
-/**
- * __useGetAdminVenuesQuery__
- *
- * To run a query within a React component, call `useGetAdminVenuesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAdminVenuesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAdminVenuesQuery({
- *   variables: {
- *      where: // value for 'where'
- *      whereEvents: // value for 'whereEvents'
- *   },
- * });
- */
-export function useGetAdminVenuesQuery(baseOptions: Apollo.QueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables> & ({ variables: GetAdminVenuesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
-      }
-export function useGetAdminVenuesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
-        }
-export function useGetAdminVenuesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>(GetAdminVenuesDocument, options);
-        }
-export type GetAdminVenuesQueryHookResult = ReturnType<typeof useGetAdminVenuesQuery>;
-export type GetAdminVenuesLazyQueryHookResult = ReturnType<typeof useGetAdminVenuesLazyQuery>;
-export type GetAdminVenuesSuspenseQueryHookResult = ReturnType<typeof useGetAdminVenuesSuspenseQuery>;
-export type GetAdminVenuesQueryResult = Apollo.QueryResult<GetAdminVenuesQuery, GetAdminVenuesQueryVariables>;

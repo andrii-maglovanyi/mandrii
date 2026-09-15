@@ -141,7 +141,6 @@ insert_permissions:
         - address
         - area
         - category
-        - chain_id
         - city
         - country
         - description_en

@@ -2,11 +2,12 @@
 
 import clsx from "clsx";
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
-import { ActionButton } from "../Button/ActionButton";
 import { useI18n } from "~/i18n/useI18n";
+
+import { ActionButton } from "../Button/ActionButton";
 
 export interface ModalProps {
   children: React.ReactNode;
@@ -30,18 +31,9 @@ export const Modal = ({
   title,
 }: ModalProps) => {
   const i18n = useI18n();
+  const titleId = useId();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && onClose) onClose();
-    };
-
-    document.addEventListener("keydown", handleEsc);
-
-    return () => document.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -61,45 +53,31 @@ export const Modal = ({
     const dialog = dialogRef.current;
     if (!dialog) return;
 
+    let frame: number;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
     if (isOpen) {
-      // Check if dialog is already open to prevent InvalidStateError on Safari/iPad
       if (!dialog.open) {
         try {
           dialog.showModal();
-          requestAnimationFrame(() => {
-            dialog.focus({ preventScroll: true });
-            setIsVisible(true);
-          });
-        } catch (err) {
-          console.error("Failed to show modal:", err);
-          // Fallback: try to reset the dialog state
-          try {
-            dialog.close();
-            dialog.showModal();
-            requestAnimationFrame(() => {
-              dialog.focus({ preventScroll: true });
-              setIsVisible(true);
-            });
-          } catch (retryErr) {
-            console.error("Failed to show modal after retry:", retryErr);
-          }
+        } catch (error) {
+          console.error("Failed to show modal:", error);
+          return;
         }
-      } else {
-        // Dialog is already open, just make it visible
-        setIsVisible(true);
       }
+      frame = requestAnimationFrame(() => {
+        dialog.focus({ preventScroll: true });
+        setIsVisible(true);
+      });
     } else {
-      setIsVisible(false);
-
-      const timeout = setTimeout(() => {
-        // Only close if dialog is actually open
-        if (dialog.open) {
-          dialog.close();
-        }
+      frame = requestAnimationFrame(() => setIsVisible(false));
+      timeout = setTimeout(() => {
+        if (dialog.open) dialog.close();
       }, MODAL_ANIMATION_TIMEOUT);
-
-      return () => clearTimeout(timeout);
     }
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timeout);
+    };
   }, [isOpen]);
 
   if (typeof window === "undefined") return null;
@@ -113,22 +91,31 @@ export const Modal = ({
   const backdropClass = "backdrop:backdrop-blur-xs backdrop:bg-neutral-800/20 dark:backdrop:bg-neutral-200/20";
   const positionClass = "md:top-1/2 md:left-1/2 md:right-1/2 md:bottom-auto md:-translate-x-1/2 md:max-w-lg";
   const layoutClass = clsx(
-    "bg-surface text-on-surface z-50 w-full rounded-xl p-6 shadow-x",
+    "z-50 w-full rounded-xl bg-surface p-6 text-on-surface shadow-xl",
     height === "conversation"
-      ? "h-[min(42rem,calc(100dvh-2rem))] open:flex open:flex-col"
+      ? `
+        h-[min(42rem,calc(100dvh-2rem))]
+        open:flex open:flex-col
+      `
       : scrollable
         ? "max-h-[calc(100dvh-2rem)] overflow-visible"
         : "overflow-visible",
   );
   const mobileClass = "bottom-0 mt-auto mx-auto mb-4";
 
-  const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `fixed`);
+  const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `
+    fixed
+  `);
 
   return ReactDOM.createPortal(
     <dialog
-      aria-labelledby={title ? "modal-title" : undefined}
+      aria-labelledby={title ? titleId : undefined}
       aria-modal="true"
       className={modalClass}
+      onCancel={(event) => {
+        event.preventDefault();
+        if (isOpen) onClose?.();
+      }}
       ref={dialogRef}
       tabIndex={-1}
     >
@@ -144,7 +131,7 @@ export const Modal = ({
       </div>
       <div className="mb-4 flex items-center">
         {title && (
-          <h2 className={`text-xl font-normal`} id="modal-title">
+          <h2 className={`text-xl font-normal`} id={titleId}>
             {title}
           </h2>
         )}

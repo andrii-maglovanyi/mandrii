@@ -214,3 +214,35 @@
     background-position: 0% 50%;
   }
 }
+
+/* Keep controls usable with touch and avoid iOS zooming small form fields. */
+@media (pointer: coarse) {
+  button,
+  [role="button"],
+  nav a,
+  summary {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+  input:not([type="checkbox"], [type="radio"]),
+  select,
+  textarea {
+    font-size: max(1rem, 16px);
+  }
+}
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

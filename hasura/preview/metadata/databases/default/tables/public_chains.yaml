@@ -50,7 +50,6 @@ insert_permissions:
               status:
                 _eq: active
       columns:
-        - chain_id
         - city
         - country
         - description_en
@@ -68,7 +67,6 @@ select_permissions:
   - role: public
     permission:
       columns:
-        - chain_id
         - city
         - country
         - description_en

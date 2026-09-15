@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ContactForm } from "~/components/layout";
 import { Button } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
+import { sendToMixpanel } from "~/lib/mixpanel";
 
 interface ClaimOwnershipProps {
   name: string;
@@ -21,7 +22,11 @@ export const ClaimOwnership = ({ name, slug }: ClaimOwnershipProps) => {
     <div className="w-full px-12 text-center">
       {isClaiming ? (
         <div className="text-left">
-          <ContactForm template={template} />
+          <ContactForm
+            template={template}
+            trackingEvent="Submitted Venue Ownership Claim"
+            trackingProps={{ venue_slug: slug }}
+          />
         </div>
       ) : (
         <Button
@@ -32,6 +37,7 @@ export const ClaimOwnership = ({ name, slug }: ClaimOwnershipProps) => {
           color="primary"
           isFeatured
           onClick={() => {
+            sendToMixpanel("Started Venue Ownership Claim", { venue_slug: slug });
             setIsClaiming(true);
           }}
           size="lg"

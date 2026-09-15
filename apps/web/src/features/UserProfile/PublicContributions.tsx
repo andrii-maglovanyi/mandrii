@@ -16,9 +16,10 @@ export type PublicEventContribution = {
   country?: null | string;
   created_at: string;
   end_date?: null | string;
+  images?: null | string[];
   is_online: boolean;
   is_recurring: boolean;
-  images?: null | string[];
+  recurrence_rule?: null | string;
   slug: string;
   start_date: string;
   status: Event_Status_Enum;
@@ -56,11 +57,18 @@ export const PublicContributions = ({ events, showDirectoryLinks = false, venues
   return (
     <section>
       <h2
-        className={`from-primary to-secondary mb-4 bg-linear-to-r bg-clip-text text-xl font-bold text-transparent md:text-2xl`}
+        className={`
+          mb-4 bg-linear-to-r from-primary to-secondary bg-clip-text text-xl
+          font-bold text-transparent
+          md:text-2xl
+        `}
       >
         {i18n("Recent contributions")}
       </h2>
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className={`
+        grid gap-4
+        lg:grid-cols-2
+      `}>
         {venues.length > 0 && (
           <SectionCard
             action={
@@ -79,13 +87,25 @@ export const PublicContributions = ({ events, showDirectoryLinks = false, venues
                 const logoUrl = getPublicMediaUrl(venue.logo || venue.images?.[0]);
                 return (
                   <Link
-                    className="group/info hover:bg-on-surface/5 focus-visible:bg-on-surface/5 grid min-h-16 w-full grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-3 px-4 py-2 transition-colors hover:no-underline"
+                    className={`
+                      group/info grid min-h-16 w-full
+                      grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center
+                      gap-3 px-4 py-2 transition-colors
+                      hover:bg-on-surface/5 hover:no-underline
+                      focus-visible:bg-on-surface/5
+                    `}
                     href={`/venues/${venue.slug}`}
                     key={venue.slug}
                   >
-                    <span className="bg-primary/10 text-primary relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                    <span className={`
+                      relative flex h-10 w-10 shrink-0 items-center
+                      justify-center overflow-hidden rounded-full bg-primary/10
+                      text-primary
+                    `}>
                       {logoUrl ? (
-                        <Image alt={`${venue.name} logo`} className="object-cover" fill sizes="40px" src={logoUrl} />
+                        <Image alt={`${venue.name} logo`} className={`
+                          object-cover
+                        `} fill sizes="40px" src={logoUrl} />
                       ) : (
                         <Store size={18} />
                       )}
@@ -94,7 +114,10 @@ export const PublicContributions = ({ events, showDirectoryLinks = false, venues
                       <span className="block max-w-full truncate font-medium" title={venue.name}>
                         {venue.name}
                       </span>
-                      <span className="text-neutral mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
+                      <span className={`
+                        mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2
+                        gap-y-0.5 text-xs text-neutral
+                      `}>
                         {location && (
                           <span className="flex min-w-0 items-center gap-1">
                             <MapPin size={12} />
@@ -109,7 +132,11 @@ export const PublicContributions = ({ events, showDirectoryLinks = false, venues
                     </span>
                     <ContentStatusBadge className="shrink-0" status={venue.status ?? Venue_Status_Enum.Active} />
                     <ArrowUpRight
-                      className="text-neutral shrink-0 transition-transform group-hover/info:translate-x-0.5 group-hover/info:-translate-y-0.5"
+                      className={`
+                        shrink-0 text-neutral transition-transform
+                        group-hover/info:translate-x-0.5
+                        group-hover/info:-translate-y-0.5
+                      `}
                       size={16}
                     />
                   </Link>
@@ -139,14 +166,26 @@ export const PublicContributions = ({ events, showDirectoryLinks = false, venues
                 const status = getEffectiveEventStatus(event);
                 return (
                   <Link
-                    className={`group/info hover:bg-on-surface/5 focus-visible:bg-on-surface/5 grid min-h-16 w-full items-center gap-3 px-4 py-2 transition-colors hover:no-underline ${
-                      imageUrl ? "grid-cols-[auto_minmax(0,1fr)_auto_auto]" : "grid-cols-[minmax(0,1fr)_auto_auto]"
-                    }`}
+                    className={`
+                      group/info grid min-h-16 w-full items-center gap-3 px-4
+                      py-2 transition-colors
+                      hover:bg-on-surface/5 hover:no-underline
+                      focus-visible:bg-on-surface/5
+                      ${
+                      imageUrl ? "grid-cols-[auto_minmax(0,1fr)_auto_auto]" : `
+                        grid-cols-[minmax(0,1fr)_auto_auto]
+                      `
+                    }
+                    `}
                     href={`/events/${event.slug}`}
                     key={event.slug}
                   >
                     {imageUrl && (
-                      <span className="bg-secondary/20 text-secondary relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                      <span className={`
+                        relative flex h-10 w-10 shrink-0 items-center
+                        justify-center overflow-hidden rounded-full
+                        bg-secondary/20 text-secondary
+                      `}>
                         <Image alt={title} className="object-cover" fill sizes="40px" src={imageUrl} />
                       </span>
                     )}
@@ -154,7 +193,10 @@ export const PublicContributions = ({ events, showDirectoryLinks = false, venues
                       <span className="block max-w-full truncate font-medium" title={title}>
                         {title}
                       </span>
-                      <span className="text-neutral mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
+                      <span className={`
+                        mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2
+                        gap-y-0.5 text-xs text-neutral
+                      `}>
                         {location && (
                           <>
                             <span className="truncate">{location}</span>&bull;
@@ -165,7 +207,11 @@ export const PublicContributions = ({ events, showDirectoryLinks = false, venues
                     </span>
                     <ContentStatusBadge className="shrink-0" status={status} />
                     <ArrowUpRight
-                      className="text-neutral shrink-0 transition-transform group-hover/info:translate-x-0.5 group-hover/info:-translate-y-0.5"
+                      className={`
+                        shrink-0 text-neutral transition-transform
+                        group-hover/info:translate-x-0.5
+                        group-hover/info:-translate-y-0.5
+                      `}
                       size={16}
                     />
                   </Link>

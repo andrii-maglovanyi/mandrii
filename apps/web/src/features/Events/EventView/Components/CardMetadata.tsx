@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import {
   Calendar,
   Clock,
@@ -19,7 +18,7 @@ import { useMemo } from "react";
 
 import { Separator } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
-import { toDateLocale } from "~/lib/utils";
+import { getNextOccurrenceStart, getOccurrenceEnd } from "~/lib/events/recurrence";
 import { GetPublicEventsQuery, Locale, Price_Type_Enum } from "~/types";
 
 import { InfoLine } from "../../../Venues/VenueCard/Components/InfoLine";
@@ -62,9 +61,11 @@ export const CardMetadata = ({
 }: CardMetadataProps) => {
   const i18n = useI18n();
 
-  const { currencyIcon, dateDisplay, priceInfo, startDate, timeDisplay } = useMemo(() => {
-    const start = event.start_date ? new Date(String(event.start_date)) : null;
-    const end = event.end_date ? new Date(String(event.end_date)) : null;
+  const { currencyIcon, dateDisplay, displaysNextOccurrence, priceInfo, startDate, timeDisplay } = useMemo(() => {
+    const originalStart = event.start_date ? new Date(String(event.start_date)) : null;
+    const nextOccurrence = getNextOccurrenceStart(event);
+    const start = nextOccurrence ?? originalStart;
+    const end = start ? getOccurrenceEnd(start, event) : null;
 
     const date = start ? formatDate(start) : null;
     const time = start ? `${formatTime(start)}${end ? ` - ${formatTime(end)}` : ""}` : null;
@@ -87,6 +88,9 @@ export const CardMetadata = ({
     return {
       currencyIcon: icon,
       dateDisplay: date,
+      displaysNextOccurrence: Boolean(
+        event.is_recurring && nextOccurrence && originalStart && nextOccurrence > originalStart,
+      ),
       endDate: end,
       priceInfo: price,
       startDate: start,
@@ -113,9 +117,7 @@ export const CardMetadata = ({
         <Section expanded={expanded} title={i18n("Date & Time")}>
           <InfoLine
             icon={<Calendar className={ICON_CLASSES} size={ICON_SIZE} />}
-            info={
-              dateDisplay ? format(new Date(dateDisplay), "EEEE, dd MMMM yyyy", { locale: toDateLocale(locale) }) : ""
-            }
+            info={dateDisplay ? `${displaysNextOccurrence ? `${i18n("Next occurrence")}: ` : ""}${dateDisplay}` : ""}
             tooltipText={i18n("Copy date")}
             withCopy
           />

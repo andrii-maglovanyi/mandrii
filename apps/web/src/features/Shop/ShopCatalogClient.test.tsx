@@ -35,9 +35,7 @@ vi.mock("~/i18n/navigation", () => ({
 }));
 
 // Mock next/image
-vi.mock("next/image", () => ({
-  default: ({ alt, src }: { alt: string; src: string }) => <Image alt={alt} src={src} />,
-}));
+vi.mock("next/image", () => import("~/__mocks__/next-image"));
 
 // Mock UI components that have complex dependencies
 vi.mock("~/components/ui", async () => {
@@ -253,19 +251,6 @@ describe("ShopCatalogClient", () => {
   });
 
   describe("rendering", () => {
-    it("renders the page title", () => {
-      render(<ShopCatalogClient initialCount={testProducts.length} initialProducts={graphqlProducts} />);
-
-      expect(screen.getByRole("heading", { name: "Shop" })).toBeInTheDocument();
-    });
-
-    it("renders breadcrumbs", () => {
-      render(<ShopCatalogClient initialCount={testProducts.length} initialProducts={graphqlProducts} />);
-
-      expect(screen.getByTestId("breadcrumbs")).toBeInTheDocument();
-      expect(screen.getByText("Home")).toBeInTheDocument();
-    });
-
     it("renders search input", () => {
       render(<ShopCatalogClient initialCount={testProducts.length} initialProducts={graphqlProducts} />);
 

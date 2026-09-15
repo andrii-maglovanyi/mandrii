@@ -18,18 +18,18 @@ import { GetPublicVenuesQuery, Locale, Venue_Status_Enum } from "~/types";
 import { ClaimOwnershipDialog } from "../../ClaimOwnershipDialog";
 
 interface CardHeaderProps {
-  hideUntilHover?: boolean;
-  /** Full views can add actions without exposing them on search and map cards. */
-  viewActions?: ReactNode;
   /** Full views use their owner action area for settings instead of a profile shortcut. */
   hideCurrentOwnerProfileAction?: boolean;
+  hideUntilHover?: boolean;
   showManageAction?: boolean;
   venue: GetPublicVenuesQuery["venues"][number];
+  /** Full views can add actions without exposing them on search and map cards. */
+  viewActions?: ReactNode;
 }
 
 export const CardHeader = ({
-  hideUntilHover = false,
   hideCurrentOwnerProfileAction = false,
+  hideUntilHover = false,
   showManageAction = true,
   venue,
   viewActions,
@@ -87,26 +87,37 @@ export const CardHeader = ({
         (profileData.id === venue.user_id && !venue.owner_id));
 
     return (
-      <div className="flex items-center gap-1">
+      <div className={`
+        ml-auto flex max-w-full shrink-0 flex-wrap items-center gap-1
+      `}>
         {canManage ? (
           showManageAction && (
             <ActionButton
               aria-label={i18n("Manage venue")}
               className="group"
-              icon={<PenTool className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={18} />}
+              icon={<PenTool className={hideUntilHover ? `
+                hidden
+                group-hover/card:flex
+              ` : ""} size={18} />}
               onClick={handleManageClick}
               size="sm"
               variant="ghost"
             />
           )
         ) : !venue.owner_id ? (
-          <div className={clsx(hideUntilHover && "hidden", `group-hover/card:flex`)}>
+          <div className={clsx(hideUntilHover && "hidden", `
+            group-hover/card:flex
+          `)}>
             <ActionButton
               aria-label={i18n("I own this venue")}
               className="group"
               icon={
                 <Crown
-                  className={`stroke-amber-600 group-hover:fill-amber-600 dark:stroke-amber-400 dark:group-hover:fill-amber-400`}
+                  className={`
+                    stroke-amber-600
+                    group-hover:fill-amber-600
+                    dark:stroke-amber-400 dark:group-hover:fill-amber-400
+                  `}
                   size={18}
                 />
               }
@@ -120,7 +131,10 @@ export const CardHeader = ({
           <ActionButton
             aria-label={i18n("Share this venue")}
             className="group"
-            icon={<Share2 className={hideUntilHover ? `hidden group-hover/card:flex` : ""} size={20} />}
+            icon={<Share2 className={hideUntilHover ? `
+              hidden
+              group-hover/card:flex
+            ` : ""} size={20} />}
             onClick={handleShareClick}
             variant="ghost"
           />
@@ -147,10 +161,19 @@ export const CardHeader = ({
   };
 
   return (
-    <div className="mb-2 flex h-8 justify-between gap-2">
-      <div className={`text-on-surface flex h-full min-w-0 flex-1 items-center gap-1 text-sm`}>
-        {getIcon(iconName, { size: 18 })}
-        <span className="block min-w-0 flex-1 truncate">{label[locale]}</span>
+    <div className={`
+      mb-2 flex min-h-8 min-w-0 flex-wrap items-start justify-between gap-x-2
+      gap-y-1
+    `}>
+      <div className={`
+        flex min-h-8 min-w-0 flex-1 basis-40 items-start gap-1 text-sm
+        text-on-surface
+      `}>
+        <span className="mt-0.5 shrink-0">{getIcon(iconName, { size: 18 })}</span>
+        <span className={`
+          block min-w-0 flex-1
+          [overflow-wrap:anywhere]
+        `}>{label[locale]}</span>
       </div>
 
       {renderVenueControls()}

@@ -2,7 +2,7 @@ import { constants } from "~/lib/constants";
 import sql from "~/lib/db/db";
 import { UrlHelper } from "~/lib/url-helper";
 
-export const CONTENT_ALERT_DELIVERY_FREQUENCIES = ["DAILY", "IMMEDIATE"] as const;
+export const CONTENT_ALERT_DELIVERY_FREQUENCIES = ["DAILY", "IMMEDIATE", "WEEKLY"] as const;
 export type ContentAlertDeliveryFrequency = (typeof CONTENT_ALERT_DELIVERY_FREQUENCIES)[number];
 
 export type ContentAlertDeliveryPreferences = {
@@ -257,62 +257,6 @@ const sendWebPush = async (delivery: DeliveryRow[]) => {
   return sendContentAlertPushNotification({ alerts: delivery, recipientUserId: first.recipient_id });
 };
 
-async function isGroupStillEnabled(delivery: DeliveryRow[]) {
-  const [first] = delivery;
-  const [result] = await sql<Array<{ enabled: boolean }>>`
-    SELECT EXISTS (
-      SELECT 1
-      FROM content_subscription_alert_deliveries delivery
-      JOIN users user_account ON user_account.id = delivery.recipient_id
-      WHERE delivery.id = ${first.id}
-        AND delivery.status = 'PROCESSING'
-        AND (
-          (delivery.channel = 'EMAIL' AND user_account.content_alert_email_notifications_enabled)
-          OR (delivery.channel = 'TELEGRAM' AND user_account.content_alert_telegram_notifications_enabled
-            AND user_account.telegram_chat_id IS NOT NULL AND user_account.telegram_user_id IS NOT NULL)
-          OR (delivery.channel = 'WEB_PUSH' AND user_account.content_alert_push_notifications_enabled)
-        )
-    ) AS enabled
-  `;
-  return result?.enabled ?? false;
-}
-
-async function markDelivered(deliveryIds: string[]) {
-  await sql`
-    UPDATE content_subscription_alert_deliveries
-    SET status = 'DELIVERED', delivered_at = NOW(), locked_at = NULL, last_error = NULL
-    WHERE id = ANY(${deliveryIds}::uuid[]) AND status = 'PROCESSING'
-  `;
-}
-
-async function cancelClaimed(deliveryIds: string[]) {
-  await sql`
-    UPDATE content_subscription_alert_deliveries
-    SET status = 'CANCELLED', locked_at = NULL
-    WHERE id = ANY(${deliveryIds}::uuid[]) AND status = 'PROCESSING'
-  `;
-}
-
-async function reschedule(deliveries: DeliveryRow[], error: unknown) {
-  const message = (error instanceof Error ? error.message : String(error)).slice(0, 1000);
-  await Promise.all(
-    deliveries.map(async (delivery) => {
-      const outcome = getContentAlertDeliveryRetryOutcome(delivery.attempts);
-      await sql`
-        UPDATE content_subscription_alert_deliveries
-        SET status = ${outcome.status},
-            locked_at = NULL,
-            next_attempt_at = CASE
-              WHEN ${outcome.delaySeconds} IS NULL THEN next_attempt_at
-              ELSE NOW() + make_interval(secs => ${outcome.delaySeconds}::integer)
-            END,
-            last_error = ${message}
-        WHERE id = ${delivery.id} AND status = 'PROCESSING'
-      `;
-    }),
-  );
-}
-
 /** Delivers immediate alerts and coalesces daily alerts into one digest per channel. */
 export async function deliverPendingContentSubscriptionAlertDeliveries({ limit = 50 }: { limit?: number } = {}) {
   await cancelDisabledDeliveries();
@@ -364,4 +308,60 @@ export async function getContentSubscriptionAlertDeliveryMetrics() {
     FROM content_subscription_alert_deliveries
   `;
   return metrics ?? { failed: 0, oldest_pending_at: null, pending: 0, processing: 0 };
+}
+
+async function cancelClaimed(deliveryIds: string[]) {
+  await sql`
+    UPDATE content_subscription_alert_deliveries
+    SET status = 'CANCELLED', locked_at = NULL
+    WHERE id = ANY(${deliveryIds}::uuid[]) AND status = 'PROCESSING'
+  `;
+}
+
+async function isGroupStillEnabled(delivery: DeliveryRow[]) {
+  const [first] = delivery;
+  const [result] = await sql<Array<{ enabled: boolean }>>`
+    SELECT EXISTS (
+      SELECT 1
+      FROM content_subscription_alert_deliveries delivery
+      JOIN users user_account ON user_account.id = delivery.recipient_id
+      WHERE delivery.id = ${first.id}
+        AND delivery.status = 'PROCESSING'
+        AND (
+          (delivery.channel = 'EMAIL' AND user_account.content_alert_email_notifications_enabled)
+          OR (delivery.channel = 'TELEGRAM' AND user_account.content_alert_telegram_notifications_enabled
+            AND user_account.telegram_chat_id IS NOT NULL AND user_account.telegram_user_id IS NOT NULL)
+          OR (delivery.channel = 'WEB_PUSH' AND user_account.content_alert_push_notifications_enabled)
+        )
+    ) AS enabled
+  `;
+  return result?.enabled ?? false;
+}
+
+async function markDelivered(deliveryIds: string[]) {
+  await sql`
+    UPDATE content_subscription_alert_deliveries
+    SET status = 'DELIVERED', delivered_at = NOW(), locked_at = NULL, last_error = NULL
+    WHERE id = ANY(${deliveryIds}::uuid[]) AND status = 'PROCESSING'
+  `;
+}
+
+async function reschedule(deliveries: DeliveryRow[], error: unknown) {
+  const message = (error instanceof Error ? error.message : String(error)).slice(0, 1000);
+  await Promise.all(
+    deliveries.map(async (delivery) => {
+      const outcome = getContentAlertDeliveryRetryOutcome(delivery.attempts);
+      await sql`
+        UPDATE content_subscription_alert_deliveries
+        SET status = ${outcome.status},
+            locked_at = NULL,
+            next_attempt_at = CASE
+              WHEN ${outcome.delaySeconds} IS NULL THEN next_attempt_at
+              ELSE NOW() + make_interval(secs => ${outcome.delaySeconds}::integer)
+            END,
+            last_error = ${message}
+        WHERE id = ${delivery.id} AND status = 'PROCESSING'
+      `;
+    }),
+  );
 }

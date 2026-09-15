@@ -3,51 +3,10 @@ import { BadRequestError, InternalServerError, NotFoundError } from "~/lib/api/e
 import { executeGraphQLQuery } from "~/lib/graphql/client";
 import { Events } from "~/types";
 
-const EVENT_FIELDS = `
-  id
-  title_en
-  title_uk
-  slug
-  description_en
-  description_uk
-  type
-  price_type
-  price_amount
-  price_currency
-  start_date
-  end_date
-  is_online
-  external_url
-  custom_location_address
-  custom_location_name
-  city
-  country
-  area
-  geo
-  images
-  registration_url
-  registration_required
-  capacity
-  age_restriction
-  language
-  accessibility_info
-  social_links
-  status
-  created_at
-  updated_at
-  is_recurring
-  recurrence_rule
-  organizer_name
-  organizer_phone_number
-  organizer_email
-  venue_id
-  user_id
-`;
-
 const INSERT_EVENT_MUTATION = `
   mutation InsertEvent($object: events_insert_input!) {
     insert_events_one(object: $object) {
-      ${EVENT_FIELDS}
+      id
     }
   }
 `;
@@ -55,7 +14,7 @@ const INSERT_EVENT_MUTATION = `
 const UPDATE_EVENT_MUTATION = `
   mutation UpdateEvent($id: uuid!, $_set: events_set_input!) {
     update_events_by_pk(pk_columns: { id: $id }, _set: $_set) {
-      ${EVENT_FIELDS}
+      id
     }
   }
 `;

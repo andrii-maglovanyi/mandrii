@@ -1,12 +1,14 @@
 import type { MetadataRoute } from "next";
 
+import { UrlHelper } from "~/lib/url-helper";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       allow: "/",
-      disallow: "/private/",
+      disallow: ["/api/", "/admin/", "/private/"],
       userAgent: "*",
     },
-    sitemap: "https://mandrii.com/sitemap.xml",
+    sitemap: UrlHelper.buildUrl("/sitemap.xml"),
   };
 }

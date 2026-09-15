@@ -1,8 +1,10 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { Modal } from "./Modal";
+
+vi.mock("~/i18n/useI18n", () => ({ useI18n: () => (key: string) => key }));
 
 describe("Modal", () => {
   beforeAll(() => {
@@ -29,6 +31,21 @@ describe("Modal", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText("Test Modal")).toBeInTheDocument();
     expect(screen.getByText("Modal content here")).toBeInTheDocument();
+  });
+
+  it("keeps dialog titles distinct and only cancels the targeted dialog", () => {
+    const closeFirst = vi.fn();
+    const closeSecond = vi.fn();
+    render(<>
+      <Modal isOpen onClose={closeFirst} title="First">First content</Modal>
+      <Modal isOpen onClose={closeSecond} title="Second">Second content</Modal>
+    </>);
+    const first = screen.getByRole("dialog", { name: "First" });
+    const second = screen.getByRole("dialog", { name: "Second" });
+    expect(first.getAttribute("aria-labelledby")).not.toBe(second.getAttribute("aria-labelledby"));
+    fireEvent(second, new Event("cancel", { cancelable: true }));
+    expect(closeSecond).toHaveBeenCalledOnce();
+    expect(closeFirst).not.toHaveBeenCalled();
   });
 
   it("does not render modal when isOpen is false", () => {
@@ -66,7 +83,7 @@ describe("Modal", () => {
       </Modal>,
     );
 
-    await userEvent.keyboard("{Escape}");
+    fireEvent(screen.getByRole("dialog"), new Event("cancel", { cancelable: true }));
 
     await waitFor(() => {
       expect(onClose).toHaveBeenCalled();

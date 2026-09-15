@@ -7,7 +7,7 @@ interface GetI18nParams {
   locale: string;
 }
 export const getI18n = async ({ locale }: GetI18nParams) => {
-  // For the default locale, skip translation and just return the key as-is
+  // Format English source messages without loading a translated catalogue.
   if (locale === routing.defaultLocale) {
     return getTemplate;
   }

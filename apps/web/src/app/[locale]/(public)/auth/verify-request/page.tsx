@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
+
 import { MailCheck } from "lucide-react";
 
 import { useI18n } from "~/i18n/useI18n";
+import { noIndexRobots } from "~/lib/seo";
+
+export const metadata: Metadata = { robots: noIndexRobots };
 
 export default function VerifyRequestPage() {
   const i18n = useI18n();

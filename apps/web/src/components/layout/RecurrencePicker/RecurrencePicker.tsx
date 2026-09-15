@@ -6,19 +6,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Input, Select } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
+import { buildRecurrenceRule, parseRecurrenceRule, RecurrenceDay, RecurrenceFrequency } from "~/lib/events/recurrence";
 import { Locale } from "~/types";
 
-type DayOfWeek = "FR" | "MO" | "SA" | "SU" | "TH" | "TU" | "WE";
 type EndType = "COUNT" | "DATE" | "NEVER";
-type FrequencyType = "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY";
 
 interface RecurrencePickerProps {
   disabled?: boolean;
   onChange?: (value: string) => void;
+  startDate?: Date | null | string;
   value?: null | string;
 }
 
-export const RecurrencePicker = ({ disabled = false, onChange, value }: RecurrencePickerProps) => {
+export const RecurrencePicker = ({ disabled = false, onChange, startDate, value }: RecurrencePickerProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
 
@@ -45,33 +45,18 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
     };
 
     // Parse FREQ
-    const freqMatch = rrule.match(/FREQ=(DAILY|WEEKLY|MONTHLY|YEARLY)/);
-    if (freqMatch) state.frequency = freqMatch[1] as FrequencyType;
+    const parsedRule = parseRecurrenceRule(rrule);
+    if (!parsedRule) return state;
 
-    // Parse INTERVAL
-    const intervalMatch = rrule.match(/INTERVAL=(\d+)/);
-    if (intervalMatch) state.interval = parseInt(intervalMatch[1], 10);
-
-    // Parse BYDAY (for weekly)
-    const bydayMatch = rrule.match(/BYDAY=((?:MO|TU|WE|TH|FR|SA|SU)(?:,(?:MO|TU|WE|TH|FR|SA|SU))*)/);
-    if (bydayMatch) {
-      state.selectedDays = bydayMatch[1].split(",") as DayOfWeek[];
-    }
-
-    // Parse COUNT
-    const countMatch = rrule.match(/COUNT=(\d+)/);
-    if (countMatch) {
+    state.frequency = parsedRule.frequency;
+    state.interval = parsedRule.interval;
+    state.selectedDays = parsedRule.byDays;
+    if (parsedRule.count) {
       state.endType = "COUNT";
-      state.count = parseInt(countMatch[1], 10);
-    }
-
-    // Parse UNTIL
-    const untilMatch = rrule.match(/UNTIL=(\d{8})/);
-    if (untilMatch) {
+      state.count = parsedRule.count;
+    } else if (parsedRule.until) {
       state.endType = "DATE";
-      const dateStr = untilMatch[1];
-      // Convert YYYYMMDD to YYYY-MM-DD
-      state.endDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}`;
+      state.endDate = parsedRule.until.toISOString().slice(0, 10);
     }
 
     return state;
@@ -81,9 +66,9 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
     count: number;
     endDate: string;
     endType: EndType;
-    frequency: FrequencyType;
+    frequency: RecurrenceFrequency;
     interval: number;
-    selectedDays: DayOfWeek[];
+    selectedDays: RecurrenceDay[];
   }
 
   const [state, setState] = useState<RecurrenceState>(() => parseRRule(value));
@@ -101,25 +86,13 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
 
   // Build RRULE string
   const buildRRule = useCallback((currentState: RecurrenceState): string => {
-    const parts: string[] = [`FREQ=${currentState.frequency}`];
-
-    if (currentState.interval > 1) {
-      parts.push(`INTERVAL=${currentState.interval}`);
-    }
-
-    if (currentState.frequency === "WEEKLY" && currentState.selectedDays.length > 0) {
-      parts.push(`BYDAY=${currentState.selectedDays.join(",")}`);
-    }
-
-    if (currentState.endType === "COUNT") {
-      parts.push(`COUNT=${currentState.count}`);
-    } else if (currentState.endType === "DATE" && currentState.endDate) {
-      // Convert YYYY-MM-DD to YYYYMMDD
-      const dateStr = currentState.endDate.replace(/-/g, "");
-      parts.push(`UNTIL=${dateStr}`);
-    }
-
-    return parts.join(";");
+    return buildRecurrenceRule({
+      byDays: currentState.selectedDays,
+      count: currentState.endType === "COUNT" ? currentState.count : undefined,
+      frequency: currentState.frequency,
+      interval: currentState.interval,
+      until: currentState.endType === "DATE" ? currentState.endDate : undefined,
+    });
   }, []);
 
   // Notify parent when state changes
@@ -129,15 +102,15 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
   }, [state, buildRRule]);
 
   const handleFrequencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setState((prev) => ({ ...prev, frequency: e.target.value as FrequencyType }));
+    setState((prev) => ({ ...prev, frequency: e.target.value as RecurrenceFrequency }));
   };
 
   const handleIntervalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const interval = parseInt(e.target.value, 10) || 1;
-    setState((prev) => ({ ...prev, interval: Math.max(1, interval) }));
+    setState((prev) => ({ ...prev, interval: Math.min(1000, Math.max(1, interval)) }));
   };
 
-  const handleDayToggle = (day: DayOfWeek) => {
+  const handleDayToggle = (day: RecurrenceDay) => {
     setState((prev) => {
       const selectedDays = prev.selectedDays.includes(day)
         ? prev.selectedDays.filter((d) => d !== day)
@@ -152,7 +125,7 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
 
   const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const count = parseInt(e.target.value, 10) || 1;
-    setState((prev) => ({ ...prev, count: Math.max(1, count) }));
+    setState((prev) => ({ ...prev, count: Math.min(1000, Math.max(1, count)) }));
   };
 
   const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,7 +147,7 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
 
   const { weekdays } = constants;
 
-  const daysOfWeek: { day: DayOfWeek; label: string }[] = [
+  const daysOfWeek: { day: RecurrenceDay; label: string }[] = [
     { day: "MO", label: weekdays[0].short[locale] },
     { day: "TU", label: weekdays[1].short[locale] },
     { day: "WE", label: weekdays[2].short[locale] },
@@ -245,6 +218,7 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
           <Input
             disabled={disabled}
             label={i18n("Every")}
+            max={1000}
             min={1}
             onChange={handleIntervalChange}
             placeholder="1"
@@ -309,6 +283,7 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
         <Input
           disabled={disabled}
           label={i18n("Number of occurrences")}
+          max={1000}
           min={1}
           onChange={handleCountChange}
           placeholder="10"
@@ -321,6 +296,7 @@ export const RecurrencePicker = ({ disabled = false, onChange, value }: Recurren
         <Input
           disabled={disabled}
           label={i18n("End date")}
+          min={startDate ? new Date(startDate).toISOString().slice(0, 10) : undefined}
           onChange={handleEndDateChange}
           type="date"
           value={state.endDate}

@@ -90,7 +90,7 @@ describe("AnimatedEllipsis", () => {
     expect(wrapper).toHaveClass("justify-center");
     expect(wrapper).toHaveClass("w-full");
     expect(wrapper).toHaveClass("h-full");
-    expect(wrapper).toHaveClass("min-h-screen");
+    expect(wrapper).toHaveClass("h-full");
   });
 
   it("contains ellipsis inside centering wrapper when centered", () => {

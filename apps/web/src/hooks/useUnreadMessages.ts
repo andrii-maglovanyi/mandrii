@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useMessagingUnreadEventsSubscription } from "~/types/graphql.generated";
@@ -7,41 +8,46 @@ import { useMessagingUnreadEventsSubscription } from "~/types/graphql.generated"
 export const MESSAGING_UNREAD_UPDATED_EVENT = "messaging-unread-updated";
 
 export type UnreadMessagingUpdate = {
-  latest: null | {
+  latest: {
     body: string;
     conversation_id: string;
     recipient_role: "OWNER" | "USER";
     sender_name: string;
     venue_slug: string;
-  };
+  } | null;
   unreadCount: number;
 };
 
-let unreadRequest: null | Promise<null | UnreadMessagingUpdate> = null;
+const unreadRequests = new Map<string, Promise<null | UnreadMessagingUpdate>>();
 
-const fetchUnreadMessages = () => {
-  if (unreadRequest) return unreadRequest;
+const fetchUnreadMessages = (userId: string) => {
+  const existing = unreadRequests.get(userId);
+  if (existing) return existing;
 
-  unreadRequest = fetch("/api/conversations/unread", { cache: "no-store" })
+  const request = fetch("/api/conversations/unread", { cache: "no-store" })
     .then(async (response) => (response.ok ? ((await response.json()) as UnreadMessagingUpdate) : null))
     .catch(() => null)
     .finally(() => {
-      unreadRequest = null;
+      unreadRequests.delete(userId);
     });
-  return unreadRequest;
+  unreadRequests.set(userId, request);
+  return request;
 };
 
 export const useUnreadMessages = (enabled = true) => {
-  const [unreadCount, setUnreadCount] = useState(0);
+  const { data: session, status } = useSession();
+  const userId = status === "authenticated" && enabled ? session?.user?.id : undefined;
+  const [count, setCount] = useState<{ userId: string; value: number } | null>(null);
   const isActiveRef = useRef(false);
-  const previousUnreadCountRef = useRef<number | null>(null);
+  const previousUnreadCountRef = useRef<null | number>(null);
   const requestIdRef = useRef(0);
-  const refreshTimerRef = useRef<number | null>(null);
+  const refreshTimerRef = useRef<null | number>(null);
   const subscriptionReadyRef = useRef(false);
   const loadUnreadCount = useCallback(async () => {
+    if (!userId) return;
     const requestId = ++requestIdRef.current;
     try {
-      const data = await fetchUnreadMessages();
+      const data = await fetchUnreadMessages(userId);
       if (!data) return;
       if (isActiveRef.current && requestId === requestIdRef.current) {
         if (
@@ -54,12 +60,12 @@ export const useUnreadMessages = (enabled = true) => {
           );
         }
         previousUnreadCountRef.current = data.unreadCount;
-        setUnreadCount(data.unreadCount);
+        setCount({ userId, value: data.unreadCount });
       }
     } catch {
       /* The counter is supplementary; a transient request failure should remain invisible. */
     }
-  }, []);
+  }, [userId]);
   const scheduleUnreadRefresh = useCallback(
     (delay = 250) => {
       if (refreshTimerRef.current) window.clearTimeout(refreshTimerRef.current);
@@ -71,16 +77,15 @@ export const useUnreadMessages = (enabled = true) => {
     [loadUnreadCount],
   );
   const { data: unreadEvents } = useMessagingUnreadEventsSubscription({
-    skip: !enabled,
+    skip: !userId,
   });
 
   useEffect(() => {
-    if (!enabled) {
+    if (!userId) {
       isActiveRef.current = false;
       requestIdRef.current++;
       previousUnreadCountRef.current = null;
       subscriptionReadyRef.current = false;
-      setUnreadCount(0);
       return;
     }
 
@@ -100,13 +105,13 @@ export const useUnreadMessages = (enabled = true) => {
       window.clearTimeout(fallbackTimer);
       window.removeEventListener("messages-read", loadUnreadCount);
     };
-  }, [enabled, loadUnreadCount, scheduleUnreadRefresh]);
+  }, [userId, loadUnreadCount, scheduleUnreadRefresh]);
 
   useEffect(() => {
-    if (!enabled || !unreadEvents) return;
+    if (!userId || !unreadEvents) return;
     subscriptionReadyRef.current = true;
     scheduleUnreadRefresh();
-  }, [enabled, scheduleUnreadRefresh, unreadEvents]);
+  }, [userId, scheduleUnreadRefresh, unreadEvents]);
 
-  return unreadCount;
+  return count?.userId === userId ? (count?.value ?? 0) : 0;
 };

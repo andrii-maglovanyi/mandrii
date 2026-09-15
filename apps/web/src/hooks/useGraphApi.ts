@@ -1,7 +1,8 @@
 import { DocumentNode, useQuery } from "@apollo/client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
+import { INFINITE_SCROLL_MEDIA_QUERY } from "~/lib/responsive";
 import { APIParams } from "~/types";
 
 interface UseInfiniteQueryOptions {
@@ -16,13 +17,15 @@ function getDataKeysFromQuery(doc: DocumentNode): string[] {
   return operation.selectionSet.selections.filter((sel) => sel.kind === "Field").map((sel) => sel.name.value);
 }
 
+const EMPTY_ITEMS: Record<string, unknown>[] = [];
+
 export const useGraphApi = <T extends Record<string, unknown>[]>(
   query: DocumentNode,
   variables: APIParams,
   options?: UseInfiniteQueryOptions,
 ) => {
   const isMobile = useMediaQuery({
-    query: "(max-width: 768px)",
+    query: INFINITE_SCROLL_MEDIA_QUERY,
   });
 
   const queryVariables = isMobile ? { ...variables, offset: 0 } : variables;
@@ -32,19 +35,33 @@ export const useGraphApi = <T extends Record<string, unknown>[]>(
     ...options,
   });
 
+  const [fetchMoreError, setFetchMoreError] = useState<Error>();
+  const generationRef = useRef(0);
+  const queryKey = JSON.stringify({ ...variables, offset: undefined });
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const lastFetchedOffsetRef = useRef(0);
   const requestInProgressRef = useRef(false);
 
-  const [dataKey] = getDataKeysFromQuery(query);
+  const [dataKey] = useMemo(() => getDataKeysFromQuery(query), [query]);
   const aggregateKey: string = `${dataKey}_aggregate`;
 
-  const items: T = data?.[dataKey] ?? [];
-  const count: number = data?.[aggregateKey]?.aggregate?.count ?? 0;
-  const total: number = data?.total?.aggregate?.count ?? 0;
+  const items: T = options?.skip ? (EMPTY_ITEMS as T) : (data?.[dataKey] ?? (EMPTY_ITEMS as T));
+  const count: number = options?.skip ? 0 : (data?.[aggregateKey]?.aggregate?.count ?? 0);
+  const total: number = options?.skip ? 0 : (data?.total?.aggregate?.count ?? 0);
 
   useEffect(() => {
-    if (!isMobile) return;
+    generationRef.current += 1;
+    lastFetchedOffsetRef.current = 0;
+    requestInProgressRef.current = false;
+    setIsFetchingMore(false);
+    setFetchMoreError(undefined);
+    return () => {
+      generationRef.current += 1;
+    };
+  }, [query, queryKey, options?.skip]);
+
+  useEffect(() => {
+    if (options?.skip || !isMobile) return;
 
     if (!variables.offset || variables.offset <= lastFetchedOffsetRef.current) {
       return;
@@ -63,6 +80,7 @@ export const useGraphApi = <T extends Record<string, unknown>[]>(
         return;
       }
 
+      const generation = generationRef.current;
       lastFetchedOffsetRef.current = variables.offset ?? 0;
       requestInProgressRef.current = true;
       setIsFetchingMore(true);
@@ -70,7 +88,7 @@ export const useGraphApi = <T extends Record<string, unknown>[]>(
       try {
         await fetchMore({
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) return prev;
+            if (!fetchMoreResult || generation !== generationRef.current) return prev;
 
             return {
               ...prev,
@@ -81,27 +99,39 @@ export const useGraphApi = <T extends Record<string, unknown>[]>(
           variables: { ...variables, offset: items.length },
         });
       } catch (error) {
-        lastFetchedOffsetRef.current = items.length;
-        throw error;
+        if (generation === generationRef.current) {
+          setFetchMoreError(error instanceof Error ? error : new Error("Unable to load more results"));
+        }
       } finally {
-        setTimeout(() => {
+        if (generation === generationRef.current) {
           setIsFetchingMore(false);
           requestInProgressRef.current = false;
-        }, 0);
+        }
       }
     };
 
     loadMore();
-  }, [isMobile, variables, items.length, count, isFetchingMore, loading, fetchMore, dataKey, aggregateKey]);
+  }, [
+    options?.skip,
+    isMobile,
+    variables,
+    items.length,
+    count,
+    isFetchingMore,
+    loading,
+    fetchMore,
+    dataKey,
+    aggregateKey,
+  ]);
 
   return {
     count,
     data: items,
-    error,
+    error: options?.skip ? undefined : (error ?? fetchMoreError),
     hasMore: items.length < count,
-    isFetchingMore,
-    isInitialLoading: loading && items.length === 0,
-    loading: loading || isFetchingMore,
+    isFetchingMore: !options?.skip && isFetchingMore,
+    isInitialLoading: !options?.skip && loading && items.length === 0,
+    loading: !options?.skip && (loading || isFetchingMore),
     total,
   };
 };

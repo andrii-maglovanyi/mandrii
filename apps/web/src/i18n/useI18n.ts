@@ -10,7 +10,7 @@ export const useI18n = () => {
 
   return useCallback(
     (key: string, options?: Record<string, Date | number | string>) => {
-      // Skip translation for default locale
+      // Format English source messages, including their explicit plural forms.
       if (locale === routing.defaultLocale) {
         return getTemplate(key, options);
       }

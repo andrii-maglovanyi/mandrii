@@ -10,9 +10,9 @@ import { useI18n } from "~/i18n/useI18n";
 
 export default function VenueManagementPage({ params }: { params: Promise<{ slug: string }> }) {
   const i18n = useI18n();
-  const { useGetVenue } = useVenues();
+  const { useOwnedVenue } = useVenues();
   const { slug } = use(params);
-  const { data: venue, loading } = useGetVenue(slug);
+  const { data: venue, loading } = useOwnedVenue(slug);
 
   if (loading) {
     return (
@@ -40,7 +40,10 @@ export default function VenueManagementPage({ params }: { params: Promise<{ slug
           { title: i18n("Manage") },
         ]}
       />
-      <h1 className="text-on-surface my-8 text-3xl font-extrabold md:text-5xl">{i18n("Manage venue")}</h1>
+      <h1 className={`
+        my-8 text-3xl font-extrabold text-on-surface
+        md:text-5xl
+      `}>{i18n("Manage venue")}</h1>
       <ContentManagementPage targetId={venue.id} targetType="venue" />
     </>
   );

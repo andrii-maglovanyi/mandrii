@@ -17,8 +17,11 @@ describe("getEventsFilter", () => {
     expect(variables.where._and).toEqual([
       {
         _or: [
-          { end_date: { _gte: "2026-08-28", _lte: "2026-08-30T23:59:59.999Z" } },
-          { start_date: { _gte: "2026-08-28", _lte: "2026-08-30T23:59:59.999Z" } },
+          { is_recurring: { _eq: true } },
+          {
+            _or: [{ end_date: { _gte: "2026-08-28" } }, { start_date: { _gte: "2026-08-28" } }],
+            start_date: { _lte: "2026-08-30T23:59:59.999Z" },
+          },
         ],
       },
       expect.objectContaining({ _or: expect.any(Array) }),
@@ -33,5 +36,22 @@ describe("getEventsFilter", () => {
 
     expect(variables.where._and).toHaveLength(3);
     expect(variables.where._or).toBeUndefined();
+  });
+
+  it("keeps active recurring series discoverable after their first occurrence", () => {
+    const { variables } = getEventsFilter({});
+
+    expect(variables.where._or).toEqual(expect.arrayContaining([{ is_recurring: { _eq: true } }]));
+  });
+
+  it("includes history only when requested, while explicit dates keep their meaning", () => {
+    const { variables: allDates } = getEventsFilter({ includePast: true });
+    const { variables: futureOnly } = getEventsFilter({ dateFrom: "2030-01-01", includePast: true });
+
+    expect(allDates.where._or).toBeUndefined();
+    expect(futureOnly.where._or).toEqual([
+      { is_recurring: { _eq: true } },
+      { _or: [{ end_date: { _gte: "2030-01-01" } }, { start_date: { _gte: "2030-01-01" } }] },
+    ]);
   });
 });

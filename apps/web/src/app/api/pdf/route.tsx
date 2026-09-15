@@ -1,13 +1,13 @@
 import { format } from "date-fns";
-import fs from "node:fs/promises";
-import path from "node:path";
 import puppeteer, { LaunchOptions } from "puppeteer-core";
 import React from "react";
+import { z } from "zod";
 
 import { BadRequestError, getApiContext, InternalServerError, NotFoundError, withErrorHandling } from "~/lib/api";
 import { isDevelopment } from "~/lib/config/env";
 import { compileMDX } from "~/lib/mdx/compiler";
-import { contentManager } from "~/lib/mdx/reader";
+import { contentManager, isSafeContentSegment } from "~/lib/mdx/reader";
+import { loadPdfStyles } from "~/lib/pdf/styles";
 import { UrlHelper } from "~/lib/url-helper";
 import { toDateLocale } from "~/lib/utils";
 import { toSnakeCase } from "~/lib/utils/string";
@@ -18,10 +18,8 @@ const createFilename = (title: string): string => {
   return `filename*=UTF-8''${encodeURIComponent(filename)}`;
 };
 
-interface ExportRequest {
-  id: string;
-  type: string;
-}
+const contentSegment = z.string().min(1).max(160).refine(isSafeContentSegment);
+const exportSchema = z.object({ id: contentSegment, type: contentSegment });
 
 async function generatePdfFromHtml(htmlContent: string) {
   const launchOptions: LaunchOptions = {
@@ -57,28 +55,12 @@ async function generatePdfFromHtml(htmlContent: string) {
 
     return buffer;
   } catch (error) {
-    throw new InternalServerError(
-      `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
-    );
+    console.error("Failed to generate PDF", error);
+    throw new InternalServerError("Unable to generate PDF. Please try again later.");
   } finally {
     if (browser) {
-      await browser.close();
+      await browser.close().catch((error) => console.error("Failed to close PDF browser", error));
     }
-  }
-}
-
-async function loadTailwindCss(): Promise<string> {
-  try {
-    const cssDir = path.join(process.cwd(), ".next/static/css");
-    const files = await fs.readdir(cssDir);
-    const cssChunks = await Promise.all(
-      files.filter((f) => f.endsWith(".css")).map((f) => fs.readFile(path.join(cssDir, f), "utf8")),
-    );
-    return cssChunks.join("\n");
-  } catch (error) {
-    throw new InternalServerError(
-      `Failed to load CSS files: ${error instanceof Error ? error.message : "Unknown error"}`,
-    );
   }
 }
 
@@ -92,18 +74,16 @@ export const POST = (req: Request): Promise<Response> =>
   withErrorHandling(async () => {
     const { locale } = await getApiContext(req);
 
-    let body: ExportRequest;
+    let body: unknown;
     try {
       body = await req.json();
     } catch {
       throw new BadRequestError("Invalid JSON body");
     }
 
-    const { id, type } = body;
-
-    if (!id || !type) {
-      throw new BadRequestError("Missing required fields: id and type");
-    }
+    const parsed = exportSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestError("A valid content id and type are required");
+    const { id, type } = parsed.data;
 
     const data = await contentManager.getContentById(type, id, locale);
 
@@ -116,7 +96,7 @@ export const POST = (req: Request): Promise<Response> =>
     }
 
     const MDXContent = await compileMDX(data.content);
-    const tailwindCss = await loadTailwindCss();
+    const tailwindCss = await loadPdfStyles();
 
     const fullHtml = `
 <!DOCTYPE html>
@@ -151,8 +131,12 @@ export const POST = (req: Request): Promise<Response> =>
   </head>
   <body>
     <div class="prose prose-sm max-w-none">
-      <h1>${data.meta.title}</h1>
-      ${await renderToString(MDXContent.default)}
+      ${await renderToString(() => (
+        <>
+          <h1>{data.meta.title}</h1>
+          <MDXContent.default />
+        </>
+      ))}
     </div>
     <div class="fixed bottom-0 right-0 flex items-center justify-end space-x-1 text-sm text-neutral-disabled">
       <span>${format(new Date(data.meta.date), "dd MMMM yyyy", { locale: toDateLocale(locale) })}</span>

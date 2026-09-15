@@ -2,7 +2,6 @@
 
 import clsx from "clsx";
 import { format, parse } from "date-fns";
-import { enGB } from "date-fns/locale";
 import { ArrowUpRight, Calendar, Globe, Info, MapPin, Newspaper, Pencil, Star } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -18,16 +17,17 @@ import {
   TabPane,
   Tabs,
 } from "~/components/ui";
-import { useEvents } from "~/hooks/useEvents";
-import { useUser } from "~/hooks/useUser";
+import { CommunityAroundContent } from "~/features/CommunityRequests";
+import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
+import { FollowContentButton } from "~/features/Following/FollowContentButton";
 import { ContentRating } from "~/features/Ratings/ContentRating";
 import { ContentReviews } from "~/features/Ratings/ContentReviews";
-import { ContentUpdates } from "~/features/ContentUpdates/ContentUpdates";
-import { CommunityAroundContent } from "~/features/CommunityRequests";
 import { ContentViewOwnerActions } from "~/features/shared/ContentViewOwnerActions";
-import { FollowContentButton } from "~/features/Following/FollowContentButton";
+import { useEvents } from "~/hooks/useEvents";
+import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
+import { getNextOccurrenceStart } from "~/lib/events/recurrence";
 import { getEffectiveEventStatus } from "~/lib/events/status";
 import { toDateLocale } from "~/lib/utils/locale";
 import { Event_Status_Enum, GetPublicEventsQuery, Locale } from "~/types";
@@ -45,12 +45,12 @@ interface EventViewProps {
 export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) => {
   const i18n = useI18n();
   const locale = useLocale() as Locale;
-  const { useGetEvent } = useEvents();
+  const { usePublicEvent } = useEvents();
   const { data: profile } = useUser();
   const router = useRouter();
 
   const shouldFetchClientSide = initialEvent === undefined;
-  const { data: clientEvent, loading } = useGetEvent(shouldFetchClientSide ? slug : undefined);
+  const { data: clientEvent, loading } = usePublicEvent(shouldFetchClientSide ? slug : undefined);
   const event = shouldFetchClientSide ? clientEvent : initialEvent;
 
   if (loading) {
@@ -82,10 +82,10 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
 
   const images = (event.images || []).filter(Boolean).map((img: string) => normalizeUrl(img)!) as string[];
 
-  const startDate = new Date(event.start_date);
+  const startDate = getNextOccurrenceStart(event) ?? new Date(event.start_date);
 
-  const formatDate = (date: Date, locale = enGB) => {
-    return format(date, "EEEE, d MMMM yyyy", { locale });
+  const formatDate = (date: Date, dateLocale = toDateLocale(locale)) => {
+    return format(date, "EEEE, d MMMM yyyy", { locale: dateLocale });
   };
 
   const formatTime = (date: Date) => {
@@ -172,35 +172,56 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
   return (
     <div className="flex flex-col">
       {/* Hero section. Edge to edge image carousel */}
-      <div className={`relative w-full pb-2 md:pb-4`}>
+      <div className={`
+        relative w-full pb-2
+        md:pb-4
+      `}>
         {showStatus && (
           <div className="absolute top-4 right-4 z-10">
             <ContentStatusBadge appearance="label-with-icon" size="md" status={effectiveStatus} />
           </div>
         )}
         {images.length ? (
-          <div className={`relative aspect-video w-full md:aspect-21/9`}>
+          <div className={`
+            relative aspect-video w-full
+            md:aspect-21/9
+          `}>
             <ImageCarousel images={images} priority showDots />
             {/* Gradient overlay */}
             <div
-              className={`pointer-events-none absolute inset-0 bg-linear-to-t from-neutral-900 via-neutral-900/30 to-transparent`}
+              className={`
+                pointer-events-none absolute inset-0 bg-linear-to-t
+                from-neutral-900 via-neutral-900/30 to-transparent
+              `}
             />
           </div>
         ) : (
           <div
-            className={`from-primary/30 via-primary/15 to-secondary/30 relative aspect-video w-full bg-linear-to-br md:aspect-21/9`}
+            className={`
+              relative aspect-video w-full bg-linear-to-br from-primary/30
+              via-primary/15 to-secondary/30
+              md:aspect-21/9
+            `}
           />
         )}
 
         {/* Event title overlay on image */}
-        <div className={`absolute right-0 bottom-24 left-0 px-4 pb-4 md:bottom-20 md:px-8`}>
+        <div className={`
+          absolute right-0 bottom-24 left-0 px-4 pb-4
+          md:bottom-20 md:px-8
+        `}>
           <div className="mx-auto max-w-5xl">
             <div className="flex items-end justify-between gap-4">
               <div className="min-w-0 flex-1">
                 <h1
                   className={clsx(
                     images.length ? "text-neutral-0" : "text-on-surface",
-                    `mb-3 text-3xl leading-tight font-black tracking-tight drop-shadow-2xl md:text-5xl lg:text-6xl`,
+                    `
+                      mb-3 text-3xl leading-tight font-black tracking-tight
+                      drop-shadow-2xl
+                      md:text-5xl
+                      lg:text-6xl
+                    `,
                   )}
                 >
                   {title}
@@ -210,12 +231,18 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
                 <div
                   className={clsx(
                     images.length ? "text-neutral-0/80" : "text-on-surface/80",
-                    `flex flex-col gap-2 md:flex-row md:items-center md:gap-4`,
+                    `
+                      flex flex-col gap-2
+                      md:flex-row md:items-center md:gap-4
+                    `,
                   )}
                 >
                   <div className="flex items-center gap-2">
                     <Calendar className="shrink-0" size={20} />
-                    <span className={`text-base font-medium md:text-lg`}>
+                    <span className={`
+                      text-base font-medium
+                      md:text-lg
+                    `}>
                       {format(new Date(startDate), "EEEE, dd MMMM yyyy", { locale: toDateLocale(locale) })}
                     </span>
                   </div>
@@ -223,14 +250,20 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
                   {!event.is_online && event.city && (
                     <div className="flex items-center gap-2">
                       <MapPin className="shrink-0" size={20} />
-                      <span className={`text-base font-medium md:text-lg`}>{event.city}</span>
+                      <span className={`
+                        text-base font-medium
+                        md:text-lg
+                      `}>{event.city}</span>
                     </div>
                   )}
 
                   {event.is_online && (
                     <div className="flex items-center gap-2">
                       <Globe className="shrink-0" size={20} />
-                      <span className={`text-base font-medium md:text-lg`}>{i18n("Online event")}</span>
+                      <span className={`
+                        text-base font-medium
+                        md:text-lg
+                      `}>{i18n("Online event")}</span>
                     </div>
                   )}
                 </div>
@@ -238,7 +271,10 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
 
               {/* Registration Button */}
               {event.registration_url && (
-                <div className={`hidden shrink-0 md:block`}>
+                <div className={`
+                  hidden shrink-0
+                  md:block
+                `}>
                   <a href={event.registration_url} rel="noopener noreferrer" target="_blank">
                     <Button color="primary" size="lg" variant="filled">
                       {event.registration_required ? i18n("Register Now") : i18n("Learn More")}
@@ -253,7 +289,10 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
 
         {/* Registration Button - Mobile (below hero) */}
         {event.registration_url && (
-          <div className={`absolute right-0 bottom-0 left-0 px-4 md:hidden`}>
+          <div className={`
+            absolute right-0 bottom-0 left-0 px-4
+            md:hidden
+          `}>
             <div className="mx-auto max-w-5xl">
               <a href={event.registration_url} rel="noopener noreferrer" target="_blank">
                 <Button color="primary" variant="filled">
@@ -268,8 +307,8 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
         <div className={`mx-auto mt-2 w-full max-w-5xl px-4`}>
           <CardHeader
             event={event}
-            hideUntilHover={false}
             hideCurrentOwnerProfileAction={isOwner}
+            hideUntilHover={false}
             showManageAction={false}
             viewActions={
               isOwner ? (
@@ -288,11 +327,20 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
       </div>
 
       {/* Main Content */}
-      <div className={`mx-auto w-full max-w-5xl px-4 py-2 lg:py-4`}>
+      <div className={`
+        mx-auto w-full max-w-5xl px-4 py-2
+        lg:py-4
+      `}>
         <Tabs defaultActiveKey="about" defer mobileFullWidth>
           <TabPane
-            icon={<Info aria-hidden className="size-6 sm:size-5" />}
-            label={<span className="hidden sm:inline">{i18n("About")}</span>}
+            icon={<Info aria-hidden className={`
+              size-6
+              sm:size-5
+            `} />}
+            label={<span className={`
+              hidden
+              sm:inline
+            `}>{i18n("About")}</span>}
             tab={i18n("About")}
           >
             {canManageInfo && (
@@ -307,14 +355,24 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
                 </Button>
               </div>
             )}
-            <div className={`grid grid-cols-1 gap-4 lg:grid-cols-3`}>
+            <div className={`
+              grid grid-cols-1 gap-4
+              lg:grid-cols-3
+            `}>
               {/* Description - Left side (2/3) */}
               <div className="lg:col-span-2">
                 {description ? (
-                  <RichText className={`prose dark:prose-invert max-w-none`}>{description}</RichText>
+                  <RichText className={`
+                    prose max-w-none
+                    dark:prose-invert
+                  `}>{description}</RichText>
                 ) : (
                   <div
-                    className={`flex items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 py-16 dark:border-gray-700`}
+                    className={`
+                      flex items-center justify-center rounded-2xl border-2
+                      border-dashed border-gray-200 py-16
+                      dark:border-gray-700
+                    `}
                   >
                     <p className="text-neutral/60">{i18n("No description available")}</p>
                   </div>
@@ -360,8 +418,14 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
 
           {canShowRatings && (
             <TabPane
-              icon={<Newspaper aria-hidden className="size-6 sm:size-5" />}
-              label={<span className="hidden sm:inline">{i18n("Feed")}</span>}
+              icon={<Newspaper aria-hidden className={`
+                size-6
+                sm:size-5
+              `} />}
+              label={<span className={`
+                hidden
+                sm:inline
+              `}>{i18n("Feed")}</span>}
               tab={i18n("Feed")}
             >
               <ContentUpdates canManage={canManageUpdates} targetId={event.id} type="event" />
@@ -371,8 +435,14 @@ export const EventView = ({ initialEvent = undefined, slug }: EventViewProps) =>
 
           {canShowRatings && (
             <TabPane
-              icon={<Star aria-hidden className="size-6 sm:size-5" />}
-              label={<span className="hidden sm:inline">{i18n("Reviews")}</span>}
+              icon={<Star aria-hidden className={`
+                size-6
+                sm:size-5
+              `} />}
+              label={<span className={`
+                hidden
+                sm:inline
+              `}>{i18n("Reviews")}</span>}
               tab={i18n("Reviews")}
             >
               <ContentReviews context={event.type} targetId={String(event.id)} type="event" />

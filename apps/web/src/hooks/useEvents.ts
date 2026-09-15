@@ -3,7 +3,8 @@ import { useSession } from "next-auth/react";
 import { useCallback, useMemo } from "react";
 
 import { EVENT_FIELDS_FRAGMENT, GET_PUBLIC_EVENTS } from "~/graphql/events";
-import { APIParams, Event_Status_Enum, GetPublicEventsQuery, GetUserEventsQuery } from "~/types";
+import { getDiscoverableEventsWhere, getPubliclyViewableEventsWhere } from "~/lib/content-visibility";
+import { APIParams, Event_Status_Enum, FilterParams, GetPublicEventsQuery, GetUserEventsQuery } from "~/types";
 import { UUID } from "~/types/uuid";
 
 import { useGraphApi } from "./useGraphApi";
@@ -39,32 +40,91 @@ export const useEvents = () => {
     return result.content;
   }, []);
 
-  const usePublicEvents = (params: APIParams, options?: { skip?: boolean }) => {
+  const usePublicEvents = (
+    params: APIParams,
+    options?: { includeTotal?: boolean; skip?: boolean; visibility?: "discoverable" | "public" },
+  ) => {
+    const { includeTotal = false, skip = false, visibility = "discoverable" } = options ?? {};
     const mergedParams = useMemo(
       () => ({
         ...params,
+        includeTotal,
         order_by: params.order_by ?? [{ start_date: "asc" }],
+        totalWhere: visibility === "public" ? getPubliclyViewableEventsWhere() : getDiscoverableEventsWhere(),
+        where:
+          visibility === "public"
+            ? getPubliclyViewableEventsWhere(params.where)
+            : getDiscoverableEventsWhere(params.where),
       }),
-      [params],
+      [includeTotal, params, visibility],
     );
 
-    const result = useGraphApi<GetPublicEventsQuery["events"]>(GET_PUBLIC_EVENTS, mergedParams, options);
+    const result = useGraphApi<GetPublicEventsQuery["events"]>(GET_PUBLIC_EVENTS, mergedParams, { skip });
 
     return result;
   };
 
-  const useGetEvent = (slug?: string) => {
+  const usePublicEvent = (slug?: string) => {
     const queryParams = useMemo(
       () => ({
         limit: 1,
-        where: {
-          slug: { _eq: slug },
-        },
+        totalWhere: getDiscoverableEventsWhere(),
+        where: getPubliclyViewableEventsWhere({ slug: { _eq: slug } }),
       }),
       [slug],
     );
 
-    const result = useGraphApi<GetPublicEventsQuery["events"]>(GET_USER_EVENTS, queryParams, { skip: !slug });
+    const result = useGraphApi<GetPublicEventsQuery["events"]>(GET_PUBLIC_EVENTS, queryParams, { skip: !slug });
+
+    const transformedData = useMemo(() => (result.data?.[0] ? result.data[0] : undefined), [result.data]);
+
+    return {
+      ...result,
+      data: transformedData,
+    };
+  };
+
+  const useEditableEvent = (slug?: string) => {
+    const { data: session } = useSession();
+    const isAdmin = session?.user.role === "admin";
+    const queryParams = useMemo(
+      () => ({
+        limit: 1,
+        where: {
+          _and: [{ slug: { _eq: slug } }, ...(isAdmin ? [] : [{ user_id: { _eq: session?.user.id } }])],
+        } as FilterParams,
+      }),
+      [isAdmin, session?.user.id, slug],
+    );
+
+    const result = useGraphApi<GetUserEventsQuery["events"]>(GET_USER_EVENTS, queryParams, {
+      skip: !session?.user.id || !slug,
+    });
+
+    const transformedData = useMemo(() => (result.data?.[0] ? result.data[0] : undefined), [result.data]);
+
+    return {
+      ...result,
+      data: transformedData,
+    };
+  };
+
+  const useOwnedEvent = (slug?: string) => {
+    const { data: session } = useSession();
+    const isAdmin = session?.user.role === "admin";
+    const queryParams = useMemo(
+      () => ({
+        limit: 1,
+        where: {
+          _and: [{ slug: { _eq: slug } }, ...(isAdmin ? [] : [{ owner_id: { _eq: session?.user.id } }])],
+        } as FilterParams,
+      }),
+      [isAdmin, session?.user.id, slug],
+    );
+
+    const result = useGraphApi<GetUserEventsQuery["events"]>(GET_USER_EVENTS, queryParams, {
+      skip: !session?.user.id || !slug,
+    });
 
     const transformedData = useMemo(() => (result.data?.[0] ? result.data[0] : undefined), [result.data]);
 
@@ -95,7 +155,7 @@ export const useEvents = () => {
     );
 
     const result = useGraphApi<GetUserEventsQuery["events"]>(GET_USER_EVENTS, mergedParams, {
-      pause: !session?.user.id,
+      skip: !session?.user.id,
     });
 
     return result;
@@ -103,7 +163,9 @@ export const useEvents = () => {
 
   return {
     updateEventStatus,
-    useGetEvent,
+    useEditableEvent,
+    useOwnedEvent,
+    usePublicEvent,
     usePublicEvents,
     useUserEvents,
   };
