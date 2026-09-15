@@ -4,7 +4,7 @@ import { expect, it, vi } from "vitest";
 import { Pagination } from "./Pagination";
 
 const viewport = vi.hoisted(() => ({ width: 768 }));
-vi.mock("react-responsive", () => ({
+vi.mock("~/hooks/useMediaQuery", () => ({
   useMediaQuery: ({ query }: { query: string }) => viewport.width <= Number(query.match(/max-width: (\d+)px/)?.[1]),
 }));
 vi.mock("~/i18n/useI18n", () => ({ useI18n: () => (key: string) => key }));

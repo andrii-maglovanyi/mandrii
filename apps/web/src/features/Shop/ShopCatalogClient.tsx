@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { AlertCircle, RefreshCw, ShoppingBag } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 import { useDebouncedCallback } from "use-debounce";
 
 import {

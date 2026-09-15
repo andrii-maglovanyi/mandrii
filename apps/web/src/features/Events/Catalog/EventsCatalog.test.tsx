@@ -14,7 +14,7 @@ const { events, mediaQuery } = vi.hoisted(() => ({
 }));
 const translate = (key: string) => key;
 vi.mock("~/i18n/useI18n", () => ({ useI18n: () => translate }));
-vi.mock("react-responsive", () => ({ useMediaQuery: (options: unknown) => mediaQuery(options) }));
+vi.mock("~/hooks/useMediaQuery", () => ({ useMediaQuery: (options: unknown) => mediaQuery(options) }));
 vi.mock("next/navigation", () => ({ useSearchParams: () => new URLSearchParams() }));
 vi.mock("~/hooks/useEventDiscovery", () => ({
   useEventDiscovery: ({limit, offset}: {limit: number; offset: number}) => ({ count: events.length, data: events.slice(offset, offset + limit), loading: false }),

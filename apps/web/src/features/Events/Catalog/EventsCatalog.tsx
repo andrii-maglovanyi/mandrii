@@ -3,7 +3,7 @@
 import { Grid3X3, List, MapPinOff } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 import { useDebouncedCallback } from "use-debounce";
 
 import { ActionButton, Alert, AnimatedEllipsis, Pagination, RichText } from "~/components/ui";

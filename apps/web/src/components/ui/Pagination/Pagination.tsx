@@ -1,6 +1,6 @@
 "use client";
 
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 
 import { useI18n } from "~/i18n/useI18n";
 import { INFINITE_SCROLL_MEDIA_QUERY } from "~/lib/responsive";

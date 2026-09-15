@@ -5,7 +5,7 @@ import { LayoutDashboard, LocateFixed, MapPinOff } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 
 import { Button, EmptyState, Input, ProgressBar, RichText, Select } from "~/components/ui";
 import { useTheme } from "~/contexts/ThemeContext";

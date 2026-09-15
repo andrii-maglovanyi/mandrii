@@ -1,5 +1,5 @@
 export const OFFLINE_ARTICLES_KEY = "mandrii-offline-articles-v1";
-export type OfflineArticle = { savedAt: string; text: string; title: string; url: string; };
+export type OfflineArticle = { savedAt: string; text: string; title: string; url: string };
 
 /** Explicit, text-only copies of public posts. Never store account pages or HTML. */
 export function saveOfflineArticle(article: OfflineArticle, storage: Storage = localStorage) {

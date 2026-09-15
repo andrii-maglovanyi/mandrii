@@ -115,7 +115,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
       <body suppressHydrationWarning>
         <ApolloWrapper>
           <AuthProvider session={session}>
-            <ThemeProvider>
+            <ThemeProvider initialIsDark={isDarkFromCookie ?? false}>
               <NextIntlClientProvider>
                 <DialogProvider>
                   <NotificationsProvider>

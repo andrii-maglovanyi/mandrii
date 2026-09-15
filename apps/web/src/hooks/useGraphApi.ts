@@ -1,6 +1,6 @@
 import { DocumentNode, useQuery } from "@apollo/client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 
 import { INFINITE_SCROLL_MEDIA_QUERY } from "~/lib/responsive";
 import { APIParams } from "~/types";

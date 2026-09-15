@@ -1,4 +1,4 @@
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 
 import { Tooltip } from "~/components/ui";
 import { publicConfig } from "~/lib/config/public";

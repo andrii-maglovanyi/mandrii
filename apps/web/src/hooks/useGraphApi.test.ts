@@ -16,7 +16,7 @@ const { fetchMore, queryResult } = vi.hoisted(() => {
   };
 });
 vi.mock("@apollo/client", async (original) => ({ ...(await original<object>()), useQuery: () => queryResult }));
-vi.mock("react-responsive", () => ({ useMediaQuery: () => true }));
+vi.mock("~/hooks/useMediaQuery", () => ({ useMediaQuery: () => true }));
 const query = gql`
   query Items($where: items_bool_exp, $offset: Int) {
     items(where: $where, offset: $offset) {

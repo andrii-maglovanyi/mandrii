@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useMediaQuery } from "react-responsive";
 
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 import { Link } from "~/i18n/navigation";
 import { useI18n } from "~/i18n/useI18n";
 import { envName } from "~/lib/config/env";
@@ -11,6 +11,7 @@ import CookieConsentBanner from "../CookieConsentBanner/CookieConsentBanner";
 import { Footer } from "../Footer/Footer";
 import { MessageToast } from "../MessageToast/MessageToast";
 import { PwaControls } from "../Pwa/PwaControls";
+import { PwaProvider } from "../Pwa/PwaProvider";
 import { Container } from "./Container";
 import { DesktopLayout } from "./Desktop/DesktopLayout";
 import { MobileLayout } from "./Mobile/MobileLayout";
@@ -24,6 +25,7 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
   const i18n = useI18n();
   const pathname = usePathname();
   const isMobile = useMediaQuery({
+    defaultMatches: true,
     query: "(max-width: 1279px)",
   });
 
@@ -51,13 +53,15 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
   });
 
   return (
-    <div className="flex min-h-dvh min-w-0 flex-col">
-      {isMobile ? <MobileLayout navLinks={navLinks} /> : <DesktopLayout navLinks={navLinks} />}
-      <Container>{children}</Container>
-      <PwaControls />
-      <CookieConsentBanner />
-      <MessageToast />
-      {!pathname.includes("/map") && <Footer />}
-    </div>
+    <PwaProvider>
+      <div className="flex min-h-dvh min-w-0 flex-col">
+        {isMobile ? <MobileLayout navLinks={navLinks} /> : <DesktopLayout navLinks={navLinks} />}
+        <Container>{children}</Container>
+        <PwaControls />
+        <CookieConsentBanner />
+        <MessageToast />
+        {!pathname.includes("/map") && <Footer />}
+      </div>
+    </PwaProvider>
   );
 }

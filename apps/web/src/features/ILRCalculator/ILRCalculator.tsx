@@ -6,7 +6,7 @@ import { enUS, uk } from "date-fns/locale";
 import { AlertCircle, Briefcase, Calendar, CheckCircle, Shield, Users } from "lucide-react";
 import { useLocale } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 import { z } from "zod";
 
 import { Alert, Card, Checkbox, Input, RichText, Select, Separator, TabPane, Tabs, UnionJack } from "~/components/ui";

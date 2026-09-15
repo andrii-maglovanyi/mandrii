@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 
 import { Card, RichText } from "~/components/ui";
 import { constants } from "~/lib/constants";

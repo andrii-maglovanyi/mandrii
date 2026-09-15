@@ -5,7 +5,7 @@ import { AlertCircle, RefreshCw, ShoppingBag } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 import { useDebouncedCallback } from "use-debounce";
 
 import { AnimatedEllipsis, Button, Card, EmptyState, Input, Pagination, RichText, Select } from "~/components/ui";

@@ -1,5 +1,6 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
+
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AccountSettings } from "./AccountSettings";
@@ -24,9 +25,10 @@ vi.mock("~/contexts/DialogContext", () => ({
   useDialog: () => ({ openConfirmDialog: vi.fn() }),
 }));
 
+vi.mock("./DeviceSettings", () => ({ DeviceSettings: () => <section>Device settings</section> }));
 vi.mock("./ContentAlertDeliverySettings", () => ({
   ContentAlertDeliverySettings: ({ id }: { id?: string }) => (
-    <section id={id}>
+    <section aria-label="Delivery preferences" id={id}>
       Delivery preferences
     </section>
   ),
@@ -58,7 +60,7 @@ describe("AccountSettings", () => {
 
     expect(screen.getByRole("checkbox", { name: "Comments to posts" })).toBeChecked();
     expect(screen.getByRole("checkbox", { name: "Replies to comments" })).not.toBeChecked();
-    expect(screen.getByText("Delivery preferences").closest("section")).toHaveAttribute(
+    expect(screen.getByRole("region", { name: "Delivery preferences" })).toHaveAttribute(
       "id",
       "content-alert-delivery",
     );
@@ -90,7 +92,9 @@ describe("AccountSettings", () => {
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(screen.getByRole("checkbox", { name: "Replies to comments" })).toBeChecked());
 
-    rejectFirstSave!(new Response(JSON.stringify({ error: "Unable to save notification preferences" }), { status: 500 }));
+    rejectFirstSave!(
+      new Response(JSON.stringify({ error: "Unable to save notification preferences" }), { status: 500 }),
+    );
 
     await waitFor(() => expect(screen.getByRole("checkbox", { name: "Comments to posts" })).toBeChecked());
     expect(screen.getByRole("checkbox", { name: "Replies to comments" })).toBeChecked();

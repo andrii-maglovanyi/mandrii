@@ -2,24 +2,20 @@
 
 import { Cookie } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import { Button } from "~/components/ui";
 import { useI18n } from "~/i18n/useI18n";
 import { localStore } from "~/lib/utils";
 
 export default function CookieConsentBanner() {
-  const [visible, setVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const visible = useSyncExternalStore(subscribeConsent, needsConsent, () => false) && !dismissed;
   const i18n = useI18n();
 
-  useEffect(() => {
-    const accepted = localStore.get("cookie_consent");
-    setVisible(!accepted);
-  }, []);
-
   const handleAccept = () => {
-    localStore.set("cookie_consent", "true");
-    setVisible(false);
+    try { localStore.set("cookie_consent", "true"); } catch { /* Still dismiss for this visit if storage is blocked. */ }
+    setDismissed(true);
   };
 
   if (!visible) return null;
@@ -27,9 +23,10 @@ export default function CookieConsentBanner() {
   return (
     <div
       className={`
-        fixed bottom-4 left-1/2 z-50 flex min-w-max -translate-x-1/2 flex-col
-        items-center justify-between rounded-lg bg-surface px-6 py-3 text-sm
-        text-on-surface shadow-lg
+        fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-50 flex
+        w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 flex-col items-center
+        justify-between rounded-lg bg-surface px-6 py-3 text-sm text-on-surface
+        shadow-lg
         lg:flex-row
       `}
     >
@@ -37,7 +34,7 @@ export default function CookieConsentBanner() {
         mb-2 flex items-center text-pretty
         lg:mr-8 lg:mb-0
       `}>
-        <Cookie className="mr-2" />
+        <Cookie className="mr-2 shrink-0" />
         <span className="flex-1 wrap-break-word">{i18n("I use cookies to make your visit smoother")}</span>
       </div>
       <div className="flex w-fit items-center text-right">
@@ -50,4 +47,12 @@ export default function CookieConsentBanner() {
       </div>
     </div>
   );
+}
+function needsConsent() {
+  try { return !localStore.get("cookie_consent"); } catch { return true; }
+}
+
+function subscribeConsent(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
 }

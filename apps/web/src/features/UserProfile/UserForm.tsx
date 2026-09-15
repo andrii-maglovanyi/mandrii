@@ -2,7 +2,7 @@
 
 import { AtSign, Lock } from "lucide-react";
 import { useState } from "react";
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 
 import { Avatar, FormFooter, ImagePreview } from "~/components/layout";
 import { Button, FilePicker, Input, LocationAutocomplete, MDEditor, RichText, Tooltip } from "~/components/ui";

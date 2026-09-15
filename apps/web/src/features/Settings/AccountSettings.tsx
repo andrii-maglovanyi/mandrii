@@ -3,15 +3,17 @@
 import { Bell, Send } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-import { Button, Checkbox, TextLink } from "~/components/ui";
-import { useDialog } from "~/contexts/DialogContext";
-import { useNotifications } from "~/hooks/useNotifications";
-import { useI18n } from "~/i18n/useI18n";
 import type { ContentAlertDeliveryPreferences } from "~/lib/models/content-subscription-alert-deliveries";
 import type { ContentUpdateNotificationPreferences } from "~/lib/models/content-updates";
 import type { TelegramCommunityNotificationPreferences } from "~/lib/models/telegram-community-notifications";
 
+import { Button, Checkbox, TextLink } from "~/components/ui";
+import { useDialog } from "~/contexts/DialogContext";
+import { useNotifications } from "~/hooks/useNotifications";
+import { useI18n } from "~/i18n/useI18n";
+
 import { ContentAlertDeliverySettings } from "./ContentAlertDeliverySettings";
+import { DeviceSettings } from "./DeviceSettings";
 
 type AccountSettingsProps = {
   initialContentAlertDeliveryPreferences: ContentAlertDeliveryPreferences;
@@ -40,7 +42,9 @@ export const AccountSettings = ({
     ...initialTelegramCommunityPreferences,
     linked: initialTelegramCommunityPreferences.linked || initialContentAlertDeliveryPreferences.telegramLinked,
   });
-  const [telegramFollowEnabled, setTelegramFollowEnabled] = useState(initialContentAlertDeliveryPreferences.telegramEnabled);
+  const [telegramFollowEnabled, setTelegramFollowEnabled] = useState(
+    initialContentAlertDeliveryPreferences.telegramEnabled,
+  );
   const [isAwaitingTelegramLink, setIsAwaitingTelegramLink] = useState(false);
   const [isLinkingTelegram, setIsLinkingTelegram] = useState(false);
   const [isUnlinkingTelegram, setIsUnlinkingTelegram] = useState(false);
@@ -61,7 +65,7 @@ export const AccountSettings = ({
         headers: { "Content-Type": "application/json" },
         method: "PUT",
       });
-      const saved = (await response.json()) as ContentUpdateNotificationPreferences & { error?: string };
+      const saved = (await response.json()) as { error?: string } & ContentUpdateNotificationPreferences;
       if (!response.ok) throw new Error(saved.error ?? "Unable to save notification preferences");
       setPreferences((current) => ({ ...current, [preference]: saved[preference] }));
     } catch (error) {
@@ -75,7 +79,7 @@ export const AccountSettings = ({
   const refreshTelegramPreferences = useCallback(async () => {
     const response = await fetch("/api/telegram/user-community-notifications", { cache: "no-store" });
     const result = (await response.json().catch(() => null)) as
-      | (TelegramCommunityNotificationPreferences & { error?: string })
+      | ({ error?: string } & TelegramCommunityNotificationPreferences)
       | null;
     if (!response.ok || !result) throw new Error(result?.error ?? "Unable to load Telegram settings");
     setTelegramPreferences({ enabled: result.linked ? result.enabled : false, linked: result.linked });
@@ -143,7 +147,7 @@ export const AccountSettings = ({
         method: "PUT",
       });
       const result = (await response.json().catch(() => null)) as
-        | (ContentAlertDeliveryPreferences & { error?: string })
+        | ({ error?: string } & ContentAlertDeliveryPreferences)
         | null;
       if (!response.ok || !result) throw new Error(result?.error ?? "Unable to save alert delivery settings");
       setTelegramFollowEnabled(result.telegramLinked ? result.telegramEnabled : false);
@@ -172,7 +176,11 @@ export const AccountSettings = ({
         headers: { "Content-Type": "application/json" },
         method: "PUT",
       });
-      const result = (await response.json().catch(() => null)) as { enabled?: boolean; error?: string; linked: boolean } | null;
+      const result = (await response.json().catch(() => null)) as {
+        enabled?: boolean;
+        error?: string;
+        linked: boolean;
+      } | null;
       const savedEnabled = result?.enabled;
       if (!response.ok || !result || savedEnabled === undefined)
         throw new Error(result?.error ?? "Unable to save Telegram settings");
@@ -191,22 +199,35 @@ export const AccountSettings = ({
     <div className="space-y-6">
       <section aria-labelledby="notifications-heading" className="space-y-4" id="updates-notifications">
         <div className="flex items-start gap-3">
-          <div className="bg-primary/10 text-primary rounded-xl p-2.5">
+          <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
             <Bell aria-hidden size={20} />
           </div>
           <div>
-            <h2 className="text-xl font-bold md:text-2xl" id="notifications-heading">
+            <h2 className={`
+              text-xl font-bold
+              md:text-2xl
+            `} id="notifications-heading">
               {i18n("Notifications")}
             </h2>
-            <p className="text-neutral mt-1 text-sm md:text-base">
+            <p className={`
+              mt-1 text-sm text-neutral
+              md:text-base
+            `}>
               {i18n("Choose the activity you want to hear about.")}
             </p>
           </div>
         </div>
-        <section className="bg-surface-tint/50 border-primary/10 rounded-2xl border p-5 md:p-6">
+        <section className={`
+          rounded-2xl border border-primary/10 bg-surface-tint/50 p-5
+          md:p-6
+        `}>
           <h3 className="text-lg font-bold">{i18n("Feed activity")}</h3>
-          <p className="text-neutral mt-1 text-sm">{i18n("Choose which feed activity you want to be notified about")}</p>
-          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-4 border-t border-current/10 pt-5">
+          <p className="mt-1 text-sm text-neutral">
+            {i18n("Choose which feed activity you want to be notified about")}
+          </p>
+          <div className={`
+            mt-5 flex flex-wrap gap-x-6 gap-y-4 border-t border-current/10 pt-5
+          `}>
             <Checkbox
               checked={preferences.comments_enabled}
               disabled={savingPreferences.comments_enabled}
@@ -221,32 +242,53 @@ export const AccountSettings = ({
             />
           </div>
         </section>
-        <section className="bg-surface-tint/50 border-primary/10 rounded-2xl border p-5 md:p-6">
-          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+        <section className={`
+          rounded-2xl border border-primary/10 bg-surface-tint/50 p-5
+          md:p-6
+        `}>
+          <div className={`
+            flex flex-col justify-between gap-3
+            sm:flex-row sm:items-start
+          `}>
             <div>
               <h3 className="text-lg font-bold">{i18n("Following alerts")}</h3>
-              <p className="text-neutral mt-1 text-sm">{i18n("Receive updates from the places and areas you follow.")}</p>
+              <p className="mt-1 text-sm text-neutral">
+                {i18n("Receive updates from the places and areas you follow.")}
+              </p>
             </div>
             <TextLink href="/user-profile/following">{i18n("Manage follows")}</TextLink>
           </div>
-          <ContentAlertDeliverySettings id="content-alert-delivery" initialPreferences={initialContentAlertDeliveryPreferences} />
+          <ContentAlertDeliverySettings
+            id="content-alert-delivery"
+            initialPreferences={initialContentAlertDeliveryPreferences}
+          />
         </section>
       </section>
+      <DeviceSettings />
       <section
         aria-labelledby="telegram-heading"
-        className="bg-surface-tint/50 border-primary/10 rounded-2xl border p-5 md:p-6"
+        className={`
+          rounded-2xl border border-primary/10 bg-surface-tint/50 p-5
+          md:p-6
+        `}
         id="telegram-connection"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="bg-primary/10 text-primary rounded-xl p-2.5">
+            <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
               <Send aria-hidden size={20} />
             </div>
             <div>
-              <h2 className="text-xl font-bold md:text-2xl" id="telegram-heading">
+              <h2 className={`
+                text-xl font-bold
+                md:text-2xl
+              `} id="telegram-heading">
                 {i18n("Telegram")}
               </h2>
-              <p className="text-neutral mt-1 text-sm md:text-base">
+              <p className={`
+                mt-1 text-sm text-neutral
+                md:text-base
+              `}>
                 {telegramPreferences.linked
                   ? i18n("Choose the Telegram alerts you want to receive.")
                   : i18n("Connect once to receive follow alerts and private Community responses.")}
@@ -276,7 +318,10 @@ export const AccountSettings = ({
             </Button>
           )}
         </div>
-        <div className="mt-5 grid gap-4 border-t border-current/10 pt-5 sm:grid-cols-2">
+        <div className={`
+          mt-5 grid gap-4 border-t border-current/10 pt-5
+          sm:grid-cols-2
+        `}>
           <Checkbox
             checked={telegramPreferences.linked && telegramFollowEnabled}
             disabled={!telegramPreferences.linked || isSavingTelegramFollow || isUnlinkingTelegram}
@@ -291,7 +336,7 @@ export const AccountSettings = ({
           />
         </div>
         {!telegramPreferences.linked && (
-          <p className="text-neutral mt-3 text-sm">{i18n("Link Telegram to turn on either alert.")}</p>
+          <p className="mt-3 text-sm text-neutral">{i18n("Link Telegram to turn on either alert.")}</p>
         )}
         <TextLink className="mt-3" href="/user-profile/settings#content-alert-delivery">
           {i18n("Follow alerts use the delivery frequency above.")}

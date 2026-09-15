@@ -293,8 +293,8 @@ export const ContentAlertDeliverySettings = ({
                 }
                 options={[
                   { label: i18n("Immediate"), value: "IMMEDIATE" },
-                  { label: i18n("Daily · 09:00 UTC"), value: "DAILY" },
-                  { label: i18n("Weekly · Mon 09:00 UTC"), value: "WEEKLY" },
+                  { label: i18n("Daily · around 09:00 UTC"), value: "DAILY" },
+                  { label: i18n("Weekly · Mon around 09:00 UTC"), value: "WEEKLY" },
                 ]}
                 value={preferences.frequency}
               />

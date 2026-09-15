@@ -17,7 +17,7 @@ const { query } = vi.hoisted(() => ({
 }));
 vi.mock("~/hooks/useGraphApi", () => ({ useGraphApi: query }));
 vi.mock("~/lib/venues/presentation", () => ({ getVenueData: (venue: unknown) => venue }));
-vi.mock("react-responsive", () => ({ useMediaQuery: () => true }));
+vi.mock("~/hooks/useMediaQuery", () => ({ useMediaQuery: () => true }));
 vi.mock("next/navigation", () => ({ useSearchParams: () => new URLSearchParams("city=London&country=UK") }));
 vi.mock("~/i18n/useI18n", () => ({ useI18n: () => translate }));
 const translate = (key: string, values?: Record<string, unknown>) => key.replace(/\{(\w+)\}/g, (_, name) => String(values?.[name] ?? name));

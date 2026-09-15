@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useI18n } from "~/i18n/useI18n";
+import { isDeviceLocationEnabled } from "~/lib/pwa/device-preferences";
 
 import { useNotifications } from "./useNotifications";
 
@@ -22,6 +23,10 @@ export function useCurrentLocation() {
   const locate = useCallback(
     (onLocated: (location: { lat: number; lng: number }) => void) => {
       if (pending.current) return;
+      if (!isDeviceLocationEnabled()) {
+        showError(i18n("Location is disabled in device settings."));
+        return;
+      }
       if (!navigator.geolocation) {
         showError(i18n("Unable to find your location. Please try searching!"));
         return;

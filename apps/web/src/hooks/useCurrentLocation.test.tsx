@@ -44,3 +44,18 @@ it("handles denied permissions and ignores late results after unmount", () => {
   getCurrentPosition.mock.calls[1][0]({ coords: { latitude: 51, longitude: 0 } });
   expect(onLocated).not.toHaveBeenCalled();
 });
+
+it("honors the device setting without requesting browser permission", async () => {
+  const { setDeviceLocationEnabled } = await import("~/lib/pwa/device-preferences");
+  setDeviceLocationEnabled(false);
+  try {
+    const getCurrentPosition = vi.fn();
+    vi.stubGlobal("navigator", { geolocation: { getCurrentPosition } });
+    const { result } = renderHook(() => useCurrentLocation());
+    act(() => result.current.locate(vi.fn()));
+    expect(getCurrentPosition).not.toHaveBeenCalled();
+    expect(showError).toHaveBeenCalledWith("Location is disabled in device settings.");
+  } finally {
+    setDeviceLocationEnabled(true);
+  }
+});

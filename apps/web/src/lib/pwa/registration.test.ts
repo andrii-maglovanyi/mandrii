@@ -1,6 +1,9 @@
 import { afterEach, expect, it, vi } from "vitest";
 
-afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); });
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.useRealTimers();
+});
 it("shares worker registration across startup and notification enrollment and retries failures", async () => {
   vi.resetModules();
   const registration = { scope: "/" };
@@ -12,8 +15,11 @@ it("shares worker registration across startup and notification enrollment and re
   expect(register).toHaveBeenCalledTimes(2);
 });
 it("bounds the wait for a worker that never activates", async () => {
-  vi.resetModules(); vi.useFakeTimers();
-  vi.stubGlobal("navigator", { serviceWorker: { register: vi.fn().mockResolvedValue({}), ready: new Promise(() => {}) } });
+  vi.resetModules();
+  vi.useFakeTimers();
+  vi.stubGlobal("navigator", {
+    serviceWorker: { ready: new Promise(() => {}), register: vi.fn().mockResolvedValue({}) },
+  });
   const { readyAppWorker } = await import("./registration");
   const result = expect(readyAppWorker()).rejects.toThrow("Unable to prepare notifications");
   await vi.advanceTimersByTimeAsync(15_000);

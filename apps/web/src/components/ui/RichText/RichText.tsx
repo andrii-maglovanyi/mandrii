@@ -10,11 +10,11 @@ interface RichTextProps {
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => {
     const entities: Record<string, string> = {
+      "'": "&#39;",
+      '"': "&quot;",
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;",
     };
 
     return entities[character];
@@ -52,11 +52,16 @@ const createSafeRenderer = () => {
 };
 
 export const RichText = ({ as: Tag = "div", children, className }: RichTextProps) => {
+  const parse = Tag === "p" || Tag === "span" ? marked.parseInline : marked.parse;
   return (
     <Tag
-      className={`prose prose-sm dark:prose-invert max-w-none ${className || ""} `}
+      className={`
+        prose prose-sm max-w-none
+        dark:prose-invert
+        ${className || ""}
+      `}
       dangerouslySetInnerHTML={{
-        __html: marked.parse(children, { breaks: true, gfm: true, renderer: createSafeRenderer() }),
+        __html: parse(children, { breaks: true, gfm: true, renderer: createSafeRenderer() }),
       }}
     />
   );

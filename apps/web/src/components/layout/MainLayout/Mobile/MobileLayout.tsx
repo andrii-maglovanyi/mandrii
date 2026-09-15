@@ -37,10 +37,12 @@ export function MobileLayout({ navLinks }: Readonly<{ navLinks: React.ReactNode 
 
   return (
     <>
-      <header className={`
-        relative z-40 flex min-h-16 shrink-0 items-center justify-between px-4
-        pt-[env(safe-area-inset-top)] shadow-md
-      `}>
+      <header
+        className={`
+          relative z-40 flex min-h-16 shrink-0 items-center justify-between px-4
+          pt-[env(safe-area-inset-top)] shadow-md
+        `}
+      >
         <ActionButton
           aria-controls="mobile-menu"
           aria-expanded={isOpen}
