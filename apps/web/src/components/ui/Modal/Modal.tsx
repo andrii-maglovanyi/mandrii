@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { X } from "lucide-react";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import ReactDOM from "react-dom";
 
 import { useI18n } from "~/i18n/useI18n";
@@ -19,6 +19,8 @@ export interface ModalProps {
   title?: string;
 }
 
+const subscribeHydration = () => () => {};
+
 export const MODAL_ANIMATION_TIMEOUT = 200;
 
 export const Modal = ({
@@ -31,6 +33,7 @@ export const Modal = ({
   title,
 }: ModalProps) => {
   const i18n = useI18n();
+  const hydrated = useSyncExternalStore(subscribeHydration, () => true, () => false);
   const titleId = useId();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -47,7 +50,7 @@ export const Modal = ({
 
     dialog.addEventListener("click", handleBackdropClick);
     return () => dialog.removeEventListener("click", handleBackdropClick);
-  }, [onClose]);
+  }, [onClose, hydrated]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -78,9 +81,9 @@ export const Modal = ({
       cancelAnimationFrame(frame);
       clearTimeout(timeout);
     };
-  }, [isOpen]);
+  }, [isOpen, hydrated]);
 
-  if (typeof window === "undefined") return null;
+  if (!hydrated) return null;
 
   const isVisibleClass = isVisible
     ? "opacity-100 md:-translate-y-1/2 translate-y-0"
@@ -119,7 +122,7 @@ export const Modal = ({
       ref={dialogRef}
       tabIndex={-1}
     >
-      <div className="fixed -top-12 right-0">
+      <div className="absolute top-3 right-3">
         <ActionButton
           aria-label={i18n("Close modal")}
           data-testid="close-modal"
@@ -129,7 +132,7 @@ export const Modal = ({
           variant="ghost"
         />
       </div>
-      <div className="mb-4 flex items-center">
+      <div className="mb-4 flex min-h-11 items-center pr-12">
         {title && (
           <h2 className={`text-xl font-normal`} id={titleId}>
             {title}

@@ -33,3 +33,5 @@ Device acceptance checks:
 3. Explicitly enroll notifications, receive a test notification in a controlled account, open its destination, disable enrollment, and check browser permission denial recovery.
 4. Accept/deny location, disable Find me in device settings, and verify manual search remains available.
 5. Deploy a worker version change while an edit is open; confirm no automatic reload and apply the update only after saving.
+
+Verified locally on 2026-09-16: production build and 1,077 unit tests passed. Chrome checked the home, venues, events, community, English guides, and Ukrainian guides pages at 320, 390, 768, and 1280 pixels, with no document overflow or hydration errors. The browser also verified menu dismissal, the location dialog's close button within the mobile viewport, and reading a saved article with the local server stopped. These checks use browser emulation, not physical iOS/Android devices.

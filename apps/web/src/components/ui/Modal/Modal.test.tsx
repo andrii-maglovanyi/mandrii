@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { renderToString } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 import { Modal } from "./Modal";
@@ -105,4 +106,8 @@ describe("Modal", () => {
       expect(onClose).toHaveBeenCalled();
     });
   });
+});
+
+it("does not render a portal during server rendering", () => {
+  expect(renderToString(<Modal isOpen title="Server dialog">Content</Modal>)).toBe("");
 });
