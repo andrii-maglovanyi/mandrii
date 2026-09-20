@@ -16,8 +16,7 @@ export function DesktopLayout({ navLinks }: Readonly<DesktopLayoutProps>) {
     <>
       <header
         className={`
-          relative z-40 flex min-h-16 shrink-0 items-center justify-between px-4
-          pt-[env(safe-area-inset-top)] shadow-md
+          relative z-50 flex h-16 items-center justify-between px-4 shadow-md
           dark:shadow-neutral-500/10
         `}
       >

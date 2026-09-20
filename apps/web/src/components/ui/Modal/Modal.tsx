@@ -33,10 +33,27 @@ export const Modal = ({
   title,
 }: ModalProps) => {
   const i18n = useI18n();
-  const hydrated = useSyncExternalStore(subscribeHydration, () => true, () => false);
+  const hydrated = useSyncExternalStore(
+    subscribeHydration,
+    () => true,
+    () => false,
+  );
   const titleId = useId();
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(
+    () => () => {
+      // DialogHost removes dialogs immediately; native close() cannot restore focus then.
+      const opener = openerRef.current;
+      const remainingDialog = document.querySelector("dialog[open]");
+      if (opener?.isConnected && !opener.closest("[inert]") && (!remainingDialog || remainingDialog.contains(opener))) {
+        opener.focus({ preventScroll: true });
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -61,6 +78,7 @@ export const Modal = ({
     if (isOpen) {
       if (!dialog.open) {
         try {
+          openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
           dialog.showModal();
         } catch (error) {
           console.error("Failed to show modal:", error);
@@ -106,9 +124,16 @@ export const Modal = ({
   );
   const mobileClass = "bottom-0 mt-auto mx-auto mb-4";
 
-  const modalClass = clsx(layoutClass, positionClass, animationClass, backdropClass, mobileClass, `
+  const modalClass = clsx(
+    layoutClass,
+    positionClass,
+    animationClass,
+    backdropClass,
+    mobileClass,
+    `
     fixed
-  `);
+  `,
+  );
 
   return ReactDOM.createPortal(
     <dialog
@@ -122,7 +147,7 @@ export const Modal = ({
       ref={dialogRef}
       tabIndex={-1}
     >
-      <div className="absolute top-3 right-3">
+      <div className="fixed -top-12 right-0">
         <ActionButton
           aria-label={i18n("Close modal")}
           data-testid="close-modal"

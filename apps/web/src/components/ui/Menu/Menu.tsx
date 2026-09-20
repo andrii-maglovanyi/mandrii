@@ -103,37 +103,25 @@ export function Menu<K extends React.ReactNode, T>({
   const menu = (
     <div
       className={clsx(
-        `
-          absolute z-50 flex h-max max-h-80 w-full max-w-[calc(100vw-2rem)]
-          flex-col overflow-hidden rounded-lg bg-surface p-1 text-on-surface
-          shadow-xl
-        `,
-        floatingPosition ? "" : placement === "top" ? "bottom-full mb-1.5" : `
-          top-full mt-1.5
-        `,
+        `bg-surface text-on-surface absolute z-50 flex h-max max-h-80 w-full max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg p-1 shadow-xl`,
+        floatingPosition ? "" : placement === "top" ? "bottom-full mb-1.5" : `top-full mt-1.5`,
       )}
       data-menu-overlay
       data-menu-owner={ownerId}
       style={{ ...floatingPosition, ...(maxHeight === undefined ? {} : { maxHeight }) }}
     >
       {search && (
-        <div className="sticky top-0 z-10 shrink-0 bg-surface p-2 pb-1">
+        <div className="bg-surface sticky top-0 z-10 shrink-0 p-2 pb-1">
           <label className="sr-only" htmlFor={`${ownerId}-search`}>
             {search.label}
           </label>
-          <div className={`
-            flex h-10 items-center rounded-md border border-neutral bg-surface
-            px-3
-            focus-within:ring-2 focus-within:ring-primary
-            focus-within:ring-offset-1 focus-within:ring-offset-surface
-          `}>
+          <div
+            className={`border-neutral bg-surface focus-within:ring-primary focus-within:ring-offset-surface flex h-10 items-center rounded-md border px-3 focus-within:ring-2 focus-within:ring-offset-1`}
+          >
             <Search aria-hidden className="mr-2 shrink-0 text-neutral-500" size={17} />
             <input
               autoComplete="off"
-              className={`
-                min-w-0 flex-1 bg-transparent text-sm outline-none
-                placeholder:text-neutral-500
-              `}
+              className={`min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-neutral-500`}
               id={`${ownerId}-search`}
               onChange={(event) => search.onChange(event.target.value)}
               onKeyDown={(event) => {
@@ -168,9 +156,7 @@ export function Menu<K extends React.ReactNode, T>({
         tabIndex={0}
       >
         {loading && options.length === 0 ? (
-          <div className={`
-            flex items-center gap-2 px-3 py-3 text-sm text-neutral
-          `} role="status">
+          <div className={`text-neutral flex items-center gap-2 px-3 py-3 text-sm`} role="status">
             <LoaderCircle aria-hidden className="animate-spin" size={16} />
             <span>{search?.emptyLabel ?? "Loading options..."}</span>
           </div>
@@ -178,12 +164,7 @@ export function Menu<K extends React.ReactNode, T>({
           options.map((option, index) => (
             <div
               aria-selected={selectedValue === option.value}
-              className={`
-                flex cursor-pointer items-center rounded-lg px-3 py-2.5 text-sm
-                hover:bg-surface-tint
-                focus:bg-surface-tint
-                sm:px-4 sm:py-3 sm:text-base
-              `}
+              className={`hover:bg-surface-tint focus:bg-surface-tint mb-px flex cursor-pointer items-center rounded-lg px-2 py-1 text-sm sm:px-4 sm:py-3 sm:text-base`}
               id={`${menuId}-option-${index}`}
               key={String(option.value)}
               onClick={() => onSelect(option.value)}
@@ -196,7 +177,7 @@ export function Menu<K extends React.ReactNode, T>({
             </div>
           ))
         ) : (
-          <p className="px-3 py-3 text-sm text-neutral">{search?.emptyLabel}</p>
+          <p className="text-neutral px-3 py-3 text-sm">{search?.emptyLabel}</p>
         )}
       </div>
     </div>

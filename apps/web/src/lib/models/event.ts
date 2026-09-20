@@ -1,6 +1,7 @@
 import { AuthenticatedSession } from "~/lib/api/context";
 import { BadRequestError, InternalServerError, NotFoundError } from "~/lib/api/errors";
 import { executeGraphQLQuery } from "~/lib/graphql/client";
+import { invalidatePublicContent } from "~/lib/public-cache/invalidate";
 import { Events } from "~/types";
 
 const INSERT_EVENT_MUTATION = `
@@ -48,6 +49,7 @@ export const saveEvent = async (variables: Partial<Events>, session: Authenticat
       throw new NotFoundError("Event not found");
     }
 
+    invalidatePublicContent();
     return result.update_events_by_pk.id;
   } else {
     const result = await executeGraphQLQuery<{ insert_events_one: { id: string } | null }>(
@@ -62,6 +64,7 @@ export const saveEvent = async (variables: Partial<Events>, session: Authenticat
       throw new InternalServerError("Failed to create event - no data returned from database");
     }
 
+    invalidatePublicContent();
     return result.insert_events_one.id;
   }
 };

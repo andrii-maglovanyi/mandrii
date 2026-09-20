@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, MapPin, Plus } from "lucide-react";
+import { Bell, MapPin } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { ActionButton, Button, LocationAutocomplete, Modal, Select } from "~/components/ui";
@@ -12,7 +12,8 @@ import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
 import { useI18n } from "~/i18n/useI18n";
 import type { AreaSubscriptionTarget } from "~/lib/content-subscriptions/types";
-import { ADD_ENTITY_BUTTON_CLASSES } from "~/features/shared/AddEntityButton";
+import { AddEntityButton } from "~/features/shared/AddEntityButton";
+import { clsx } from "clsx";
 
 const radiusOptions = [1, 2, 3, 5, 10, 25, 50, 100].map((kilometres) => ({
   label: `${kilometres} km`,
@@ -61,7 +62,7 @@ export const FollowAreaButton = ({
   mapArea,
   onSaved,
   presentation = "button",
-  size = "lg",
+  size = "md",
   variant = "outlined",
 }: FollowAreaButtonProps) => {
   const i18n = useI18n();
@@ -174,50 +175,62 @@ export const FollowAreaButton = ({
 
   if (isWaitingForAuthentication || !canFollow) return null;
 
-  return (
-    <>
-      {presentation === "action" ? (
+  const renderFollowAreaButton = () => {
+    if (presentation === "action") {
+      return (
         <ActionButton
           aria-label={i18n("Follow this area")}
           busy={isPreparing || isSaving}
           className={className}
           color="neutral"
+          tooltipPosition="bottom-start"
           disabled={disabled}
           icon={<Bell aria-hidden size={20} />}
           onClick={() => void open()}
           size={size}
           variant="ghost"
         />
-      ) : (
-        <Button
-          className={presentation === "add" ? `${ADD_ENTITY_BUTTON_CLASSES} ${className ?? ""}` : className}
-          color="primary"
-          disabled={disabled}
-          onClick={() => void open()}
-          size={size}
-          variant={presentation === "add" ? "filled" : variant}
-        >
-          {presentation === "add" ? (
-            <>
-              <Plus aria-hidden size={20} strokeWidth={3} /> {i18n("Follow new area")}
-            </>
-          ) : (
-            <>
-              <MapPin aria-hidden size={20} /> {i18n("Follow this area")}
-            </>
-          )}
-        </Button>
-      )}
+      );
+    }
+
+    if (presentation === "add") {
+      return (
+        <AddEntityButton
+          className="ml-auto"
+          isAuthenticated={isAuthenticated}
+          label={i18n("Follow new area")}
+          onClick={open}
+          signInLabel={i18n("Sign in to follow")}
+        />
+      );
+    }
+
+    return (
+      <Button
+        className={clsx(className, "gap-2")}
+        color="primary"
+        disabled={disabled}
+        onClick={open}
+        size={size}
+        variant={variant}
+      >
+        <Bell aria-hidden size={20} /> {i18n("Follow new area")}
+      </Button>
+    );
+  };
+
+  return (
+    <>
+      {renderFollowAreaButton()}
+
       <Modal className="mb-0" isOpen={isOpen} onClose={close} scrollable title={i18n("Follow an area")}>
         <div className="space-y-5">
-          <p className="text-neutral text-sm">
+          <p className="text-neutral">
             {usesMapArea
               ? i18n("Use the selected map area, or choose another place below.")
               : i18n("Choose a place from the suggestions, then set the distance around it.")}
           </p>
-          <p className="text-neutral text-xs">
-            {i18n("Your chosen area is private and is used only to match alerts.")}
-          </p>
+
           <LocationAutocomplete
             label={i18n("Location")}
             onChange={(event) => {
@@ -256,10 +269,12 @@ export const FollowAreaButton = ({
               {target.label} - {target.radiusMeters / 1000} km
             </p>
           )}
-          <div className="flex justify-end gap-3 border-t border-current/10 pt-5">
+
+          <div className="flex justify-end gap-3 pt-5">
             <Button color="neutral" onClick={close} variant="ghost">
               {i18n("Cancel")}
             </Button>
+
             <Button busy={isSaving} color="primary" disabled={!target} onClick={() => void save()}>
               {i18n("Follow area")}
             </Button>

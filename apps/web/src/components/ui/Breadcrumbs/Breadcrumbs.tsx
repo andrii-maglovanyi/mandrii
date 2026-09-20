@@ -1,9 +1,13 @@
 import { ArrowRight, CornerRightDown } from "lucide-react";
-import React from "react";
 
 import { Link } from "~/i18n/navigation";
 
-export const Breadcrumbs = ({ items }: { items: Array<{ title: string; url?: string }> }) => {
+export type BreadcrumbsProps = Array<{
+  title: string;
+  url?: string;
+}>;
+
+export const Breadcrumbs = ({ items }: { items: BreadcrumbsProps }) => {
   const list = items
     .reduce(
       (acc, { title, url }, index) => {

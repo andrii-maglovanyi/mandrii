@@ -22,6 +22,16 @@ describe("Modal", () => {
     }
   });
 
+  it("restores focus when the host unmounts an open dialog", () => {
+    render(<button>Open details</button>);
+    const opener = screen.getByRole("button", { name: "Open details" });
+    opener.focus();
+    const { unmount } = render(<Modal isOpen title="Details">Details</Modal>);
+    screen.getByRole("dialog").focus();
+    unmount();
+    expect(opener).toHaveFocus();
+  });
+
   it("renders modal with title and content when open", () => {
     render(
       <Modal isOpen title="Test Modal">

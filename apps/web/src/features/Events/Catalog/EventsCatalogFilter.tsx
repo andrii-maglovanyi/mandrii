@@ -88,7 +88,7 @@ export const EventsCatalogFilter = ({
   );
 
   return (
-    <div className="mx-auto mt-4 w-full max-w-(--breakpoint-xl)">
+    <div className="mx-auto w-full max-w-(--breakpoint-xl)">
       <div className="mb-6 space-y-3">
         <Input
           className="pl-10"
@@ -98,11 +98,7 @@ export const EventsCatalogFilter = ({
           value={searchQuery}
         />
 
-        <div className={`
-          grid grid-cols-1 gap-2
-          sm:grid-cols-2
-          lg:grid-cols-4
-        `}>
+        <div className={`grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4`}>
           <Select
             onChange={(e) => onTypeChange(e.target.value)}
             options={eventTypeOptions}

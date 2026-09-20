@@ -41,24 +41,6 @@ interface RequestRecord {
 const rateLimitNamespace = `mandrii:${envName}`;
 const KV_OPERATION_TIMEOUT_MS = 2_000;
 
-async function withKvTimeout<T>(operation: Promise<T>): Promise<T> {
-  let timeout: ReturnType<typeof setTimeout> | undefined;
-
-  try {
-    return await Promise.race([
-      operation,
-      new Promise<never>((_, reject) => {
-        timeout = setTimeout(
-          () => reject(new Error("Vercel KV rate-limit operation timed out")),
-          KV_OPERATION_TIMEOUT_MS,
-        );
-      }),
-    ]);
-  } finally {
-    if (timeout) clearTimeout(timeout);
-  }
-}
-
 /**
  * Creates a rate limiter instance with the specified configuration.
  * Uses Redis (Vercel KV) when available, falls back to in-memory.
@@ -265,6 +247,24 @@ function isKvAvailable(): boolean {
   return Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
 }
 
+async function withKvTimeout<T>(operation: Promise<T>): Promise<T> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(
+          () => reject(new Error("Vercel KV rate-limit operation timed out")),
+          KV_OPERATION_TIMEOUT_MS,
+        );
+      }),
+    ]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+}
+
 /**
  * Pre-configured rate limiters for different endpoints.
  */
@@ -279,33 +279,24 @@ export const rateLimiters = {
     windowMs: 60 * 1000, // 1 minute
   }),
 
+  contentComment: createRateLimiter({ maxRequests: 10, prefix: "content-comment", windowMs: 60 * 1000 }),
+
+  contentUpdate: createRateLimiter({
+    maxRequests: 20,
+    prefix: "content-update",
+    windowMs: 60 * 1000,
+  }),
+
   /**
    * General API rate limiter: 60 requests per minute per IP.
    * For less sensitive read endpoints.
    */
+  // Discovery performs multiple public reads per view; isolate it from account actions.
+  discovery: createRateLimiter({ maxRequests: 240, prefix: "discovery", windowMs: 60 * 1000 }),
+
   general: createRateLimiter({
     maxRequests: 60,
     prefix: "general",
-    windowMs: 60 * 1000,
-  }),
-
-  /**
-   * Telegram-link rate limiter: token creation is a write operation, so it
-   * must not share the chat polling allowance used by the same account.
-   */
-  telegramLink: createRateLimiter({
-    maxRequests: 10,
-    prefix: "telegram-link",
-    windowMs: 60 * 1000,
-  }),
-
-  /**
-   * Chat-read rate limiter: initial loads, pagination, and live-update
-   * reconciliation need headroom without sharing the write-action bucket.
-   */
-  messagingRead: createRateLimiter({
-    maxRequests: 120,
-    prefix: "messaging-read",
     windowMs: 60 * 1000,
   }),
 
@@ -320,6 +311,15 @@ export const rateLimiters = {
     windowMs: 60 * 1000,
   }),
 
+  /**
+   * Chat-read rate limiter: initial loads, pagination, and live-update
+   * reconciliation need headroom without sharing the write-action bucket.
+   */
+  messagingRead: createRateLimiter({
+    maxRequests: 120,
+    prefix: "messaging-read",
+    windowMs: 60 * 1000,
+  }),
   /** Rating writes are isolated from general browsing and messaging activity. */
   rating: createRateLimiter({
     maxRequests: 30,
@@ -331,15 +331,18 @@ export const rateLimiters = {
     prefix: "review",
     windowMs: 60 * 1000,
   }),
-  contentUpdate: createRateLimiter({
-    maxRequests: 20,
-    prefix: "content-update",
-    windowMs: 60 * 1000,
-  }),
-  contentComment: createRateLimiter({ maxRequests: 10, prefix: "content-comment", windowMs: 60 * 1000 }),
   reviewVote: createRateLimiter({
     maxRequests: 30,
     prefix: "review-vote",
+    windowMs: 60 * 1000,
+  }),
+  /**
+   * Telegram-link rate limiter: token creation is a write operation, so it
+   * must not share the chat polling allowance used by the same account.
+   */
+  telegramLink: createRateLimiter({
+    maxRequests: 10,
+    prefix: "telegram-link",
     windowMs: 60 * 1000,
   }),
 };

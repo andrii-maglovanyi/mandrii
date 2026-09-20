@@ -71,13 +71,13 @@ export function DiscoveryHero() {
 
         <div className="relative mx-auto max-w-3xl">
           <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-white/80 uppercase sm:text-sm sm:tracking-[0.2em]">
-            {i18n("For Ukrainians abroad")}
+            {i18n("Stay connected")}
           </p>
           <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-6xl">
-            {i18n("Your Ukrainian community, wherever you are")}
+            {i18n("A beacon of Ukrainian life abroad")}
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-white/90 md:text-lg">
-            {i18n("Find trusted places, events and practical support from Ukrainians near you.")}
+            {i18n("Find trusted places, events and support from Ukrainian community around you.")}
           </p>
           <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
             <DiscoveryLocationPicker onChange={locationChange} />
@@ -95,7 +95,7 @@ export function DiscoveryHero() {
       <div>
         <div className="mb-5 text-center">
           <h2 className="text-2xl font-bold md:text-3xl">{i18n("What are you looking for?")}</h2>
-          <p className="text-on-surface/70 mt-2">{i18n("Choose a starting point and explore your local community.")}</p>
+          <p className="text-on-surface/70 mt-2">{i18n("Choose a starting point and explore")}</p>
         </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">

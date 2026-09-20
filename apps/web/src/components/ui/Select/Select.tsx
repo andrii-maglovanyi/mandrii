@@ -126,7 +126,7 @@ export function Select<K extends React.ReactNode, T>({
   }, [focused, searchable]);
 
   const selectClass = clsx(
-    "flex items-center px-3 pr-10 text-left",
+    "flex items-center px-3 text-left",
     sizeClasses.md,
     error ? "border-red-500" : "border-neutral",
     commonClass,
@@ -137,7 +137,7 @@ export function Select<K extends React.ReactNode, T>({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-sm font-medium text-on-surface" htmlFor={selectId}>
+        <label className="text-on-surface text-sm font-medium" htmlFor={selectId}>
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>
@@ -177,15 +177,11 @@ export function Select<K extends React.ReactNode, T>({
         >
           <span className="min-w-0 flex-1 truncate">{selectedLabel}</span>
           {loading ? (
-            <LoaderCircle aria-hidden className={`
-              ml-2 shrink-0 animate-spin text-neutral-500
-            `} size={18} />
+            <LoaderCircle aria-hidden className={`ml-2 shrink-0 animate-spin text-neutral-500`} size={18} />
           ) : (
             <ChevronDown
               aria-hidden
-              className={clsx(`
-                ml-2 shrink-0 text-neutral-500 transition-transform
-              `, focused && `rotate-180`)}
+              className={clsx(`ml-2 shrink-0 text-neutral-500 transition-transform`, focused && `rotate-180`)}
               size={18}
             />
           )}

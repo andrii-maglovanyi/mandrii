@@ -2,15 +2,14 @@ import { cache } from "react";
 
 import { JsonLd } from "~/components/seo/JsonLd";
 import { Alert } from "~/components/ui";
-import { GET_PUBLIC_EVENTS } from "~/graphql/events";
 import { getI18n } from "~/i18n/getI18n";
-import { getServerClient } from "~/lib/apollo/server-client";
 import { getDiscoverableEventsWhere, getPubliclyViewableEventsWhere } from "~/lib/content-visibility";
 import { getNextOccurrenceStart, getOccurrenceEnd } from "~/lib/events/recurrence";
 import { getEffectiveEventStatus } from "~/lib/events/status";
 import { getPublicMediaUrl } from "~/lib/media";
+import { getCachedPublicQuery } from "~/lib/public-cache/query";
 import { buildEventStructuredData, buildPublicPageUrl } from "~/lib/seo";
-import { Event_Status_Enum, GetPublicEventsQuery, GetPublicEventsQueryVariables } from "~/types/graphql.generated";
+import { Event_Status_Enum, GetPublicEventsQuery } from "~/types/graphql.generated";
 
 import { EventView } from "./EventView";
 
@@ -21,15 +20,11 @@ type EventViewServerProps = {
 
 /** Shared per-request loader for the event page and its metadata. */
 export const getEventViewBySlug = cache(async (slug: string) => {
-  const client = await getServerClient();
-  const { data } = await client.query<GetPublicEventsQuery, GetPublicEventsQueryVariables>({
-    query: GET_PUBLIC_EVENTS,
-    variables: {
-      limit: 1,
-      offset: 0,
-      totalWhere: getDiscoverableEventsWhere(),
-      where: getPubliclyViewableEventsWhere({ slug: { _eq: slug } }),
-    },
+  const { data } = await getCachedPublicQuery<GetPublicEventsQuery>("GetPublicEvents", {
+    limit: 1,
+    offset: 0,
+    totalWhere: getDiscoverableEventsWhere(),
+    where: getPubliclyViewableEventsWhere({ slug: { _eq: slug } }),
   });
 
   return data?.events[0] ?? null;

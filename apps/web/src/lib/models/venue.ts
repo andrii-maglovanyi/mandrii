@@ -1,6 +1,7 @@
 import { AuthenticatedSession } from "~/lib/api/context";
 import { BadRequestError, InternalServerError, NotFoundError } from "~/lib/api/errors";
 import { executeGraphQLQuery } from "~/lib/graphql/client";
+import { invalidatePublicContent } from "~/lib/public-cache/invalidate";
 import { Venues } from "~/types";
 
 const VENUE_FIELDS = `
@@ -75,6 +76,7 @@ export const saveVenue = async (variables: Partial<Venues>, session: Authenticat
       throw new NotFoundError("Venue not found");
     }
 
+    invalidatePublicContent();
     return result.update_venues_by_pk.id;
   } else {
     const result = await executeGraphQLQuery<{ insert_venues_one: { id: string } | null }>(
@@ -89,6 +91,7 @@ export const saveVenue = async (variables: Partial<Venues>, session: Authenticat
       throw new InternalServerError("Failed to create venue - no data returned from database");
     }
 
+    invalidatePublicContent();
     return result.insert_venues_one.id;
   }
 };

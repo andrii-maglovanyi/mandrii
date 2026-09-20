@@ -1,6 +1,7 @@
 import { getCronAuthorizationError } from "~/lib/cron/authorization";
 import sql from "~/lib/db/db";
 import { isEventScheduleFinished } from "~/lib/events/recurrence";
+import { invalidatePublicContent } from "~/lib/public-cache/invalidate";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,8 @@ export const GET = async (req: Request) => {
         AND COALESCE(end_date, start_date) < NOW()
       RETURNING id
     `;
+
+    if (completedOneOff.length) invalidatePublicContent();
 
     // Keep schedule edits from racing the read/compute/update sequence.
     const completedRecurring = await sql.begin(async (transaction) => {
@@ -42,6 +45,7 @@ export const GET = async (req: Request) => {
         : [];
     });
 
+    if (completedRecurring.length) invalidatePublicContent();
     return Response.json({ completed: completedOneOff.length + completedRecurring.length });
   } catch (error) {
     console.error("Event completion cron failed:", error);

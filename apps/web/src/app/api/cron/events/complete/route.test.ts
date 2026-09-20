@@ -1,3 +1,4 @@
+vi.mock("next/cache", () => ({ revalidateTag: vi.fn() }));
 import { beforeEach, expect, it, vi } from "vitest";
 
 import { GET } from "./route";
@@ -20,9 +21,9 @@ beforeEach(() => {
 it("completes only finished series and includes one-off completions in its count", async () => {
   transaction
     .mockResolvedValueOnce([
-      { id: "finished", start_date: "2000-01-01T09:00:00Z", recurrence_rule: "FREQ=WEEKLY;COUNT=2" },
-      { id: "ongoing", start_date: "2000-01-01T09:00:00Z", recurrence_rule: "FREQ=WEEKLY" },
-      { id: "future", start_date: "2099-01-01T09:00:00Z", recurrence_rule: "FREQ=WEEKLY;COUNT=2" },
+      { id: "finished", recurrence_rule: "FREQ=WEEKLY;COUNT=2", start_date: "2000-01-01T09:00:00Z" },
+      { id: "ongoing", recurrence_rule: "FREQ=WEEKLY", start_date: "2000-01-01T09:00:00Z" },
+      { id: "future", recurrence_rule: "FREQ=WEEKLY;COUNT=2", start_date: "2099-01-01T09:00:00Z" },
     ])
     .mockResolvedValueOnce([{ id: "finished" }]);
   const response = await GET(new Request("https://mandrii.com/api/cron/events/complete"));

@@ -14,6 +14,7 @@ import { useI18n } from "~/i18n/useI18n";
 
 import { ContentAlertDeliverySettings } from "./ContentAlertDeliverySettings";
 import { DeviceSettings } from "./DeviceSettings";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 
 type AccountSettingsProps = {
   initialContentAlertDeliveryPreferences: ContentAlertDeliveryPreferences;
@@ -51,6 +52,7 @@ export const AccountSettings = ({
   const [isSavingTelegramFollow, setIsSavingTelegramFollow] = useState(false);
   const [isSavingTelegramCommunity, setIsSavingTelegramCommunity] = useState(false);
   const isTelegramPreferenceSaving = isSavingTelegramFollow || isSavingTelegramCommunity;
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const save = async (preference: keyof ContentUpdateNotificationPreferences, enabled: boolean) => {
     if (savingPreferences[preference]) return;
@@ -199,35 +201,24 @@ export const AccountSettings = ({
     <div className="space-y-6">
       <section aria-labelledby="notifications-heading" className="space-y-4" id="updates-notifications">
         <div className="flex items-start gap-3">
-          <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+          <div className="bg-primary/10 text-primary rounded-xl p-2.5">
             <Bell aria-hidden size={20} />
           </div>
           <div>
-            <h2 className={`
-              text-xl font-bold
-              md:text-2xl
-            `} id="notifications-heading">
+            <h2 className={`text-xl font-bold md:text-2xl`} id="notifications-heading">
               {i18n("Notifications")}
             </h2>
-            <p className={`
-              mt-1 text-sm text-neutral
-              md:text-base
-            `}>
+            <p className={`text-neutral mt-1 text-sm md:text-base`}>
               {i18n("Choose the activity you want to hear about.")}
             </p>
           </div>
         </div>
-        <section className={`
-          rounded-2xl border border-primary/10 bg-surface-tint/50 p-5
-          md:p-6
-        `}>
+        <section className={`border-primary/10 bg-surface-tint/50 rounded-2xl border p-5 md:p-6`}>
           <h3 className="text-lg font-bold">{i18n("Feed activity")}</h3>
-          <p className="mt-1 text-sm text-neutral">
+          <p className="text-neutral mt-1 text-sm">
             {i18n("Choose which feed activity you want to be notified about")}
           </p>
-          <div className={`
-            mt-5 flex flex-wrap gap-x-6 gap-y-4 border-t border-current/10 pt-5
-          `}>
+          <div className={`mt-5 flex flex-wrap gap-x-6 gap-y-4 border-t border-current/10 pt-5`}>
             <Checkbox
               checked={preferences.comments_enabled}
               disabled={savingPreferences.comments_enabled}
@@ -242,17 +233,11 @@ export const AccountSettings = ({
             />
           </div>
         </section>
-        <section className={`
-          rounded-2xl border border-primary/10 bg-surface-tint/50 p-5
-          md:p-6
-        `}>
-          <div className={`
-            flex flex-col justify-between gap-3
-            sm:flex-row sm:items-start
-          `}>
+        <section className={`border-primary/10 bg-surface-tint/50 rounded-2xl border p-5 md:p-6`}>
+          <div className={`flex flex-col justify-between gap-3 sm:flex-row sm:items-start`}>
             <div>
               <h3 className="text-lg font-bold">{i18n("Following alerts")}</h3>
-              <p className="mt-1 text-sm text-neutral">
+              <p className="text-neutral mt-1 text-sm">
                 {i18n("Receive updates from the places and areas you follow.")}
               </p>
             </div>
@@ -267,61 +252,51 @@ export const AccountSettings = ({
       <DeviceSettings />
       <section
         aria-labelledby="telegram-heading"
-        className={`
-          rounded-2xl border border-primary/10 bg-surface-tint/50 p-5
-          md:p-6
-        `}
+        className={`border-primary/10 bg-surface-tint/50 rounded-2xl border p-5 md:p-6`}
         id="telegram-connection"
       >
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+            <div className="bg-primary/10 text-primary rounded-xl p-2.5">
               <Send aria-hidden size={20} />
             </div>
             <div>
-              <h2 className={`
-                text-xl font-bold
-                md:text-2xl
-              `} id="telegram-heading">
+              <h2 className={`text-xl font-bold md:text-2xl`} id="telegram-heading">
                 {i18n("Telegram")}
               </h2>
-              <p className={`
-                mt-1 text-sm text-neutral
-                md:text-base
-              `}>
+              <p className={`text-neutral mt-1 text-sm md:text-base`}>
                 {telegramPreferences.linked
                   ? i18n("Choose the Telegram alerts you want to receive.")
                   : i18n("Connect once to receive follow alerts and private Community responses.")}
               </p>
             </div>
           </div>
-          {telegramPreferences.linked ? (
-            <Button
-              busy={isUnlinkingTelegram}
-              color="danger"
-              disabled={isTelegramPreferenceSaving}
-              onClick={() => void unlinkTelegram()}
-              size="sm"
-              variant="outlined"
-            >
-              {i18n("Unlink")}
-            </Button>
-          ) : (
-            <Button
-              busy={isLinkingTelegram}
-              color="primary"
-              disabled={isUnlinkingTelegram || isTelegramPreferenceSaving}
-              onClick={() => void linkTelegram()}
-              size="sm"
-            >
-              {i18n("Link Telegram")}
-            </Button>
-          )}
+          <div className="flex w-full items-center justify-center md:w-auto">
+            {telegramPreferences.linked ? (
+              <Button
+                busy={isUnlinkingTelegram}
+                color="danger"
+                disabled={isTelegramPreferenceSaving}
+                onClick={() => void unlinkTelegram()}
+                size={isMobile ? "lg" : "md"}
+                variant="outlined"
+              >
+                {i18n("Unlink")}
+              </Button>
+            ) : (
+              <Button
+                busy={isLinkingTelegram}
+                color="primary"
+                disabled={isUnlinkingTelegram || isTelegramPreferenceSaving}
+                onClick={() => void linkTelegram()}
+                size={isMobile ? "lg" : "md"}
+              >
+                {i18n("Link Telegram")}
+              </Button>
+            )}
+          </div>
         </div>
-        <div className={`
-          mt-5 grid gap-4 border-t border-current/10 pt-5
-          sm:grid-cols-2
-        `}>
+        <div className={`mt-5 grid gap-4 border-t border-current/10 pt-5 sm:grid-cols-2`}>
           <Checkbox
             checked={telegramPreferences.linked && telegramFollowEnabled}
             disabled={!telegramPreferences.linked || isSavingTelegramFollow || isUnlinkingTelegram}
@@ -336,7 +311,7 @@ export const AccountSettings = ({
           />
         </div>
         {!telegramPreferences.linked && (
-          <p className="mt-3 text-sm text-neutral">{i18n("Link Telegram to turn on either alert.")}</p>
+          <p className="text-neutral mt-3 text-sm">{i18n("Link Telegram to turn on either alert.")}</p>
         )}
         <TextLink className="mt-3" href="/user-profile/settings#content-alert-delivery">
           {i18n("Follow alerts use the delivery frequency above.")}

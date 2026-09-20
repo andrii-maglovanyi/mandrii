@@ -6,6 +6,8 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 
+import { isPublicOperation } from "~/lib/public-cache/operations";
+
 import { publicConfig } from "../config/public";
 import { getApolloAccessToken, setApolloSessionToken } from "./session-token";
 
@@ -75,6 +77,12 @@ const cache = new InMemoryCache({
   },
 });
 
+const readLink = split(
+  (operation) => isPublicOperation(operation.operationName),
+  new HttpLink({ uri: "/api/discovery" }),
+  authLink.concat(httpLink),
+);
+
 const client = new ApolloClient({
   cache,
   link: wsLink
@@ -84,9 +92,9 @@ const client = new ApolloClient({
           return definition.kind === "OperationDefinition" && definition.operation === "subscription";
         },
         wsLink,
-        authLink.concat(httpLink),
+        readLink,
       )
-    : authLink.concat(httpLink),
+    : readLink,
 });
 
 export default client;

@@ -215,14 +215,11 @@
   }
 }
 
-/* Keep controls usable with touch and avoid iOS zooming small form fields. */
 @media (pointer: coarse) {
   button,
   [role="button"],
   nav a,
   summary {
-    min-height: 44px;
-    min-width: 44px;
     touch-action: manipulation;
   }
   input:not([type="checkbox"], [type="radio"]),

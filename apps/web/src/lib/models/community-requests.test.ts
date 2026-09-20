@@ -1,3 +1,7 @@
+vi.mock("next/cache", () => ({
+  revalidateTag: vi.fn(),
+  unstable_cache: (fn: (...args: unknown[]) => unknown) => fn,
+}));
 import { describe, expect, it, vi } from "vitest";
 
 const { sqlMock, transactionMock } = vi.hoisted(() => {
@@ -13,7 +17,14 @@ vi.mock("~/lib/api", async () => import("~/lib/api/errors"));
 
 import { ConflictError, ForbiddenError } from "~/lib/api/errors";
 
-import { createCommunityRequest, createCommunityRequestResponse, getCommunityRequestPage, getCommunityRequestResponses, getCommunityRequests, getCommunityResponseThread } from "./community-requests";
+import {
+  createCommunityRequest,
+  createCommunityRequestResponse,
+  getCommunityRequestPage,
+  getCommunityRequestResponses,
+  getCommunityRequests,
+  getCommunityResponseThread,
+} from "./community-requests";
 
 const responseResult = {
   author_id: "responder-id",
@@ -79,7 +90,9 @@ describe("community request concurrency safeguards", () => {
 
     await getCommunityRequestPage({}, null);
 
-    const query = String(sqlMock.mock.calls.find(([strings]) => String(strings).includes("FROM community_requests request"))?.[0]);
+    const query = String(
+      sqlMock.mock.calls.find(([strings]) => String(strings).includes("FROM community_requests request"))?.[0],
+    );
     expect(query).toContain("ORDER BY\n      location_rank,");
     expect(query).not.toContain("ORDER BY\n      0,");
   });

@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -15,85 +16,143 @@ import { LoveButton } from "../../LoveButton/LoveButton";
 import { ThemeToggle } from "../../ThemeToggle/ThemeToggle";
 import { Logo } from "../Logo";
 
-export function MobileLayout({ navLinks }: Readonly<{ navLinks: React.ReactNode }>) {
+const AnimatedIconSwap = ({ isOpen }: { isOpen: boolean }) => (
+  <span className={`
+    relative inline-block h-6 w-6 transition-transform duration-300
+  `}>
+    <Menu
+      className={clsx(
+        "absolute inset-0 transition-transform duration-300",
+        isOpen ? "scale-0 rotate-90" : "scale-100 rotate-0",
+      )}
+    />
+    <X
+      className={clsx(
+        "absolute inset-0 transition-transform duration-300",
+        isOpen ? "scale-100 rotate-0" : "scale-0 -rotate-90",
+      )}
+    />
+  </span>
+);
+
+type MobileLayoutProps = {
+  navLinks: React.ReactNode;
+};
+
+export function MobileLayout({ navLinks }: Readonly<MobileLayoutProps>) {
   const [openPath, setOpenPath] = useState<null | string>(null);
+  const navigationRef = useRef<HTMLDivElement>(null);
   const i18n = useI18n();
   const pathname = usePathname();
+  const [previousPath, setPreviousPath] = useState(pathname);
+  if (previousPath !== pathname) {
+    setPreviousPath(pathname);
+    setOpenPath(null);
+  }
+
   const isOpen = openPath === pathname;
-  const dialog = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    const element = dialog.current;
-    if (isOpen && !element?.open) element?.showModal();
-    else if (!isOpen && element?.open) element.close();
-  }, [isOpen]);
+
   useEffect(() => {
     if (!isOpen) return;
-    const previous = document.body.style.overflow;
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // A sign-in or other modal opened from the menu owns its keyboard events.
+      if (document.querySelector("dialog[open]")) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOpenPath(null);
+        navigationRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+      }
+      if (event.key === "Tab") {
+        const controls = Array.from(navigationRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not(:disabled), input:not(:disabled), [tabindex="0"]',
+        ) ?? []).filter((element) => element.getClientRects().length > 0);
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && (document.activeElement === first || !navigationRef.current?.contains(document.activeElement))) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && (document.activeElement === last || !navigationRef.current?.contains(document.activeElement))) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.body.style.overflow = previous;
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
 
   return (
-    <>
-      <header
-        className={`
-          relative z-40 flex min-h-16 shrink-0 items-center justify-between px-4
-          pt-[env(safe-area-inset-top)] shadow-md
-        `}
-      >
-        <ActionButton
-          aria-controls="mobile-menu"
-          aria-expanded={isOpen}
-          aria-label={i18n("Open menu")}
-          data-testid="mobile-menu-toggle"
-          icon={<Menu />}
-          onClick={() => setOpenPath(pathname)}
-          variant="ghost"
-        />
-        <Logo />
-        {envName !== "production" ? <CartButton /> : <span className="w-11" />}
-      </header>
-      <dialog
-        aria-label={i18n("Navigation menu")}
-        className={`
-          fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-y-auto
-          overscroll-contain bg-surface p-4
-          pt-[max(1rem,env(safe-area-inset-top))]
-          pb-[max(1rem,env(safe-area-inset-bottom))] text-on-surface
-        `}
-        id="mobile-menu"
-        onCancel={(event) => {
-          event.preventDefault();
-          setOpenPath(null);
-        }}
-        ref={dialog}
-      >
-        <div className="flex justify-end">
+    <div ref={navigationRef}>
+      <header className={`
+        relative z-50 flex h-16 items-center justify-between px-4 shadow-md
+      `}>
+        <span className="absolute left-1/2 -translate-x-1/2 transform">
+          <Logo />
+        </span>
+
+        <>
           <ActionButton
-            aria-label={i18n("Close menu")}
-            icon={<X />}
-            onClick={() => setOpenPath(null)}
+            aria-controls="mobile-menu"
+            aria-expanded={isOpen}
+            aria-label={isOpen ? i18n("Close menu") : i18n("Open menu")}
+            className="min-h-11 min-w-11"
+            data-testid="mobile-menu-toggle"
+            icon={<AnimatedIconSwap isOpen={isOpen} />}
+            onClick={() => setOpenPath(isOpen ? null : pathname)}
+            tooltipPosition="bottom-start"
             variant="ghost"
           />
-        </div>
-        <nav
-          className="flex flex-col gap-3 px-2 py-4 text-xl"
-          onClick={(event) => {
-            if ((event.target as Element).closest("a[href]")) setOpenPath(null);
-          }}
-        >
+          {envName !== "production" && <div className={`
+            [&_button]:min-h-11 [&_button]:min-w-11
+          `}><CartButton /></div>}
+        </>
+      </header>
+
+      <div
+        aria-hidden={!isOpen}
+        className={clsx(
+          `
+            fixed top-0 left-0 z-40 h-full w-full transform overflow-hidden py-4
+            transition-transform duration-300
+          `,
+          "bg-surface",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+        id="mobile-menu"
+        inert={!isOpen}
+        style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+      >
+        <nav aria-label={i18n("Navigation menu")} className={`
+          mt-16 flex max-h-[calc(100dvh-5rem)] flex-col space-y-1
+          overflow-y-auto p-6 pb-12 text-xl
+          sm:space-y-2
+          md:space-y-3
+        `} onClickCapture={(event) => {
+          if ((event.target as Element).closest("a[href]")) {
+            // A dialog opened by this link should restore focus to a visible control.
+            navigationRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+            setOpenPath(null);
+          }
+        }}>
           <MobileAuth>{navLinks}</MobileAuth>
           <Separator variant="margin" />
-          <div className="mt-4 flex flex-wrap justify-end gap-2">
-            {envName !== "production" && <CartButton onClick={() => setOpenPath(null)} />}
+
+          <div className={`
+            mt-4 flex justify-end space-x-2
+            [&_button]:min-h-11 [&_button]:min-w-11
+          `}>
             <LoveButton onClick={() => setOpenPath(null)} />
             <ThemeToggle data-testid="theme-toggle-mobile" />
             <LanguageToggle data-testid="language-toggle-mobile" />
           </div>
         </nav>
-      </dialog>
-    </>
+      </div>
+
+    </div>
   );
 }

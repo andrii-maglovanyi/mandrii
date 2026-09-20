@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+
 import { ConflictError, ForbiddenError, NotFoundError } from "~/lib/api";
 import {
   CommunityRelatedContent,
@@ -12,6 +14,9 @@ import {
   CommunityResponseThread,
 } from "~/lib/community-requests/types";
 import sql from "~/lib/db/db";
+import { COMMUNITY_TAG, invalidateCommunity } from "~/lib/public-cache/invalidate";
+import { canonicalJson } from "~/lib/public-cache/operations";
+import { retryInvalidatedRead, singleFlight } from "~/lib/public-cache/single-flight";
 
 type CommunityRequestResponseRow = {
   author_id: string;
@@ -114,6 +119,7 @@ export async function closeCommunityRequest(id: string, userId: string): Promise
   await sql`
     UPDATE community_requests SET status = 'CLOSED' WHERE id = ${id} AND user_id = ${userId}
   `;
+  invalidateCommunity();
 }
 
 export async function createCommunityRequest(input: {
@@ -130,7 +136,7 @@ export async function createCommunityRequest(input: {
 }): Promise<CommunityRequest> {
   await validateRelatedContent(input.relatedVenueId, input.relatedEventId);
 
-  return sql.begin(async (transaction) => {
+  const saved = await sql.begin(async (transaction) => {
     // Serialise post creation per author. This makes the active-post limit reliable
     // even if a browser retries or two requests arrive at the same time.
     await transaction`
@@ -162,6 +168,8 @@ export async function createCommunityRequest(input: {
     `;
     return toCommunityRequest(row);
   });
+  invalidateCommunity();
+  return saved;
 }
 
 export async function createCommunityRequestResponse(input: {
@@ -211,6 +219,7 @@ export async function createCommunityRequestResponse(input: {
     throw new ForbiddenError("You cannot respond to your own community post");
   }
   if (!result.id) throw new ConflictError("You have already responded to this community post");
+  invalidateCommunity();
   return toResponse(result);
 }
 
@@ -250,78 +259,45 @@ export async function createCommunityResponseMessage(input: {
   return toResponseMessage(message);
 }
 
+const readCommunityPage = unstable_cache(
+  async (key: string) => {
+    const { cursor, filters, includeTotal, limit } = JSON.parse(key);
+    return singleFlight(`community:${key}`, () => loadCommunityRequestPage(filters, cursor, limit, { includeTotal }));
+  },
+  ["community-page-v1"],
+  { revalidate: 60, tags: [COMMUNITY_TAG] },
+);
+
 export async function getCommunityRequestPage(
   filters: CommunityRequestFilters = {},
   cursor: CommunityRequestCursor | null,
   limit = 12,
   { includeTotal = true }: { includeTotal?: boolean } = {},
 ): Promise<CommunityRequestsPage> {
-  const pageSize = Math.min(Math.max(limit, 1), 30);
-  const locationRank = filters.location
-    ? sql`CASE WHEN lower(request.location) = lower(${filters.location}) THEN 0 ELSE 1 END`
-    : sql`0`;
-  const cursorFilter = cursor
-    ? sql`
-        AND (
-          ${locationRank} > ${cursor.locationRank}
-          OR (
-            ${locationRank} = ${cursor.locationRank}
-            AND (request.created_at, request.id) < (${cursor.createdAt}::timestamptz, ${cursor.id}::uuid)
-          )
-        )
+  const { viewerUserId, ...publicFilters } = filters;
+  const page = await retryInvalidatedRead(() =>
+    readCommunityPage(
+      canonicalJson({
+        cursor,
+        filters: publicFilters,
+        includeTotal,
+        limit: Math.min(Math.max(limit, 1), 30),
+      }),
+    ),
+  );
+  // Expiry is evaluated on every read, even if no author edits the post.
+  const requests = page.requests.filter((item) => Date.parse(item.expiresAt) > Date.now());
+  const responses =
+    viewerUserId && requests.length
+      ? await sql<{ id: string; request_id: string }[]>`
+        SELECT id, request_id FROM community_request_responses
+        WHERE user_id = ${viewerUserId} AND request_id = ANY(${requests.map((item) => item.id)}::uuid[])
       `
-    : sql``;
-  const rows = await sql<CommunityRequestRow[]>`
-    SELECT request.id, request.kind, request.category, request.title, request.body, request.country, request.location,
-           request.status, request.expires_at, request.created_at,
-           ${locationRank} AS location_rank,
-           author.id AS author_id, author.name AS author_name, author.image AS author_image,
-           venue.id AS related_venue_id, venue.name AS related_venue_name, venue.slug AS related_venue_slug,
-           event.id AS related_event_id, COALESCE(event.title_en, event.title_uk) AS related_event_name,
-           event.slug AS related_event_slug,
-           ${filters.viewerUserId ? sql`(SELECT id FROM community_request_responses response WHERE response.request_id = request.id AND response.user_id = ${filters.viewerUserId})` : sql`NULL::uuid`} AS viewer_response_id,
-           (
-             SELECT COUNT(*)::int
-             FROM community_request_responses response
-             WHERE response.request_id = request.id
-           ) AS response_count
-    FROM community_requests request
-    JOIN users author ON author.id = request.user_id
-    LEFT JOIN venues venue ON venue.id = request.venue_id AND venue.status IN ('ACTIVE', 'ARCHIVED')
-    LEFT JOIN events event ON event.id = request.event_id AND event.status IN ('ACTIVE', 'COMPLETED', 'ARCHIVED')
-    WHERE request.status = 'OPEN'
-      AND request.expires_at > NOW()
-      ${filters.kind ? sql`AND request.kind = ${filters.kind}` : sql``}
-      ${filters.category ? sql`AND request.category = ${filters.category}` : sql``}
-      ${filters.country ? sql`AND request.country = ${filters.country}` : sql``}
-      ${filters.relatedVenueId ? sql`AND request.venue_id = ${filters.relatedVenueId}` : sql``}
-      ${filters.relatedEventId ? sql`AND request.event_id = ${filters.relatedEventId}` : sql``}
-      ${filters.query ? sql`AND (request.title ILIKE ${`%${filters.query}%`} OR request.body ILIKE ${`%${filters.query}%`})` : sql``}
-      ${cursorFilter}
-    ORDER BY
-      location_rank,
-      request.created_at DESC, request.id DESC
-    LIMIT ${pageSize + 1}
-  `;
-  const hasMore = rows.length > pageSize;
-  const visibleRows = hasMore ? rows.slice(0, pageSize) : rows;
-  const last = visibleRows.at(-1);
-  const [{ total }] = includeTotal ? await sql<Array<{ total: number }>>`
-    SELECT COUNT(*)::int AS total
-    FROM community_requests request
-    WHERE request.status = 'OPEN'
-      AND request.expires_at > NOW()
-      ${filters.kind ? sql`AND request.kind = ${filters.kind}` : sql``}
-      ${filters.category ? sql`AND request.category = ${filters.category}` : sql``}
-      ${filters.country ? sql`AND request.country = ${filters.country}` : sql``}
-      ${filters.relatedVenueId ? sql`AND request.venue_id = ${filters.relatedVenueId}` : sql``}
-      ${filters.relatedEventId ? sql`AND request.event_id = ${filters.relatedEventId}` : sql``}
-      ${filters.query ? sql`AND (request.title ILIKE ${`%${filters.query}%`} OR request.body ILIKE ${`%${filters.query}%`})` : sql``}
-  ` : [{ total: 0 }];
+      : [];
+  const responseIds = new Map(responses.map((item) => [item.request_id, item.id]));
   return {
-    nextCursor: hasMore && last ? `${last.location_rank}|${new Date(last.created_at).toISOString()}|${last.id}` : null,
-    requests: visibleRows.map(toCommunityRequest),
-    total,
+    ...page,
+    requests: requests.map((item) => ({ ...item, viewerResponseId: responseIds.get(item.id) ?? null })),
   };
 }
 
@@ -451,7 +427,85 @@ export async function updateCommunityRequest(input: {
       NULL::uuid AS viewer_response_id
   `;
   if (!row) throw new NotFoundError("This community post is no longer available to edit");
+  invalidateCommunity();
   return toCommunityRequest(row);
+}
+
+async function loadCommunityRequestPage(
+  filters: Omit<CommunityRequestFilters, "viewerUserId"> = {},
+  cursor: CommunityRequestCursor | null,
+  limit = 12,
+  { includeTotal = true }: { includeTotal?: boolean } = {},
+): Promise<CommunityRequestsPage> {
+  const pageSize = Math.min(Math.max(limit, 1), 30);
+  const locationRank = filters.location
+    ? sql`CASE WHEN lower(request.location) = lower(${filters.location}) THEN 0 ELSE 1 END`
+    : sql`0`;
+  const cursorFilter = cursor
+    ? sql`
+        AND (
+          ${locationRank} > ${cursor.locationRank}
+          OR (
+            ${locationRank} = ${cursor.locationRank}
+            AND (request.created_at, request.id) < (${cursor.createdAt}::timestamptz, ${cursor.id}::uuid)
+          )
+        )
+      `
+    : sql``;
+  const rows = await sql<CommunityRequestRow[]>`
+    SELECT request.id, request.kind, request.category, request.title, request.body, request.country, request.location,
+           request.status, request.expires_at, request.created_at,
+           ${locationRank} AS location_rank,
+           author.id AS author_id, author.name AS author_name, author.image AS author_image,
+           venue.id AS related_venue_id, venue.name AS related_venue_name, venue.slug AS related_venue_slug,
+           event.id AS related_event_id, COALESCE(event.title_en, event.title_uk) AS related_event_name,
+           event.slug AS related_event_slug,
+           NULL::uuid AS viewer_response_id,
+           (
+             SELECT COUNT(*)::int
+             FROM community_request_responses response
+             WHERE response.request_id = request.id
+           ) AS response_count
+    FROM community_requests request
+    JOIN users author ON author.id = request.user_id
+    LEFT JOIN venues venue ON venue.id = request.venue_id AND venue.status IN ('ACTIVE', 'ARCHIVED')
+    LEFT JOIN events event ON event.id = request.event_id AND event.status IN ('ACTIVE', 'COMPLETED', 'ARCHIVED')
+    WHERE request.status = 'OPEN'
+      AND request.expires_at > NOW()
+      ${filters.kind ? sql`AND request.kind = ${filters.kind}` : sql``}
+      ${filters.category ? sql`AND request.category = ${filters.category}` : sql``}
+      ${filters.country ? sql`AND request.country = ${filters.country}` : sql``}
+      ${filters.relatedVenueId ? sql`AND request.venue_id = ${filters.relatedVenueId}` : sql``}
+      ${filters.relatedEventId ? sql`AND request.event_id = ${filters.relatedEventId}` : sql``}
+      ${filters.query ? sql`AND (request.title ILIKE ${`%${filters.query}%`} OR request.body ILIKE ${`%${filters.query}%`})` : sql``}
+      ${cursorFilter}
+    ORDER BY
+      location_rank,
+      request.created_at DESC, request.id DESC
+    LIMIT ${pageSize + 1}
+  `;
+  const hasMore = rows.length > pageSize;
+  const visibleRows = hasMore ? rows.slice(0, pageSize) : rows;
+  const last = visibleRows.at(-1);
+  const [{ total }] = includeTotal
+    ? await sql<Array<{ total: number }>>`
+    SELECT COUNT(*)::int AS total
+    FROM community_requests request
+    WHERE request.status = 'OPEN'
+      AND request.expires_at > NOW()
+      ${filters.kind ? sql`AND request.kind = ${filters.kind}` : sql``}
+      ${filters.category ? sql`AND request.category = ${filters.category}` : sql``}
+      ${filters.country ? sql`AND request.country = ${filters.country}` : sql``}
+      ${filters.relatedVenueId ? sql`AND request.venue_id = ${filters.relatedVenueId}` : sql``}
+      ${filters.relatedEventId ? sql`AND request.event_id = ${filters.relatedEventId}` : sql``}
+      ${filters.query ? sql`AND (request.title ILIKE ${`%${filters.query}%`} OR request.body ILIKE ${`%${filters.query}%`})` : sql``}
+  `
+    : [{ total: 0 }];
+  return {
+    nextCursor: hasMore && last ? `${last.location_rank}|${new Date(last.created_at).toISOString()}|${last.id}` : null,
+    requests: visibleRows.map(toCommunityRequest),
+    total,
+  };
 }
 
 async function validateRelatedContent(relatedVenueId: null | string, relatedEventId: null | string) {

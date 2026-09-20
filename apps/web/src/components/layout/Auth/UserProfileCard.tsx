@@ -23,7 +23,7 @@ export const UserProfileCard = ({ inactive = false, profile }: UserProfileCardPr
   const destination = inactive ? "/account-inactive" : "/user-profile";
 
   const card = (
-    <div className="from-primary/7.5 to-secondary/7.5 flex items-center gap-3 rounded-lg bg-linear-to-r p-3 transition-[transform,box-shadow] duration-200 ease-out group-hover:shadow-md group-focus-visible:shadow-md motion-safe:group-hover:scale-[1.015] motion-safe:group-focus-visible:scale-[1.015] motion-reduce:transition-none">
+    <div className="from-primary/7.5 to-secondary/7.5 flex items-center gap-3 rounded-lg bg-linear-to-r p-3 transition-[transform,box-shadow] duration-200 ease-out group-hover:shadow-md group-focus-visible:shadow-md motion-reduce:transition-none">
       <div className="relative">
         <div className={`from-primary to-secondary absolute inset-0 rounded-full bg-linear-to-r opacity-20 blur-sm`} />
         <Avatar avatarSize={48} className="relative" profile={profile} />

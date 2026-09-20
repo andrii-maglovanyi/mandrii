@@ -1,3 +1,7 @@
+vi.mock("next/cache", () => ({
+  revalidateTag: vi.fn(),
+  unstable_cache: (fn: (...args: unknown[]) => unknown) => fn,
+}));
 import { beforeEach, expect, it, vi } from "vitest";
 
 import { saveChain } from "./chain";

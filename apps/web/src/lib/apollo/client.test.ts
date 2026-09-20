@@ -59,3 +59,22 @@ it("removes old authorization headers when replaying a request after sign-out", 
   );
   expect(result.headers).toEqual({ "x-request-id": "request" });
 });
+
+it("routes public reads through the shared endpoint without looking up an account token", async () => {
+  const fetchMock = vi.fn().mockResolvedValue(
+    new Response(JSON.stringify({ data: { venues: [] } }), {
+      headers: { "Content-Type": "application/json" },
+    }),
+  );
+  vi.stubGlobal("fetch", fetchMock);
+  const { default: client } = await import("./client");
+  const { GET_PUBLIC_VENUE_OPTIONS } = await import("~/graphql/venues");
+  await client.query({
+    fetchPolicy: "network-only",
+    query: GET_PUBLIC_VENUE_OPTIONS,
+    variables: { limit: 20, where: {} },
+  });
+  expect(fetchMock.mock.calls[0][0]).toBe("/api/discovery");
+  expect(getToken).not.toHaveBeenCalled();
+  vi.unstubAllGlobals();
+});

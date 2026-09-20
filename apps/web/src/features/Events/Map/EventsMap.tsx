@@ -5,7 +5,6 @@ import { LayoutDashboard, LocateFixed, MapPinOff } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMediaQuery } from "~/hooks/useMediaQuery";
 
 import { Button, EmptyState, Input, ProgressBar, RichText, Select } from "~/components/ui";
 import { useTheme } from "~/contexts/ThemeContext";
@@ -15,6 +14,7 @@ import { AddEntityButton, useAddEntity } from "~/features/shared/AddEntityButton
 import { useCurrentLocation } from "~/hooks/useCurrentLocation";
 import { useEvents } from "~/hooks/useEvents";
 import { useListControls } from "~/hooks/useListControls";
+import { useMediaQuery } from "~/hooks/useMediaQuery";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
@@ -109,6 +109,7 @@ export const EventsMap = () => {
     country,
     distance,
     geo: hasLocationFilter ? undefined : userLocation,
+    isOnline: false,
     type,
   });
 

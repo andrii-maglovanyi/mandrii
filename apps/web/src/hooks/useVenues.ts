@@ -132,9 +132,7 @@ export const useVenues = () => {
 
   const usePublicVenues = (params: APIParams, options?: { includeTotal?: boolean; skip?: boolean }) => {
     const { includeTotal = false, skip = false } = options ?? {};
-    const [whereEvents] = useState(() =>
-      getDiscoverableEventsWhere(getEventsFilter({ dateFrom: new Date().toISOString() }).variables.where),
-    );
+    const [whereEvents] = useState(() => getDiscoverableEventsWhere(getEventsFilter({}).variables.where));
     const mergedParams = useMemo(() => {
       return {
         ...params,
@@ -163,9 +161,7 @@ export const useVenues = () => {
         limit: 1,
         totalWhere: getDiscoverableVenuesWhere(),
         where: getDiscoverableVenuesWhere({ slug: { _eq: slug } }),
-        whereEvents: getDiscoverableEventsWhere(
-          getEventsFilter({ dateFrom: new Date().toISOString() }).variables.where,
-        ),
+        whereEvents: getDiscoverableEventsWhere(getEventsFilter({}).variables.where),
       }),
       [slug],
     );

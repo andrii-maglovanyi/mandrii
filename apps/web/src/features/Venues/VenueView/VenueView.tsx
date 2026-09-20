@@ -35,6 +35,7 @@ import { useI18n } from "~/i18n/useI18n";
 import { constants } from "~/lib/constants";
 import { isEventScheduleFinished, sortEventsByNextOccurrence } from "~/lib/events/recurrence";
 import { getPublicMediaUrl } from "~/lib/media";
+import { discoveryWindowStart } from "~/lib/public-cache/operations";
 import {
   FilterParams,
   GetPublicEventsQuery,
@@ -94,8 +95,8 @@ export const VenueView = ({
       where: {
         _or: [
           { is_recurring: { _eq: true } },
-          { end_date: { _gte: new Date().toISOString() } },
-          { start_date: { _gte: new Date().toISOString() } },
+          { end_date: { _gte: discoveryWindowStart() } },
+          { start_date: { _gte: discoveryWindowStart() } },
         ],
         venue_id: { _eq: venue?.id },
       } as FilterParams,

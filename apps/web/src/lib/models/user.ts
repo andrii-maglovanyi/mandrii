@@ -1,6 +1,7 @@
 import { AuthenticatedSession } from "~/lib/api/context";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "~/lib/api/errors";
 import { executeGraphQLQuery } from "~/lib/graphql/client";
+import { invalidateCommunity } from "~/lib/public-cache/invalidate";
 import { Users } from "~/types";
 
 import { privateConfig } from "../config/private";
@@ -78,10 +79,6 @@ export type PublicUser = {
   username: null | string;
 };
 
-type PublicUserRecord = Omit<PublicUser, "isAdmin"> & {
-  role: string;
-};
-
 export type UserUpdate = {
   bio?: null | string;
   city?: null | string;
@@ -90,6 +87,10 @@ export type UserUpdate = {
   name?: string;
   username?: null | string;
 };
+
+type PublicUserRecord = {
+  role: string;
+} & Omit<PublicUser, "isAdmin">;
 
 export function getPublicUserImageUrl(image: null | string) {
   return getPublicMediaUrl(image);
@@ -173,6 +174,7 @@ export class UserModel {
       throw new NotFoundError("User not found");
     }
 
+    invalidateCommunity();
     return result.update_users_by_pk;
   }
 

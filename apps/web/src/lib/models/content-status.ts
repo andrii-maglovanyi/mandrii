@@ -1,8 +1,15 @@
 import { ForbiddenError, NotFoundError } from "~/lib/api/errors";
 import sql from "~/lib/db/db";
+import { invalidatePublicContent } from "~/lib/public-cache/invalidate";
 import { Event_Status_Enum, Venue_Status_Enum } from "~/types";
 import { UserSession } from "~/types/user";
 import { UUID } from "~/types/uuid";
+
+type ContentRecord = {
+  owner_id?: null | string;
+  status: Event_Status_Enum | Venue_Status_Enum;
+  user_id: string;
+};
 
 type ContentStatusChange =
   | {
@@ -15,12 +22,6 @@ type ContentStatusChange =
       status: Venue_Status_Enum;
       type: "venue";
     };
-
-type ContentRecord = {
-  owner_id?: null | string;
-  status: Event_Status_Enum | Venue_Status_Enum;
-  user_id: string;
-};
 
 const VERIFIED_EVENT_STATUSES = new Set<Event_Status_Enum>([
   Event_Status_Enum.Active,
@@ -83,5 +84,6 @@ export async function updateContentStatus(change: ContentStatusChange, actor: Us
     throw new NotFoundError(change.type === "event" ? "Event not found" : "Venue not found");
   }
 
+  invalidatePublicContent();
   return { ...updated, previousStatus: content.status };
 }

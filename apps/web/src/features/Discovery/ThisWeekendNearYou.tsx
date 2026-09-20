@@ -63,33 +63,20 @@ export function ThisWeekendNearYou() {
 
   return (
     <section aria-labelledby="this-weekend-heading" className="my-12">
-      <div className={`
-        mb-6 flex flex-col gap-2
-        sm:flex-row sm:items-end sm:justify-between sm:gap-3
-      `}>
+      <div className={`mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-3`}>
         <div>
-          <p className={`
-            text-sm font-semibold tracking-wide text-primary uppercase
-          `}>{i18n("Plan your weekend")}</p>
-          <h2 className={`
-            mt-1 text-2xl font-bold
-            md:text-3xl
-          `} id="this-weekend-heading">
+          <p className={`text-primary text-sm font-semibold tracking-wide uppercase`}>{i18n("Plan your weekend")}</p>
+          <h2 className={`mt-1 text-2xl font-bold md:text-3xl`} id="this-weekend-heading">
             {title}
           </h2>
-          <p className="mt-2 text-on-surface/70">
+          <p className="text-on-surface/70 mt-2">
             {locationLabel
-              ? i18n("A few Ukrainian community events chosen for your location.")
+              ? i18n("A few events chosen for your location.")
               : i18n("Choose a location above to make these suggestions more personal.")}
           </p>
         </div>
         <Link
-          className={`
-            inline-flex min-h-11 items-center gap-2 self-start py-2
-            font-semibold text-primary no-underline
-            hover:underline
-            sm:self-auto
-          `}
+          className={`text-primary inline-flex min-h-11 items-center gap-2 self-start py-2 font-semibold no-underline hover:underline sm:self-auto`}
           href={allEventsHref}
         >
           {i18n("View all events")}
@@ -102,10 +89,7 @@ export function ThisWeekendNearYou() {
           <AnimatedEllipsis size="md" />
         </div>
       ) : weekendEvents.length ? (
-        <div className={`
-          grid grid-cols-1 gap-4
-          md:grid-cols-3
-        `}>
+        <div className={`grid grid-cols-1 gap-4 md:grid-cols-3`}>
           {weekendEvents.map((event) => (
             <EventsMasonryCard
               event={event}
@@ -117,29 +101,18 @@ export function ThisWeekendNearYou() {
         </div>
       ) : (
         <div
-          className={`
-            rounded-2xl border border-on-surface/10 bg-surface-tint/50 px-4 py-8
-            text-center
-            sm:px-6
-            md:py-10
-          `}
+          className={`border-on-surface/10 bg-surface-tint/50 rounded-2xl border px-4 py-8 text-center sm:px-6 md:py-10`}
         >
-          <div className={`
-            mx-auto flex h-16 w-16 items-center justify-center rounded-full
-            bg-primary/10 text-primary
-          `}>
+          <div className={`bg-primary/10 text-primary mx-auto flex h-16 w-16 items-center justify-center rounded-full`}>
             <CalendarDays size={30} />
           </div>
           <h3 className="mt-5 text-xl font-bold">{i18n("No events this weekend")}</h3>
-          <p className="mx-auto mt-2 max-w-xl text-on-surface/70">
+          <p className="text-on-surface/70 mx-auto mt-2 max-w-xl">
             {i18n("Know about something happening in {location}? Add it so others can find it.", {
               location: emptyLocationLabel,
             })}
           </p>
-          <Button className={`
-            mt-6 w-full gap-2
-            sm:w-auto
-          `} color="primary" onClick={handleAddEvent}>
+          <Button className={`mt-6 w-full gap-2 sm:w-auto`} color="primary" onClick={handleAddEvent}>
             <Plus size={17} />
             {i18n("Add an event")}
           </Button>

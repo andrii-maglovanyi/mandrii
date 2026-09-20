@@ -10,7 +10,6 @@ import { envName } from "~/lib/config/env";
 import CookieConsentBanner from "../CookieConsentBanner/CookieConsentBanner";
 import { Footer } from "../Footer/Footer";
 import { MessageToast } from "../MessageToast/MessageToast";
-import { PwaControls } from "../Pwa/PwaControls";
 import { PwaProvider } from "../Pwa/PwaProvider";
 import { Container } from "./Container";
 import { DesktopLayout } from "./Desktop/DesktopLayout";
@@ -54,10 +53,9 @@ export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>
 
   return (
     <PwaProvider>
-      <div className="flex min-h-dvh min-w-0 flex-col">
+      <div className="flex min-h-screen flex-col">
         {isMobile ? <MobileLayout navLinks={navLinks} /> : <DesktopLayout navLinks={navLinks} />}
         <Container>{children}</Container>
-        <PwaControls />
         <CookieConsentBanner />
         <MessageToast />
         {!pathname.includes("/map") && <Footer />}

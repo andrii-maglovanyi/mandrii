@@ -102,9 +102,7 @@ export function DiscoveryLocationPicker({ onChange, variant = "hero" }: Readonly
 
       <Modal className="mb-0" isOpen={isOpen} onClose={() => setIsOpen(false)} title={i18n("Choose where to explore")}>
         <div className="space-y-4">
-          <p className="text-neutral text-sm">
-            {i18n("This is saved only in this browser and can be changed anytime.")}
-          </p>
+          <p className="text-neutral text-sm">{i18n("This is saved on this device and can be changed anytime.")}</p>
           <Select
             label={i18n("Country")}
             onChange={(event) => {

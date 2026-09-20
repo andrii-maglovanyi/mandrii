@@ -16,6 +16,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Avatar } from "~/components/layout";
 import { SignInForm } from "~/components/layout/Auth/SignInForm";
+import { PublicPageHeader } from "~/components/layout/PublicPageHeader/PublicPageHeader";
 import {
   ActionButton,
   Badge,
@@ -30,22 +31,22 @@ import {
   TextLink,
 } from "~/components/ui";
 import { useDialog } from "~/contexts/DialogContext";
+import { CommunityRelatedContentPicker } from "~/features/CommunityRequests/CommunityRelatedContentPicker";
+import { AddEntityButton } from "~/features/shared/AddEntityButton";
+import { UserProfilePreview } from "~/features/UserProfile/UserProfilePreview";
 import { useNotifications } from "~/hooks/useNotifications";
 import { useUser } from "~/hooks/useUser";
-import { useI18n } from "~/i18n/useI18n";
 import { useRouter } from "~/i18n/navigation";
-import { CommunityRelatedContentPicker } from "~/features/CommunityRequests/CommunityRelatedContentPicker";
-import { UserProfilePreview } from "~/features/UserProfile/UserProfilePreview";
-import { AddEntityButton } from "~/features/shared/AddEntityButton";
+import { useI18n } from "~/i18n/useI18n";
 import {
   COMMUNITY_REQUEST_CATEGORIES,
+  CommunityRelatedContent,
   CommunityRequest,
   CommunityRequestCategory,
   CommunityRequestKind,
   CommunityRequestResponse,
-  CommunityResponseThread,
-  CommunityRelatedContent,
   CommunityRequestsPage,
+  CommunityResponseThread,
 } from "~/lib/community-requests/types";
 import { sendToMixpanel } from "~/lib/mixpanel";
 
@@ -217,7 +218,7 @@ export function CommunityRequestsBoard({
       if (kind !== "ALL") params.set("kind", kind);
       if (category !== "ALL") params.set("category", category);
       const response = await fetch(`/api/community-requests?${params.toString()}`);
-      const result = (await response.json()) as CommunityRequestsPage | { error?: string };
+      const result = (await response.json()) as { error?: string } | CommunityRequestsPage;
       if (!response.ok || !("requests" in result)) throw new Error("Unable to load more posts");
       setRequests((current) => [...current, ...result.requests]);
       setNextCursor(result.nextCursor);
@@ -294,7 +295,7 @@ export function CommunityRequestsBoard({
         headers: { "Content-Type": "application/json" },
         method: editingId ? "PATCH" : "POST",
       });
-      const result = (await response.json().catch(() => null)) as CommunityRequest | { error?: string } | null;
+      const result = (await response.json().catch(() => null)) as { error?: string } | CommunityRequest | null;
       if (!response.ok || !result || !("id" in result)) {
         throw new Error(result && "error" in result ? result.error : "Unable to publish your post");
       }
@@ -342,7 +343,7 @@ export function CommunityRequestsBoard({
         headers: { "Content-Type": "application/json" },
         method: "POST",
       });
-      const result = (await response.json().catch(() => null)) as CommunityRequestResponse | { error?: string } | null;
+      const result = (await response.json().catch(() => null)) as { error?: string } | CommunityRequestResponse | null;
       if (!response.ok || !result || !("id" in result)) {
         throw new Error(result && "error" in result ? result.error : "Unable to publish your response");
       }
@@ -369,8 +370,8 @@ export function CommunityRequestsBoard({
     try {
       const response = await fetch(`/api/community-requests/${request.id}/responses`);
       const result = (await response.json().catch(() => null)) as
-        | CommunityRequestResponse[]
         | { error?: string }
+        | CommunityRequestResponse[]
         | null;
       if (!response.ok || !Array.isArray(result)) {
         throw new Error(
@@ -392,7 +393,7 @@ export function CommunityRequestsBoard({
     setIsLoadingThread(true);
     try {
       const response = await fetch(`/api/community-responses/${responseId}`);
-      const result = (await response.json().catch(() => null)) as CommunityResponseThread | { error?: string } | null;
+      const result = (await response.json().catch(() => null)) as { error?: string } | CommunityResponseThread | null;
       if (!response.ok || !result || !("response" in result)) {
         throw new Error(result && "error" in result ? result.error : "Unable to load conversation");
       }
@@ -416,8 +417,8 @@ export function CommunityRequestsBoard({
         method: "POST",
       });
       const result = (await response.json().catch(() => null)) as
-        | CommunityResponseThread["messages"][number]
         | { error?: string }
+        | CommunityResponseThread["messages"][number]
         | null;
       if (!response.ok || !result || !("id" in result)) {
         throw new Error(result && "error" in result ? result.error : "Unable to send message");
@@ -433,23 +434,22 @@ export function CommunityRequestsBoard({
 
   return (
     <section className="flex flex-1 flex-col pb-16">
-      <Breadcrumbs items={[{ title: i18n("Home"), url: "/" }]} />
-      <div className="mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <h1 className="from-primary to-secondary bg-gradient-to-r bg-clip-text text-3xl font-extrabold text-transparent md:text-5xl">
-          {i18n("Community help")}
-        </h1>
-        <AddEntityButton
-          className="ml-auto"
-          isAuthenticated={viewerIsAuthenticated}
-          label={i18n("Post a request or offer")}
-          onClick={openComposer}
-          signInLabel={i18n("Sign in to post")}
-        />
-      </div>
+      <PublicPageHeader
+        breadcrumbs={[{ title: i18n("Home"), url: "/" }]}
+        title={i18n("Community help")}
+        description={i18n("Things I find interesting, useful or worth sharing")}
+        actionButtons={
+          <AddEntityButton
+            className="ml-auto"
+            isAuthenticated={viewerIsAuthenticated}
+            label={i18n("Post a request or offer")}
+            onClick={openComposer}
+            signInLabel={i18n("Sign in to post")}
+          />
+        }
+      />
 
-      <p className="text-neutral mb-6">{i18n("Ask for help - or offer it.")}</p>
-
-      <div className="mb-3 grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(11rem,0.7fr)_minmax(13rem,0.8fr)]">
+      <div className={`mb-3 grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(11rem,0.7fr)_minmax(13rem,0.8fr)]`}>
         <LocationAutocomplete
           onChange={(event) => {
             setLocationFilter(event.target.value);
@@ -500,12 +500,12 @@ export function CommunityRequestsBoard({
 
       {visibleRequests.length ? (
         <>
-          <div className="mt-4 columns-1 gap-4 md:columns-2">
+          <div className={`mt-4 columns-1 gap-4 md:columns-2`}>
             {visibleRequests.map((request) => {
               const isOwner = viewerUserId === request.author.id;
               return (
                 <article
-                  className="border-neutral/20 bg-surface-tint/35 group mb-4 flex break-inside-avoid flex-col rounded-2xl border p-5 shadow-sm transition-shadow duration-200 hover:shadow-md"
+                  className={`group border-neutral/20 bg-surface-tint/35 mb-4 flex break-inside-avoid flex-col rounded-2xl border p-5 shadow-sm transition-shadow duration-200 hover:shadow-md`}
                   key={request.id}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -540,8 +540,8 @@ export function CommunityRequestsBoard({
                       </div>
                     )}
                   </div>
-                  <h2 className="text-on-surface mt-4 text-xl font-bold tracking-tight">{request.title}</h2>
-                  <p className="text-neutral mt-2 leading-relaxed whitespace-pre-line">{request.body}</p>
+                  <h2 className={`text-on-surface mt-4 text-xl font-bold tracking-tight`}>{request.title}</h2>
+                  <p className={`text-neutral mt-2 leading-relaxed whitespace-pre-line`}>{request.body}</p>
                   {request.relatedContent && (
                     <TextLink
                       className="mt-4 inline-flex items-center gap-1.5 text-sm"
@@ -569,7 +569,7 @@ export function CommunityRequestsBoard({
                       </span>
                     </div>
                     <button
-                      className="text-primary hover:text-primary-hover inline-flex items-center gap-2 font-medium"
+                      className={`text-primary hover:text-primary-hover inline-flex items-center gap-2 font-medium`}
                       onClick={() => openUserProfilePreview(request.author.id, request.author.name)}
                       type="button"
                     >
@@ -579,7 +579,7 @@ export function CommunityRequestsBoard({
                   </div>
                   {(isOwner ? request.responseCount > 0 : true) && (
                     <div
-                      className={isOwner || request.viewerResponseId ? "mt-auto flex justify-end pt-5" : "mt-auto pt-5"}
+                      className={isOwner || request.viewerResponseId ? `mt-auto flex justify-end pt-5` : `mt-auto pt-5`}
                     >
                       {isOwner ? (
                         <Button
@@ -629,13 +629,6 @@ export function CommunityRequestsBoard({
               );
             })}
           </div>
-          {nextCursor && (
-            <div className="mt-2 flex justify-center">
-              <Button busy={isLoadingMore} color="primary" onClick={() => void loadMore()} variant="outlined">
-                {i18n("Load more posts")}
-              </Button>
-            </div>
-          )}
         </>
       ) : (
         <div className="flex flex-1 items-center justify-center">
@@ -645,10 +638,18 @@ export function CommunityRequestsBoard({
                 ? i18n("No posts in {country} yet. Try another place or create the first post.", initialFilters)
                 : i18n("Try changing your filters or create the first post.")
             }
-            className="my-0 translate-y-8 md:translate-y-10"
+            className={`my-0 translate-y-8 md:translate-y-10`}
             heading={i18n("No posts found")}
             icon={<EyeOff aria-hidden size={64} />}
           />
+        </div>
+      )}
+
+      {nextCursor && (
+        <div className="mt-2 flex justify-center">
+          <Button busy={isLoadingMore} color="primary" onClick={() => void loadMore()} variant="outlined">
+            {i18n("Load more posts")}
+          </Button>
         </div>
       )}
 
@@ -759,15 +760,15 @@ export function CommunityRequestsBoard({
               {thread.messages.map((message) => {
                 const sentByViewer = message.senderUserId === viewerUserId;
                 return (
-                  <div className={`flex ${sentByViewer ? "justify-end" : "justify-start"}`} key={message.id}>
+                  <div className={`flex ${sentByViewer ? "justify-end" : `justify-start`} `} key={message.id}>
                     <div
                       className={`max-w-[85%] rounded-xl p-3 text-sm ${
-                        sentByViewer ? "bg-primary text-surface" : "bg-surface-tint/35 text-on-surface"
-                      }`}
+                        sentByViewer ? "bg-primary text-surface" : `bg-surface-tint/35 text-on-surface`
+                      } `}
                     >
                       <p className="whitespace-pre-line">{message.body}</p>
                       {message.source === "TELEGRAM" && (
-                        <p className={`mt-2 text-xs ${sentByViewer ? "text-surface/75" : "text-neutral"}`}>
+                        <p className={`mt-2 text-xs ${sentByViewer ? `text-surface/75` : `text-neutral`} `}>
                           {i18n("Sent from Telegram")}
                         </p>
                       )}
@@ -815,7 +816,7 @@ export function CommunityRequestsBoard({
             {responses.length ? (
               <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
                 {responses.map((response) => (
-                  <div className="bg-surface-tint/35 flex items-start gap-3 rounded-xl p-3" key={response.id}>
+                  <div className={`bg-surface-tint/35 flex items-start gap-3 rounded-xl p-3`} key={response.id}>
                     <button
                       aria-label={i18n("View profile for {name}", {
                         name: response.author.name ?? i18n("Someone"),
@@ -828,13 +829,13 @@ export function CommunityRequestsBoard({
                     </button>
                     <div className="w-full min-w-0 text-sm">
                       <button
-                        className="text-primary hover:text-primary-hover font-medium underline underline-offset-2"
+                        className={`text-primary hover:text-primary-hover font-medium underline underline-offset-2`}
                         onClick={() => openUserProfilePreview(response.author.id, response.author.name)}
                         type="button"
                       >
                         {response.author.name ?? i18n("Someone")}
                       </button>
-                      <p className="text-on-surface mt-1 leading-relaxed whitespace-pre-line">{response.body}</p>
+                      <p className={`text-on-surface mt-1 leading-relaxed whitespace-pre-line`}>{response.body}</p>
                       <div className="mt-3 flex justify-end">
                         <Button color="primary" onClick={() => void openThread(response.id)} size="sm" variant="ghost">
                           {i18n("Open conversation")}

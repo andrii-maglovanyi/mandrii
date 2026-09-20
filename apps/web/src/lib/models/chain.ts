@@ -5,6 +5,7 @@ import type { ChainInput } from "~/lib/validation/chain";
 
 import { ConflictError, NotFoundError, ValidationError } from "~/lib/api/errors";
 import sql from "~/lib/db/db";
+import { invalidatePublicContent } from "~/lib/public-cache/invalidate";
 
 export async function getChainDetails(chainId: string) {
   const [result] = await sql<Array<{ venues: ChainVenue[] } & ChainDetails>>`
@@ -49,7 +50,7 @@ export async function saveChain(input: ChainInput, userId: string) {
   const parentChainId = input.parentChainId ?? null;
   const venueIds = [...new Set(input.venueIds)];
 
-  return sql.begin(async (transaction) => {
+  const result = await sql.begin(async (transaction) => {
     // Chain administration is rare. Serialising writes makes the unique-slug
     // and hierarchy checks deterministic when the same chain is edited in two tabs.
     await transaction`SELECT pg_advisory_xact_lock(hashtext('venue-chain-manager'))`;
@@ -154,6 +155,8 @@ export async function saveChain(input: ChainInput, userId: string) {
 
     return savedChain;
   });
+  invalidatePublicContent();
+  return result;
 }
 
 function cleanOptionalText(value: null | string | undefined) {

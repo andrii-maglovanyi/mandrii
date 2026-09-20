@@ -1,7 +1,9 @@
 import { DocumentNode, useQuery } from "@apollo/client";
+import { getOperationName } from "@apollo/client/utilities";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useMediaQuery } from "~/hooks/useMediaQuery";
 
+import { useMediaQuery } from "~/hooks/useMediaQuery";
+import { isPublicOperation } from "~/lib/public-cache/operations";
 import { INFINITE_SCROLL_MEDIA_QUERY } from "~/lib/responsive";
 import { APIParams } from "~/types";
 
@@ -28,9 +30,10 @@ export const useGraphApi = <T extends Record<string, unknown>[]>(
     query: INFINITE_SCROLL_MEDIA_QUERY,
   });
 
-  const queryVariables = isMobile ? { ...variables, offset: 0 } : variables;
+  const queryVariables = { ...variables, offset: isMobile ? 0 : (variables.offset ?? 0) };
 
   const { data, error, fetchMore, loading } = useQuery(query, {
+    fetchPolicy: isPublicOperation(getOperationName(query) ?? "") ? "cache-and-network" : "cache-first",
     variables: queryVariables,
     ...options,
   });

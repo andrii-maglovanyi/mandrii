@@ -1,3 +1,4 @@
+import { discoveryWindowStart } from "~/lib/public-cache/operations";
 import { Event_Type_Enum, FilterParams, Price_Type_Enum } from "~/types";
 
 type EventsFilterResult = {
@@ -39,7 +40,7 @@ export const getEventsFilter = ({
   type,
 }: EventsParams): EventsFilterResult => {
   const where: FilterParams = {};
-  const now = new Date().toISOString();
+  const now = discoveryWindowStart();
   let dateConditions: FilterParams[] = [];
 
   if (slug) {
